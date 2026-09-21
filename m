@@ -1,167 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152713F5BE3
-	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 15:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51AD4BA1EA
+	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 16:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790004510; cv=none; b=OUvVvxZ+DyymtgYkzOx2Oz/6dxmQte/3PHVo67F/aYiQt19eVZagm1Jd1Yqo36Nrb9iUCr7FyEH3cLGJ3HxwkR61HOs/lbh/gaPZko9TboB+j6EXZSYZGjJ2YLdP2JANmuTZrMq3w2ZdNZdwXqMHUUnhRkFnj9TzQH3a4N8Mtwg=
+	t=1790009078; cv=none; b=Igrt/A2ZDI4hRbW+aQaX9+/OT/Q8epUtrFHTL1qhK/IE7UKRldYTgSXE9YnInhz2xTvRXhlX3mGUQkY3ZLlhfj9SHip5GrQ3qAm6kDV18yo/viOjcuOnseeEb02PUyjMhQJMubeuX4/AR7HZRETLSg0kEark1M+aXzmC5OT9TTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790004510; c=relaxed/simple;
-	bh=4ns94LogX5OA2pP65C8E1PBfvQ7/rCEkhv9gb+l2PE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Li6+hcbX1RvmD1WVE4ufGmrSL9QUl+0Dv2xoOPD/v02pJu1/onq/88bVUaHz9YfFAu96mRaUE8QOXVjGRIK36iRX7mdFILmvinknq6crxnsNOj51/kTxqdsRimex+2A9PNSJQPRPKTVZ3mkUi2Ec8aJEVXtBNRlrmP8203fqy1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fu0cIiDQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790009078; c=relaxed/simple;
+	bh=QZzmOJOPv/EoQdxGPQOL62qo+b2IzGIc3h5IrZH5pbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STBjewHi+x3KAHSOW3WCuFSMBbdNH+Dpkx437AI7TczZ5GFQ9oF80o82n57rTVMiDPMYnhQkWRP3n3njaHasexGTN3zvh3fli1SZiOz0mARnSd5iQa3oMHjOdTONBlhq5OtVBG9CJpa90073gv3u/gvsZLF14Av9XUghph7ZG/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=ETOnTJrW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VKcMeiVt; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fu0cIiDQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01161F00899
-	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 15:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790004509;
-	bh=4ns94LogX5OA2pP65C8E1PBfvQ7/rCEkhv9gb+l2PE4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=fu0cIiDQD/YqTDk1JAy5zclqVsYW+2AjMfmGi0g4fmMhZsovzfkIUp/mfOa2PgMNR
-	 g2oQwxBh8UFDVkFNNcONs2kKLkg2LAAqBaB2Ed+QwBSkoZrrMLhNZ51aBUv4MtUU4i
-	 nsRb3doYkD2eNFLNHYZDB9vLdiNx+xkBhF1mV+7WdXGJgtewIZqdNIuOBf6ruZxUQD
-	 vMb4ug3Sk2CTOFq1IRL19IJVZNWt8/HbNgCwLLg3clsBKEO2orufxth9zXFq57nqN1
-	 UmUz26i+2SFaqoWVVxftYbTKufFW/BN08nnTiCPQJCQ85JibDVVdzDDqr8z56j04HN
-	 KJqm7XTlQJtjA==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3a5a0703ae7so82091fa.0
-        for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 08:28:28 -0700 (PDT)
-X-Gm-Message-State: AFuF++kwZIv58vgWwJjwISEjxew40kbBk/GSxJU3WQCcrWBa6RCPobu9
-	fRzOr3rDqe+z9kWRWB8roZXUZBg0/RtJ+GHBkFGZ9M5BCJn6zHlCv001RwyJCeL4ukVl/NnYVyb
-	cTlyHblkQC0DS62PciB8mac1Y5KeYDQk=
-X-Received: by 2002:a05:651c:a208:20b0:3a5:f142:af6e with SMTP id
- 38308e7fff4ca-3a5f142b0a9mr21380951fa.21.1790004507202; Mon, 21 Sep 2026
- 08:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="ETOnTJrW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VKcMeiVt"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id C92B914000BD;
+	Mon, 21 Sep 2026 12:44:35 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 21 Sep 2026 12:44:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1790009075;
+	 x=1790095475; bh=zjivBsa9hsRYHRNcFKFS9TSN3LLieSyZGZ06Ds3oU04=; b=
+	ETOnTJrWCFgnFf/C6RW39dzZVGm9alXCueR8hrIYvyhVK8RxNGOJ3OBhs38QifwK
+	Gd/b0d8HjsrrNbRIEKPqx/2AZwA8lrpMeqkU9fgFMkFLA1an3zIpHfKWcYIsn0CI
+	aKtNx2/7C4QYRxoPxjGafhTx+EInGybRln/BP8LTVlQevCgBsVu5GpS6RIvARYlD
+	dFRTcZvm06/nhqQ3uj6a1EBIltNrr7VfTvD1ct1HsppWzC9XyaD3jh2/85aWS5vC
+	txPKZ3eIWTWEIne68UlhLAOTEkaXyBUCKK211Mpdcr/Z85aKHUv1AdkFpifKBbjH
+	jNIULI84Px6RykN2jLUoHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1790009075; x=1790095475; bh=zjivBsa9hsRYHRNcFKFS9TSN3LLieSyZGZ0
+	6Ds3oU04=; b=VKcMeiVtck82x1r/UyvCXPeKBPcVIOpbiLym7cqzPvPhJLsdZp1
+	9s+QNXETbUNvzxGoGahycJ7vl1NOZ045Vvl+lF58R7PcoLvhGtv9g9lQFTKe0xka
+	IL9yBbYA3v8iaW8ZB9xuc9hIc1+XR1N8qYSrCLIhKrNUyrhWPu9X+KyFBMuP0uCm
+	9RsBxp6aM4gF/lPyXboPKE8bnOsMI3s7kcF5HKhdkLD2WVzir4SuEXpzeRHjYyy/
+	uceQqwtXZWhQKJ2mvaDFAJMtcgStz9u6RGqkfikyY7n/LxaTpDGgIVEPkzI+ES1z
+	QU45+tsWIgJiLG6lggy9LF9WgS/CAl/ZStw==
+X-ME-Sender: <xms:816xahJ1LXzvp-yUi51Wp_yPlvOBzkMZQGoT40iBcnuMYf6HQYFQgQ>
+    <xme:816xaiG6rUwTFXAUUl5CCiPAfcinsSTWArg-r2yZw1WuyNyZl776JOkszTL823t0t
+    rDFSHFIzASozQwuI9FCltLtOOCBcmhU4a2QkETLoedAXjomRw>
+X-ME-Received: <xmr:816xat8VHnFPJuKWO2gnQin-jdnfpxHhIl7PMeLxLfgGEC8fi8DQMYL5aszSmTrLY5txy0FdhpUAxvEzasxUsAkVtPuTCSQkQXvJ7klAPGo>
+X-ME-Proxy-Cause: dmFkZTEeJuUSXcXeoFym2RhUCdnjC1hVcyJNbiXzRJfWYXLtKAJXYGAPCakl5qcp6/SKXs
+    MGNNYK1DQXRQ2t//wFMwqiisHDJwLqn7jO49xQPd0WPBSlYe9lDssGROHDQsS8Bk7FlTe6
+    0EvM8fIU92OKf3+3Gigm9Qce8DcAbAIPunT5xFIRRF3Ty8X1bTicArUlkdPTZol/UiwrKd
+    Hobiz/pIFccJHnBJIevVebKUXyOh1TNjvla/N5w0hybdKG7+G/uRJtzwe5hkpZvwhe8zUR
+    2+UHThMzf4dYYKG+me1Y9hzKWbr+1QfhRSj7X745j7VRthIymvfnGMWTNMvihukkwdkZl+
+    qHJZYmWrhaTHFuidDeOXKl58oQjIrx8ft2kjCTJdv/Q4FvyJ4tprsGwOBViHTQREvOU+Xe
+    a16oR2BSKbPhYqK61AcYux0Y71upCmsQiYMaql4UhguxQE1QfvDkh+iz9MIpgmPqWSiaqn
+    bwMcE4vt5kvoLHIkEVw8zx2GdJ3213MnEjFRH4vW4CjcZ6+uSS4YGiDlAlmCsMXxvguEDv
+    18N/psr8ZwybdP1rujQDtYLnfDep6bjEx8oioZ/A6UfJ8+mw5/yQpC30VzG4PhYCYqkbk9
+    FRaVrq5qGyQEBQTDZpgAPeYS6mPpd6ZgO0JPOPln4Vv9dzAyne0/GJjgpNTg
+X-ME-Proxy: <xmx:816xaiJgq853xS5tN-BLCraQiqOkZKbLFnWVYo3D-1TMXudqaXoXpg>
+    <xmx:816xart2tdtEtBCWdWYvKd3bB2StsRBrJzqdjkusdlX1AoKswkRamA>
+    <xmx:816xapB2H6u-tVayBeTar35szQVWML6bFau1oEinGM6HrePo5mZgNw>
+    <xmx:816xajMUUcH--87Ycu2a5W1iaMiwwU_5sxvdhziSshYNCq5DHrJjwg>
+    <xmx:816xagAoWBUPSw0s7yC1piPv0zpMXd7gPP4Srdym09Jee9u61TWOtbr9>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 21 Sep 2026 12:44:33 -0400 (EDT)
+Date: Mon, 21 Sep 2026 18:44:31 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: Support TRINITY <support@trinity-net.com>,
+	regressions <regressions@lists.linux.dev>,
+	linux-acpi <linux-acpi@vger.kernel.org>,
+	linux-pm <linux-pm@vger.kernel.org>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Huisong Li <lihuisong@huawei.com>
+Subject: Re: [REGRESSION] ACPI processor/cpuidle change in 6.18.52 breaks
+ bare-metal Xen dom0 boot
+Message-ID: <arFe7-xa3HtCUOHs@mail-itl>
+References: <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
+ <CAJZ5v0gg7kBtEhagR9SYKaPNstPC6aSyP7W4xBjP1r-kzbcH1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
-In-Reply-To: <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Mon, 21 Sep 2026 17:26:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gg7kBtEhagR9SYKaPNstPC6aSyP7W4xBjP1r-kzbcH1A@mail.gmail.com>
-X-Gm-Features: AcwNN1UxyJztudU9HEP_x1NXmMgrHZXRAKUGqrNcukJ4vaLpZv_8ujS2owei2hI
-Message-ID: <CAJZ5v0gg7kBtEhagR9SYKaPNstPC6aSyP7W4xBjP1r-kzbcH1A@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Lth3KI9EydCmQGrl"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gg7kBtEhagR9SYKaPNstPC6aSyP7W4xBjP1r-kzbcH1A@mail.gmail.com>
+
+--Lth3KI9EydCmQGrl
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 21 Sep 2026 18:44:31 +0200
+From: Marek =?utf-8?B?PT91dGYtOD9RP01hcmN6eWtvd3NraS1HPUMzPUIzcmVja2k/PQ==?= <marmarek@invisiblethingslab.com>
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: Support TRINITY <support@trinity-net.com>,
+	regressions <regressions@lists.linux.dev>,
+	linux-acpi <linux-acpi@vger.kernel.org>,
+	linux-pm <linux-pm@vger.kernel.org>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Huisong Li <lihuisong@huawei.com>
 Subject: Re: [REGRESSION] ACPI processor/cpuidle change in 6.18.52 breaks
  bare-metal Xen dom0 boot
-To: Support TRINITY <support@trinity-net.com>
-Cc: regressions <regressions@lists.linux.dev>, linux-acpi <linux-acpi@vger.kernel.org>, 
-	linux-pm <linux-pm@vger.kernel.org>, xen-devel <xen-devel@lists.xenproject.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Huisong Li <lihuisong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 20, 2026 at 5:48=E2=80=AFPM Support TRINITY <support@trinity-ne=
-t.com> wrote:
->
-> Hello,
->
-> I am reporting a bare-metal Xen dom0 boot regression seen with Linux 6.18=
-.52.
->
-> On affected systems, Linux 6.18.51 boots successfully as Xen dom0 on bare=
- metal, while Linux 6.18.52 consistently black-screens before dom0 userspac=
-e/networking comes up.
->
-> #regzbot introduced: v6.18.51..v6.18.52
-> #regzbot title: ACPI processor/cpuidle lifecycle change breaks bare-metal=
- Xen dom0 boot
-> #regzbot link: https://gitlab.alpinelinux.org/alpine/aports/-/work_items/=
-18447
->
-> Tested results:
->
-> Linux 6.18.51-r0, Xen dom0, bare metal: boots
-> Linux 6.18.52-r0, Xen dom0, bare metal: black screen before userspace/net=
-work
+On Mon, Sep 21, 2026 at 05:26:55PM +0200, Rafael J. Wysocki (Intel) wrote:
+> On Sun, Sep 20, 2026 at 5:48=E2=80=AFPM Support TRINITY <support@trinity-=
+net.com> wrote:
+> >
+> > Hello,
+> >
+> > I am reporting a bare-metal Xen dom0 boot regression seen with Linux 6.=
+18.52.
+> >
+> > On affected systems, Linux 6.18.51 boots successfully as Xen dom0 on ba=
+re metal, while Linux 6.18.52 consistently black-screens before dom0 usersp=
+ace/networking comes up.
+> >
+> > #regzbot introduced: v6.18.51..v6.18.52
+> > #regzbot title: ACPI processor/cpuidle lifecycle change breaks bare-met=
+al Xen dom0 boot
+> > #regzbot link: https://gitlab.alpinelinux.org/alpine/aports/-/work_item=
+s/18447
+> >
+> > Tested results:
+> >
+> > Linux 6.18.51-r0, Xen dom0, bare metal: boots
+> > Linux 6.18.52-r0, Xen dom0, bare metal: black screen before userspace/n=
+etwork
+>=20
+> I'm wondering what's special about Xen dom0 bare metal.
+>=20
+> Does adding processor=3Dnocst to the kernel command line help, by any cha=
+nce?
 
-I'm wondering what's special about Xen dom0 bare metal.
+It does not.
 
-Does adding processor=3Dnocst to the kernel command line help, by any chanc=
-e?
+> The patch is essentially a revert of commit 13ebeef6a1b9 ("ACPI:
+> processor: idle: Optimize ACPI idle driver registration") which I'd
+> rather not do without knowing what exactly is going on.
+>=20
+> At this point it looks like a missing check somewhere or similar, so
+> it would be good to find out where exactly it crashes.
 
-> Linux 6.18.52-r0, Xen domU: boots
-> Linux 6.18.52-r0 with Xenbus notifier change reverted: still fails
-> Linux 6.18.52-r0 with only ACPI processor/cpuidle changes reverted: boots
-> Linux 6.18.52-r0 with refined ACPI idle lifecycle patch: boots
->
-> Affected hardware tested:
->
-> Intel Core i7-4785T thin mini-ITX, 16 GB DDR3
-> Intel N305 thin mini-ITX, 16 GB DDR5
-> Supermicro / Intel Xeon E5-1650, 32 GB DDR3
->
-> The successful boot used the regular Xen command line:
->
-> multiboot2 /boot/xen.gz cpufreq=3Dxen:performance
-> module2 /boot/vmlinuz-lts modules=3Dloop,squashfs,sd-mod,usb-storage,xfs =
-quiet
-> module2 /boot/initramfs-lts
->
-> No IOMMU workaround, serial console parameter, debug parameter, storage w=
-orkaround, or Xen command-line change was required.
->
-> The regression was narrowed to ACPI processor/cpuidle changes between 6.1=
-8.51 and 6.18.52, specifically the idle-driver registration lifecycle.
->
-> The working 6.18.51-style behavior registers the ACPI idle driver from ac=
-pi_processor_power_init() and unregisters it from acpi_processor_power_exit=
-().
->
-> The failing 6.18.52 behavior registers the ACPI idle driver globally from=
- acpi_processor_driver_init() before driver_register().
->
-> A first ACPI-only revert confirmed the regression source. A refined candi=
-date patch was then prepared to preserve the working ACPI idle lifecycle wh=
-ile keeping unrelated 6.18.52 safety fixes, including:
->
-> _LPI bounds checks
-> cpufreq notifier cleanup on acpi_processor_driver_init() failure
->
-> The refined candidate patch modifies only:
->
-> drivers/acpi/processor_driver.c
-> drivers/acpi/processor_idle.c
-> include/acpi/processor.h
->
-> It does not modify Xen, Xenbus, IOMMU, APIC, PCI/ASPM, intel_idle, syscor=
-e, USB, storage, XFS, networking, printk, or the cpuidle core API.
->
-> The earlier cpuidle_disabled() workaround is not included.
->
-> The refined patch has been rebuilt and boot-tested successfully as Xen do=
-m0 on bare metal on TRINITY-EDGE.
->
-> This issue is currently visible to Alpine users because the Alpine v3.24 =
-stable repository contains:
->
-> alpine-release 3.24.2-r0
-> linux-lts 6.18.52-r0
->
-> Systems tracking Alpine 3.24 stable / latest-stable may therefore receive=
- Linux 6.18.52 as the default LTS kernel.
->
-> Attachments:
->
-> revert-acpi-idle-registration-lifecycle.patch
-> APKBUILD
->
-> The original Alpine report is here:
->
-> https://gitlab.alpinelinux.org/alpine/aports/-/work_items/18447
->
-> Please let me know if this should be submitted as a formal patch with Sig=
-ned-off-by, or if there is a better upstream fix/dependency that should be =
-backported instead.
+I can reproduce the crash, I get this:
 
-The patch is essentially a revert of commit 13ebeef6a1b9 ("ACPI:
-processor: idle: Optimize ACPI idle driver registration") which I'd
-rather not do without knowing what exactly is going on.
+[    3.525669] BUG: kernel NULL pointer dereference, address: 0000000000000=
+008
+[    3.525677] #PF: supervisor read access in kernel mode
+[    3.525681] #PF: error_code(0x0000) - not-present page
+[    3.525685] PGD 0 P4D 0=20
+[    3.525688] Oops: Oops: 0000 [#1] SMP NOPTI
+[    3.525693] CPU: 0 UID: 0 PID: 21 Comm: cpuhp/0 Not tainted 6.18.52-1.qu=
+bes.23.fc41.x86_64 #1 PREEMPT(full)=20
+[    3.525700] Hardware name: Micro-Star International Co., Ltd. MS-7E06/PR=
+O Z790-P WIFI (MS-7E06), BIOS Dasharo (coreboot+UEFI) v0.9.1 01/17/2024
+[    3.525706] RIP: e030:cpuidle_register_device+0xd2/0x350
+[    3.525714] Code: 00 00 8b 55 04 49 89 c5 49 89 d4 81 fa ff 1f 00 00 0f =
+87 68 02 00 00 48 8b 04 d5 c0 a0 19 82 48 83 3c 18 00 0f 85 ad 48 12 ff <49=
+> 8b 7d 08 48 89 14 24 e8 31 73 30 ff 84 c0 0f 84 72 01 00 00 41
+[    3.525723] RSP: e02b:ffffc90040133db8 EFLAGS: 00010246
+[    3.525727] RAX: ffff888235f5c000 RBX: ffffffff834d4d40 RCX: 00000000000=
+00000
+[    3.525732] RDX: 0000000000000000 RSI: 0000000000000007 RDI: ffff888101c=
+39c00
+[    3.525736] RBP: ffff888101c39c00 R08: 4ec4ec4ec4ec4ec5 R09: ffff888101c=
+39c00
+[    3.525740] R10: ffffc90040133df8 R11: 0000000000000000 R12: 00000000000=
+00000
+[    3.525744] R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff834=
+d4d40
+[    3.525752] FS:  0000000000000000(0000) GS:ffff888235f5c000(0000) knlGS:=
+0000000000000000
+[    3.525757] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    3.525761] CR2: 0000000000000008 CR3: 000000000242c000 CR4: 00000000000=
+50660
+[    3.525768] Call Trace:
+[    3.525771]  <TASK>
+[    3.525775]  acpi_processor_power_init+0xde/0x150
+[    3.525782]  ? __pfx_acpi_soft_cpu_online+0x10/0x10
+[    3.525787]  acpi_soft_cpu_online+0x123/0x170
+[    3.525792]  cpuhp_invoke_callback+0x134/0x470
+[    3.525797]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[    3.525802]  cpuhp_thread_fun+0xa2/0x170
+[    3.525806]  smpboot_thread_fn+0xf3/0x220
+[    3.525810]  kthread+0xfc/0x240
+[    3.525814]  ? __pfx_kthread+0x10/0x10
+[    3.525818]  ? __pfx_kthread+0x10/0x10
+[    3.525822]  ret_from_fork+0x158/0x170
+[    3.525827]  ? __pfx_kthread+0x10/0x10
+[    3.525830]  ret_from_fork_asm+0x1a/0x30
+[    3.525835]  </TASK>
+[    3.525837] Modules linked in:
+[    3.525842] CR2: 0000000000000008
+[    3.525845] ---[ end trace 0000000000000000 ]---
+[    3.525849] RIP: e030:cpuidle_register_device+0xd2/0x350
+[    3.525854] Code: 00 00 8b 55 04 49 89 c5 49 89 d4 81 fa ff 1f 00 00 0f =
+87 68 02 00 00 48 8b 04 d5 c0 a0 19 82 48 83 3c 18 00 0f 85 ad 48 12 ff <49=
+> 8b 7d 08 48 89 14 24 e8 31 73 30 ff 84 c0 0f 84 72 01 00 00 41
+[    3.525862] RSP: e02b:ffffc90040133db8 EFLAGS: 00010246
+[    3.525866] RAX: ffff888235f5c000 RBX: ffffffff834d4d40 RCX: 00000000000=
+00000
+[    3.525870] RDX: 0000000000000000 RSI: 0000000000000007 RDI: ffff888101c=
+39c00
+[    3.525874] RBP: ffff888101c39c00 R08: 4ec4ec4ec4ec4ec5 R09: ffff888101c=
+39c00
+[    3.525878] R10: ffffc90040133df8 R11: 0000000000000000 R12: 00000000000=
+00000
+[    3.525882] R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff834=
+d4d40
+[    3.525889] FS:  0000000000000000(0000) GS:ffff888235f5c000(0000) knlGS:=
+0000000000000000
+[    3.525894] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    3.525898] CR2: 0000000000000008 CR3: 000000000242c000 CR4: 00000000000=
+50660
+[    3.525904] Kernel panic - not syncing: Fatal exception
+[    3.525931] Kernel Offset: disabled
 
-At this point it looks like a missing check somewhere or similar, so
-it would be good to find out where exactly it crashes.
+And I have also another data point: Linux 7.2.6 is _not_ affected. And
+similarly, Linux 7.3-rc3 works fine (haven't tried -rc4 yet).
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--Lth3KI9EydCmQGrl
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmqxXu8ACgkQ24/THMrX
+1yxeNAf8CqjSP8UmFu0EwOUBtvbUXkkKyQgSNjKPFIYIh4LYPPhWtXqrWzp3GKn4
+1QbwQSmgEPWpJjLi5/zkNGpJ75gPkJbzDCcD82D39fYjcncHWfD2LCh7LHHOM94J
+1z+dqF6L6llqEgeKxcFNDX8eWopBznsp5XNv0wVtYAlt9Qdl89FGYg5qsFecbwno
+aDEuUVfT46CQ6+6+eY/mNyifgQcNlFnmShIOR0OXjKghsOzNwU+Geyin3/Kylh/g
+9adNQ+eNkUod/gidhUZxUS0O2Q3ZDlM2CHnkItGEWj3vu8OTsvUZrBcussfKnPHD
+60t/CiN4kdY1vKqB0SqRGgKmVy4d9w==
+=n6Pq
+-----END PGP SIGNATURE-----
+
+--Lth3KI9EydCmQGrl--
