@@ -1,125 +1,159 @@
-Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5954D4E4305
-	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 21:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.141
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790025513; cv=pass; b=lG1jxxLUGjLriw2Nm7JbHujtc8P0Bs291rfvvCAuWegzhjfum3EPwSPY6K22kyHBC+zpdDtl5fmcIHuLioqdfDesDPwIF/jLseEGdZOWy1O/5Ia9rEDDu9lSlNNb9hBv2BboAaVos7S4BjfiXwHvVc1FTZ9GlV0MwfY1ggTvFsE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790025513; c=relaxed/simple;
-	bh=brjRvH3C6Mu55blpnUj4kyKWqBF3ChBISvnfSPmnR7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gIPr6GyUvLGbs6dyZqfUhLgNTT/E3k8EgTHOXwT9e1450VkGwB6x+TUPLtTLx2aG4N5cYWC/cpWSO76PIdljoi0/qukpSbr50KIlqLmv8DY3A02/3//JKHpVE9+81g1e0WEGBGiWFc96rQxhvHUvOk0n5fBIEtYhjQlCwhrVgr8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s4zM+/UC; arc=pass smtp.client-ip=74.125.227.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB47231839
+	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 01:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790040220; cv=none; b=H9o4o1u4h9FVLEmwywQhrYFMPR8tmaTd4VMqY17UT9BpD9EulvJS20WWq/WrEHNQPbq5lyHdRdC3eii47es/l5PlWKqkWoiIQQR12AjC00Pae2Sf94myYflD1ghYePH/8Q3tTl/AmWMub8/KLK+894xbplTZbnesXq72Pn9wiQw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790040220; c=relaxed/simple;
+	bh=qkwY7bpZcT8tzaU519Lq5BhL2mG7LNy2Xqg6UPj/Tf8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=CB/pyCzwPgskh9l0/rakv/8OHeaC6xge949Tr/a/Nm2pHp1diwWKDcElT0rqosbQMEk7W23QLt8ZGmTDqoce2MRgw8Q9nLfeT4JB7I8zopjlR0auODlxOzLa8SEPxhUXOLBsKQ2fsuk53dT4g3/Yp7Rhm+k88p0BgO6HMPm1nd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=serow.io; spf=pass smtp.mailfrom=serow.io; dkim=pass (2048-bit key) header.d=serow.io header.i=@serow.io header.b=DMUMLNSd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LpWECrBh; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=serow.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=serow.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s4zM+/UC"
-Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-39e03468a5fso3047174a91.0
-        for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 14:18:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790025512; cv=none;
-        d=google.com; s=arc-20260327;
-        b=KUipJl77NMIOn07iQN+i4Yiv2WEsMKsN4nHkLwrcRiRXITVhAwGqnE9YcqY+edzY6O
-         CWd2IapYLsLOqE2DuuCFHAvRqotAfGVbLH1dZg5C0Tbns1EFvEWWgf65YL113aEYp4K2
-         MF+LJuN8OZCgQ27hNJl7WiySi8jlrVHy6fU6n61hpjEPn7ccWloUKZm1qcniGBMrxkdm
-         rNYD9j4ftwDwFPvcg0MK48CGSnUiJ8wZ+7MWjH0HDnDIE9jpLqemx+reEkFOUmSTcow9
-         I9fDIDTpfnqWcjb2Y0tZsVMJFtw2/DqAfrSpNLHTSUVWql6il0u0x78ypaOgXL6/y7KE
-         2AOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=brjRvH3C6Mu55blpnUj4kyKWqBF3ChBISvnfSPmnR7w=;
-        fh=jmCg2AXA6fi9xYKmvzxxryW/YPTrZl34weuF0imE1rU=;
-        b=rp4jsPFK19+oJtX/CnX8ID32za4oQPe+ADS1YaoAc04tokkc6K8qF29+qAJ+kSQ0ou
-         CIgcUy8gaFln5V6OLm9JK9UnGCaGda7nIenJ6ImaaWL3TsJWh3J+vjV2Uv03hJYt5aES
-         sNLE88bKu7pR+N6H2tNm41oNVpa+vIBcGBwmRHfBcV1oSxVPiMkCmJqZUkV1VW7ZKJjJ
-         tqfrLD18uAH7sDTolvEfRfh0LPa0QXcqDh739BXw2I0m2deuUCph3g8S87Zxay9kM9+o
-         tH+4RE6XvpGJQLNgcFC1Rc5T9dJOR+d1YP1kFnPz6hNoQnBEcnSABVLZkzxyX41DELDn
-         AS2w==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790025512; x=1790630312; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=brjRvH3C6Mu55blpnUj4kyKWqBF3ChBISvnfSPmnR7w=;
-        b=s4zM+/UC5x1dFu8IvJ7eEJT0UZMf5Y7VRkKzUnhmqc/YVUUzfB2D80fR1XZI2CgbHe
-         y0LXansYr/YCDQon4hlzfEzl3izsvzX5ELCLT8wF2bKyrDzBGpCnU6rWbel3sm/uOJcP
-         s8MNqpIZHXRqYU/5geOf11kytNBxLSfmWfDOOvSMmYhHQ/UguDVb91GuG6l3e+5CEEgr
-         4op6K8nJuqPtm1uxRaTtlXtRFtHgwn7wflAbHsbKfK6J4hCVnO80UbEVyzSUG3cLf/KM
-         reu/eW9zS7SA840moU6XBLwQm/5tgND6I57+waqMQKfzupESFFqVxTNRUROVj/811dRJ
-         OaEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790025512; x=1790630312;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=brjRvH3C6Mu55blpnUj4kyKWqBF3ChBISvnfSPmnR7w=;
-        b=NjJ9/wiv0jMxl0blK+SjTL9i1QU0vr6OPD0Wl+t+v7nyUCjw6mB4LbmFRGwNzrNOkD
-         rY9fCU+ShwIVUU+EBehjG5aBaibeVueBEjRestzSWaE4Y2YZ+rweYWr8RxNecv6ZSNe0
-         QiGaux1YcSTr1qkDUEVlEia6NI3cIdmvh19IGp2vH6BCDGUO10Ho7oE915VZVr2Ym417
-         KAd6IalVGJZ8cPfcWaflM+VTpq8tQcoWHmay3AGWsgTEG0HCKMQZnM6olKNy+mXAwGeu
-         jLRmGumChW1r/b1ssRwunXlgezB7Dg2M51PaX9HGoKROe8fiirsGMgWozYc/g0WvLlE8
-         IJMA==
-X-Forwarded-Encrypted: i=1; AKwUvBzk145OFCmRe+QW6ZQNAzDMO7D8oBdFXmdfPgrxrK+d2f5Z1Me5hOc/7NvV3ExU4DC5TAWSNsWIXn+b5Q==@lists.linux.dev
-X-Gm-Message-State: AFuF++nNIbZPxdBaEZ56TnM4qlhdNnxb3l6zwRM+bMODymzHX0kci2ih
-	QBmNQWocrZfR7Iv1GB4pitjPD0BuVFGE9qJkWonro1cnRlJC46aNTrsgwvDQgk4dmWL5pYD9uLV
-	N2FN/RIdtY36VOtw/BvWiyLXmOFZSJKA=
-X-Gm-Gg: AYBFou1GZS1XCxkyudJ3YvTk4ORG1HsowW8jG8woCcS336Ss564UGb/3fx1nqXPK6O5
-	un2+TMMlJY4sezJNe1pHIRUyGCKaWiQSMgj3l4HYhUEQW2U2eTZp/54pnUc0L5zEm06fmoShH6r
-	FJ7zTgzAtKkGbNDYCXyP/S7EJtUkORgqhnAAvxiq9RU0B4GCKHRSoxVIoSBWouq6nG0miUwoeap
-	DK/hxCvY7Gkr0GS/rcT14UnxhzJWGsxlOKZRQYCHqk1Z+YTwIaFjADXghRRvnzljEjZbnSIzZHO
-	4yQId4+sCFViGLUdnLREgQ3qm6PgGYGye7m8iBjldo0PmrHi6P29Hw==
-X-Received: by 2002:a17:90b:2809:b0:39e:4c7f:8b15 with SMTP id
- 98e67ed59e1d1-3a06ae45c96mr221446a91.26.1790025511678; Mon, 21 Sep 2026
- 14:18:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=serow.io header.i=@serow.io header.b="DMUMLNSd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LpWECrBh"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 1FCF77A0073;
+	Mon, 21 Sep 2026 21:23:37 -0400 (EDT)
+Received: from phl-imap-16 ([10.202.2.88])
+  by phl-compute-03.internal (MEProxy); Mon, 21 Sep 2026 21:23:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serow.io; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm1; t=1790040216; x=1790126616; bh=y2
+	yB26Ce1uR5hfdEhMeGbsIPkmpdfEsE9PbOrwadxpI=; b=DMUMLNSdEPHaS+Q6vP
+	3umnZnJnVuH3OR1VQPDy2YlH2F+dz0ZEAOD5YHqfnAn4AEH9ogKGtj2ArPVPTXpK
+	LwAHDuLUU+suXHSaU1V97eh/ZQk/lSV63ZzZG/G7TSSReu1Af+q3bJukAYIh1mul
+	IQ1K3dVZ0EW+tfMfXWr4p0ehykiAHlss5bETe3OmMQ8gwrWwjDen3N3qTWMq7ygW
+	fQF+8GwpuhJ2vHcQHFx8FgLwJEkQLT/o9ZaNbpiRISpsAhdRCi3vbqPZNLQynE50
+	G1rW6sU8U+HcaNxbe2uAMFCtpAJvgaAS2HGqPpNMCXqTZkWin1L7VoDHSdP3pMvk
+	G2Tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1790040216; x=1790126616; bh=y2yB26Ce1uR5hfdEhMeGbsIPkmpd
+	fEsE9PbOrwadxpI=; b=LpWECrBhpldkybrjUnKaefygsEgszwxrBpMkbTHcfRlY
+	jbCtXYFkXhD1Y7FgW+RTsvA742bn5ZBp8rjcfse2HBojNk1a72xWcD+XL8GXsqpu
+	gEPFM7mIYYcjOWU53AE/ZpVx0BsGV1T/fjxTxMmrWEFGxAN4tfqAzAV+78ts9tFW
+	4n3W66JMb4HCt/N8OXm9SiJXdzSj0clVgb6eyK8Z2AvNo0HZNpaJj6rAiCpXRfJ7
+	dAx/oOS3VhuzH6JJOBVGrESYzr9JMte8asaOyy2+t98gi/7OKpZMRyCgSPLdxgCN
+	tWOUCL17fkuLRe0pZTIAPelbIkwSrduGV7AvKQqK8w==
+X-ME-Sender: <xms:mNixapLPzTwA-gCCSMNe4y4m-INxIkfXqvQbnzTH40JFh1KBrDRPUw>
+    <xme:mNixav9gRZ6xQIZJV5MjNbRQdJuGiQpfy-O1VqGMBLm4O9IT5jY7wZvAP7VPj7Edj
+    oOy5VRsKD_Z7sF4Ru4WMsRsKN0UybH0csTeOX__a5yiy-8EWGHFF4yb>
+X-ME-Proxy-Cause: dmFkZTEq/TRVa6MTThR+1j2LN7qpYuXLwj82iFMxFu7q2MHMZOafcjaLEkJPlhejv3pSpc
+    /ElWdVMUpec69cp/px/F0Wxsu3GPPntu3MAqspCcPU1GNM01jSCnHcyjaD5ikIQVeDE+Cr
+    4sCCVRJ9gh0ZdnEoAszKCUSsP6csTFLAjZj1wEtS/74TJNYgsd2hSUPkpf8aCVezRLB1JL
+    YIniF4KN9FSeinCTBDBksxUC26hiU9KlE+B4qWHQZXhfiI3U+m1ajz0WJOiU5LOhYljI4C
+    7WTf5cK4fMjR4OXtjoKrTc1XwLkNlXBJiCWDFjyqzaa9MJLxFbx+qJqMwK1BoL/4aFQ7lX
+    67jLEsR02Ayu17aXVWr796qW2eh3tBeJLseybVQYwIK2V2CybIjnR7EQaxo5sR910nnA4H
+    tzARjVcKtG4k91nISkSFqGcXn89n4BXQXjqwlZ0gN4Zi5FcIbNyJ9ptLogV4xDN2WvDaMw
+    bCquXEGYCq0k3zdDlOFbSqsWQlyN9Qqwf/O9bDPb+151TON0AvCbulzt1zuYawvb6L7bN1
+    BUDKKTi+StHB29VziB4Ki7A6T1mBax8GaAhe5uesJSw89e3SN8jot57fTT5218uAk26ykC
+    fmvn9wRDf17IqIFkrgSBQf/KXioLTYRNqAedI5OLRiFlUuiVy6JE+gxFa2Pw
+X-ME-Proxy: <xmx:mNixaiB3LRJ7zMUWTHqUPeyn8xABqUA_qIYjImRFFrdVC_wgwJ1Zhw>
+    <xmx:mNixakpK4VKT_lia1abp00vLl3Q75e6oDTsX4PdnQ6BJaiHwZq6mbQ>
+    <xmx:mNixalErfCSzzZjgnuYvhetIMGHIaGuZdrzZBOr36NC8ZkFmKMgb1w>
+    <xmx:mNixagu235b7EoNQ5kC5Z31DTeLroTMuu80ySPcoiQIUop8MfIII9g>
+    <xmx:mNixam482eNPiQIQTX3TlQkrpvdTzutZX5mWZaqGRtbWhp5yln8Wa9QF>
+Feedback-ID: ia6364811:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7032A2CC0086; Mon, 21 Sep 2026 21:23:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CALjEBWT9wyBYtWPgtg8Xd_FxRU_XnatzQMcwMB9_P2Fdj83+cQ@mail.gmail.com>
-In-Reply-To: <CALjEBWT9wyBYtWPgtg8Xd_FxRU_XnatzQMcwMB9_P2Fdj83+cQ@mail.gmail.com>
-From: Hic Haec Hoc <h.haechoc@gmail.com>
-Date: Mon, 21 Sep 2026 23:18:20 +0200
-X-Gm-Features: AcwNN1XDR3liA0aUKbpLmsIaVZiCpdO_7eTgmIqmdYIp2_7ENPKfCo1bzTJtA7k
-Message-ID: <CAKp=m=DkRA3FQdJC+1AKDtn1X8ZuO0HRF5H7PJVf15uQyBuEbg@mail.gmail.com>
-Subject: Re: [PATCH 6.18 0167/1250] PM: hibernate: call preallocate_image()
- after freeze prepare
-To: David Lomas <david.s.lomas@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, 
-	matthew.leach@collabora.com, gregkh@linuxfoundation.org, 
-	stable@vger.kernel.org, regressions@lists.linux.dev, 
-	Florian Schmaus <flo@geekplace.eu>
-Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 21 Sep 2026 20:23:16 -0500
+From: "Grant King" <gking@serow.io>
+To: "Jiri Kosina" <jikos@kernel.org>,
+ "Benjamin Tissoires" <bentiss@kernel.org>
+Cc: linux-input <linux-input@vger.kernel.org>,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Linux Stable" <stable@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ "Antheas Kapenekakis" <lkml@antheas.dev>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Sasha Levin" <sashal@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Jann Horn" <jannh@google.com>
+Message-Id: <069bd866-4eb0-4c42-bcf4-6983ba59aa49@slotpi16m74>
+Subject: [REGRESSION 6.18.48 -> 6.18.49] hid-asus: ROG N-Key keyboard dead, also in
+ 6.12.y
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 9 Saturday 19 Sep 2026 at 22:53 David Lomas <david.s.lomas@gmail.com> wrote:
->
-> Same commit, same symptom: my report with the blocked-task backtrace
-> is at https://lore.kernel.org/all/CALjEBWQo0-Sdimo+aRNKUQvgDGw=jBFCcfwCXaqVdtoPrHLAQA@mail.gmail.com/
-> (XPS 13 9360, 8 GB, zswap). The hibernating task sits in
-> throttle_direct_reclaim() waiting for kswapd, which
-> freeze_kernel_threads() froze just before
-> hibernate_preallocate_memory() ran.
->
-> #regzbot introduced: 783c8109844503bd1c35dab41b6d5fd074a9f131
->
-> David
+Hi,
 
-Hello,
+The built-in keyboard on my ROG Zephyrus G14 (GA403UV) stops working on 6.18.49. 6.18.48 is fine. The N-Key controller enumerates, but hid-asus fails to initialise it:
 
-I'm replying to this message because I was not CCed on the later ones.
+`asus 0003:0B05:19B6.0004: using HID for asus::kbd_backlight
+asus 0003:0B05:19B6.0004: Asus failed to request functions: -75
+asus 0003:0B05:19B6.0004: Failed to initialize backlight.
+asus 0003:0B05:19B6.0004: input,hiddev98,hidraw3: USB HID v1.10 Keyboard
+    [ITE Tech. Inc. ITE Device(8910)] on usb-0000:65:00.3-4/input0
+`
+An input node still appears, the keyboard just does nothing. On 6.18.48 those two error lines are absent and /sys/class/leds/asus::kbd_backlight shows up.
 
-I can reproduce the issue quite reliably on this machine, and with
-Florian Schmaus's patch applied on top of 7.2.5 it survived ten
-hibernate/resume cycles under significant memory pressure without
-hanging. I can't tell if it could reintroduce the problems that
-783c8109844503bd1c35dab41b6d5fd074a9f131 was trying to avoid but at a
-minimum it seems to fix this particular deadlock.
+`ASUS ROG Zephyrus G14 GA403UV, BIOS GA403UV.308
+keyboard 0b05:19b6 (ROG N-Key), usb-0000:65:00.3-4
+`
+The culprit looks like d0754db7883c ("HID: asus: simplify RGB init sequence") in 6.18.y, a backport of 56d1b33e644c taken as Stable-dep-of: 02bf61dfb44f ("HID: asus: fix missing hid_is_usb() check"). Reading drivers/hid/hid-asus.c at each tag, v6.18.48 has the old code and v6.18.49 is the first with the merged init path; it is still there at v6.18.52. 6.12 LTS has it too, good at v6.12.107 and first bad at v6.12.108, still there at v6.12.110. 6.6.y never took the refactor and 7.1.y already has the mainline structure, so neither looks affected.
 
-Best regards,
+Before the patch, the N-Key branch ran the init reports and never called asus_kbd_get_functions():
 
-H.
+`if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+        ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+        ...
+        ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+        ...
+        ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+`
+After it, get_functions runs for every device and returns early on failure, so the 0x5d and 0x5e inits never happen when it fails. That is what kills the keyboard here.
+
+It fails because of a size mismatch. The controller declares feature report 0x5a as 62 bytes:
+
+`06 31 ff     Usage Page (Vendor 0xFF31)
+09 76        Usage (0x76)
+a1 01        Collection (Application)
+85 5a          Report ID (0x5a)
+...
+75 08          Report Size (8)
+95 3e          Report Count (62)
+b1 00          Feature
+c0           End Collection
+`
+and asus_kbd_get_functions() asks for FEATURE_KBD_REPORT_SIZE, which is 16:
+
+`readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
+ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
+                         FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
+                         HID_REQ_GET_REPORT);
+`
+The device answers with all 62 bytes into a 16 byte control transfer, so it overflows and hid_hw_raw_request() returns -EOVERFLOW, the -75 above. The call cannot succeed on this device, which I assume is why the old code kept it out of the N-Key path. That descriptor came from /sys/bus/hid/devices/0003:0B05:19B6.0004/report_descriptor; I can send the whole thing if it is useful.
+
+The patch says "There should be no functional change with this patch", and in mainline that holds, because 0919db9f3583 ("HID: asus: always fully initialize devices") had already moved the init reports into asus_probe() where a failed get_functions only warns. 0919db9f3583 is not in 6.18.y or 6.12.y, so there the inits are still behind the call that fails.
+
+So either revert d0754db7883c in both trees and rework the hid_is_usb() fix against the old structure, or backport 0919db9f3583 alongside it. The revert looks like less risk for stable, but that is your call. Separately, asking for a fixed 16 bytes from a report the device declares as 62 seems wrong in any tree. Sizing the request from the report would make the call work here rather than just avoiding it.
+
+Alpine has what looks like the same bug on a ProArt P16, same error string, same controller, bisected there to the same commit:
+
+`https://gitlab.alpinelinux.org/alpine/aports/-/work_items/18451
+`
+That reporter only loses the keyboard before root is mounted, mine is dead in the running session.
+
+Caveats. I am on a patched distro kernel (Fedora 44, Bazzite "ogc"), not a vanilla build. The function symbols in its hid-asus.ko match upstream v6.18.44's, so I do not think it patches this file, but I have not proven that. I have not bisected; the first-bad releases above come from reading the tags. I have not captured evdev output proving no key events get through, and the 6.12.y entry is from reading source, not from running it. The descriptor was read on 6.18.44, but it comes from the device so it should not vary by kernel.
+
+I can reproduce this on demand and have a USB keyboard for recovery, so I am happy to test patches or build a vanilla 6.18.49 if that would help.
+
+#regzbot introduced: v6.18.48..v6.18.49
+
+Thanks, Grant
