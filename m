@@ -1,84 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f42.google.com (mail-pj2-f42.google.com [74.125.227.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C4A522EE5
-	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 12:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1933EFD21
+	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 15:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790078972; cv=none; b=a6F0N/zaPBod6bFBp7Pq7SS8R5SPTxuFCXJ+Vw5sn+fbdhvW1+uY4xkOwQ2cA6YBbcIay4ZZFAJbgKx1nf9v+oel7lYUG8FYOc97rKTOelSeTlTm2XFc+1tcaTzrGkFMZCcCs35sV4Zk++LtiECvyetX46yLT3rjHLqH3V2nuCs=
+	t=1790091243; cv=none; b=R9MjSI88rHegzXIQkkN8+sJxJGmmZA37CsULf0SkEEJJI2u33Ji0cA588FoMEuS628LIb3IQC2u79sALFnAZx+h7aNac/9mg0EWDmVB1bWP60zAigk3I8Jjgtl5c8lijmGwM0juRdzF9Kax3Y4n3fNLMZ2d46m/zwhIh6PQw/gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790078972; c=relaxed/simple;
-	bh=gqKwaL+/AcGiqt0SEqNOonv02Mge4jL0jxPzbOQ6yJc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nJCFQ/A1x3tMvtzluzkSlCSYZD+rinWFeoyVtXnRD+idTlLai5ECbtZeIKy+qh3Q9uVLPED12iyzuvN4NFhp3Iauortz/ivxkccW7oIIMj9FURJRcyaSlE2vksk0L5ywlR8bDMk/3XxK1MoclRjI7Ri7xYv7u6EgRFjbWp6NlZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUd7oCph; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790091243; c=relaxed/simple;
+	bh=M44KejLjN9PzhtH13UorzrKXY6qmkOaI4F1rztr/4YA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tT6TTT0q54E3WB/PlkTsZWhYQYiHD6V3FuTWAMVix/aYeEhFU2cyvlKTMf+yXuGdJRHMAI9dwA2q10bukZs3VsQ+vsRudggzkeqQhsZMjBzzMpYJ/myZcOBqQsZLNIeVHkB5ArE6EZjlp+XO2vqyIENZ69APunFIJJTTCs4FzC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxHRKuN1; arc=none smtp.client-ip=74.125.227.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUd7oCph"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7982B1F00898
-	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 12:09:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790078970;
-	bh=gqKwaL+/AcGiqt0SEqNOonv02Mge4jL0jxPzbOQ6yJc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=aUd7oCph+9i8ACVufMzt89mdZPx3sPvEVZR1YbHK1v/rQDJfyT1G/JEF1Xpkuihv6
-	 WejvVmeXEKX00xGTJQMuntZc/bsNTfVVb9jobxmwY3wgnbIYG87xwiVIy1IvK+cgDU
-	 9SoDO66pTcRjDGUzDMikTtWnFnYIni+wGpwEWDJI08ta0E5UoPUaaNSaQeYAZV6ojF
-	 zuPmle+uEOaiTNpUVUzUSY9qlKLt4xE9A/2U0bPo9XSZLZFo2DQdjGB5Npkjtk8qDE
-	 CZbtp4mng1tU35xNVlqSSyxh5d/T0tlohMtvKJ+KNhgKspQ0JitAYo0HiclGZ2u9Wd
-	 /Q4Sgm/4/X1Kw==
-Received: by mail-lf2-f13.google.com with SMTP id 2adb3069b0e04-5b8d47b5987so468533e87.2
-        for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 05:09:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzhGCQXmDGGsAtakqMQ6g9kYKjglWdeTxG5tM4BLYK1cmMq4erRnCg+TNjiHfzmZ2uqaTXTKcrR51B31w==@lists.linux.dev
-X-Gm-Message-State: AFuF++kCul5ihmMBi5JKKXIrEPnmiWw34fbMJOH7gNBRWB5HRbdlc+Sn
-	zG+J4rd3FW+AgtB9VZUqwy/TYeeRqOEREt+UErnaMb4ohLeXTKfgKFS12vzC8dbv6PIpPoWQLiE
-	AL7VKP67c8QxX01K/TNZYKO5gBQr+cWY=
-X-Received: by 2002:a05:6512:3f26:b0:5b0:129c:ed85 with SMTP id
- 2adb3069b0e04-5b8c1833735mr4656415e87.1.1790078968689; Tue, 22 Sep 2026
- 05:09:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxHRKuN1"
+Received: by mail-pj2-f42.google.com with SMTP id 98e67ed59e1d1-396ccc09d65so18956a91.3
+        for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 08:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790091241; x=1790696041; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=MX4YUTICf0RtvgphPrSl6xSOkCeNscfqMM3Oh4fbG54=;
+        b=MxHRKuN1g6b0OiNlm5afKwiN9Q6GptfPWtxq7W/tkA/3rNdM++WWDJi9J+2DAdOjqU
+         XB4KwxGqTCiJOzmrPSSxeW65O2W5uD4rVcpEMYSMuSNGt6tZh0g+uDmEZ2aZMXvpX97i
+         hw7Gf9J4ejvHUX+XeOJQ7BtJTBy6/6HYLvlhQqQf8X/MtSLi+UJzG8bnd7XPXww/aaKW
+         A1UFIuEazn6XSiBsxCnk9e89S5RahcEygsY2CQ71TLkBRXBTmt+TW/9xPaLTpOIlSB2g
+         10lZulUVaLhHpEONPj16ljovi9VknEfEJ/qaQ6j5WMWsd7FIx2MHO+QunPbTsrvQK9jy
+         Ag8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790091241; x=1790696041;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MX4YUTICf0RtvgphPrSl6xSOkCeNscfqMM3Oh4fbG54=;
+        b=JAJtia8zHm80jVtwgK1gEJACi9XSCLcT5ZjCG4cF0S9V0PviPplOsUJ3TADV+nADRZ
+         gdiLeSnLV1QOlym+J7e2Jo1+mtuvBkNg9UFWXtq4pNTYSYExC5EfkHOD8oWFL37wx+0+
+         06+C/bhb/W1G1oK4MtV3HRAlpJGDZIJKW5UZHudvLNQw70njNrCaUpN/EdEZ1hlKk/9O
+         z0a/bwIYytZT0pbGNuoc5if1XrdkCfiLFm3zv8aQQJjZt02XpXNYqmGWSK03ug1WLRp+
+         XjZReUD8RGCIx722jwnbDeGsp7ZgKQKefm3P0+QQQp00bKyWKI++yCbJoylC2rVcDvJp
+         4yRA==
+X-Forwarded-Encrypted: i=1; AKwUvBxrRPiU0LMreUHAzm7gp48D4r752gwT6b1pQCOGRnhmYcTkzaR8mdgnhztYMOM5mY0OzWn6fRSlme/RJA==@lists.linux.dev
+X-Gm-Message-State: AFuF++lrRIbliO8dK1jOlqgUMcdrcE09D/R8CajMAgvpF3VGj27mWqXK
+	FBYoq/Mye4RLCAOzHCQg9wLnhgEeyZNLoS6bQ+y7tjJOkLt9FX0fPRt3
+X-Gm-Gg: AYBFou1+3K04CXzSaMvY58qmkH71anQ4ppzpYdzcJkSNAKa0qfd/ycIeHRyM7XTh513
+	6RRr/MC3J+IWs5llFjtJeLvCHgpBk/lp1A6QjgwSZIPAAFXXqyebXWRWW5XeB+CTliFrUGMxyRu
+	tftvUln4r4vFV6x8CvII8Z+GaxsCYRhJEMJKfObV0OKVmymAGUi8mGitIm44akEGuWUYyTsrFWd
+	vI95Ry0OfElflE0/MfseKZQMCz/cjL3Qb4sE8/UPr/cwA+UYUUUp2nu2lih+6DQNqcKVtFH5wVH
+	uzDsjsGbiBF+jrOsZxDg+eLi87DV7QtWoDw5f+CqtTvwX0Pzviyqh5iE70hiS2KRr3My4rMmoCP
+	1OtMeq+OJHY0yyvPArjjLUHCPOHmkcjhJRYBzxNPAURC9N/L/o53wEDm8oMArsRIjQ48ySsM16h
+	NkAz0hQaAGcCbBevqsiMgNUa97sc6JuspNIVDgec25yMB/xtZLAOXhu1Xdzr4JFE8IsNfSn41oy
+	poZWngVSiV1DmCUr91dKFHUEEPvXIPpgpLQaQ==
+X-Received: by 2002:a17:90b:4c47:b0:39e:6a7f:1dc6 with SMTP id 98e67ed59e1d1-3a073201bf0mr1653263a91.34.1790091240806;
+        Tue, 22 Sep 2026 08:34:00 -0700 (PDT)
+Received: from eggarch ([152.58.24.177])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a07d48e8basm130683a91.17.2026.09.22.08.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 08:34:00 -0700 (PDT)
+Date: Tue, 22 Sep 2026 21:03:24 +0530
+From: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+To: Roman Stingler <roman.stingler@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Erik Hakansson <erikhakan@gmail.com>, 
+	Filipe Lains <lains@riseup.net>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION 7.3-rc1] HID: logitech-hidpp: hi-res scroll mode
+ forcibly re-enabled on every reconnect for Bolt devices, overriding
+ userspace
+Message-ID: <arJs7GjCP3r4IaM-@eggarch>
+References: <20260920094508.39682-1-roman.stingler@gmail.com>
+ <arAe2iRkYh9p98Rf@eggarch>
+ <20260920205058.11958-1-roman.stingler@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260501165542.GA491695@bhelgaas> <561131dd-0e42-437a-9724-a036238a9bb4@gmx.net>
- <5f716613-d996-46db-96ec-6c0251219922@gmx.net> <449c834d-d115-4242-aa5a-43daa085f178@leemhuis.info>
- <81ac70ae-c51e-4960-8dd3-bed47ceafafb@gmx.net> <012b3ebc-62f0-402e-afa9-02712e67e72a@leemhuis.info>
- <86030fc1-473b-4695-a2f3-c30b5f19614c@gmx.net>
-In-Reply-To: <86030fc1-473b-4695-a2f3-c30b5f19614c@gmx.net>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Tue, 22 Sep 2026 14:07:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iw9Jrdv2MaCu5Dou3Ust5L-YsEMWDpZPP58-ag_pbZSg@mail.gmail.com>
-X-Gm-Features: AcwNN1UGH85E-0STnNRfBuN9iOHz5RK2V5gbiUx9oFANBoJIrdCdCHY4pgwi5FY
-Message-ID: <CAJZ5v0iw9Jrdv2MaCu5Dou3Ust5L-YsEMWDpZPP58-ag_pbZSg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: Add quirk for Acer Swift 3 SF314-56G (MX250)
-To: lxuser <dittrich.m@gmx.net>
-Cc: rafael@kernel.org, linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260920205058.11958-1-roman.stingler@gmail.com>
 
-On Fri, Sep 18, 2026 at 8:49=E2=80=AFAM lxuser <dittrich.m@gmx.net> wrote:
->
-> Dear Rafael,
->
-> the Acer Swift 3 SF314-56G with NVIDIA GeForce MX250 (bios V1.14)
-> suffers from an ACPI power resource regression where the power resource
-> controlling the dGPU is incorrectly marked as unused and turned off
-> during initialization.
-> This causes the GPU to enter D3cold state, making it inaccessible to the
-> NVIDIA driver.
->
-> The symptom was:
-> nvidia 0000:02:00.0: Unable to change power state from D3cold to D0,
-> device inaccessible
->
-> This commit adds a DMI quirk to prevent the power resource from being
-> turned off, similar to the existing Thunderobot ZERO quirk (cd7ef20ba8c6e=
-9).
+On Sun, Sep 20, 2026 at 10:50:53PM +0200, Roman Stingler wrote:
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> index 1504de32b1c8..ffc7cef49b59 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -2044,6 +2044,7 @@ static int hidpp_hrs_set_highres_scrolling_mode(struct hidpp_device *hidpp,
+>  #define HIDPP_PAGE_HIRES_WHEEL		0x2121
+>  
+>  #define CMD_HIRES_WHEEL_GET_WHEEL_CAPABILITY	0x00
+> +#define CMD_HIRES_WHEEL_GET_WHEEL_MODE		0x10
+>  #define CMD_HIRES_WHEEL_SET_WHEEL_MODE		0x20
+>  
+>  static int hidpp_hrw_get_wheel_capability(struct hidpp_device *hidpp,
+> @@ -2072,12 +2073,10 @@ static int hidpp_hrw_get_wheel_capability(struct hidpp_device *hidpp,
+>  	return ret;
+>  }
+>  
+> -static int hidpp_hrw_set_wheel_mode(struct hidpp_device *hidpp, bool invert,
+> -	bool high_resolution, bool use_hidpp)
+> +static int hidpp_hrw_get_wheel_mode(struct hidpp_device *hidpp, u8 *mode)
+>  {
+>  	u8 feature_index;
+>  	int ret;
+> -	u8 params[1];
+>  	struct hidpp_report response;
+>  
+>  	ret = hidpp_root_get_feature(hidpp, HIDPP_PAGE_HIRES_WHEEL,
+> @@ -2085,13 +2084,14 @@ static int hidpp_hrw_set_wheel_mode(struct hidpp_device *hidpp, bool invert,
+>  	if (ret)
+>  		return ret;
+>  
+> -	params[0] = (invert          ? BIT(2) : 0) |
+> -		    (high_resolution ? BIT(1) : 0) |
+> -		    (use_hidpp       ? BIT(0) : 0);
+> +	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
+> +					  CMD_HIRES_WHEEL_GET_WHEEL_MODE,
+> +					  NULL, 0, &response);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return hidpp_send_fap_command_sync(hidpp, feature_index,
+> -					   CMD_HIRES_WHEEL_SET_WHEEL_MODE,
+> -					   params, sizeof(params), &response);
+> +	*mode = response.fap.params[0];
+> +	return 0;
+>  }
+>  
+>  /* -------------------------------------------------------------------------- */
+> @@ -3910,8 +3910,16 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
+>  	u8 multiplier = 1;
+>  
+>  	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_HI_RES_WHEEL) {
+> -		ret = hidpp_hrw_set_wheel_mode(hidpp, false, true, false);
+> -		if (ret == 0)
+> +		u8 mode;
+> +
+> +		/*
+> +		 * The wheel mode is persistent state in the device, so read it
+> +		 * rather than overwriting it, and scale to match. A device
+> +		 * left in hi-res still gets the multiplier it needs; one the
+> +		 * user configured for low resolution is left alone.
+> +		 */
+> +		ret = hidpp_hrw_get_wheel_mode(hidpp, &mode);
+> +		if (ret == 0 && (mode & BIT(1)))
+>  			ret = hidpp_hrw_get_wheel_capability(hidpp, &multiplier);
+>  	} else if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_HI_RES_SCROLL) {
+>  		ret = hidpp_hrs_set_highres_scrolling_mode(hidpp, true,
+> 
+> Tested on top of 7.3-rc3, installed via DKMS so it is the module loaded at
+> boot. Results against the same device:
+> 
+>                             stock   your patch   this
+>   suspend/resume                no        yes       yes
+>   solaar write sticks           no        yes       yes
+>   module reload                 no        no        yes
+>   cold boot                     no        no        yes
 
-I would have applied your patch, but I need the same information in
-the Signed-off-by tag and the email From: header (preferably, your
-full name followed by the email address).
+I didn't think of this, your patch seems like a better solution.
+I think you should format and send it.
 
-Thanks!
+
+Regards,
+Lovekesh
