@@ -1,98 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6E33C1F4F
-	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 06:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC481418A33
+	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 08:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790059226; cv=none; b=t/QtD/0Aa7frjvnsjIVzD4vMx7+CM9IQ4qLT9IoXFnob8ZyCmynESPi1RaUcqq/YAqoiYn16he8zGyXUFS8JjS9531RO36ViMMe6wg/BETf7Ecr91bZ4rGSSNjw1JyrQqz1wJ7Hw8c/hA7AvGUJzhgaDn/pdAtvsacBwcqNvJf8=
+	t=1790065261; cv=none; b=cWj0uGZQJg8rJfrz1D52LeoINm01H/uJRgaZReAyerXK8wCJd9N4pyEsPdNWkiwe5YDoczSaMg1xR5wHBk965rSfZEF+gQkxypYLH5aS7KLx1tkxgoAoC1IGXNjfN/BlIZAOFdWtFgv9I0ZkHTMImSYhrkrGJAFK6D5UiAZ/uno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790059226; c=relaxed/simple;
-	bh=ffrN1g+ysBk6rrIxBIrOJmHcef99zYr/h6hrDrTA/a8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQXXRu0TKZU6VFW/YNiS9mtczjL6HN8YLAH6YDRkugXM/Wy4uiCZpy7QtxIg5Mgh90zDm78OyuzyT9iWoSFXjTzBWfadw6poVkeIbU8sdOVii8IMdTi4IMV4RWtxYc/A+yYxzwL2yIeBuNMcEH2sf0BoX9LvNyjy8r9GElxWimA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FbBtqsMJ; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790065261; c=relaxed/simple;
+	bh=o+72YWQvPnMyVfj14Ks97oOHbWB67rkCtT351XOG2+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HQ3tnMC9ZlZh2UEtiW7VdGeEj77Fvo8qRDEZXTQFN812a53r8vstl80xs7KclAiag4Z8VzDamP28roudtquLtT0ZqGF76qpvr19QcjWjWhLq2sWsgrxBNm35Oic8haR7Pkra7TKjxAndWfFpnl4hdbJwSLv39khTsHCuaeOn9oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BPbP2wCY; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FbBtqsMJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790059225; x=1821595225;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ffrN1g+ysBk6rrIxBIrOJmHcef99zYr/h6hrDrTA/a8=;
-  b=FbBtqsMJUFhuPWehhhFrp5uwJSAtPlFhNPI+3lHF3FCK3n9pp73ktTMl
-   ohNuvNiD8HTBe/Vooc2gTi2tDUS/5K68E5pbtLBBYVz883VWD8eNZ8lBy
-   VdxzT0wy5SPM88k1FzneZzn9HslT2S2MsE2mxvnfOldG0y6a9/qqLzjgV
-   Eg0Qf1/IAcQeKlO84t/VmvBQVqnWH3z5tthWroWHkefFWjvdLDDzuofBI
-   jqRqsCNUdtwnSSza+IKjQg2pDUPnOL6HhfvtuLvhaold6YUKJA7m05rQG
-   1b2SGgHhcWp0EVXd4lsX5fTKN28OmgGrBAN4YawN4wCw6ufD3KP60aMbP
-   A==;
-X-CSE-ConnectionGUID: 7whkApX3TFG+wUhxQjKMzA==
-X-CSE-MsgGUID: VcIA/pO1R+K/K+X2oYGiGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11912"; a="90499324"
-X-IronPort-AV: E=Sophos;i="6.27,116,1787036400"; 
-   d="scan'208";a="90499324"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 23:40:24 -0700
-X-CSE-ConnectionGUID: VMAhOoEkRVq6I5gVKp0oVQ==
-X-CSE-MsgGUID: hj6MyF9dQ82neTCZWUM88Q==
-X-ExtLoop1: 1
-Received: from carterle-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.41])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2026 23:40:22 -0700
-Received: from punajuuri.localdomain (unknown [192.168.240.130])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id E7BE4121BA5;
-	Tue, 22 Sep 2026 09:40:19 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
-	(envelope-from <sakari.ailus@linux.intel.com>)
-	id 1x8uAr-00000001YpS-3Syt;
-	Tue, 22 Sep 2026 09:40:17 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-media@vger.kernel.org
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Junjie Cao <junjie.cao@intel.com>,
-	Miguel Vadillo <miguel.vadillo@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Manuel Knitza <manuel.knitza@googlemail.com>,
-	Antti Laakso <antti.laakso@linux.intel.com>,
-	Mehdi Djait <mehdi.djait@linux.intel.com>,
-	regressions@lists.linux.dev
-Subject: [PATCH 1/1] media: cvs: Default selection to VIDEO_INTEL_IPU6
-Date: Tue, 22 Sep 2026 09:40:17 +0300
-Message-ID: <20260922064017.371437-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BPbP2wCY"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hptLF231Rz98sZ;
+	Tue, 22 Sep 2026 10:19:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1790065173;
+	bh=o+72YWQvPnMyVfj14Ks97oOHbWB67rkCtT351XOG2+k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BPbP2wCYqFaPudqq6ZrqieU45jfpX7OIG1xK5SnQe+9OptdMp0zlfTRvdFuhowiTW
+	 Gpo/cGN8rJVNUjX7CEbsqAfJaDhDps4GlSJlSvoOFNqNcxUTrJDslTBRxys1l7aNNa
+	 bsngLdQhR7FR3HVUNxVFxqK7BZV3/9JYFPj2SZTZlx4dhj+5HuDzJ75KLwrnt/ZMP6
+	 NbTqMr231pD1mQjj9X3zux/rsOETcXYP8YUyk21T5g0Dy6RQBld2I+wSh7PuyJ0/MA
+	 V9207NSfd21wFR2t54J123+eEGeHc7x4QmbCSbc45sc4xywMIVSfxADBkjmtRzRlKY
+	 F0YbxbW3+I1DA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hptLF1K3Hz7wgc;
+	Tue, 22 Sep 2026 10:19:33 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hptLD4zKKz8tHB;
+	Tue, 22 Sep 2026 10:19:31 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1ED645FAE9;
+	Tue, 22 Sep 2026 10:19:27 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <95c7b907-b238-442f-ac2e-78edda7fdd36@leemhuis.info>
+Date: Tue, 22 Sep 2026 10:19:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] drm/ttm: NULL dereference in
+ ttm_resource_add_bulk_move after OOM on Navi32
+To: =?UTF-8?B?6LWk5bKh5oKg?= <c0a25004a6@edu.teu.ac.jp>,
+ dri-devel@lists.freedesktop.org
+Cc: amd-gfx@lists.freedesktop.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <CA+Y9VQPNWWGFqErKbbM+S2PcEXbJ30O71sA6h8s-+YVRMC51TQ@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CA+Y9VQPNWWGFqErKbbM+S2PcEXbJ30O71sA6h8s-+YVRMC51TQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <179006516742.266935.14180532826607751970@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 1ED645FAE9
+X-NC-CID: GRzHa4zDgXgF+KZ7C1DDbD9bQU8zSgPphq6RYtPGo7CnV+6M8mg=
 
-The cvs driver is only usable with the Intel ipu6 driver and is commonly
-required for the ipu6 driver to function. Make the default of the cvs
-driver the same as what was selected for the ipu6 driver.
+On 9/19/26 19:17, 赤岡悠 wrote:
+> CachyOS package issue: https://github.com/CachyOS/linux-cachyos/issues/1058
+> 
+> I hit a kernel Oops in the AMDGPU/TTM swapout path on a Radeon RX 7800 XT. The
+> failure happened immediately after a global OOM condition and was followed by an
+> RCU stall and a host reset.
+> [...]
+> This looks related to the recent TTM fixes:
+> 
+> - [3db7d7d](https://github.com/torvalds/linux/commit/3db7d7d583419f7b1f2e141e36418802dbb25cf8)
+>   fixes swapped-out resources remaining in a `bulk_move` range.
+> - [fcfe647](https://github.com/torvalds/linux/commit/fcfe64715b425262af1b36f498f9197f3537ceed)
+>   changes the cleanup condition after `ttm_tt_swapout()` from `if (!ret)` to
+>   `if (ret > 0)`.
+> [...]> Does this match the stale `bulk_move` endpoint issue fixed by
+> `3db7d7d`/`fcfe647`,
+> and should those fixes be backported to kernels based on 7.2.4?
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/i2c/cvs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+They are marked for backporting; feel free to test them and report your
+results -- if they fix your problem we can ask the stable team to
+shortlist them.
 
-diff --git a/drivers/media/i2c/cvs/Kconfig b/drivers/media/i2c/cvs/Kconfig
-index 4309d20dd726..f482f1ccc38a 100644
---- a/drivers/media/i2c/cvs/Kconfig
-+++ b/drivers/media/i2c/cvs/Kconfig
-@@ -4,6 +4,7 @@ config VIDEO_INTEL_CVS
- 	tristate "Intel CVS CSI-2 bridge support"
- 	depends on I2C && ACPI && VIDEO_DEV
- 	depends on IPU_BRIDGE || !IPU_BRIDGE
-+	default VIDEO_INTEL_IPU6
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select V4L2_FWNODE
-
-base-commit: 508a3559448684c4c0110a0c1614deaface399c4
--- 
-2.47.3
-
+Ciao, Thorsten
