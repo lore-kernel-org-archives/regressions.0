@@ -1,107 +1,184 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed2-f12.google.com (mail-ed2-f12.google.com [74.125.228.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5549D56853B
-	for <regressions@lists.linux.dev>; Tue, 22 Sep 2026 17:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404F02DECC2
+	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 10:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790098155; cv=none; b=Y4SyiMAufb6PkyS9B9itEl4rvmYFoEtwrOnmA80mNPhDY0dicgk7rja5kcJwD9tR6CVOgMN29KqDwfv1nRPLG/3BoqSVuutCSyDtIM1qc0tsVeyYAKwSDZCQgBjGCEy/d11TCtjU6me710XTfBAGZR8AqS3Fpk0ToJnlDPsa0JY=
+	t=1790160517; cv=none; b=R47+iyGzX0FyPb18HUkThp7NEx6wXs9pNtcIUA+KSs9nTNxaTsl0ZjemmIAchDYILMlSxJbZIP2n80GwXB/kUJHQF48E/8XlfEr76G3j3+r23hCu7QsxG2pxF3p6uMwoTzTmRwvOBA97JMcUiY/r5zEYH6TcWg8VVfmHQxJ0bwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790098155; c=relaxed/simple;
-	bh=WDdU+RoIRC74e9CNP7qeqsxMqKdI0jxRfUEfZ8vb/Qo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=uETWnz/vUP92F2HoJuDKTIsyCrmjjO4US/FaFnjozg/4zEiyM5EkimqpW2q7i20SON3dU/P8T8MNK+YwErVT0VxUMea7KgkXuzDHWn3Y3ZzS3DlrrmvGhz8e2CVpiLeDuT4Sd38KXBuP77GhVmmX/8F1jRGTpyYAJMvaBClb51Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=serow.io; spf=pass smtp.mailfrom=serow.io; dkim=pass (2048-bit key) header.d=serow.io header.i=@serow.io header.b=qRIpIgE8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=i6hniyxL; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=serow.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=serow.io
+	s=arc-20240116; t=1790160517; c=relaxed/simple;
+	bh=00LliydZFbWhN9/JMAzKVWb41FNb6WBNeqfGEFRG2kg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QWq1pEhk6mPv4wqWtbaogohcsFvZ7+zJuzQDRZJZl2/fCLyLmHVo9nGDT5jDsg4KwvNRSqO5yzDlbO6n8bgu+0IPIkpA4nv5GW6gtoMYpvL8bvr9sctffzqJKjp1DYVn0C6CN4xkvvJXiht0A42gHG9PEhxel1fMEmbcG5JDCko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SXZPV3Tv; arc=none smtp.client-ip=74.125.228.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=serow.io header.i=@serow.io header.b="qRIpIgE8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i6hniyxL"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3B39F7A0063;
-	Tue, 22 Sep 2026 13:29:13 -0400 (EDT)
-Received: from phl-imap-16 ([10.202.2.88])
-  by phl-compute-03.internal (MEProxy); Tue, 22 Sep 2026 13:29:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serow.io; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1790098153;
-	 x=1790184553; bh=wGjntAVjqqMJdW+oeRuv+YV0f9faSeXFe/ciJuzRhTU=; b=
-	qRIpIgE8Yomm/t81NMgQzV0c4xc/ELq4g9PEuXtSg2+lSvNOeUF3Jaa0Vplmt3MD
-	rz7vqRpzLAwhSx+kXgp89AhvQ6Xbatz+gXcpBqG4Qt5tyUL1Ay88AoIeVwLsl3X1
-	GcHGWVSprwhDyzYgAPxmjcfCqAW+R8E/niBbhmTQog0biiDCXpzP31Gco05jghw/
-	02OTsBPb/lopUhbEHBqBrIW6SJyUqk40SAs7kcz7vw/FvsGogok12rzB9UdgItqs
-	1OelR0nbGEndeCOxWGEiUxhkA0GoreTasg+HHzoKQwq7T/rsyoi6q5Lt5Gsrh042
-	SpdL6a99xftgrCURC2+LvQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790098153; x=
-	1790184553; bh=wGjntAVjqqMJdW+oeRuv+YV0f9faSeXFe/ciJuzRhTU=; b=i
-	6hniyxLue5YP+0v4HjV0TcfPTZZ2wAGLLOBuCWaU9jtG012kWQOy92MpxO71eTxW
-	dz2kPrq6dDBEOb0lYwA5Lgl8zpClhLx7zWP7JkuXOHNzHMcHreLCybFJd4545mal
-	SSnVQQPsb75PxwhaBqrNTIkH3IhQIcl9vTIACcRWt/AhDnSiT8qn76Nwm/8ALUnp
-	or6lHDuFAgeyIPzpS0/RkGtFeGXEbNr0LILl0nOfZa9ve076IvSAPasdI8BhgceO
-	NP3yfPfg2UhME/ifT39vqDCHqni1MXCLW6vn/IZWof/iHPJCdHIRob0ldnAiGNfD
-	k6buptfMNFj/xLJF+9Wcg==
-X-ME-Sender: <xms:6LqyalHESznQplFV479Cz90rP1K6EWrd00hMLS8_l5PmxEslfUT4Hg>
-    <xme:6LqyalIw3ovnINwiW3qoO5FgXkrm8AdCG-AHRlw-mzWmwBqfL367vv8cCZPZ9BJYt
-    pL_Y5rmjQk_VdvMswGmNxHW9UT3Yy0qnJrDiu1-LIh7UEay7wnqftbI>
-X-ME-Proxy-Cause: dmFkZTGrgKU1K1Fms1e0Iz+qWUb267yIf1P3GMeglKx7fTpR1GDVFzSYc1d4P5/ZNYTzPy
-    PkPpKeSNk7/eX7Ur3tca7BOfjOtFJRcJijDNl3+zXekfN2E68Gl+6uYLzdwwBtuheqYk+O
-    kdNVX2Cgcmt5S+oFV8bWX8ZzSiv/7uRisOD1k3GPLo0vAjAyBU+be2GUAdVsGDV+llf3dH
-    yQQwATv82dX7ZF9iq/EB3rDNsYOQL+DjL3lnTOzRSUE3qYxTAtihkjl5B2iztWFGrWi9Ia
-    xIZUgTy5KV/6hQM7tyyez1f7tdxauCgG7J0jHHte6VK0xO5GPIBk8g1pYrO+XQpLYVWdSk
-    7yM/eEqZmpX9P/C4bM8vTPbY2g+QFxOj97Ed2YI5TaAL6sNxkrf+3L4K6XEbdZTMueZFoe
-    Aun2h1fIbmY3jOVyn9A7n9O2WuZ0n9kU1IfK8GXP8PbHUHsq1O3mzpbQQ5B0oWLINffkAD
-    km0ME+xwlsx20wzCqemaPkCyRKPIXdpSlmzXMpWSVKK/pAFmkBibfrfoRLDD8vqMi+FUlk
-    Iututxu5C9gH/Ax0bnNKzwZb96uDFb4wMTi7oJgmMvOa2/VoIVgs5pK6F+rnZQ4NbL+IRs
-    yxnusZ05t9ZeBxMGvp/ViNq+g8DsCyOu99Jax79A1NKUESLv32eZkJdCT54g
-X-ME-Proxy: <xmx:6LqyamXmm_yHjFK5qQV0I8dXHo0qLIrS7cSdqHVYGU-qxaU4AtXYFA>
-    <xmx:6LqyatDkFGR11_9TFBQH3hMjrTpcdvPLpQwKxnwsFHJ_MCwZXKzfgg>
-    <xmx:6Lqyah7LogQRonVpttgVCVz9EjpkS_puK4irYMUGntlT4kNcM8YuzA>
-    <xmx:6Lqyak2RZfzpk3qBvf_pfMlPBUJClLJjM4_m7aZlwvhi4WBaxaW9NA>
-    <xmx:6bqyauiqVrqpWa4CqPnCnGNeH9ed1FgvcFe68TEH2DzVlasfFr-YTQd9>
-Feedback-ID: ia6364811:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 758512CC0083; Tue, 22 Sep 2026 13:29:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SXZPV3Tv"
+Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a6063d7daaso1062317a12.1
+        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 03:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790160502; x=1790765302; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZdJeS2NWmvwKi1c64k6v6zLwI+NJ1nsn1DFESP4VK7w=;
+        b=SXZPV3TvCvLDcm6dbJ7gkrimoEso3ZJSSiqj7bRXSA4kbqFZRP3bBq8zx0PgemBbqe
+         QuoWN7Ba1W/lmtDKF7odHNNuITHhRoFTxPug2/utC4R7oNjO8Qm0So80WUFrbci24+c9
+         TcjGqMV6kJqfEiPzNOLrPXDqR7TziSV3dk/whiwn9K2y/kj74789jwT42K0FcKOYDft5
+         MDoE9lBwGOCBryE9CqGVPOY/yx7NbinT+50qVqkdWR/Gn/+m1+jXZUqOy89ypfMmMnjG
+         yMz1yKiZG/zt+J6DIVJ7hNQY0ZsQnpHjZJyk8YsrYTLsjx9cojsrbwScyhWtH6RUztWB
+         ecWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790160502; x=1790765302;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ZdJeS2NWmvwKi1c64k6v6zLwI+NJ1nsn1DFESP4VK7w=;
+        b=KihdSWOPiDWwuIFpHaW/WokjMk5i4+9S5Vv3vbReRyxlZXfeOkS/Tk6EgWzHAL1HJ4
+         fNoWKhyNdxj4eA3DLIuF5Klw0MilYRc27xXavzvHMaXljDbHzAX3FBAgznLC2pRwcaeh
+         66C6fDAUU6Fs0xKfh96sZ3Vl2LJTO6VstE3pJ0BStCAYiwNxlq2KBGslhOA0cmuS+XMK
+         k9QzQdBr9uKd5jM7Mb7JF5uW1NgZvlRRyc95VTX/AG8/UGhQ48+dGCl16enLE5VAUDMT
+         BdDzVYrViCubE9kaEG4hoFGaze9UDIazoxZQqXsF9Ej/+hn8HujnCFckOKV5uyeRHY9N
+         OdVg==
+X-Forwarded-Encrypted: i=1; AKwUvBypiXctotAzz4b/gnUYtVmBV4rKKY3+tbdp15FHB/mCL6ewW9zVZLLItPuVDSSC43Ph6o+MG3KqVNXRXg==@lists.linux.dev
+X-Gm-Message-State: AFuF++mmlbrdzXJ8zKVilIa9p+joK6CBQ698X2ZJYR/H2TXqdbxV8MC2
+	Y5I9LJKn4GttqhKHiyfnG5AqNHdzl6VHoWlMg8Xe75cHn7W4ajFCkwx8C9VZ2j7plyg+coKPkVv
+	PsiycO+U=
+X-Gm-Gg: AYBFou1kf4sOya0GDTmlfCAvMnywgt1cLzbplBNrRfj/hFelfLh4Use7MeoeASaB5zU
+	E4r4cqJsIqSg2UoZLMCRb+B5lPB6rGCR9E3w+NvxkDkuW4KzdOK8K8w0P31shgMdP/44aV2nQ+k
+	y7L6zsuANpnGKw7NHLzYtnGlb6lcM6qHnp6RnPoHaeZsz1UctlQm3g/xvbuw3Z1Z0hroapqqHc9
+	mPvbRz1a3O4FZ2djYpv77TF5k3u/qmStnhcrc6JahJtlvM0xQEYkutx7/4JwyBPByMpV1J2A3EU
+	XUzVXsNy7Sn2HLot2IiuOINZ8YPB25XPnBgmBE7O49XyxPw7kr6FMAIElAeL0znVR1b4DZOBCz5
+	M8Ozwph1L7jYdcX9BUlKz9Dqd5VH3Tge6RpTr+QithwQkJUilz19FDz4y/OmGyJ3EZ6O3FBFFZw
+	YxOudWy17tLcLAQpV53MPlRIN6TALwLGWT2pc1yOIvzKyZin3aBK6BWXmASsLcWFta1V9ehvHgi
+	wWSxN6jMW6zjdljvc4AUVibYghnvNtbQK4dFjjqEImd94ii37Yqbg==
+X-Received: by 2002:a05:6402:52c5:b0:6a9:d0f0:69a0 with SMTP id 4fb4d7f45d1cf-6aab3b0a3e2mr1757911a12.11.1790160502330;
+        Wed, 23 Sep 2026 03:48:22 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:4140:d290:ef49:44ba? ([2a01:e0a:106d:1080:4140:d290:ef49:44ba])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48868266822sm6706162f8f.5.2026.09.23.03.48.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Sep 2026 03:48:21 -0700 (PDT)
+Message-ID: <f77e53d3-fb80-4832-aff7-4ab1244ee4a4@linaro.org>
+Date: Wed, 23 Sep 2026 12:48:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 22 Sep 2026 12:26:59 -0500
-From: "Grant King" <gking@serow.io>
-To: "Sasha Levin" <sashal@kernel.org>
-Cc: "Jiri Kosina" <jikos@kernel.org>,
- "Benjamin Tissoires" <bentiss@kernel.org>,
- linux-input <linux-input@vger.kernel.org>,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Linux Stable" <stable@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- "Antheas Kapenekakis" <lkml@antheas.dev>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Jann Horn" <jannh@google.com>
-Message-Id: <4a7814ba-5c50-4c03-b998-2bd83d5011ce@slotpi16m74>
-In-Reply-To: 
- <2026-09-22-daily-reply-0005-re-hid-asus-nkey-regression-report@kernel.org>
-References: <069bd866-4eb0-4c42-bcf4-6983ba59aa49@slotpi16m74>
- <2026-09-22-daily-reply-0005-re-hid-asus-nkey-regression-report@kernel.org>
-Subject: Re: [REGRESSION 6.18.48 -> 6.18.49] hid-asus: ROG N-Key keyboard dead, also in
- 6.12.y
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [REGRESSION] Resolutions broken after "drm/msm: dsi: fix PLL init
+ in bonded mode"
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Mohit Dsor <mohit.dsor@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, vishnu.saini@qualcomm.oss.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20251027-topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
+ <ae07cef84AmXK43H@hu-mdsor-hyd.qualcomm.com>
+ <wrhuksrzlxw2pjlvjm37dwjuztcv7qs5t6mqiav4ujecwqdkwj@ozbfxpbgaimt>
+ <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
+ <114b9be8-1fca-4762-822e-1d53838d5de5@leemhuis.info>
+ <o64cxeq5f4ffqpdmbai5cvsmxei2cnw3p6acvu55xl3cj5w3z3@6o6kokszvng7>
+ <akt6z1irWlXA5UIy@hu-mdsor-hyd.qualcomm.com>
+ <493b8d4c-164e-43c9-93c8-40cc251b1c3b@leemhuis.info>
+ <d7v4kwmc42k5ymgdt4mn2qc7dkrf5jj2l5afgyjqrm3pxterl4@guulk22xwlzs>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <d7v4kwmc42k5ymgdt4mn2qc7dkrf5jj2l5afgyjqrm3pxterl4@guulk22xwlzs>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-I can confirm the keyboard comes back on my GA403UV with e82ae34af29e on top of vanilla 6.18.49.
+Hi,
 
-Tested-by: Grant King <gking@serow.io>
+On 7/8/26 15:31, Dmitry Baryshkov wrote:
+> On Wed, Jul 08, 2026 at 09:26:04AM +0200, Thorsten Leemhuis wrote:
+>> On 7/6/26 11:52, Mohit Dsor wrote:
+>>> On Wed, Jun 03, 2026 at 03:11:34PM +0300, Dmitry Baryshkov wrote:
+>>>> On Wed, Jun 03, 2026 at 11:56:15AM +0200, Thorsten Leemhuis wrote:
+>>>>> On 5/4/26 22:09, Mohit Dsor wrote:
+>>>>>> Sorry for the late reply. I am attaching clk_summary and reg_dump in
+>>>>>> working and non working case. Lilliput is just a normal display working
+>>>>>> with hdmi and has 720p as preferred mode. Yes, I was talking about RB3
+>>>>>> Gen2 only.
+>>>>>
+>>>>> Neil, Dmitry, and Mohit: what's the status here? From the outside it
+>>>>> looks like this regression is still unfixed with nothing happening for
+>>>>> weeks now. Or has progress been made and I just missed it?
+>>>>
+>>>> Thanks as a reminder. Unfortunately, it takes some more time (and I've
+>>>> been a bit overloaded lately). Worst case I will send a revert soon.
+>>>>
+>>> Just wanted to check if you had a chance to look into this issue and whether there's any update on the investigation from your side.
+>> Hmm, no reply. Given that we are entering holiday season and are way
+>> past what Linus expects in a situation like this[1] I'd say we should go
+>> for a revert, unless some fix shows up really soon now.
 
-Grant
+Sorry I'm very late to the party, and checked again, reverting this breaks all dual-DSI setup
+on SM8650, and probably other similar SoCs.
 
-On 2026-09-22T11:38:58-04:00, Sasha Levin wrote:
-> >  If you can confirm the keyboard comes back on the GA403UV with that commit on top of 6.18.49, I would like to have that before it goes out. -- Thanks, Sasha
+Here's a complete log of the breakage which appears on the Ayaneo PS2 running v7.3-rc3 with mainline panel driver: https://gitlab.postmarketos.org/-/snippets/65
+
+I don't see why my fix did break this use case since it reverted the way the dual DSI PHYs
+were initialized to actually allow the dual-DSI setup.
+
+Thanks,
+Neil
+
+>>
+>> Ciao, Thorsten
+> 
+> Please send a revert.
+> 
+>>
+>> [1] To quote Linus statements from
+>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+>>
+>> """
+>>  From 2026-01-22:
+>>
+>>   But a user complaining should basically result in an immediate fix -
+>>   possibly a "revert and rethink".
+>>
+>> With a later clarification on 2026-01-28:
+>>
+>>   It's also worth noting that "immediate" obviously doesn't mean "right
+>>   this *second* when the problem has been reported".
+>>
+>>   But if it's a regression with a known commit that caused it, I think
+>>   the rule of thumb should generally be "within a week", preferably
+>>   before the next rc.
+>> """
+> 
+
