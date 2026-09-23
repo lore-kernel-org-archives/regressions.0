@@ -1,203 +1,301 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF0952189B
-	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 18:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E461E549365
+	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 18:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187258; cv=none; b=YFBZKLkHIPJ/ghesRA4lDAKZDPmimN1MhzQObuL3479GyZD7V8zZP80mgaZYWOeSCTfF+Qd3O/5js2wKwpoFz4UvrrQE1+Os3I3VXcRcapJiniM9sSKCy7x87rsgxD2K9gaP/jFBWcOKdPMdPB3gd6hz+cgw+8VMH90SJuowBwo=
+	t=1790188751; cv=none; b=A/Dfjgp2drYup/kNgcvLWiQiFwflHyF/dAvVOmcZPdmHhoGQx82zPcJZaHUAWmOWVCbuQLFWrCl2x11GTKX66xV+Sb78kVDUG5IXetll/PAjhYVOYmBBub2DSbgymuyVqLj6HHTu7fwxu5KN+lDb5gFSVGzmSt6nucupD60uRBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187258; c=relaxed/simple;
-	bh=NoYTdwxwn+++VlSqYDmNkTbGe8sVLyF98wvRfV4aZr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LwH9bGp8m80e/Wwx1GNGVBo2NGbvrbsqPYKGiq2c3qt71hVBL2RTTOZuuAKg/9FQMa3HqGDJzCEXBfR0SpGGeClA2FdReTTbnt4QaK0xSSA5VttHktnk1ULTGKLmxOQXzuLGXqLMEAeLHYnAFvFwn1KTUvNv7z80z0blmOH87Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQ0EjUFu; arc=none smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790188751; c=relaxed/simple;
+	bh=kutqiqSsu23x5F7im6+hlma0g1ONH2fG+mGqwBNcC/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GG1fXiLYXzF6kqu4bx8+y6srjrJOmeKknsYmK/giYCJFlU08DQ3IibIBcMsJ2+nhYIYcm/CtzuxxpIwtNJytXpLDjfIcPhE0vBBDs411wpfXAiYbIXZ0uLgO2T5bmKo/Fsb5YcKCNzZ0E/bDVVqk6zlP6VhkYBmNo5FwXBCzCgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VV7U2RDY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iUaYymco; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m0WtN9eO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Uf0dXioQ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQ0EjUFu"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4858bc96fabso1092255f8f.3
-        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 11:14:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790187244; x=1790792044; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fkORU3gh/MDLpHIFia2dyxO/HqIPBw2hOdFlH/z2RPg=;
-        b=RQ0EjUFuOvVQlmnVdZu+6dqF6KZiGrxewu07WKDfSz4y5j6gnUDTE2PpS0S5Cy8KG8
-         OL0IHRHbUvIuFKv0DJparhBlDBKCWLYGg1MYtxSMH75jSGpr55RuUJZKnSbz7G11SrP4
-         2D4DhtYvRUp31uREwsxDfmFTqs2alMp6j8TXkpffeXTO5jD7hLhaYdoh6t8CiLg4aRQe
-         vygSDYuo4ppB1BSXshLa7zbnhniXAoJ8kv7IQZKOleOh2RPhh8IsCBsUEGci5sl/XQRX
-         in0ac8rVxOfNdAQ1kXJwRWlnD4cZuCWMt8vQN/+K5vpQoubnSV7nt7P6UeEjs439Imzu
-         O/YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187244; x=1790792044;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=fkORU3gh/MDLpHIFia2dyxO/HqIPBw2hOdFlH/z2RPg=;
-        b=XhhJeH0DAeU8exOV3DY++pmznNScY6o4l96j91Aj5getG0sHK+abt4eEKokQ2uHTd5
-         V11oh8WFrmuiDonFjIAaKTwjQgKAyRQEfGP2RVh5fWssIyO7gIVw5j9QWBnL+4OOvYwt
-         ci8WWniU2V+aOz3s404xDOsXJv3HOJVVP5UAs2wmzBM+HUro6VdpC2flgkssLQCHZlpU
-         JJSCx7cxb+WoJeLYBb2iHvyuPRopJfBK630g+/tt1P14izdMM9wgmp5/nqThOBrnBYoP
-         Fk185+QJi3lRsxVdI17BkzXot5YQS1i/I6ucT0TRdhxSXFYde/z1GxJ4czOlUrMa0ehm
-         2eKA==
-X-Forwarded-Encrypted: i=1; AKwUvBwrLd0jDEZM2wAvaTo0qGDxLBSvDNj5pfVNULW9i4GA6ClVvkFrd+LEYzZUzL3XS0BbN8nfPviubiRWHw==@lists.linux.dev
-X-Gm-Message-State: AFuF++m+xcX6tFc6FKOmP7mRNppluRmUmh6z1nZ9yws84AUnv3zfsJwn
-	qJlw2PyFjc5khkrkwsQRa3TBkuWAzzUG+ZmyVfhYmXsSjCQ7oDPnd8i8
-X-Gm-Gg: AYBFou13Ia9E2jMXUbbdaGH5EVaNtiQX1C6RTlKmlehrwBHdnEQd0inWgU0/lKD2ScU
-	VY831JSfgn9/xNKzh4KRQGpryuQpy4rU57hKSaxVMnoQIw3kzB6vxCiR6+oiriuGb7aQmYXT/7+
-	DgP8weS/b3BOWlpUrYQGy2ld9Y86RCmDhwCEAnsKVdzyt6suGguZRX+lF4GdYFeWm4EjY6xQ6Gn
-	+08PoFPHRpWX1soi/NxaFbZOL/m8zlrYL+PsHosrnPLnzEa9/uc6DdzQHSkhgX6XVZeeCLKsZNr
-	EsB6KYIWY+/OuarOJOIClSxO0iLYIAs0BcUta2/a1Vh555hFyIVi09hHrkURqftV6Yg97k5xBeo
-	3xLq3hJiEl9R/VZi+7zu1t4QmOip14m2PIzUu6I8a29DLeA/8nXDXcO1rXTm869aiiz3JqmmGtU
-	mjdNqUiq3co8F7izl9rWHpXnnZmlD13c0L+BTy359jwbY/Y0m/iaYAyiTOMlG50bkboZTcutgNe
-	yzLBUhY7YBJ86+tmWdqGhMlZUlOa5CQ2j1riC2KHLAR
-X-Received: by 2002:a5d:5d0c:0:b0:487:aff:9952 with SMTP id ffacd0b85a97d-4886706f69emr6125723f8f.16.1790187244370;
-        Wed, 23 Sep 2026 11:14:04 -0700 (PDT)
-Received: from cachyos-x8664 (213-225-11-125.nat.highway.a1.net. [213.225.11.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-488684862a3sm8007107f8f.7.2026.09.23.11.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2026 11:14:03 -0700 (PDT)
-From: Roman Stingler <roman.stingler@gmail.com>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Cc: Roman Stingler <roman.stingler@gmail.com>,
-	Lovekesh Solanki <lovekeshsolanki00@gmail.com>,
-	Erik Hakansson <erikhakan@gmail.com>,
-	Filipe Lains <lains@riseup.net>,
-	Bastien Nocera <hadess@hadess.net>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH] HID: logitech-hidpp: do not overwrite the device's hi-res wheel mode
-Date: Wed, 23 Sep 2026 20:11:29 +0200
-Message-ID: <20260923181203.422097-1-roman.stingler@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VV7U2RDY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iUaYymco";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m0WtN9eO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Uf0dXioQ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4988321BEB;
+	Wed, 23 Sep 2026 18:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1790188742; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ii8zjXOvCjg0J/8vHyFLQds1UkGP0eIpuGSI1vhp13w=;
+	b=VV7U2RDYE9fAwwu+wi5FGZL+QFvYtgIxVUy0+ci8xo2V5KPcU+rVbwevpnI51wMywOZowK
+	BjDDLI5lKHPiUOUknD15tn2++SDh3TpCyO4scnWVFy30GB1NM2tvCVDQ/8uUGiDBYSOfYY
+	4zZcXpoaYQCQzPeW8q5SyJZa04O3jt8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1790188742;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ii8zjXOvCjg0J/8vHyFLQds1UkGP0eIpuGSI1vhp13w=;
+	b=iUaYymcoZLIrJmEFe6r4WODrZoTVe3fgUBcSqRg4yCweDi3oaFHUBweFJDI09+AXxR2uOq
+	7j1lHD3L9azqPbBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1790188738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ii8zjXOvCjg0J/8vHyFLQds1UkGP0eIpuGSI1vhp13w=;
+	b=m0WtN9eO6qq03zUsVRJESmQifaCv53PIilcQSeItrlnilO9h0A+fEi8v9BuKjV9cqiPARy
+	uhRvgCSceLTrsTxLNbzQy2BK4tKGas1BIbVHPAn8mLAik3IUdVI8key6Rt5Tlhbv7VrOVU
+	0J1k8bd9Gu2Wz/Gx/fYDAQzUma6mO30=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1790188738;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ii8zjXOvCjg0J/8vHyFLQds1UkGP0eIpuGSI1vhp13w=;
+	b=Uf0dXioQesj0Eoa9OYfB/swSAQKr1824vXldB0DBDuRdUH01fKxSrD9f6DL1CxOJpxQHkE
+	HoSBbL9N5GUhxOAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 20912134E8;
+	Wed, 23 Sep 2026 18:38:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3snAN8ActGrwdQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 23 Sep 2026 18:38:57 +0000
+Date: Wed, 23 Sep 2026 19:38:55 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
+	Mike Rapoport <rppt@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Toshi Kani <toshi.kani@hpe.com>, linux-mm@kvack.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: avoid a reclaiming allocation in
+ pud_free_pmd_page()
+Message-ID: <arQbFrGiilXn7ABD@pedro-suse.lan>
+References: <20260916062222.27347-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260916062222.27347-1-mikhail.v.gavrilov@gmail.com>
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
 
-hi_res_scroll_enable() unconditionally puts HID++ 2.0 devices supporting
-the HiRes Wheel feature (0x2121) into high-resolution mode on every
-connect event.
+On Wed, Sep 16, 2026 at 11:22:22AM +0500, Mikhail Gavrilov wrote:
+> On a box with a discrete GPU, lockdep reports a possible deadlock as soon
+> as kswapd shrinks the TTM page pool:
+> 
+>   WARNING: possible circular locking dependency detected
+>   7.3.0-rc3-f6e7b42bf05b+ #183 Tainted: G     U
+>   ------------------------------------------------------
+>   kswapd0/269 is trying to acquire lock:
+>   ((init_mm).mmap_lock){++++}-{4:4}, at: change_page_attr_set_clr+0x29a/0x4a0
+>   but task is already holding lock:
+>   (pool_shrink_rwsem){.+.+}-{4:4}, at: ttm_pool_shrink+0xb2/0x330 [ttm]
+>   Chain exists of:
+>     (init_mm).mmap_lock --> fs_reclaim --> pool_shrink_rwsem
+> 
+> The cycle is built from three edges:
+> 
+>   1) pool_shrink_rwsem -> (init_mm).mmap_lock
+> 
+>      The TTM shrinker restores the caching attribute of every page it
+>      frees, while holding pool_shrink_rwsem:
+> 
+>        ttm_pool_shrink()
+>        -> ttm_pool_dispose_list()
+>        -> ttm_pool_free_page()
+>        -> set_pages_wb()
+>        -> change_page_attr_set_clr()   [ init_mm mmap read lock ]
+> 
+>   2) fs_reclaim -> pool_shrink_rwsem
+> 
+>      The same shrinker, called from reclaim.
+> 
+>   3) (init_mm).mmap_lock -> fs_reclaim
+> 
+>      ioremap() installing a huge PUD mapping over an existing PMD table:
+> 
+>        ioremap_page_range()
+>        -> vmap_range_noflush()
+>        -> vmap_try_huge_pud()          [ init_mm mmap read lock ]
+>        -> pud_free_pmd_page()
+>        -> __get_free_page(GFP_KERNEL)  [ enters reclaim ]
+> 
+> Edge 3 is the one that should not exist.  Now that reclaim can acquire the
+> init_mm mmap lock, that lock must not be held over an allocation which can
+> enter reclaim.  This rule is stated by commit d5d8b8662e6e
+> ("x86/mm/pat: Acquire init_mm read lock on attribute changes to avoid UAF")
+> and honoured inside CPA itself, where split_large_page() drops the lock
+> around pagetable_alloc().  The vmap path took the same lock earlier, in
+> commit 26444eb71465
+> ("mm/vmalloc: acquire init_mm lock on huge vmap to avoid ptdump UAF"),
+> and pud_free_pmd_page() still allocates its scratch page with GFP_KERNEL
+> underneath it.  Neither commit deadlocks on its own; together they close
+> the cycle.
+> 
+> Use GFP_NOWAIT for that page.  pud_free_pmd_page() already returns 0 when
+> the allocation fails, and its only caller, vmap_try_huge_pud(), then maps
+> at PMD granularity through the existing page table - exactly what it does
+> when its own mmap trylock fails.  So the failure path is not new, and a
+> failed allocation costs nothing but a smaller mapping.
+> 
+> This breaks the cycle at its source: no code holds the init_mm mmap lock
+> across a reclaiming allocation any more, so no shrinker-held lock can be
+> ordered against it.  The same cycle was reported from the i915 shrinker
+> with &vm->mutex in place of pool_shrink_rwsem.
+> 
+> Link: https://lore.kernel.org/all/80993b70-352f-4069-84c7-39a04c061e98@intel.com/
+> Fixes: d5d8b8662e6e ("x86/mm/pat: Acquire init_mm read lock on attribute changes to avoid UAF")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> ---
+> 
+> #regzbot introduced: d5d8b8662e6e
+> 
+> Reproduced and verified on a Ryzen 9 7950X with a Radeon RX 7900 XTX
+> (Navi 31, 0000:03:00.0), lockdep and KASAN enabled.
+> 
+> On a kernel with a TTM driver bound the report above reproduces on
+> demand, no memory pressure needed:
+> 
+>   # cat /sys/kernel/debug/ttm/page_pool         # wc/uc rows non-zero
+>   # cat /sys/kernel/debug/ttm/page_pool_shrink
+> 
+> The second read runs the TTM shrinker with fs_reclaim held, so the
+> same cycle is reported from the reading task instead of kswapd.
+> 
+> Before (7.3-rc3-f6e7b42bf05b, #183): report within 105 s of boot,
+> 2048 pool pages scanned.
+> 
+> After (same base plus this patch, #185): 1536 write-combined pages
+> scanned - the order-9 row of the pool went from 3 to 0 and total
+> node0 from 27650 to 26114 - no report, and /proc/lockdep_stats still
+> showed debug_locks: 1 afterwards.
+> 
+>  arch/x86/mm/pgtable.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index cb03f5a2b243..c79587962526 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -713,7 +713,7 @@ int pmd_clear_huge(pmd_t *pmd)
+>   * Context: The PUD range has been unmapped and TLB purged.
+>   * Return: 1 if clearing the entry succeeded. 0 otherwise.
+>   *
+> - * NOTE: Callers must allow a single page allocation.
+> + * NOTE: Callers must allow a single non-blocking page allocation.
+>   */
+>  int pud_free_pmd_page(pud_t *pud, unsigned long addr)
+>  {
+> @@ -722,7 +722,13 @@ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
+>  	int i;
+>  
+>  	pmd = pud_pgtable(*pud);
+> -	pmd_sv = (pmd_t *)__get_free_page(GFP_KERNEL);
+> +	/*
+> +	 * The only caller, vmap_try_huge_pud(), holds the init_mm mmap read
+> +	 * lock, which reclaim can take via set_memory_*().  Do not enter
+> +	 * reclaim from here.  Failing is fine: the caller then keeps the
+> +	 * existing PMD table instead of installing a huge PUD mapping.
+> +	 */
+> +	pmd_sv = (pmd_t *)__get_free_page(GFP_NOWAIT);
+>  	if (!pmd_sv)
+>  		return 0;
 
-On at least the MX Master 4 that mode is persistent state in the device.
-With hid-logitech-hidpp unloaded, a mode set from userspace survives
-switching the mouse off and on again. Writing it at connect therefore
-destroys a setting the user configured, and does so on every probe --
-cold boot, receiver replug or module reload -- so userspace cannot
-reliably keep it either: it gets no indication that the mode it set has
-been changed underneath it.
+So, I'm really confuesd about this code. As in the original code. Copy-pasting
+here:
 
-This became visible when Bolt receivers gained support in 7.3. Before
-that these devices were driven by hid-generic, hid-logitech-hidpp never
-bound to them, and nothing in the kernel wrote the setting.
+        pmd_t *pmd, *pmd_sv;
+        struct ptdesc *pt;
+        int i;
 
-0x2121 exposes getWheelMode alongside setWheelMode. Read the current
-mode and scale vertical_wheel_counter.wheel_multiplier to match rather
-than forcing high resolution: a device left in high-resolution mode
-still gets its multiplier, and one the user configured for low
-resolution is left alone.
+        pmd = pud_pgtable(*pud);
+        pmd_sv = (pmd_t *)__get_free_page(GFP_KERNEL);
+        if (!pmd_sv)
+                return 0;
 
-Note this changes behaviour for devices sitting at a low-resolution
-factory default -- the kernel will no longer switch those to
-high-resolution scrolling.
+We allocate a copy...
 
-Link: https://lore.kernel.org/all/20260920094508.39682-1-roman.stingler@gmail.com/
-Signed-off-by: Roman Stingler <roman.stingler@gmail.com>
----
-Lovekesh Solanki proposed an alternative in the report thread which
-remembers the last mode seen from userspace. That fixes suspend/resume
-but not the probe cases above, and he suggested sending this instead:
-https://lore.kernel.org/all/arJs7GjCP3r4IaM-@eggarch/
+        for (i = 0; i < PTRS_PER_PMD; i++) {
+                pmd_sv[i] = pmd[i];
+                if (!pmd_none(pmd[i]))
+                        pmd_clear(&pmd[i]);
+        }
 
-Tested on 7.3-rc3 with an MX Master 4 (WPID B042) behind a Bolt
-receiver, built as a module and loaded at boot:
+We, for some reason, save and clear the pmd.
+        
+        pud_clear(pud);
 
-                        stock   this patch
-  suspend/resume          no        yes
-  module reload           no        yes
-  cold boot               no        yes
+Then we clear the PUD entry...
 
-With the mouse left in high-resolution mode, a full module reload leaves
-it in high resolution and the multiplier is fetched as before. I checked
-that the mode is honoured; I did not instrument events per detent,
-though that path is unchanged.
+        /* INVLPG to clear all paging-structure caches */
+        flush_tlb_kernel_range(addr, addr + PAGE_SIZE-1);
 
- drivers/hid/hid-logitech-hidpp.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+Then we flush the TLB (and with it, translation caches).
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 493763a12518..338477bfcaeb 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -2044,6 +2044,7 @@ static int hidpp_hrs_set_highres_scrolling_mode(struct hidpp_device *hidpp,
- #define HIDPP_PAGE_HIRES_WHEEL		0x2121
- 
- #define CMD_HIRES_WHEEL_GET_WHEEL_CAPABILITY	0x00
-+#define CMD_HIRES_WHEEL_GET_WHEEL_MODE		0x10
- #define CMD_HIRES_WHEEL_SET_WHEEL_MODE		0x20
- 
- static int hidpp_hrw_get_wheel_capability(struct hidpp_device *hidpp,
-@@ -2072,12 +2073,10 @@ static int hidpp_hrw_get_wheel_capability(struct hidpp_device *hidpp,
- 	return ret;
- }
- 
--static int hidpp_hrw_set_wheel_mode(struct hidpp_device *hidpp, bool invert,
--	bool high_resolution, bool use_hidpp)
-+static int hidpp_hrw_get_wheel_mode(struct hidpp_device *hidpp, u8 *mode)
- {
- 	u8 feature_index;
- 	int ret;
--	u8 params[1];
- 	struct hidpp_report response;
- 
- 	ret = hidpp_root_get_feature(hidpp, HIDPP_PAGE_HIRES_WHEEL,
-@@ -2085,13 +2084,14 @@ static int hidpp_hrw_set_wheel_mode(struct hidpp_device *hidpp, bool invert,
- 	if (ret)
- 		return ret;
- 
--	params[0] = (invert          ? BIT(2) : 0) |
--		    (high_resolution ? BIT(1) : 0) |
--		    (use_hidpp       ? BIT(0) : 0);
-+	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
-+					  CMD_HIRES_WHEEL_GET_WHEEL_MODE,
-+					  NULL, 0, &response);
-+	if (ret)
-+		return ret;
- 
--	return hidpp_send_fap_command_sync(hidpp, feature_index,
--					   CMD_HIRES_WHEEL_SET_WHEEL_MODE,
--					   params, sizeof(params), &response);
-+	*mode = response.fap.params[0];
-+	return 0;
- }
- 
- /* -------------------------------------------------------------------------- */
-@@ -3910,8 +3910,16 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
- 	u8 multiplier = 1;
- 
- 	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_HI_RES_WHEEL) {
--		ret = hidpp_hrw_set_wheel_mode(hidpp, false, true, false);
--		if (ret == 0)
-+		u8 mode;
-+
-+		/*
-+		 * The wheel mode is persistent state in the device, so read it
-+		 * rather than overwriting it, and scale to match. A device
-+		 * left in hi-res still gets the multiplier it needs; one the
-+		 * user configured for low resolution is left alone.
-+		 */
-+		ret = hidpp_hrw_get_wheel_mode(hidpp, &mode);
-+		if (ret == 0 && (mode & BIT(1)))
- 			ret = hidpp_hrw_get_wheel_capability(hidpp, &multiplier);
- 	} else if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_HI_RES_SCROLL) {
- 		ret = hidpp_hrs_set_highres_scrolling_mode(hidpp, true,
+        for (i = 0; i < PTRS_PER_PMD; i++) {
+                if (!pmd_none(pmd_sv[i])) {
+                        pt = page_ptdesc(pmd_page(pmd_sv[i]));
+                        pagetable_dtor_free(pt);
+                }
+        }
 
-base-commit: fe2ec83746e501645709761605c2464a44fd2929
+        free_page((unsigned long)pmd_sv);
+
+        pmd_free(&init_mm, pmd);
+
+Then we free possible PTEs attached to the PMD (from our copy),
+and free the PMD itself.
+
+
+So, the question is: why the heck do we need a copy? PMD is still allocated
+by the time we flush the TLB. Why doesn't a simple pud_clear() + flush_tlb +
+free over the pmd Just Work? Am I missing something? The git log isn't
+clueing me in.
+
+
+All-in-all, I would much prefer not having a copy of the PMD at all. Perhaps,
+if this isn't workable, then a linked list of PTEs would work. But I would rather
+not have tricky logic at all.
+
 -- 
-2.55.0
-
+Pedro
