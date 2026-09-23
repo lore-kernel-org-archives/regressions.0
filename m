@@ -1,208 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960DD46A5F2
-	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 22:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5D47426F
+	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 23:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790204039; cv=none; b=NoKHVkPQgx62SF9t8VfuG2lYS+60spH7HkS/Jngfte2lyj8PYtuFTjKKC9dXeAXHY8rCANb8hY+mD+z0MpkbE7qOXly6waDI04viaKE2MP68gri7u9Jg5qjzrsPv6H3ugJHrXBwt1+/8T+owFHWz7Y7rvC9U+xN/cThARJ/9fso=
+	t=1790204638; cv=none; b=M91yrGt46QygcDO3ZCK8r6yLJtFnBm/C0GhGhN4oacMd1DR4svr5aaLjXGyBiYPI+5nm5t3zk3rV/tubUwbdEvSzvrIQJN12MYG97yiiqwiLHQfd393DWb/rNeJ7b1sQbXTg5j0QcHlMl2HaV0t8r4v9Uxiw5gpSqV1xVvXpSTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790204039; c=relaxed/simple;
-	bh=1x5MXmFtxzmm1q9H8+jB/OdaeToUC4yW6b3h02ycNzY=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=kffoxOOGhzsG9cEkfHLHlnKRriLsvalCYl7btWBAvVTNzOaqW+euYcUq9UdxpcQwaYEOGD/lXziGgO62dd09m3+LPOerycy6fmAsnZ1B9figa3OlPK1Ww6OVzfyFBClGF6czDUpvXxEg8n6s/ZTzAGI+bglEqSD9YYQef7B1F2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y4FduAeH; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790204638; c=relaxed/simple;
+	bh=XgOV2jzBNHsZI4frAsR9/oTXm9YIxk7KkNVPLd2XZuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DDkgZvpefv7m5hAZhtkfsjoXPnkQJ9Ziq7mETkOwt5AmUX+brYBFLxQAzBUhsPctgAn59pA4Pzf9CgtHdCJMwR+j8UA+qUUc8O94Wtb7YIfNdHRdc1aM0b7ldLb757Xv6GrML7TwuEK1DnWszNQ66mQ/S/O3G5x+vizzPLen3BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lj1Rg91P; arc=none smtp.client-ip=74.125.225.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y4FduAeH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790204039; x=1821740039;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=1x5MXmFtxzmm1q9H8+jB/OdaeToUC4yW6b3h02ycNzY=;
-  b=Y4FduAeH1Hjw+DlQYkCLtl9Pj+gem0ZvVkAGqJbfNDIIYUiuZ9xs3Hsb
-   WTl4QfI04ca3PDQqDK8FUG6T412WJPmSWdKlDJZ47VK5UGcrkSJHQdfxP
-   KBaHyfmnPLH4Sz7xW+IJNjqpvLge7eYR+94Z2VutdoUt7xO7gI6+5DCHg
-   w8ajlyuGX6nFZ2nASaPqLn32kfsME+aiYalLXmnxb9zkO2Q8OCZHv/pH2
-   CcRa9JAGqrLkw7kMzkchBHwRq7RfuAVZYOsR7J5+bypthF5B9Wp00JoM5
-   N7imdTD1RQ8az/Qsn0sykL4U8Spv0VNTPgC4yx3Op4H0Iydj4ckLhe3ci
-   Q==;
-X-CSE-ConnectionGUID: 1Gx1gPrbQNqUj48+JXR7tA==
-X-CSE-MsgGUID: OPpfJ7cwQbG/75LQvhGaww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="101610191"
-X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
-   d="scan'208";a="101610191"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 15:53:58 -0700
-X-CSE-ConnectionGUID: vNzfkoyZQLaCeP30fIQpAQ==
-X-CSE-MsgGUID: fHRdLffWTyaGJCv0Sjqmdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
-   d="scan'208";a="281899357"
-Received: from cooperst-gp06.amr.corp.intel.com (HELO [10.125.110.104]) ([10.125.110.104])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 15:53:57 -0700
-Content-Type: multipart/mixed; boundary="------------8ltgeDxBJN0BN2U8yZ01aJMF"
-Message-ID: <e11449f0-d9ad-4d1b-ab21-2be7d71fe335@intel.com>
-Date: Wed, 23 Sep 2026 15:53:57 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lj1Rg91P"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f6350faaso956588f8f.0
+        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 16:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790204635; x=1790809435; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IT+kPykiDUVKChmVTT4JFPPqjHccYovstoU8+/L1N6I=;
+        b=lj1Rg91P/1umrkioZkE79ENZ0uTigh9oGMWGKruOchHjDEwwn5mJ0onckPPdUtco2q
+         MLs7I9LWwiXVmxN4Ww3I27iufPwXobLLWnJtuwrujumAajvIXbSDV4+RgKYC9iGftlfY
+         qN4T+FxmiRBU2wCITaZeN9OJvOr4TnVPmeYCLjdJf1SgBgJiYd4I9GsM0TDviVnmFeeR
+         uo+VPYdVOCMChHLCwysGPbdu7WqxGKGuIDXcDqoFZ94Ox5bhW8PclsQO6wjrRyYeID59
+         YBfrcnbEx+WBJGcPwiZ6mnKIJVh6RfgD6miLf6syWbSQsAdD+739kR3jDZvZs74V+pKE
+         CviA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790204635; x=1790809435;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IT+kPykiDUVKChmVTT4JFPPqjHccYovstoU8+/L1N6I=;
+        b=LsN/kNmiSGYO5g0cAXuEsUGVSqWXTS0Gay/OcFtDcFsm3x1DIh+qaPUenlDwZADPmt
+         qiz+X9SWDW7GVHO8cNpo++gERVCyG5rKMZ7QixDLvK4Sy3xAnL4sfMpwkFrfuQwRC32a
+         dllcNPeuzyIK3ojKI6kvjHgU8AIaQ9kx8evqWznStOM3S9AvAGpxEw+jbpIi9U8WmsIW
+         bmvmY8zkbnA+xePaYezr3VYodAJW8XIc42qDouoJP3kFsnfCvP8q55lfwSQe1yk/Mt8I
+         IsVSulCmCYX+sEzxXqJsb1we1jIkwDwZjRf8uOUeU3XwMDljIyGHFYbS6w2uSvBlaV+N
+         c6Kg==
+X-Forwarded-Encrypted: i=1; AKwUvBwx7y1ggJO5FCyqrjocQoX5dxzN+roa7CXmiJhSA3DFRDo9HSY9A7SInZRy/0zpEH6b9EBU4z0PXeM3ng==@lists.linux.dev
+X-Gm-Message-State: AFuF++mVxV1025jSw4TWu083UHZh1aTlsO1gRImBrEDeGNNmG+ZzGbSw
+	1Vbt6neuEtdiRhHP+9WG//y38xuJY7hUZSTB9Pzq/I9qDQ0Nn/3U0EBd
+X-Gm-Gg: AYBFou11755eGSpXaTB2Ky3NT7sIEMp3IJvANEUeKBf7KlHSW91ezbZffSTvoXu/5Uf
+	yHmecUzWYqL4hiJoShY4NTwZvDB5Vp1AHVtPQVzcIEFkM69HDUrnc/wYxd0PZtpcJWhwoCPQI62
+	BhR729qCKDNSCkjq8nwwydqp5jdKaUyNzoWKPD3NmYwz1oRRMDUcn4D6QUS5bXSq4WNxjpZ6coK
+	sLWLAHPGPlbc4ePD501bXfmEaRZOebU1dzrnfu/nwNjwt1NQB5YdHXlihlLVlEzh6BAqIbMp7Up
+	V2d7fyXxept92Nop9UpGy8jlqvn1rz98W7Wzj7wZO5GaRZ+I41MTio/FJJubjppV1fJJEmSlcIQ
+	M5vXSvX8X/WFdcm+hyJhRv0ON5e/s7zOTDawxRioMKW2BVVMZzg6qPJIYWYYQFfjXOyLKv8buCW
+	H61UQuUoXruVZK2mMUxCADQEEwUApEt6xmXiw2cbtMt+OadhPEevTRK9qxr05F2s0Z7qfj0ryzu
+	LpStJZ/ARAuIHmgmRViaeOo5qRiKHvX4I4bjCTgPzWhKfUZy4MXGepEwnb8h3yitiH/0S9R
+X-Received: by 2002:a05:600c:530e:b0:49f:cc2a:f73a with SMTP id 5b1f17b1804b1-49fe66fbeb9mr10115395e9.25.1790204635318;
+        Wed, 23 Sep 2026 16:03:55 -0700 (PDT)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5dfa6a7sm31259815e9.12.2026.09.23.16.03.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2026 16:03:54 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Dave Hansen <dave.hansen@intel.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Toshi Kani <toshi.kani@hpe.com>,
+	linux-mm@kvack.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: avoid a reclaiming allocation in pud_free_pmd_page()
+Date: Thu, 24 Sep 2026 04:03:50 +0500
+Message-ID: <20260923230350.365304-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <e11449f0-d9ad-4d1b-ab21-2be7d71fe335@intel.com>
+References: <e11449f0-d9ad-4d1b-ab21-2be7d71fe335@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm: avoid a reclaiming allocation in
- pud_free_pmd_page()
-To: Pedro Falcato <pfalcato@suse.de>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Mike Rapoport <rppt@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Toshi Kani <toshi.kani@hpe.com>,
- linux-mm@kvack.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260916062222.27347-1-mikhail.v.gavrilov@gmail.com>
- <arQbFrGiilXn7ABD@pedro-suse.lan>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <arQbFrGiilXn7ABD@pedro-suse.lan>
+Content-Transfer-Encoding: 8bit
 
-This is a multi-part message in MIME format.
---------------8ltgeDxBJN0BN2U8yZ01aJMF
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On 9/23/26 15:53, Dave Hansen wrote:
+> I think that means we can do something like the completely untested
+> attached patch.
+>
+> Looks like Mikhail came to basically the same conclusion.
 
-On 9/23/26 11:38, Pedro Falcato wrote:
-> So, the question is: why the heck do we need a copy? PMD is still allocated
-> by the time we flush the TLB. Why doesn't a simple pud_clear() + flush_tlb +
-> free over the pmd Just Work? Am I missing something? The git log isn't
-> clueing me in.
+Yes - v2 does the same thing, and also drops the now-stale NOTE about
+the page allocation.  It went out about 20 minutes before your mail:
 
-Yeah, the original changelog in here:
+  https://lore.kernel.org/all/20260923223116.20090-1-mikhail.v.gavrilov@gmail.com/
 
-	commit 5e0fb5df2ee871b841f96f9cb6a7f2784e96aa4e
-	Author: Toshi Kani <toshi.kani@hpe.com>
-	Date:   Wed Jun 27 08:13:48 2018 -0600
+It was tested on a box that reaches this path at boot without any
+instrumentation (from amdgpu_ttm_init()), plus the TTM shrinker
+reproducer; the details are below the scissors there.
 
-	    x86/mm: Add TLB purge to free pmd/pte page interfaces
+Two things in the attached sketch, in case it gets picked up as is:
 
-is a bit vague about what it is doing. I think there might have been
-some confusion around speculation:
+ - The first hunk prepends the patch name to the SPDX line
+   ("pud_free_pmd_page-simplify// SPDX-License-Identifier: ..."),
+   which will not build.
 
-	speculation may cache pud/pmd entries (paging-structure
-	caches) when they have P-bit set
+ - Making it return void conflicts with the prototype in
+   include/linux/pgtable.h, and vmap_try_huge_pud() still does
+   "if (!pud_free_pmd_page(pud, addr))".  The arm64, riscv and powerpc
+   versions also always return 1, so dropping the return value looks
+   like a reasonable follow-up across architectures, but I kept v2
+   x86-only and returning int so that it stays small for stable.
 
-Because, as far as I know, you can't have establish an entry in the TLB,
-period, if Accessed==0. I think the changelog imagines a world where the
-CPU is establishing TLB entries from Present=1,Accessed=0 PTEs. That
-just doesn't happen.
-
-There are only two ways the CPU can find a page table entry to cache in
-the TLB and start setting Accessed bits:
-
- 1. It walks down from CR3 and finds the entry
- 2. It starts from a mid-level cache and finds the entry
-
-This takes care of a walk from CR3 (#1):
-
-	pud_clear(pud);
-
-and this takes care of the mid-level caches (#2):
-
-	/* INVLPG to clear all paging-structure caches */
-	flush_tlb_kernel_range(addr, addr + PAGE_SIZE-1);
-
-I don't think there's anything else to do. Right?
-
-I think that means we can do something like the completely untested
-attached patch.
-
-Looks like Mikhail came to basically the same conclusion.
---------------8ltgeDxBJN0BN2U8yZ01aJMF
-Content-Type: text/x-patch; charset=UTF-8;
- name="pud_free_pmd_page-simplify.patch"
-Content-Disposition: attachment; filename="pud_free_pmd_page-simplify.patch"
-Content-Transfer-Encoding: base64
-
-CgotLS0KCiBiL2FyY2gveDg2L21tL3BndGFibGUuYyB8ICAgMzAgKysrKysrKysrKy0tLS0t
-LS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMjAg
-ZGVsZXRpb25zKC0pCgpkaWZmIC1wdU4gYXJjaC94ODYvbW0vcGd0YWJsZS5jfnB1ZF9mcmVl
-X3BtZF9wYWdlLXNpbXBsaWZ5IGFyY2gveDg2L21tL3BndGFibGUuYwotLS0gYS9hcmNoL3g4
-Ni9tbS9wZ3RhYmxlLmN+cHVkX2ZyZWVfcG1kX3BhZ2Utc2ltcGxpZnkJMjAyNi0wOS0yMyAx
-NTozMDozMi4wMzU2MTA0NzUgLTA3MDAKKysrIGIvYXJjaC94ODYvbW0vcGd0YWJsZS5jCTIw
-MjYtMDktMjMgMTU6MzY6NTYuNjYzNzQ3NTg2IC0wNzAwCkBAIC0xLDQgKzEsNCBAQAotLy8g
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKK3B1ZF9mcmVlX3BtZF9wYWdlLXNp
-bXBsaWZ5Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKICNpbmNsdWRlIDxs
-aW51eC9tbS5oPgogI2luY2x1ZGUgPGxpbnV4L2dmcC5oPgogI2luY2x1ZGUgPGxpbnV4L2h1
-Z2V0bGIuaD4KQEAgLTcxMSw0NCArNzExLDM0IEBAIGludCBwbWRfY2xlYXJfaHVnZShwbWRf
-dCAqcG1kKQogICogQGFkZHI6IFZpcnR1YWwgYWRkcmVzcyBhc3NvY2lhdGVkIHdpdGggUFVE
-CiAgKgogICogQ29udGV4dDogVGhlIFBVRCByYW5nZSBoYXMgYmVlbiB1bm1hcHBlZCBhbmQg
-VExCIHB1cmdlZC4KLSAqIFJldHVybjogMSBpZiBjbGVhcmluZyB0aGUgZW50cnkgc3VjY2Vl
-ZGVkLiAwIG90aGVyd2lzZS4KICAqCiAgKiBOT1RFOiBDYWxsZXJzIG11c3QgYWxsb3cgYSBz
-aW5nbGUgcGFnZSBhbGxvY2F0aW9uLgogICovCi1pbnQgcHVkX2ZyZWVfcG1kX3BhZ2UocHVk
-X3QgKnB1ZCwgdW5zaWduZWQgbG9uZyBhZGRyKQordm9pZCBwdWRfZnJlZV9wbWRfcGFnZShw
-dWRfdCAqcHVkLCB1bnNpZ25lZCBsb25nIGFkZHIpCiB7Ci0JcG1kX3QgKnBtZCwgKnBtZF9z
-djsKIAlzdHJ1Y3QgcHRkZXNjICpwdDsKKwlwbWRfdCAqcG1kOwogCWludCBpOwogCiAJcG1k
-ID0gcHVkX3BndGFibGUoKnB1ZCk7Ci0JcG1kX3N2ID0gKHBtZF90ICopX19nZXRfZnJlZV9w
-YWdlKEdGUF9LRVJORUwpOwotCWlmICghcG1kX3N2KQotCQlyZXR1cm4gMDsKLQotCWZvciAo
-aSA9IDA7IGkgPCBQVFJTX1BFUl9QTUQ7IGkrKykgewotCQlwbWRfc3ZbaV0gPSBwbWRbaV07
-Ci0JCWlmICghcG1kX25vbmUocG1kW2ldKSkKLQkJCXBtZF9jbGVhcigmcG1kW2ldKTsKLQl9
-CiAKIAlwdWRfY2xlYXIocHVkKTsKIAotCS8qIElOVkxQRyB0byBjbGVhciBhbGwgcGFnaW5n
-LXN0cnVjdHVyZSBjYWNoZXMgKi8KKwkvKgorCSAqICdwbWQnIGFuZCBhbGwgaXRzIGRlc2Nl
-bmRlbnRzIGFyZSB1bnJlYWNoYWJsZQorCSAqIHZpYSBub3JtYWwgcGFnZSB3YWxrcy4gTWFr
-ZSB0aGVtIHVucmVhY2hhYmxlCisJICogaW4gY2FjaGVkIG1pZC1sZXZlbCB3YWxrcyB0b286
-CisJICovCiAJZmx1c2hfdGxiX2tlcm5lbF9yYW5nZShhZGRyLCBhZGRyICsgUEFHRV9TSVpF
-LTEpOwogCiAJZm9yIChpID0gMDsgaSA8IFBUUlNfUEVSX1BNRDsgaSsrKSB7Ci0JCWlmICgh
-cG1kX25vbmUocG1kX3N2W2ldKSkgewotCQkJcHQgPSBwYWdlX3B0ZGVzYyhwbWRfcGFnZShw
-bWRfc3ZbaV0pKTsKKwkJaWYgKCFwbWRfbm9uZShwbWRbaV0pKSB7CisJCQlwdCA9IHBhZ2Vf
-cHRkZXNjKHBtZF9wYWdlKHBtZFtpXSkpOwogCQkJcGFnZXRhYmxlX2R0b3JfZnJlZShwdCk7
-CiAJCX0KIAl9CiAKLQlmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpcG1kX3N2KTsKLQogCXBt
-ZF9mcmVlKCZpbml0X21tLCBwbWQpOwotCi0JcmV0dXJuIDE7CiB9CiAKIC8qKgpfCg==
-
---------------8ltgeDxBJN0BN2U8yZ01aJMF--
+Your comment above the flush explains it better than the "INVLPG to
+clear all paging-structure caches" one-liner.  If you prefer it, I can
+send a v3 with it, or feel free to fold it in when applying.
