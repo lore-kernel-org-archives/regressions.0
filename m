@@ -1,85 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B802E542C
-	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 12:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3453938C415
+	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 16:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790167501; cv=none; b=RJNpjEGuzRuCTAIzCythDZXSpPNfbNxYUtfvXnH0i6OO7wnHrDmUNSBG9KNuNbUwP3BhVSdyz/U7DUA4AVQpzWJf+KNEOsshqqXcbkpmAkg8HRXXFjpvKBADY6SUlaTLVWcQLCtp9ccfBGAVIs0gGVQ66vtzD9TG3rR/qMVz29U=
+	t=1790181206; cv=none; b=lRQYLX4dHQq59tw5Lz8T2zHkrBi6Q92TdJZiV4gzHmsLL2ZLWPW2IGst1zkZYnj+dev8P6C8TYI48DQAxDpULHELM7ArQQ+w7cU6iNcDZbvS1oQ1mO2bqgxjM3j5mpz7f43uEeX74S6kPbWP3MoXazqa9pxZYeMo8/QTzvqqQ8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790167501; c=relaxed/simple;
-	bh=plefyBgqMCRYDWCZtKif3JD3zNFTc2d7WQvOUDurc7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B/61VspiFsoFbMzlgcSLJqFCNph/HJ8Q4IQkT1XcN8zTfQ8jmgPHim/elsvT/HQ+z2Dd/bWY96oeo/SCKQFa5qyJkXV6tRzF5vJB6A/8orWOXV2hYwLUhGhTIXuLapMfbdbjbq9wsgzbePVOhv7OSRQgdb5XNHHdNa5tE72qJpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Npl1F0B+; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790181206; c=relaxed/simple;
+	bh=67glpMEqmp3cgj1Y882mMOoL/orbcvIp/trxu8TR2Gk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XbRKTVT5EamjOGCWbY2SGIHWd4L4TTL2ehYU2bNedY6h51oRVeSvkxSf37wU2n9HQnHtu7C6uKbF7//O7GKOETf4+QdP0sVNOqfwWrtbuyjwvtbeog5MAhbNtExS+DQTvwTN962OswGh5zNIivjLTte1Xz9CCVL+wW/W6luAvjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OHx7XiAL; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Npl1F0B+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790167500; x=1821703500;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=plefyBgqMCRYDWCZtKif3JD3zNFTc2d7WQvOUDurc7U=;
-  b=Npl1F0B+dfsxE6WDzh2n00ntdgxxNNyCe8VsDlXuzM6/fLBdeuZbVXmg
-   +1K83VghOMseoRfJMYyu5Olh/XZsh/7eBlP6ZTCxqQ0esEs3p+IgVokjE
-   5lzD6f4i4f7ga21Fk7xE62C7kijBysq1x7ClsPDr4wTb6YS0PgYpYDTTp
-   SOKsdY1pt7WxvakmnIQRMvM5srgTyvyQd0wKzgWRseyBAEz3mtV17EwUH
-   YTVs7ASUz/Ls0FMoO6iHjMlJku7p3o60hUPeUnWZ+489Rkozla3IwnGCz
-   VrZ7NnxATVN19JNDMaHRW/W122fuqf7bQIFOKODc9dBLBFncbnIERNyU9
-   A==;
-X-CSE-ConnectionGUID: qPVpw/wHSyiG+cBF2dVZlA==
-X-CSE-MsgGUID: 6ncIkuq7She/xLh3XgFV/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="101447410"
-X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
-   d="scan'208";a="101447410"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 05:44:59 -0700
-X-CSE-ConnectionGUID: sOOhZKr6QK2wCz1rFN50bg==
-X-CSE-MsgGUID: IQV8N+8vQPiT+1BDiNsB0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
-   d="scan'208";a="301521238"
-Received: from mkosciow-mobl1.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.29])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 05:44:57 -0700
-Date: Wed, 23 Sep 2026 14:44:47 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Junjie Cao <junjie.cao@intel.com>, 
-	Miguel Vadillo <miguel.vadillo@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Manuel Knitza <manuel.knitza@googlemail.com>, Antti Laakso <antti.laakso@linux.intel.com>, 
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 1/1] media: cvs: Default selection to VIDEO_INTEL_IPU6
-Message-ID: <arPIqZNMC98jPL3B@mdjait-mobl>
-References: <20260922064017.371437-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHx7XiAL"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49ccf3ca626so6462655e9.0
+        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 09:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790181199; x=1790785999; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MMSEiPc5+o34xNJdJ/12oIWCPCor4YVV3MLKdTKKMrI=;
+        b=OHx7XiALTrDCQEjTeM4MPTaYFCumVHtN2EbhLfQWS4pn//ZLozGAIXpUYdPdLqqENJ
+         cgxovcZixpG2h0oALbxVFErFYb7tVKLLySNm46mfns3odGrqMqNkUGAP9T+wfXh5OCM8
+         ONLmpdiJCNwVN11QxJLM/sw7i+Gu48hQRt6b2oX09dhdMjrsky5IVZ3lRpbaC8/LrsYA
+         +CrL+vlOTiTRI7TvGVul2RO5ma77SL0JtVkiIs/njT+JhKi25RdqJPevAmnpzmCUfcnV
+         hGkIsQY+a3eRMlxgz7luejAIkCwHKWcturOUZ0JUIIYyM11rYJUJxKNOOZgTW18gcs5j
+         R6SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790181199; x=1790785999;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MMSEiPc5+o34xNJdJ/12oIWCPCor4YVV3MLKdTKKMrI=;
+        b=XbZOJv9NXCJbbs6e3JVDnff+X2XRgqn6qESnXO2vOOKJPsOCTreGimzu4Exdjn/Di1
+         QIonHwcRcaPjybSxuOIvEw/FDszfLRt40hdlBOl/yfAJXRVULl/dBohFbOvNJiRscAZz
+         njjOLHLPZ/Lf3X4r3fRfaLD9LZDaqX7MuF+2kZ9b9zE3tAYbsKZ6RGCYUMJGX6gVStVX
+         /bxpvE38st+qTiTQEogOi5JX+Lto/K/Pv6QhnI5w8YCtA4vRDuWIFBzldRX6A4F5Ws7p
+         y+wtPhgO0l8W2HhALqASur4j8GHmpNvRGtEzpkAAjwnlAci/a5ugxqQSbtxZUOTvszkN
+         Hvig==
+X-Forwarded-Encrypted: i=1; AKwUvBw5LYRZvFX7niW/glc5DTSx2TOM8odzOIGpjm1C4wN8awlY/xdioxCB3WVRPpeQptrPngTDcmAQLLTWog==@lists.linux.dev
+X-Gm-Message-State: AFuF++n7kNuEPR1hcgIMcdX/WXrHLfFadwxmLnU1ZysB04wp0Y+ydwQq
+	LJ1FUBjyLJXFZtzlquQqmxm2ouWROLDCt8dSzhVKtQqIAa6NG4iFAmEA
+X-Gm-Gg: AYBFou3JYBsMWBj1op1JWrPIyb+U8iNI6IKm5IauNISB5HXbGmq3ar/P/yaodwVnBKc
+	xUm/JMT4Am2eI8Q0X7gk8KneHr85nYyJTS/DTR6sjab560PyVtekLnI6Uf1vSIQ7RQet6LJ8YuZ
+	Q15/axO9AuN3a9Llstp/Viyp9FXK1oIZm7cogMuAtRhqHOB5YqNev6fytxWRitwi/ouH/5cjWHA
+	66KK1b32WxgXegV6nLvOQa0JjMH/dVMb5CtENGMLwePgQh38cDq0hqXzYvoHnN0uFerlDuqlGXp
+	fJ5QmNKdsL3CZH0VtSuc8FOkI7Ff48UsjenqO1vK9kA1IHhNy8Mfv+CFDjleQwuwpF8lMqF6c72
+	PLb/TvxLG5FynixYuZavv2cW8j4fr8XDiaQBG3/ozrVHOefKwT5jHp9hfVqlTCrreZdPpioPsaZ
+	cBKDnp3ZjOJNwJ9PizY8oBtBqPURmrBpgZZ5zujlMCaEXw7uxuozKWMF4q39Na3Ou5VJd3zML7M
+	DAFdnlljg+3ujww8mdfb7ID3ZU0QDN/wl+T3U5JirJFQv6tOtIUNDkeNv1STmSFAoN6/iw=
+X-Received: by 2002:a05:600c:1d29:b0:49c:cee2:a508 with SMTP id 5b1f17b1804b1-49fdf12f7a8mr57065555e9.16.1790181199387;
+        Wed, 23 Sep 2026 09:33:19 -0700 (PDT)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fdf9691e2sm78673275e9.1.2026.09.23.09.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2026 09:33:18 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Toshi Kani <toshi.kani@hpe.com>,
+	linux-mm@kvack.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm: avoid a reclaiming allocation in pud_free_pmd_page()
+Date: Wed, 23 Sep 2026 21:33:15 +0500
+Message-ID: <20260923163315.275046-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260916062222.27347-1-mikhail.v.gavrilov@gmail.com>
+References: <20260916062222.27347-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260922064017.371437-1-sakari.ailus@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hello Sakari,
+Hi,
 
-Thank you for the patch!
+The lock cycle this patch breaks has meanwhile reached released stable
+kernels: d5d8b8662e6e ("x86/mm/pat: Acquire init_mm read lock on
+attribute changes to avoid UAF") went out in 7.2.7 and 6.18.53 on
+Sep 21. Both trees already carry 26444eb71465 ("mm/vmalloc: acquire
+init_mm lock on huge vmap to avoid ptdump UAF"), and pud_free_pmd_page()
+there still allocates with GFP_KERNEL under the init_mm lock, so the
+cycle quoted in the patch exists there too, not only in 7.3-rc.
 
-On Tue, Sep 22, 2026 at 09:40:17AM +0300, Sakari Ailus wrote:
-> The cvs driver is only usable with the Intel ipu6 driver and is commonly
+The patch still applies cleanly to current mainline and next-20260922,
+and the reproducer below the scissors of the original mail works
+unchanged.
 
-I don't know about this statement. Do you mean the ipu6 with the ipu7
-support merged ?
+Dave, could this go in through x86/urgent for 7.3? Lorenzo, since the
+rule it applies comes from your series, a review from you would help.
+If either of you would rather fix it differently, I am happy to respin.
 
-I write this because I use the cvs with the ipu7 driver from staging on
-one my dell laptops. No ipu6 on that system.
-
-> required for the ipu6 driver to function. Make the default of the cvs
-> driver the same as what was selected for the ipu6 driver.
-
---
-Kind Regards,
-Mehdi Djait
+-- 
+Thanks,
+Mikhail
