@@ -1,128 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f17.google.com (mail-wr2-f17.google.com [74.125.225.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129EE47ECC6
-	for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 23:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC3637DAB3
+	for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 05:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790204825; cv=none; b=cndlTmLjuCHuxOmmBcYBsElxSzd0cBjcldktLVqnTJ1D3CejheqiGD7U20PqDbSo6cPrE6/IxjTKwXSRRywsGRnq0juTT8+hxswSX8YxhoxkuJEYXID2CSc4MrsdSDanBiWg2ypdiwtQmxh02tm8nIv0JFkQxy+r1332s3SFccc=
+	t=1790226619; cv=none; b=btoe8wPw243f/rLZCcdLqhkIjE7T+E1VdQmBSdGXYN7BgXbDL6g9mXksRNH8PkybPzdvpDsoQG1lcbGBExTa0PyaMdBuAmv2PVrIefFw0f2ZUYu5XNI+Vv7a2PrzWiMBluqTK8xNIdTBVzLEVfjXqPegj2z5GLtDV4dHwhFTJXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790204825; c=relaxed/simple;
-	bh=Ew+zaljAwfQAfT6VZB25JIASmNZAHg3G51tgKE5JB/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MnQfDNBZUSlzoknMm1PQKMJxllJFf2xD2v+3/L4ZHrM8rYgWFAoy7v/0IZvq1dtr+DsWX8ZezBb3iK1Hvwp6eSKL/FHKYyLP6iGLavvEIdiy67tEWcrDbdw3LUtN/Zt/0Hh12adqjtC5WoD8htPZCRwO5YfQ3ad8u1/WOFQTf3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X80bj3p0; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790226619; c=relaxed/simple;
+	bh=EzS/SIPwNhc8n/arMuSg3yPaF0nMCEdu+ba1kwNXnUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gfk4loJp6jiYiFJCK5+bAPNFngIm+PRD+YmZx1ZSiy7+2IT/A70SnFDCGxifQB6R+Z+fbhFkxeLp1XmE1+NVOX5WTMgyD5DsjNiAH46AApCIpZDAa64kJp2SbL+5MHsrFMOlvD2KjVTN/AdOS7frX2OG9eISLzUKtkhQ6jjW60Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pYpFct6s; arc=none smtp.client-ip=74.125.225.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X80bj3p0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790204824; x=1821740824;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ew+zaljAwfQAfT6VZB25JIASmNZAHg3G51tgKE5JB/I=;
-  b=X80bj3p0g/Ga/oT2W+fnJ+8qTHJHJ2LLrVY++808NXELuSzVz8FFOTpp
-   8Ods2LiU97nhWsCvAtHqpJLt/VbXrkzDh2NJHbzDEfaArqQ177o9zrNyZ
-   vH7weaevTBJbwk5DZ/miF3rKGyi3zG0VxsBt5vNnqOGyuDX9eGLl80D8P
-   XgdL2denq2tTOat8GKFP+ocHXQei2ZDN6qA/ybb3kAgMOqPlB28Ji9YDR
-   mExPtfhKIWOgIIwhI176Ul7rnopCOS/NEIPqcFI0tYN9tIB/rfg0Lih0h
-   9PcqsmAkl3JCCEnRsdOhAP5FfBmzWdEyF+4XHp84ML5yZpIRGnOASYLiL
-   Q==;
-X-CSE-ConnectionGUID: 9q8F35VmQUqg9KLNYKw4hA==
-X-CSE-MsgGUID: 0qaot5P+RIK3YskwF+BIdw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="90077729"
-X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
-   d="scan'208";a="90077729"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 16:07:03 -0700
-X-CSE-ConnectionGUID: lypd9Xt/QnyIdgWAJebIuQ==
-X-CSE-MsgGUID: Z5/JGz86SbebjHM9o281yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
-   d="scan'208";a="300076285"
-Received: from cooperst-gp06.amr.corp.intel.com (HELO [10.125.110.104]) ([10.125.110.104])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 16:07:02 -0700
-Message-ID: <e1f8a64a-e4b5-4c1b-b83d-50425a7621a4@intel.com>
-Date: Wed, 23 Sep 2026 16:07:02 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYpFct6s"
+Received: by mail-wr2-f17.google.com with SMTP id ffacd0b85a97d-484366874b0so1005254f8f.2
+        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 22:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790226616; x=1790831416; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0Uje1jfPOPcmIbWgJBz3Sa+j8/FJrZMoBTZpzcUyL9A=;
+        b=pYpFct6sylOtdnGhXHhR2e4Jsm4LBTFWxeQA2BgsSoKN5IDQDVdZk7frYz8akGc8oV
+         aG5rl4zbWQTqZmiHm5qAEOLGDgn1O4sPTi1H+o0RTR/LcKrIFulTy4GCpMjdtRMR0U3T
+         JyLZaL3a4/RvuEaSz18XvIUFJ9Ay9kthPmKtXyZDmM1vF92cgwoMVCYBOUFwWUFrveXs
+         uhD51/G1tx9sEJqr8vBm+S8iexoHezu6B3pzu85iV6MQ6/1kzElI8jdTOL99SGoOQKVK
+         qb0G7FySKDGGBk39X5Ju2fOix/+H9meotGGX0Tg14iEj5aUAqcXCKhqU32rlS0aerEHw
+         AywQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790226616; x=1790831416;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=0Uje1jfPOPcmIbWgJBz3Sa+j8/FJrZMoBTZpzcUyL9A=;
+        b=oRAcrRS+0CiEfsQCoWkmFn5t+SrVlyai2REE0ivoBcr+M2brXHrQbW7X4HOLcF4Z5F
+         BGJ8M48sMrnOUZ/y+YTViNfxTy3W9jd+QdLhD4ggEo0U5CyqENxuSBkel71Ylp8qXjdv
+         hTsnTb9p5/2Kn43XJu5UH0JolC3DGP8XPZpJc7Zy3XG+BlR0/bDlhvPb9BFOf80K+AzS
+         J9mLWR2/zjq9s6UXIL3chDVG8sPi9w4n4tgWMm75wa1Qy5loEeJn7VlA4PLGNPQRS/dC
+         grZq/iAXAwZn/595vt6MKgTmUgRb88UFTnZXaV/EX21x7cWoSyNYMLO3Yu4Cw8fZbBs8
+         8Zpg==
+X-Forwarded-Encrypted: i=1; AKwUvBwLAGNeruF2NrwMzmjdXMEtFBtJ+hFpIiDEklBfZjJl3ppMtqKcdF3iJCoEomZIPlw9wBJ+ryAX3KDYlw==@lists.linux.dev
+X-Gm-Message-State: AFuF++l+7qbUy5AVnZVa5fuz32Z8SCsVkgU92t/uMa5lCKsau8Nzs4Kq
+	RvC7PWATx7O3+hCFl5FGdHoQx3Y4OXO4NSWb+e3+dsxLzCuOtxlWRxqs7FoEKNFT66DjlwB1
+X-Gm-Gg: AYBFou2NTn1UvJTwxXpTFCW5aO0G3kwCgunQTRoGHuIc7o/Sau25AjaAn/UkJZDpduS
+	SBgWA4MP4k5rjv1DxBiiZ+04dHWQCumf8PX9iiRPYzVdOsfEza1y3R+/NLV+eFBxdS/UN9YSiYD
+	1YMrwJckpib1eRQeoPCu48pDKfFqdJ5+NpwuQNJTHWyCJu02o0f+74zrWk0phAZlmkLckNfvSiV
+	UdmEyUJP+Qfp7vNhOioFkMUAQJ7QBKMtZU5Z2fGhUKje363StAjnGtldisCU7iGEx2OYaVGLAgN
+	mqcnWK16cHIxZZs+b4BmLRQOzB4AFxiE2qIgWUacJhRvDN1F/gxD32CPbj/KF+CL14qujPfWowH
+	kjQIeyzZbArvY1QGXMeFhqAskHOA+dXmfWE8GSI8+uCaH9L8wSB2xF4n6kY85hBprA51he+cGAK
+	/UxLSN0KXFenDS4z3ItW+ZmFA9uQqTy5r3aZ2zyz88SG2pl/4dRJEKtx3FnWI1I0yoYRTSi0FKs
+	pE8u3LuMJnua3tjz+firoX9XboWCF2BCEKSZJgYcGSEf0R4L4VyX6+gHo/mCSAVLXnLo7w=
+X-Received: by 2002:a5d:5f52:0:b0:487:232c:a9fb with SMTP id ffacd0b85a97d-4887166daacmr2047188f8f.12.1790226615925;
+        Wed, 23 Sep 2026 22:10:15 -0700 (PDT)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4886876c417sm10993394f8f.18.2026.09.23.22.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Sep 2026 22:10:15 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Toshi Kani <toshi.kani@hpe.com>,
+	linux-mm@kvack.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/mm: Drop the page allocation from pud_free_pmd_page()
+Date: Thu, 24 Sep 2026 10:10:11 +0500
+Message-ID: <20260924051011.21237-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <e1f8a64a-e4b5-4c1b-b83d-50425a7621a4@intel.com>
+References: <e1f8a64a-e4b5-4c1b-b83d-50425a7621a4@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/mm: Drop the page allocation from
- pud_free_pmd_page()
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org
-Cc: "H . Peter Anvin" <hpa@zytor.com>, Mike Rapoport <rppt@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Pedro Falcato <pfalcato@suse.de>,
- Toshi Kani <toshi.kani@hpe.com>, linux-mm@kvack.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260923223116.20090-1-mikhail.v.gavrilov@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20260923223116.20090-1-mikhail.v.gavrilov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 9/23/26 15:31, Mikhail Gavrilov wrote:
-> So clear the PUD, flush, and free the PTE tables straight from the
-> detached PMD table - the same order pmd_free_pte_page() uses one level
-> down.  With no allocation left the cycle is gone, and so is the only way
-> this function could fail.
+On 9/23/26 16:07, Dave Hansen wrote:
+> There are a few things we need to figure out like having
+> pmd_free_pte_page() return 'int' when it doesn't ever fail, the
+> comments, and the reverse Christmas tree.
 
-Yeah, I basically agree with your analysis and fix.
+One data point for the return value: the x86-PAE pmd_free_pte_page()
+does fail.  It returns pmd_none(*pmd), and vmap_try_huge_pmd() relies
+on that to keep ioremap() from replacing an existing PTE table there
+(the comment above it is about the sync'd PMD entries).  Huge PMD vmap
+is enabled on PAE whenever the CPU has PSE.
 
-There are a few things we need to figure out like having
-pmd_free_pte_page() return 'int' when it doesn't ever fail, the
-comments, and the reverse Christmas tree.
+pud_free_pmd_page() has no such case: the PUD level is 64-bit only on
+x86, and with v2 applied the x86-64 version, like the arm64, riscv and
+powerpc ones, always returns 1.
 
-I'll dig into it a bit tomorrow and see what I come up with.
+> I'll dig into it a bit tomorrow and see what I come up with.
+
+Thanks.  This box reaches pud_free_pmd_page() on every boot I have
+checked, so I can run whatever you come up with through the same
+boot-time kprobe and reproducer check.
