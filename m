@@ -1,87 +1,86 @@
-Received: from mail-wr2-f17.google.com (mail-wr2-f17.google.com [74.125.225.81])
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC3637DAB3
-	for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 05:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D014B38332F
+	for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 06:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790226619; cv=none; b=btoe8wPw243f/rLZCcdLqhkIjE7T+E1VdQmBSdGXYN7BgXbDL6g9mXksRNH8PkybPzdvpDsoQG1lcbGBExTa0PyaMdBuAmv2PVrIefFw0f2ZUYu5XNI+Vv7a2PrzWiMBluqTK8xNIdTBVzLEVfjXqPegj2z5GLtDV4dHwhFTJXw=
+	t=1790232209; cv=none; b=RsjChC7XcriLeWJlGzNQH6Q+fX2lGfZTiw0+KRAdLZGuEdNUGd3wpNwEbjajt1GA2/hcl2+aGRBv/DtiBCB77Dg+91fWojQNxQlJAJllD56g6r0vnQ22jiLt7IPWNXytnlePlz3U7KBPuj10EbI8zihgcxuxHbQNpyqF/AH0ir0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790226619; c=relaxed/simple;
-	bh=EzS/SIPwNhc8n/arMuSg3yPaF0nMCEdu+ba1kwNXnUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gfk4loJp6jiYiFJCK5+bAPNFngIm+PRD+YmZx1ZSiy7+2IT/A70SnFDCGxifQB6R+Z+fbhFkxeLp1XmE1+NVOX5WTMgyD5DsjNiAH46AApCIpZDAa64kJp2SbL+5MHsrFMOlvD2KjVTN/AdOS7frX2OG9eISLzUKtkhQ6jjW60Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pYpFct6s; arc=none smtp.client-ip=74.125.225.81
+	s=arc-20240116; t=1790232209; c=relaxed/simple;
+	bh=lrI7esIax69ngJYm931hYNsW1zvRdM31DhVgSi9jBVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CRRUj1ZQGtxHpg+MtndFdTbHr6guEZDzdSERDvPUYfLH4CjGOjR5CoP90bNhylJk01T9q/PRO+Boktq79K/sv0JrH8msv3VSxdSy9wUFXU2/bJKjuFl1bFHbqfWJHU31hB5qV1Tb47JSf+Tiaq1QeHinY8W3iwxJWmvOvadRB/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9M3SUiC; arc=none smtp.client-ip=74.125.225.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYpFct6s"
-Received: by mail-wr2-f17.google.com with SMTP id ffacd0b85a97d-484366874b0so1005254f8f.2
-        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 22:10:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9M3SUiC"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49d1ca5b0d6so11397815e9.0
+        for <regressions@lists.linux.dev>; Wed, 23 Sep 2026 23:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790226616; x=1790831416; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=0Uje1jfPOPcmIbWgJBz3Sa+j8/FJrZMoBTZpzcUyL9A=;
-        b=pYpFct6sylOtdnGhXHhR2e4Jsm4LBTFWxeQA2BgsSoKN5IDQDVdZk7frYz8akGc8oV
-         aG5rl4zbWQTqZmiHm5qAEOLGDgn1O4sPTi1H+o0RTR/LcKrIFulTy4GCpMjdtRMR0U3T
-         JyLZaL3a4/RvuEaSz18XvIUFJ9Ay9kthPmKtXyZDmM1vF92cgwoMVCYBOUFwWUFrveXs
-         uhD51/G1tx9sEJqr8vBm+S8iexoHezu6B3pzu85iV6MQ6/1kzElI8jdTOL99SGoOQKVK
-         qb0G7FySKDGGBk39X5Ju2fOix/+H9meotGGX0Tg14iEj5aUAqcXCKhqU32rlS0aerEHw
-         AywQ==
+        d=gmail.com; s=20251104; t=1790232206; x=1790837006; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sd81Spa/YxvQixpMcNxhaEy6XglgEfTWtaXZ4D7EaWc=;
+        b=f9M3SUiC6/j9ezrmggO5rLVqfI27OPoX1ag3o6gzCl1CZL+HehRq8zONLDm2XSLcA/
+         cFdTnggz4fZZwWbKWrgUgx08v3eaZMUKngiBYiE/P0QVRuGEhnZShIppGFiPCxkdC/f8
+         qNdgyzzO/7pSAv9vWwNrDRbPHU+S6d6NTmOJoIdpOKZyxsgsFx2kZqlj5cVuwb/cfR/W
+         +Oj7Pf+d9ZNdijS41V87y2pFFJD0LNhyiWJpUuT73+BE2wLDO+z0oKmWQaHs30r9AFPb
+         AX49Q/fUmv6+kvxT6dYUSH5Gf6Vb1carBamZqe2U2uTXo1uWsFBWI4eT+bCThRPMeuDm
+         P50Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790226616; x=1790831416;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0Uje1jfPOPcmIbWgJBz3Sa+j8/FJrZMoBTZpzcUyL9A=;
-        b=oRAcrRS+0CiEfsQCoWkmFn5t+SrVlyai2REE0ivoBcr+M2brXHrQbW7X4HOLcF4Z5F
-         BGJ8M48sMrnOUZ/y+YTViNfxTy3W9jd+QdLhD4ggEo0U5CyqENxuSBkel71Ylp8qXjdv
-         hTsnTb9p5/2Kn43XJu5UH0JolC3DGP8XPZpJc7Zy3XG+BlR0/bDlhvPb9BFOf80K+AzS
-         J9mLWR2/zjq9s6UXIL3chDVG8sPi9w4n4tgWMm75wa1Qy5loEeJn7VlA4PLGNPQRS/dC
-         grZq/iAXAwZn/595vt6MKgTmUgRb88UFTnZXaV/EX21x7cWoSyNYMLO3Yu4Cw8fZbBs8
-         8Zpg==
-X-Forwarded-Encrypted: i=1; AKwUvBwLAGNeruF2NrwMzmjdXMEtFBtJ+hFpIiDEklBfZjJl3ppMtqKcdF3iJCoEomZIPlw9wBJ+ryAX3KDYlw==@lists.linux.dev
-X-Gm-Message-State: AFuF++l+7qbUy5AVnZVa5fuz32Z8SCsVkgU92t/uMa5lCKsau8Nzs4Kq
-	RvC7PWATx7O3+hCFl5FGdHoQx3Y4OXO4NSWb+e3+dsxLzCuOtxlWRxqs7FoEKNFT66DjlwB1
-X-Gm-Gg: AYBFou2NTn1UvJTwxXpTFCW5aO0G3kwCgunQTRoGHuIc7o/Sau25AjaAn/UkJZDpduS
-	SBgWA4MP4k5rjv1DxBiiZ+04dHWQCumf8PX9iiRPYzVdOsfEza1y3R+/NLV+eFBxdS/UN9YSiYD
-	1YMrwJckpib1eRQeoPCu48pDKfFqdJ5+NpwuQNJTHWyCJu02o0f+74zrWk0phAZlmkLckNfvSiV
-	UdmEyUJP+Qfp7vNhOioFkMUAQJ7QBKMtZU5Z2fGhUKje363StAjnGtldisCU7iGEx2OYaVGLAgN
-	mqcnWK16cHIxZZs+b4BmLRQOzB4AFxiE2qIgWUacJhRvDN1F/gxD32CPbj/KF+CL14qujPfWowH
-	kjQIeyzZbArvY1QGXMeFhqAskHOA+dXmfWE8GSI8+uCaH9L8wSB2xF4n6kY85hBprA51he+cGAK
-	/UxLSN0KXFenDS4z3ItW+ZmFA9uQqTy5r3aZ2zyz88SG2pl/4dRJEKtx3FnWI1I0yoYRTSi0FKs
-	pE8u3LuMJnua3tjz+firoX9XboWCF2BCEKSZJgYcGSEf0R4L4VyX6+gHo/mCSAVLXnLo7w=
-X-Received: by 2002:a5d:5f52:0:b0:487:232c:a9fb with SMTP id ffacd0b85a97d-4887166daacmr2047188f8f.12.1790226615925;
-        Wed, 23 Sep 2026 22:10:15 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1790232206; x=1790837006;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sd81Spa/YxvQixpMcNxhaEy6XglgEfTWtaXZ4D7EaWc=;
+        b=zoKLrZ4dJ2XPsj6Upr37VI1dHNapns9S8O5nHbf9e9Hz5vGAkm/hG2UZF9nv18fUqX
+         3CVZnpNmDYvYmD636uSSQo9sKVmuPjVnCe2207wo7MaLmovxHJLe18JBBzx88lbNHrCx
+         4g/oGt0eLlBSEJsLb8SkpJZe7XUFTGZHWPsFsG67+OZlDdihSQ0OPiHDUZx5BYhJkFMd
+         L+krO/JUJIjbt8ky/YOh0iRyVcN9PIPhDPpIpr7oTVMKry8VtmH0H/VKxb9v8APnMwBF
+         8Xc2pY0L38wKjyVHlCRSYUS957bO9eC/ZIWoMk2BGoU4o1O/IacsTovVAlNxOmwxgdc/
+         bEfg==
+X-Forwarded-Encrypted: i=1; AKwUvBygiVoSUqFVzd8hGGOu7VWi/+2xtM0zikJpNCYwsaAJAclltXIm7Kxg1sMoVp7Cq4pzhiu9Oql/o5TBAg==@lists.linux.dev
+X-Gm-Message-State: AFuF++mMlV/PQB6Uz4/adw6yROsXBZloBUbP+gRhhxE2xmpBKXZBNhKO
+	0GPKPX1arZ3+vixymX9eYrfwQKQ0diPX1hLLFzqghkR5HgH88DRW7wWX
+X-Gm-Gg: AYBFou3GcFpQ0lQ2HrTmBtbUdULDbusaz3PNQi2BpYl4V1KfDcW3LyO9+rqegY2DALQ
+	C5KtcH6Y4UN/QgMJNmQZuZ89xbbtnN3P1PGIlE6kbj+6PoAJO38ykODjkstoynKaIIyczbkaa7T
+	LEmCResa2PKFWZiXBH4CzK7kKKWFLmkBF+fVruaY7V2vIVpBhLT+UEK75blkGwkYP2D5KtJYhTh
+	bg1CUFjVU23drkYVGxdaWI1JWS2IkXxiKMj6L721JVVpeo9V9Am8Lq4X2U2L3xk6BKwW/t5h2al
+	1tNsnmCrvSnKrXK3f2qiibUIc/3e+MFLLviQ2Jct4APOwqKkYQKxp2kKGi0pfrAHBEGaMop/0IA
+	ByTrkRcKe3u2VteEBTty/KzNhMbAq53QQ1JBBK/9TNBWhaOSw9sxb9qMzIha8daSkt/+4ggOmrB
+	Et91Qyc+rWs2/3hZcGfFltu2vKqljMcsaxLGvVzjYWLrbrx2vJY0cH2F8IsfNGp02F5dG6zLiQa
+	lofyktrRfTmVS1f/AcpAe3e8Y2OmkhyTp/ww7gopYmODf9Ha8VqENzAO1V3eC1hQj2263s=
+X-Received: by 2002:a05:600c:8b22:b0:49e:6fd2:a45 with SMTP id 5b1f17b1804b1-49fe66d81fbmr22703135e9.16.1790232205833;
+        Wed, 23 Sep 2026 23:43:25 -0700 (PDT)
 Received: from localhost ([188.234.148.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4886876c417sm10993394f8f.18.2026.09.23.22.10.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fdf99df60sm90788905e9.1.2026.09.23.23.43.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2026 22:10:15 -0700 (PDT)
+        Wed, 23 Sep 2026 23:43:24 -0700 (PDT)
 From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
 	Mike Rapoport <rppt@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Toshi Kani <toshi.kani@hpe.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Vishal Moola <vishal.moola@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	x86@kernel.org,
 	linux-mm@kvack.org,
 	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/mm: Drop the page allocation from pud_free_pmd_page()
-Date: Thu, 24 Sep 2026 10:10:11 +0500
-Message-ID: <20260924051011.21237-1-mikhail.v.gavrilov@gmail.com>
+	linux-kernel@vger.kernel.org,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Subject: [PATCH] mm: don't defer freeing kernel page tables while booting
+Date: Thu, 24 Sep 2026 11:43:21 +0500
+Message-ID: <20260924064321.23787-1-mikhail.v.gavrilov@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <e1f8a64a-e4b5-4c1b-b83d-50425a7621a4@intel.com>
-References: <e1f8a64a-e4b5-4c1b-b83d-50425a7621a4@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -90,23 +89,92 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On 9/23/26 16:07, Dave Hansen wrote:
-> There are a few things we need to figure out like having
-> pmd_free_pte_page() return 'int' when it doesn't ever fail, the
-> comments, and the reverse Christmas tree.
+Booting with a boot-time function tracer and a filter, for example
 
-One data point for the return value: the x86-PAE pmd_free_pte_page()
-does fail.  It returns pmd_none(*pmd), and vmap_try_huge_pmd() relies
-on that to keep ioremap() from replacing an existing PTE table there
-(the comment above it is about the sync'd PMD entries).  Huge PMD vmap
-is enabled on PAE whenever the CPU has PSE.
+  ftrace=function ftrace_filter=pud_free_pmd_page
 
-pud_free_pmd_page() has no such case: the PUD level is 64-bit only on
-x86, and with v2 applied the x86-64 version, like the arm64, riscv and
-powerpc ones, always returns 1.
+panics on 7.3-rc4 as soon as the tracer starts:
 
-> I'll dig into it a bit tomorrow and see what I come up with.
+  [   23.531178] Starting tracer 'function'
+  [   23.675800] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN NOPTI
+  [   23.819917] KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
+  [   23.964025] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 7.3.0-rc4-fe2ec83746e5-with-fixes-v2+ #195 PREEMPT(undef)
+  [   24.252248] RIP: 0010:__queue_work+0xab/0xf00
+  [   25.981629] Call Trace:
+  [   26.125727]  <TASK>
+  [   26.413912]  ? pagetable_free_kernel+0x20/0x120
+  [   26.990283]  queue_work_on+0x97/0xf0
+  [   27.134382]  __cpa_collapse_large_pages+0x501/0x6f0
+  [   27.566662]  cpa_flush+0x394/0x620
+  [   27.998953]  change_page_attr_set_clr+0x321/0x4a0
+  [   29.151729]  set_memory_rox+0xa2/0xf0
+  [   29.584018]  create_trampoline+0x431/0x6f0
+  ...
+  [   44.343347] Kernel panic - not syncing: Attempted to kill the idle task!
 
-Thanks.  This box reaches pud_free_pmd_page() on every boot I have
-checked, so I can run whatever you come up with through the same
-boot-time kprobe and reproducer check.
+The boot-time tracer is started from early_trace_init(), which runs
+before workqueue_init_early().  Making its trampoline read-only splits a
+large page, and CPA collapses it again right away.  The split table has
+been a kernel page table since commit 9e4a3ec3411b
+("x86/mm/pat: Allocate split page tables as kernel page tables"), so the
+collapse frees it through pagetable_free_kernel(), which queues work on
+system_percpu_wq - still NULL at that point.
+
+The deferral exists so that IOMMUs using SVA can have their paging
+structure caches flushed before a kernel page table is freed.  While
+system_state is still SYSTEM_BOOTING only the boot CPU runs and no IOMMU
+has been initialised yet (on x86 that happens from pci_iommu_init(), a
+rootfs_initcall), so there is nothing to flush.  Free the table directly
+in that case.
+
+Fixes: 9e4a3ec3411b ("x86/mm/pat: Allocate split page tables as kernel page tables")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+---
+#regzbot introduced: 9e4a3ec3411b
+
+Tested on a Ryzen 9 7950X with a Radeon RX 7900 XTX, lockdep and KASAN
+enabled, booting with the command line above plus earlycon=efifb so
+that the oops is visible:
+
+  7.3-rc4 (fe2ec83746e5)             panics as quoted
+  + revert of 9e4a3ec3411b           boots
+  + this patch, 9e4a3ec3411b kept    boots
+
+With this patch the boot-time tracer works as intended and records
+pud_free_pmd_page() being called from vmap_p4d_range() during boot.
+All three kernels also carry my pud_free_pmd_page() v2 patch and
+unrelated local changes elsewhere (HID, sound/usb, Bluetooth, debugfs);
+none of them is on this path.
+
+9e4a3ec3411b is also in 7.2.7 and 6.18.53, together with the deferred
+pagetable_free_kernel(); I have not tried those.
+
+ mm/pgtable-generic.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+index b91b1a98029c..2d9b4ba33b46 100644
+--- a/mm/pgtable-generic.c
++++ b/mm/pgtable-generic.c
+@@ -440,6 +440,17 @@ static void kernel_pgtable_work_func(struct work_struct *work)
+ 
+ void pagetable_free_kernel(struct ptdesc *pt)
+ {
++	/*
++	 * While the system is still booting only the boot CPU runs and no
++	 * IOMMU has been set up, so nothing can be caching this table and
++	 * there is nothing to flush.  The workqueue this defers to may not
++	 * exist yet either.
++	 */
++	if (system_state == SYSTEM_BOOTING) {
++		__pagetable_free(pt);
++		return;
++	}
++
+ 	spin_lock(&kernel_pgtable_work.lock);
+ 	list_add(&pt->pt_list, &kernel_pgtable_work.list);
+ 	spin_unlock(&kernel_pgtable_work.lock);
+-- 
+2.55.0
+
