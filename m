@@ -1,75 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC7443B3EA;
-	Thu, 24 Sep 2026 07:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC0E43F4CE
+	for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 07:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790235507; cv=none; b=UfUA7si2rtJnxBcnbJy5Yjzt7N0vb22QSVmIkZsZXaWUzuzVzKLiLs/a25q+iTXicbt7yqnriRAwqwbJfOupYy+W22htbvtVuSklvvRwjU36Ja+Oziwpcj6Yy+TypDSiaRClFvKfb96aBCx8x/RLnpWjluopIfLCnHcdtxsFZrw=
+	t=1790236608; cv=none; b=sD46xOd3MGJ/6Fo4oEJ4WIrYZI8Lhtu7FFC9nmOmcOp0tYd+RLKT2sV4QHLzf2K1szGAsD5BZElgNocEjgpuDFYZBCvO9Mo/cxOlHDkDgVBCtJNTHj9L5H6Vp5cMtMKNOni25wYm2b6tlUU9zvuQdV9K0Zk7q2H4ObqvO6gemcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790235507; c=relaxed/simple;
-	bh=p6CmvTxdRWJaR85/x76jMBw0rw5S+UxLU9OMQSWKTns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvwlAmclkbTBzLkQkacgcSmMWy1khKCLHoDVpXTzpiCHnrK9Ba5U84b5XQKzODUtbMQIa6GoObas2ohbE8tnz59g2XtgVMPGClQQ0/oOyCBA27FIZRZgydK7RYe3CzPavgB8WqMdGkVZhP6HyxRZ6bZDLie67mdK+HANuYX6xn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qrg79Odc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790236608; c=relaxed/simple;
+	bh=/TFhBRaHqGZ4NvfjtaGaeSCDvwIU976ZRm5BEDj8Fro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h9dOCdKrDbEROAkbl7BJRZWgeTTZgpxmys5xictYHN9SQeu4Xwnvj8tL2OIpCs5VBw0dKERoHyF23362qvRDAF6oK1oJpD8tHIuOuUCzQzBN5jxa6y9HNxA2EnT7+1P49qq7XMyv/aj40l3TbryjsQYkZ6j6f3j7vFECcYO5fEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=C1pL3SX/; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qrg79Odc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F4F1F000FF;
-	Thu, 24 Sep 2026 07:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790235505;
-	bh=syHUjeiyU6PAQHnSegmJU/Xn5fIogA7Zi7eAXuaZd0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Qrg79OdcGPfgl7yoXl3ptDh3IKF+UVtWixl4nCRdJqTGzJZ+s1Q/oDpS1tvP5TbmU
-	 NC/P3mvbNVR2+m1S835Pu6Brj4w2XDBtdsxcTRzLAGRNZ0ek1YUfRQay4KrGBYVwSP
-	 c/1mkMp1GSHwPMMZCV7oAdOOPyVA9oyXrssm/mTg12mdArxvR3+Vl5KYhLriakA9mb
-	 l/cnPm91MdLqYgXSXXTT03lz59Mp7424d4AfeLbVjh9oqanpGJ4zauMw5X2uFjzT2W
-	 TR2o7CkHFMIgi7kDWyK7afhFP1BP82PNGmcb4v/0pzFiydme+Isv5TB4vSibkKCO01
-	 1I4uk/WoQjk6w==
-Date: Thu, 24 Sep 2026 08:38:18 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: David Hildenbrand <david@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Vishal Moola <vishal.moola@gmail.com>, 
-	Ingo Molnar <mingo@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org, 
-	linux-mm@kvack.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: don't defer freeing kernel page tables while booting
-Message-ID: <arTTVY4bwYKzeWgb@gremlin>
-References: <41a59ba9-039e-454f-8d31-f647db802ada@kernel.org>
- <20260924072819.33277-1-mikhail.v.gavrilov@gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="C1pL3SX/"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hr5kn12DMz6JX0;
+	Thu, 24 Sep 2026 09:56:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1790236593;
+	bh=/TFhBRaHqGZ4NvfjtaGaeSCDvwIU976ZRm5BEDj8Fro=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C1pL3SX/mq8E51xRDcnRhHxkJ0HcdIpa8b9Ck65vMj722c912KjH7Jvdj1lMNQPIG
+	 r50sjICcpkhHgjvX0qUCJoMEn8xiteVns9O93P/B0gG8D8ixTvuRtzdAUKoTtDR1ok
+	 4zhWE74pZOxZX0BXdZjZ2AcMetMAAkQpsS2XSD643XiQsHc61HWtvW4RC10gtJZyM9
+	 Z70J6BhxmbKainT0598Y55PZUsjN3dRsAm0EJrEoJyg4Q+mdQyEMTw4TGsIY8qABsF
+	 SgqX2kf+2kYuno8epshSnUA792y2Edtqxp49WBKmehsYjiD80s76IH7EMjB8KWtgwx
+	 ZfY7q+FLIb2VQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hr5kn0Jdrz4ykm;
+	Thu, 24 Sep 2026 09:56:33 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hr5km3Zxmz8sb3;
+	Thu, 24 Sep 2026 09:56:32 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 719AF5FA13;
+	Thu, 24 Sep 2026 09:56:31 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <30af27bf-202b-48fd-9b7f-b05e68757ee4@leemhuis.info>
+Date: Thu, 24 Sep 2026 09:56:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260924072819.33277-1-mikhail.v.gavrilov@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] iwlwifi AX200 (cc-a0-77): downlink capped at HE-NSS
+ 1 with, firmware core24.70-49 (77.8dbafb52.0), 2x2 with 77.f39cc7f9.0
+To: jiyu <yuji1899@outlook.com>, linux-wireless@vger.kernel.org
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <SY8P300MB05515915C81B8D9E50D83F64DA862@SY8P300MB0551.AUSP300.PROD.OUTLOOK.COM>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <SY8P300MB05515915C81B8D9E50D83F64DA862@SY8P300MB0551.AUSP300.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179023659194.4151773.10876639730678461774@mxe9fb.netcup.net>
+X-NC-CID: rN8nvm6jsEq3N/dziQRynEHRpFO7X6e3hsAnmkVPOn4K9vZrTbY=
 
-On Thu, Sep 24, 2026 at 12:28:19PM +0500, Mikhail Gavrilov wrote:
-> On 9/24/26 09:07, David Hildenbrand (Arm) wrote:
-> > Should we instead simply skip the
-> >
-> > 	schedule_work(&kernel_pgtable_work.work);
-> >
-> > and rely on anybody freeing stuff later to just free that one alongside?
-> >
-> > That avoids throwing in more freeing handling.
->
-> Yes, that is simpler, and the early table then goes through the same
-> IOMMU flush as every other one, so there is no need to reason about
-> what an IOMMU can see during boot.  The only cost is that it waits on
-> the list until the next kernel page table is freed after boot.
->
-> I'll send a v2 that way once I have booted it here.
+On 9/19/26 12:34, jiyu wrote:
+> 
+> (Please keep me in Cc - I am not subscribed to this list.)
+> 
+> Bug tracker entry with all logs and both firmware A/B runs: https://
+> bugzilla.kernel.org/show_bug.cgi?id=222031
+> 
+> Summary: an Intel Wi-Fi 6 AX200 [8086:2723] (rev 1a) receives only ONE
+> spatial stream on the downlink while transmitting TWO, but only with
+> the newest cc-a0-77 firmware build. The kernel and the iwlwifi driver
+> are unchanged between the working and the failing case - only the
+> firmware blob differs, so this is not a kernel code regression; the
+> same kernel (7.2.5-200.fc44) reaches full 2x2 with the previous build.
+In that case you want to report this to
+https://gitlab.com/kernel-firmware/linux-firmware and ask for a revert.
+Please post the link to your report afterwards here.
 
-Please wait for me to have a look through this issue before respinning,
-please.
-
---
-Cheers, Lorenzo
+Ciao, Thorsten
