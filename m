@@ -1,49 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDB842A178;
-	Thu, 24 Sep 2026 09:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD1635677C;
+	Thu, 24 Sep 2026 09:31:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790242179; cv=none; b=IAzPEonFYr4qpqooVZ83/WQDlsaYAaYUAiez/8BZgmzEjTawrPm3fY2zJyH4eOVpMTM/RsW8ufD4LCqcnd6udmyrgvBg4Gnc14rqsgLzLcvhCqi+XNk062gAIZncHl5pVLm3xupmj4HFvnSpDUVRvlXToT9549jPeXJO4mWJBEo=
+	t=1790242284; cv=none; b=iMqmHgEGKoqRZ9yB7kQHVxJIpQH+wfdnc6lbk8oqW9ZUQpU8I5H5oPzQTCJvxxRXFshr9beQPGj3B+XFWpmN7MEpcJ+8kXUqS3uLAejv3fWn8MBmywBPchU9qktYcQ1WrHwiTAwT5rLYefFiWEs8jArfv2Bczy8tSdumpo/tx84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790242179; c=relaxed/simple;
-	bh=CvllqMS/s6S8skjjB6EJv5PXXeEUt9nfg3vLkSb42Ww=;
+	s=arc-20240116; t=1790242284; c=relaxed/simple;
+	bh=3016/YcUrafmSJfnVIIyNUFVP7OY0QoPQKi4VrtHhdc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnKMEQgbuWmFiKKXf83UH+1UNbFV3WxrDk7WugeeiMesNR/5mwOWqETassaW7d2OORFY2ou6u6yLK8KNwdl97/J3S7ChJXbanlYY5dFR7JYbiXvUFTeZYkfxstqUKZJzpRn5TsCfVrDpWczf/cgx7gADqWCJozG1FH3z2zQgkCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm+Fwa7r; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=KOjqat7oLnA/Q7Pk/LTrUZ6P7Q8tcaWDnVhGh5eoAfJuFXjLWpT+Zm3lOdWNLAFMKltKStOi9sGdMrpR0GoOWGYR0pGq6hlgM+UmWqaEnAEJq0xUYp4qF6IKlNtMk65r4GVkDvQoeq6+9vXeJvYhRmnXGqnbNxGZymRYASU2+74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZmbNWDr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm+Fwa7r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0B71F000FF;
-	Thu, 24 Sep 2026 09:29:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZmbNWDr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9CC1F000FF;
+	Thu, 24 Sep 2026 09:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790242176;
-	bh=ks0w1rHPiDMbqqG99fpjPwGGuK/nceQ8BW9BfzFj+fc=;
+	s=k20260515; t=1790242282;
+	bh=NeTuCFcemX/adNl5XbtKYCBGxqR8ivj2ssA68DygpBo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Lm+Fwa7rBukjDdQpzJDEQf80YAJJBMO9WT/Y84Z6zBCDoesGJ6lMYoymrAxpvRA/S
-	 5qZID6fZ7FitJC+kX5Yc34J7MOKOWr96hil/eb6D9lTLKqrInm0p79sHbtkEB828/F
-	 +t0EmQwm9flvR3SQlv69+Ls75YyUsCPM4rdoCQtuLS/2vMtiafQ1zltIhEjmQaFBlF
-	 PssluRWFi1r0lqm4805PJMCr4h2mnQDIPNhHUascXIyWR7R5mdO0N6q4NAGoT/nKcT
-	 /LQgTaA583h5uLTLE+y/lA89MG+G1gz9Vkxi9WBl2ocBXPekK5O7Ehciij3CxQUwUd
-	 JdaGuBdtP21Bg==
-Date: Thu, 24 Sep 2026 10:29:29 +0100
+	b=EZmbNWDrJtzCFAJtM9thEalDnEZjbzv/YFJ6VRB0CFMs6afx6LFyjqWeB9uvZu9Qj
+	 x81U9J6SOwj+0cLIr/MZhV0koClWIOxcD5o/aYGCmtyDTOVlrSVvKX6ZfcZBj68e6K
+	 vYdqUfgrFK//iQz1ODBsg0qkf5SSSUOk+wALZMA2yrtTuYJTmKd2zxd3tMMblpobmo
+	 OPdWy5LyVA52bNPo6ohdMZWzXomoavKccUxrgflAMfYVBRrOQO6rK1bHxObbSADG3d
+	 kdoP8cjsGmQto1i2Tuxf28J9IBuOzTTBvd4L9nigmzb2llrZgIVXCPzl22BDUyAmMY
+	 BBCYQ4gHnz+VQ==
+Date: Thu, 24 Sep 2026 10:31:15 +0100
 From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
 	"Liam R . Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
 	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
 	Michal Hocko <mhocko@suse.com>, Vishal Moola <vishal.moola@gmail.com>, 
 	Ingo Molnar <mingo@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
 	Jason Gunthorpe <jgg@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org, 
 	linux-mm@kvack.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: don't defer freeing kernel page tables while booting
-Message-ID: <arTq_8FGRj7a85kw@gremlin>
-References: <41a59ba9-039e-454f-8d31-f647db802ada@kernel.org>
- <20260924072819.33277-1-mikhail.v.gavrilov@gmail.com>
- <65b94694-d503-46c5-9f13-f0f7f8bba8d8@kernel.org>
- <arTl5Cc1B-2_BoHP@gremlin>
- <arTmLiTLnxhwohH1@gremlin>
+Subject: Re: [PATCH v2] mm: don't schedule deferred kernel page table freeing
+ while booting
+Message-ID: <arTtl-7Nl5Ie0SEs@gremlin>
+References: <20260924092307.22813-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,33 +49,109 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <arTmLiTLnxhwohH1@gremlin>
+In-Reply-To: <20260924092307.22813-1-mikhail.v.gavrilov@gmail.com>
 
-On Thu, Sep 24, 2026 at 09:59:36AM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Thu, Sep 24, 2026 at 09:57:57AM +0100, Lorenzo Stoakes (ARM) wrote:
-> > On Thu, Sep 24, 2026 at 09:31:40AM +0200, David Hildenbrand (Arm) wrote:
-> > > On 9/24/26 09:28, Mikhail Gavrilov wrote:
-> > > > On 9/24/26 09:07, David Hildenbrand (Arm) wrote:
-> > > >> Should we instead simply skip the
-> > > >>
-> > > >> 	schedule_work(&kernel_pgtable_work.work);
-> > > >>
-> > > >> and rely on anybody freeing stuff later to just free that one alongside?
-> > > >>
-> > > >> That avoids throwing in more freeing handling.
-> > > >
-> > > > Yes, that is simpler, and the early table then goes through the same
-> > > > IOMMU flush as every other one, so there is no need to reason about
-> > > > what an IOMMU can see during boot.  The only cost is that it waits on
-> > > > the list until the next kernel page table is freed after boot.
-> > >
-> > > If we're worried about that actually causing problems we could drain the list at
-> > > a later part during the boot stage. I'd suspect we free something else later
-> > > already and simply drain the list ...
+I know I said go ahead so it's my fault not yours, but in general please don't
+respin so fast :P
+
+I made a suggestion on the other thread which this has now raced. See below!
+
+On Thu, Sep 24, 2026 at 02:23:07PM +0500, Mikhail Gavrilov wrote:
+> Booting with a boot-time function tracer and a filter, for example
 >
-> And on that, yes, I don't think there's anything to worry about there.
+>   ftrace=function ftrace_filter=pud_free_pmd_page
+>
+> panics on 7.3-rc4 as soon as the tracer starts:
+>
+>   [   23.531178] Starting tracer 'function'
+>   [   23.675800] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN NOPTI
+>   [   23.819917] KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
+>   [   23.964025] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 7.3.0-rc4-fe2ec83746e5-with-fixes-v2+ #195 PREEMPT(undef)
+>   [   24.252248] RIP: 0010:__queue_work+0xab/0xf00
+>   [   25.981629] Call Trace:
+>   [   26.125727]  <TASK>
+>   [   26.413912]  ? pagetable_free_kernel+0x20/0x120
+>   [   26.990283]  queue_work_on+0x97/0xf0
+>   [   27.134382]  __cpa_collapse_large_pages+0x501/0x6f0
+>   [   27.566662]  cpa_flush+0x394/0x620
+>   [   27.998953]  change_page_attr_set_clr+0x321/0x4a0
+>   [   29.151729]  set_memory_rox+0xa2/0xf0
+>   [   29.584018]  create_trampoline+0x431/0x6f0
+>   ...
+>   [   44.343347] Kernel panic - not syncing: Attempted to kill the idle task!
+>
+> The boot-time tracer is started from early_trace_init(), which runs
+> before workqueue_init_early().  Making its trampoline read-only splits a
+> large page, and CPA collapses it again right away.  The split table has
+> been a kernel page table since commit 9e4a3ec3411b
+> ("x86/mm/pat: Allocate split page tables as kernel page tables"), so the
+> collapse frees it through pagetable_free_kernel(), which queues work on
+> system_percpu_wq - still NULL at that point.  That commit is correct in
+> itself; it only lets CPA reach pagetable_free_kernel() before the
+> workqueue that function relies on exists.
+>
+> Keep putting the table on the list, but don't schedule the work while
+> the system is still booting.  The next kernel page table freed after
+> boot schedules it, and the work then frees the early table too, after
+> the same IOMMU flush as any other.  If no kernel page table is freed
+> after boot, the ones freed during boot stay on the list.
+>
+> Fixes: 9e4a3ec3411b ("x86/mm/pat: Allocate split page tables as kernel page tables")
+> Suggested-by: David Hildenbrand (Arm) <david@kernel.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> Link: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
+> ---
+> v2:
+>  - Keep the table on the list and only skip scheduling the work while
+>    booting, instead of freeing it directly (David Hildenbrand)
+>  - Say that 9e4a3ec3411b is correct in itself and only exposes the
+>    problem (Lorenzo Stoakes)
+> v1: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
+>
+> Tested on a Ryzen 9 7950X with a Radeon RX 7900 XTX, lockdep and KASAN
+> enabled, on 7.3-rc4 (fe2ec83746e5) with the same unrelated local
+> changes as noted for v1, booting with
+>
+>   ftrace=function ftrace_filter=pud_free_pmd_page,pagetable_free_kernel,kernel_pgtable_work_func
+>
+> The boot that panicked without the fix completes.  The table freed
+> while the tracer installs itself does not show up in the trace, since
+> the tracer is not live yet at that point, but the first kernel page
+> table freed after boot does: systemd-modules-load freeing one from
+> __cpa_collapse_large_pages() schedules the work, and
+> kernel_pgtable_work_func() runs 0.8 ms later and drains the list.  From
+> then on every pagetable_free_kernel() in the trace (660 entries, none
+> lost) is followed by a work run within a few milliseconds.  So on this
+> box the early tables wait until the first module is loaded, and no
+> separate drain is needed.
+>
+>  mm/pgtable-generic.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> index b91b1a98029c..f7f504f57914 100644
+> --- a/mm/pgtable-generic.c
+> +++ b/mm/pgtable-generic.c
+> @@ -444,6 +444,12 @@ void pagetable_free_kernel(struct ptdesc *pt)
+>  	list_add(&pt->pt_list, &kernel_pgtable_work.list);
+>  	spin_unlock(&kernel_pgtable_work.lock);
+>
+> -	schedule_work(&kernel_pgtable_work.work);
+> +	/*
+> +	 * The workqueue may not exist yet while the system is booting.
+> +	 * The next kernel page table freed after boot schedules the work,
+> +	 * which then frees this one as well.
+> +	 */
+> +	if (system_state != SYSTEM_BOOTING)
+> +		schedule_work(&kernel_pgtable_work.work);
+>  }
+>  #endif
+> --
+> 2.55.0
+>
 
-Though maybe it's worth ensuring the drain? Shouldn't be hard, so like:
+Maybe we want to ensure the drain? Like below:
 
 diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
 index f3754cefb19e..67f286169632 100644
@@ -115,5 +188,6 @@ index f3754cefb19e..67f286169632 100644
 +core_initcall(kernel_pgtable_drain_early);
 +
  #endif
+
 --
 Cheers, Lorenzo
