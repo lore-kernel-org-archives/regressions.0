@@ -1,101 +1,75 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF89939CD11
-	for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 07:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC7443B3EA;
+	Thu, 24 Sep 2026 07:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790235271; cv=none; b=C+g7WTli6xC1KhC6dLUerKmoPLNNvpRXj5bcPI7R+SwnxpiWxwdbOO7rT2dZ7RxbEc90Juu0EUSn8qMMR6chMmemh/8d2e48xLi4Xb6KpP+F627Zd+PVoFHYnyxes39kyTXqdaf8ubbwMC++lgt4tzwA3ge3ciNjdd3eXigOpH0=
+	t=1790235507; cv=none; b=UfUA7si2rtJnxBcnbJy5Yjzt7N0vb22QSVmIkZsZXaWUzuzVzKLiLs/a25q+iTXicbt7yqnriRAwqwbJfOupYy+W22htbvtVuSklvvRwjU36Ja+Oziwpcj6Yy+TypDSiaRClFvKfb96aBCx8x/RLnpWjluopIfLCnHcdtxsFZrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790235271; c=relaxed/simple;
-	bh=MygDLt77CAWexrvXWHNdRVysOGikwZW7aGyxat4mspo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sUn8sXvaHBhs4+6FNbxXWY2Bnh1xcga6w7QueNCw9uIluN3IigWWO5OteJrvJi62bT0v7dW0CIZ4KSJWZhJUukSkgeV1hEV3jENNlHVAqtK0QEB38L0chHtHvyS05JTkDFrWk9GEshRSZGtImgXxSfzEgHq4yqDdWs4JdtGqYqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LuS1KZ33; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1790235507; c=relaxed/simple;
+	bh=p6CmvTxdRWJaR85/x76jMBw0rw5S+UxLU9OMQSWKTns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvwlAmclkbTBzLkQkacgcSmMWy1khKCLHoDVpXTzpiCHnrK9Ba5U84b5XQKzODUtbMQIa6GoObas2ohbE8tnz59g2XtgVMPGClQQ0/oOyCBA27FIZRZgydK7RYe3CzPavgB8WqMdGkVZhP6HyxRZ6bZDLie67mdK+HANuYX6xn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qrg79Odc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LuS1KZ33"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hr5F70Rh2z4NB0;
-	Thu, 24 Sep 2026 09:34:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1790235259;
-	bh=MygDLt77CAWexrvXWHNdRVysOGikwZW7aGyxat4mspo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LuS1KZ33CklYBOlwsAqs9/QrxI9dSGf8IeCa8Vx/JpgwBH7xzIy8OyQW1wwQYgKw+
-	 4orq/C+jHH+X4bgwZoi8dxvn+8b99Bayalo5pK03K5MOzromw/9OZ1548Rc5eMcwUh
-	 3iHSMZtrBqAp6KozHPLKJEq/wWIW+RpDdhpfgYyg9ZJr2k7Y8C1TOuCexXP3y89Up1
-	 XZBseHFEmdxEYTsZIy8UlwBs1l+g52VYBlyVaJcV2Y5oVz0Jl26gl+ZS0puowDEp8s
-	 etPQpFXc3Kg3FZ4Z7OeSQfLGp6ZH7T0DgvrUwC4B5i0VaY04HsIFhENXgaqJ2RbmHO
-	 QbTqhmFh5hI2A==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hr5F66rPXz7xFf;
-	Thu, 24 Sep 2026 09:34:18 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hr5F55zj7z8svW;
-	Thu, 24 Sep 2026 09:34:17 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BFD145FA13;
-	Thu, 24 Sep 2026 09:34:16 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <4f37f217-fb94-4d4b-a2aa-9df8069c62bb@leemhuis.info>
-Date: Thu, 24 Sep 2026 09:34:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qrg79Odc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F4F1F000FF;
+	Thu, 24 Sep 2026 07:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790235505;
+	bh=syHUjeiyU6PAQHnSegmJU/Xn5fIogA7Zi7eAXuaZd0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Qrg79OdcGPfgl7yoXl3ptDh3IKF+UVtWixl4nCRdJqTGzJZ+s1Q/oDpS1tvP5TbmU
+	 NC/P3mvbNVR2+m1S835Pu6Brj4w2XDBtdsxcTRzLAGRNZ0ek1YUfRQay4KrGBYVwSP
+	 c/1mkMp1GSHwPMMZCV7oAdOOPyVA9oyXrssm/mTg12mdArxvR3+Vl5KYhLriakA9mb
+	 l/cnPm91MdLqYgXSXXTT03lz59Mp7424d4AfeLbVjh9oqanpGJ4zauMw5X2uFjzT2W
+	 TR2o7CkHFMIgi7kDWyK7afhFP1BP82PNGmcb4v/0pzFiydme+Isv5TB4vSibkKCO01
+	 1I4uk/WoQjk6w==
+Date: Thu, 24 Sep 2026 08:38:18 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: David Hildenbrand <david@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"Liam R . Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Vishal Moola <vishal.moola@gmail.com>, 
+	Ingo Molnar <mingo@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org, 
+	linux-mm@kvack.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: don't defer freeing kernel page tables while booting
+Message-ID: <arTTVY4bwYKzeWgb@gremlin>
+References: <41a59ba9-039e-454f-8d31-f647db802ada@kernel.org>
+ <20260924072819.33277-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] e1000e: heavy packet loss on Lenovo ThinkPad P14s
- Gen 5 (I219-LM, Meteor Lake) after K1 re-enable; fixed by disable-k1
-To: dima.ruinskiy@intel.com, anthony.l.nguyen@intel.com,
- przemyslaw.kitszel@intel.com
-Cc: Javier Herrera <javier.herrera@afronta.com>, vitaly.lifshits@intel.com,
- netdev@vger.kernel.org, regressions@lists.linux.dev,
- intel-wired-lan@lists.osuosl.org
-References: 
- <CAKRuCQLWEcci9hPgNUmvq44Bd2H30T5_vP=exMjsknXMN5Yh9A@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAKRuCQLWEcci9hPgNUmvq44Bd2H30T5_vP=exMjsknXMN5Yh9A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179023525718.4133067.16941654907970362532@mxe9fb.netcup.net>
-X-NC-CID: cGcaaXxBdAKNLYFFv6hi9U+IhSapvlba8V2FM/uAY+tvOOFUJOE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260924072819.33277-1-mikhail.v.gavrilov@gmail.com>
 
-On 9/15/26 10:57, Javier Herrera wrote:
-> 
-> Since commit 578294b8b60d ("e1000e: Reconfigure PLL clock gate timeout and
-> re-enable K1 on Meteor Lake") the integrated I219-LM in a Lenovo ThinkPad
-> P14s Gen 5 (Intel variant, Core Ultra 9 185H) shows constant packet loss
-> and erratic latency on the wired link. Wi-Fi and a USB-C RTL8152 adapter on
-> the same cable, switch and router are fine, so the network itself is not
-> the problem.
-> 
-> Setting the private flag "disable-k1" fixes it immediately, so this looks
-> like another system where the PLL clock gate reconfiguration is not enough
-> and the DMI quirk table introduced by that commit should be extended.
-> [...]
+On Thu, Sep 24, 2026 at 12:28:19PM +0500, Mikhail Gavrilov wrote:
+> On 9/24/26 09:07, David Hildenbrand (Arm) wrote:
+> > Should we instead simply skip the
+> >
+> > 	schedule_work(&kernel_pgtable_work.work);
+> >
+> > and rely on anybody freeing stuff later to just free that one alongside?
+> >
+> > That avoids throwing in more freeing handling.
+>
+> Yes, that is simpler, and the early table then goes through the same
+> IOMMU flush as every other one, so there is no need to reason about
+> what an IOMMU can see during boot.  The only cost is that it waits on
+> the list until the next kernel page table is freed after boot.
+>
+> I'll send a v2 that way once I have booted it here.
 
-Dima or e1000e maintainers, could you please submit and upstream a quirk
-entry to resolve this regression? Ideally with a stable tag? Javier
-afaics provided everything needed for this. Reminder, Linus rule of
-thumb wrt to regressions is "generally fix them within a week,
-preferably before the next rc.":
-https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+Please wait for me to have a look through this issue before respinning,
+please.
 
-Or is there some reason why the quirk entry is a bad idea here?
-
-Sending this as things looked stalled from here; or was there some
-progress to resolve this already which I missed?
-
-Ciao, Thorsten
+--
+Cheers, Lorenzo
