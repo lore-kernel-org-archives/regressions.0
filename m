@@ -1,33 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A84C41DEE7;
-	Thu, 24 Sep 2026 07:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFFC40929D
+	for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 07:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790233683; cv=none; b=K3kR9qOCG3S9bFbqcIQoCzixvxSEoh1rJE4QZ91IB+I4Yt+rAwgjl3rZDAfj7mvuig3mmMkE4HSKVOu4mkk2zfUGuRLG+sl5Ta77UJCFMP25/mG0YjZep2Z3INiBUxGPF64Pk130aKJOV0C/ubuac8F3VpvnGMiHUg4zYZxwXBg=
+	t=1790233788; cv=none; b=V3SFw6CVJzOdWdNrcog2nMg9+kYdwt1rRLpPue03Ah1af/YafRSm8yOa2srSvxYhNTLDMxdbABaRy0cFskFbZm/wuzVy55RaAVBbJ5WNn2DkfHsJH/nWNH+6wKcMk/9rk/BqvU0StfDn5yXDBJxzIugsNnwy0dwzrbKg33dtnMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790233683; c=relaxed/simple;
-	bh=Icj/hgctX9XKLRGJgAUX+/cnp4d0vWoBSdT27qFinws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cXME208jXcrLuo6EGkx5UlzoCOpPFB+eAONaiAq51QibCR+MdH3d/Q61/JYN4pOAB/hka/hud+p8k+bGRPJzd4Yt0XqjFVcpOuwtRHKyC1VT+Kn7daA6WPapHJ8J2MI84EKRg8iIk5yHdbc3z+It2u+U5xzm9vh6rmHjO5jN4VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQJbdOLA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790233788; c=relaxed/simple;
+	bh=K7D7cVhyfKWTG5ZsIkrNnok6a9O/FIU+9I2MVB2PDTg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WN96zFyuCiFnWsfkeoaRo9dmKOMgY5Sgtn5velZbuF3q2BzlnJ5eczcuAAXLlP9tye6c8oRRO9c0XnK9JSBhBx+12Z/BJ153Kijku78FjaEg/24eNwYpqwAFlOCV22nVq/7ChFJ7X5qPIG+zzdncgHviys5RBoKdup5H3RmueD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r28mzjoE; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQJbdOLA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C128A1F000FF;
-	Thu, 24 Sep 2026 07:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790233675;
-	bh=mEMedDFi9mFkp6jCqF0VrbvDKNuIkj1/7PXdOKCq+kE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=KQJbdOLAdAoeUmQNZYOWsQ+KwIVQmJINzs5RxLAPvqdG8+KBfOeVGO8ywz2N9NiDK
-	 xwiiDNSHGv/1iLZNFDDuOyrlVMeHRxjM0ppRkOf3GTYhRiIPhq4As0s1tgvNcJQz9z
-	 0ijoG8Xw3nf4hs4eZQ4hCBMBgwvmw0L/g9ZWWZpoNlLCYVOKPW6lHZ7G9Y47Tk6VpN
-	 qPeyAk+4a22CaO2FuE7Jeynwu99I5ZyvbEqc4l6srO7RdlFq/wGeW8EU9Rw04hfEPB
-	 PQmNs/ZdZ5ahp839B/m4yzyQgTiUWhxr5JRnXBVeyUnxG2dClGLnqyJ1m1/jFe2vss
-	 VlPOQIS/zdvtQ==
-Message-ID: <41a59ba9-039e-454f-8d31-f647db802ada@kernel.org>
-Date: Thu, 24 Sep 2026 09:07:45 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r28mzjoE"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-48586861639so272729f8f.0
+        for <regressions@lists.linux.dev>; Thu, 24 Sep 2026 00:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790233781; x=1790838581; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7avs/biYs8l8E4Q+bkJinfYIswxmGt6u/gkPhCnUaNY=;
+        b=r28mzjoE/yJoTXvHOVirS7KIdYGROfu0Ig6rl8Vrdoa4s1ovbMr0SfanOi+KbhSWpD
+         tK3px1HW1gXqlMHJ3Bz/LQ4Iz0rdRXiKb+2oy7g+65lpWhB207wGwKL+4x0o8Ua4kUGt
+         TLnYdp0q71VT9aNGVD4M5Sj50bQ2CPegZSExNSygktbK2gUrJOKQ8mVdKUKFE4b25VGL
+         LzrssG80eZ8W4/uJK1fA3NHQviyfGs/Xox2d/TWdaMiZisv/bqFKdv4GuHEMQVfgJu5B
+         2jWXt+W0dABaimtItuWX5RMav5QJhGz3nW75gKwd7VcsTZWKc60s05acglqB55pc17zf
+         pMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790233781; x=1790838581;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=7avs/biYs8l8E4Q+bkJinfYIswxmGt6u/gkPhCnUaNY=;
+        b=1Jaq3Z2GCQXMBQD8D7jbinJQY+cKYubwWAgOP1UH6fe6YIYjTgCqN9aS9m0eNWx2Yz
+         n9+L/S8IOS2k4voqR+qwS9LlBTj1t0jzt0/0j4r6qJX+HnFGHbzi33qE58GE/cMlF9z/
+         lxW/vqnp7aa0azm7s9CWRepkrgOswE7gvVTnzGAcw3fUAkFCPEXm/JX0cpzUa0TKkFD6
+         1H0MzWhqg8rIHzWh+fuRQPKLJZVCftPyOJtgupFR03Wbac3bzRvNNjI9MDajdpDcQN4f
+         yg7YGSuQISInBj6bu9zZ45PIJsQJjF4tW+lbQdzs5ro695t69113yq5jIeoRuDuqqVDy
+         IqJg==
+X-Forwarded-Encrypted: i=1; AKwUvBwnB03vGoNYj77nTuNhzitaLQXDGFCQLeNiiXbA+JLkQ/Zr2u6Nn7TVQGg6F4BsIaCQDvgho+CFJJWT1g==@lists.linux.dev
+X-Gm-Message-State: AFuF++kbIIywxw51jjNidBIvfN2qW/yNM6l9HuNJLEhF/INlMU/ZT8tF
+	j8s++tKDprA5tgDDxyIuehMvX9TtawEwDUBF91iBMcs6tCOLh0zSRIghXe5dwhxj33Y=
+X-Gm-Gg: AYBFou0W+9d440fEQYJuHRor5oImiflhVgKif5twTH+tMoTmmf+DA4K8xmapq7wv4uz
+	W+U13zVhYNx57zSwKEhz79tH5NshYXizamRnhDeKXGh9YzFRPf8p0Jae7WrmzSi8j7X0Zk4N+Fy
+	vFnNFS6zlYHQDKOAj5tHWiBeBdqBl/k5G5nPv1ADTX+EHLaABnfFUH8dsB2n03JkdKxMpfLjq2H
+	xSUdnZtDkp1eu+KcId6IUbqVKnvKSqpM/UL9QXSh43ONsdNue/A4ZwzOyKUcoiJ9IbK0y1IpmJN
+	Fq8RD3A6bcrzdPBSs2c1dZ9ox4QlW76L0hLsKmzS14FN6Am8JClOlwrsbLn3S/ibS2aLBGBvGSy
+	kAfBHHZPQnYSTPKTWJIYIjklp2V8MK+j/mu80FqmrZn8c8Ts0d7FKEXM/0cJ2t5M2WF+XODPmeI
+	+SewQpik/T1BTiCKN/PV6CGLnIetA5As+ia769AmY8h5jxF+k67W6tgQuIZJ+0v/CVOA3gTXtwe
+	Q/3kkHiaAhPYoAANTNTac79ZUK8MIk1qnMmgxxcNUYG3GSk1wENYScULEcX+H2+wrw+AI2v+zs=
+X-Received: by 2002:a05:6000:1861:b0:487:e:f4f6 with SMTP id ffacd0b85a97d-488716dd323mr2953334f8f.15.1790233780913;
+        Thu, 24 Sep 2026 00:09:40 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:5e86:d153:fdb4:61c0? ([2a01:e0a:106d:1080:5e86:d153:fdb4:61c0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4886877a2a5sm13347227f8f.26.2026.09.24.00.09.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Sep 2026 00:09:40 -0700 (PDT)
+Message-ID: <2e369f45-6c9a-4604-a66e-f35c0904ec0f@linaro.org>
+Date: Thu, 24 Sep 2026 09:09:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,166 +70,132 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: don't defer freeing kernel page tables while booting
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett"
- <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Vishal Moola <vishal.moola@gmail.com>,
- Ingo Molnar <mingo@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>,
- x86@kernel.org, linux-mm@kvack.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260924064321.23787-1-mikhail.v.gavrilov@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260924064321.23787-1-mikhail.v.gavrilov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [REGRESSION] Resolutions broken after "drm/msm: dsi: fix PLL init
+ in bonded mode"
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Mohit Dsor <mohit.dsor@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, vishnu.saini@qualcomm.oss.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20251027-topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
+ <ae07cef84AmXK43H@hu-mdsor-hyd.qualcomm.com>
+ <wrhuksrzlxw2pjlvjm37dwjuztcv7qs5t6mqiav4ujecwqdkwj@ozbfxpbgaimt>
+ <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
+ <114b9be8-1fca-4762-822e-1d53838d5de5@leemhuis.info>
+ <o64cxeq5f4ffqpdmbai5cvsmxei2cnw3p6acvu55xl3cj5w3z3@6o6kokszvng7>
+ <akt6z1irWlXA5UIy@hu-mdsor-hyd.qualcomm.com>
+ <493b8d4c-164e-43c9-93c8-40cc251b1c3b@leemhuis.info>
+ <d7v4kwmc42k5ymgdt4mn2qc7dkrf5jj2l5afgyjqrm3pxterl4@guulk22xwlzs>
+ <f77e53d3-fb80-4832-aff7-4ab1244ee4a4@linaro.org>
+ <y64m2frbbg67zfukyuuds5cx65fx3rjxfujbckoerv7sswhk2u@i6p4k3ul4aec>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <y64m2frbbg67zfukyuuds5cx65fx3rjxfujbckoerv7sswhk2u@i6p4k3ul4aec>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 9/24/26 08:43, Mikhail Gavrilov wrote:
-> Booting with a boot-time function tracer and a filter, for example
+On 9/23/26 22:58, Dmitry Baryshkov wrote:
+> On Wed, Sep 23, 2026 at 12:48:21PM +0200, neil.armstrong@linaro.org wrote:
+>> Hi,
+>>
+>> On 7/8/26 15:31, Dmitry Baryshkov wrote:
+>>> On Wed, Jul 08, 2026 at 09:26:04AM +0200, Thorsten Leemhuis wrote:
+>>>> On 7/6/26 11:52, Mohit Dsor wrote:
+>>>>> On Wed, Jun 03, 2026 at 03:11:34PM +0300, Dmitry Baryshkov wrote:
+>>>>>> On Wed, Jun 03, 2026 at 11:56:15AM +0200, Thorsten Leemhuis wrote:
+>>>>>>> On 5/4/26 22:09, Mohit Dsor wrote:
+>>>>>>>> Sorry for the late reply. I am attaching clk_summary and reg_dump in
+>>>>>>>> working and non working case. Lilliput is just a normal display working
+>>>>>>>> with hdmi and has 720p as preferred mode. Yes, I was talking about RB3
+>>>>>>>> Gen2 only.
+>>>>>>>
+>>>>>>> Neil, Dmitry, and Mohit: what's the status here? From the outside it
+>>>>>>> looks like this regression is still unfixed with nothing happening for
+>>>>>>> weeks now. Or has progress been made and I just missed it?
+>>>>>>
+>>>>>> Thanks as a reminder. Unfortunately, it takes some more time (and I've
+>>>>>> been a bit overloaded lately). Worst case I will send a revert soon.
+>>>>>>
+>>>>> Just wanted to check if you had a chance to look into this issue and whether there's any update on the investigation from your side.
+>>>> Hmm, no reply. Given that we are entering holiday season and are way
+>>>> past what Linus expects in a situation like this[1] I'd say we should go
+>>>> for a revert, unless some fix shows up really soon now.
+>>
+>> Sorry I'm very late to the party, and checked again, reverting this breaks all dual-DSI setup
+>> on SM8650, and probably other similar SoCs.
+>>
+>> Here's a complete log of the breakage which appears on the Ayaneo PS2 running v7.3-rc3 with mainline panel driver: https://gitlab.postmarketos.org/-/snippets/65
+>>
+>> I don't see why my fix did break this use case since it reverted the way the dual DSI PHYs
+>> were initialized to actually allow the dual-DSI setup.
 > 
->   ftrace=function ftrace_filter=pud_free_pmd_page
-> 
-> panics on 7.3-rc4 as soon as the tracer starts:
-> 
->   [   23.531178] Starting tracer 'function'
->   [   23.675800] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN NOPTI
->   [   23.819917] KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
->   [   23.964025] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 7.3.0-rc4-fe2ec83746e5-with-fixes-v2+ #195 PREEMPT(undef)
->   [   24.252248] RIP: 0010:__queue_work+0xab/0xf00
->   [   25.981629] Call Trace:
->   [   26.125727]  <TASK>
->   [   26.413912]  ? pagetable_free_kernel+0x20/0x120
->   [   26.990283]  queue_work_on+0x97/0xf0
->   [   27.134382]  __cpa_collapse_large_pages+0x501/0x6f0
->   [   27.566662]  cpa_flush+0x394/0x620
->   [   27.998953]  change_page_attr_set_clr+0x321/0x4a0
->   [   29.151729]  set_memory_rox+0xa2/0xf0
->   [   29.584018]  create_trampoline+0x431/0x6f0
->   ...
->   [   44.343347] Kernel panic - not syncing: Attempted to kill the idle task!
-> 
-> The boot-time tracer is started from early_trace_init(), which runs
-> before workqueue_init_early().  Making its trampoline read-only splits a
-> large page, and CPA collapses it again right away.  The split table has
-> been a kernel page table since commit 9e4a3ec3411b
-> ("x86/mm/pat: Allocate split page tables as kernel page tables"), so the
-> collapse frees it through pagetable_free_kernel(), which queues work on
-> system_percpu_wq - still NULL at that point.
-> 
-> The deferral exists so that IOMMUs using SVA can have their paging
-> structure caches flushed before a kernel page table is freed.  While
-> system_state is still SYSTEM_BOOTING only the boot CPU runs and no IOMMU
-> has been initialised yet (on x86 that happens from pci_iommu_init(), a
-> rootfs_initcall), so there is nothing to flush.  Free the table directly
-> in that case.
-> 
-> Fixes: 9e4a3ec3411b ("x86/mm/pat: Allocate split page tables as kernel page tables")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-> ---
-> #regzbot introduced: 9e4a3ec3411b
-> 
-> Tested on a Ryzen 9 7950X with a Radeon RX 7900 XTX, lockdep and KASAN
-> enabled, booting with the command line above plus earlycon=efifb so
-> that the oops is visible:
-> 
->   7.3-rc4 (fe2ec83746e5)             panics as quoted
->   + revert of 9e4a3ec3411b           boots
->   + this patch, 9e4a3ec3411b kept    boots
-> 
-> With this patch the boot-time tracer works as intended and records
-> pud_free_pmd_page() being called from vmap_p4d_range() during boot.
-> All three kernels also carry my pud_free_pmd_page() v2 patch and
-> unrelated local changes elsewhere (HID, sound/usb, Bluetooth, debugfs);
-> none of them is on this path.
-> 
-> 9e4a3ec3411b is also in 7.2.7 and 6.18.53, together with the deferred
-> pagetable_free_kernel(); I have not tried those.
-> 
->  mm/pgtable-generic.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-> index b91b1a98029c..2d9b4ba33b46 100644
-> --- a/mm/pgtable-generic.c
-> +++ b/mm/pgtable-generic.c
-> @@ -440,6 +440,17 @@ static void kernel_pgtable_work_func(struct work_struct *work)
->  
->  void pagetable_free_kernel(struct ptdesc *pt)
->  {
-> +	/*
-> +	 * While the system is still booting only the boot CPU runs and no
-> +	 * IOMMU has been set up, so nothing can be caching this table and
-> +	 * there is nothing to flush.  The workqueue this defers to may not
-> +	 * exist yet either.
-> +	 */
-> +	if (system_state == SYSTEM_BOOTING) {
-> +		__pagetable_free(pt);
-> +		return;
-> +	}
-> +
->  	spin_lock(&kernel_pgtable_work.lock);
->  	list_add(&pt->pt_list, &kernel_pgtable_work.list);
->  	spin_unlock(&kernel_pgtable_work.lock);
+> See commit cb55f39bf7b1. Without PLL_SHUTDOWNB and DIGTOP_PWRDN_B most
+> of the PLL registers read as zero. Currently the regs are handled
+> correctly (almost). With your patch in place the SHUTDOWNB gets dropped,
+> making PLL loose reg contents (and return 0 to CCF as the selected divisor).
+> Current code depends on those two bits being set across host_power_on.
 
-Should we instead simply skip the
+Thanks I'll have a look.
 
-	schedule_work(&kernel_pgtable_work.work);
+Neil
 
-and rely on anybody freeing stuff later to just free that one alongside?
+> 
+>>
+>> Thanks,
+>> Neil
+>>
+>>>>
+>>>> Ciao, Thorsten
+>>>
+>>> Please send a revert.
+>>>
+>>>>
+>>>> [1] To quote Linus statements from
+>>>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+>>>>
+>>>> """
+>>>>   From 2026-01-22:
+>>>>
+>>>>    But a user complaining should basically result in an immediate fix -
+>>>>    possibly a "revert and rethink".
+>>>>
+>>>> With a later clarification on 2026-01-28:
+>>>>
+>>>>    It's also worth noting that "immediate" obviously doesn't mean "right
+>>>>    this *second* when the problem has been reported".
+>>>>
+>>>>    But if it's a regression with a known commit that caused it, I think
+>>>>    the rule of thumb should generally be "within a week", preferably
+>>>>    before the next rc.
+>>>> """
+>>>
+>>
+> 
 
-That avoids throwing in more freeing handling.
-
--- 
-Cheers,
-
-David
