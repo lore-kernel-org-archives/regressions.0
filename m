@@ -1,45 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF66C36E47A;
-	Fri, 25 Sep 2026 07:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8E5145B27
+	for <regressions@lists.linux.dev>; Fri, 25 Sep 2026 07:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790321096; cv=none; b=lYAG+T/4oWFVAzkeKMTjqhbEACqj2EBKK+K3C18MXoVFWQFqdbx+ZFf7n6Bseis3mPOi/Vv+eMV7xfmVuDE3PsN4+slfQWtngEOUrGNojtrLsN1h7433zT5uH8AiqowBE+jj1XDSCB6gfFx5Yws7UiQZ/7bbTAAECpfIuctJyPU=
+	t=1790321253; cv=none; b=pqIZEwNaRCiCYxhoknw82JXXLCHm/PngEaN2TFXBq9MTOtsLl35e7fpqnzht4lfOpVfYaSKem6t/43b6sFHyYHReIqLQpMlRomopMFYOrROwTRTkpLQvP4INYpWvFeNGRnEnU2701tssMTXWCeaSYdeZijnQHFEd4yMNrZaWhC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790321096; c=relaxed/simple;
-	bh=0VOHKEzRhehp0zEUuwNIJeuPoAxqqEaHLkE7NqM9JZA=;
+	s=arc-20240116; t=1790321253; c=relaxed/simple;
+	bh=MczutNopvym+aLd4VAnmq1I5ltfQNC54OxZUv3eO/Ag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MBtA4To/zX8ka0loPp6jwLLoGmreo/vMAMoceQpCc+6NahJrr/kfPztDLdMR7fWRLiLOYtUeirWx/lilsvhMIi0cgyXlDEF16NoZxVBCFYeup/I9QQ0a5C2kuEzExvgJ4Lq1ehmIueXcsfKDOvzM6mI83OZ8/4MBpPHgdQUZux0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T51PMqdt; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVBoqM04H+nI8IlAWrSbfEqy54Nt+XqVJz7bFWLEjkTrcnDgrwtRkKnxFXpAoPyxmLaIzn72XbhntfLF5nTOgjy5ZqW5EWujrMV/zbf3Dvb65/GsUv24rAvK68j/x3W7MfLlDuPwvbg+QAZn15t7cK1CDcQePYASPSjCmzWp1ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSfc4ysL; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T51PMqdt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E27C41F000FF;
-	Fri, 25 Sep 2026 07:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790321094;
-	bh=LXRP/1wipC9J8UX4qDqGkgwn+tmzgWEzq4b5o6Ax+9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=T51PMqdtftu+im81DJxP4CPkokLbkFS53m9mcYvmL3K+t5ROMTQfep6P85iiVzFTP
-	 Tv5Gk1D9fgKhMg0irB7CeOYqC6CbbMKLhDpoWtPTfbdhKClF/ZEMZp5xbUTZwucyov
-	 LHIvzNBAwCCv8DA5u8bsMxabWRLCRLmDyWZ5VZej+6kJJiNSWcnVTZ6DuAjvwSV+cy
-	 85gyATs9AMckS1R/ZsJqY7aLzbNXWAFc7zf8E6/lZGQ2/AJWAjpVfSV+TXA27bcJCw
-	 ImxTZG6nmhATEQkHCStlEFASUI92lCS/ERcrJu4JiZZXDCzpccuFNZCXtN+DRCSfIA
-	 KQbcugiYY/WGg==
-Date: Fri, 25 Sep 2026 08:24:47 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSfc4ysL"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49d1fb0cf5eso4591065e9.3
+        for <regressions@lists.linux.dev>; Fri, 25 Sep 2026 00:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790321250; x=1790926050; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=2qVH4xy3bEZql7DbItAa1RNXdUwDHnSm6EwoBaYYWu8=;
+        b=WSfc4ysLyV6Fnzsvbu83HJ3IC1A7+MuWNHtvx/rXuPbAYKHM4fwmnOKcLThAHBmAnV
+         B4NnRL1EUsU0T0oS7+X5agRnKxcMkaijj0qbOxCKAY1yalgongJv6GmEOM4TvU8cNnwb
+         wDAYckUm4Xwi8/t/TZ2wjksqDA8rqCZzKUELkvooFmaAcs41NoWxYnaY+x1UzwkHXBOE
+         4kLIJse20NjpK2o6FKb/AnzzUr5r5v3K4ZZuVs+yAi0uA1zvZ4e8CwszHoQbRSYbsaIE
+         4tCFzTCjymgzRVyJx9iCJGDP4ZcJBPemaJldlpIksk+m0bfcBEdfe5VuK2yrmoMigkDj
+         4yWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790321250; x=1790926050;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=2qVH4xy3bEZql7DbItAa1RNXdUwDHnSm6EwoBaYYWu8=;
+        b=uIn6kHYMppSxgyP25DsNigAjRNJMsiqxSTO8TQgCWUaaXTuELp/J9cUwwx/+h60nin
+         y5tieZzMNTbMbaL7uqOr8XQtXbCgYdkRsDgYONs6qQb/qVkPlb+cekvZq3cCvluFW3aK
+         Ig9G2EpiyMhvH9fEe9oGvFGHqcqn7aEefffhIcKk909ImbHhVdGzHoO2SxhaJDtXX7/F
+         KC3XvTLlIQWqbfdOrL3ct8oQso2noJLO481+S5RPW9WIvH8dRtRwtLK7hI53UPVG+sGt
+         SqvossaClzBe9R4/3gowcu1SavyHD0aRMuUnoj5m9pg1qIOvlHGYm9md97p7AqrsU1uG
+         xVxA==
+X-Forwarded-Encrypted: i=1; AKwUvBw/nZOb+f0W6dSIOpNdo48jj5hVVnQvIuE6Dcinnb0YNU96Me16+H+omXdyqtOBdVNNdGhgJIO0LR+yog==@lists.linux.dev
+X-Gm-Message-State: AFuF++kMmrvbzgMHD9JxcHGbBCmwKe86bJCvtjMBnWodbznBrv6vak2/
+	D5HX+niX4KAfQ0yP1VNhM3XBF9ecFL6VAM29AWCdBHUTU31/f0AZ6TEo
+X-Gm-Gg: AYBFou3k3rBY5n2GW7lC1XVmKIJXpU8UV99b0k96ug7FC3mTcSYX9bB1LVpGu6FV6IM
+	3GcJ71aFCBg3qi97nnZbmQteScRtRk0CbePJ067fFqUrCs3dyzCf1mMlJJs4NSigNdw36/BnZlI
+	xL5j80nFPTlPjKiZ4UfFJnzmjvyiQvzVJb/B/wCOKo5LyGZeT/700dqsYqf/s2NjRLy8XcOZ1Hn
+	h/IVriPV299PL+Dbrq8njMZE7RpOqbwm/3Lw9+tO02ne2eLm8+yX0xA9jzpYTTHkvemjiZGCcNw
+	WJHTFOYtbAlQNzrbhzdoMP40y5Mkw1FCpBUBYXyDVL79Iz/issV+Lkb1ZH4b0n/MdGeO20ix2ay
+	1ZV3dME6sbnGu+GND6aKyz+8Q8xE1P6XcpUQ0HNEJ8rv35ACq7MIRTEkxMGvNw3CEV5/PD8Htbd
+	ucewVNzoYyVuwGhquYG0D4nL3k01JV7Fwsqrml0+j23EvakYAoIx3Gnvz2szI=
+X-Received: by 2002:a05:600c:3556:b0:49f:bd3c:bc24 with SMTP id 5b1f17b1804b1-49fe6708a46mr82223855e9.31.1790321250356;
+        Fri, 25 Sep 2026 00:27:30 -0700 (PDT)
+Received: from gmail.com ([83.231.69.9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fee9203f0sm32571675e9.1.2026.09.25.00.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 00:27:29 -0700 (PDT)
+Date: Fri, 25 Sep 2026 09:27:26 +0200
+From: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>
 To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
 	David Hildenbrand <david@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Vishal Moola <vishal.moola@gmail.com>, 
-	Ingo Molnar <mingo@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org, 
-	linux-mm@kvack.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Vishal Moola <vishal.moola@gmail.com>, Ingo Molnar <mingo@kernel.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org, linux-mm@kvack.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3] mm: don't schedule deferred kernel page table freeing
  while booting
-Message-ID: <arYhsEGuCVatW7ZY@gremlin>
+Message-ID: <arYhPon5nrixAm3I@gmail.com>
 References: <20260925050647.86913-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -94,11 +128,6 @@ On Fri, Sep 25, 2026 at 10:06:47AM +0500, Mikhail Gavrilov wrote:
 > Suggested-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-
-LGTM so:
-
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-
 > Link: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
 > ---
 > v3:
@@ -160,9 +189,11 @@ Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 >  }
 > +core_initcall(kernel_pgtable_drain_early);
 >  #endif
-> --
-> 2.55.0
->
+
+tested it, boots cleanly and the panic is gone. LGTM.
+
+Reviewed-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
+Tested-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
 
 --
-Cheers, Lorenzo
+cheers, jose a. p-a
