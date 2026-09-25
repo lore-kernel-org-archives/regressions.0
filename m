@@ -1,165 +1,212 @@
-Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2989C3D75D1
-	for <regressions@lists.linux.dev>; Fri, 25 Sep 2026 07:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.203.200.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790320433; cv=pass; b=HvcKfZmhqLGtyeazuH0JLO2CpwJ00+e/GcFdyVEn7vebdetydkcK0+1pKXg8pR+FzLtvtfVzSSSAYFF3X7nDwXIyRd0Igz39oVRPmx1iKcPIRu3OxLRff+y0b9JSV6x2inNBazzqJBgvjLPuAEBZlvjHBeFgR7EONPcYrkYEZbQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790320433; c=relaxed/simple;
-	bh=204sKMI5do38KKJp7Jqj1fEbF7DyWfLHVaIFvH58Y1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GzAlbXmVDhUiCttGoiO+8WuCkDZ61VLYEMYkW2yhfqhFfBGy5KuKbJrz5MzwcORgmD61kX1HpTnldFVIianBy2FINVknaYVGLZ40j5OivFctsHdx0hltnFn5OFLti8gLAf0eBVJLgfmYEoAn/b7VRsZ4HA3YvtTQzNcUU64pCp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; dkim=pass (2048-bit key) header.d=pengutronix.de header.i=@pengutronix.de header.b=LmI0yBIq; arc=pass smtp.client-ip=185.203.200.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA381DDC38;
+	Fri, 25 Sep 2026 07:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790320568; cv=none; b=igRyUBj2OlNO6aq7fFJJmyEKEP3ZTkcCsV+P57G5Io608p7kC5QxZq88iEzeDuGmCa2IWkihgcDMZu0DJk46a37P9BkwqVtEasQirCv0KLugFePuW3zgVyJED90z15OYNCs4+GCWoqimZSeeiEsbCQfi4rnrBaet/N3YOLMXbLE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790320568; c=relaxed/simple;
+	bh=O44x8cCy8S9EV7/z9TCra7OVUQMx5JFuqSWTVLnBg54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HHNjcPQsZ9Y+SbB9VKAJl2+DQYaY20vXnNn5lOD6o8Qt+DQWIJ2R6HpebJs9VqKl0pFwsAo2Xvs/AQZSN9v6gdVdy7vKaoz+jCpX7sxi5WFBVe718RZ7+DA/c8a+Cp9ENsUI4Cj+hTaRlsbc2IBVQbmxptdL4wvJ+AVS51yZT7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDf6YXQG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pengutronix.de header.i=@pengutronix.de header.b="LmI0yBIq"
-Received: from drehscheibe.grey.stw.pengutronix.de (drehscheibe.grey.stw.pengutronix.de [IPv6:2a0a:edc0:0:c01:1d::a2])
-	(Authenticated sender: relay-from-drehscheibe.grey.stw.pengutronix.de)
-	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id 3D21C2010E2;
-	Fri, 25 Sep 2026 09:13:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
-	s=20260414; t=1790320430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WLceNeGlZl/gS3dxnKEM095tZNl9hbWJqJ8xL8l+Ngk=;
-	b=LmI0yBIqgdLYlZkBCpjZXNKQNbWFfWYbjkQGdgI8oJTKi4oGntWIoji0TdDTHQJ3EEPyUM
-	lUWPkBqVsnlERCCmLxdFcgnWBGblRcHNwoTEY/qihG5/7/bkzheB+luC+QfHmQf91ehAEC
-	k107ogFRxkRe9xelZoDmMOsDsp0azvpkOqIrPCOJ03AdM+h1e5xR6r37+JpN/WbHKiVW14
-	CEV+Lex9xsFyd1fSyQcodP/oO4KTWOrSow8GmzEZtCTcXbFioBuupqJFOvCj9v4xbj7BPk
-	aPVNQXjFE12d2YntZd5szOvIYc4bgVsUk/cY0LHbHE6J35BH2O4Oeii1fBTQ1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
-	s=20260414; t=1790320430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WLceNeGlZl/gS3dxnKEM095tZNl9hbWJqJ8xL8l+Ngk=;
-	b=FjSBUpNBgiTP2RKJG00Xn9iQ/JJqcctKp9O/ky08jS+C51zWkAhFYyH8sVwdFPCHYKa9us
-	+U5V0v0A74FHrHCtCGWJLPN/5re7JATWiLsAr0APVCoWMcyDMoeTcwUtm0xhDtdwvdJwrR
-	qpi5M7aaqkU+vJ5l/TkHEB9gd5UMOY2mt6Y7flzTlKenM+rv6aCd3nAHA3KjbBIYKPe/z8
-	nFh82pKaYtTwgA94J0AVCxKt66K2KQCJoAWsriaPCCGuV175PmxJBctTIyXLhXsN+uFR5W
-	Z6m+s1AxL62HnXrs1mfJeVwlSTOGwmcpDJ6nIgvEX8+MtM3l9UeQONk5e+d5yg==
-ARC-Seal: i=1; s=20260414; d=pengutronix.de; t=1790320430; a=rsa-sha256;
-	cv=none;
-	b=PRWtc/sudJkmT2stVbINd3FjWG7+/X+w1GiaPS6ulSjIXeuumkxkXw8KYppU9Dq7TW1d8g
-	MPKIL2swAhb+tSAM5JPbgYPfa7de+dcAwBiIhpOhANYfWQRfwDvab2NWso3j7PB/h0h2wt
-	gNbrPM07qISuPs4803t9tGq5RJ/Z0lKhZUaao4zC4qUKdarYttF+sZ+N8puvdjU2Sf0bIk
-	mD2skZUlLlABJgpn7LAu010byQgRRbvc3WJ0m3hpNKOlJExaNWagJfHNer0I/DAovVjRO9
-	sx98NJeMnjoTHMpIMJuMofN3PqNC3jO/5tjkuEbe2R1OESp7s77GQi7Et2F/nw==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=relay-from-drehscheibe.grey.stw.pengutronix.de smtp.mailfrom=ore@pengutronix.de
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1xA07y-002h3b-0W;
-	Fri, 25 Sep 2026 09:13:50 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.98.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1xA07x-00000005Ptt-481R;
-	Fri, 25 Sep 2026 09:13:49 +0200
-Date: Fri, 25 Sep 2026 09:13:49 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Dennis Piecha <d.piecha@ymail.com>
-Cc: "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"nic_swsd@realtek.com" <nic_swsd@realtek.com>,
-	"andrew@lunn.ch" <andrew@lunn.ch>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"nb@tipi-net.de" <nb@tipi-net.de>
-Subject: Re: [REGRESSION] r8169: RTL8168h silent RX stall with EEE after
- "net: phy: realtek: fix EEE advertisement write on the internal PHY MMD
- path" (6.18.y)
-Message-ID: <arYfLe7JpeO5tw6G@pengutronix.de>
-References: <353419280.954808.1790290283530.ref@mail.yahoo.com>
- <353419280.954808.1790290283530@mail.yahoo.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDf6YXQG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357501F000FF;
+	Fri, 25 Sep 2026 07:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790320563;
+	bh=d932yjix1Tn4l08d2x/Renb33cLb0uv6fwAZBrYQ3Uo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=FDf6YXQGPQ2Y7yog7yhM2jVPqJGoH0968+QQYkyCVOKvH38V73A6X/u2SN9+oOrDm
+	 agf0RYHY1877oCucHhL43AS9RrXunzHpd2mVbwAaszX2prpEANtyRvop1WhuhwqWb2
+	 TzF7vvktfAqHLob+ntiuuh1lp9QaSojZ3imP9CgT7l+oSUhoRfi0yNAbys0FGMbHF1
+	 PxaCWqNNLXhm42sBvg55hj5RyNRv4/8jyn1ajCk/YQkwZMte3mbj+A7C8qVTQ7zLW3
+	 iTYYnzx3Ru4Wk7ISuu1RNxqqNYvST/vbPuI/oYmBCQhxeMSoLkpuWvCvlXU7xYTAiY
+	 t4h+M4mqliQuA==
+Message-ID: <8244d5fd-e448-41c8-9f58-e87499ebac21@kernel.org>
+Date: Fri, 25 Sep 2026 09:15:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <353419280.954808.1790290283530@mail.yahoo.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm: don't schedule deferred kernel page table freeing
+ while booting
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett"
+ <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Vishal Moola <vishal.moola@gmail.com>,
+ Ingo Molnar <mingo@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>,
+ x86@kernel.org, linux-mm@kvack.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260925050647.86913-1-mikhail.v.gavrilov@gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260925050647.86913-1-mikhail.v.gavrilov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-H Dennis,
+On 9/25/26 07:06, Mikhail Gavrilov wrote:
+> Booting with a boot-time function tracer and a filter, for example
+> 
+>   ftrace=function ftrace_filter=pud_free_pmd_page
+> 
+> panics on 7.3-rc4 as soon as the tracer starts:
+> 
+>   [   23.531178] Starting tracer 'function'
+>   [   23.675800] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN NOPTI
+>   [   23.819917] KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
+>   [   23.964025] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 7.3.0-rc4-fe2ec83746e5-with-fixes-v2+ #195 PREEMPT(undef)
+>   [   24.252248] RIP: 0010:__queue_work+0xab/0xf00
+>   [   25.981629] Call Trace:
+>   [   26.125727]  <TASK>
+>   [   26.413912]  ? pagetable_free_kernel+0x20/0x120
+>   [   26.990283]  queue_work_on+0x97/0xf0
+>   [   27.134382]  __cpa_collapse_large_pages+0x501/0x6f0
+>   [   27.566662]  cpa_flush+0x394/0x620
+>   [   27.998953]  change_page_attr_set_clr+0x321/0x4a0
+>   [   29.151729]  set_memory_rox+0xa2/0xf0
+>   [   29.584018]  create_trampoline+0x431/0x6f0
+>   ...
+>   [   44.343347] Kernel panic - not syncing: Attempted to kill the idle task!
+> 
+> The boot-time tracer is started from early_trace_init(), which runs
+> before workqueue_init_early().  Making its trampoline read-only splits a
+> large page, and CPA collapses it again right away.  The split table has
+> been a kernel page table since commit 9e4a3ec3411b
+> ("x86/mm/pat: Allocate split page tables as kernel page tables"), so the
+> collapse frees it through pagetable_free_kernel(), which queues work on
+> system_percpu_wq - still NULL at that point.  That commit is correct in
+> itself; it only lets CPA reach pagetable_free_kernel() before the
+> workqueue that function relies on exists.
+> 
+> Keep putting the table on the list, but don't schedule the work while
+> the system is still booting.  A core_initcall schedules it once to free
+> whatever was queued by then.
+> 
+> Fixes: 9e4a3ec3411b ("x86/mm/pat: Allocate split page tables as kernel page tables")
+> Suggested-by: David Hildenbrand (Arm) <david@kernel.org>
+> Suggested-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> Link: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
+> ---
+> v3:
+>  - Schedule the work once from a core_initcall to free whatever was
+>    queued during boot (Lorenzo Stoakes, Dave Hansen, David Hildenbrand).
+>    late_initcall would work just as well; workqueues exist from
+>    workqueue_init() on.
+>  - Keep the fix in pagetable_free_kernel() rather than skipping the
+>    collapse during boot (Mike Rapoport): that would only avoid this
+>    caller, and any other early free would still need a workqueue.
+> v2: https://lore.kernel.org/20260924092307.22813-1-mikhail.v.gavrilov@gmail.com
+> v1: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
+> 
+> Tested on a Ryzen 9 7950X with a Radeon RX 7900 XTX (lockdep, KASAN),
+> 7.3-rc4 plus unrelated local changes, by booting with
+> 
+>   ftrace=function ftrace_filter=pud_free_pmd_page,pagetable_free_kernel,kernel_pgtable_work_func,kernel_pgtable_drain_early
+> 
+> The boot that panicked without the fix completes, and the trace shows
+> kernel_pgtable_drain_early() and then kernel_pgtable_work_func() before
+> any other kernel page table is freed.
+> 
+>  mm/pgtable-generic.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> index b91b1a98029c..cd227fc05d2d 100644
+> --- a/mm/pgtable-generic.c
+> +++ b/mm/pgtable-generic.c
+> @@ -438,12 +438,30 @@ static void kernel_pgtable_work_func(struct work_struct *work)
+>  		__pagetable_free(pt);
+>  }
+>  
+> +static void schedule_kernel_pgtable_free(void)
+> +{
+> +	schedule_work(&kernel_pgtable_work.work);
+> +}
+> +
+>  void pagetable_free_kernel(struct ptdesc *pt)
+>  {
+>  	spin_lock(&kernel_pgtable_work.lock);
+>  	list_add(&pt->pt_list, &kernel_pgtable_work.list);
+>  	spin_unlock(&kernel_pgtable_work.lock);
+>  
+> -	schedule_work(&kernel_pgtable_work.work);
+> +	/*
+> +	 * The workqueue may not exist yet while the system is booting.
+> +	 * kernel_pgtable_drain_early() schedules the work once it does.
+> +	 */
+> +	if (system_state != SYSTEM_BOOTING)
+> +		schedule_kernel_pgtable_free();
+> +}
+> +
+> +static int __init kernel_pgtable_drain_early(void)
+> +{
+> +	/* Free the kernel page tables queued while booting. */
+> +	schedule_kernel_pgtable_free();
+> +	return 0;
+>  }
+> +core_initcall(kernel_pgtable_drain_early);
+>  #endif
 
-On Thu, Sep 24, 2026 at 10:51:23PM +0000, Dennis Piecha wrote:
-> Hi,
-> 
-> after updating from 6.18.39 to 6.18.52 (Home Assistant OS 18.2 -> 18.3,
-> close to vanilla stable), the onboard RTL8168h of my NUC silently stops
-> receiving every ~7-20 minutes. Disabling EEE at runtime makes it stable
-> again, so I suspect the stable backport of
-> 
-> 202fef9bbbf5 ("net: phy: realtek: fix EEE advertisement write on the
-> internal PHY MMD path")
-> 
-> (0af3afd054e7 in 6.18.y). There are no changes to r8169_main.c between
-> 6.18.39 and 6.18.52, but this PHY fix touches rtlgen_write_mmd(), which
-> is used by the "Generic FE-GE Realtek PHY" bound to this NIC. My
-> guess: with the advertisement write now landing, EEE actually gets
-> negotiated with the link partner, and RTL8168h doesn't handle LPI
-> correctly on the RX side. The fix itself looks correct to me; it seems
-> to expose an existing r8169/RTL8168h problem.
-> 
-> Hardware:
-> Intel NUC11ATKPE, BIOS ATJSLCPX.0039.2023.0221.1502
-> RTL8168h/8111h, 10ec:8168 (subsys 8086:3027), XID 541
-> PHY: Generic FE-GE Realtek PHY
-> link partner: AVM FRITZ!Box 6690 Cable, 1000/Full, flow control off
-> no VLANs, ASPM already disabled on the device (LnkCtl ASPM bits 0)
-> 
-> EEE state on 6.18.52 (read via ETHTOOL_GEEE):
-> supported=0x28 advertised=0x28 lp_advertised=0x28
-> eee_active=1 eee_enabled=1 tx_lpi_enabled=1 tx_lpi_timer=12
-> 
-> Symptom: carrier stays up, nothing at all is logged by r8169 or phylib,
-> no NETDEV WATCHDOG. rx_packets freezes while TX and the MSI-X interrupt
-> count keep going; no RX error/missed/dropped counters move:
-> 
-> time rx_packets tx_packets irq bql_inflight tx_timeout
-> 23:08:29 626373 188818 201071 0 0
-> 23:08:31 626458 188908 201236 0 0
-> 23:08:34 626513 189037 201394 0 0 <- stall
-> 23:08:37 626513 189126 201473 0 0
-> 23:08:44 626513 189284 201606 0 0
-> 23:08:51 626513 189517 201788 0 0
-> 
-> It never recovers by itself. "ip link set eno1 down; ip link set eno1 up"
-> restores traffic within 3 s; flushing the neighbour table does not help.
-> Disabling TX checksum offload and pinning MTU 1500 (workaround for the
-> VLAN-related TX timeouts reported by others on the same update) has no
-> effect here.
-> 
-> EEE test: on a 6.18.52 boot that had stalled at ~7 min and again ~7 min
-> later, I disabled EEE via ETHTOOL_SEEE (eee_active=0 afterwards). Since
-> then it has run for 60+ minutes without a stall, nothing else changed.
-> 
-> What I have NOT done yet: verified the EEE state on 6.18.39 for
-> comparison, and tested 6.18.52 with the commit reverted. I can do the
-> former easily; building a kernel is harder on this appliance-style OS
-> but possible if needed. I can also capture a MAC register dump
-> (ETHTOOL_GREGS) during a stall if that helps.
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Can you please test following patch:
-https://lore.kernel.org/all/20260925071040.2137178-1-o.rempel@pengutronix.de/
-
-Best Regards,
-Oleksij
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers,
+
+David
