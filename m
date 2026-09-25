@@ -1,199 +1,176 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8E5145B27
-	for <regressions@lists.linux.dev>; Fri, 25 Sep 2026 07:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A22B445ACE
+	for <regressions@lists.linux.dev>; Fri, 25 Sep 2026 09:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790321253; cv=none; b=pqIZEwNaRCiCYxhoknw82JXXLCHm/PngEaN2TFXBq9MTOtsLl35e7fpqnzht4lfOpVfYaSKem6t/43b6sFHyYHReIqLQpMlRomopMFYOrROwTRTkpLQvP4INYpWvFeNGRnEnU2701tssMTXWCeaSYdeZijnQHFEd4yMNrZaWhC8=
+	t=1790327132; cv=none; b=uTDp+wdZHiZHpQdoepR3QIal1F2MGXTEvRLPNah7v50Gs234Is+rzGofcffji8Ek3NyXKmIATIk+44NPw/SLQdF7VPHho/8fQaOv3ccCEfIpa54C5vudybyg7ehjalLYZXig281M7wpSXG5sOl8rdOMz3i5+9oXlvJM4e55J5r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790321253; c=relaxed/simple;
-	bh=MczutNopvym+aLd4VAnmq1I5ltfQNC54OxZUv3eO/Ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kVBoqM04H+nI8IlAWrSbfEqy54Nt+XqVJz7bFWLEjkTrcnDgrwtRkKnxFXpAoPyxmLaIzn72XbhntfLF5nTOgjy5ZqW5EWujrMV/zbf3Dvb65/GsUv24rAvK68j/x3W7MfLlDuPwvbg+QAZn15t7cK1CDcQePYASPSjCmzWp1ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSfc4ysL; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790327132; c=relaxed/simple;
+	bh=oqdY50+Ua1sm0dA0riA3XKlPkPf5jSVWn6/Ar3bjEu0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NMgLNbgshNx8pYz4tYkfCqePYasQTExbJerDKJ28KiXC8mgrdLwL4+u8XLRrhlCWAJznFKv66YTmdvDm52/3rfS6Pn5z10ziVU3ppZG3E8CYWVTtT/ayQLMw4NEnr8v4a2ASplk6NwthpYhqRwS17bdTkC/UlXrooV45PNCPmQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iYRuMxE0; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSfc4ysL"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49d1fb0cf5eso4591065e9.3
-        for <regressions@lists.linux.dev>; Fri, 25 Sep 2026 00:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790321250; x=1790926050; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2qVH4xy3bEZql7DbItAa1RNXdUwDHnSm6EwoBaYYWu8=;
-        b=WSfc4ysLyV6Fnzsvbu83HJ3IC1A7+MuWNHtvx/rXuPbAYKHM4fwmnOKcLThAHBmAnV
-         B4NnRL1EUsU0T0oS7+X5agRnKxcMkaijj0qbOxCKAY1yalgongJv6GmEOM4TvU8cNnwb
-         wDAYckUm4Xwi8/t/TZ2wjksqDA8rqCZzKUELkvooFmaAcs41NoWxYnaY+x1UzwkHXBOE
-         4kLIJse20NjpK2o6FKb/AnzzUr5r5v3K4ZZuVs+yAi0uA1zvZ4e8CwszHoQbRSYbsaIE
-         4tCFzTCjymgzRVyJx9iCJGDP4ZcJBPemaJldlpIksk+m0bfcBEdfe5VuK2yrmoMigkDj
-         4yWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790321250; x=1790926050;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2qVH4xy3bEZql7DbItAa1RNXdUwDHnSm6EwoBaYYWu8=;
-        b=uIn6kHYMppSxgyP25DsNigAjRNJMsiqxSTO8TQgCWUaaXTuELp/J9cUwwx/+h60nin
-         y5tieZzMNTbMbaL7uqOr8XQtXbCgYdkRsDgYONs6qQb/qVkPlb+cekvZq3cCvluFW3aK
-         Ig9G2EpiyMhvH9fEe9oGvFGHqcqn7aEefffhIcKk909ImbHhVdGzHoO2SxhaJDtXX7/F
-         KC3XvTLlIQWqbfdOrL3ct8oQso2noJLO481+S5RPW9WIvH8dRtRwtLK7hI53UPVG+sGt
-         SqvossaClzBe9R4/3gowcu1SavyHD0aRMuUnoj5m9pg1qIOvlHGYm9md97p7AqrsU1uG
-         xVxA==
-X-Forwarded-Encrypted: i=1; AKwUvBw/nZOb+f0W6dSIOpNdo48jj5hVVnQvIuE6Dcinnb0YNU96Me16+H+omXdyqtOBdVNNdGhgJIO0LR+yog==@lists.linux.dev
-X-Gm-Message-State: AFuF++kMmrvbzgMHD9JxcHGbBCmwKe86bJCvtjMBnWodbznBrv6vak2/
-	D5HX+niX4KAfQ0yP1VNhM3XBF9ecFL6VAM29AWCdBHUTU31/f0AZ6TEo
-X-Gm-Gg: AYBFou3k3rBY5n2GW7lC1XVmKIJXpU8UV99b0k96ug7FC3mTcSYX9bB1LVpGu6FV6IM
-	3GcJ71aFCBg3qi97nnZbmQteScRtRk0CbePJ067fFqUrCs3dyzCf1mMlJJs4NSigNdw36/BnZlI
-	xL5j80nFPTlPjKiZ4UfFJnzmjvyiQvzVJb/B/wCOKo5LyGZeT/700dqsYqf/s2NjRLy8XcOZ1Hn
-	h/IVriPV299PL+Dbrq8njMZE7RpOqbwm/3Lw9+tO02ne2eLm8+yX0xA9jzpYTTHkvemjiZGCcNw
-	WJHTFOYtbAlQNzrbhzdoMP40y5Mkw1FCpBUBYXyDVL79Iz/issV+Lkb1ZH4b0n/MdGeO20ix2ay
-	1ZV3dME6sbnGu+GND6aKyz+8Q8xE1P6XcpUQ0HNEJ8rv35ACq7MIRTEkxMGvNw3CEV5/PD8Htbd
-	ucewVNzoYyVuwGhquYG0D4nL3k01JV7Fwsqrml0+j23EvakYAoIx3Gnvz2szI=
-X-Received: by 2002:a05:600c:3556:b0:49f:bd3c:bc24 with SMTP id 5b1f17b1804b1-49fe6708a46mr82223855e9.31.1790321250356;
-        Fri, 25 Sep 2026 00:27:30 -0700 (PDT)
-Received: from gmail.com ([83.231.69.9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fee9203f0sm32571675e9.1.2026.09.25.00.27.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Sep 2026 00:27:29 -0700 (PDT)
-Date: Fri, 25 Sep 2026 09:27:26 +0200
-From: "Jose A. Perez de Azpillaga" <azpijr@gmail.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R . Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Vishal Moola <vishal.moola@gmail.com>, Ingo Molnar <mingo@kernel.org>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org, linux-mm@kvack.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm: don't schedule deferred kernel page table freeing
- while booting
-Message-ID: <arYhPon5nrixAm3I@gmail.com>
-References: <20260925050647.86913-1-mikhail.v.gavrilov@gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iYRuMxE0"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hrlCh6fxjz8lHj;
+	Fri, 25 Sep 2026 09:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1790327120;
+	bh=oqdY50+Ua1sm0dA0riA3XKlPkPf5jSVWn6/Ar3bjEu0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=iYRuMxE0dV3cH+aUbVbxRfHsi0LAhWaU2Dj04PEF6IxobPWJO4tyfDOXPdj1liJMf
+	 ZDkYbgmB8/bKO+g31oTJ3QkPJE83vQcu4ogJTcxTHai9dQbov5XWk6W7ifUHODIivW
+	 WgQGZtHBhR3cG/cGPv2X0Z1ljahgNKggLH+hAJp3t/DzB8q6nAYnd4Q+yrGsMaHHrs
+	 vZoo4YrSEr9ln1WmboqBh1H2lKl8RAq+xjjsoZFN3bYq0UDjHC2QOdzGegap8o4M4M
+	 Nv/6Qll3nfqHd8jZRE3UB+Symmw2GoU8dj64HTb8Y75FW/aMm+rPwsqQwfaqUnY8xd
+	 NG4q0MfRwEp6g==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hrlCh5xndz8lDL;
+	Fri, 25 Sep 2026 09:05:20 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hrlCd4gTDz8tfB;
+	Fri, 25 Sep 2026 11:05:17 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id DCA7A5F8CC;
+	Fri, 25 Sep 2026 11:05:16 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4f28488c-ff9e-46db-aa2a-687213c129d6@leemhuis.info>
+Date: Fri, 25 Sep 2026 11:05:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260925050647.86913-1-mikhail.v.gavrilov@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] RTL8761BU 0bda:a728: removing BROKEN_EXT_SCAN fixes
+ 0x200c timeout
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Andy Tsvetinskiy <andrew.tsvetinskiy@gmail.com>
+Cc: regressions@lists.linux.dev, linux-bluetooth@vger.kernel.org,
+ Kamil Serwus <kserwus@gmail.com>, Junjie Cao <junjie.cao@intel.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Marcel Holtmann <marcel@holtmann.org>, LKML <linux-kernel@vger.kernel.org>,
+ Alexej Sidorenko <alexej@sidorenko.cz>
+References: 
+ <CAE4bxw+ofDFVx0aTHqCrzns9oP1CRQDm_wzeyHPeMBYOhSpcuA@mail.gmail.com>
+ <f322a3b2-71eb-45e7-aeaf-18ad87f938ce@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <f322a3b2-71eb-45e7-aeaf-18ad87f938ce@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179032711737.4193479.59443090121703576@mxe9fb.netcup.net>
+X-NC-CID: VoNGq77+MfkMVWhdao7Mfl8yZM1MwjyjeQ/z56srSUi0NsajOO4=
 
-On Fri, Sep 25, 2026 at 10:06:47AM +0500, Mikhail Gavrilov wrote:
-> Booting with a boot-time function tracer and a filter, for example
->
->   ftrace=function ftrace_filter=pud_free_pmd_page
->
-> panics on 7.3-rc4 as soon as the tracer starts:
->
->   [   23.531178] Starting tracer 'function'
->   [   23.675800] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] SMP KASAN NOPTI
->   [   23.819917] KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
->   [   23.964025] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 7.3.0-rc4-fe2ec83746e5-with-fixes-v2+ #195 PREEMPT(undef)
->   [   24.252248] RIP: 0010:__queue_work+0xab/0xf00
->   [   25.981629] Call Trace:
->   [   26.125727]  <TASK>
->   [   26.413912]  ? pagetable_free_kernel+0x20/0x120
->   [   26.990283]  queue_work_on+0x97/0xf0
->   [   27.134382]  __cpa_collapse_large_pages+0x501/0x6f0
->   [   27.566662]  cpa_flush+0x394/0x620
->   [   27.998953]  change_page_attr_set_clr+0x321/0x4a0
->   [   29.151729]  set_memory_rox+0xa2/0xf0
->   [   29.584018]  create_trampoline+0x431/0x6f0
->   ...
->   [   44.343347] Kernel panic - not syncing: Attempted to kill the idle task!
->
-> The boot-time tracer is started from early_trace_init(), which runs
-> before workqueue_init_early().  Making its trampoline read-only splits a
-> large page, and CPA collapses it again right away.  The split table has
-> been a kernel page table since commit 9e4a3ec3411b
-> ("x86/mm/pat: Allocate split page tables as kernel page tables"), so the
-> collapse frees it through pagetable_free_kernel(), which queues work on
-> system_percpu_wq - still NULL at that point.  That commit is correct in
-> itself; it only lets CPA reach pagetable_free_kernel() before the
-> workqueue that function relies on exists.
->
-> Keep putting the table on the list, but don't schedule the work while
-> the system is still booting.  A core_initcall schedules it once to free
-> whatever was queued by then.
->
-> Fixes: 9e4a3ec3411b ("x86/mm/pat: Allocate split page tables as kernel page tables")
-> Suggested-by: David Hildenbrand (Arm) <david@kernel.org>
-> Suggested-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-> Link: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
-> ---
-> v3:
->  - Schedule the work once from a core_initcall to free whatever was
->    queued during boot (Lorenzo Stoakes, Dave Hansen, David Hildenbrand).
->    late_initcall would work just as well; workqueues exist from
->    workqueue_init() on.
->  - Keep the fix in pagetable_free_kernel() rather than skipping the
->    collapse during boot (Mike Rapoport): that would only avoid this
->    caller, and any other early free would still need a workqueue.
-> v2: https://lore.kernel.org/20260924092307.22813-1-mikhail.v.gavrilov@gmail.com
-> v1: https://lore.kernel.org/20260924064321.23787-1-mikhail.v.gavrilov@gmail.com
->
-> Tested on a Ryzen 9 7950X with a Radeon RX 7900 XTX (lockdep, KASAN),
-> 7.3-rc4 plus unrelated local changes, by booting with
->
->   ftrace=function ftrace_filter=pud_free_pmd_page,pagetable_free_kernel,kernel_pgtable_work_func,kernel_pgtable_drain_early
->
-> The boot that panicked without the fix completes, and the trace shows
-> kernel_pgtable_drain_early() and then kernel_pgtable_work_func() before
-> any other kernel page table is freed.
->
->  mm/pgtable-generic.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-> index b91b1a98029c..cd227fc05d2d 100644
-> --- a/mm/pgtable-generic.c
-> +++ b/mm/pgtable-generic.c
-> @@ -438,12 +438,30 @@ static void kernel_pgtable_work_func(struct work_struct *work)
->  		__pagetable_free(pt);
->  }
->
-> +static void schedule_kernel_pgtable_free(void)
-> +{
-> +	schedule_work(&kernel_pgtable_work.work);
-> +}
-> +
->  void pagetable_free_kernel(struct ptdesc *pt)
->  {
->  	spin_lock(&kernel_pgtable_work.lock);
->  	list_add(&pt->pt_list, &kernel_pgtable_work.list);
->  	spin_unlock(&kernel_pgtable_work.lock);
->
-> -	schedule_work(&kernel_pgtable_work.work);
-> +	/*
-> +	 * The workqueue may not exist yet while the system is booting.
-> +	 * kernel_pgtable_drain_early() schedules the work once it does.
-> +	 */
-> +	if (system_state != SYSTEM_BOOTING)
-> +		schedule_kernel_pgtable_free();
-> +}
-> +
-> +static int __init kernel_pgtable_drain_early(void)
-> +{
-> +	/* Free the kernel page tables queued while booting. */
-> +	schedule_kernel_pgtable_free();
-> +	return 0;
->  }
-> +core_initcall(kernel_pgtable_drain_early);
->  #endif
+On 9/18/26 15:37, Thorsten Leemhuis wrote:
+> Lo!
+> On 9/18/26 11:21, Andy Tsvetinskiy wrote:
+>>
+>>    This report concerns USB ID 0bda:a728, not 0bda:8771.
+>>
+>>    I have a Realtek RTL8761BUV USB Bluetooth adapter:
+>>
+>>    - USB ID: 0bda:a728
+>>    - Product: Bluetooth 5.4 Radio
+>>    - Firmware: rtl_bt/rtl8761bu_fw.bin
+>>    - Firmware version: 0xdfc6d922
+>>    - Running kernel: 6.18.51-1-lts
+>>    - Distribution: Arch Linux
+>>
+>>    With the stock btusb driver, Bluetooth repeatedly failed with:
+>>
+>>        Bluetooth: hci0: command 0x200c tx timeout
+>>        Bluetooth: hci0: Opcode 0x200c failed: -110
+>>        Bluetooth: hci0: Unable to disable scanning: -110
+>>        Bluetooth: hci0: Resetting usb device.
+>>        usb 1-2.2: reset full-speed USB device
+>>        Bluetooth: hci0: unexpected event for opcode 0x200c
+> 
+> Thx for the report. Just replying to bring a few people into the loop
+> that can help handling this: the Blutooth maintainers and developers
+> which were involved in ca0583c2466174 ("Bluetooth: btusb: limit RTL8761B
+> BROKEN_EXT_SCAN quirk to 0bda:a728") [v7.3-rc1] and 5ead2063611ae5
+> ("Bluetooth: btrtl: fix RTL8761B/BU broken LE extended scan")
+> [v7.2-rc1]. Ciao, Thorsten
 
-tested it, boots cleanly and the panic is gone. LGTM.
+Hmm, seems nobody cares, so we need to go the next step: can you please
+test if latest mainline (7.3-rc4 or later) is affected to rule out that
+it's something specific to the stable series in question?
 
-Reviewed-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
-Tested-by: Jose A. Perez de Azpillaga <azpijr@gmail.com>
+Ciao, Thorsten
+>>    The firmware was loaded successfully:
+>>
+>>        Bluetooth: hci0: RTL: loading rtl_bt/rtl8761bu_fw.bin
+>>        Bluetooth: hci0: RTL: loading rtl_bt/rtl8761bu_config.bin
+>>        Bluetooth: hci0: RTL: fw version 0xdfc6d922
+>>
+>>    The USB autosuspend setting was not the cause:
+>>
+>>        /sys/bus/usb/devices/1-2.2/power/autosuspend: -1
+>>
+>>    The current upstream fix ca0583c24661
+>>    ("Bluetooth: btusb: limit RTL8761B BROKEN_EXT_SCAN quirk to 0bda:a728")
+>>    is already present in my kernel. It sets BTUSB_BROKEN_EXT_SCAN for 0bda:a728.
+>>
+>>    I tested the opposite change locally in drivers/bluetooth/btusb.c:
+>>
+>>        - { USB_DEVICE(0x0bda, 0xa728), .driver_info = BTUSB_REALTEK |
+>>        -                    BTUSB_BROKEN_EXT_SCAN },
+>>        + { USB_DEVICE(0x0bda, 0xa728), .driver_info = BTUSB_REALTEK },
+>>
+>>    After rebuilding and reloading the btusb module:
+>>
+>>        systemctl stop bluetooth
+>>        modprobe -r btusb
+>>        modprobe btusb
+>>        systemctl start bluetooth
+>>
+>>    Bluetooth scanning worked normally. A 20-second scan completed with:
+>>
+>>        Discovery started
+>>        Discovering: yes
+>>
+>>    After loading the patched module, no new occurrences of the
+>> following messages appeared:
+>>
+>>        Opcode 0x200c failed: -110
+>>        Opcode 0x2042 failed
+>>        command tx timeout
+>>        Unable to disable scanning
+>>        Resetting usb device
+>>
+>>    The patched driver is currently loaded and Bluetooth remains operational.
+>>
+>>    This suggests that different RTL8761BUV devices or firmware
+>> revisions using USB ID 0bda:a728 may require different scan quirks. On
+>> my device, keeping BTUSB_BROKEN_EXT_SCAN causes the legacy 0x200c
+>> command to
+>>  time out, while removing the quirk fixes the issue.
+>>
+>>    Relevant upstream reports:
+>>
+>>    https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20260822141115.58815-1-kserwus@gmail.com/
+>>
+>>    https://bugzilla.redhat.com/show_bug.cgi?id=2521504
+>>
+>>    https://lkml.iu.edu/2608.2/12212.html
+>>
+>>    Please let me know if more logs, a full patch, or additional
+>> testing is needed.
+>>
+> 
 
---
-cheers, jose a. p-a
