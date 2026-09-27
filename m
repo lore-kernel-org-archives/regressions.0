@@ -1,122 +1,82 @@
-Received: from mail-dl2-f33.google.com (mail-dl2-f33.google.com [74.125.229.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18F722A4EE
-	for <regressions@lists.linux.dev>; Sat, 26 Sep 2026 21:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC873264612;
+	Sun, 27 Sep 2026 06:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790459951; cv=none; b=j07siD4a5UyNnEo8uErS2l8Glvd28FQquub/LiMh/Lh2ZI0tlNl8UTV5uJQf8SpNwKyR13y62uN8b8OZjBCb/XvboHG60rcxaikkP54s0vAEE59sw0zU0j9cDqXWA00mvTGJ8DXeP9dpZ4PWG7GhdMNmSa3+i3IgJYDg4Gxdi1E=
+	t=1790491715; cv=none; b=AzlqylRYo0atl8Jid0sFeXE5hmdlYeXrjXRURfRDD6CX0Lf9sShUBl6xFuqyWPy8cjk13Cwi4lnk/apfRsPgil9hjWdj35QMaervSPI57HGc0n3Nm6CMuTqQnvHkDnoQ2PuA7LDhtC1hOxWdZc9qSsWZML++bCg72X9JrOutgKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790459951; c=relaxed/simple;
-	bh=h+LUVkyFIE2zlAjtE/YVsH5AQ993c76JZHeeBRNcqgQ=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=pAJ6gZRYImtGmthU5Dr6/KSgfCW1T9JarCBARAm5Us3sSYq9E6X05VmUFGB8NoLY64Dm8KyTpwb/fYfY7YKXl9RplR704uL4dJH4YGzY6noicbjoOquDiV2bINnXt1WivHgLFuurKywNQOzdqoORztmLs5x1SxwllRyjIFwk6GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=iscEJijw; arc=none smtp.client-ip=74.125.229.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1790491715; c=relaxed/simple;
+	bh=a3qGlG41+Q4DERgdj7x7UFHj6kLK08MSc/V1bwbY+1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PCAWb4CfZ1LS4+FGt/Mx3ZfhK2jTNmV/I9Pq2dyLR/V5GfZ/61dSbtZ/ztMdrXvmow6fnVTQL4YF2fsal+L6pNZ9hjGDotKOjBvn07e5JMNYiZDEB+ZoZsXlL29+5Jfn6lFnZaIN6sPAC8u4q6qTetGPH2Yc5fIyh9yy2aWe14M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BTeCiUX3; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="iscEJijw"
-Received: by mail-dl2-f33.google.com with SMTP id a92af1059eb24-1438e88300cso1694148c88.0
-        for <regressions@lists.linux.dev>; Sat, 26 Sep 2026 14:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1790459949; x=1791064749; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=XYBuBP5Xe7rdPxBA07StsgmLL2Qwcxp/fLZua7seV5Y=;
-        b=iscEJijwtTNfXo1HowXMGOILbifsSe3zrOfMsmS8f0YJZ8QzkixfTWzGtzJthbBSXO
-         H7IC60zdeoJg1kMNxbUd9iO0TMVniGdUTcmLInb4EeVHBEcYUG4xryDRIeSyCdRIdzGP
-         cZDUkc2RkNAndvrXH/QmQ9W9o0kPsCYuZ2Xh7ryKZ9fPJ08Z8S4cQBs+D+0rrlYBC3my
-         OLp1mtubmdkUKXHWEYqJEERndC+j9O5Zl4G5lFRmfp5eaPzXxudjJwf6ByRfUaF5FeWB
-         Wi3AvgF0GB5QKKyYV8PslazNVyg4IPn4OFUB3RyQ3Ct03Vk/oEGC5VlIG+Y8xfH9PZh2
-         10cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790459949; x=1791064749;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XYBuBP5Xe7rdPxBA07StsgmLL2Qwcxp/fLZua7seV5Y=;
-        b=V9RId7F0Wbe2czsHOWUujGJ8DabZJCQyHrYr637K/6ltCdnHoz3b3wU9XYBFFcNqjZ
-         Iy3r/YzgOxj6E3RAqtCvv/EoshuxRCluE1DE1Q/vQYegWYMycEuVqrbyUgMYbNIAvFyO
-         ogP8ImKka6R4OQdfWR46nPj1uZ0bj+Up6f1VIjXqeRw6y8qqNaTz74Lqaq6uLNGCeuFo
-         ivTB0UlwIVku4xvcL+MnZjBKITyVAxyN/DlnQ8RDdxBwvO6/0aq4yBf17hy0GJZ3dHjF
-         1o7LvlqKmMAKHPxvS1oCYWTg3MsRKDQDQH9/Tur8s01osGdKm8q6pwTA6J88F3LcdNHQ
-         AF6A==
-X-Gm-Message-State: AFuF++moAgUotrgO+p513n/2RymrfLB5CIZxKRJCvBEFDlFQC06Y01sO
-	OC9r2C8POdZhpiD7pxfgO4kalxnORUU+qvlDxDbISiT0fdoFLk+bwnNUDFrJis8NDDs=
-X-Gm-Gg: AYBFou1ldcRVmUOwOVa3ywHUK7eVSOrBWQhLLub8LGBtHs4A8Uikg4R9WMLcKJHN6xO
-	D2VvvxIWM/WZ95lBN0Hj3SYi6CY3hDKqhofTS/KjQnImL08csJqus7Q2szSJ4QL83ek0Ab4RMdt
-	5JyVHTVSTbX3rZrBdQjqrcza5mXXa5mw5jJnCiBPOlQMm3OmerG73DT+PGgpiAuiQH+qI9u1hvq
-	9OLs3Q/svvdnMFe4QSdJuBkNbe2CHAWd5/rynXl4Eb8L9ZtW/GBzznWTPtabaCqdvHX45IJCCNs
-	8F0A4X//bZRaRI1g080XPvlNZgZqXnpq0pC0HK3CVV6j7kV45HBAR6LSrTSDLSGEzLqzK0cCxZ7
-	6dfJZUZoVnD+vojUx3A6DMuZ6/HgbNfuyIhVW19yLCeLihBzpgZpUhkrki5zYQVqdYGTQS0Ylnm
-	mxv3limwV/HtjhYyJsvdMB28SLyI3aMuqj859sTJDQ7rfkUe2GErJvA63qqknmHGk=
-X-Received: by 2002:a05:701b:21c5:b0:143:7cca:e14 with SMTP id a92af1059eb24-146ce492caamr4445645c88.12.1790459948731;
-        Sat, 26 Sep 2026 14:59:08 -0700 (PDT)
-Received: from ec7b70f3a45c ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-145aa0cb7bcsm13530125c88.2.2026.09.26.14.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 14:59:08 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BTeCiUX3"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hsw4m1Vqtz9Hgm;
+	Sun, 27 Sep 2026 08:48:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1790491704;
+	bh=a3qGlG41+Q4DERgdj7x7UFHj6kLK08MSc/V1bwbY+1o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BTeCiUX315XZF9eInz9jj7vH+zM0oAOit42tuxYs6oWeZ6kU8IUJkCyWqXf1s+TBr
+	 RH+Q0vnF0A/ZjZWG7+pFbyfgkq0l8mR+9chD2OjIwnIoEiMZU4I/FlU0h7E3J0QkbC
+	 ziYkawY2bwZphe4JKXNRMsYGazRxCIr5gKPq79BoQqioRfRIUglS8LcyGuvU/7pVcN
+	 rFUJ3jO9td1Wk+X+TV5AWt78tOOQWkJZk+56vUZvyaJqz18g5e08RTWkd33/jjmFd7
+	 JPgsPcNg2wIOsqRyuG2q2l3EL/z/OZ98F9HtOCd/XMvg5RwA5TXirbD+IdwhMQ5CJ0
+	 r+XBDwxMxONIQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hsw4m0q4pz7x98;
+	Sun, 27 Sep 2026 08:48:24 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hsw4l3Zpxz8sb7;
+	Sun, 27 Sep 2026 08:48:23 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BEA845FA14;
+	Sun, 27 Sep 2026 08:48:22 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ebe6dff2-18f7-4691-bf70-08ba652bb5a4@leemhuis.info>
+Date: Sun, 27 Sep 2026 08:48:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] mainline/master: (build)stack frame size (3128) exceeds
- limit
- (3072) in 'dml_core_mode_prog...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] mainline/master: (build)stack frame size (3128)
+ exceeds limit (3072) in 'dml_core_mode_prog...
+To: kernelci@lists.linux.dev, kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, broonie@kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Sat, 26 Sep 2026 21:59:08 -0000
-Message-ID: <179045994373.636297.9560581777523775419@kernelci.org>
+References: <179045994373.636297.9560581777523775419@kernelci.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <179045994373.636297.9560581777523775419@kernelci.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179049170303.3534085.13013348134667743871@mxe9fb.netcup.net>
+X-NC-CID: wqPViGxqPzBF45XOuPHgEtDvVjGH43zKhCfPUy6toU9YKj0+QT4=
 
-New build issue found on mainline/master:
+On 9/26/26 23:59, KernelCI bot wrote:
+> New build issue found on mainline/master:
+> 
+> ---
+> stack frame size (3128) exceeds limit (3072) in 'dml_core_mode_programming' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.c) [logspec:kbuild,kbuild.compiler.error]
+This to my untrained eyes looks like a variant of the problem that was
+reported yesterday, just with a slightly different error message
+(yesterday it was a stack frame size of 3096).
 
----
-stack frame size (3128) exceeds limit (3072) in 'dml_core_mode_programming' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.c) [logspec:kbuild,kbuild.compiler.error]
----
+#regzbot dup:
+https://lore.kernel.org/all/179039514312.597384.1659548947123427650@kernelci.org/
 
-Log excerpt:
-=====================================================
-/tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.c:10513:13: error: stack frame size (3128) exceeds limit (3072) in 'dml_core_mode_programming' [-Werror,-Wframe-larger-than]
- 10513 | static bool dml_core_mode_programming(struct dml2_core_calcs_mode_programming_ex *in_out_params)
-       |             ^
-1 error generated.
-
-=====================================================
-
-When fixing this issue, please attribute this report according to the
-patch submission rules:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Link: https://lore.kernel.org/all/179045994373.636297.9560581777523775419@kernelci.org/
-
-For complete logs and details about the environment used, see the issue
-on the KernelCI dashboard:
-
-- dashboard: https://d.kernelci.org/i/maestro:aa9a8f27ecff599ad18ae0eda5a089c9ea1bf7b6
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  fd179f8a05be3ccae366b9b96e176b51fbe54aab
-
-# Builds where the incident occurred:
-
-## x86_64_defconfig+allmodconfig on (x86_64):
-- compiler: clang-21
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6ab8139f5ec73975aae631b8
-
-#regzbot introduced: f14572c203d57492e1d4e5d7851a3b143e083b82..fd179f8a05be3ccae366b9b96e176b51fbe54aab
-#regzbot link: https://d.kernelci.org/i/maestro:aa9a8f27ecff599ad18ae0eda5a089c9ea1bf7b6
-
-#kernelci issue maestro:aa9a8f27ecff599ad18ae0eda5a089c9ea1bf7b6
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Ciao, Thorsten
