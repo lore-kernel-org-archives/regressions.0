@@ -1,125 +1,133 @@
 Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18B939A7F2
-	for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 21:29:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9535F3C10A4
+	for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 21:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790544565; cv=none; b=dyQeqfvbUO5ogcinDT8QGL5vyjZ5hVgb4U4oS7xaf8jWDSLCQ7DyHG3mlJ5q0NbE3H8LBP3Kstko7VkRmYHk92PPOj++dIDP5Q7xlKKwEwZ6NRtjgcUVmNUz9pcopOB6pilCm+EJTIuMj5mOahrLhLMssrhlXTk9TlYi2jU8wac=
+	t=1790544616; cv=none; b=h1our3DPLqtgmCdR/Yz52Et2pB0h4Mw0VyulCVEN0hZpw43lbt5wGPHPvp5DLo2JHeKTUqc5xP/GtGP2ESd4x95WVpQy2zfKilwbsE9kt4/IEbgBCSgPy5Et8rH5pGpvvJL4FCXr53JyqczXnFJcUFbJuEWn+t0FtFsFEhWM4Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790544565; c=relaxed/simple;
-	bh=ZdP8akaIB+EYU8/7T2OgyYdXlnTQ5Dpskc4c1QXPRRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CV0ji9lv8hJYdpxgZUUB0wcswbIopcBB9eVFAFhQX+IqTWjHL9zICLUlH8cMgjgIG4qaKpdLA8bO8U/7Ni4tlUMVx5Ft6hXNsw1HF+M64F7K3IDewl4H1w4B5NNYzOQkNINxtGtMENVwoAP5+hQvq32UXEPF8ljjBm/+uwMm+KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=BQQC5+T4; arc=none smtp.client-ip=91.189.121.228
+	s=arc-20240116; t=1790544616; c=relaxed/simple;
+	bh=5E+12Be7OEjou2LCPKAP/4vXzFvj7dPan4fmMbDq538=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NeBSKzX7O0855+mfNVKv+sLT9pV8/fFyjM6muS+vAlvp9VMAfcvjiRtDDvpHg7ootXecrB4Ch4dQuuFLetz0WYhjqhQligVgylnmTJXNCmKCyFD+PsNuKUQE02FeVrubZyXlCAcw2JwNjr4px61Ey6ok1pFDBf5XipdJcnb9KPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=a0dMnNNP; arc=none smtp.client-ip=91.189.121.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="BQQC5+T4"
-From: Stian Halseth <stian@itx.no>
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="a0dMnNNP"
+Message-ID: <33811471d0a5c2a48b74132544761bfaa593bb63.camel@itx.no>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1790544556;
+	t=1790544612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vVk683zxNhz5LjQr1fmEFS9mghEkBEiP1XPaWUoGcpg=;
-	b=BQQC5+T4b3jX/MAJXQsnSMRbZlIubq9awTf5texse1PFttMLddnymJESCEiLd/Mx7kibRa
-	BV2rRV8I7ljnh/WjgsXXdJwHlbzVkD+aU6ob8a9b1Ut2EFiz/1NaupUbXpePfPcubUrNqR
-	qbhbhkaJcUlTAnt0beIrZY4fLmb6zHs=
-To: andreas@gaisler.com,
-	davem@davemloft.net,
-	sparclinux@vger.kernel.org
-Cc: Tony Rodriguez <unixpro1970@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	david.laight.linux@gmail.com,
-	glaubitz@physik.fu-berlin.de,
-	thuth@redhat.com,
-	regressions@lists.linux.dev,
-	nroach44@nroach44.id.au,
-	kaloz@kernel.org,
-	Stian Halseth <stian@itx.no>
-Subject: [PATCH v3 1/2] sparc64: increase kernel thread stack size to 32K
-Date: Sun, 27 Sep 2026 23:29:00 +0200
-Message-ID: <20260927212913.3237082-1-stian@itx.no>
+	bh=CUDG9GC9eRqW+mvK68VrsUJWYeyozDIV4IPnZX7k+1Y=;
+	b=a0dMnNNPo+2z4DPljLy0f3/6hGzZ9K2i7j/oTSm8YXSrD6I+H2RwsxUlGtNkMzW4pYLCR/
+	Y04IbIsNRc8mZe+A39uSz/0rG0bQdVZ0/mb+moYi3+YdS5PLuUPq6UE/7Z/4zeLrKKOUZV
+	nqMHviMFeH3fuBaxb2Jvbd99LMWkzh0=
+Subject: Re: [PATCH v2] sparc64: increase kernel thread stack size to 32K
+From: Stian Halseth <stian@itx.no>
+To: Imre Kaloz <kaloz@kernel.org>
+Cc: Andreas Larsson <andreas@gaisler.com>, davem@davemloft.net, 
+ sparclinux@vger.kernel.org, Tony Rodriguez <unixpro1970@gmail.com>, 
+ linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, 
+ glaubitz@physik.fu-berlin.de, thuth@redhat.com,
+ regressions@lists.linux.dev,  nroach44@nroach44.id.au
+Date: Sun, 27 Sep 2026 23:30:11 +0200
 In-Reply-To: <20260927204912.3667-1-kaloz@kernel.org>
-References: <20260927204912.3667-1-kaloz@kernel.org>
+References: <20260519075809.8993-1-unixpro1970@gmail.com>
+	 <20260831172928.3082853-1-stian@itx.no>
+	 <20260927204912.3667-1-kaloz@kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-BJgZ19SNOurW6N2jL4c+"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Tony Rodriguez <unixpro1970@gmail.com>
 
-Kernel stacks on sparc64 are 16K and this is no longer enough:
-several machines (SPARC T5-2, Sun Ultra 45) panic early in boot
-during USB hub enumeration with "corrupted stack end detected inside
-scheduler". sparc has not been converted to THREAD_INFO_IN_TASK, so
-thread_info sits at the bottom of the kernel stack and a marginal
-overflow corrupts it first; CONFIG_SCHED_STACK_END_CHECK then fires
-from __schedule long after the deep path has unwound, which is why
-the reported backtraces look shallow.
+--=-BJgZ19SNOurW6N2jL4c+
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Measurements with CONFIG_STACK_TRACER show the problem is frame
-count, not any single large frame. On an UltraSPARC T4-1 the
-high-water mark of an ordinary successful boot is 12616 of 16384
-bytes (77%), reached in hub_probe() with a printk console flush and
-a timer interrupt (which runs on the task stack) stacked on top. Of
-the 66 frames in that path the largest is 408 bytes, and ~85% of
-them are 176-224 bytes - at or just above the SPARC V9 ABI minimum
-frame. An equivalent call chain on x86-64 costs roughly a third of
-the stack, so a 16K stack on sparc64 provides far less effective
-call depth than on other 64-bit architectures. On a Sun Ultra 45
-(sun4u), which panics on 10 out of 10 boots with 16K stacks and USB
-devices attached, a forced hub rebind peaks at 15832 bytes.
+Hi Imre,
 
-Double THREAD_SIZE to 32K (four 8K pages). Kernel stacks become
-order-2 allocations; sparc64 has no VMAP_STACK, but stacks are
-allocated once per thread and the trade against boot-time panics is
-a good one.
+Sending V3 with two separate patches now.
 
-Link: https://lore.kernel.org/all/20260519075809.8993-1-unixpro1970@gmail.com/
-Tested-by: Imre Kaloz <kaloz@kernel.org> # Sun Ultra 45
-Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
-[stian: reduced to the minimal value change, measured stack usage]
-Signed-off-by: Stian Halseth <stian@itx.no>
----
-v3:
- - split per Andreas' review of v1: this patch is now only the size
-   change (minimal diff as posted by Imre Kaloz); the removal of the
-   dead non-8K-page branches moves to patch 2/2 with a Fixes: tag
-   for 15b9350a177b
- - added Imre's Tested-by and Ultra 45 (sun4u) measurements
-v2: https://lore.kernel.org/all/20260831172928.3082853-1-stian@itx.no/
+Thank for the feedback and testing!
 
- arch/sparc/include/asm/thread_info_64.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Stian
 
-diff --git a/arch/sparc/include/asm/thread_info_64.h b/arch/sparc/include/asm/thread_info_64.h
---- a/arch/sparc/include/asm/thread_info_64.h
-+++ b/arch/sparc/include/asm/thread_info_64.h
-@@ -100,8 +100,8 @@
- #define	FAULT_CODE_BAD_RA	0x20	/* Bad RA for sun4v		   */
- 
- #if PAGE_SHIFT == 13
--#define THREAD_SIZE (2*PAGE_SIZE)
--#define THREAD_SHIFT (PAGE_SHIFT + 1)
-+#define THREAD_SIZE (4*PAGE_SIZE)
-+#define THREAD_SHIFT (PAGE_SHIFT + 2)
- #else /* PAGE_SHIFT == 13 */
- #define THREAD_SIZE PAGE_SIZE
- #define THREAD_SHIFT PAGE_SHIFT
-@@ -129,7 +129,7 @@
- 
- /* thread information allocation */
- #if PAGE_SHIFT == 13
--#define THREAD_SIZE_ORDER	1
-+#define THREAD_SIZE_ORDER	2
- #else /* PAGE_SHIFT == 13 */
- #define THREAD_SIZE_ORDER	0
- #endif /* PAGE_SHIFT == 13 */
---
-2.53.0
+On Sun, 2026-09-27 at 22:49 +0200, Imre Kaloz wrote:
+> Hi Stian,
+>=20
+> I ran this on a Sun Ultra 45 (UltraSPARC IIIi, SMP). The unpatched
+> kernel hits "corrupted stack end detected inside scheduler" in
+> hub_power_on() on 10 out of 10 boots with USB devices attached. With
+> the 32K stack it boots clean every time: 6 boots with the v1 diff,
+> 10 more with the minimal diff below. A forced hub/device rebind with
+> the stack tracer armed peaked at 15832 of 32768 bytes, so 32K looks
+> like plenty here.
+>=20
+> On v1, Andreas agreed with 32K but asked for the dead else branches
+> to be pulled into their own patch with a fixup tag for 15b9350a177b,
+> since that commit should have removed them already. v2 folds the
+> removal into the same patch, so I'd split it back out for v3: the
+> fix as the minimal diff below, the else-branch removal as its own
+> patch on top. Nice work!
+>=20
+> The minimal diff is below the scissors, feel free to fold it in.
+>=20
+> Tested-by: Imre Kaloz <kaloz@kernel.org> # Sun Ultra 45
+>=20
+>=20
+> Best,
+> Imre
+>=20
+> -- >8 --
+> Signed-off-by: Imre Kaloz <kaloz@kernel.org>
+> ---
+> diff --git a/arch/sparc/include/asm/thread_info_64.h
+> b/arch/sparc/include/asm/thread_info_64.h
+> index c8a73dff27f8..ec552513d63c 100644
+> --- a/arch/sparc/include/asm/thread_info_64.h
+> +++ b/arch/sparc/include/asm/thread_info_64.h
+> @@ -100,8 +100,8 @@ struct thread_info {
+> =A0#define	FAULT_CODE_BAD_RA	0x20	/* Bad RA for
+> sun4v		=A0=A0 */
+> =A0
+> =A0#if PAGE_SHIFT =3D=3D 13
+> -#define THREAD_SIZE (2*PAGE_SIZE)
+> -#define THREAD_SHIFT (PAGE_SHIFT + 1)
+> +#define THREAD_SIZE (4*PAGE_SIZE)
+> +#define THREAD_SHIFT (PAGE_SHIFT + 2)
+> =A0#else /* PAGE_SHIFT =3D=3D 13 */
+> =A0#define THREAD_SIZE PAGE_SIZE
+> =A0#define THREAD_SHIFT PAGE_SHIFT
+> @@ -129,7 +129,7 @@ extern struct thread_info
+> *current_thread_info(void);
+> =A0
+> =A0/* thread information allocation */
+> =A0#if PAGE_SHIFT =3D=3D 13
+> -#define THREAD_SIZE_ORDER	1
+> +#define THREAD_SIZE_ORDER	2
+> =A0#else /* PAGE_SHIFT =3D=3D 13 */
+> =A0#define THREAD_SIZE_ORDER	0
+> =A0#endif /* PAGE_SHIFT =3D=3D 13 */
+
+--=-BJgZ19SNOurW6N2jL4c+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCarmK4wAKCRDoeAEuJe36
+VogkAP9R7tEqlrVRNhzy1/oMtAPyOM6pCa5aqPcJIqcKctwXrAD/RfqGNQxiB1yp
+hcrSouDqwd06nNX/xu7EAmo1qUIq3Qs=
+=1H8C
+-----END PGP SIGNATURE-----
+
+--=-BJgZ19SNOurW6N2jL4c+--
