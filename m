@@ -1,133 +1,134 @@
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej2-f41.google.com (mail-ej2-f41.google.com [74.125.228.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9535F3C10A4
-	for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 21:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790544616; cv=none; b=h1our3DPLqtgmCdR/Yz52Et2pB0h4Mw0VyulCVEN0hZpw43lbt5wGPHPvp5DLo2JHeKTUqc5xP/GtGP2ESd4x95WVpQy2zfKilwbsE9kt4/IEbgBCSgPy5Et8rH5pGpvvJL4FCXr53JyqczXnFJcUFbJuEWn+t0FtFsFEhWM4Iw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790544616; c=relaxed/simple;
-	bh=5E+12Be7OEjou2LCPKAP/4vXzFvj7dPan4fmMbDq538=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NeBSKzX7O0855+mfNVKv+sLT9pV8/fFyjM6muS+vAlvp9VMAfcvjiRtDDvpHg7ootXecrB4Ch4dQuuFLetz0WYhjqhQligVgylnmTJXNCmKCyFD+PsNuKUQE02FeVrubZyXlCAcw2JwNjr4px61Ey6ok1pFDBf5XipdJcnb9KPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=a0dMnNNP; arc=none smtp.client-ip=91.189.121.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480D02EEE92
+	for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 22:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790549448; cv=pass; b=d4N1D1hIlG2IXSWm4ubbIsoVmhByDWpaQ1Oig9vBTPYIUukgg/3wlVEIdRR8onNR48mV/KhCbZF0Hw44c7Nztfk5TeIQe6lIobuKcqypdAVwlcNq0Ss04r+9nLnTNV/8iTIpxb+3FsiRblKzgfKqvYv3qY6f6ZEImcxuyAHUldo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790549448; c=relaxed/simple;
+	bh=Ifx1yTX0L1801X3uiipDGm66k2wMyQhOYEC1lY1zW3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GEuvnU84vGmv7GlDFpe1KRjV4fPXMT9pRm1kPU2OKbI2VhQ3p5jJchJqljF19eo6RbIP7OsLSlBCyWx6n9+aWJ7jc1vPjmTconmYZHM5BlG53XS8FpAgxcEPmDwz/IZYK+WXDPD0gEiOMljDC0ZZHvPN0gUrv6Nk98jVv0KeUxM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=I4Qg4vl8; arc=pass smtp.client-ip=74.125.228.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="a0dMnNNP"
-Message-ID: <33811471d0a5c2a48b74132544761bfaa593bb63.camel@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1790544612;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CUDG9GC9eRqW+mvK68VrsUJWYeyozDIV4IPnZX7k+1Y=;
-	b=a0dMnNNPo+2z4DPljLy0f3/6hGzZ9K2i7j/oTSm8YXSrD6I+H2RwsxUlGtNkMzW4pYLCR/
-	Y04IbIsNRc8mZe+A39uSz/0rG0bQdVZ0/mb+moYi3+YdS5PLuUPq6UE/7Z/4zeLrKKOUZV
-	nqMHviMFeH3fuBaxb2Jvbd99LMWkzh0=
-Subject: Re: [PATCH v2] sparc64: increase kernel thread stack size to 32K
-From: Stian Halseth <stian@itx.no>
-To: Imre Kaloz <kaloz@kernel.org>
-Cc: Andreas Larsson <andreas@gaisler.com>, davem@davemloft.net, 
- sparclinux@vger.kernel.org, Tony Rodriguez <unixpro1970@gmail.com>, 
- linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, 
- glaubitz@physik.fu-berlin.de, thuth@redhat.com,
- regressions@lists.linux.dev,  nroach44@nroach44.id.au
-Date: Sun, 27 Sep 2026 23:30:11 +0200
-In-Reply-To: <20260927204912.3667-1-kaloz@kernel.org>
-References: <20260519075809.8993-1-unixpro1970@gmail.com>
-	 <20260831172928.3082853-1-stian@itx.no>
-	 <20260927204912.3667-1-kaloz@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-BJgZ19SNOurW6N2jL4c+"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="I4Qg4vl8"
+Received: by mail-ej2-f41.google.com with SMTP id a640c23a62f3a-c2dc50c6edfso89670066b.1
+        for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 15:50:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790549444; cv=none;
+        d=google.com; s=arc-20260327;
+        b=p+V2Jq7Ba87t3o8yLskX3kddESGU6XEQsKxNy+pPupkMIyR5SGrDcs9cGWYSMRQmEt
+         zezp+tR/Yy6Gec4d5Ni4rFGWFwfUmKtjqqs0CxVwQcm3amP6+lTceYJTmgA7qG6LYrEx
+         PDDqKL3XvbYHK7uWcYWeOWVdcX1z4wV8W5r4SMWcI7IOGz7RqF+I7TWxjEKUZjM3Tfwa
+         hzN2sOLDDWu9gyaViYwwBqsAvyExh1PXlZIFLq73VvNOGlYo2pgHZEoa1IGGMnq1uLOj
+         rEAplWW24VZao0QL7XhTVnv3x1tAUa2Mz2mZEAQm2R6w/BRylE5iSDIGHoAa6iu59Cj4
+         DvtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=Ifx1yTX0L1801X3uiipDGm66k2wMyQhOYEC1lY1zW3Q=;
+        fh=Lbap4FKNERTbvWePlsOdix7Uf+YzDtdvx/a7n+YW4aY=;
+        b=JSuKj9b6ccnXkPPvH168MrDRUNWhHQErstgg5fh2MPl8DSbWHXhp0BwsHS6nxeJSbu
+         PMBbfQC/+sGabjeXiJv/+/IikAYx5o7aL/LhUHtpq4es1Nelt8AyeW61IE7DKxnrXLQ4
+         xLXfTxXdSCXslISX8N79KLPZwOCt+1yzz40LauXXcoPqHeOtnGsHUGUOaFbXZlRaGVeD
+         PHw8J1zKCdVXs7UhZScnEms283uWj0k8Xf+Ff1oj/hHWsMLq5Qg0rqUpoLZ71E2weLiD
+         wzwrmtpPx9Z8EAEk7k16C8LBiU64Kc4m8aHQGgxye/1PxH1CY0DGYsyVgYmpk99dynXQ
+         h22g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20251104; t=1790549444; x=1791154244; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ifx1yTX0L1801X3uiipDGm66k2wMyQhOYEC1lY1zW3Q=;
+        b=I4Qg4vl8MeZEfQBOvsinuDVhzRtNFCviswMeRfSwnSKe/7f6/ozLV0oBYmDNlFDC/r
+         0GuXKlSxTa3RkHkrZdOTgSfM9fmtZ3zyI1DmnlcBdxLZ16Yg4dwc+ZuDg/Jk+NMFhrjW
+         OXhmYGiuuAenuT2Gtlhb3kK61237+6+xKPl9cPABByNKqZKuhIGWM7kI34UoyG8+yf6c
+         AASf4mX9ProBGwNYTfzeUWdgUKovtbPLYMYIH56rq8dHLMtERYlpSFC/QnpgLz23xwNE
+         EGtnw4RkqCl44a+ntJ+vOylD+0VZ+FevkqmWiHMzi+eGQ6x867lm6ywkIIMy915koDsf
+         RX4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790549444; x=1791154244;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Ifx1yTX0L1801X3uiipDGm66k2wMyQhOYEC1lY1zW3Q=;
+        b=dM8k8UcPZNAkSHn9KQ9k2BrYGJVmLVO3ziH2RBuXZsulEv2lAASn/MPvDe/2/fFkbZ
+         R5Z/+1bts4MniererO5XSYpoGX4bBoUTt0waLVnwTR9YGSD/jzF2I9J/yQ1T3+ZkeqAs
+         k5ayQ50SzQiY0Fayb7QZrXRs0cozbb8OVcx/PkzfO2GCxGQyXpTpuPPUvCB+0nOHq+FX
+         LdUPhKeM05Xn4KnBMsL1kXF55vySNpnthYxZgfar6spNOfUy/uqgZBG1sVrLmF97/fyO
+         joq5fC8scO/c3w3q3UFO2xTtO1+Mb2J1T9rmuIEcFsJlSk6hKXOOc/j6eRomv7/hpDYd
+         2ZWw==
+X-Forwarded-Encrypted: i=1; AKwUvBxaJIW1gVGByL784LvOItHeg/MmuEMMNcuylAgzkjIsxwQa/2rFik8+Tfqr/INo0tj/GDzWI766/eNylw==@lists.linux.dev
+X-Gm-Message-State: AFuF++nVKXIdcAbKxsDP6rAhrdPP96yz/xoW1bzZDJS7SI4ze7TxWqyr
+	eWaL4ju3lM555RtXdIXqcZUZnedW2qi7PQXooDBvOFQJ8O7FfE/UYuI5t7sXQhgVYes4rQ7gwLQ
+	SMa2ttXpUXgBzAktJn9HOlmgu0nV48Z5q2ZtaFFCIm/FGtLs=
+X-Gm-Gg: AYBFou1A3NPK++NQ/kYzozmA/1E78a91WjWtXu7uJTS5mdV2U5vgjbYurrPQjgOEl/a
+	9RMFCh7JBJZc7bfhiUGm7K9WypkN3DHe9dqDvP5SaQ/ziZGdbRcxs2+NfPhhGIo0ofpC8XWXyRn
+	TVk3CkT0bIzporeGRcYPINrM5HWAL+BiUwsGmJdUwB5L1YwpBlJ6gu52V74j7kcGV47EZp8L/oR
+	ZIL9lq2pfZiv22xRZN78O0aDpYOJ3Hx3TWaVVTi6AzoB6mkMDnaYtTnfg27hYl5rif5/QT/acQo
+	Y7K8klBhM6JYwE1Gb1/r5GNeGC1G7OZs44QTsz7XmGh8jMbgOniDi0tZSXtwrgqvsZAZM3SApJg
+	/2DIrrrPJHzBHdKPJRtnXGOFrpgTH2VYNVBmyaSviL8TR0dE08WTXkGGJI0340X7U3FkzqzS6kb
+	Elh+R9fssLXK5SO1w=
+X-Received: by 2002:a17:907:7b8c:b0:c2d:c33d:a9d4 with SMTP id
+ a640c23a62f3a-c2dc33dada2mr233426266b.10.1790549444303; Sun, 27 Sep 2026
+ 15:50:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=+iOe4ZGA@mail.gmail.com>
+ <2026-09-27-daily-reply-0001-re-audient-evo4-mixer-put-errors@kernel.org>
+In-Reply-To: <2026-09-27-daily-reply-0001-re-audient-evo4-mixer-put-errors@kernel.org>
+From: Faaris Ansari <faarisansari@googlemail.com>
+Date: Sun, 27 Sep 2026 23:50:33 +0100
+X-Gm-Features: AclHuK-yRwoG3EWnoCvNFcLc3JE7YWNDmy2zbYPYkBL_ZtPL-UpCyDcrqmqvJWY
+Message-ID: <CANBVYRAr_ShKGmrt2NoqsDsDEbTXa5DWJbq2oP6wKLWJQpLRWw@mail.gmail.com>
+Subject: Re: [REGRESSION] Audient EVO4 hardware volume control now requires quirk
+To: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-sound@vger.kernel.org, 
+	=?UTF-8?Q?C=C3=A1ssio_Gabriel?= <cassiogabrielcontato@gmail.com>, 
+	Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Sasha,
 
---=-BJgZ19SNOurW6N2jL4c+
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
+It seems you're right. Reverting that change has fixed the volume
+control with my interface - I made sure to remove the quirk flags
+whilst testing.
 
-Hi Imre,
+What are the next steps here? Is there a problem with that patch, or
+do we need to add a quirk for the EVO4 in the kernel?
 
-Sending V3 with two separate patches now.
+Faaris
 
-Thank for the feedback and testing!
-
-Stian
-
-On Sun, 2026-09-27 at 22:49 +0200, Imre Kaloz wrote:
-> Hi Stian,
->=20
-> I ran this on a Sun Ultra 45 (UltraSPARC IIIi, SMP). The unpatched
-> kernel hits "corrupted stack end detected inside scheduler" in
-> hub_power_on() on 10 out of 10 boots with USB devices attached. With
-> the 32K stack it boots clean every time: 6 boots with the v1 diff,
-> 10 more with the minimal diff below. A forced hub/device rebind with
-> the stack tracer armed peaked at 15832 of 32768 bytes, so 32K looks
-> like plenty here.
->=20
-> On v1, Andreas agreed with 32K but asked for the dead else branches
-> to be pulled into their own patch with a fixup tag for 15b9350a177b,
-> since that commit should have removed them already. v2 folds the
-> removal into the same patch, so I'd split it back out for v3: the
-> fix as the minimal diff below, the else-branch removal as its own
-> patch on top. Nice work!
->=20
-> The minimal diff is below the scissors, feel free to fold it in.
->=20
-> Tested-by: Imre Kaloz <kaloz@kernel.org> # Sun Ultra 45
->=20
->=20
-> Best,
-> Imre
->=20
-> -- >8 --
-> Signed-off-by: Imre Kaloz <kaloz@kernel.org>
-> ---
-> diff --git a/arch/sparc/include/asm/thread_info_64.h
-> b/arch/sparc/include/asm/thread_info_64.h
-> index c8a73dff27f8..ec552513d63c 100644
-> --- a/arch/sparc/include/asm/thread_info_64.h
-> +++ b/arch/sparc/include/asm/thread_info_64.h
-> @@ -100,8 +100,8 @@ struct thread_info {
-> =A0#define	FAULT_CODE_BAD_RA	0x20	/* Bad RA for
-> sun4v		=A0=A0 */
-> =A0
-> =A0#if PAGE_SHIFT =3D=3D 13
-> -#define THREAD_SIZE (2*PAGE_SIZE)
-> -#define THREAD_SHIFT (PAGE_SHIFT + 1)
-> +#define THREAD_SIZE (4*PAGE_SIZE)
-> +#define THREAD_SHIFT (PAGE_SHIFT + 2)
-> =A0#else /* PAGE_SHIFT =3D=3D 13 */
-> =A0#define THREAD_SIZE PAGE_SIZE
-> =A0#define THREAD_SHIFT PAGE_SHIFT
-> @@ -129,7 +129,7 @@ extern struct thread_info
-> *current_thread_info(void);
-> =A0
-> =A0/* thread information allocation */
-> =A0#if PAGE_SHIFT =3D=3D 13
-> -#define THREAD_SIZE_ORDER	1
-> +#define THREAD_SIZE_ORDER	2
-> =A0#else /* PAGE_SHIFT =3D=3D 13 */
-> =A0#define THREAD_SIZE_ORDER	0
-> =A0#endif /* PAGE_SHIFT =3D=3D 13 */
-
---=-BJgZ19SNOurW6N2jL4c+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCarmK4wAKCRDoeAEuJe36
-VogkAP9R7tEqlrVRNhzy1/oMtAPyOM6pCa5aqPcJIqcKctwXrAD/RfqGNQxiB1yp
-hcrSouDqwd06nNX/xu7EAmo1qUIq3Qs=
-=1H8C
------END PGP SIGNATURE-----
-
---=-BJgZ19SNOurW6N2jL4c+--
+On Sun, 27 Sept 2026 at 15:27, Sasha Levin <sashal@kernel.org> wrote:
+>
+> > I was able to work around the issue by adding extra modprobe config to
+> > my system, specifically the below:
+> >
+> > options snd_usb_audio quirk_flags=2708:0006:ignore_ctl_error
+> >
+> > Does this quirk need to be added to the snd_usb_audio module or is
+> > there an underlying fix somewhere else?
+>
+> The likely cause is 87a6f2fa6e6c ("ALSA: usb-audio: Propagate write errors
+> in generic mixer put callbacks"). It is in 7.2 and was backported to 6.18.53
+> and 6.12.111. Before it, a failed SET_CUR in the mixer put callbacks was
+> ignored and userspace saw success. Now the error is returned unless
+> ignore_ctl_error is set, which is exactly what your workaround does. It is
+> the only functional change to sound/usb/mixer.c between 7.1.13 and 7.2.5.
+>
+> Could you confirm by reverting just that commit on 7.2.y or 6.18.y and
+> testing without the quirk_flags option?
+>
+> --
+> Thanks,
+> Sasha
