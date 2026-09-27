@@ -1,192 +1,72 @@
-Received: from mail-dl2-f41.google.com (mail-dl2-f41.google.com [74.125.229.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4403F23B5
-	for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 13:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790515801; cv=pass; b=ipttAsaoAjisr0ZSOXj75ziFYzwf6KDa6Q03MVQxQOx7uZzEXug7Uf2Ga5XVDhk8iVkxSQRYCG8BqvIFy2CEQbYj+gVZOFA7G8VoVcEvJczgoon5eurI6+QQ+iPpUtDGne7OrcHXd+iy7sZBNakuQYORJgPeglIvBnVjcW/6pRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790515801; c=relaxed/simple;
-	bh=lkIUIKBr9//KP17Abm9XBf3FAV/tUC2s0b7CDBQ6VmI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F5t+lYnSNBbrWUFJzmko/4s8egReYS8UBwTMBWD30Wad2kYBy0VcIBnAOumm7QT/jyvGhph/cf5F2svBU2Ewt62MtyfI09SerKg0b/QUof515ZePY8UNSgHF9ms/xODr3kgRufnW3K6cg7LVgip9olA5bhaP6iMhIc3aNv+nlME=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cH6D5emP; arc=pass smtp.client-ip=74.125.229.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9D23F23B5;
+	Sun, 27 Sep 2026 14:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790519225; cv=none; b=Ig8OJ3NfyDNcBFVj9cFkQgs5mukjXe/NwPRxlyrPehjmAZFDkjxYjIk5XitbhGkOQRfWsU8idPUW3stkTtNYjfJbWD9GlC7oS4T79x6cu8Dr5M+WD8MKHRJ7UWp9dk4Sftm/4SmzkrtGXI7YUd83qhA8FWd8v978ENIahmWBFIc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790519225; c=relaxed/simple;
+	bh=rFX+rRMPeLiE/DGCCg7dOcgZAY5QQ7Bpa6LuddfFyrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XFZqLolAi2+7UZslNjXP0Dqi95ZQhnCTA7qFp7/Owbw9i1BniQLbj2z/RZAh+eIDDt511qyUmG/QX8w4tfNMlp7+eJXGQeQFM+a3sl2Fp5WhTPvBFwPedK0mMWxKMlxX2Y+Sf9rseykbDS85ve4Q+sdfK9Bw/aa9F017vqWB1wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xk5TZUvj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cH6D5emP"
-Received: by mail-dl2-f41.google.com with SMTP id a92af1059eb24-147be78cc56so23914c88.1
-        for <regressions@lists.linux.dev>; Sun, 27 Sep 2026 06:29:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790515798; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pk7crdJyXRRk7b+DXmNhyzZtsG5ze/0GzwfHiz+N6WZJox/8qx7Ie4MWC7eJYeKmoN
-         sWzSfuHlTOqwJfmP4kykRKvHbRz3MGRlttT1Wnh2a6qBc0Nc6rvF4pnAVDezeybMPVvZ
-         TLGFkiCBPuI8T5nJ8Z6XbdzPkheZXbGqc32MyUVk7YuyEu88kvZs2M2rc1jh45eC8STw
-         IvIw0Ay/JfKXKvnUZnEjHtWJcJpe79BCCiZwRD4E1THQZbt0lvIJiwpPez4TTMeJVJjL
-         6xqY24sjWy7Mi+ahYSfobZqyAqse3VAwkuXeMTanTe5/pNZwdThOqd0Iaf2XKJsVVUzS
-         NPKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=JjWx7CdMGt/+JDfl7KX1wEPjdEp46bufMD+qtwVQ9jw=;
-        fh=OU4ECyotw2sWhahMU+WEmnnmH5q65WfPudm2SgylBLI=;
-        b=GcxqxAT5zSYqnXjufzLhsgk4kxW41EZKMSt8znpjuX1evkQNbEwLnP0FedWJ2xRKv1
-         TQ9IhGm86V2+NCAkqoJHt/+1/SdC7gkdocpbbxY1iQCW0MAWjjhNr4xgza9B3Tf2iqmC
-         ADDPPMYCWZaDmdkDN5Hq65j2v6kxHO05RgsGc/lt15cTiiGNS0Y5YIeutOkUVd8Q/R8L
-         h4kYeR3DSy0Kj9VofUAMuUvw2zaup4utNE7opqsQyB5LKPt2poCbHah5y9/cqRjKfk+C
-         RzgG07ygRSe/69jlVZsU5U6GsvfDQg16XlkZsuWEBNmZ5zGNW73ifkUBurKkN2DywPh1
-         pPbg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790515798; x=1791120598; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=JjWx7CdMGt/+JDfl7KX1wEPjdEp46bufMD+qtwVQ9jw=;
-        b=cH6D5emP2aTeDjCmdxHbs+u5+TpTbuMt/ucZt+EIXmyO/RZLxCUwVThgCm1K6RDed2
-         Lh1YGy63DkhhAwgTbK+zVO77/l9HWCp3yqgne/0kKvNWqGpcwcrE179B1m2/QBYsaKG4
-         sryTV9DKts3qho2j07go52sGsKy2PuWy7/u3EK9S+QxZ+zryvccUPik6EupKixwbbDEV
-         dh4gGHgVgVqkRFNwtF7F4GNKo1hoZQyXhwGR53rWwh4bnHZFKNxqyrGfQrOWdQBkeBYR
-         HppMrLKF1Yrnp2SHtvULg8JZHen1L7U2+2GNAGmL2F+898VWZ+auz296uaWd2lIgrHdv
-         Ih5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790515798; x=1791120598;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JjWx7CdMGt/+JDfl7KX1wEPjdEp46bufMD+qtwVQ9jw=;
-        b=zEPIV6ltXc71S5+aoy7fi99YenAgq/GQII/U05BbiaNVPHs2TpTERc2ccLCIsXcSjl
-         ZXrfwp3SJxrH3EumD6ZLRA02HJoO2yljcB22ANr3v27azauCyO0sVhJCKPNvkqfQ/XLQ
-         kYDHVOwZgkagg+VS5vynEaYgZreNZMx1496aRInv1pnxIEfwW3JhUrXHieLZsYERUjr0
-         t3ghuVbfNTo24QFXpQKZiitjc+g5YFFLgk6v05c1SNFazMSFzMVnHp17vu5UzrKZ947S
-         YNXFsyQHNiBB2ShVimUDOkY3DAAFT/7ll0DRhSrjhSQh3K8m3JoQi27Ars0RuEYGhlna
-         hCEA==
-X-Forwarded-Encrypted: i=1; AKwUvBwNbeFt3VSMxDmPo7+JhZnLj898iUFi6RJ8vxgQnQB8jxitWORa1u4Vw/0sOiheJlA2dWN6PaYKF2cMVw==@lists.linux.dev
-X-Gm-Message-State: AFuF++ljFFpr539BGKTHYxYRYkpOQSPpRk19jvIMaBL6hxR+2Zx7Ae0E
-	5dR4MXLvSa38wVn4xJR0gAObTHMwAL0Kjys2TN1ss44dlClVFf7636wpzRJsETFXrkoK5jsrdjX
-	rCB4102SmOjBX/qcc72ftcI+Df39k4jiD+g==
-X-Gm-Gg: AYBFou018CaYEJT8DaqOqHs5Zix2wq8SlOnrbt1O/WrB4oYupu8cPs1377SwS00YL4r
-	+NKckylFvyn5/qX9jjjiUgUF8RYzUnv/LDs6aS4K7wcO+1N62qpKOqf5D8f9u/ROCD/vjOV4LAp
-	w7absgph2WGuvnQdNN4wztwV274PTLZquFhcJbvQW4rQ6B2xXWDYhcnObtw5Ov7SWUKw7s+AEpr
-	H0s5zgt4XlVttKKE2vmxcI3LbP/qOv+IPusrfit0thYtlpOkGRjPYGcxUGHmoUJoWltRCpCRZMZ
-	JiDvargExpoEzMk/5iUPgJAU2xrKdyOikdVKFJ4QK/M3GN3B+dCaKUMgHoHB4c0AFEzEBC3Kxk3
-	nCpr5VmlDkRRU3BGmWSBg9V1xpIrGfmfLMQLMzQPCcw==
-X-Received: by 2002:a05:7022:29c:20b0:12d:c389:ae54 with SMTP id
- a92af1059eb24-146cfdd1a65mr10144867c88.2.1790515798339; Sun, 27 Sep 2026
- 06:29:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xk5TZUvj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4941F000FF;
+	Sun, 27 Sep 2026 14:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790519223;
+	bh=cqGmgP7NufmJ/ktboJDXDW5qnWwG5i1YxzK7VM/Ztyw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Xk5TZUvj4GW/URyvtHsmy4ZcWevaGVfWAZNVhS4rP/BwPK6ud2YOt95BFXzoRQ18q
+	 MYsdqIGkUiP8tQYaC8Uky5tgKppFkLm8aPMQ1K6nEYFt1NM8aiusC5eROBOIUm7w4z
+	 RUYy6XavliC+e9ZkpIKn+lHkVtwhRozAKsWgtZ2K81jeAMSxg0p05E+bEOoBL8FCX6
+	 shGIV7wFXgbiPG1GFFljHwpUbofGO+QidCMf3nras8hIBVXZGP0Hh8mLxSC+w1KkIb
+	 fGgBpI/5GgA+Z8dw7rVwg48AQkGI2xjE79kXg7QBsWjWhJJEegmMILAmhLQe6k+VPf
+	 Qk6PFnodHQ67w==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev,
+	linux-sound@vger.kernel.org,
+	Faaris Ansari <faarisansari@googlemail.com>,
+	=?UTF-8?q?C=C3=A1ssio=20Gabriel?= <cassiogabrielcontato@gmail.com>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jaroslav Kysela <perex@perex.cz>
+Subject: Re: [REGRESSION] Audient EVO4 hardware volume control now requires quirk
+Date: Sun, 27 Sep 2026 10:26:59 -0400
+Message-ID: <2026-09-27-daily-reply-0001-re-audient-evo4-mixer-put-errors@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=+iOe4ZGA@mail.gmail.com>
+References: <CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=+iOe4ZGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <179039514312.597384.1659548947123427650@kernelci.org> <8ad00f0f-d924-4b19-986c-8c17dcdade86@leemhuis.info>
-In-Reply-To: <8ad00f0f-d924-4b19-986c-8c17dcdade86@leemhuis.info>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Sun, 27 Sep 2026 09:29:46 -0400
-X-Gm-Features: AclHuK-3xaAgJQ-_J7Ya8xlZeXYTi28sJqJn3vWlASVO1_3rsBfjl4g86XVoWRU
-Message-ID: <CADnq5_O7R096UP9mF5RvGSzT+c2p2v2Dm8M243CLxXa=VZvRwQ@mail.gmail.com>
-Subject: Re: [REGRESSION] mainline/master: (build)stack frame size (3096)
- exceeds limit (3072) in 'dml_core_mode_prog...
-To: Thorsten Leemhuis <regressions@leemhuis.info>, "Leo (Sunpeng) Li" <Sunpeng.Li@amd.com>, 
-	Alex Hung <alex.hung@amd.com>
-Cc: kernelci@lists.linux.dev, kernelci-results@groups.io, 
-	regressions@lists.linux.dev, broonie@kernel.org, 
-	Alex Deucher <alexander.deucher@amd.com>, DRI <dri-devel@lists.freedesktop.org>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 26, 2026 at 6:37=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
+> I was able to work around the issue by adding extra modprobe config to
+> my system, specifically the below:
 >
-> On 9/26/26 05:59, KernelCI bot wrote:
-> > New build issue found on mainline/master:
-> >
-> > ---
-> > stack frame size (3096) exceeds limit (3072) in 'dml_core_mode_programm=
-ing' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display=
-/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.o (drivers/gpu/drm/amd/=
-amdgpu/../display/dc/dml2_0/dml21/src/dml2_core/dml2_core_dcn4_calcs.c) [lo=
-gspec:kbuild,kbuild.compiler.error]
-> > ---
-> >
-> > Log excerpt:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml2_0/dml21/sr=
-c/dml2_core/dml2_core_dcn4_calcs.c:10513:13: error: stack frame size (3096)=
- exceeds limit (3072) in 'dml_core_mode_programming' [-Werror,-Wframe-large=
-r-than]
-> >  10513 | static bool dml_core_mode_programming(struct dml2_core_calcs_m=
-ode_programming_ex *in_out_params)
-> >        |             ^
-> > 1 error generated.
+> options snd_usb_audio quirk_flags=2708:0006:ignore_ctl_error
 >
-> Hmmm, there are known "stack frame size [...] exceeds limit" problems in
-> -next that should soon be fixed there, see:
-> https://lore.kernel.org/all/CADnq5_MFMriR-b3eX0mTZShPDgUBgwoObgumEjJ9cJqd=
-mDM6xQ@mail.gmail.com/
->
-> But this error is new -- and happens in mainline. Wondering if this is
-> caused by a fix for those problems.
+> Does this quirk need to be added to the snd_usb_audio module or is
+> there an underlying fix somewhere else?
 
-+ Leo, Alex
+The likely cause is 87a6f2fa6e6c ("ALSA: usb-audio: Propagate write errors
+in generic mixer put callbacks"). It is in 7.2 and was backported to 6.18.53
+and 6.12.111. Before it, a failed SET_CUR in the mixer put callbacks was
+ignored and userspace saw success. Now the error is returned unless
+ignore_ctl_error is set, which is exactly what your workaround does. It is
+the only functional change to sound/usb/mixer.c between 7.1.13 and 7.2.5.
 
-Looks like some combination of compiler and/or config options explodes
-the stack even further than the recent changes handled.
+Could you confirm by reverting just that commit on 7.2.y or 6.18.y and
+testing without the quirk_flags option?
 
-Alex
-
->
-> CCing Alex and Christian in case this is really something new they want
-> to know about.
->
-> Ciao, Thorsten
->
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >
-> > When fixing this issue, please attribute this report according to the
-> > patch submission rules:
-> >
-> > Reported-by: kernelci.org bot <bot@kernelci.org>
-> > Link: https://lore.kernel.org/all/179039514312.597384.16595489471234276=
-50@kernelci.org/
-> >
-> > For complete logs and details about the environment used, see the issue
-> > on the KernelCI dashboard:
-> >
-> > - dashboard: https://d.kernelci.org/i/maestro:24dc0670f5eb776888969170a=
-199e08b7f23f99b
-> > - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-> > - commit HEAD:  6812ce4e4379ffc99c52401ec28f0d7ffbc36206
-> >
-> > # Builds where the incident occurred:
-> >
-> > ## x86_64_defconfig+allmodconfig on (x86_64):
-> > - compiler: clang-21
-> > - config: None
-> > - dashboard: https://d.kernelci.org/build/maestro:6ab70c1f5ec73975aade9=
-d6e
-> >
-> > #regzbot introduced: f14572c203d57492e1d4e5d7851a3b143e083b82..6812ce4e=
-4379ffc99c52401ec28f0d7ffbc36206
-> > #regzbot link: https://d.kernelci.org/i/maestro:24dc0670f5eb77688896917=
-0a199e08b7f23f99b
-> >
-> > #kernelci issue maestro:24dc0670f5eb776888969170a199e08b7f23f99b
-> >
-> > --
-> > This is an experimental report format. Please send feedback in!
-> > Talk to us at kernelci@lists.linux.dev
-> >
-> > Made with love by the KernelCI team - https://kernelci.org
->
+-- 
+Thanks,
+Sasha
