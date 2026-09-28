@@ -1,1074 +1,209 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1704F393B
-	for <regressions@lists.linux.dev>; Mon, 28 Sep 2026 16:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7A247A884
+	for <regressions@lists.linux.dev>; Mon, 28 Sep 2026 22:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790614398; cv=none; b=YPNk1N0mCb9n3HqDpgGgjM2ru+fhRxq6G5sOdICPrRjYBu6L7IVvYVPKY1zzo/qoQuQ5SyH8HSzFGSKDT0tm58ilc3FK3xISfqlfBcLkNbRr7di7yDROts6fqrZVgiqb2ux/u2Y3uix7JhIfDWGN72qiUBGKDgO7lbu6KDaxSwQ=
+	t=1790633882; cv=none; b=vAMJI7X59WZgWb8vdLshHeHIWiPUdE4PKVTDTNRaAkoOmU2pv9a3Xwsj3Fsl7FriX5yOvlpeoLd6KKdySVIdlGE/Hktjmpe2Qrp3Wne/gAeNSuOjjcLdwWiEn2XjGNY1esxOaUA0ZIkkJfcUHZEN5Cih1vCbZWPl6Os/RS9+bok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790614398; c=relaxed/simple;
-	bh=G9sExAdtnxh/VHCkojybBWsTBo/Gb/MbdlY4uuZD4tA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bHQOVT41PaiSUsZFVN2eDCutr6wc14VtbVdy/BtxvWXO4vS4oydvh8kzIHLrLXvUvIs+y24TcHURhFNJx+aXC6U0AhBmKijpsQip+XO49X7YMPJDU8MlS7tzuKmA9yRU1g2PuwF3hCvK2PSU3kEi/F7rrCSln9Jsjk8WRyKs1U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Va6WaOpX; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790633882; c=relaxed/simple;
+	bh=z3cD18dfRRxJBzxxLMbV7wKOYV85Yje2YDlaAf0/JiE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EZlU1bfT1/Hnxy19q5UO9RAJEVfVzy6VA+SLv2MaE5J8BzqXHUOsnOTOP+DPB4RIN9dhfLYF8zgOV+funi52hwZ32hSpGgE3xsWIdnNkji6Lpc/wvjs5TORoVsVN0OMWClBBROBRWeZONeDod4DaUsrhtJ+PNVGVz2EDGYAqLzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=EARQgv6T; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Va6WaOpX"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ffed768deso1585145e9.1
-        for <regressions@lists.linux.dev>; Mon, 28 Sep 2026 09:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790614391; x=1791219191; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=0cnAg8yd+SFMKgMnOCthTX/mJXQ5eQt2X/SkShksKg4=;
-        b=Va6WaOpXiBO5usaLguD34ZHt7HLhUV45HbpHHUPgA/YdDc8fijUlxfgVHMbNqK8XVY
-         8RQvVqG2GlFJQltSnpa7nV4OMqhhEaXgN04IzA9CkjSBCXJ4ChRwIGoXPcS4eXHLiOdV
-         NkR4yy66Yrh9gkNfinCv2X4nCr4WW3oPZ9Hfc19wj5bWkGZqLQrQqJUPt7we9NKsawFg
-         gYKiT9Fsz+7tC0fvZlOdsJqEdHzFOqTqsoM7EjImUKoxMhDFGnIi58HIaBNNdILyEXRL
-         l5OTAsq/AkWTkp+8iM4Ql+p9/5/s3qKhtop/UyMwLxLZV6wWRmWjeIjocHUgu5BZl47Y
-         l9ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790614391; x=1791219191;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=0cnAg8yd+SFMKgMnOCthTX/mJXQ5eQt2X/SkShksKg4=;
-        b=f6jsoEfL/eY+99ykiIkD7QYQkXBeP877Hca9zqKfgPLpbLDOD2jKDzx+RucpkgrUGb
-         4GVDMJQnNjtgGJt/vzIUx2/T0dCEx8oI3CkK/JX8/bx+SGnnhjgc3wogMIXFDadF8mR+
-         8/b+Ko6RXB5Uze0xT/oHDcKy40c8c+DhmJwffmo7CjPRYlap2GW1xtya8xojpzL8EjDz
-         mEMo7eJTVu+OYUKsd/tnQ/S1nCCEE0VoEgxp81uWioQ3z0EQxHRAmDVcp545F6QFk9td
-         2XjuFdAiXK+XJSuGZGZ5yaR9r5h4P7iF91r6ODoEV97Ol3g8AyqZeU9YDwacIEZuLd5C
-         EsTw==
-X-Forwarded-Encrypted: i=1; AKwUvBwU4IjWq0S57pasqnpQQ4eNXAxQWmay+Fwwnl7RlhS7MTMP3TjeAixeHe1yFCSBotpXVd4ScfFNNB2B5Q==@lists.linux.dev
-X-Gm-Message-State: AFuF++ko9Z6yhgbddv51fk/ESV/yoPFw/xCXzV85eRM+2mD1IZKkUya+
-	WVISnahMZOQV+ZmtYOFpyceb+TkqnuMQh9llYKy2QzY6JVEolP9nSvT+yr/PTDd2tiM6dKpy
-X-Gm-Gg: AYBFou38sDFjrJR8Lf0B3k0a+XOK56tXfocgzt7ri7SQjRBKZkYW6z1aRisVW5hlLBt
-	uCW1ddEsyDu1MpUb/cP4Yk1epyVteX60wPi1pErQj6sxb9DJHWJD8E7sqG9TREwrDZcvNTfeK1s
-	19K1Dn3pysuB3/yT9auXcURWyjoV/K00tIaskPyGWaxPnNF1xmRZjvK5rsBzDvz+2Hp1xT+ZKVV
-	rsZr8rWjTYWIUCkaobeg0pK5nX+GcIBkJi6Iu5sge+y07O2FpbdUtjTSoaAHyJ+/DGjfi3k42Os
-	J5wqkwDK21bKt8f4oWmQLiuYr211UzYCfTxi7S1FS5bmz7RqFS3PflgIw5LuCR62/rqYyC5WcYm
-	UxAkMXruYUzYxUoBXgfKrK4NyDjRkNsvridbTO+4FRrQ5NMhZ/HvmBLcfOsisov1FxNKyvMjKmQ
-	xtNJEbZuxTMTlVEzRaOFc1n/p0Lg+daFkf0AAg6KUim4OgcFQ7N3waT/tVyfpmv52Xg7LKty2gh
-	Wc9yttXcs3ZCTpOIQwcUY5mSmhR65V5qIfM7p9Rx4yZP9zAMAzlLijtubx8YmczdRnur35ut6KS
-	yoAUbZzud6EAJskR6qbme0ZxfrUKMvz1L0iUz1sg1De3Yvi53XoV
-X-Received: by 2002:a05:600c:4e41:b0:49e:715d:95ca with SMTP id 5b1f17b1804b1-4a00d778ed3mr11895e9.13.1790614391251;
-        Mon, 28 Sep 2026 09:53:11 -0700 (PDT)
-Received: from [192.168.0.46] ([63.135.75.98])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a648895sm28809748f8f.28.2026.09.28.09.53.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Sep 2026 09:53:10 -0700 (PDT)
-Message-ID: <ee6e9e8f-e174-4872-baee-114d848e8137@gmail.com>
-Date: Mon, 28 Sep 2026 17:53:10 +0100
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="EARQgv6T"
+Message-ID: <a1e1a8c88161894c8fcd4514900cf3a14232aa47.camel@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1790633870;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=57P7JFPpwMerIO3+pWerd46p4Ojio7Wq8LO1VeNWTLw=;
+	b=EARQgv6T5ULGs2S7nheXWP05DIkXzdGB9wVbuz1ZL7Gu71Lfd5+9c0YEcQBq2V1d6eWo7R
+	pWNTM74u7eYtAf0fHeT4LDshbQfZ9XwDV5baPSSzHcN2v5AbfwVXs+3DqTzei7fm0r5hNK
+	7t1kPeAeeqlSKbQobZL6DXM3SJHU5FA=
+Subject: Re: [PATCH v3] sparc64: Fix comparator problem with timer interrupts
+From: Stian Halseth <stian@itx.no>
+To: tglx@kernel.org, andreas@gaisler.com, davem@davemloft.net, 
+	sparclinux@vger.kernel.org
+Cc: Tony Rodriguez <unixpro1970@gmail.com>, linux-kernel@vger.kernel.org, 
+ thomas.weissschuh@linutronix.de, regressions@lists.linux.dev, 
+ glaubitz@physik.fu-berlin.de, linux@leemhuis.info,
+ torvalds@linux-foundation.org
+Date: Tue, 29 Sep 2026 00:17:49 +0200
+In-Reply-To: <20260831180728.3097740-1-stian@itx.no>
+References: <20260519022421.5978-1-unixpro1970@gmail.com>
+	 <20260831180728.3097740-1-stian@itx.no>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-SGTUVnu+6H4b+MUMUot/"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Audient EVO4 hardware volume control now requires
- quirk
-To: Sasha Levin <sashal@kernel.org>,
- Faaris Ansari <faarisansari@googlemail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-sound@vger.kernel.org, =?UTF-8?Q?C=C3=A1ssio_Gabriel?=
- <cassiogabrielcontato@gmail.com>, Takashi Iwai <tiwai@suse.com>,
- Jaroslav Kysela <perex@perex.cz>
-References: <CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=+iOe4ZGA@mail.gmail.com>
- <2026-09-27-daily-reply-0001-re-audient-evo4-mixer-put-errors@kernel.org>
- <CANBVYRAr_ShKGmrt2NoqsDsDEbTXa5DWJbq2oP6wKLWJQpLRWw@mail.gmail.com>
- <2026-09-28-daily-reply-0001-re-audient-evo4-upstream-decision@kernel.org>
-Content-Language: en-US
-From: Faaris Ansari <faaris.ansari@gmail.com>
-In-Reply-To: <2026-09-28-daily-reply-0001-re-audient-evo4-upstream-decision@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi, yeah of course I can provide you with this info - I installed the 
-latest 7.3-rc5 for testing.
-
-Below are the dmesg logs that you requested:
-
-[   80.940668] usb 3-1: cannot set ctl value: req = 0x1, wValue = 0x203, 
-wIndex = 0xa00, type = 4, data = 0x0/0x81
-[   80.944292] usb 3-1: cannot set ctl value: req = 0x1, wValue = 0x203, 
-wIndex = 0xa00, type = 4, data = 0x0/0x81
-[   80.947542] usb 3-1: cannot set ctl value: req = 0x1, wValue = 0x203, 
-wIndex = 0xa00, type = 4, data = 0x0/0xdc
-[   80.950794] usb 3-1: cannot set ctl value: req = 0x1, wValue = 0x203, 
-wIndex = 0xa00, type = 4, data = 0x0/0x81
-
-Below is the output of lsusb -v -d 2708:0006:
-
-Bus 003 Device 002: ID 2708:0006 Audient EVO4
-Negotiated speed: High Speed (480Mbps)
-Device Descriptor:
-   bLength                18
-   bDescriptorType         1
-   bcdUSB               2.00
-   bDeviceClass          239 Miscellaneous Device
-   bDeviceSubClass         2 [unknown]
-   bDeviceProtocol         1 Interface Association
-   bMaxPacketSize0        64
-   idVendor           0x2708 Audient
-   idProduct          0x0006 EVO4
-   bcdDevice            1.4c
-   iManufacturer           1 Audient
-   iProduct                3 EVO4
-   iSerial                 0
-   bNumConfigurations      2
-   Configuration Descriptor:
-     bLength                 9
-     bDescriptorType         2
-     wTotalLength       0x01d6
-     bNumInterfaces          4
-     bConfigurationValue     1
-     iConfiguration          0
-     bmAttributes         0x80
-       (Bus Powered)
-     MaxPower              500mA
-     Interface Association:
-       bLength                 8
-       bDescriptorType        11
-       bFirstInterface         0
-       bInterfaceCount         3
-       bFunctionClass          1 Audio
-       bFunctionSubClass       0 [unknown]
-       bFunctionProtocol      32
-       iFunction               0
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        0
-       bAlternateSetting       0
-       bNumEndpoints           1
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      1 Control Device
-       bInterfaceProtocol     32
-       iInterface              3
-       AudioControl Interface Descriptor:
-         bLength                 9
-         bDescriptorType        36
-         bDescriptorSubtype      1 (HEADER)
-         bcdADC               2.00
-         bCategory               8
-         wTotalLength       0x0100
-         bmControls           0x01
-           Latency control Control (read-only)
-       AudioControl Interface Descriptor:
-         bLength                 8
-         bDescriptorType        36
-         bDescriptorSubtype     10 (CLOCK_SOURCE)
-         bClockID               41
-         bmAttributes            3 Internal programmable clock
-         bmControls           0x07
-           Clock Frequency Control (read/write)
-           Clock Validity Control (read-only)
-         bAssocTerminal          0
-         iClockSource            9
-       AudioControl Interface Descriptor:
-         bLength                 8
-         bDescriptorType        36
-         bDescriptorSubtype     11 (CLOCK_SELECTOR)
-         bClockID               40
-         bNrInPins               1
-         baCSourceID(0)         41
-         bmControls           0x03
-           Clock Selector Control (read/write)
-         iClockSelector          8
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      2 (INPUT_TERMINAL)
-         bTerminalID             2
-         wTerminalType      0x0101 USB Streaming
-         bAssocTerminal          0
-         bCSourceID             40
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          11
-         bmControls         0x0000
-         iTerminal               6
-       AudioControl Interface Descriptor:
-         bLength                26
-         bDescriptorType        36
-         bDescriptorSubtype      6 (FEATURE_UNIT)
-         bUnitID                10
-         bSourceID               2
-         bmaControls(0)     0x00000000
-         bmaControls(1)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(2)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(3)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(4)     0x0000000c
-           Volume Control (read/write)
-         iFeature                0
-       AudioControl Interface Descriptor:
-         bLength                12
-         bDescriptorType        36
-         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-         bTerminalID            20
-         wTerminalType      0x0301 Speaker
-         bAssocTerminal          0
-         bSourceID              59
-         bCSourceID             40
-         bmControls         0x0000
-         iTerminal               0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                59
-         wExtensionCode     0x0000
-         bNrInPins               1
-         baSourceID(0)          56
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x3f
-           Enable Control (read/write)
-           Cluster Control (read/write)
-           Underflow Control (read/write)
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      2 (INPUT_TERMINAL)
-         bTerminalID             1
-         wTerminalType      0x0201 Microphone
-         bAssocTerminal          0
-         bCSourceID             40
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          15
-         bmControls         0x0000
-         iTerminal               0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                58
-         wExtensionCode     0x0000
-         bNrInPins               1
-         baSourceID(0)           1
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0xff
-           Enable Control (read/write)
-           Cluster Control (read/write)
-           Underflow Control (read/write)
-           Overflow Control (read/write)
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                26
-         bDescriptorType        36
-         bDescriptorSubtype      6 (FEATURE_UNIT)
-         bUnitID                11
-         bSourceID               1
-         bmaControls(0)     0x00000000
-         bmaControls(1)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(2)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(3)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(4)     0x0000000c
-           Volume Control (read/write)
-         iFeature                0
-       AudioControl Interface Descriptor:
-         bLength                12
-         bDescriptorType        36
-         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-         bTerminalID            22
-         wTerminalType      0x0101 USB Streaming
-         bAssocTerminal          0
-         bSourceID              60
-         bCSourceID             40
-         bmControls         0x0000
-         iTerminal               7
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                50
-         wExtensionCode     0x0000
-         bNrInPins               2
-         baSourceID(0)          11
-         baSourceID(1)          10
-         bNrChannels             6
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x03
-           Enable Control (read/write)
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      4 (MIXER_UNIT)
-         bUnitID                60
-         bNrInPins               1
-         baSourceID(0)          50
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames          19
-         bmMixerControls(0)   0xff
-         bmControls           0xff
-           Cluster Control (read/write)
-           Underflow Control (read/write)
-           Overflow Control (read/write)
-         iMixer                  0
-       Warning: Junk at end of descriptor (1 bytes):
-         00
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                56
-         wExtensionCode     0x0000
-         bNrInPins               2
-         baSourceID(0)          11
-         baSourceID(1)          10
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x00
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                57
-         wExtensionCode     0x0000
-         bNrInPins               1
-         baSourceID(0)           2
-         bNrChannels             0
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x00
-         iExtension              0
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x83  EP 3 IN
-         bmAttributes            3
-           Transfer Type            Interrupt
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0006  1x 6 bytes
-         bInterval               8
-         INTERFACE CLASS:  10 24 09 3e 00 00 01 01 01 00 00 00 00 00 00 00
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              4
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       1
-       bNumEndpoints           2
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              4
-       AudioStreaming Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      1 (AS_GENERAL)
-         bTerminalLink           2
-         bmControls           0x00
-         bFormatType             1
-         bmFormats          0x00000001
-           PCM
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          11
-       AudioStreaming Interface Descriptor:
-         bLength                 6
-         bDescriptorType        36
-         bDescriptorSubtype      2 (FORMAT_TYPE)
-         bFormatType             1 (FORMAT_TYPE_I)
-         bSubslotSize            4
-         bBitResolution         24
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x01  EP 1 OUT
-         bmAttributes            5
-           Transfer Type            Isochronous
-           Synch Type               Asynchronous
-           Usage Type               Data
-         wMaxPacketSize     0x00d0  1x 208 bytes
-         bInterval               1
-         AudioStreaming Endpoint Descriptor:
-           bLength                 8
-           bDescriptorType        37
-           bDescriptorSubtype      1 (EP_GENERAL)
-           bmAttributes         0x00
-           bmControls           0x00
-           bLockDelayUnits         2 Decoded PCM samples
-           wLockDelay         0x0008
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes           17
-           Transfer Type            Isochronous
-           Synch Type               None
-           Usage Type               Feedback
-         wMaxPacketSize     0x0004  1x 4 bytes
-         bInterval               4
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       2
-       bNumEndpoints           2
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              4
-       AudioStreaming Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      1 (AS_GENERAL)
-         bTerminalLink           2
-         bmControls           0x00
-         bFormatType             1
-         bmFormats          0x00000001
-           PCM
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          11
-       AudioStreaming Interface Descriptor:
-         bLength                 6
-         bDescriptorType        36
-         bDescriptorSubtype      2 (FORMAT_TYPE)
-         bFormatType             1 (FORMAT_TYPE_I)
-         bSubslotSize            2
-         bBitResolution         16
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x01  EP 1 OUT
-         bmAttributes            5
-           Transfer Type            Isochronous
-           Synch Type               Asynchronous
-           Usage Type               Data
-         wMaxPacketSize     0x0068  1x 104 bytes
-         bInterval               1
-         AudioStreaming Endpoint Descriptor:
-           bLength                 8
-           bDescriptorType        37
-           bDescriptorSubtype      1 (EP_GENERAL)
-           bmAttributes         0x00
-           bmControls           0x00
-           bLockDelayUnits         2 Decoded PCM samples
-           wLockDelay         0x0008
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes           17
-           Transfer Type            Isochronous
-           Synch Type               None
-           Usage Type               Feedback
-         wMaxPacketSize     0x0004  1x 4 bytes
-         bInterval               4
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        2
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              5
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        2
-       bAlternateSetting       1
-       bNumEndpoints           1
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              5
-       AudioStreaming Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      1 (AS_GENERAL)
-         bTerminalLink          22
-         bmControls           0x00
-         bFormatType             1
-         bmFormats          0x00000001
-           PCM
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          15
-       AudioStreaming Interface Descriptor:
-         bLength                 6
-         bDescriptorType        36
-         bDescriptorSubtype      2 (FORMAT_TYPE)
-         bFormatType             1 (FORMAT_TYPE_I)
-         bSubslotSize            4
-         bBitResolution         24
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x82  EP 2 IN
-         bmAttributes            5
-           Transfer Type            Isochronous
-           Synch Type               Asynchronous
-           Usage Type               Data
-         wMaxPacketSize     0x00d0  1x 208 bytes
-         bInterval               1
-         AudioStreaming Endpoint Descriptor:
-           bLength                 8
-           bDescriptorType        37
-           bDescriptorSubtype      1 (EP_GENERAL)
-           bmAttributes         0x00
-           bmControls           0x00
-           bLockDelayUnits         2 Decoded PCM samples
-           wLockDelay         0x0008
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        3
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass       254 Application Specific Interface
-       bInterfaceSubClass      1 Device Firmware Update
-       bInterfaceProtocol      1
-       iInterface             10
-       Device Firmware Upgrade Interface Descriptor:
-         bLength                             9
-         bDescriptorType                    33
-         bmAttributes                        7
-           Will Not Detach
-           Manifestation Tolerant
-           Upload Supported
-           Download Supported
-         wDetachTimeout                    250 milliseconds
-         wTransferSize                      64 bytes
-         bcdDFUVersion                   1.10
-   Configuration Descriptor:
-     bLength                 9
-     bDescriptorType         2
-     wTotalLength       0x01d6
-     bNumInterfaces          4
-     bConfigurationValue     1
-     iConfiguration          0
-     bmAttributes         0x80
-       (Bus Powered)
-     MaxPower              500mA
-     Interface Association:
-       bLength                 8
-       bDescriptorType        11
-       bFirstInterface         0
-       bInterfaceCount         3
-       bFunctionClass          1 Audio
-       bFunctionSubClass       0 [unknown]
-       bFunctionProtocol      32
-       iFunction               0
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        0
-       bAlternateSetting       0
-       bNumEndpoints           1
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      1 Control Device
-       bInterfaceProtocol     32
-       iInterface              3
-       AudioControl Interface Descriptor:
-         bLength                 9
-         bDescriptorType        36
-         bDescriptorSubtype      1 (HEADER)
-         bcdADC               2.00
-         bCategory               8
-         wTotalLength       0x0100
-         bmControls           0x01
-           Latency control Control (read-only)
-       AudioControl Interface Descriptor:
-         bLength                 8
-         bDescriptorType        36
-         bDescriptorSubtype     10 (CLOCK_SOURCE)
-         bClockID               41
-         bmAttributes            3 Internal programmable clock
-         bmControls           0x07
-           Clock Frequency Control (read/write)
-           Clock Validity Control (read-only)
-         bAssocTerminal          0
-         iClockSource            9
-       AudioControl Interface Descriptor:
-         bLength                 8
-         bDescriptorType        36
-         bDescriptorSubtype     11 (CLOCK_SELECTOR)
-         bClockID               40
-         bNrInPins               1
-         baCSourceID(0)         41
-         bmControls           0x03
-           Clock Selector Control (read/write)
-         iClockSelector          8
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      2 (INPUT_TERMINAL)
-         bTerminalID             2
-         wTerminalType      0x0101 USB Streaming
-         bAssocTerminal          0
-         bCSourceID             40
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          11
-         bmControls         0x0000
-         iTerminal               6
-       AudioControl Interface Descriptor:
-         bLength                26
-         bDescriptorType        36
-         bDescriptorSubtype      6 (FEATURE_UNIT)
-         bUnitID                10
-         bSourceID               2
-         bmaControls(0)     0x00000000
-         bmaControls(1)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(2)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(3)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(4)     0x0000000c
-           Volume Control (read/write)
-         iFeature                0
-       AudioControl Interface Descriptor:
-         bLength                12
-         bDescriptorType        36
-         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-         bTerminalID            20
-         wTerminalType      0x0301 Speaker
-         bAssocTerminal          0
-         bSourceID              59
-         bCSourceID             40
-         bmControls         0x0000
-         iTerminal               0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                59
-         wExtensionCode     0x0000
-         bNrInPins               1
-         baSourceID(0)          56
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x3f
-           Enable Control (read/write)
-           Cluster Control (read/write)
-           Underflow Control (read/write)
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      2 (INPUT_TERMINAL)
-         bTerminalID             1
-         wTerminalType      0x0201 Microphone
-         bAssocTerminal          0
-         bCSourceID             40
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          15
-         bmControls         0x0000
-         iTerminal               0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                58
-         wExtensionCode     0x0000
-         bNrInPins               1
-         baSourceID(0)           1
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0xff
-           Enable Control (read/write)
-           Cluster Control (read/write)
-           Underflow Control (read/write)
-           Overflow Control (read/write)
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                26
-         bDescriptorType        36
-         bDescriptorSubtype      6 (FEATURE_UNIT)
-         bUnitID                11
-         bSourceID               1
-         bmaControls(0)     0x00000000
-         bmaControls(1)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(2)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(3)     0x0000000c
-           Volume Control (read/write)
-         bmaControls(4)     0x0000000c
-           Volume Control (read/write)
-         iFeature                0
-       AudioControl Interface Descriptor:
-         bLength                12
-         bDescriptorType        36
-         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-         bTerminalID            22
-         wTerminalType      0x0101 USB Streaming
-         bAssocTerminal          0
-         bSourceID              60
-         bCSourceID             40
-         bmControls         0x0000
-         iTerminal               7
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                50
-         wExtensionCode     0x0000
-         bNrInPins               2
-         baSourceID(0)          11
-         baSourceID(1)          10
-         bNrChannels             6
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x03
-           Enable Control (read/write)
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      4 (MIXER_UNIT)
-         bUnitID                60
-         bNrInPins               1
-         baSourceID(0)          50
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames          19
-         bmMixerControls(0)   0xff
-         bmControls           0xff
-           Cluster Control (read/write)
-           Underflow Control (read/write)
-           Overflow Control (read/write)
-         iMixer                  0
-       Warning: Junk at end of descriptor (1 bytes):
-         00
-       AudioControl Interface Descriptor:
-         bLength                17
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                56
-         wExtensionCode     0x0000
-         bNrInPins               2
-         baSourceID(0)          11
-         baSourceID(1)          10
-         bNrChannels             2
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x00
-         iExtension              0
-       AudioControl Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      9 (EXTENSION_UNIT)
-         bUnitID                57
-         wExtensionCode     0x0000
-         bNrInPins               1
-         baSourceID(0)           2
-         bNrChannels             0
-         bmChannelConfig    0x00000000
-         iChannelNames           0
-         bmControls           0x00
-         iExtension              0
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x83  EP 3 IN
-         bmAttributes            3
-           Transfer Type            Interrupt
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0006  1x 6 bytes
-         bInterval               8
-         INTERFACE CLASS:  10 24 09 3e 00 00 01 01 01 00 00 00 00 00 00 00
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              4
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       1
-       bNumEndpoints           2
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              4
-       AudioStreaming Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      1 (AS_GENERAL)
-         bTerminalLink           2
-         bmControls           0x00
-         bFormatType             1
-         bmFormats          0x00000001
-           PCM
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          11
-       AudioStreaming Interface Descriptor:
-         bLength                 6
-         bDescriptorType        36
-         bDescriptorSubtype      2 (FORMAT_TYPE)
-         bFormatType             1 (FORMAT_TYPE_I)
-         bSubslotSize            4
-         bBitResolution         24
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x01  EP 1 OUT
-         bmAttributes            5
-           Transfer Type            Isochronous
-           Synch Type               Asynchronous
-           Usage Type               Data
-         wMaxPacketSize     0x00d0  1x 208 bytes
-         bInterval               1
-         AudioStreaming Endpoint Descriptor:
-           bLength                 8
-           bDescriptorType        37
-           bDescriptorSubtype      1 (EP_GENERAL)
-           bmAttributes         0x00
-           bmControls           0x00
-           bLockDelayUnits         2 Decoded PCM samples
-           wLockDelay         0x0008
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes           17
-           Transfer Type            Isochronous
-           Synch Type               None
-           Usage Type               Feedback
-         wMaxPacketSize     0x0004  1x 4 bytes
-         bInterval               4
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       2
-       bNumEndpoints           2
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              4
-       AudioStreaming Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      1 (AS_GENERAL)
-         bTerminalLink           2
-         bmControls           0x00
-         bFormatType             1
-         bmFormats          0x00000001
-           PCM
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          11
-       AudioStreaming Interface Descriptor:
-         bLength                 6
-         bDescriptorType        36
-         bDescriptorSubtype      2 (FORMAT_TYPE)
-         bFormatType             1 (FORMAT_TYPE_I)
-         bSubslotSize            2
-         bBitResolution         16
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x01  EP 1 OUT
-         bmAttributes            5
-           Transfer Type            Isochronous
-           Synch Type               Asynchronous
-           Usage Type               Data
-         wMaxPacketSize     0x0068  1x 104 bytes
-         bInterval               1
-         AudioStreaming Endpoint Descriptor:
-           bLength                 8
-           bDescriptorType        37
-           bDescriptorSubtype      1 (EP_GENERAL)
-           bmAttributes         0x00
-           bmControls           0x00
-           bLockDelayUnits         2 Decoded PCM samples
-           wLockDelay         0x0008
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes           17
-           Transfer Type            Isochronous
-           Synch Type               None
-           Usage Type               Feedback
-         wMaxPacketSize     0x0004  1x 4 bytes
-         bInterval               4
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        2
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              5
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        2
-       bAlternateSetting       1
-       bNumEndpoints           1
-       bInterfaceClass         1 Audio
-       bInterfaceSubClass      2 Streaming
-       bInterfaceProtocol     32
-       iInterface              5
-       AudioStreaming Interface Descriptor:
-         bLength                16
-         bDescriptorType        36
-         bDescriptorSubtype      1 (AS_GENERAL)
-         bTerminalLink          22
-         bmControls           0x00
-         bFormatType             1
-         bmFormats          0x00000001
-           PCM
-         bNrChannels             4
-         bmChannelConfig    0x00000000
-         iChannelNames          15
-       AudioStreaming Interface Descriptor:
-         bLength                 6
-         bDescriptorType        36
-         bDescriptorSubtype      2 (FORMAT_TYPE)
-         bFormatType             1 (FORMAT_TYPE_I)
-         bSubslotSize            4
-         bBitResolution         24
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x82  EP 2 IN
-         bmAttributes            5
-           Transfer Type            Isochronous
-           Synch Type               Asynchronous
-           Usage Type               Data
-         wMaxPacketSize     0x00d0  1x 208 bytes
-         bInterval               1
-         AudioStreaming Endpoint Descriptor:
-           bLength                 8
-           bDescriptorType        37
-           bDescriptorSubtype      1 (EP_GENERAL)
-           bmAttributes         0x00
-           bmControls           0x00
-           bLockDelayUnits         2 Decoded PCM samples
-           wLockDelay         0x0008
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        3
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass       254 Application Specific Interface
-       bInterfaceSubClass      1 Device Firmware Update
-       bInterfaceProtocol      1
-       iInterface             10
-       Device Firmware Upgrade Interface Descriptor:
-         bLength                             9
-         bDescriptorType                    33
-         bmAttributes                        7
-           Will Not Detach
-           Manifestation Tolerant
-           Upload Supported
-           Download Supported
-         wDetachTimeout                    250 milliseconds
-         wTransferSize                      64 bytes
-         bcdDFUVersion                   1.10
-
-And here is the output of amixer -c EVO4 contents
-
-numid=6,iface=CARD,name='Audient Internal Clock Validity'
-   ; type=BOOLEAN,access=r-------,values=1
-   : values=on
-numid=3,iface=MIXER,name='Mic Playback Volume'
-   ; type=INTEGER,access=rw---R--,values=4,min=0,max=116,step=0
-   : values=96,0,0,0
-   | dBminmax-min=-8.00dB,max=50.00dB
-numid=4,iface=MIXER,name='EVO4  Playback Volume'
-   ; type=INTEGER,access=rw---R--,values=4,min=0,max=254,step=0
-   : values=182,182,0,0
-   | dBminmax-min=-127.00dB,max=0.00dB
-numid=5,iface=MIXER,name='Extension Unit Switch'
-   ; type=BOOLEAN,access=rw------,values=1
-   : values=off
-numid=2,iface=PCM,name='Capture Channel Map'
-   ; type=INTEGER,access=r--v-R--,values=4,min=0,max=36,step=0
-   : values=0,0,0,0
-   | container
-     | chmap-fixed=FL,FR,FC,LFE
-numid=1,iface=PCM,name='Playback Channel Map'
-   ; type=INTEGER,access=r--v-R--,values=4,min=0,max=36,step=0
-   : values=0,0,0,0
-   | container
-     | chmap-fixed=FL,FR,FC,LFE
 
 
-Thank you for your help debugging this issue,
+--=-SGTUVnu+6H4b+MUMUot/
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Faaris
+Hi,
+
+I just got a SPARC T7-1 and have independent reproduction and
+confirmation of the fix.
+
+Without the patch the system is not really usable. I can just bring
+down a network interface and that alone triggers a hang.=20
+Hung on 3 out of 3 boots unpatched:
+
+  task:ip              state:D
+   [<0000000000cfebc4>] wait_for_completion+0x64/0x180
+   [<0000000000509c30>] synchronize_rcu_normal+0x150/0x280
+   [<0000000010079060>] ixgbe_down+0x1a0/0x460 [ixgbe]
+   [<000000001007a4c8>] ixgbe_close+0xe8/0x100 [ixgbe]
+   [<0000000000af1cf8>] netif_change_flags+0x18/0x80
+   [<0000000000b08618>] rtnl_newlink+0x758/0xaa0
+
+A second caller hit the same stall under kernel build load, from
+network namespace teardown rather than any driver path:
+
+  task:kworker/u1024:0 state:D
+   Workqueue: netns cleanup_net
+   [<0000000000cfebc4>] wait_for_completion+0x64/0x180
+   [<0000000000504ab4>] rcu_barrier+0x214/0x480
+   [<0000000000af3f88>] netdev_run_todo+0x48/0x600
+   [<0000000000ad99c8>] cleanup_net+0x1c8/0x360
+
+Both are plain RCU waits:
+
+  rcu: rcu_sched kthread timer wakeup didn't happen for 6002 jiffies!
+       g193 f0x0 RCU_GP_WAIT_FQS(5) ->state=3D0x402
+  rcu:     Possible timer handling issue on cpu=3D20 timer-softirq=3D107
+  rcu: rcu_sched kthread starved for 6004 jiffies! ->cpu=3D20
 
 
-On 28/09/2026 17:46, Sasha Levin wrote:
->> It seems you're right. Reverting that change has fixed the volume
->> control with my interface - I made sure to remove the quirk flags
->> whilst testing.
->>
->> What are the next steps here? Is there a problem with that patch, or
->> do we need to add a quirk for the EVO4 in the kernel?
-> Thanks for testing.
->
-> Takashi, Cássio: before 87a6f2fa6e6c ("ALSA: usb-audio: Propagate write
-> errors in generic mixer put callbacks"), a failed SET_CUR in the mixer
-> put callbacks was ignored. Now it is returned to userspace, and on the
-> EVO4 (2708:0006) that breaks hardware volume control. Would you prefer a
-> QUIRK_FLAG_IGNORE_CTL_ERROR entry for 2708:0006, or a revert or rework
-> of that commit? Any other device that rejects SET_CUR on a single
-> control or channel will regress the same way.
->
-> Faaris, to help with that decision, could you send:
->
->    1. dmesg with snd_usb_audio debug output enabled while you change the
->       volume without the quirk, using
->       echo 'module snd_usb_audio +p' > /sys/kernel/debug/dynamic_debug/control
->       (the "cannot set ctl value" lines are the useful ones)
->    2. lsusb -v -d 2708:0006
->    3. amixer -c <card> contents
->
+With the patch applied: 3 boots with a clean first ifdown on each, plus
+6 consecutive interface down/up cycles within one boot, and no stall or
+hung-task messages in any of them.
+
+Tested-by: Stian Halseth <stian@itx.no>
+
+
+On Mon, 2026-08-31 at 20:07 +0200, Stian Halseth wrote:
+> From: Tony Rodriguez <unixpro1970@gmail.com>
+>=20
+> The tick/stick/hbtick add_compare() implementations program the
+> comparator and then check whether the write took effect in time:
+>=20
+> 	exp =3D read_cnt() + delta_ticks;
+> 	write_cmp(exp);
+> 	return (read_cnt() - exp) > 0;
+>=20
+> A nonzero return value means the expiry time was already reached
+> before the comparator write could take effect, so the interrupt may
+> never fire, and the caller retries with a new expiry:
+>=20
+> 	return tick.add_compare(delta_ticks) ? -ETIME : 0;
+>=20
+> The check only fails the write when the counter has advanced past the
+> expiry time, but not when it is equal to it. In the equal case it is
+> unknown whether the comparator write took effect before or after the
+> counter reached the expiry value, so the compare match - and with it
+> the timer interrupt - may have been missed. add_compare() then
+> reports success, the caller does not retry, and the CPU is left with
+> no pending timer interrupt.
+>=20
+> This results in stalled hrtimers and RCU stalls / hangs under load,
+> observed on SPARC S7-2 and T7-1 systems:
+>=20
+> =A0=A0=A0 rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> =A0=A0=A0 rcu: rcu_sched kthread timer wakeup didn't happen for 5259
+> jiffies!
+> =A0=A0=A0 rcu:=A0=A0=A0=A0 Possible timer handling issue on cpu=3D100 tim=
+er-
+> softirq=3D15
+>=20
+> Treat counter =3D=3D expiry as failure as well, so the caller retries
+> with a new expiry time. After this change S7-2 and T7-1 systems no
+> longer hang.
+>=20
+> Diagnosed-by: Thomas Gleixner <tglx@kernel.org>
+> Link: https://lore.kernel.org/all/87tssb6olo.ffs@tglx/
+> Link: https://lore.kernel.org/all/871pfcznw0.ffs@tglx/
+> Link:
+> https://lore.kernel.org/all/20260519022421.5978-1-unixpro1970@gmail.com/
+> Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
+> [stian: rewrote the changelog per review of v2, retested]
+> Signed-off-by: Stian Halseth <stian@itx.no>
+> ---
+> v3:
+> =A0- rewrite the changelog: describe the write/readback ordering and
+> the
+> =A0=A0 direction of the equal-compare case per Thomas Gleixner's review
+> =A0=A0 https://lore.kernel.org/all/878q9fxywc.ffs@tglx/
+> =A0=A0 (the code change is identical to v2)
+> =A0- add the Link: tags to the original debugging discussion
+> =A0- picked up with Tony's agreement after v2 stalled
+> =A0=A0
+> https://lore.kernel.org/all/10382506-3f57-4b33-8356-34f23fb5f153@gmail.co=
+m/
+>=20
+> Tested on an UltraSPARC T4-1 (sun4v, stick variant): 9.1M hrtimer
+> reprograms in 90s across 32 threads with 10-500us expiries, no
+> stalls, no lost wakeups (worst oversleep 657us).
+>=20
+> =A0arch/sparc/kernel/time_64.c | 6 +++---
+> =A01 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/sparc/kernel/time_64.c
+> b/arch/sparc/kernel/time_64.c
+> --- a/arch/sparc/kernel/time_64.c
+> +++ b/arch/sparc/kernel/time_64.c
+> @@ -146,7 +146,7 @@
+> =A0			=A0=A0=A0=A0 : "=3Dr" (new_tick));
+> =A0	new_tick &=3D ~TICKCMP_IRQ_BIT;
+> =A0
+> -	return ((long)(new_tick - (orig_tick+adj))) > 0L;
+> +	return ((long)(new_tick - (orig_tick+adj))) >=3D 0L;
+> =A0}
+> =A0
+> =A0static unsigned long tick_add_tick(unsigned long adj)
+> @@ -277,7 +277,7 @@
+> =A0			=A0=A0=A0=A0 : "=3Dr" (new_tick));
+> =A0	new_tick &=3D ~TICKCMP_IRQ_BIT;
+> =A0
+> -	return ((long)(new_tick - (orig_tick+adj))) > 0L;
+> +	return ((long)(new_tick - (orig_tick+adj))) >=3D 0L;
+> =A0}
+> =A0
+> =A0static unsigned long stick_get_frequency(void)
+> @@ -411,7 +411,7 @@
+> =A0
+> =A0	val2 =3D __hbird_read_stick() & ~TICKCMP_IRQ_BIT;
+> =A0
+> -	return ((long)(val2 - val)) > 0L;
+> +	return ((long)(val2 - val)) >=3D 0L;
+> =A0}
+> =A0
+> =A0static unsigned long hbtick_get_frequency(void)
+> --
+> 2.53.0
+
+--=-SGTUVnu+6H4b+MUMUot/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCarrnjQAKCRDoeAEuJe36
+VqZvAQDk5SX53KefiP3+481kGr9gFkYSS9HS41YB1+91UXUUuwEA2CPwV+rv7hG+
+Ogwcp9C1kq7hE3cQ+cUBuRVXM79CAQc=
+=M+os
+-----END PGP SIGNATURE-----
+
+--=-SGTUVnu+6H4b+MUMUot/--
