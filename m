@@ -1,256 +1,221 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240A450EC10
-	for <regressions@lists.linux.dev>; Tue, 29 Sep 2026 11:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3363F4FD289
+	for <regressions@lists.linux.dev>; Tue, 29 Sep 2026 11:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790680297; cv=none; b=j4nfOUTERttoLBejlcMtMy20bLZJNW0uNNGjhq6GZyh40f5+3och21uReJmgJIoLMHRVtVO7qVpFcYkFEI9laGdlpQoAVuYehG/3VJK/KNkN/dHPNjWaq3qzU4UE8a55wQYn7/V7rMEFWmrRwfVvTejn6KN5mCZUiLkwOVQAV2E=
+	t=1790682145; cv=none; b=fkh4+7mmrM0G9rgICNesYwWkyXI7nhGRoSeafp/yA1nRdpeQN4gKd5ytKtKWWbjEAMe97KdsXgSlhVeutXPIV77Wx7BIWmPpvSR5A8B7Heyxdais+MCFZORW8aur9wvme0koaeg0JwfHkZWjtrRj0FetKi9jEAWDb8iNMhaZZAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790680297; c=relaxed/simple;
-	bh=0PqdUx8rKwADKPdR+wsYbYMImyQx7yX+E51fSlXK5xk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DZYL4wKUwVGZihEIKlunT52EKoX5XoMAdp2GAFNeZrfAwoyx4jwHwmOOF/o6l1ZAvrJV+R7+L3j6nvppOLtXM+zOw86++xDuolVzZDm0F0Rxi9hlPREQfCjmWmik5zBoNOAN/tjUnxi0OYX3JdYqZu63f7woS6wDV9+B8wbtJcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LtYvM9I+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8hbA8cy2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rrz/hgrG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Udoy5epo; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1790682145; c=relaxed/simple;
+	bh=ye2gp5Y2CP963eYs7VQJu+LUBZo/4xZhUhdZdNbqwDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FH+a0VIgQt6tp+eoQF9lOvIe0zLpidItpURpa8eyEg/faAmrEiARnK1rWAfXIAHIu9EGzZw6EgVJqgeI//JwgCOQz6eYofBmRUyXTGW2uRBzHZOh22ZlB+UOgboTsGmhZhJMtlQEY3SlEY3pzo3PurHUTYdzFW5/wzv34vZ0FsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=jan.lentfer@web.de header.b=E9iAaez8; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LtYvM9I+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8hbA8cy2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rrz/hgrG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Udoy5epo"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 056381F7BF;
-	Tue, 29 Sep 2026 11:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1790680290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+RDezdUxyBg67hf2lf4Gyq/3lew68MZA9XvgOQi/T9M=;
-	b=LtYvM9I+ZZOYg1HS1xAAXcUvNfIv6JE7Q90Vh4Sz2p/SX3rTmpzIrrc/gkpgf1JeG+SOod
-	f7Od7ZpPDKCc33R/YkLTyXyrOX/k/fpAIayh6v2RKkF8PTeyISSA/gKqhRTtVBboNcTRou
-	XydxczXj3BEIoThkMEkCfi88U49JN+k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1790680290;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+RDezdUxyBg67hf2lf4Gyq/3lew68MZA9XvgOQi/T9M=;
-	b=8hbA8cy2C5Awznvht/lahVKPqS8/u1Ybj9JQWigXS7jcpUgDiuGj913DucaBf4HH8RtnXX
-	IGU4b33dcsSwfPCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1790680286; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+RDezdUxyBg67hf2lf4Gyq/3lew68MZA9XvgOQi/T9M=;
-	b=rrz/hgrGgcJTlEs3NxyOrZWwRkVbm4ZvMnCaWbvURIcyGoItqAEoRHrkedjZK8S6VCQ90r
-	5Bvi6z+NgP7BdPbprauFkgnfWjMV3XStly0uQa8GJUKCuYkP6Zz4nShO55dVGLcxs95VQo
-	5ksR5qinxQpQHgIXRjYBbZ60ANxk27I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1790680286;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+RDezdUxyBg67hf2lf4Gyq/3lew68MZA9XvgOQi/T9M=;
-	b=Udoy5epoQPjYPTrpRFhlzq3I31rW7rwV2D8uvoqd+zbNY5yTHMTgG02iBySVwuk8njwQvm
-	bj94lUQu16UbBlDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C76B3136E4;
-	Tue, 29 Sep 2026 11:11:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Cz/7Jt2cu2q9BAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 29 Sep 2026 11:11:25 +0000
-Date: Tue, 29 Sep 2026 13:11:25 +0200
-Message-ID: <875wzo2tya.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Jan Lentfer <jan.lentfer@web.de>
-Cc: linux-sound@vger.kernel.org,
-	tiwai@suse.de,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] ALSA: usb-audio: Behringer USB-MIDI output stalls, since "Use strings in struct usb_dev for manufacturer & co"
-In-Reply-To: <e7087d42-5e74-4d85-b1c5-b11eff235d41@web.de>
-References: <e7087d42-5e74-4d85-b1c5-b11eff235d41@web.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=web.de header.i=jan.lentfer@web.de header.b="E9iAaez8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1790682130; x=1791286930; i=jan.lentfer@web.de;
+	bh=a7qQ39UjbeXduB3PGMMPR7QDax0wMe286QF3Uoml6hY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=E9iAaez8RZhe/cbvdUydHKX2VW4huT+9Iw27OT1N/3w75UwZp76nAaGGdwolR5q7
+	 pvacvRsxXbdfAcksc3IwQ4hvsLFuasiTU/H3Dmqfm922XbqfINCQR4oYjgKePoVZR
+	 Uf+URtG07Jmayd526kVWKhk9lrqPoS37I7qLONFWXzl4s0jfoqeGAVq+3K5wBQ0+M
+	 I9oLI/Jj8TXngb9Q/9xmnqA/AWx3RU04BbCol/oICDtS7A4M6ofKNUT/3vaLSa+ey
+	 CKmjqNMnfKC/8AXm3A1WPmFWjMJExjri6LnU3uUgEKXQvw6EDCnar9cER/UKa9iFj
+	 fO6UyIVycaIVpF7SZw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M76bV-1x5Dd03NvD-002S7Z; Tue, 29
+ Sep 2026 13:42:09 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by vm-mailsrv.lan.net (Postfix) with ESMTP id AE23DF133;
+	Tue, 29 Sep 2026 13:42:08 +0200 (CEST)
+X-Spam-Flag: NO
+X-Spam-Score: -2.899
+X-Spam-Level:
+Received: from vm-mailsrv.lan.net ([127.0.0.1])
+	by localhost (vm-mailsrv.lan.net [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id OZjomxOUGvWQ; Tue, 29 Sep 2026 13:42:05 +0200 (CEST)
+Received: from [10.94.76.105] (ts-d20.lan.net [10.94.76.105])
+	by vm-mailsrv.lan.net (Postfix) with ESMTPS id 4C451F12B;
+	Tue, 29 Sep 2026 13:42:05 +0200 (CEST)
+Message-ID: <272336a8-ab7c-4f9a-ac0c-c438b94caeca@web.de>
+Date: Tue, 29 Sep 2026 13:42:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[web.de];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[web.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ALSA: usb-audio: Behringer USB-MIDI output stalls,
+ since "Use strings in struct usb_dev for manufacturer & co"
+To: Takashi Iwai <tiwai@suse.de>
+Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev
+References: <e7087d42-5e74-4d85-b1c5-b11eff235d41@web.de>
+ <875wzo2tya.wl-tiwai@suse.de>
+Content-Language: en-US
+From: Jan Lentfer <jan.lentfer@web.de>
+In-Reply-To: <875wzo2tya.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uhHAKtVB5lTKq1BKKuviyWhAFCTjgkfQ8YEGba4F8e2e/z843ox
+ 69CXld+UKfJlkwYF+PA0SHhkrjrHt87jDlq8u6p62UwCheWPjjC6miVVR8PMAO5GWXvc/9A
+ 7xATdaadiYX9KpPi71LrlL7tJJohfzOZxMD7PFcJMso73zCkpMPSScrF+lElaHRkwBrUl9X
+ 24BEF93B8VcvbNk/wXiwA==
 X-Spam-Flag: NO
-X-Spam-Score: -2.30
-X-Spam-Level: 
+UI-OutboundReport: notjunk:1;M01:P0:NYm5/3G34YI=;En6ntC4KTzmC/EGP9n3UIGQmsQT
+ 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
+ vbBWMjA2OsDVTGDIwx+Q86G7fg==
 
-On Tue, 29 Sep 2026 12:55:11 +0200,
-Jan Lentfer wrote:
-> 
-> Hi,
-> 
-> since 7.1, USB-MIDI output to several Behringer synths stalls completely
-> after the synth is switched on or re-plugged. I traced it to the missing
-> string-descriptor reads after SET_CONFIGURATION, which were removed by
-> 
->   "ALSA: usb-audio: Use strings in struct usb_dev for manufacturer & co"
->   (Takashi Iwai, posted 2026-03-05)
-> 
-> The firmware of these devices evidently only starts accepting bulk-OUT
-> data after one more control request following SET_CONFIGURATION.
-> Until 7.0, snd-usb-audio happened to send two: the usb_string() calls
-> in usb_audio_make_shortname() / usb_audio_make_longname().
-> 
-> #regzbot introduced: v7.0..v7.1
-> 
-> Affected (class-compliant USB-MIDI 1.0, full speed, bulk EP 0x02 OUT /
-> EP 0x81 IN, one altsetting):
->   1397:1230  BEHRINGER K-2 MK II      (verified: usbmon + workaround)
->   1397:1249  BEHRINGER KOBOL EXPANDER (same symptom; 7.0 good, 7.1 bad)
->   1397:1256  BEHRINGER 2-XM           (same symptom on 7.2)
-> Not affected: Behringer PRO-800, Roland SE-02 (0582:0201).
-> 
-> Kernels: Liquorix builds of the stable releases, Debian 12 amd64.
-> 7.0.14 is good; 7.1.12 and 7.2.4 - 7.2.8 are bad.
-> I have not run a vanilla build, but the usbmon diff below points
-> directly at the mainline change. Liquorix report:
-> https://github.com/damentz/liquorix-package/issues/233
-> 
-> Symptom
-> -------
-> After the synth is power-cycled while connected, the first 7 MIDI
-> messages leave the rawmidi buffer, and none of them reaches the synth.
-> After that the output is stuck:
-> 
->   /proc/asound/cardN/midi0:  Tx bytes: 21   Avail: 4021 (of 4096)
->   dmesg on close:  rawmidi drain error (avail = 4081, buffer_size = 4096)
-> 
-> usbmon shows 7 bulk-OUT URBs (= OUTPUT_URBS) submitted with correct
-> USB-MIDI packets and never completed (the device NAKs forever). No
-> error is logged. Once stalled, only a new control request (see below)
-> or booting a 7.0 kernel recovers it. A synth that was already working
-> keeps working across a reboot into 7.1+, because nothing re-enumerates
-> its firmware state; only a fresh power-on triggers the problem.
-> 
-> Ruled out: IRQ threading (same with nothreadirqs), RT IRQ priorities,
-> the shared IRQ line, hubs vs. root port, userspace (aplaymidi alone),
-> runtime PM, MIDI channel.
-> 
-> usbmon: power cycle of the K-2 MK II, 7.0.14 vs 7.2.8
-> -----------------------------------------------------
-> Byte-identical up to and including SET_CONFIGURATION. Then:
-> 
-> 7.0.14:
->   S Co:3:021:0 s 00 09 0001 0000 0000 0         SET_CONFIGURATION 1
->   C Co:3:021:0 0 0
->   S Ci:3:021:0 s 80 06 0302 0409 00ff 255 <     string 2 (product)
->   C Ci:3:021:0 0 20 = 14034b00 2d003200 ...      "K-2 MK II"
->   S Ci:3:021:0 s 80 06 0301 0409 00ff 255 <     string 1 (manufacturer)
->   C Ci:3:021:0 0 20 = 14034200 65006800 ...      "Behringer"
->   S Bi:3:021:1 -115 64 <   (x7)
->   S Bo:3:021:2 -115 4 = 09933c6e
->   C Bo:3:021:2 0 4 >                             completes in ~0.2 ms
->   ... all further Bo complete
-> 
-> 7.2.8:
->   S Co:2:022:0 s 00 09 0001 0000 0000 0         SET_CONFIGURATION 1
->   C Co:2:022:0 0 0
->   (no further control request to the device)
->   S Bi:2:022:1 -115 64 <   (x7)
->   S Bo:2:022:2 -115 4 = 09933c6e
->   ... 6 Bo submitted, none ever completes (capture ran > 60 s)
-> 
-> Proof / workaround
-> ------------------
-> On 7.2.8, with the K-2 stalled (7 OUT URBs pending), I issued a single
-> GET_DESCRIPTOR(STRING, index 2, 0x0409) from userspace via usbfs
-> USBDEVFS_CONTROL. The pending URBs completed immediately (Tx 21 -> 96,
-> buffer drained), and all later MIDI output works.
-> As a stop-gap I now do that from a udev rule when the card appears:
-> 
->   ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", \
->     ATTRS{idVendor}=="1397", \
->     RUN+="/usr/local/sbin/behringer-usbmidi-wake $attr{busnum}
-> $attr{devnum}"
-> 
-> With it, a power-cycled K-2 MK II works on 7.2.8 without manual steps.
-> 
-> Possible fix
-> ------------
-> A quirk for these IDs (or all of 1397:*) that issues one standard
-> control request after SET_CONFIGURATION, e.g. reading a string
-> descriptor, before the MIDI endpoints are used. Alternatively, restore
-> an actual usb_string() read in the card-name path. I'm happy to test
-> patches, and I can send the full usbmon captures and descriptor dumps.
-> 
-> USB descriptors (K-2 MK II; Kobol Expander identical apart from strings):
-> - bcdUSB 2.00, full speed, bcdDevice 2.00, 1 configuration, self powered
-> - Interface 0: AudioControl, no endpoints
-> - Interface 1: MIDIStreaming, 1 altsetting, 2 endpoints
->   - EP 0x02 OUT bulk, 64 bytes, 1 embedded jack
->   - EP 0x81 IN bulk, 64 bytes, 1 embedded jack
-> - Host: Intel 82801JI (ICH10) EHCI, devices behind USB 2.0 hubs
->   (also seen on a UHCI root port)
-> 
-> Thanks,
-> Jan Lentfer
-> 
-> Disclaimer: analyzed and reported with AI support
-
-Thanks for the report.
-
-Can this be fixed by applying the same boot quirk for Behringer CM1A
-(something like below)?
-
-Or do we need explicit usb_string() calls instead?  If yes, which one
-(iProduct, iManufacturer) matters?
+> Thanks for the report.
+>
+> Can this be fixed by applying the same boot quirk for Behringer CM1A
+> (something like below)?
+>
+> Or do we need explicit usb_string() calls instead?  If yes, which one
+> (iProduct, iManufacturer) matters?
+>
+>
+> thanks,
+>
+> Takashi
+>
+> -- 8< --
+> --- a/sound/usb/quirks.c
+> +++ b/sound/usb/quirks.c
+> @@ -1785,6 +1785,9 @@ int snd_usb_apply_boot_quirk_once(struct usb_devic=
+e *dev,
+>   	case USB_ID(0x07fd, 0x0008): /* MOTU M Series, 1st hardware version *=
+/
+>   		return snd_usb_motu_m_series_boot_quirk(dev);
+>   	case USB_ID(0x1397, 0x1234): /* Behringer CM1A */
+> +	case USB_ID(0x1397, 0x1230): /* Behringer K-2 Mk II */
+> +	case USB_ID(0x1397, 0x1249): /* Behringer Kobol Expander */
+> +	case USB_ID(0x1397, 0x1256): /* Behringer 2-XM */
+>   		return snd_usb_cm1a_boot_quirk(dev);
+>   	case USB_ID(0x2717, 0xd005): /* Xiaomi audio connector */
+>   		snd_usb_xiaomi_boot_quirk(dev);
 
 
-thanks,
+The CM1A quirk should be sufficient. No usb_string() is needed.
 
-Takashi
+I reproduced the CM1A quirk's request from userspace on 7.2.8 (usbfs
+USBDEVFS_CONTROL, no wake-up udev rule active):
 
--- 8< --
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1785,6 +1785,9 @@ int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
- 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series, 1st hardware version */
- 		return snd_usb_motu_m_series_boot_quirk(dev);
- 	case USB_ID(0x1397, 0x1234): /* Behringer CM1A */
-+	case USB_ID(0x1397, 0x1230): /* Behringer K-2 Mk II */
-+	case USB_ID(0x1397, 0x1249): /* Behringer Kobol Expander */
-+	case USB_ID(0x1397, 0x1256): /* Behringer 2-XM */
- 		return snd_usb_cm1a_boot_quirk(dev);
- 	case USB_ID(0x2717, 0xd005): /* Xiaomi audio connector */
- 		snd_usb_xiaomi_boot_quirk(dev);
+1. Power-cycle the K-2 MK II and send notes: the output stalls as before
+ =C2=A0 =C2=A0(rawmidi Tx 21, avail 4021, 7 bulk-OUT URBs pending).
+2. Send a single GET_DESCRIPTOR(DEVICE, 18 bytes)
+ =C2=A0 =C2=A0(80 06 0100 0000 0012), nothing else. The pending URBs compl=
+ete
+ =C2=A0 =C2=A0immediately (Tx 21 -> 96, buffer drained), and all following=
+ MIDI
+ =C2=A0 =C2=A0output works.
+
+A GET_DESCRIPTOR(STRING 2) instead has the same effect (tested
+earlier). So it looks like any standard control request after
+SET_CONFIGURATION wakes the endpoint, same as on the CM1A.
+
+I have only verified this on the K-2 MK II (1397:1230). The KOBOL
+EXPANDER (1397:1249) and 2-XM (1397:1256) run the same firmware
+family, have identical descriptors and show the identical stall, so
+I'd expect the quirk to cover them as well.
+
+Thanks,
+Jan
+
