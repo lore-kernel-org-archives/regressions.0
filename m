@@ -1,227 +1,172 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0AF3F7AAC
-	for <regressions@lists.linux.dev>; Tue, 29 Sep 2026 05:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FAC3C2BB0
+	for <regressions@lists.linux.dev>; Tue, 29 Sep 2026 05:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790661337; cv=none; b=OhtupFuS4eF944vPRmBaalrodL34clrg24d8EmXLyG039zgirLBw9GBXmRJp/2vVroeujBR/BFJ9DuVDvxaVBXnbpP2atJhf6fheLot8DRnrrj3bd5SruNt2++iQO+oXy257IFOCWiky5ykn2XVppJYOET0O/i1DyOnjSXN6azw=
+	t=1790661497; cv=none; b=n5aYuYpupwyaERkTTVQi+w/A+cmEATZblwnBzQmZ9HkimuZvt7L3vce2l9o14JT717ZwWI4b9ptR5FuNfCytVdCdsUmIpXkMyEGeNQfRoI/pOPajolNOyCm+V/CAppjh/AvPi/aA4GRRpXS2krgpSdgJvROj47Gsa6ajaBv+uck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790661337; c=relaxed/simple;
-	bh=CKxekNszWfSdwNcJCaViVu6IwzP+H2JAddE6YL8/04U=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rZdhcBbgWr5n8gsox24Symsi/hU8K6wU6fWs0PgxeE9jPUzOqsDBgTT8/De0CxgA3a0ZPAdem/tbPj2Agj8+10BJT4HoxF0jbPCkzQDCVyOTu0gwYPSehVrmMjhqabDaX6k1YBMCtPLmMPa6A8IHCpgKqifcClSaMTwy3XwXVns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X7nnMXwW; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1790661497; c=relaxed/simple;
+	bh=dYWTGKEmLy9RCuDX9LBRoIFyt0G1rRI61VU8mKpqEG8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qSg+qLFlPHFfZH5RMGVLkXSCb6WZ6DDWLfmEosYraSUQkkeUcX+5NWy1/dFCiJsVIaemnJ+nruzp8MLW07oalxnKZdmZ3WVU0Z5/NUEilGwHyt4cXDRjBNF9QJWzQV17B0BamuHoH75rkzXAVbnnFJ1kazxPsR9+xhnLl1LpzMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WtG3rPAX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MFAcjth6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vEzcR55v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MNGEDZBL; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X7nnMXwW"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hv6bs2vFRz74pR;
-	Tue, 29 Sep 2026 07:46:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1790660761;
-	bh=CKxekNszWfSdwNcJCaViVu6IwzP+H2JAddE6YL8/04U=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=X7nnMXwWuk8iotlPrRQUYMi12/+BdRJWLrSvFwou4IA9jl3ks1Vud12chW/hPkgSE
-	 oKT5WFtxqt/HeCsC7PjpyRGLX7JcoHCsHdC6z3oe349NfaqqLVkENG3x38ycuOlRKS
-	 w0N3D9TPDLlFvSovWqT/C6JrCSiIGk+CwcwPjzO/UE01+hq1l+dfhGf/lovuE7wasz
-	 tpxhlbAMbx5JiN2Y5AzL3PQ5YTViSN7caT3Ze3wM7zwQI1VZKCfSkDbnT+lN+AjC/d
-	 MKpSvU9FOfO97qYDc/ucXqeWOfzr8Ta5FBhHA89SuMSuncst+Ao2j6tdS5af/HD1+s
-	 +NI2uLxGg/d7w==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hv6bs29VHz74p0;
-	Tue, 29 Sep 2026 07:46:01 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WtG3rPAX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MFAcjth6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vEzcR55v";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MNGEDZBL"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hv6br2lBwz8sbF;
-	Tue, 29 Sep 2026 07:46:00 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 516BD5FADA;
-	Tue, 29 Sep 2026 07:45:51 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <87c93553-d74d-4588-bd54-0ccb2728f327@leemhuis.info>
-Date: Tue, 29 Sep 2026 07:45:50 +0200
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8215C1F79E;
+	Tue, 29 Sep 2026 05:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1790661488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HqOlcpvcIyNFLst/qfqz9TJtK91EoerlTMtFztTgEJE=;
+	b=WtG3rPAXfa9oKArYYfe8zHGwgGKKYuim1N6GvQiEkilp7tqaPmR1e/xYyGbIgthydyX6Pb
+	CXWNrwAAZ/f1Q3kgGGzSnGgIDnKaqrWdTqv68jP4/IO24Wf6ysblNMjYJxk454V5kEPEcZ
+	HbNk7j927Ne55pMUhhGNTsrHFpr0DUM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1790661488;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HqOlcpvcIyNFLst/qfqz9TJtK91EoerlTMtFztTgEJE=;
+	b=MFAcjth6jNmE0BbSFRRLjoNYr3dJByXNh+YPeiRo4SrCL2taXqES2hQv2xXmrDT/RBLI2x
+	3rbpyClZLk75qXCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vEzcR55v;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MNGEDZBL
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1790661484; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HqOlcpvcIyNFLst/qfqz9TJtK91EoerlTMtFztTgEJE=;
+	b=vEzcR55vVicyUIC8CrZyFeLKvMnTmP6RkT2VNRtFmPlEKtS2NJRPreTzWo2U/GIb1jkgvc
+	tIRo/RNMAVr5DeksG/CKZJCYDriW/kFaL1tjRRJFLiV/qgdxr68PmOLVL1iMiOIaFftmFK
+	ZGVvxgW0yEtcIh0xPaLecgFBSNy2MSI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1790661484;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HqOlcpvcIyNFLst/qfqz9TJtK91EoerlTMtFztTgEJE=;
+	b=MNGEDZBLTCB2hyjz1aB59js81oabbjwbD89TGYNNNYhifI5rtMW2aBh95FO2s5bI2VVSSY
+	yegKggKA8MuFZjDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1AFC0133F1;
+	Tue, 29 Sep 2026 05:58:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JbwcOGtTu2odMQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 29 Sep 2026 05:58:04 +0000
+Date: Tue, 29 Sep 2026 07:58:03 +0200
+Message-ID: <87tsn838gk.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Faaris Ansari <faarisansari@googlemail.com>,	stable@vger.kernel.org,
+	regressions@lists.linux.dev,	linux-sound@vger.kernel.org,
+	=?ISO-8859-1?Q?C=E1ssio?= Gabriel <cassiogabrielcontato@gmail.com>,	Takashi
+ Iwai <tiwai@suse.com>,	Jaroslav Kysela <perex@perex.cz>,	Faaris Ansari
+ <faaris.ansari@gmail.com>
+Subject: Re: [REGRESSION] Audient EVO4 hardware volume control now requires quirk
+In-Reply-To: <2026-09-28-2-daily-reply-0001-re-audient-evo4-channel-3-set-cur@kernel.org>
+References: <CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=+iOe4ZGA@mail.gmail.com>
+	<2026-09-27-daily-reply-0001-re-audient-evo4-mixer-put-errors@kernel.org>
+	<CANBVYRAr_ShKGmrt2NoqsDsDEbTXa5DWJbq2oP6wKLWJQpLRWw@mail.gmail.com>
+	<2026-09-28-daily-reply-0001-re-audient-evo4-upstream-decision@kernel.org>
+	<ee6e9e8f-e174-4872-baee-114d848e8137@gmail.com>
+	<2026-09-28-2-daily-reply-0001-re-audient-evo4-channel-3-set-cur@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Andreas Wild <andiwild@gmail.com>,
- linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org, M M <restafvalendergelijke@outlook.com>,
- regressions@lists.linux.dev, blaat windows <blaaaat@hotmail.com>,
- edwardmalik95@icloud.com
-References: <20260917233355.GA1115024@bhelgaas>
- <b4ed1637-ac6a-4af5-ab47-e07309af200b@leemhuis.info>
- <alpine.DEB.2.21.2609181131520.57799@angie.orcam.me.uk>
- <1b2cceea-8da4-4239-a955-e0c6b475a227@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <1b2cceea-8da4-4239-a955-e0c6b475a227@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179066075179.2935103.4041930143182765755@mxe9fb.netcup.net>
-X-NC-CID: cVLYoJvbPniRBetUZOUHjc7CUf64eyIAZBcHv+euESFtTCoysO8=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -2.01
+X-Rspamd-Queue-Id: 8215C1F79E
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[googlemail.com,vger.kernel.org,lists.linux.dev,gmail.com,suse.com,perex.cz];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid]
+X-Spam-Flag: NO
 
-On 9/21/26 12:33, Thorsten Leemhuis wrote:
-> On 9/18/26 12:39, Maciej W. Rozycki wrote:
->> On Fri, 18 Sep 2026, Thorsten Leemhuis wrote:
->>>> But IIUC Aoxtj still sees issues with 72780f796468 ("PCI: Always lift
->>>> 2.5GT/s restriction in PCIe failed link retraining") even with this
->>>> patch
->>>> (https://lore.kernel.org/all/331e97c7-e422-420d-9f3e-5d9f734464b3@axtjblog.cc)
-
-@Andreas, @Bjorn: JFYI, Edward (now CCed) in the bugzilla thread and in
-private pointed out that the partial fix this thread is about ("PCI:
-Skip Target Speed quirk on clamped ports with no link") was applied by
-CachyOS, but then reverted due to problems:
-https://github.com/CachyOS/linux/commit/5c1239de195c6f4d26c3e4fc292eadab6feb41a0
-
-No reason given, just a link to a diagnostic file that from a very quick
-look showed an Oops from the Nvidia driver:
-https://paste.cachyos.org/p/49a2487.log
-
-So maybe it's a problem in that OOT driver, maybe not. Just wanted to
-let you know about this. To quote:
-
-"""
-> Aug 30 21:56:16 cachyos kernel: [drm:nv_drm_dev_load [nvidia_drm]] *ERROR* [nvidia-drm] [GPU ID 0x00000100] Failed to allocate NvKmsKapiDevice
-> Aug 30 21:56:17 <hostname-redacted> kernel: Oops: general protection fault, probably for non-canonical address 0xe95cb1b08fafee9c: 0000 [#1] SMP NOPTI
-> Aug 30 21:56:17 <hostname-redacted> kernel: CPU: 0 UID: 0 PID: 503 Comm: modprobe Tainted: G           O        7.2.2-1-cachyos #1 PREEMPT(full)  e429b9d2132c094dcc3a5be7de95f46bd03f9bdb
-> Aug 30 21:56:17 <hostname-redacted> kernel: Tainted: [O]=OOT_MODULE
-> Aug 30 21:56:17 <hostname-redacted> kernel: Hardware name: LENOVO 82RF/LNVNB161216, BIOS J2CN40WW 04/15/2022
-> Aug 30 21:56:17 <hostname-redacted> kernel: RIP: 0010:__refill_objects_node+0x283/0x390
-> Aug 30 21:56:17 <hostname-redacted> kernel: Code: 48 ff c0 48 8b 5c 24 20 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 44 89 c1 4d 89 5c c2 f8 44 8b 43 28 48 8b 93 b0 00 00 00 <4b> 33 14 18 0f 1f 44 00 00 4d 01 d8 49 0f c8 4c 31 c2 48 39 e8 41
-> Aug 30 21:56:17 <hostname-redacted> kernel: RSP: 0018:ffffccf440bef700 EFLAGS: 00010287
-> Aug 30 21:56:17 <hostname-redacted> kernel: RAX: 0000000000000008 RBX: ffff8a2380045900 RCX: 0000000000000018
-> Aug 30 21:56:17 <hostname-redacted> kernel: RDX: 690fa410ac2511e3 RSI: fffff1bb44805500 RDI: fffff1bb44805510
-> Aug 30 21:56:17 <hostname-redacted> kernel: RBP: 0000000000000020 R08: 0000000000000080 R09: 0000000000200020
-> Aug 30 21:56:17 <hostname-redacted> kernel: R10: ffff8a23819df220 R11: e95cb1b08fafee1c R12: ffff8a2380041e01
-> Aug 30 21:56:17 <hostname-redacted> kernel: R13: ffffccf440bef748 R14: 0000000000000020 R15: 0000000000000007
-> Aug 30 21:56:17 <hostname-redacted> kernel: FS:  0000000000000000(0000) GS:ffff8a276e465000(0000) knlGS:0000000000000000
-> Aug 30 21:56:17 <hostname-redacted> kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Aug 30 21:56:17 <hostname-redacted> kernel: CR2: 00007fbf1ad14270 CR3: 000000011ffe4002 CR4: 0000000000f70ef0
-> Aug 30 21:56:17 <hostname-redacted> kernel: PKRU: 55555554
-> Aug 30 21:56:17 <hostname-redacted> kernel: Call Trace:
-> Aug 30 21:56:17 <hostname-redacted> kernel:  <TASK>
-> Aug 30 21:56:17 <hostname-redacted> kernel:  refill_objects+0x3f/0x3c0
-> Aug 30 21:56:17 <hostname-redacted> kernel:  kmem_cache_prefill_sheaf+0xe3/0x210
-> Aug 30 21:56:17 <hostname-redacted> kernel:  mas_preallocate+0x4e7/0x730
-> Aug 30 21:56:17 <hostname-redacted> kernel:  __split_vma+0xc5/0x550
-> Aug 30 21:56:17 <hostname-redacted> kernel:  vms_gather_munmap_vmas+0x119/0x350
-> Aug 30 21:56:17 <hostname-redacted> kernel:  mmap_region+0x10b8/0x1890
-> Aug 30 21:56:17 <hostname-redacted> kernel:  do_mmap+0x2b0/0x580
-> Aug 30 21:56:17 <hostname-redacted> kernel:  vm_mmap_pgoff+0xf7/0x190
-> Aug 30 21:56:17 <hostname-redacted> kernel:  ? ksys_mmap_pgoff+0xbb/0x110
-> Aug 30 21:56:17 <hostname-redacted> kernel:  ksys_mmap_pgoff+0xb0/0x110
-> Aug 30 21:56:17 <hostname-redacted> kernel:  do_syscall_64+0xa6/0x3e0
-> Aug 30 21:56:17 <hostname-redacted> kernel:  ? do_syscall_64+0x65/0x3e0
-> Aug 30 21:56:17 <hostname-redacted> kernel:  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> Aug 30 21:56:17 <hostname-redacted> kernel: RIP: 0033:0x7fbf1b7241f6
-> Aug 30 21:56:17 <hostname-redacted> kernel: Code: 00 00 00 00 f3 0f 1e fa 41 f7 c1 ff 0f 00 00 75 2b 55 89 cd 53 48 89 fb 48 85 ff 74 4f 41 89 ea 48 89 df b8 09 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 22 5b 5d c3 0f 1f 80 00 00 00 00 c7 05 6e 71
-> Aug 30 21:56:17 <hostname-redacted> kernel: RSP: 002b:00007ffcb1466808 EFLAGS: 00000206 ORIG_RAX: 0000000000000009
-> Aug 30 21:56:17 <hostname-redacted> kernel: RAX: ffffffffffffffda RBX: 00007fbf1b4f5000 RCX: 00007fbf1b7241f6
-> Aug 30 21:56:17 <hostname-redacted> kernel: RDX: 0000000000000005 RSI: 000000000000a000 RDI: 00007fbf1b4f5000
-> Aug 30 21:56:17 <hostname-redacted> kernel: RBP: 0000000000000812 R08: 0000000000000000 R09: 0000000000001000
-> Aug 30 21:56:17 <hostname-redacted> kernel: R10: 0000000000000812 R11: 0000000000000206 R12: 00007fbf1b504580
-> Aug 30 21:56:17 <hostname-redacted> kernel: R13: 0000000000001000 R14: 000000000000b000 R15: 00007fbf1b4f4000
-> Aug 30 21:56:17 <hostname-redacted> kernel:  </TASK>
-> Aug 30 21:56:17 <hostname-redacted> kernel: Modules linked in: xt_LOG nf_log_syslog nft_limit xt_limit xt_addrtype xt_tcpudp xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nft_compat x_tables nf_tables dm_mod pkcs8_key_parser i2c_dev crypto_user ntsync zram 842_decompress 842_compress lz4hc_compress xe gpu_sched drm_gpuvm drm_exec drm_gpusvm_helper drm_suballoc_helper nvme nvme_core nvidia_drm(O) nvme_keyring nvidia_uvm(O) nvidia_modeset(O) nvme_auth i915 drm_buddy intel_gtt i2c_algo_bit intel_lpss_pci drm_display_helper spi_intel_pci intel_lpss spi_intel idma64 intel_vsec cec vmd serio_raw nvidia(O) drm_ttm_helper ttm video wmi aead
-> Aug 30 21:56:17 <hostname-redacted> kernel: ---[ end trace 0000000000000000 ]---
-> Aug 30 21:56:17 <hostname-redacted> kernel: RIP: 0010:__refill_objects_node+0x283/0x390
-> Aug 30 21:56:17 <hostname-redacted> kernel: Code: 48 ff c0 48 8b 5c 24 20 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 44 89 c1 4d 89 5c c2 f8 44 8b 43 28 48 8b 93 b0 00 00 00 <4b> 33 14 18 0f 1f 44 00 00 4d 01 d8 49 0f c8 4c 31 c2 48 39 e8 41
-> Aug 30 21:56:17 <hostname-redacted> kernel: RSP: 0018:ffffccf440bef700 EFLAGS: 00010287
-> Aug 30 21:56:17 <hostname-redacted> kernel: RAX: 0000000000000008 RBX: ffff8a2380045900 RCX: 0000000000000018
-> Aug 30 21:56:17 <hostname-redacted> kernel: RDX: 690fa410ac2511e3 RSI: fffff1bb44805500 RDI: fffff1bb44805510
-> Aug 30 21:56:17 <hostname-redacted> kernel: RBP: 0000000000000020 R08: 0000000000000080 R09: 0000000000200020
-> Aug 30 21:56:17 <hostname-redacted> kernel: R10: ffff8a23819df220 R11: e95cb1b08fafee1c R12: ffff8a2380041e01
-> Aug 30 21:56:17 <hostname-redacted> kernel: R13: ffffccf440bef748 R14: 0000000000000020 R15: 0000000000000007
-> Aug 30 21:56:17 <hostname-redacted> kernel: FS:  0000000000000000(0000) GS:ffff8a276e465000(0000) knlGS:0000000000000000
-> Aug 30 21:56:17 <hostname-redacted> kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Aug 30 21:56:17 <hostname-redacted> kernel: CR2: 00007fbf1ad14270 CR3: 000000011ffe4002 CR4: 0000000000f70ef0
-> Aug 30 21:56:17 <hostname-redacted> kernel: PKRU: 55555554
-
-"""
-
-Ciao, Thorsten
-
->>>> And M M / Mich (BCC'd) also reports an issue that (IIUC) is not fixed by
->>>> this patch (https://bugzilla.kernel.org/show_bug.cgi?id=221919#c3)
->>>>
->>>> So evidently there are still issues but maybe this patch fixes part of
->>>> them?
->>>>> Yeah, Maciej ten days expressed that we to look into this. Anyway, I
->>> suggest someone that is affected by that problem starts a new thread
->>> (please CC all those that are affected by it and the regression list)
->>> with summarizing the current state + this patch, as this thread got a
->>> bit confusing... (please drop a link to that thread here afterwards)
->>
->>  It remains on my radar, no worries.  [...]
+On Tue, 29 Sep 2026 00:39:05 +0200,
+Sasha Levin wrote:
 > 
-> FWIW, another report from "blaat windows" (now CCed) can be found
-> out-of-thread here:
+> > [   80.940668] usb 3-1: cannot set ctl value: req = 0x1, wValue = 0x203,
+> > wIndex = 0xa00, type = 4, data = 0x0/0x81
+> [...]
+> > numid=4,iface=MIXER,name='EVO4  Playback Volume'
+> >    ; type=INTEGER,access=rw---R--,values=4,min=0,max=254,step=0
+> >    : values=182,182,0,0
 > 
-> https://lore.kernel.org/all/AS2PR10MB7429335B6C8F4C7FA3F88638B5852@AS2PR10MB7429.EURPRD10.PROD.OUTLOOK.COM/
+> Thanks, that narrows it down.
 > 
-> Quoting that below.
-> """
->>>>> Another reproducible case of the active-link failure described in this thread.
->>>>>
->>>>> Hardware:
->>>>> Intel 4th-gen/9-series platform
->>>>> Intel 82571EB quad-port NIC
->>>>> Microsemi/PMC/IDT PES12N3A PCIe switch
->>>>> Root port 00:1c.4, LnkCap 5GT/s x4
->>>>> Working negotiated link: 2.5GT/s x4
->>>>>
->>>>> Kernel results:
->>>>> 7.2-rc1 fail
->>>>> 7.1-rc7 succes
->>>>>
->>>>> On failing kernels, the PES12N3A hierarchy does not enumerate and all four downstream 82571EB ports disappear.
->>>>>
->>>>> I traced this to pcie_failed_link_retrain() and specifically the new generic clamp-removal code introduced by 72780f7964684939d7d2f69c348876213b184484 ("PCI: Always lift 2.5GT/s restriction in PCIe failed link retraining").
->>>>>
->>>>> I tested 7.3.0-rc3+ with only this block commented out:
->>>>>
->>>>>     pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
->>>>>     if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT) {
->>>>>             pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
->>>>>             ret = pcie_set_target_speed(dev, speed_cap, false);
->>>>>             if (ret)
->>>>>                     goto err;
->>>>>     }
->>>>>
->>>>> With that block disabled, 7.3.0-rc3+ boots normally, having all four NIC ports enumerate:
->>>>>
->>>>> 07:00.0 82571EB
->>>>> 07:00.1 82571EB
->>>>> 08:00.0 82571EB
->>>>> 08:00.1 82571EB
->>>>>
->>>>> The important result is that the initial 2.5GT/s recovery is fine. Leaving the link at 2.5GT/s works. It is the subsequent:
->>>>>
->>>>>     pcie_set_target_speed(dev, speed_cap, false);
->>>>>
->>>>> which breaks this PES12N3A/82571EB link.
->>>>>
->>>>> So this appears to be the same active-link failure mode, but with a PES12N3A switch rather than a direct 82571EB connection.
->>>>>
->>>>> This was tested against vanilla 7.3.0-rc3+ with only the above local change.
->>>>>
->>>>> I can provide full dmesg/lspci output and test a proposed fix if useful.
-> """
-> 
-> Ciao, Thorsten
-> 
+> Every failure is SET_CUR of the Volume control on feature unit 10, channel 3
+> (wValue 0x0203, wIndex 0x0a00). That unit is 'EVO4  Playback Volume' and
+> advertises read/write volume on all four channels. mixer_ctl_feature_put()
+> writes channels 1 and 2, then returns the channel 3 error, so the hardware
+> volume changes while userspace is told the write failed and adds software
+> attenuation on top. Faaris sees the same on 7.3-rc5, so this is a mainline
+> regression from 87a6f2fa6e6c ("ALSA: usb-audio: Propagate write errors in
+> generic mixer put callbacks").
 
+Right.  So a simple fix would be to just to set the IGNORE_CTL_ERROR
+quirk flag like below.  One of iD14 models has already this flag, so
+it might be safer to set to all Audient devices.
+
+
+thanks,
+
+Takashi
+
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -2690,6 +2690,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_DSD_RAW),
+ 	DEVICE_FLG(0x2708, 0x0002, /* Audient iD14 */
+ 		   QUIRK_FLAG_IGNORE_CTL_ERROR),
++	DEVICE_FLG(0x2708, 0x0006, /* Audient EV04 */
++		   QUIRK_FLAG_IGNORE_CTL_ERROR),
+ 	DEVICE_FLG(0x2772, 0x0502, /* Musical Fidelity M6s DAC */
+ 		   0), /* for avoiding QUIRK_FLAG_DSD_RAW with vendor match */
+ 	DEVICE_FLG(0x2912, 0x30c8, /* Audioengine D1 */
