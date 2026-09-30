@@ -1,40 +1,51 @@
-Received: from mail-108-mta89.mxroute.com (mail-108-mta89.mxroute.com [136.175.108.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E28345EC0
-	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 04:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463A3370AE2
+	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 05:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790742621; cv=none; b=apEhyyaEVd9ncghhD2h40P+DZFh+MERPXslcr+7yh3dK8H2k96kf2LxpKllIJm46mbfPBD0073CN7zDOn0I8UKcq0XlhKecKS79nfe4x7XDOnAUxT1x4hwXUtFJHxYcgvGhKvbwwigRPCJFaevHMtrvfk7t2xWOvBLzlbxGsIGs=
+	t=1790744949; cv=none; b=QeeKCAA1D8tByKJfxb92XkH4S0RhYIa82aPFL6moQf8Wj67GlzD6qt5d7gw3Z1v/+UJqViicnlL5oMcWpwgpcbBev4+BmqdZIcWRzS7wW40Mx38W4gimQklE+v5wSeZalYCGYQuHXWeHMd9VydnQDWXD7ljQR7Bz4S1C1/fJT10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790742621; c=relaxed/simple;
-	bh=8a6Nd2BP8tdgqPGtiKuTPSDEdvr2//3RiAZ4eXytnf0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=cchfY0o8Z96x4Rb7JXNJ3hYUA26LHHz9k5rVxlXHo1IfHc3al7pezg7Up38KpTooiWkRuzKpDi+HUqNf5lkLy9JnD/36d6WruuaqgqL8DMeMqubDnB+ENiM2hxyEmcTf7dL/EL3VlJySN78iyzOlipuhGKP2PfI3aFYZnS8hwL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pepdata.pt; spf=pass smtp.mailfrom=pepdata.pt; dkim=fail (0-bit key) header.d=pepdata.pt header.i=@pepdata.pt header.b=N+n+XHnk reason="key not found in DNS"; arc=none smtp.client-ip=136.175.108.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pepdata.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pepdata.pt
+	s=arc-20240116; t=1790744949; c=relaxed/simple;
+	bh=0I+7tJL13LXB1JkNtku0+LEKvwUxssqkUBMFpkehDYA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ldTr4lW5jRdAzqedYH/FF9gti2kMWPxjxm5C2EEagiWttv6KxEe8+L+PX3KQKmxaHsUCCcSOBUdon7xZAOhwqMXrTnbFS1NNMUIwa4CtONN7Z91uTODujKSF4E2HRvjDoUmoD9lAgl8kpV7uQklaAWNtWQlLsFp7mx8pGkkxdis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=KNB5X4gV; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=pepdata.pt header.i=@pepdata.pt header.b="N+n+XHnk"
-Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta89.mxroute.com (ZoneMTA) with ESMTPSA id 1a0f08f22f500028b2.007
- for <regressions@lists.linux.dev>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 30 Sep 2026 04:25:07 +0000
-X-Zone-Loop: 217d993bb5663adcca1920e1c44cdeb9f7ae3bb7c709
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=pepdata.pt;
-	s=x; h=Content-Transfer-Encoding:Content-Type:Subject:From:Cc:To:MIME-Version
-	:Date:Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
-	References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=Q3rqBbYafqKOzi82dlVrf5nDhBNnr4qzwYl6NBphMIo=; b=N
-	+n+XHnkvl57tkgr+1lh3zD7TEDjnLAuYf0qV13TcacOExVK/0eksiilJeByEW6j/Zj0JV7OMwVKbA
-	jKfFi7c1As1IndqZrZxVsgRP7vOqJDuMUPDKQXTNzy9pBREU16zPCV1FKOHP5I9lVuPirT3T04clJ
-	u3hoSm/5cBHDt+HRwYzQ82Ef3kDl/sIzT/vAZHtS+vVqT0UArtloWME1wJHzU4SoqmKoUAv2FiwWd
-	lPdXMC/jXG0ZUa/A3vihBtOa16ZQlHL8sxS0wPZ6rHRNQIP8c3whe94K6uMIR3nT6QsNGvBTm183u
-	nxtdpQ9rEIsx9dovb6NxtGF8IvMevcUnw==;
-Message-ID: <14ed23dd-b171-4ffb-b368-5c717f56188c@pepdata.pt>
-Date: Wed, 30 Sep 2026 05:24:59 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="KNB5X4gV"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hvjkf0PbYz8NXd
+	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 07:08:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1790744938;
+	bh=0I+7tJL13LXB1JkNtku0+LEKvwUxssqkUBMFpkehDYA=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=KNB5X4gVkeC96JOXy07hzqdUnL3mjjVbhCBuSotn3v2nYKoyQEqWi38xClaakpHOM
+	 3POd2eCOXSH6dvHo4QcMYWcCdSqCwV6c8s/BLduf5PAEISvXw9wEQBxYN0juEQvs83
+	 P1jaMOfCofyua/0WEAQHu5cyGKL3Z++YRKrEEg2IUfHfFadwNSRKczUYtk5ziBemOm
+	 Kls6jc1hNqJ7WHE4vknERIAYcwXNFin3XrJxVV4OWz54J9a+okXq2mNX0Le4V6Bzb+
+	 YgnnSOE2VbxHoLIvk7cVyd2deqg8qAyucYEc8LGc869cLYA19/NS+kPt1oxyQGVc6y
+	 F/UVJrOj8vAoQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hvjkd6pw8z8NWS
+	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 07:08:57 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hvjkd5GTFz8sbC
+	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 07:08:57 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 332D45F996
+	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 07:08:57 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <0a283de4-8a71-42d6-a3e2-42a7248d6058@leemhuis.info>
+Date: Wed, 30 Sep 2026 07:08:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,75 +53,52 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Antheas Kapenekakis <lkml@antheas.dev>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-input@vger.kernel.org, regressions@lists.linux.dev
-From: =?UTF-8?Q?Andr=C3=A9_Pinheiro?= <andre@pepdata.pt>
-Subject: [REGRESSION] 6.18.y: HID: asus: ROG keyboard 0b05:19b6 stops working
- after 56d1b33e644c backport; missing buffer size fix e82ae34af29e
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: andre@pepdata.pt
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179074493737.2827715.9167082324987469513@mxe9fb.netcup.net>
+X-NC-CID: 9QCh5M6HqiIczA8DrNwUVTrAHJeIl7uniXVG0aowfqzoGnPoNWo=
 
-Hi,
 
-Since 6.18.49, the internal keyboard of ASUS ROG Zephyrus G16 GU605MV
-(USB 0b05:19b6, ITE Device(8910), bcdDevice 0.03) can stop sending input
-events. 6.18.42 works. 6.18.51 is broken. I did not test 6.18.49/6.18.50.
 
-Cause: the backport of 56d1b33e644c ("HID: asus: simplify RGB init
-sequence") made asus_kbd_get_functions() run for QUIRK_ROG_NKEY_KEYBOARD
-devices too. That function reads feature report 0x5A into a buffer of
-FEATURE_KBD_REPORT_SIZE = 16 bytes. This device answers with 63 bytes, so
-the transfer fails with EOVERFLOW. The buffer size fix is in mainline as
-e82ae34af29e ("HID: asus: fortify keyboard handshake", 
-FEATURE_KBD_REPORT_SIZE
-16 -> 64; its message says "Since the response is more than 16 bytes,
-increase the buffer size to 64 as well to avoid overflow errors"). It is in
-the same series as 56d1b33e644c but was not backported. v7.0 has the value
-64 (checked in the source, not booted on this machine).
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Symptom (6.18.51):
-   asus 0003:0B05:19B6.0001: Asus failed to request functions: -75
-   asus 0003:0B05:19B6.0001: Failed to initialize backlight.
-usbmon:
-   S Ci:1:002:0 s a1 01 035a 0000 0010 16 <
-   C Ci:1:002:0 -75 0
+#regzbot report:
+https://lore.kernel.org/all/CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=+iOe4ZGA@mail.gmail.com/
+#regzbot introduced: 87a6f2fa6e6c
+#regzbot title: ALSA: usb-audio: Audient EVO4 hardware volume control broken
 
-The HID report descriptor (1102 bytes, from sysfs) declares Feature report
-0x5A as 62 data bytes plus the report ID (63). The device matches its own
-descriptor; the driver buffer is too small.
+#regzbot report:
+https://lore.kernel.org/linux-arm-msm/20260923074256.9357-1-liujianfeng1994@gmail.com/
+#regzbot fix: Revert "dma-buf: Make DMABUF_DEBUG default to y on
+DEBUG_KERNEL kernels"
+#regzbot monitor:
+https://lore.kernel.org/all/20260926022026.10539-1-liujianfeng1994@gmail.com/
 
-Evidence. Same physical device and USB host controller (xhci on 6.18.42) in
-both runs, only the guest kernel driving the HID device changes; bytes read
-from the evdev node while typing:
-   guest 6.18.42: 16776 bytes in 12 s
-   guest 6.18.51: -75 as above, 0 bytes in 12 s
+#regzbot report:
+https://lore.kernel.org/all/e7087d42-5e74-4d85-b1c5-b11eff235d41@web.de/
+#regzbot introduced: b364a0d23cae15
 
-Requests sent by hand on 6.18.42 through hidraw (HIDIOCGFEATURE on report
-0x5A), device re-enumerated before each case, bytes in 5 s windows:
-   GET 16, no SET before:  7488 -> EOVERFLOW -> 0
-   GET 32, no SET before:  7776 -> EOVERFLOW -> 0
-   GET 64, no SET before:  8208 -> ok, 63 bytes returned -> 8568
-   SET 5a 05 20 31 00 08, then GET 64: 8496 -> ok, 63 bytes -> 7920
-   SET, then GET 16:       7848 -> EOVERFLOW -> 7056 (did not silence 
-this run)
-   (an earlier run of SET, GET 16: 2736 -> 6984 after SET -> 0 after GET)
-With a 64-byte buffer byte 6 of the reply is 0x83, i.e. 
-SUPPORT_KBD_BACKLIGHT
-is set. So with the fix the driver would register the backlight instead of
-failing. One or two runs per case, only this device tested.
+#regzbot report:
+https://lore.kernel.org/all/CAE4bxw%2BofDFVx0aTHqCrzns9oP1CRQDm_wzeyHPeMBYOhSpcuA@mail.gmail.com/
+#regzbot introduced: 5ead2063611a
+#regzbot title: Bluetooth: btusb: RTL8761BU 0bda:a728 broken due to
+BROKEN_EXT_SCAN quirk
+#regzbot monitor:
+https://lore.kernel.org/all/20260920020227.709800-1-junjie.cao@intel.com/
 
-Request: please backport e82ae34af29e (or at least the 
-FEATURE_KBD_REPORT_SIZE
-16 -> 64 change) to 6.18.y, and to any other stable branch that received
-56d1b33e644c. Alternatively drop 56d1b33e644c there.
-
-Thanks,
-André
-
+#regzbot report:
+https://lore.kernel.org/all/DM6PR02MB5433F3C2A156335B6ED47756EA8E2@DM6PR02MB5433.namprd02.prod.outlook.com/
+#regzbot introduced: 4b490e0d103c
+#regzbot title: ALSA: ctxfi: no PCM playback on Creative X-Fi Titanium
+HD (EMU20k2 / SB1270)
