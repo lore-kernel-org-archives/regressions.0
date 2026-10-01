@@ -1,256 +1,125 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy2-f41.google.com (mail-dy2-f41.google.com [74.125.229.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A33E4F4049
-	for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 20:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF202147F9
+	for <regressions@lists.linux.dev>; Thu,  1 Oct 2026 02:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790801175; cv=none; b=uWSv4IP+CMAA/YfK22HVXDlSuo2rJ/kvSyvh99Go1RjNsyiyD+pDdUvh+gwh/ThfA4PDMiSSAeGQvTrIDrj1M5bUVSdnKcKPZiT4fwPs0uniFAyglc5AAI8s57V1ZfZZ52bPIeoTsoKy8Ndce8dOnRHqom/56U3KCPc3ehZgZrE=
+	t=1790822345; cv=none; b=AfHJXVDo7fX9/Q/pgsrSPe8MQKHaq3IP5vdl3Ib1hcnUZ66Mh+zHu4VE92rorw1EThXQb3+xZ+6v6q61q676Ts4fIRPONECbRm0zVSkIcuvG4BNr0NzIDZ/ijzHHe14zSs4R/KlQHp1TaknGn8IzF30JrUEH6h2Be/XLL4mXwzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790801175; c=relaxed/simple;
-	bh=yAQ585lNH1jUTd+5p2fTkQEVt8HCoFAfpndGNj9cD1Q=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LC7me673OQ/UxSJbXUjV04RwsvIdADdwTdW0/6cZtN5bJ5L7WN4BIDduDy4qk/slZwbfh94O4EBH3xc46rbzCfliwsgGwghz7638/6JKDsC+enbiPcLh+Xq/I8n/qHkA9I8e3Dkb3V6endpM2FyF5RUfXHdjtTKlOqlw8Vcf5Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=iLiMCSsK; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1790822345; c=relaxed/simple;
+	bh=HibY2yVbJXZTc6DBlwdMDBsFHqSRLxYPMVNLoQ1p3wc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=p/4gLNNFCcLdUuZbxGI3w4ffw6FrgaKglRHc30S8sb/reR/Vm4Re7ceCHBDizSzW5CJ7kLAotl5i4myfYyCFRB+xH0v6I8n4MIoL8DbjavqgyrDMNKQ6GSCcggeD5yLJYpXtYmxIIz33rzzJ/v2jvExmLJVsV+PI9K2px8pVqxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cyIBqwXq; arc=none smtp.client-ip=74.125.229.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="iLiMCSsK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1790801164; x=1791060364;
-	bh=aSDMcsMjHnp3Y060QClQXCLPIrlJvpS+hNxMuOnsPAU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=iLiMCSsK3aewrZAjppgmGDO5pS6RNWMdT3pgSDNdPSQzdtgLjxPLDlMVKue0HylWA
-	 TnpLI6+p4NZ/B9QVtUlXE/7G3iKvY1DPJxOSyfOtz5MyYzCFSidvKmrwMO1XRlDp7Z
-	 ksme/WRRBmVfeat8UMHOmDWGemr3uQtrOiJBngUCxteEVs4E9HJtt8bW0Tc4aUF5Xx
-	 lVWnAS61haG7bXsrygubRAqq5nfVMqQxpzPJLTjUWhDvP+t5mg670Qn6Yrq0YsaVVd
-	 WypSvWmyRSVWb4iaC/3NDen0hH4qM0HnqxuOeQN7Cj3OKUyzBy4aESagFgifsqAKNa
-	 VeIsUsOoZscYA==
-Date: Wed, 30 Sep 2026 20:46:01 +0000
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-From: Mike Karcic <mikekarcic@protonmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>, Kailang <kailang@realtek.com>, Sean Rhodes <sean@starlabs.systems>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e) -- 6.12.73 to 6.12.85
-Message-ID: <Ec4j0RfeT26a8BoOVxaZhKI1UKjRqEeSHl-MuYi9vXNaYXf1-ZbF693NaGdqetY65BTbhYXjfPJbWco8JUOcMOF5InHN84Ag__OKGT2bHzw=@protonmail.com>
-In-Reply-To: <edadb400-b2b0-469c-9aeb-9ae82dee13fd@leemhuis.info>
-References: <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com> <87mrxjsk52.wl-tiwai@suse.de> <bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com> <87cxyfs2vm.wl-tiwai@suse.de> <833d600fdebd4aaeab6706185ce854e6@realtek.com> <87wlwgygyf.wl-tiwai@suse.de> <330931ee49624f2486f66e510271d80a@realtek.com> <87jysdv4qg.wl-tiwai@suse.de> <edadb400-b2b0-469c-9aeb-9ae82dee13fd@leemhuis.info>
-Feedback-ID: 22946815:user:proton
-X-Pm-Message-ID: ba1b525957c451503807398badc9c966771dc362
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyIBqwXq"
+Received: by mail-dy2-f41.google.com with SMTP id 5a478bee46e88-34b4f2d90c4so2162491eec.2
+        for <regressions@lists.linux.dev>; Wed, 30 Sep 2026 19:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790822343; x=1791427143; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=QxM9bT7cYjfTboFQvHDwSX62x29YcBN8kbWxUGtmO+s=;
+        b=cyIBqwXqRqtMmf9YjFLQzf362/+QKqOE01bNJq3OVLD53GNAWPIcqcRrhLaCKyG9lK
+         YlVeRGXimGq7rR5qaUwaqXECkH3rCxABgtvDGb1a+H+dPxLe6ahXWET4TEdZeS8C/YpT
+         hw5TTWO3yXE+Ml4HZv9Ltl1jGbw01kzt6WrpnAmk/2zkLBNw7hykMYZWrdjK24KWecAP
+         l/FXJdnxggbuG9a5yDrB5WsagA+dCBcIYiUMzhCWMrs7bYYQ1y4mSRG/W/W7cG+bVOkM
+         wntnDDO6KoUx3xrN4O9kCFSLo9mzeZizYCQGn6yJRtQ8pz/4q2v0KbsC1gGGt74VHTtP
+         JW6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790822343; x=1791427143;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=QxM9bT7cYjfTboFQvHDwSX62x29YcBN8kbWxUGtmO+s=;
+        b=REBULVEaKcUzK6pN16P/FQsPTG5GcH5/6G7rr+W+hLywJH09n+kz3EoJEzh4SwxaKk
+         dT7bNoNcLEffmTb7Dv3dfkDqWP5999W0ddmuZMIafqcR/Ztt/LmwjQU7EB4IZJSFNnXw
+         eUhmtvtIJQYk4U/uJivQAsvWRTdWbKrn2KOzTgjM7IsOFqVKCgiFF1fyYgzB7TKJ5yXy
+         Mfqo5iG1nFXppIULg3yJ4ZTckfceEUi+aRIdfFRj7zvNenn+jELomsd6Apwtw7j/6bcp
+         31nuq3HiOujrXJXeKVvOzRkAYlLbaEadmyaTUxejp+zmyLVeiiIq4c1CxUxe24AMhQ9y
+         pLSA==
+X-Forwarded-Encrypted: i=1; AKwUvBzqk6TpIRhLeF7j1nh8M7TWdvAZoH8lYojOV27EQubQkCiWYQq92ynUgxZfBXcg0b5OuAZzHYk+jPTAkQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYLoOpi+WOpqN844ammKYONpJ46ZiI0ghFyE+O8SfOuAhV99c0tL
+	NzyfgaJ1oSZi0cL4KMS+8sBXEcO+LGp4kOo4O5uxVcUUOR22iTAOgX59
+X-Gm-Gg: AYBFou2AMld1NCPAOn7PrwV3cDRrnMfNwjomG0UwixqoRpf4DcGkVdpsB25wIZW4TEV
+	kpVY4ZZsrsxE57GBno5mZ5H+6daSy/0Zf0IuL+Bw0epKwTwbtRUZbihIThxLC4/5gJpij8VtjjX
+	GNPYajgwXLdMNBWITybqxkrxsSN8zannLUYep3p4omoVEhLV6ypPWuek+WwGaUTNRhcl7mkyZKQ
+	Z75cN9EGA2fVJNj6Zay+LXH66m6F4o8JMnV4iql+GWb+B1/55zCI4jkkt41AfiSmCyHepCmRVIU
+	QOedtfn3fUnxgazJ3sa0f/fMiBKyZkZFf5jD+6WpK8ePaVdjK0Eiv3J7iRGmSeB22ITq82olewB
+	nKNJ12XNOmZvU1nLxHv51luMQaRkoJjNPyND43GKr5N13ceylLbTMxyq5r/Ty8sRgjLG9g7hTYw
+	ucFt+Ri32H+myqilRou92LfxAhpLeja8xa53XuwbuhQvwGmNIY1OA2wpZeHznzp6gT5KAdFOTHr
+	xgvMw6JtFzb0Fqi1C6CUTJVOOdbthkz49rIzZFYXV+JOp5i+O7J
+X-Received: by 2002:a05:7301:468f:b0:346:7bfd:8504 with SMTP id 5a478bee46e88-34cdd98c9d9mr3520723eec.41.1790822342788;
+        Wed, 30 Sep 2026 19:39:02 -0700 (PDT)
+Received: from [192.168.68.59] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34db4c1ca89sm2351755eec.27.2026.09.30.19.39.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Sep 2026 19:39:02 -0700 (PDT)
+Message-ID: <bd839c03-5cd7-48bf-91a7-c8dc51e5f6e5@gmail.com>
+Date: Wed, 30 Sep 2026 19:39:01 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] qcom/qcom-msm8960-samsung-expressatt: SSH over USB
+ no longer works
+From: Rudraksha Gupta <guptarud@gmail.com>
+To: Xu Yang <xu.yang_2@oss.nxp.com>, Xu Yang <xu.yang_2@nxp.com>
+Cc: Peter Chen <peter.chen@kernel.org>, Frank Li <Frank.li@oss.nxp.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <8e659c4f-723b-4241-9c2b-8ea42c6c3600@gmail.com>
+Content-Language: en-US
+In-Reply-To: <8e659c4f-723b-4241-9c2b-8ea42c6c3600@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Bringing this back with two new data points from the same unit
-(ThinkPad X1 Carbon Gen 12, machine type 21KC / 21KCCTO1WW, ALC287,
-SSID 17aa:231e, BIOS N3YET85W (1.50)).
+On 9/29/26 03:43, Rudraksha Gupta wrote:
+> Hi all,
+>
+>
+> I can no longer SSH in via USB. Reverting 
+> dd0c03d685225cb8fc60c477417d1b9c3b05ba9d fixes the issue.
+>
+> Please see below on logs that I captured over UART (v7.3.0-rc5) and 
+> USB (v7.3.0-rc5 + revert).
+>
+> Distro is Nura (formerly postmarketOS). Using head of 
+> pmbootstrap/pmaports. Instructions for this device:
+> https://wiki.nura.eco/wiki/Samsung_Galaxy_Express_SGH-I437_(samsung-expressatt) 
+>
+>
+>
+> Thanks,
+> Rudraksha
+>
+>
+> #regzbot introduced: dd0c03d68522
 
-1. Windows: I installed Windows 11 on this laptop with Lenovo's Realtek
-audio driver (6.0.9788.1, from Lenovo's driver pack) and used it for a
-few hours without the chirp ever reproducing. As soon as I switched
-back to Fedora/Aurora, it chirped again right away.
 
-2. Linux: on a stock Fedora/Aurora 44 kernel (7.1.8-200.fc44), I wrote
-the old en_coefs values once after boot, i.e. these writes to the
-vendor widget 0x20 (sent through /dev/snd/hwC0D0; equivalent hda-verb
-commands shown):
+Hello all,
 
-hda-verb /dev/snd/hwC0D0 0x20 SET_COEF_INDEX 0x24
-hda-verb /dev/snd/hwC0D0 0x20 SET_PROC_COEF  0x0013
-hda-verb /dev/snd/hwC0D0 0x20 SET_COEF_INDEX 0x25
-hda-verb /dev/snd/hwC0D0 0x20 SET_PROC_COEF  0x0000
-hda-verb /dev/snd/hwC0D0 0x20 SET_COEF_INDEX 0x26
-hda-verb /dev/snd/hwC0D0 0x20 SET_PROC_COEF  0xc203
-hda-verb /dev/snd/hwC0D0 0x20 SET_COEF_INDEX 0x28
-hda-verb /dev/snd/hwC0D0 0x20 SET_PROC_COEF  0x0084
-hda-verb /dev/snd/hwC0D0 0x20 SET_COEF_INDEX 0x29
-hda-verb /dev/snd/hwC0D0 0x20 SET_PROC_COEF  0xb023
 
-After that the chirp no longer occurs. I now run this from a systemd
-oneshot service at boot, and the chirp stays away across reboots. I
-have not yet checked suspend/resume.
+I have identified the culprit:
 
-Happy to test anything else.
+> CONFIG_USB_OTG_FSM=y
+
+If (v7.3.0-rc5 + revert), then regardless of CONFIG_USB_OTG_FSM, SSH 
+over USB works.
+
+If (v7.3.0-rc5), then CONFIG_USB_OTG_FSM cannot be set to y. It must be 
+not set.
+
 
 Thanks,
-Mike
 
-Sent with Proton Mail secure email.
+Rudraksha
 
-On Monday, July 6th, 2026 at 6:58 AM, Thorsten Leemhuis <regressions@leemhu=
-is.info> wrote:
-
-> On 6/5/26 09:14, Takashi Iwai wrote:
-> > On Fri, 05 Jun 2026 09:02:29 +0200,
-> > Kailang wrote:
-> >> Yes, it's the same codec and SSID. It's the same model of machine.
-> > Hrm, and still they show different behavior?  That's tough.
->=20
-> TWIMC: I have this on the list of regressions I track, but seems things
-> stalled -- and at the same time it's a tricky situation where fixing
-> this regressions would cause another regression. Which is why I'll stop
-> tracking this, unless this reminder bringt this thread back to life someh=
-ow.
->=20
-> Ciao, Thorsten
->=20
-> >> -----Original Message-----
-> >> From: Takashi Iwai <tiwai@suse.de>
-> >> Sent: Wednesday, June 3, 2026 1:45 AM
-> >> To: Kailang <kailang@realtek.com>
-> >> Cc: Takashi Iwai <tiwai@suse.de>; Mike Karcic <mikekarcic@protonmail.c=
-om>; Sean Rhodes <sean@starlabs.systems>; stable@vger.kernel.org; regressio=
-ns@lists.linux.dev; linux-sound@vger.kernel.org; linux-kernel@vger.kernel.o=
-rg
-> >> Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17a=
-a:231e) -- 6.12.73 to 6.12.85
-> >>
-> >>
-> >> External mail : This email originated from outside the organization. D=
-o not reply, click links, or open attachments unless you recognize the send=
-er and know the content is safe.
-> >>
-> >>
-> >>
-> >> On Tue, 02 Jun 2026 08:14:14 +0200,
-> >> Kailang wrote:
-> >>>
-> >>>
-> >>> There were the same SSID for two different symptoms.
-> >>> But this project was from 2025. This machine maybe didn't in our site=
-.
-> >>
-> >> Aha, that can explain the difference of the behavior, then.
-> >> Do both of them have the same codec ID and SSID, too?
-> >>
-> >>
-> >> Takashi
-> >>
-> >>>
-> >>> -----Original Message-----
-> >>> From: Takashi Iwai <tiwai@suse.de>
-> >>> Sent: Friday, May 29, 2026 4:20 AM
-> >>> To: Mike Karcic <mikekarcic@protonmail.com>
-> >>> Cc: Kailang <kailang@realtek.com>; Takashi Iwai <tiwai@suse.de>; Sean
-> >>> Rhodes <sean@starlabs.systems>; stable@vger.kernel.org;
-> >>> regressions@lists.linux.dev; linux-sound@vger.kernel.org;
-> >>> linux-kernel@vger.kernel.org
-> >>> Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287
-> >>> (17aa:231e) -- 6.12.73 to 6.12.85
-> >>>
-> >>>
-> >>> External mail : This email originated from outside the organization. =
-Do not reply, click links, or open attachments unless you recognize the sen=
-der and know the content is safe.
-> >>>
-> >>>
-> >>>
-> >>> On Thu, 28 May 2026 20:27:30 +0200,
-> >>> Mike Karcic wrote:
-> >>>>
-> >>>> Yes, I can confirm the patched kernel is running, and commenting out=
- that line fixes the problem completely.
-> >>>>
-> >>>> Below is output with the added debug lines as requested:
-> >>>>
-> >>>> $ uname -r
-> >>>> 6.12.90-debug-no-discoefs
-> >>>>
-> >>>> $ sudo dmesg | grep -i "alc287_alc1318"
-> >>>> [  453.823528] snd_hda_codec_realtek ehdaudio0D0:
-> >>>> alc287_alc1318_playback_pcm_hook called action=3D0 [  453.871577]
-> >>>> snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook
-> >>>> called action=3D1 [  459.605379] snd_hda_codec_realtek ehdaudio0D0:
-> >>>> alc287_alc1318_playback_pcm_hook called action=3D2 [  459.605497]
-> >>>> snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook
-> >>>> called action=3D3
-> >>>>
-> >>>> $ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/pat=
-ch_realtek.c
-> >>>> 7918-           return;
-> >>>> 7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
-> >>>> 7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented ou=
-t for testing */
-> >>>> 7921-   alc_process_coef_fw(codec, coefs);
-> >>>> 7922-   spec->power_hook =3D alc287_s4_power_gpio3_default;
-> >>>> 7923-   spec->gen.pcm_playback_hook =3D alc287_alc1318_playback_pcm_=
-hook;
-> >>>> 7924-}
-> >>>
-> >>> Hm, then the previous fix doesn't seem working, obviously.
-> >>> Kailang, could you check this in your side?
-> >>>
-> >>> Maybe we should apply the AMP-silence-detection disablement condition=
-ally to certain models?
-> >>>
-> >>>
-> >>> thanks,
-> >>>
-> >>> Takashi
-> >>>
-> >>>>
-> >>>>
-> >>>>
-> >>>> Sent with Proton Mail secure email.
-> >>>>
-> >>>> On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de=
-> wrote:
-> >>>>
-> >>>>> On Thu, 28 May 2026 15:38:54 +0200, Mike Karcic wrote:
-> >>>>>>
-> >>>>>> I did test 46c862f5419e on 6.12.90. Chirp still present.
-> >>>>>>
-> >>>>>> I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e),
-> >>>>>> same as the original reporter. The fix resolved it for them but
-> >>>>>> not for me.
-> >>>>>>
-> >>>>>> Only a full revert of 630fbc6e870e resolves the issue.
-> >>>>>>
-> >>>>>> Verification on the running kernel:
-> >>>>>>
-> >>>>>>   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
-> >>>>>>   2
-> >>>>>>
-> >>>>>>   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
-> >>>>>>   0
-> >>>>>>
-> >>>>>>   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hd=
-a/patch_realtek.c
-> >>>>>>   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_stre=
-am *hinfo,
-> >>>>>>                                      struct hda_codec *codec,
-> >>>>>>                                      struct snd_pcm_substream *sub=
-stream,
-> >>>>>>                                      int action)
-> >>>>>>   {
-> >>>>>>           switch (action) {
-> >>>>>>           case HDA_GEN_PCM_ACT_OPEN:
-> >>>>>>                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
-> >>>>>>                   break;
-> >>>>>>           case HDA_GEN_PCM_ACT_CLOSE:
-> >>>>>>                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
-> >>>>>>                   break;
-> >>>>>>           }
-> >>>>>>   }
-> >>>>>>
-> >>>>>> Happy to test further patches.
-> >>>>>
-> >>>>> Just to be sure, could you verify that you've tested really the
-> >>>>> patched kernel, e.g. by adding a debug print, etc?
-> >>>>> If yes and the problem is seen even with the patch, try to comment =
-out
-> >>>>>   alc_process_coef_fw(codec, dis_coefs); and confirm that this
-> >>>>> fixes the problem.
-> >>>>>
-> >>>>>
-> >>>>> Takashi
-> >>>>>
-> >
->=20
-> 
