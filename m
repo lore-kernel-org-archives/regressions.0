@@ -1,133 +1,134 @@
-Received: from mail-yx2-f38.google.com (mail-yx2-f38.google.com [74.125.224.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B563C1089
-	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 17:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A2138E5C8
+	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790963825; cv=none; b=bI6cqiaO+31VBthdKp8YTU6qEwKMFwOkWa8T0fef2bygO2c3dXdHq6K5VFKPVYMWe33A7iOQHgftoPZmqZ4TmIV2pWy3T3MHOzB0GBeZEls0K7ypNZI8JAlEUAkUX2eRPjlJQHLbSo2gvLLCkeAnqRY1JgxQa78VqQ+UopqpauQ=
+	t=1790964666; cv=none; b=ljuzD70izXxZZvnhDUOHIT4oh+j5jnl8ry6TA/92Vx837LH83uTrul1Ig8DaqK1h/95gg9emSwO9Pc30aLdrpNs1BHOG8gnSOHekRzma0fvUVn9YTjpZY7BsfrNHXIInd6R1fvn/pE5MpPS37w8wa9EVNLDEAlcVQLgfR5TKwQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790963825; c=relaxed/simple;
-	bh=39BCaKIS2a4rsGcJLQO0o1OjODWMY9BGj2pmo1ZKneE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tH7QKaYh4zQlHgh6byl7GU77yvjAxIydvdhzZKblE0zb5zx/8iUm2217gPNJhnab9itGApHy5/E4q7guLLH55QtXfvdb11XaPIMH99+LiR1TtfWvIheefJT3uxXnZTWAutk/Wgc+po7Nv44t+yLgHzboNl+fcCQILmZQBXryNWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=truenas.com; spf=pass smtp.mailfrom=truenas.com; dkim=pass (2048-bit key) header.d=truenas.com header.i=@truenas.com header.b=iLrJDE/r; arc=none smtp.client-ip=74.125.224.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=truenas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=truenas.com
+	s=arc-20240116; t=1790964666; c=relaxed/simple;
+	bh=WrODKdi5ozGc5dYKBf25DF657MISnuhp3KpL4RdA49o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rMzCBb7BxGsQUn+qJcLPSYylYrvB4/gm2HkA417/Zj3nsG44cnkFCkAM7QVVfG49Za9XVM/376s3yv3OUBpPEVHT8ENtFSiNNqEu5coJ0c77Q+IjXzTmn6C517k3kIw2WF+gcSzAYQTWyD13KUy6PG556XkXQlxHURrEE+y+3Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=BEvsMMIh; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=truenas.com header.i=@truenas.com header.b="iLrJDE/r"
-Received: by mail-yx2-f38.google.com with SMTP id 956f58d0204a3-67561cbafd0so270934d50.2
-        for <regressions@lists.linux.dev>; Fri, 02 Oct 2026 10:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=truenas.com; s=google; t=1790963820; x=1791568620; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xxaI2OMOwwuqBrxKvOI44CslxEdzYP5+0cKedVWBK0M=;
-        b=iLrJDE/rCQAuHBBF33j40sPH8lttqWW3r7xYN2XHEwygadaITAywJ1Y6OLj9TMUk4x
-         1/5Nl9eqw8RWl7CIS+fNZbUzm9HM2sGvs9vNOYABhiFF/DONwgVvo6a4CG0GyrJ2Gnpg
-         8TDdfD5g3jTQnmGqcY9d9g6Tc1B1oUODtapozPV2CjwXVhjcjU881WWzJZ6f3lVuUUcl
-         xi3vHjd4OV8ZO7KJtPDqJI4TnGl+vaSUOQFYEmD6n5j/w5hKhxceXUw7L6/FVfwfNwNt
-         TeYet8M/NnQO9I/Uv3ivG/0mo/nI6A9XhQRpqC+6D1S5RyOFi8Y3W3u8wNkf4fsMBRs3
-         arIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790963820; x=1791568620;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xxaI2OMOwwuqBrxKvOI44CslxEdzYP5+0cKedVWBK0M=;
-        b=hq8IyFV3IJjU2S4NiLoMiA2P1Wu5JIkFqvffhpkR36TDSf8cS8QTwuOXpEdCYV8clT
-         yOjX9g7LdtA/cUdeWcKOxMcvUBCsyPPOUstZNdFDSxBy5hAX2GLbDc1vReM3Zot2bwR/
-         517mZ1IkAPp7iSq4tlVgBQbD5DKOgodai9QS+G9OqJQ8kZGHU3cE3/Kzwfe8/pZzhmbW
-         vD22jPo3+nfD5ag8GIW7nslYJ+GA59i22A/d0oBK6pGsBc1sxXiJ4CCl5OscnpUX7wMp
-         3auSCCOG4/gs2Rshql+VGzSz+8svxLnV2iOoTZgBQmomgg0ioD91gMUVPATzorCb5KUa
-         Qw9w==
-X-Forwarded-Encrypted: i=1; AKwUvBzM8RJLr/iQpULZtNzOCX0xRs09689TrwL2+gdU9x76LHRtofzeJM45LI6KfXYunky0uv/9DYUiOA81YQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJeFdePdPdz83UHHDNvNuPgPftptn+c6TgRqRpC1sZWVVytJocI
-	02r7K3aGNYzKAyoUndCBDBKu+u4LeX75jReT9msM1+2yYEoRLH9xk+8K2d5StSKMZQ==
-X-Gm-Gg: AYBFou1N/Fmw+Sk3n/uWOerjGXhs4U+hFmYOef/FoOOh9gCmnavimgA3aPlyUgHWBcD
-	XpwPkFTJrLK6JXxpZxzkqxByLcge5fBAYV378iWMvAkhiPtzqP7DI/B0yWDqqbpMGQ8QoKy2vKc
-	d2lYy7vnJbIb4dvxHUr1vw8yutczTHgHl4CMRJ0lwXEg+F4Xwmk74atr7a2F3AYHsQYgBzjBJ2k
-	YiEwdtAroJYIB/mBfpflOr+hBihMuOz3iN+UoFezFM3YgDCPBFBxhXokjsRsT8p57WQQCXaSnCr
-	ZMd7yZkWwiO3q7PU0yiRRc+OrCYHKzESXiB8LEfKPP0qB5Dl8pfn+A9gx18SLdNgPQEj1PJh3dI
-	DKtU2EThLsa+Bni3vXqW2yib47jufRtxrM9Da2HfrxuAKFDG0bEquq9ezacWqUNj/C/GCllVE4X
-	cnZA0xUyALEt+hK/lqfGWigTS+YQDdEatY073nT61RFAVw/smfSvDgBzGf6coF/sl+bRf3JA==
-X-Received: by 2002:a05:690e:4291:10b0:676:8641:27d2 with SMTP id 956f58d0204a3-677ac0944c5mr1330447d50.40.1790963819897;
-        Fri, 02 Oct 2026 10:56:59 -0700 (PDT)
-Received: from hamza-PC ([124.29.197.38])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-677ac63acc0sm1368439d50.20.2026.10.02.10.56.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 10:56:59 -0700 (PDT)
-From: Ameer Hamza <ameer.hamza@truenas.com>
-To: ljs@kernel.org,
-	rppt@kernel.org,
-	peterz@infradead.org
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org,
-	4ncienth@gmail.com,
-	sashal@kernel.org,
-	alexander.motin@truenas.com,
-	caleb.stjohn@truenas.com,
-	ameer.hamza@truenas.com
-Subject: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while perf record runs
-Date: Fri,  2 Oct 2026 22:56:51 +0500
-Message-ID: <20261002175651.811343-1-ameer.hamza@truenas.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="BEvsMMIh"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 82CA5240028
+	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 20:11:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1790964662;
+	bh=FQXYj5vzNTW49jPfnwyMevRJEY7OOX+I2jx8ra6cAeU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=BEvsMMIh+99TUyEf90jTp5qFk31b+Hh1i1Di8InZzWayemsQDtK+SW5Qh2LFJilIX
+	 OgysMd2B5H7G4G61tzHK94lM6gehdpPbfyiPNcUDmGlqizEIqU19vRpPuTA+6otyvm
+	 b1TYcD4tczEe8vDJRRGs4PAKyI/zEAouIMedSVU+hQn+Cqx7Cjxgh9QXAiUPCHUPoA
+	 fzsdXOXzmkDOmx6IloO+LQSujUajnBvSMNmkkgG42FVEkeLTcBfdR9ZDVZn+I29GEg
+	 NAi2a4GZlgF+/S1+u3EgNs8SP0CmKhcoGSrcwu3Y8i/mVW1D9yArlS0cEZMWS66Z1A
+	 3bXoledpY3UCg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hxH043lzRz6v1h;
+	Fri,  2 Oct 2026 20:11:00 +0200 (CEST)
+Message-ID: <d245c4b1-dfba-4507-85a2-c6883f5eae64@posteo.de>
+Date: Fri, 02 Oct 2026 18:11:01 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
+ link active
+To: Devin Wittmayer <lucid_duck@justthetip.ca>,
+ Sean Wang <sean.wang@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sean Wang <sean.wang@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+ lorenzo.bianconi83@gmail.com, regressions@lists.linux.dev,
+ linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
+ <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+ <c64f5fa6-4c61-45b6-a513-b971e59d7723@posteo.de>
+ <476e7721-580e-4a6b-86e5-5ed782a2c7ec@leemhuis.info>
+ <c9f984c4-e3c4-4e41-a502-99db97ce724b@posteo.de>
+ <20260829221319.25334-1-lucid_duck@justthetip.ca>
+Content-Language: en-US, de-DE
+From: Jonas Hort <jonas.hort@posteo.de>
+In-Reply-To: <20260829221319.25334-1-lucid_duck@justthetip.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi all,
 
-Since commit 97d34aa65c29 ("mm/secretmem: properly account locked
-pages"), in v7.3-rc2 and the 6.18.52 and 7.2.5 backports, touching a
-memfd_secret() page for the first time fails with SIGBUS while the
-same user is running perf record, and read() into such a page fails
-with EFAULT. This happens for root as well as for an unprivileged
-user running its own perf record. It reproduces on v7.3-rc4 and
-6.18.52, and the same test passes without the recording or with the
-commit reverted.
+I just came across this patch from Andrei Rusu de Castro, posted on
+2026-09-02 with "Fixes: ff643b81bc38" (the commit I bisected to):
 
-The commit charges secretmem pages to the per-user user->locked_vm
-and checks that counter against RLIMIT_MEMLOCK, with no CAP_IPC_LOCK
-exemption because the fd can be passed to other processes. perf has
-charged its ring buffers to the same counter since 2009, up to
-perf_event_mlock_kb per online CPU, and only what exceeds that
-allowance is checked against RLIMIT_MEMLOCK. sysctl/kernel.rst
-describes the allowance as not counted against the mlock limit, yet
-it sits in the counter that secretmem now enforces. perf record sizes
-its buffers to the allowance by default, 516 KiB per CPU, so on 16 or
-more CPUs one recording uses up the default 8 MiB limit on its own,
-and on fewer CPUs it leaves correspondingly less for secretmem.
+Patch wifi: mt76: mt7925: stabilize STA_REC_MLD link selection
+https://ratatoskr.run/linux-wireless/2026/09/17497919
 
-Reproducer, as root on a 16 vCPU x86_64 guest with the default
-ulimit -l 8192, while "perf record -o /tmp/p.data -- sleep 300" runs
-in another shell:
+Could this be the fix for this regression? Devin, you mentioned the
+link count undercount is real but likely not the root cause - does
+this patch change that assessment?
 
-  fd = syscall(SYS_memfd_secret, 0);
-  ftruncate(fd, 4096);
-  p = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-  read(open("/dev/zero", O_RDONLY), p, 4096);   /* EFAULT */
-  p[0] = 1;                                     /* SIGBUS */
-
-The commit closes a real hole, unbounded pinning of unevictable memory
-by unprivileged users. The question is whether the perf_event_mlock_kb
-allowance is meant to count against the RLIMIT_MEMLOCK budget that
-secretmem and the other subsystems accounting to user->locked_vm
-enforce, or whether perf should keep it in a counter of its own, which
-would leave the hole closed and secretmem usable during a recording.
-
-#regzbot introduced: 97d34aa65c29
+I'm happy to test it on my hardware if that helps.
 
 Thanks,
-Ameer Hamza
+Jonas
+
+Am 30.08.26 um 00:13 schrieb Devin Wittmayer:
+> On Mon, 2026-08-24 at 08:18 +0000, Jonas Hort wrote:
+>> Setup is still up and I can build and test whatever is useful.
+> Your bisect holds here, on a different machine and a different access
+> point, running your June firmware. Three states, each replicated:
+>
+>    both commits reverted        clean, two runs of six minutes
+>    only the later one reverted  stalls, two runs
+>    neither reverted             stalls, three runs
+>
+> Tail welded and head climbing, which is your signature. The tree is
+> 7.2-rc5 with one unrelated ACPI patch of mine, nowhere near this path.
+>
+> db134691924f lands fifteen commits after ff643b81bc38, and reverting it
+> alone still stalls, so the builder rewrite is the one that matters.
+> Reverting the builder on its own is not available either: v7.0's version
+> dereferences a link pointer that the later commit leaves unpublished
+> until after the firmware call, so it would need a check neither version
+> has.
+>
+> A correction to my last message. I pointed you at the link count, since
+> the new code reports one link whenever the update concerns the primary.
+> That undercount is real but it's not the cause. Telling firmware one
+> link always is clean over two six-minute runs. Skipping the
+> undercounting update entirely, so firmware is never told anything wrong,
+> stalls on both runs. Writing the entries in v7.0's order stalls on all
+> three.
+>
+> On the August firmware, stock still stalls, twice, the detector firing
+> 95 and 141 seconds into the run.
+>
+> The band pair matters. Same driver, same August firmware, two runs each:
+>
+>    5 GHz + 6 GHz     stalls
+>    2.4 GHz + 5 GHz   clean, full duration
+>    2.4 GHz + 6 GHz   clean, full duration
+>
+> Not the channel width. Narrowing the 5 GHz link to 40 MHz, so that pair
+> carries the same narrow-plus-wide mix as the clean ones, still stalls on
+> both runs.
+>
+> The sharpest pair there is the two runs where the iperf3 stream never
+> established, leaving only the UDP pressure: 5 plus 6 stalled with the
+> queue peaking at 187, and 2.4 plus 6 stayed clean at 186. The other
+> three clean runs peaked above 1000.
+>
+> Sean, the two things I can't see from out here: what firmware does with
+> a multi-link record naming one link while a second is associated, and
+> why 5 plus 6 should differ from 2.4 plus 6.
+>
+> Jonas, thank you for the bisect. Five steps, every bad verdict confirmed
+> on the queue signature.
+>
+> Devin
