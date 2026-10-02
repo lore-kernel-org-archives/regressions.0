@@ -1,119 +1,129 @@
-Received: from mail-oo2-f36.google.com (mail-oo2-f36.google.com [74.125.231.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244CC3E49D2
-	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 15:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.231.164
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790954458; cv=pass; b=ucEZkxORbHipyYtiFgVlish/gRtk4kEDHlm497UrCOlF3JyPPiAeww6Jdjces6/l+E4MPTyC3VaoimiocqyxGvwmHWzoJx+owDlnhPZU/UKmJOQvDErkjSv8Y6CssrZ57RJZZ/rKUnU9zFzvBQ0Yibt/gUS6QmDlbjjamc/y+8E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790954458; c=relaxed/simple;
-	bh=c8Ui2uQdljkfizQJxJXTO3Y+BpS1mteN/FKkUOLbueo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SDRgZYBgm4k9HdrevYIQR+8tgMSePV46NLPNp7PhVg1VHymIdOe+/qT1HejjCtXR4xaTqSl+KnQtODwnossK5gbvGs6WzkemE4VEPlLK7SbgC441NqMpFOkLXOdMlwpD0bUYEZtx3OCApCBNde2KzoV5T749i5sZ8vYexw7mKIA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=omzmnGd8; arc=pass smtp.client-ip=74.125.231.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C4D493D41
+	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 17:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790962319; cv=none; b=fAV1WZmf02FESRBAkhp8YLlkRTZCneANzdzJBihaxbUcbwUAg35BH9ybZKF2UyFKnq3qbs2SIDFXe+qsL1jSAdiqE3RyvwoAWQB40LTvoRAMoJSQgGNnVQZdig7VeYwpc/PuDETYfrcnOcdeLAoei9Umov/NCaOWAnyMzL5idpo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790962319; c=relaxed/simple;
+	bh=MS4ZDGuvKjfwTzbHy9l4+euwKvvlpobjq9tTX69q7i0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H4cr7WyxD3SmaxhicRTW8ZJh8FFNLJ+FG58ooaSUsowA94M9QlUtVij0cIGNPbgn1fFUfTAZ5cPvy6NPT5FfZG023bK5Wh/xNu9EEJWpNqb/ezkwqKQb7BAKVKMNEGYyEqdNvbrqECyvOSbd0QmYDpexHxrGEj6IbPzetQPVVkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=Yo7jqArn; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omzmnGd8"
-Received: by mail-oo2-f36.google.com with SMTP id 006d021491bc7-6d77aa5735aso11966eaf.1
-        for <regressions@lists.linux.dev>; Fri, 02 Oct 2026 08:20:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790954454; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Oxje33WBwerqtrAsM7gyKz/OjuVuXggtHlzlKtrrEmxPsmT2f/Syniv2V2b6ZoRegY
-         e+rxpAtqvy6C9dolAn/E6AhcN1oWZPLaqFDVj35CNE/FhutQBAmdht1f24vScUHkYTk6
-         7c3XtvcQ47dxvhlm9g4cdff8FS8RKlr4n+qQaEH7fad3C1kcPqsPeG9nngESDCVA8bpO
-         ZUU+A4LYcfRB0Nbw7YiQii8q2KgD4QlmM7kZF/mQZfj71c/sk+jMmn/e6BJFdzC00auy
-         B9ZSKlWDSsJLVBnUWWnWu1QIs31mrjM66UgxKDkXu0OcumnZ3rmgq+D3Se4vG5ubbp5o
-         kCLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=pRJcBvkIQpM6vnmBseq7C5SjURfqx9cLuKNSFbQ72co=;
-        fh=XCUnfO2R+n3kUkxHvG2mqk3heFoVhe7cy0RQMS+8YRo=;
-        b=kviX+Q3nIK11AgcqBcXpFoJmzfwdi3d1yMgnK6dEtWWO0PGcGBU7XdgoiK1qMF9LQ1
-         Nw3cuz6f9EBXKSudU1picwRMPOvhrtySBiaGV4lT46mUCAs3oOYlCpLSEDZQu1fAAu9v
-         Ldk5NRDbwZ+Lyckgi5PQ07mngOIB1O59De4AEvJsmiXDAIdogu3QFqftIdr9HhG6xbFl
-         8LtGJvXrZWOrO8QVK+Te7oprLu/jo2d3Y++guFpU01HxbM/eCYchrWDmnkqB4tEkto4g
-         swxjfUst0ncQnp5pkUomk4MjOBhj3DW/7/is4gvTikr/hV0vNi4Eiqqq56A6M3gxAK0m
-         5g+A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790954454; x=1791559254; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pRJcBvkIQpM6vnmBseq7C5SjURfqx9cLuKNSFbQ72co=;
-        b=omzmnGd8gcJqLcSKqFeVbt20NjHhoB+Da5avUqLbLGhBTm+WGkShzReVyT9wbos/pZ
-         mjAKQnRVn1bF5qHYE3RMAm1mR9zyvDKaN5xngEwj5fA6JbQLuYa9zFPykq4x1Jc0+De1
-         AUJ5hs9Ky8IyxaPoCN4LT4vKx8x+35aAgTCjAa7X9PtkCKepXqRIPo6SHvq0MljsvyDL
-         PomgEY0ge+zf4Qt7Tg+9gnEWq5NvQijItarM7uaZxm6GLg9XdCr+Rh2axAe57NInAVcY
-         E4zdzuDRlZR2i8Yu70sL4r+/RMEkHYjkPNHbq6gr4Vbo0hYxugbb+EHBgl4mswxsSlb6
-         fTPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790954454; x=1791559254;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=pRJcBvkIQpM6vnmBseq7C5SjURfqx9cLuKNSFbQ72co=;
-        b=ebnV7PGhTAni3t5xWnmcZww1ZCHU1iJZ3ASMLaY6ThN151KCstMPt5xVJxiQ6IIEeV
-         jaIc7ljq5nmy5VbjmfO95aekKa8u6Cjn2V/eIT6Na61IokstF+rid/3vDF0CYgxzYKcc
-         WsPJdHWkuFiQ7vN6gF0hxoNx1Mi+pWKihs+O4lWwXCAycRHfvfig3xOLRcVgoTxrw+wo
-         p3sBGSFW8SiVASrCuN3v1DmE+/x99kKhMWolYYLpbebmOOsGSbjSLlkEpNRfhWPizbZY
-         3v5Q5liwa9id3KZG2M9xFf1c5A36TzwdGAj5qwessNbc0QgyfVx1MwG0OZpkNbx9sxUQ
-         ew4A==
-X-Forwarded-Encrypted: i=1; AKwUvBzbfU7Erc/k1vCMgaMLs+dd1GASmPYpMb7Iufkw4QHhir5qVGEApJAhZaacPu+9/Bhv03J1L/1BinKOFQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++kd4otkZsgbPBnxEQaLiXDBb2Q0NY8jzZ+XBcs5H+qHr5bbddPY
-	MDnnoDHADcqnMPQV+ozqXxL259IFzh/prGm2p4SG3lLQzlvk2xkF+tSDEDCtLoetYTttY1wLeEN
-	iswFHwohfFCcOp7fkLtQb7azSIMbuWis=
-X-Gm-Gg: AYBFou1fpQ1lIBVMa60iiOuK24kMFYdjl2MJZPt4gZ214phmN+opnBDAhOk0BCVsKv5
-	n+VKezIO3s9PEhKllvYqT+i34ia4BvGWoqfs9j6LM5XbFnE4QkP5C4p/a93tyiZ7Z+s/qR/QMDY
-	xQpWn8dLjbt0SGCYoBmBUZ/xfByHIUmYpd8WW1M6/exKO93NTlLa+7Kb224LGwGvLts14pGVLAT
-	IqFSHVKxQoPHKg4Md/SjL/N5IImLX1lx+oVGuc5CsQ7lDA54CCAlWngb3KfjgLmQ1hynhn3S55l
-	s2Dkqq1lzcWLE5J9FKTXnP3Y0FhGA8OK556ceJeJWSx1horxv9dRzUNNzTLp/9cUG2/VJykSF5/
-	11JPpMUj5dA==
-X-Received: by 2002:a05:6820:1789:b0:6df:5b31:f4b7 with SMTP id
- 006d021491bc7-6df5b3205b0mr1758431eaf.88.1790954453969; Fri, 02 Oct 2026
- 08:20:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="Yo7jqArn"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id BA516240101
+	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 19:31:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1790962315;
+	bh=RVpkGJ1xxwLinZ+PqsTSo9xnvUSVxp77MIy/WKYmLyE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=Yo7jqArnMBYJ7KtXMfzz996WdcYsoeysPeJs8tspFWd7Z4QgtnmOB7rxTjNqZjWWW
+	 +g5NMznaMNDRpI61BOkLXhCS4mXLcD1i75i1XU10oVxFmNmTOpnMwuy7Jx97vb+VIf
+	 I/VQAcwL+OfQ2PH1TEA6UaDyVM7z0YRs8FGO/xtH7ERtkKqRo0C/o+y/GnezMrQA1U
+	 LYnn++DCZVIszMjyMFPRo58YM452mGVo3jyg+HFHvNryKgWPHR3ricww/YFWC7zb96
+	 BZ6chLTnujFB5cltQPqbshz9eChz+rfr16etpGjdKrphCYj38B1NmNJfEipn2u72uE
+	 3ieS1gKBWUJng==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hxG6x74FMz6txy;
+	Fri,  2 Oct 2026 19:31:53 +0200 (CEST)
+Message-ID: <d10ae529-968e-4cf8-bf28-b704755f124f@posteo.de>
+Date: Fri, 02 Oct 2026 17:31:55 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADrS85612m-Hh-G4BJmOhy-y6r3Ni3kD8_GM-2QRBeWWEEZWuA@mail.gmail.com>
-In-Reply-To: <CADrS85612m-Hh-G4BJmOhy-y6r3Ni3kD8_GM-2QRBeWWEEZWuA@mail.gmail.com>
-From: Andrej Scek <scek.andrej@gmail.com>
-Date: Fri, 2 Oct 2026 17:20:43 +0200
-X-Gm-Features: AclHuK8klb-fvmewqmk7PkjTDnYTa3t-BgP_FVZnqttllQOZ5PBEMOmDlR84Ucs
-Message-ID: <CADrS857iYjafXEZcHRSmeOFjrzs0DYG5Dp2PeS0n669cHBjAuQ@mail.gmail.com>
-Subject: Re: [REGRESSION] amd_sfh: accelerometer broken since 6.19 ("Event
- data for report 1 was too short (15 vs 14)")
-To: linux-input@vger.kernel.org
-Cc: Basavaraj Natikar <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, srinivas.pandruvada@linux.intel.com, 
-	Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, regressions@lists.linux.dev, 
-	lee@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
+ link active
+To: Devin Wittmayer <lucid_duck@justthetip.ca>,
+ Sean Wang <sean.wang@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sean Wang <sean.wang@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+ lorenzo.bianconi83@gmail.com, regressions@lists.linux.dev,
+ linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
+ <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+ <c64f5fa6-4c61-45b6-a513-b971e59d7723@posteo.de>
+ <476e7721-580e-4a6b-86e5-5ed782a2c7ec@leemhuis.info>
+ <c9f984c4-e3c4-4e41-a502-99db97ce724b@posteo.de>
+ <20260829221319.25334-1-lucid_duck@justthetip.ca>
+Content-Language: en-US, de-DE
+From: Jonas Hort <jonas.hort@posteo.de>
+In-Reply-To: <20260829221319.25334-1-lucid_duck@justthetip.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Update: this looks like it is caused by
+Hi all,
 
-  0a3fe972a7cb ("HID: core: Mitigate potential OOB by removing bogus memset()")
+Friendly ping on this one - any news on the mt7925 MLO stall?
 
-which was backported to the 6.18.y and 6.19.y stable trees on 2026-04-11.
-6.18.16 predates that backport and works; 6.19.12 and 7.2.8 contain it and
-fail. The AMD SFH sends 14-byte reports where the descriptor declares 15, and
-those are now rejected instead of zero-padded. (This corrects my earlier note
-that hid-core had no relevant changes; I had only checked v6.18..v6.19.)
+No pressure, I know everyone's busy. My setup is still in place, so
+I'm happy to build and test patches or collect further traces if
+that would help. Nothing has changed here: still reproducible with
+the 5 GHz + 6 GHz pair.
 
-The same symptom on another AMD SFH device (Legion Go S, "18 vs 14"):
-https://github.com/ublue-os/bazzite/issues/5796
+Thanks for all the help so far.
+Jonas
 
-So AMD SFH (hid-amdsfh 1022:0001) probably needs to be covered by whatever
-short-report quirk/fix is adopted for this.
-
-#regzbot introduced: 0a3fe972a7cb
-
-Thanks,
-Andrej
+Am 30.08.26 um 00:13 schrieb Devin Wittmayer:
+> On Mon, 2026-08-24 at 08:18 +0000, Jonas Hort wrote:
+>> Setup is still up and I can build and test whatever is useful.
+> Your bisect holds here, on a different machine and a different access
+> point, running your June firmware. Three states, each replicated:
+>
+>    both commits reverted        clean, two runs of six minutes
+>    only the later one reverted  stalls, two runs
+>    neither reverted             stalls, three runs
+>
+> Tail welded and head climbing, which is your signature. The tree is
+> 7.2-rc5 with one unrelated ACPI patch of mine, nowhere near this path.
+>
+> db134691924f lands fifteen commits after ff643b81bc38, and reverting it
+> alone still stalls, so the builder rewrite is the one that matters.
+> Reverting the builder on its own is not available either: v7.0's version
+> dereferences a link pointer that the later commit leaves unpublished
+> until after the firmware call, so it would need a check neither version
+> has.
+>
+> A correction to my last message. I pointed you at the link count, since
+> the new code reports one link whenever the update concerns the primary.
+> That undercount is real but it's not the cause. Telling firmware one
+> link always is clean over two six-minute runs. Skipping the
+> undercounting update entirely, so firmware is never told anything wrong,
+> stalls on both runs. Writing the entries in v7.0's order stalls on all
+> three.
+>
+> On the August firmware, stock still stalls, twice, the detector firing
+> 95 and 141 seconds into the run.
+>
+> The band pair matters. Same driver, same August firmware, two runs each:
+>
+>    5 GHz + 6 GHz     stalls
+>    2.4 GHz + 5 GHz   clean, full duration
+>    2.4 GHz + 6 GHz   clean, full duration
+>
+> Not the channel width. Narrowing the 5 GHz link to 40 MHz, so that pair
+> carries the same narrow-plus-wide mix as the clean ones, still stalls on
+> both runs.
+>
+> The sharpest pair there is the two runs where the iperf3 stream never
+> established, leaving only the UDP pressure: 5 plus 6 stalled with the
+> queue peaking at 187, and 2.4 plus 6 stayed clean at 186. The other
+> three clean runs peaked above 1000.
+>
+> Sean, the two things I can't see from out here: what firmware does with
+> a multi-link record naming one link while a second is associated, and
+> why 5 plus 6 should differ from 2.4 plus 6.
+>
+> Jonas, thank you for the bisect. Five steps, every bad verdict confirmed
+> on the queue signature.
+>
+> Devin
