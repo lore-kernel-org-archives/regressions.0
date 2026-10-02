@@ -1,122 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779D12BD022;
-	Thu,  1 Oct 2026 16:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5932836EA84
+	for <regressions@lists.linux.dev>; Fri,  2 Oct 2026 06:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790871819; cv=none; b=PZIjShoZXz2C5lvKHlFaZzqHYAvNPx1h16TNqzP8d1jN/vNVCM5ZwCaquUptt6ewTAm1mTSCJTVp9IH7bn5hUTUw72AkobJXRCsYHZPS7ZfTH+d8iEWSSvBnSWWgU0FG0Tm3mhi1e+6isFysbyaTmj/+YsslKuBnuam/u8MWWSc=
+	t=1790921036; cv=none; b=r1iz2KcywnkSpzGQM55KW1oWGUR7CPEKXJ4i2MHuVUxffJrFJLnGytNtN4lrcbczmULv3oT/11yNP6WR2PtfpypNNlIgcC3IHkxJdbHigOBF2yYwBwKB6ClHl3Ky/PPPorFj7dat6Igyekfw9keJJFstu8Ma9Hoe6W7QLK84VQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790871819; c=relaxed/simple;
-	bh=2YNI7pB6efh2PLKthQqPV3hJUbC1LkdRRgWLeml4KcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qzvhozV6DRW+gv2TIeI2LH0EujLAgSJtvDYsFypPhknt0+5Yr+XKkazlFwbmntyTWzde9Sz+ZpimgrQTrR9u5NL43g+vMV8iOr44qeWSyZtw9zY5lqpz8UpOdV3jpZ27uk5Pxt+9sQQH8qmpjY8vqiFWMHWFHh8oxQ53XRYMdM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RD0Z2qnc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790921036; c=relaxed/simple;
+	bh=QjmjzmWOZHhXJEiEVChe93mYvdYlkxEWk9ACIKrHxbI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=tpZeXPw0VWBVSJo8Af7PwTU4glEFGavOTMv6lMWqw2hTz6uYZqbZHQSDWe2q9ubnDW3lOZ6jqigKPMaIF0FolLE2kRWIdm1QhrqAwOl7FCyfMnQ5ndU/taW58mcrY9NlOC9wJTkCMNLwSO4PaoSJ/mmCVtDtqZX5ghdxuq9o8p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=12oclockpoint.com; spf=none smtp.mailfrom=12oclockpoint.com; dkim=pass (2048-bit key) header.d=12oclockpoint-com.20251104.gappssmtp.com header.i=@12oclockpoint-com.20251104.gappssmtp.com header.b=DTH6+kl+; arc=none smtp.client-ip=74.125.230.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=12oclockpoint.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=12oclockpoint.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RD0Z2qnc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AC31F000FF;
-	Thu,  1 Oct 2026 16:23:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790871814;
-	bh=oViQG46mglwKreUchYO11Hqs4mHMpQhSXG2+xTbUjf8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=RD0Z2qncsM3PctrR28TbKTitwf8mKG575RALyVD7/tjLtXEsdVQlsm6e5TYqxWi5T
-	 Z0FQlJl1vaQlrGUrOvRSCjyeYswJQVXZ1ViTzK9h9w0cu2hPTuiwrFwvY/3MoUGCnD
-	 G2SkmxJYWtNlt9aRxBMiNDVq+Q759QxUoS0Z/oEgoyhsvTUGeK+g+GHyc4tkiXq5sw
-	 V+evUQNpMI28kcTLBfrVo0dqnxTgBZwAbkFajEJt+NtXtf2D3b3Ln6Oc5gEscpV5Lb
-	 ofEAJrIFJ205rzH3WiyKPq8uAZx50JUZ8rEkh/6MEMrDSbRq86l0xv9ROYIaZMDitb
-	 Sw3lrRQ+0TgNg==
-Date: Thu, 1 Oct 2026 11:23:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nikola Prica <nikprica@amd.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	jerry.jiang@amd.com, haijun.chang@amd.com, andy.zhang@amd.com,
-	christian.koenig@amd.com, jim.chow@broadcom.com,
-	matthew.mcclure@broadcom.com, gbayer@linux.ibm.com,
-	regressions@lists.linux.dev, Nikola Prica <nikola.prica@amd.com>
-Subject: Re: [PATCH v4] PCI: Accept AtomicOps already enabled by the
- hypervisor
-Message-ID: <20261001162333.GA2692735@bhelgaas>
+	dkim=pass (2048-bit key) header.d=12oclockpoint-com.20251104.gappssmtp.com header.i=@12oclockpoint-com.20251104.gappssmtp.com header.b="DTH6+kl+"
+Received: by mail-qk2-f12.google.com with SMTP id af79cd13be357-93910a0cefaso595260785a.2
+        for <regressions@lists.linux.dev>; Thu, 01 Oct 2026 23:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=12oclockpoint-com.20251104.gappssmtp.com; s=20251104; t=1790921034; x=1791525834; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:autocrypt:content-language
+         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=iyTbDvzMeKYwhPCEvsBv2T2yKoX8vPf7zBj7eJ2aaGo=;
+        b=DTH6+kl+hOCKA7tss/iktQxmHHDTCBVbPzdn3hdnnu00cCbvodHpxmzoiuYV2jjl2+
+         OBIpoVADudLtFH9RROb2p20WIza4AOju/7v7n1BYTHYiRKDrHO1o5QGc2zIC9xh6h3AV
+         W19E5Ox++Nwv4u83iKEc6+g27nkS0APlD2BwBTmwMyxojWRw8mmXc0YBY85AHHc9h3VL
+         wNzRPXZRMuVfrnWRPKxEVd/9LNcyj9xLxS1b/rS5a8gtCydnsnatGTH8VdXw2dd/ySAj
+         meqvLRb/LQYzbzDOByM4JkXlfcLSk45IzLC1JbzvPwyG9lqL1NhEwL8AKDCxgpfmXL5t
+         YXtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790921034; x=1791525834;
+        h=content-transfer-encoding:content-type:autocrypt:content-language
+         :to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=iyTbDvzMeKYwhPCEvsBv2T2yKoX8vPf7zBj7eJ2aaGo=;
+        b=aWrat+1W4PtlD8DHHrQF+nBpVdQs8WEULbtmNHa++cP2xyktfYLS/Y3Z1DOu90LfwR
+         JYJTu/8eBURjf9ySlJ4inS9Ie9yBXop3NDnHo3hDh/czG/yJBLOBPyX+EIik9L6TNgrl
+         9z0Gl7zouxBdoxbcueD8NpYTbgQAoidHftGd1rrLnxoFAKqapiUEl6eNJQV41zzK6rUE
+         FNyijYNlNMLofLcj7a7iltZgMUHuH2NSnRkOfzTW48Zsem/+gcPOEMwzq3aihNv4NUws
+         DP2X+Qiuc2grMlVJp8T2Yhnb0xMM3bE04cStX6AL3AfXK5gNWe2TX+bqX/1Otxu7JhOi
+         +ODA==
+X-Forwarded-Encrypted: i=1; AKwUvBxj9naXCJy4DSO/QUgMqK3LPrwymnZBkIHydyhi39rHtoIiV4wcKUFQ/5s00qhvpCxo5c/IfqfclECP8A==@lists.linux.dev
+X-Gm-Message-State: AFuF++l8DoTJitinAQGSMs6/eQhRMxiLB/fImBZeIAkI+wn0Wl+FiOf2
+	h7C8v7cpfTennXZ77rfr+31e+LGbsJ1pLG0pSt8Qj4Ea4NdG/HD/ko19IK04bh8CkwI=
+X-Gm-Gg: AYBFou1y7Ttz32Tlq501V/8rp88bJeS/XZyXm4bwdW/+vtFqk4ZOwifZBxibGkhi2b5
+	ZvgGKqFJIhmc6EeHZPZeHgis6vlD8MYSCgm9TE6OV5RfcvNYptWYJ8+Lp/xXZ6YvNhFgLlmmyUk
+	bQKyUXK9480xs0LkCefmat16oAI+JRFxClrYApjUi8KjUTNGbRxZ+EEOq0SLOVd/tLTa5ZrhGmr
+	RE6kk/cpnHiiHM+hTouUfccCrG4/f2GHrVtFExLShk+Lh0XyqBukAy43eYPErKPC16uhMBABDJi
+	h/0PSN10VEVRZM3I7fI4aVHl/pBcpqCBDBrJNQqm3TYeAcMHCnzezgv28uOrecBvDTm+Po0ofSf
+	Umv0HXp4DXQSco0epDHWns3xkBdEXeHakGipNyN/y4nFu15i/vhw+0SK1W+Um0duo+qijexuB6J
+	kynb+en9qbrQqkhMmVSxwl+JEsnvpO546HEC7LicNXGeOZvraJsvY0u0Su1C5YIWfsm9xjJs3/L
+	7J21BVKRyqIDgom
+X-Received: by 2002:a05:620a:1a1b:b0:93c:746d:7c6a with SMTP id af79cd13be357-93ce920fd9emr276576885a.10.1790921034134;
+        Thu, 01 Oct 2026 23:03:54 -0700 (PDT)
+Received: from [192.168.86.41] ([142.126.42.187])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93cca2ed5e2sm140331785a.47.2026.10.01.23.03.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Oct 2026 23:03:53 -0700 (PDT)
+Message-ID: <9404c689-a95f-4475-a53a-47a724f6784f@12oclockpoint.com>
+Date: Fri, 2 Oct 2026 02:03:42 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260921111903.978687-1-nikprica@amd.com>
+User-Agent: Mozilla Thunderbird
+From: solonovamax <solonovamax@12oclockpoint.com>
+Subject: [REGRESSION] drm/amd/display: screen will randomly display static on
+ high refresh rates
+To: amd-gfx@lists.freedesktop.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev
+Content-Language: en-US, en-US-large, en-CA, en-CA-large
+Autocrypt: addr=solonovamax@12oclockpoint.com; keydata=
+ xsFNBF+V2DABEADBXJYEHk9O7/2YFInp/pCL4qBmk8We/LAx4jJ1+/I1ELJxOkEbGMNBCN8U
+ WP1tSgrPoWTKFemKY7M3BNBJYrO9mY0jPE443qEucCuzqHixgzJ9vyzwDAa0hFZeat6p5n4r
+ l1u0ceYXSNvKED6KViayS17+9ba+JglT/UzCPadOYziRTRmCiQCZLwrmY4vmW7iiveYT8SIN
+ hQ8nSc4pFhaRdJtuKMwBnFunOogtV/4XbX5Bv+Uk8AkZAER+8xPV6ByizCmfzqBPPuwTP+Wf
+ +OY8PLwvNB9jDsPcroMDt7AE2TQ5zJK0HSPBPbh8oYgX8rJBEpnoQy0NsFJwrSDA9Qd5T6qN
+ nHyUTAMpastKfDeKQDhdbkB95gviZ0rPm50G4gx/BuB4bL4A3Wzy7AKhsZhMjUk5SFg+zdxV
+ V9LdogmcmQizoBWDiyvs9fzuB2c4riiPGxm51S8PSmjyBPSigrOldnWTg6Pf0TaIyqt+JrVH
+ 2HunRkrMEJg6TvmzwySfHZkvgk+DBif8V6+opNU8q6Odz0AnVKs96fO1YFXcsSBPlnhBUvfp
+ y45atJHVqNmJw/3sRdujgEi68nh2WFt3znQYLd8xzMBru6Au+hsKbafzKLBJx88vL9QwmFd8
+ rt3kN/JWlEOtAKRc6woe5Nj5CYAnfvYeXY20VgiNqiB+SA/lVQARAQABzStzb2xvbm92YW1h
+ eCA8c29sb25vdmFtYXhAMTJvY2xvY2twb2ludC5jb20+wsOrBBMBCAJVAhsDAh4BAheABQsJ
+ CAcDBBUKCQgFFgIDAQAWIQRrQtQLTMazAY8q8gntD8LUTNdkggUCYddFWmoUgAAAAAAQAFFw
+ cm9vZkBhcmlhZG5lLmlkaHR0cHM6Ly93d3cucmVkZGl0LmNvbS91c2VyL3NvbG9ub3ZhbWF4
+ L2NvbW1lbnRzL3J4bWZrYS9vcGVucGdwX2tleV92ZXJpZmljYXRpb24voxSAAAAAABAAinBy
+ b29mQGFyaWFkbmUuaWRtYXRyaXg6dS9Ac29sb25vdmFtYXg6bWF0cml4Lm9yZz9vcmcua2V5
+ b3hpZGUucj0hZEJmUVp4Q29HVm1TVHVqZml2Om1hdHJpeC5vcmcmb3JnLmtleW94aWRlLmU9
+ JG9hbGFNYU5WLVpVME5NY0dDemJsd05NQWFSTXdZVW9qQ2VvSGZEZzFIVm9dFIAAAAAAEABE
+ cHJvb2ZAYXJpYWRuZS5pZGh0dHBzOi8vZ2lzdC5naXRodWIuY29tL3NvbG9ub3ZhbWF4Lzk1
+ NGY1ZDhkNDc5ODU3Njk1N2JkNDA2OThkNGFmMTYyNRSAAAAAABAAHHByb29mQGFyaWFkbmUu
+ aWRkbnM6c29sb25vdmFtYXguZ2F5P3R5cGU9VFhUNRSAAAAAABAAHHByb29mQGFyaWFkbmUu
+ aWRkbnM6c29sby1zdHVkaW9zLmNhP3R5cGU9VFhURBSAAAAAABAAK3Byb29mQGFyaWFkbmUu
+ aWRodHRwczovL2dpdGxhYi5jb20vc29sb25vdmFtYXgvZ2l0bGFiX3Byb29mAAoJEO0PwtRM
+ 12SC4XMP/jNjHMNxqcjIQ3EveF+WwKUhxoAoP+eIm2fmlAvaZ2ufvcBq7toK95b68IARyh6b
+ ysOJfAuXYPEpHAePtaGutUXHb96Uwlu2MnYwpyJyhzxCoMAYQqmh0JdE97Cn796TGdLfSzI4
+ /BYAvz5MUQXi3ezow4y7/mt/R+CdVyHuedX9epHwgJJx8nsiX9Eg95H8pnKh+Rj8MO9jf6Cy
+ GwK2QlgKo0qgV5VcvSEA1Fp7HgQQ/OgVqGegUrYAXDDJTBvt+fcHQRlpyOhUaB8bnlMSgW3B
+ 49zk/sWb13w0zlPR2FoZR8rZKkkSC0eiIOqcJbwjns7IF5pUCTgz9pnSuDI6sl8wEFRGPGMg
+ Tcwu3QbuIVEJrgx8mAH7awoM8ajaj9uVXNJIfv2jr2Rks0xGyUQepfJrUKKVRBnhQZp6Vn4q
+ zpaR0qFGfVquPQGaBKxLpgg8cnnSGQHNCBz4Yiph7l3bf3jEVHOKsROQKYpXjM7dWEuVeO2P
+ xSFpirbMObo6n3DSy3t8jUHcZi8RL5lllmGYQLDBJ4Wd38Fv5uisDutrXY3W4eL7Q8o1Px7E
+ mNU2MN9oYf2eCZjNruIWiOInJXWqumCzuY9PXVW2nx9vmxvNUQ1Oj8RnmXR/WbnS01YhJPeW
+ j98Udc5aVvlNPPZEx4sWme7WDdeFZTyI4b0dPFA3hTL8zsFNBF+V2DABEADKsjnQl8i0j1t+
+ rDZcA3y75JgEkDZvRQt1uH8ujmINKYA3/AW5oQHlFj7zCVzC24giMYoSFg+RrX4+6Ds7dcjZ
+ DZiB2S4+LYHF069V0r1CWUMv/PGIgP4vDepPGm65OPZEiqaEnobEdzlxgg1Z2DkQl42Q805h
+ SHo835NZReVEcCvMei5h9nC4ACYFM/2fCTAoglKojoBIgEQ/fLP79E+ztSf8gTXGFnZVlRx3
+ Oe5RWFh/m5uY4iCO6U5cSRla8trUo076bo1/btxuWwZqYLXifzBbtm/Emm/ZtNOqeANlTCzT
+ u2oHvqCULj/hz+uNLlM6YLJKgTZrXPmre7njD4Meng74ddMByBoNO3vTuujIHHc9C4shltnP
+ OLVL6L6uVcJBvqQAKEcr2lPyRi7nNbUPk1Y70RcukBsFEQCjoZYfBvzzwV1pv2QUK7yfm5pw
+ Xp9LAtS2HSk45H2zca3nGlBbBywmzl6pqFP2xh6RUtzU01yA2/pU84QdUm0BdhNk5J7FUTWt
+ E8x6ZrVS9uCDDbjM1oVequH2S3Mv2T3nc0CpscUyjXHvTi4g8ISwxDGsetv+lr3i1nimM4y6
+ bvj6PwmVZgLcJc1rmPYUnGSMrA7occXN504ajAnkZY8IMmGWFdeZNPnlgOiG+6JT+jIdILSz
+ nUS7pbdJ4VwPQzJuXmPWXQARAQABwsF2BBgBCAAgFiEEa0LUC0zGswGPKvIJ7Q/C1EzXZIIF
+ Al+V2DACGwwACgkQ7Q/C1EzXZIIMgRAAjU+aaplTp1iWpol3JtZiBdfQ9D+nVC0wiL0JD6FZ
+ opuyXWTJDVzC+RcyZBMyiMTDiWj2uF1r5JvvLwRMmz+z+AtGtBWgFR9idIjHvSqOI+C5D2T6
+ OZx24g3C9/XUwaeMajcyxwY6/1lp5yGprBEGOtizechRvivNDGYxTohbuCPVdVeIx8R1lQfl
+ swz7GfMLUjqg+kaxMDO89ikVqB/imZ8w44O1P4NpjpNm/202p6cWBr3TmIASGry2BpB07BYn
+ nEAVHF2hTtCTKwClRMW6h2ieTUwKrYm3ouHoiSvWtzns5GAG6M5Ai7GVfEAe4h8UTwfd/NJS
+ ov9IdONk+cbEINzaEfx8bUbwNZE1/J299SjFfXpbzcxh5daaLg2cKiRKc2H34az1Bd+RSCju
+ 2nck1V69RSHQvNpq4cQNw26t/0Aga97/Y03R/p77bMRHNkjTRv4WQIHXEEa9Gf5rFc263jTc
+ wqBj5/iQ5HDci721KVmKJgE919DZVuuM99b/vOV7ZdMbyKykHZDqLgmepkHvZ9uCViVSyNjX
+ fsOi77igNyI9gv3OSvIHQd+uNmEn1WBDk/G3egI8Gf4DfxKKf9UAt09npwkgwsVfV2JoShQ6
+ yRFzP2ddxYve9dtpRT7cyiuDZ+HgfzwPY/MXqpURBw/t/glbCqs2iKh8IPB9mS0a7jI=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 21, 2026 at 01:19:03PM +0200, Nikola Prica wrote:
-> From: Nikola Prica <nikola.prica@amd.com>
-> 
-> pci_enable_atomic_ops_to_root() currently fails when no Root Port is
-> visible. That is common in passthrough guests (ESXi, Hyper-V): the
-> endpoint is assigned to the VM, but the guest topology has no Root
-> Port above it.
-> 
-> In those setups the hypervisor may already have enabled AtomicOp
-> Requester Enable on the device. If PCI_EXP_DEVCTL2_ATOMIC_REQ is set,
-> treat AtomicOps as already enabled and return success instead of
-> failing the Root Port walk.
-> 
-> After 1ae8c4ce1570 ("PCI: Enable AtomicOps only if Root Port
-> supports them"), pci_enable_atomic_ops_to_root() always fails if the
-> Root Port is not visible.  On systems where the Root Port is not
-> visible but *does* support AtomicOps, this is a regression: prior to
-> 1ae8c4ce1570, it enabled AtomicOps in the endpoint and returned
-> success.
-> 
-> Fixes: 1ae8c4ce1570 ("PCI: Enable AtomicOps only if Root Port supports them")
-> Reviewed-by: Christian König <christian.koenig@amd.com>
-> Reviewed-by: Gerd Bayer <gbayer@linux.ibm.com>
-> Tested-by: Gerd Bayer <gbayer@linux.ibm.com>
-> Signed-off-by: Nikola Prica <nikola.prica@amd.com>
+Hi,
 
-Applied to pci/for-linus for v7.3, thank you!
+I'm experiencing an issue with my laptop where, when using a refresh rate above 60 Hz, periodically the screen will display static for a handful of frames before going back to normal.
 
-I tweaked the last paragraph to be more explicit about the regression
-behavior (as I understand it):
+There are no messages logged in dmesg when this occurs.
 
-  After 1ae8c4ce1570 ("PCI: Enable AtomicOps only if Root Port
-  supports them"), pci_enable_atomic_ops_to_root() always returns
-  failure if the Root Port is not visible, so drivers don't use
-  atomics when they could.
+I bisected the issue to bf3fc94cd72abe6fc6cd88691fa98f817f4cd6db, although I'm not 100% confident that was the cause (on that commit, I observe slightly different behaviour. In addition to the full-screen static, there are also rendering issues that appear when some surfaces are being updated). The issue does not occur before this commit though.
 
-> ---
-> v4: Updates commit log to make regression point clear
-> v3: Add Fixes tag
-> v2: Be more strict and only apply logic in headless device case.
-> ---
->  drivers/pci/pci.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b2879a6be5f8..62729ade496f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3769,8 +3769,18 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
->  	}
->  
->  	root = pcie_find_root_port(dev);
-> -	if (!root)
-> +	if (!root) {
-> +		/*
-> +		 * A hypervisor may expose a headless topology with no
-> +		 * visible root port.  If it has already set AtomicOp
-> +		 * Requester Enable, there is nothing more to do.
-> +		 */
-> +		pcie_capability_read_dword(dev, PCI_EXP_DEVCTL2, &ctl2);
-> +		if (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_REQ)
-> +			return 0;
-> +
->  		return -EINVAL;
-> +	}
->  
->  	pcie_capability_read_dword(root, PCI_EXP_DEVCAP2, &cap);
->  	if ((cap & cap_mask) != cap_mask)
-> -- 
-> 2.34.1
-> 
+My laptop's built-in screen has only 3 refresh rates: 60 Hz, 240 Hz, and 300 Hz. The issue occurs on 240 Hz and 300 Hz, however it seems that it occurs more often on 240 Hz.
+
+Setting the amdgpu.dcdebugmask kernel parameter to 0x400 (disabling panel replay) causes the issue to no longer occur.
+
+System details:
+* Laptop: TUXEDO InfinityBook Pro 15 Gen10 (AMD)
+* CPU: AMD Ryzen AI 9 HX 370
+* GPU: Integrated GPU (AMD Radeon 890M Graphics)
+* OS: Arch Linux for bisecting, I used stable/linux)
+* DE: KDE Plasma 6.7.5
+* Compositor: KWin (Wayland)
+
+I'm also more than happy to compile any patches and test if they fix the issue.
+
+I'm new to the kernel mailing lists, please let me know if there's something I'm doing incorrectly or any information that's missing.
+
+Note: I have not tested this issue in 7.2.8 (only up to 7.2.7), however given that the files in question have not been modified between 7.2.7 and 7.2.8, I don't think doing so is necessary. (Though I can do so if requested)
+
+See also: https://bbs.archlinux.org/viewtopic.php?pid=2311113
+
+Here is the hex-encoded EDID data for the display:
+
+00ffffffffffff0009e55f0d000000002a220104b5211578077335a7544c
+9c250e505400000001010101010101010101010101010101606c00a0a040
+64603020660049ce1000001a000000000000000000000000000000000000
+000000fe00424f45204e4a0a202020202020000000fc004e453135335144
+4d2d4e5a320a020502032400e3058000e60605016a6a48741a0000035130
+f000006a486a482c01000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000000000ce7020790200220028bf2a1585ff09
+9f002f001f003f06630005000500ffee1085ff099f002f001f003f066300
+050005002b00122700782b0100270064ef00002700303b000021011ddf0c
+0b08000a40068866fa53c8949851120e023554d05fd05f003813782e0006
+404ed05fd05f250109bf2a15bf2a153c2c8100000000a790
+
+#regzbot introduced: bf3fc94cd72abe6fc6cd88691fa98f817f4cd6db
+
+-- 
+Thanks for your time,
+solonovamax
