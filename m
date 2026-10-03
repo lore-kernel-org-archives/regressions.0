@@ -1,85 +1,77 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FC547FAE8
-	for <regressions@lists.linux.dev>; Sat,  3 Oct 2026 17:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA70488204
+	for <regressions@lists.linux.dev>; Sat,  3 Oct 2026 17:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791046961; cv=none; b=ONpswebwBNpny7BcHszyIw+NbWG/rQQX45wv6aR3ELAz9UUDXiEa4ChJdB5uoWV4ROcc/lWkv0aptwUn/qXYCrR4VmjKpV/yHD4JIXJUW6HJl+eecWOjDLIChbo7fIqnhk8ux7ZlQcBf+PNmke11NHgsdln1C/EN4QDqAKeeWB8=
+	t=1791047124; cv=none; b=so64FYjpLkrmrEQC5vQwIAxNDjxNX/LnEjiMknsPGjCRctOwTMe4GGn0S6t0EgFfVRLFaE15a5P8nypRSrTe7vQbcBiA3yRgJb6MnT5P/xBnIOE606gx9cAvpZY5pU+95GcY2hrcyF61MIslt4FLmY0rtC5DWxGKK94zLbMtSNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791046961; c=relaxed/simple;
-	bh=kLoV5W1FHSMCnQXJR94hBtpM1Iv97CLc5Gk+9EMFE3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ptz+nD+iDPrKwv5fJmPlboQ8196Y4eHvMFJ6CVL8i1GCVoEla9yU+7cnz6mDx6WUf03IIUg6Eu69cs7pkDZykNsNVUbI3tXC6vZsgbpi+qaqN3zZNLRPb0dnjzDCuIkZoXr6Rcazs6KhOWt+01DXyPIKCufXM48PTqJ6S5hG1tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=oDxinKuH; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1791047124; c=relaxed/simple;
+	bh=GkuLv8sohC6Q/26XJMwu4gBJyw5znkiBZUe3IXWF3xI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JyiFieYlSuDeekIHKX6kC414oE9cAUCFioXeQXwXihCmX8s0z9E+BymbckpFsTleiQpDfaZ9Ykb2EFgVQmAsGV5ED807wId+kbTIR3Xlrd9oXCLDa8OioSQej1uFGpxLvLR1Z5xOcu73zW4fkO2xZ8RkQ3jbQaD8cXz4loB5e5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=truenas.com; spf=pass smtp.mailfrom=truenas.com; dkim=pass (2048-bit key) header.d=truenas.com header.i=@truenas.com header.b=en8UiUoV; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=truenas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=truenas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="oDxinKuH"
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 85DE73F1C4
-	for <regressions@lists.linux.dev>; Sat,  3 Oct 2026 17:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1791046950;
-	bh=kLoV5W1FHSMCnQXJR94hBtpM1Iv97CLc5Gk+9EMFE3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type;
-	b=oDxinKuHjSwh31QA9ULq54Z0Ka3ICwf6Mm+tdVnkM2VCtxgbrTphDAaxTtj3bHKvh
-	 78EgtWchmjblnTJmdW79O/x1M9TQ3JIbaHQH0vWmn4/rs8QPf19aJqM0y9HWHeLCFG
-	 FCxDNLRmZFMyy+WcJMGl5Ex528DbAArYEXbX3TTAp3GuTRH6jQq6zlPomY8wFBKo7/
-	 m4YNaGXO93hcs2fw4DtuZLeuPeCbAsYYUjAc/ILCXgnb+kGlkBOluIna7w2H+I3rEp
-	 QVWSEhhGFiXJlsUZtU3ot3pjM0eWFL6rsAS6/vbSbqYTbXVwUhBtpBqdh+tCO8VYTM
-	 ciIqkrOECxtRbx2ylA9aQfiM24gdlrdjS9YkmVOAO7h1GwHTPEssGD1TLBCTL7OVJR
-	 YO9R1Fm08M3lNhY78i/ajFG3yAv+q7OyG1222rlbJ9XBa8I7LnSgZyWsf6KlHeAZVX
-	 MiL5VN7es0oakI1vvnA3RKdzjCjC/Q7VS96sAMqomj6RUzs+SCWUYT1gbmr3cQj/Rp
-	 OpgmeZOeIThCglW9H9qOTtacdLCct0I1HwkSFwB3e05sJ8EG0j3pq6LpKQRMGJwC5W
-	 5oRfiii9TvMy47pN5PsZqMLXpOIGnQFRJyVdMlBdVsUSKqnQ5uIL2o+kC/slooAlKF
-	 Qa/d0vr/A+83MXyjwjwRYyrM=
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49febef74e3so6559145e9.0
-        for <regressions@lists.linux.dev>; Sat, 03 Oct 2026 10:02:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=truenas.com header.i=@truenas.com header.b="en8UiUoV"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49fff6f0f87so6443975e9.3
+        for <regressions@lists.linux.dev>; Sat, 03 Oct 2026 10:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=truenas.com; s=google; t=1791047120; x=1791651920; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=V9/myqvD+Wu7dUPpez/fB+sxDbuYQxQUAR18f1smsBQ=;
+        b=en8UiUoVm8TldGHtm6g/onN6GOXTHpU3h4dJGk87hOQj3m/QDaqJFYJuc8nbkvJpMQ
+         0yEla0YTwS6FhAi39dZ2Um/rRCRMp57l5ZKTRiAJZXMUFQ1p2ufVVu76/+YWn/WdRzvH
+         c6f7kNHtSK4nVW5VuwNpHXQ78LPMva0r/VZHb2jddh2f1jvc5AFPsaPIlSTX8ZvheLsW
+         gdWWo3hgyc/uIJoYVTzhSMsvijrTstZ+Ra3W20kRnR37q1/RMeQ9WJQERIQa4ZLBPMuw
+         yjYcSEXP2C0BMtk0fZPo91XCNb5NZW+c/80BBKN9372TnEQF0A97+X0rWHLaaIE/wNa/
+         oGfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791046950; x=1791651750;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kLoV5W1FHSMCnQXJR94hBtpM1Iv97CLc5Gk+9EMFE3c=;
-        b=0VnJaik+5Y7bLi+Iz1JR+RdmF6APJY9kOnXOziCWRq636zlFCzFPeOw+cup/TMqImv
-         3oVboQjgQ528HNFZGGX9OfcRbldeFU/TRro+3AhxFUWW5grKXzI7ygowiSeNFLHNmwpe
-         69rm/VlwEpsLJuKmu9szRT1cd4PL2hL3uh9mUCGdEkjkq/8oHaUHRMlgRH5pUkBs7Anj
-         72wnRLETTMZyV63tu2AKlms8cnppuBEUJAUxePVo0Tg7P5fILo4ZUs57MAogjvoe3/BA
-         AI80Yce6Y8Efu2MrO+lLN8JAjdH4FKzRwoT/+Dv9NVwa1FrWVTKInwiZ27NrAiRjz1NM
-         Z4sg==
-X-Forwarded-Encrypted: i=1; AKwUvBygrej7tnxd5Sr6w9kqwZ9IO6beVKgrb94PPTt+lZ5O5lXdzBwvrHIlF4FwVvIA1dK8PjrnD2bh4xHwWA==@lists.linux.dev
-X-Gm-Message-State: AFuF++n85qkL84qosGzU+SLlcM+GszwtiULWXs6Kn+WmUeITy8YfAYqv
-	zUBQi14MqWUZEM5BwJ5gmBXpuoBw+lES1qA2y+rHP4xlw1lQAZWUndnqQ8t1ZdQpLlWEilmaXG5
-	+2qEajvERizOp7f7+Bu2ckAlvc8dBI/Q/Kk9TngrQRVxSUGQdchuePBBlv/yr8aAudANSuBG+AS
-	giRNfv
-X-Gm-Gg: AYBFou2y6yaP8Wt4wdfJhTHrpUVSD+SOf58+2IiPqFw7Ar3D3Rmwn4dS9DeKT03yxOd
-	i+iCufBd8Z7684+ezfJ3/KxvkzqQKODRn7q9YNptKKSbh+wBwTlpQMAIvWkrxuxwAtip3Ef2qQd
-	PYxaneH9KiNFEPm7JzE50ywEbhoB4ZhDZswdR1gsmqT2n3+i+E0Av80zskuH206JUEx1lcCtmLJ
-	EXTMPZeVwNLTP/l47XYTMlZZyWWElNwv4tKO4yuJBmBVUEYnPO9LGGK+837roTAqWuOW+MSykC3
-	yAUL3vp+YOIYUDMdipgcjpWeyI5AweQMwRM5PO41XhcAoUTDJHOtsDhi31xVuB41qq8jF6QaRr8
-	DTJjFaVs=
-X-Received: by 2002:a05:600c:3e19:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-4a027534b98mr106170625e9.3.1791046950115;
-        Sat, 03 Oct 2026 10:02:30 -0700 (PDT)
-X-Received: by 2002:a05:600c:3e19:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-4a027534b98mr106170055e9.3.1791046949625;
-        Sat, 03 Oct 2026 10:02:29 -0700 (PDT)
-Received: from px13 ([2a06:5902:822:4600:184c:5422:d333:cf3f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a02752aeb3sm192763715e9.0.2026.10.03.10.02.28
+        d=1e100.net; s=20260707; t=1791047120; x=1791651920;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=V9/myqvD+Wu7dUPpez/fB+sxDbuYQxQUAR18f1smsBQ=;
+        b=tU06Tk48rQeImT5BQXWdTNKa02A51r1V61vsCqS79XM4QgsAGNr2EpAYiiGwMSKQOw
+         dncwBvlp35LUlEOJOLeFbgaFB9DYP6DlTFPWhGt/pneehzsnKl/R94xfgaTxNsiLiJ3J
+         KKH6kVmqBX4eBbUMs5n1hjK6Qb/CdC0HieHkOL9FC82mFxb7iVTxKb13pZHzCFAEE+VK
+         bvGUNkE/tO1tac01QfavrDnYkLzwj9gycooqlM2t1bwaOKZXhAi/Ror/7jiuy9Bpif5Y
+         oNavqr21e9c3NjgVytGpbNriwa4jX+UHAVGwH1gfmJDxS7eycyB0SJRgqkwnnpMlGtic
+         /pGg==
+X-Forwarded-Encrypted: i=1; AKwUvBzEHJCKYWl0hMNOfZPazChCfrs+EOFmnnRqph9AZf3APOAblFzUKQg2ek+KE6cmVWFt12llF2enu/58lg==@lists.linux.dev
+X-Gm-Message-State: AFuF++k3sAwJi7+6IO6TV4JbbIDDccVSHzoegK5plCT35wyzRmnC7zLC
+	Ao3OX98v3XtnyEM2XLvG9cGi0X/El/pSoGZu8EE6lk4RHMkjbN8idQvyodE0pFijkw==
+X-Gm-Gg: AYBFou0Sqd1YY9eI/h+dpOx0SuPuGouGWOwbu/Ry7eCo4qYl9pmrA1LrUqM71IT1ToM
+	aaKiVUurFtc+mpFofYvDZebgReybMmgU9aiCy9Bne8TarPk1zL5Wu+HPN6DpqT/CxMXB5YK/7RL
+	tE2LdB4N71lWcPC78h3I+qCahHo+YLgDWmDHUtAAjBGAFVT+/2QFJ+ZuQGbeIdBaz6/VYuEq72h
+	EW1fha4JUIYkgGLxtmLv0P4+uW1jwHwOqP5fqrhUUXcjNCK/0t6WbtfDD5/hhH6dE1HfdhHUZeL
+	i7PcysL86y7WvRl3yxMYulNg7805G+Hs5Mf5ImVFwSBb3WblidwRQdN0Y47DxYS2B4cFmovl2hz
+	LnFwVSNy97b4zdIc+XvniZyzGZW3xNuAJaQc+Lg+7VM7nW5AMdpAWpeX/JayTMNMdQwR3WVRTDd
+	gxaedot+zcYSQuhMcBHxmDY5x+7uKCoFShkjDoH16Flwi1kP+pFw==
+X-Received: by 2002:a05:600c:c16f:b0:49f:ed8c:6cad with SMTP id 5b1f17b1804b1-4a027594557mr93542555e9.19.1791047119916;
+        Sat, 03 Oct 2026 10:05:19 -0700 (PDT)
+Received: from hamza-PC ([2400:adc1:158:c700::2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0e1afbc44sm177013365e9.4.2026.10.03.10.05.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Oct 2026 10:02:29 -0700 (PDT)
-Date: Sat, 3 Oct 2026 18:02:27 +0100
-From: Chris Bainbridge <chris.bainbridge@canonical.com>
-To: Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Jason Miu <jasonmiu@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org
-Subject: [BUG] KHO handover hangs when memmap reserves PMEM
-Message-ID: <asE0R_f2r2TL-3Sy@px13>
+        Sat, 03 Oct 2026 10:05:19 -0700 (PDT)
+Date: Sat, 3 Oct 2026 22:05:11 +0500
+From: Ameer Hamza <ameer.hamza@truenas.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: ljs@kernel.org, rppt@kernel.org, peterz@infradead.org, 
+	akpm@linux-foundation.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, 4ncienth@gmail.com, sashal@kernel.org, 
+	alexander.motin@truenas.com, caleb.stjohn@truenas.com
+Subject: Re: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while
+ perf record runs
+Message-ID: <asE0ctESLO306qYs@hamza-PC>
+References: <20261002175651.811343-1-ameer.hamza@truenas.com>
+ <3c5b9d1e-5ed4-4bd1-b532-39f2d4612965@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -88,29 +80,20 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <3c5b9d1e-5ed4-4bd1-b532-39f2d4612965@kernel.org>
 
-Hello,
+On Sat, Oct 03, 2026 at 04:14:49PM +0200, David Hildenbrand (Arm) wrote:
+> May I know whether this problem was found by
+> 
+> (a) A real workload
+> 
+> (b) A test case
+> 
+> (c) Complains by some tooling
 
-I am reporting a regression in KHO handover.
+(a). A root userspace process that keeps secrets in memfd_secret()
+failed while perf record ran on the same machine. I reduced it to the
+snippet in the report.
 
-In the most recent Ubuntu 26.10 beta mini-ISO releases (2026-09-18 onwards),
-the first kernel reserves RAM for the downloaded ISO with a memmap directive
-such as memmap=<size>!4G, then kexecs a second kernel. On affected kernels, the
-first kernel reaches "kexec_core: Starting new kernel", but the second kernel
-produces no further output and QEMU spins at 100% CPU. On unaffected kernels,
-the second kernel starts and finds /dev/pmem0 with the expected "Persistent
-Memory (legacy)" range in /proc/iomem.
-
-A source bisect identified 3f2ad90060f6 ("kho: adopt radix tree for preserved
-memory tracking") as the first bad commit; reverting it at the bisected
-revision restored the handover. The regression appears related to KHO metadata
-being accessed after the receiving kernel's memmap directive changes how the
-metadata's physical range is mapped.
-
-#regzbot introduced: 3f2ad90060f6
-
-I have an AI-generated candidate fix that changes 22 files. I have not attached
-or published it: although the AI did extensive verification on both x64 and
-arm64, I cannot review or explain the complete change, so I am not submitting
-it as a fix. If one of you thinks an unreviewed candidate would be useful for
-further analysis, please let me know.
+Thanks,
+Ameer Hamza
