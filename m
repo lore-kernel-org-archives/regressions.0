@@ -1,85 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E21836197E;
-	Sat,  3 Oct 2026 22:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C585191F91
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 00:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791066898; cv=none; b=qz+gd+XP07ttzZ686NLyC1xe8mdKBJvq0YjjZ8OM3mVsWk/tOqfIZ4TZ3v3i/rxVgW80GVyIMkZtFMNY+9FXvbxMC20J5Y56BS9uJMwCXcKcvY0jzt7uPjX98QK9nHFhiquxtkP4uWyt1Dads+Lz+30TTD29djq0HNg5ffVMmBs=
+	t=1791075117; cv=none; b=JvCvsnG4OdTy3oTJyCjAyNKVzmIUzQfwE8l1AVL+NesfM/GxBxh/VO0XpfL/cpbZ86hmz1tmdjLolmFb+n9cs8cHmOlqUQBVLcTmkus5jCBSuIWx/UX8n1Jbkbe5N7KbxyA9aqMbKCyiOQtOQeskhq26LpjwSjFcHg9Vf7L7RIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791066898; c=relaxed/simple;
-	bh=3c83gcdlMeLewvksfduAw5wRq5N5/4MFTXSogqZE/Vw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GoyMYvx/tUeLLURe9e0FjWvhWMgXzbUKiV/Y/4T7p1GyLXosNJkxMxSyzaNi/EoQo/yXb+W+nNeEdjFmQBObnc6zN5EY5LdsuQLokoYJxwja1V6dIUOgKyuGIAYKarPtENm1VRD92ScQarCUHImwU/lOEhYuNDCBDQ3VxK9azVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ct2T4C8w; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791075117; c=relaxed/simple;
+	bh=+xXRChb7pRTKeEKacaBfsTdJsfEptT6xDoTfO6eJkpA=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ea/U4AavBKBIDQMDCd4qXTmICF2Dwlik3W9wzO5VmlF80uSKeFWUIP9MH6HvEL4IdNiJo/OWQJjRH+DtKviHfraanshUn6t5GvnJaWHCAefedjijem/uwa2vD9P0Qokc6r4H9Vbb9MgDodXNJXYxSqF7ioIA72Qgb0ArMoSzvQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=kSqBw0Wb; arc=none smtp.client-ip=109.224.244.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ct2T4C8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 806B91F0089C;
-	Sat,  3 Oct 2026 22:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791066896;
-	bh=zM0wm05N9ZuKkLRyyuk0bb0nZGRol8Du4ryT1xAF6Ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ct2T4C8w0B4NvOUhuAHDjs6urnTBmSBma2hgKbEK6vMzu0BleolZEr8UYilUeTcpo
-	 cj6LeVtQws2ZNkAfkwi0RXGE8crK0CF8nyUA+ri30xkJM40i9rjErnYw5fW+XjXgc+
-	 LrZoeTae6F0j+baG8DKdekLuwm5ojpVYfOW6r774y/BKWhXKFWZyUXzmubgcdZrl02
-	 q5e6KpTldk63TEOLIcF7nyv/nBC7rmSlvFhKJ5uiKAE8IYWpPkBY5c/yaqqArUauHP
-	 p40OT8Rtqjq7gPyRMZSIch1RXfZDc1gI3uo3WTrAKZ+UKdQ9JVg6Yml4Q2TNpHE8/x
-	 XL3HvrZhi2IBw==
-Date: Sat, 3 Oct 2026 18:34:47 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: rppt@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-	david@kernel.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	4ncienth@gmail.com, alexander.motin@truenas.com,
-	caleb.stjohn@truenas.com, ameer.hamza@truenas.com
-Subject: Re: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while
- perf record runs
-Message-ID: <asGDB8ZBX6zcsmWJ@laps>
-References: <20261002175651.811343-1-ameer.hamza@truenas.com>
- <2026-10-02-rc-reply-0003-re-secretmem-sigbus-perf@kernel.org>
- <asDF77csaLDIuHTB@gremlin>
- <asERcvLuNJatsBL7@laps>
- <asEra6tBau-hiutj@gremlin>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="kSqBw0Wb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1791075102; x=1791334302;
+	bh=+xXRChb7pRTKeEKacaBfsTdJsfEptT6xDoTfO6eJkpA=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=kSqBw0WbR/0gTff/dbPKzurZq9fdCYlKgko5qUzlv4Jllsby2isilo9777hI+ugkx
+	 jM9lcbUDWvESLDMznr2FKvofHEVWKLigRpz7advQvpLYzgiXl8wBH0fP1EdhQm3TYF
+	 DM6dSVULvA8pXhMF5aLmARdZj0PN7oh4A5Qd7PDyI1zMmEQbJLzY9wB65HLLMXBAaQ
+	 zrlOUhfCeQ4y7qroMYjTo/aXtAg4kCphHmOaW4ICWbE/QNjnKkH4nugPpEwGkWJkNn
+	 t1NWVaTUeWNf1kyaTfHufZQMteoZnYuF4BhYJx2iZPWP2tYGw9KiDRkfzCtJ5NrzEG
+	 BqwVTNWcG7SgA==
+Date: Sun, 04 Oct 2026 00:51:40 +0000
+To: "rafael@kernel.org" <rafael@kernel.org>
+From: Charis Stratakis <c.stratakis@proton.me>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [REGRESSION] thermal: core: battery data corrupted after resume on ThinkPad P1 Gen2 since d33e89d12295
+Message-ID: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me>
+Feedback-ID: 224044180:user:proton
+X-Pm-Message-ID: 9b9be756796ff897da51b7220e70e8d7add16813
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <asEra6tBau-hiutj@gremlin>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 03, 2026 at 05:23:53PM +0100, Lorenzo Stoakes (ARM) wrote:
->On Sat, Oct 03, 2026 at 10:30:10AM -0400, Sasha Levin wrote:
->> On Sat, Oct 03, 2026 at 10:18:34AM +0100, Lorenzo Stoakes (ARM) wrote:
->
->> > It was sent late on Friday in a week that I was ill and it's Saturday
->> > pre-LPC, so that's hardly a timeframe that I could reasonably have replied.
->>
->> Keep in mind that our release cycles are fairly short, so this shouldn't be too
->> big of a deal?
->
->I mean the same argument could be made both ways :)
->
->>
->> We will generally go for the safe option of dropping a commit that introduces a
->> regression as it's fairly easy to queue it back up very soon after a
->> diagnosis/fix shows up.
->
->I think we'll have to agree to disagree about what was safe in this situation!
 
-Happy to chat about it at LPC. Our reasoning is that users are better off with
-a regression they are aware of, instead of getting surprised every time they
-upgrade.
+On my ThinkPad P1 Gen2 with Fedora 44 I've noticed that the battery=C2=
+=A0percentage started showing garbage values, mainly showing less, while th=
+e battery was fully charged.
 
-I can see the other side of this, and I think we can do some work to accomodate
-this type of preferences from subsystems/authors.
+I enlisted the help of Claude to help me debug this so I am providing the r=
+esults here. All the testing was done on my laptop and no vanilla kernel wa=
+s installed. Started with Fedora's build of 7.1.6 and currently I'm on 7.2.=
+8 with the same results.
 
--- 
-Thanks,
-Sasha
+Since v7.1, _BIX and _BST data read after resume from S3 on my Lenovo Think=
+Pad P1 Gen2 (latest BIOS 1.57) is often garbage, energy_full 327.97 Wh (des=
+ign 78 Wh), voltage_min_design 32.8 V, serial changes, or energy_now ~328 W=
+h giving 424%, reported percentage wrong until the next re-read. Same sympt=
+om as https://bugzilla.kernel.org/show_bug.cgi?id=3D218881, fixed in 494c7d=
+055081 ("thermal: core: Change PM notifier priority to the minimum").
+
+#regzbot introduced: d33e89d12295
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218881
+
+Out of the suspend/resume cycles I logged on this machine, the battery data=
+ came back corrupted in 0 of 39 on 7.0.11-7.0.14, 14 of 22 on 7.1.6-7.1.13 =
+and 5 of 12 on 7.2.5. 7.2.8 and mainline still carry the same code.
+
+d33e89d12295 dropped the INT_MIN-priority PM notifier and starts thermal zo=
+ne resume from dpm_complete(), so INT3403 _TMP now runs concurrently with t=
+he ACPI battery driver's _BIX refresh in battery_notify().
+
+Claude provided this explanation for the "firmware confusion" left unexplai=
+ned in 494c7d055081:
+
+the DSDT method \GTST, called by every INT3403 _TMP, writes the EC page sel=
+ector (HIID =3D 0x60) without taking the BATM
+mutex that the battery methods hold while paging through the same EC window=
+. EC register trace (ec.c dyndbg) at resume:
+
+=C2=A0 =C2=A0 WR 81=3D02 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<- GBIX (=
+_BIX) selects battery page 2
+=C2=A0 =C2=A0 WR 81=3D60 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<- GTST f=
+rom a concurrent _TMP
+=C2=A0 =C2=A0 RD a2->3a a3->80 =C2=A0 =C2=A0<- _BIX reads "design voltage" =
+=3D 0x803A
+
+Test: 3 suspend/resume cycles (rtcwake + systemctl suspend), checking /sys/=
+class/power_supply/BAT0/{energy_full,voltage_min_design,serial_number} afte=
+r each. int3403_thermal loaded: 3/3 corrupted. Unloaded: 3/3 correct.
+
+I did not bisect though, the analysis of the responsible commit was perform=
+ed statically, happy to test patches, and can provide the DSDT/SSDT dump an=
+d full EC trace.
+
+This issue seems also similar to https://bugs.launchpad.net/ubuntu/+source/=
+linux/+bug/2070441
+
+Regards,
+Charalampos Stratakis
