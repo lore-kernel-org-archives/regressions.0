@@ -1,86 +1,217 @@
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+Received: from mail-4320.protonmail.ch (mail-4320.protonmail.ch [185.70.43.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF71D440A3E
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 14:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30973A6418
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 14:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791124067; cv=none; b=U53gfOI+vL75pI0dJ67KPmx+QRZX15O3lei/qpPXUXd+9h/hTMouq+mC7c91rB2SrFUPsekWuvq+17ETvPMvgHGz4guokmNbiN8fNX7M6DOAdeljBMC4A72Rvz8opLdVTY7PWjqCETx03BEeGtZSgpigOxQqfOgXErIRZz13xQg=
+	t=1791124317; cv=none; b=mvTvaK7/36qiIhZmo/KUb3qFMMEWPlUJJXRTi8f6wPVula6HcRtUw9Pvz3y/MthXjxxGKT/7CZOivsvZ+DUcNUJ+AKIR3+y1fD2LZiQMaOgHHREIQ3w1Hud3WlcHs4YXhrwdNgHOM8Jt/U/uWa5eFRMKLP+izTs+ptMQzDwY6KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791124067; c=relaxed/simple;
-	bh=1KdpqyBuIjuLBvWYIW5i5vria/6OVyt65BvBNkWHUCc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xib9cGGurdBvKKhq79pkyahXkRHH0TaeDgdQ8pqNebTuJEAUmcQsRowWuu1tlczHqmPeNqvaE7NBDBGu5C86Y3p7/FpwWu4afjTJbWoEl2oydZOI803odVBzATbsaYeF3wbpmOPnDYP9ewa/dQ+AuPiz3JJXetBvR0FPj7lva2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=p7SipqU1; arc=none smtp.client-ip=91.189.121.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	s=arc-20240116; t=1791124317; c=relaxed/simple;
+	bh=7rwycEjFCnOKq+gYB2mxgj+nEVpchxT39dZu2FyVYsg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aG5/+WKXXf4o9GEs90c+zaq1KP8xu5NTIphbRarnKl0sFoz1AdeYkS+rcQgYUHuuUMnhVEs9koifJASdBZ8ZX/a3d/d1R9O2uxZo56hdNbhKdRSmropJKvVlRGg3QpA3fluGU1dGq0sBTK1K6iZ4r1yzRW7tATwu9VldFcxWCjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=saurla.com; spf=pass smtp.mailfrom=saurla.com; dkim=pass (2048-bit key) header.d=saurla.com header.i=@saurla.com header.b=Ltz2uDnX; arc=none smtp.client-ip=185.70.43.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=saurla.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=saurla.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="p7SipqU1"
-From: Stian Halseth <stian@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1791124057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=f1mUDrEgHuD4xd6cPadDTTmFU27wOGNSESTtR/jQtY8=;
-	b=p7SipqU1iSvk3dnl5H7B7i2txRvHbGnjP0yF6uF//WDIdV3FFrL3sqF+C7ATM3n30FeTFg
-	dZ4GqX882XwM3OhNpBF1NQDHtZYn52tynDpUiWzsf03IkxDYpbFSlqoYglZ2Pe4bmT4wcn
-	l+kyd1pb7/qk5pq2tYFj1HPFVy2LVVg=
-To: Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [REGRESSION] tick/sched: /proc/stat idle time exceeds wall time since v7.2
-Date: Sun,  4 Oct 2026 16:27:24 +0200
-Message-ID: <20261004142724.3896396-1-stian@itx.no>
+	dkim=pass (2048-bit key) header.d=saurla.com header.i=@saurla.com header.b="Ltz2uDnX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=saurla.com;
+	s=protonmail; t=1791124305; x=1791383505;
+	bh=7rwycEjFCnOKq+gYB2mxgj+nEVpchxT39dZu2FyVYsg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=Ltz2uDnXHu1Z8urMax7wVZ318bnYc4CYunsZ9V+/kvWJzhXoo/a0hRAtci2wjbIcL
+	 jkOebFRF+o5K5Keug2XQzX7c/Er2L5A7EOSd/HJtc9KFOsh04LrIOA8FfdyOFIfwxb
+	 dgeFTWX/peY90zVp8VHoFiysdZOpGbJV2orjfZmGSZvDIDmnjoOQVJJQe4W6ERImPo
+	 aBgqOxR8+cyPI5dreKYATLCi5WtUZyVknRKZELdku0tpy3Ut6YyMi9NzdxEqxk7gpw
+	 cU7h1IKDhQOLhKk1Ai85QJNUGXF+ztYHGpGRvyTwHIK/ofCrwPjse8lJwnXPql7KeC
+	 klMiXeATir7pw==
+Date: Sun, 04 Oct 2026 14:31:40 +0000
+To: Frantisek Musil <lister@gamesplit.cz>
+From: Lauri Saurus <saurla@saurla.com>
+Cc: Jiri Kosina <jikos@kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "jkosina@suse.com" <jkosina@suse.com>
+Subject: Re: [REGRESSION] HID: logitech-hidpp: commit f0866517be93 breaks hi-res wheel scrolling over Lightspeed receiver (G903)
+Message-ID: <Qcqpyk51pmEh4pab4ob63O_xwOfVnMZbRigEHshfaClUdXYlQgHvsdGqCqGyI8o8XctHqVSDpoTW5Ngsyz03wlX9ghiv8dpLREphQW8Gppg=@saurla.com>
+In-Reply-To: <dfbc41ec-7200-4178-9bc2-a8b4d6b9654e@gamesplit.cz>
+References: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz> <77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz> <0IXbR44wf-idjlLSV2kHpzPm88Rs_orpaG-CJumHqfydxGdMNnuobRi0Oz8lW2cdpibztLCb1HK2MpcAw3lgsCzSmugEbQBf70Zjooz6ZLY=@saurla.com> <72d144aa-bd56-4ee5-a504-9cfcb329eb44@gamesplit.cz> <pI2--urSOUMdyRKpMPDftneDAGdGm05IPF8Xt8FhYnOLhbErUDQRh_6Yq1wqKW6559W2APlI2QtM03TJOrjRobiIoUSsMOrutYfyZP0W3OY=@saurla.com> <dfbc41ec-7200-4178-9bc2-a8b4d6b9654e@gamesplit.cz>
+Feedback-ID: 198286868:user:proton
+X-Pm-Message-ID: 00a52eaf21d162276577655458b1efa6609a94e1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed;
+ boundary="b1=_k60ljnAys8QILyn4gPZmCg0bNYTzf2kpWRVXHkBBi0"
 
-Hi,
+--b1=_k60ljnAys8QILyn4gPZmCg0bNYTzf2kpWRVXHkBBi0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Since v7.2-rc1, /proc/stat counts more idle time than wall time on
-NO_HZ_IDLE kernels with TICK_CPU_ACCOUNTING. Monitoring that computes
-CPU usage as 1 minus the idle rate shows negative usage on idle
-machines.
+Hi.
 
-Measured over 60 s with /proc/stat and the idle_sleeps counters in
-/proc/timer_list:
+Adding the regressions list back to the discussion, as I accidentally omitt=
+ed it from the recipients of my previous reply.
 
-  SPARC T7-1, 7.3-rc5, HZ=100, 256 CPUs:
-    idle per wall second 1.0057 on average, 1.44 on the worst CPU
-    (92 tick stops/s, 4.8 ms of excess per tick stop)
+The debug log patch and log file were not sent to the list, so I=E2=80=
+=99m attaching them here for reference.
 
-  amd64 (Opteron 1214), 7.2.7, HZ=1000, 2 CPUs:
-    idle machine:                         +0.03% and +0.06%
-    a task waking every 3.7 ms on CPU 1:  +13.1% on CPU 1
-    (285 tick stops/s, 0.46 ms of excess per tick stop)
+> Thanks again for digging into this. Built and loaded your debug patch on =
+top of f0866517be93 (Fedora 44 kernel-7.2.8 sources), rebuilt into the init=
+ramfs so it's active from early boot. Log attached (wheeldbg.log).
+>=20
+> Result across every single transition logged (9 total, covering both driv=
+er-initiated SetWheelMode and ones triggered externally via Solaar): SetWhe=
+elMode's answer and the follow-up GetWheelMode always
+> *agree* -- wheel_multiplier and the device's self-reported mode never dis=
+agree once. Yet the actual scroll behavior stays broken/undivided the whole=
+ time regardless of which mode is active or agreed-upon.
+>=20
+> So in my case it doesn't look like a SetWheelMode/GetWheelMode cache-desy=
+nc at all -- both sides consistently agree, but the visible scroll output d=
+oesn't follow what either side thinks the mode is. That
+> suggests the actual REL_WHEEL_HI_RES scaling happening on the wire/in the=
+ input layer isn't being driven by wheel_multiplier the way we'd expect, or=
+ something downstream of this driver is involved.
 
-On both machines the excess is about half a tick per tick stop.
+Based on the debug log you sent, I can't see the reason why this commit wou=
+ld break the hires scroll on G903. Especially if it is broken right away af=
+ter plugging the receiver, without any user space intervention. After recei=
+ver connect, I only see logs "SetWheelMode answer (kernel request)". These =
+are just debug logging but there is nothing there that the commit f0866517b=
+e9345d8245d32b722574b8aecccb348 changed. "SetWheelMode answer" logs show th=
+e place where the commit actually changes existing functionality by modifyi=
+ng the multiplier which before the commit was statically always 8 if hires =
+capability was found from mouse and 1 if not. Logs show that the SetWheelMo=
+de responses come as expected and multiplier is updated as expected.
 
-From reading the code (not bisected), I think the cause is that
-cf6444c3e1bb7 ("tick/sched: Unify idle cputime accounting") made
-dyntick-idle time and tick-sampled time share cpustat[CPUTIME_IDLE].
-On idle exit, kcpustat_dyntick_stop() accounts idle time up to now.
-The tick is then restarted on its old period, and the first tick
-accounts a whole TICK_NSEC through account_process_tick(), although
-the part of that period before the idle exit has just been accounted
-as idle. Before v7.2, /proc/stat read ts->idle_sleeptime, and the tick
-fed a counter it did not use, so nothing was counted twice.
+What is "sudo evtest" showing right after receiver connect when you scroll?=
+ With Solaar not running.
+--b1=_k60ljnAys8QILyn4gPZmCg0bNYTzf2kpWRVXHkBBi0
+Content-Type: text/x-log; name=wheeldbg.log
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=wheeldbg.log
 
-I have a fix that records the overlap in kcpustat_dyntick_stop() and
-leaves it out of the first tick. With it, idle per wall second is
-1.0000 on both machines, and -0.1% under the wakeup load at 280 tick
-stops/s. I am still testing it with IRQ_TIME_ACCOUNTING and with steal
-time in a KVM guest, and will send it when that is done.
+WyAgIDQzLjQ5OTkyOF0gbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMEU6
+IHdoZWVsZGJnOiBTZXRXaGVlbE1vZGUgYW5zd2VyIChrZXJuZWwgcmVxdWVzdCk6IHNlbnQgbW9k
+ZSAweDAyLCByZXQgMCwgcGFyYW1zIDAyIDAwIDAwIDAwClsgIDE0Mi40MzE5NTRdIGxvZ2l0ZWNo
+LWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDBFOiB3aGVlbGRiZzogU2V0V2hlZWxNb2Rl
+IGFuc3dlciAoa2VybmVsIHJlcXVlc3QpOiBzZW50IG1vZGUgMHgwMiwgcmV0IDAsIHBhcmFtcyAw
+MiAwMCAwMCAwMApbICAxNDIuNTExOTUzXSBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZE
+OjQwODcuMDAwRTogd2hlZWxkYmc6IFNldFdoZWVsTW9kZSBhbnN3ZXIgKGtlcm5lbCByZXF1ZXN0
+KTogc2VudCBtb2RlIDB4MDIsIHJldCAwLCBwYXJhbXMgMDIgMDAgMDAgMDAKWyAgMTQzLjUzMzk0
+NV0gbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMEU6IHdoZWVsZGJnOiBT
+ZXRXaGVlbE1vZGUgYW5zd2VyOiBkZXYgMHgwMSBzd2lkIDB4YiwgcGFyYW1zIDAwIDAwIDAwIDAw
+LCB3aGVlbF9tdWx0aXBsaWVyIDggLT4gMQpbICAxNDQuMDk2OTUwXSBsb2dpdGVjaC1oaWRwcC1k
+ZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRTogd2hlZWxkYmc6IEdldFdoZWVsTW9kZSBhbnN3ZXI6
+IGRldiAweDAxIHN3aWQgMHgxLCBwYXJhbXMgMDAgMDAgMDAgMDAsIG1vZGUgMHgwMCwgbGFzdCBT
+ZXRXaGVlbE1vZGUgYW5zd2VyIDB4MDAsIGhpcmVzIGFncmVlLCB3aGVlbF9tdWx0aXBsaWVyIDEK
+WyAgMzgwLjE3MTM4N10gbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMEU6
+IHdoZWVsZGJnOiBTZXRXaGVlbE1vZGUgYW5zd2VyOiBkZXYgMHgwMSBzd2lkIDB4YiwgcGFyYW1z
+IDAyIDAwIDAwIDAwLCB3aGVlbF9tdWx0aXBsaWVyIDEgLT4gOApbICAzODAuNjg2MDE5XSBsb2dp
+dGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRTogd2hlZWxkYmc6IEdldFdoZWVs
+TW9kZSBhbnN3ZXI6IGRldiAweDAxIHN3aWQgMHgxLCBwYXJhbXMgMDIgMDAgMDAgMDAsIG1vZGUg
+MHgwMiwgbGFzdCBTZXRXaGVlbE1vZGUgYW5zd2VyIDB4MDIsIGhpcmVzIGFncmVlLCB3aGVlbF9t
+dWx0aXBsaWVyIDgKWyAgMzg0LjMwNzAyMV0gbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2
+RDo0MDg3LjAwMEU6IHdoZWVsZGJnOiBTZXRXaGVlbE1vZGUgYW5zd2VyOiBkZXYgMHgwMSBzd2lk
+IDB4YiwgcGFyYW1zIDAwIDAwIDAwIDAwLCB3aGVlbF9tdWx0aXBsaWVyIDggLT4gMQpbICAzODQu
+ODEzMDIyXSBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRTogd2hlZWxk
+Ymc6IEdldFdoZWVsTW9kZSBhbnN3ZXI6IGRldiAweDAxIHN3aWQgMHgxLCBwYXJhbXMgMDAgMDAg
+MDAgMDAsIG1vZGUgMHgwMCwgbGFzdCBTZXRXaGVlbE1vZGUgYW5zd2VyIDB4MDAsIGhpcmVzIGFn
+cmVlLCB3aGVlbF9tdWx0aXBsaWVyIDEK
 
-#regzbot introduced: cf6444c3e1bb7
+--b1=_k60ljnAys8QILyn4gPZmCg0bNYTzf2kpWRVXHkBBi0
+Content-Type: text/x-patch; name=hidpp-wheel-multiplier-debug.patch
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=hidpp-wheel-multiplier-debug.patch
 
-Stian
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaGlkL2hpZC1sb2dpdGVjaC1oaWRwcC5jIGIvZHJpdmVycy9o
+aWQvaGlkLWxvZ2l0ZWNoLWhpZHBwLmMKaW5kZXggNzBiYTFhNWU0MGQ4Li5jY2JjOWFhZWFjYmUg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvaGlkL2hpZC1sb2dpdGVjaC1oaWRwcC5jCisrKyBiL2RyaXZl
+cnMvaGlkL2hpZC1sb2dpdGVjaC1oaWRwcC5jCkBAIC0xOTQsNiArMTk0LDcgQEAgc3RydWN0IGhp
+ZHBwX2RldmljZSB7CiAKIAlzdHJ1Y3Qgd29ya19zdHJ1Y3Qgd29yazsKIAlzdHJ1Y3Qgd29ya19z
+dHJ1Y3QgcmVzZXRfaGlfcmVzX3dvcms7CisJc3RydWN0IGRlbGF5ZWRfd29yayB3aGVlbF9tb2Rl
+X2NoZWNrX3dvcms7CiAJc3RydWN0IGtmaWZvIGRlbGF5ZWRfd29ya19maWZvOwogCXN0cnVjdCBp
+bnB1dF9kZXYgKmRlbGF5ZWRfaW5wdXQ7CiAKQEAgLTIwOCw2ICsyMDksNyBAQCBzdHJ1Y3QgaGlk
+cHBfZGV2aWNlIHsKIAogCWludCBoaXJlc193aGVlbF9tdWx0aXBsaWVyOwogCXU4IGhpcmVzX3do
+ZWVsX2ZlYXR1cmVfaW5kZXg7CisJdTggbGFzdF9zZXRfd2hlZWxfbW9kZV9hbnN3ZXI7CiAKIAli
+b29sIGNvbm5lY3RlZF9vbmNlOwogfTsKQEAgLTIwMzgsNiArMjA0MCw3IEBAIHN0YXRpYyBpbnQg
+aGlkcHBfaHJzX3NldF9oaWdocmVzX3Njcm9sbGluZ19tb2RlKHN0cnVjdCBoaWRwcF9kZXZpY2Ug
+KmhpZHBwLAogI2RlZmluZSBISURQUF9QQUdFX0hJUkVTX1dIRUVMCQkweDIxMjEKIAogI2RlZmlu
+ZSBDTURfSElSRVNfV0hFRUxfR0VUX1dIRUVMX0NBUEFCSUxJVFkJMHgwMAorI2RlZmluZSBDTURf
+SElSRVNfV0hFRUxfR0VUX1dIRUVMX01PREUJCTB4MTAKICNkZWZpbmUgQ01EX0hJUkVTX1dIRUVM
+X1NFVF9XSEVFTF9NT0RFCQkweDIwCiAKIHN0YXRpYyBpbnQgaGlkcHBfaHJ3X2dldF93aGVlbF9j
+YXBhYmlsaXR5KHN0cnVjdCBoaWRwcF9kZXZpY2UgKmhpZHBwLApAQCAtMjA3Miw3ICsyMDc1LDcg
+QEAgc3RhdGljIGludCBoaWRwcF9ocndfc2V0X3doZWVsX21vZGUoc3RydWN0IGhpZHBwX2Rldmlj
+ZSAqaGlkcHAsIGJvb2wgaW52ZXJ0LAogCXU4IGZlYXR1cmVfaW5kZXg7CiAJaW50IHJldDsKIAl1
+OCBwYXJhbXNbMV07Ci0Jc3RydWN0IGhpZHBwX3JlcG9ydCByZXNwb25zZTsKKwlzdHJ1Y3QgaGlk
+cHBfcmVwb3J0IHJlc3BvbnNlID0ge307CiAKIAlyZXQgPSBoaWRwcF9yb290X2dldF9mZWF0dXJl
+KGhpZHBwLCBISURQUF9QQUdFX0hJUkVTX1dIRUVMLAogCQkJCSAgICAgJmZlYXR1cmVfaW5kZXgp
+OwpAQCAtMjA4Myw5ICsyMDg2LDE0IEBAIHN0YXRpYyBpbnQgaGlkcHBfaHJ3X3NldF93aGVlbF9t
+b2RlKHN0cnVjdCBoaWRwcF9kZXZpY2UgKmhpZHBwLCBib29sIGludmVydCwKIAkJICAgIChoaWdo
+X3Jlc29sdXRpb24gPyBCSVQoMSkgOiAwKSB8CiAJCSAgICAodXNlX2hpZHBwICAgICAgID8gQklU
+KDApIDogMCk7CiAKLQlyZXR1cm4gaGlkcHBfc2VuZF9mYXBfY29tbWFuZF9zeW5jKGhpZHBwLCBm
+ZWF0dXJlX2luZGV4LAotCQkJCQkgICBDTURfSElSRVNfV0hFRUxfU0VUX1dIRUVMX01PREUsCi0J
+CQkJCSAgIHBhcmFtcywgc2l6ZW9mKHBhcmFtcyksICZyZXNwb25zZSk7CisJcmV0ID0gaGlkcHBf
+c2VuZF9mYXBfY29tbWFuZF9zeW5jKGhpZHBwLCBmZWF0dXJlX2luZGV4LAorCQkJCQkgIENNRF9I
+SVJFU19XSEVFTF9TRVRfV0hFRUxfTU9ERSwKKwkJCQkJICBwYXJhbXMsIHNpemVvZihwYXJhbXMp
+LCAmcmVzcG9uc2UpOworCisJaGlkX2luZm8oaGlkcHAtPmhpZF9kZXYsCisJCSAid2hlZWxkYmc6
+IFNldFdoZWVsTW9kZSBhbnN3ZXIgKGtlcm5lbCByZXF1ZXN0KTogc2VudCBtb2RlIDB4JTAyeCwg
+cmV0ICVkLCBwYXJhbXMgJSpwaFxuIiwKKwkJIHBhcmFtc1swXSwgcmV0LCA0LCByZXNwb25zZS5m
+YXAucGFyYW1zKTsKKwlyZXR1cm4gcmV0OwogfQogCiAvKiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSAqLwpA
+QCAtMzc3NCwxMyArMzc4Miw1OCBAQCBzdGF0aWMgaW50IGhpZHBwMjBfaGlyZXNfd2hlZWxfcmF3
+X2V2ZW50KHN0cnVjdCBoaWRwcF9kZXZpY2UgKmhpZHBwLAogCQlib29sIGhpcmVzID0gKG1vZGUg
+JiAweDAyKSAhPSAwOwogCQlpbnQgbmV3X211bHRpcGxpZXIgPSAoaGlyZXMgJiYgaGlkcHAtPmhp
+cmVzX3doZWVsX211bHRpcGxpZXIgPiAwKQogCQkJPyBoaWRwcC0+aGlyZXNfd2hlZWxfbXVsdGlw
+bGllciA6IDE7CisKKwkJaGlkX2luZm8oaGlkcHAtPmhpZF9kZXYsCisJCQkgIndoZWVsZGJnOiBT
+ZXRXaGVlbE1vZGUgYW5zd2VyOiBkZXYgMHglMDJ4IHN3aWQgMHgleCwgcGFyYW1zICUqcGgsIHdo
+ZWVsX211bHRpcGxpZXIgJWQgLT4gJWRcbiIsCisJCQkgZGF0YVsxXSwgZGF0YVszXSAmIDB4MGYs
+IDQsICZkYXRhWzRdLAorCQkJIGhpZHBwLT52ZXJ0aWNhbF93aGVlbF9jb3VudGVyLndoZWVsX211
+bHRpcGxpZXIsCisJCQkgbmV3X211bHRpcGxpZXIpOwogCQloaWRwcC0+dmVydGljYWxfd2hlZWxf
+Y291bnRlci53aGVlbF9tdWx0aXBsaWVyID0gbmV3X211bHRpcGxpZXI7CisKKwkJV1JJVEVfT05D
+RShoaWRwcC0+bGFzdF9zZXRfd2hlZWxfbW9kZV9hbnN3ZXIsIG1vZGUpOworCQlzY2hlZHVsZV9k
+ZWxheWVkX3dvcmsoJmhpZHBwLT53aGVlbF9tb2RlX2NoZWNrX3dvcmssCisJCQkJICAgICAgbXNl
+Y3NfdG9famlmZmllcyg1MDApKTsKIAkJcmV0dXJuIDE7CiAJfQogCiAJcmV0dXJuIDA7CiB9CiAK
+K3N0YXRpYyB2b2lkIGhpZHBwX3doZWVsX21vZGVfY2hlY2tfaGFuZGxlcihzdHJ1Y3Qgd29ya19z
+dHJ1Y3QgKndvcmspCit7CisJc3RydWN0IGhpZHBwX2RldmljZSAqaGlkcHAgPSBjb250YWluZXJf
+b2YodG9fZGVsYXllZF93b3JrKHdvcmspLAorCQkJCQkJICBzdHJ1Y3QgaGlkcHBfZGV2aWNlLAor
+CQkJCQkJICB3aGVlbF9tb2RlX2NoZWNrX3dvcmspOworCXU4IGFuc3dlciA9IFJFQURfT05DRSho
+aWRwcC0+bGFzdF9zZXRfd2hlZWxfbW9kZV9hbnN3ZXIpOworCXU4IGZlYXR1cmVfaW5kZXggPSBo
+aWRwcC0+aGlyZXNfd2hlZWxfZmVhdHVyZV9pbmRleDsKKwlzdHJ1Y3QgaGlkcHBfcmVwb3J0IHJl
+c3BvbnNlOworCWJvb2wgYWdyZWU7CisJdTggbW9kZTsKKwlpbnQgcmV0OworCisJaWYgKGZlYXR1
+cmVfaW5kZXggPT0gMHhmZikKKwkJcmV0dXJuOworCisJcmV0ID0gaGlkcHBfc2VuZF9mYXBfY29t
+bWFuZF9zeW5jKGhpZHBwLCBmZWF0dXJlX2luZGV4LAorCQkJCQkgIENNRF9ISVJFU19XSEVFTF9H
+RVRfV0hFRUxfTU9ERSwKKwkJCQkJICBOVUxMLCAwLCAmcmVzcG9uc2UpOworCWlmIChyZXQpIHsK
+KwkJaGlkX2luZm8oaGlkcHAtPmhpZF9kZXYsCisJCQkgIndoZWVsZGJnOiBHZXRXaGVlbE1vZGUg
+ZmFpbGVkOiAlZFxuIiwgcmV0KTsKKwkJcmV0dXJuOworCX0KKworCW1vZGUgPSByZXNwb25zZS5m
+YXAucGFyYW1zWzBdOworCWFncmVlID0gKG1vZGUgJiAweDAyKSA9PSAoYW5zd2VyICYgMHgwMik7
+CisJaGlkX2luZm8oaGlkcHAtPmhpZF9kZXYsCisJCSAid2hlZWxkYmc6IEdldFdoZWVsTW9kZSBh
+bnN3ZXI6IGRldiAweCUwMnggc3dpZCAweCV4LCBwYXJhbXMgJSpwaCwgbW9kZSAweCUwMngsIGxh
+c3QgU2V0V2hlZWxNb2RlIGFuc3dlciAweCUwMngsIGhpcmVzICVzLCB3aGVlbF9tdWx0aXBsaWVy
+ICVkXG4iLAorCQkgcmVzcG9uc2UuZGV2aWNlX2luZGV4LAorCQkgcmVzcG9uc2UuZmFwLmZ1bmNp
+bmRleF9jbGllbnRpZCAmIDB4MGYsCisJCSA0LCByZXNwb25zZS5mYXAucGFyYW1zLAorCQkgbW9k
+ZSwgYW5zd2VyLCBhZ3JlZSA/ICJhZ3JlZSIgOiAiRElTQUdSRUUiLAorCQkgaGlkcHAtPnZlcnRp
+Y2FsX3doZWVsX2NvdW50ZXIud2hlZWxfbXVsdGlwbGllcik7Cit9CisKIC8qIC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tICovCiAvKiBHZW5lcmljIEhJRCsrIGRldmljZXMgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqLwogLyogLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0g
+Ki8KQEAgLTQ0NzYsNiArNDUyOSw4IEBAIHN0YXRpYyBpbnQgaGlkcHBfcHJvYmUoc3RydWN0IGhp
+ZF9kZXZpY2UgKmhkZXYsIGNvbnN0IHN0cnVjdCBoaWRfZGV2aWNlX2lkICppZCkKIAogCUlOSVRf
+V09SSygmaGlkcHAtPndvcmssIGhpZHBwX2Nvbm5lY3RfZXZlbnQpOwogCUlOSVRfV09SSygmaGlk
+cHAtPnJlc2V0X2hpX3Jlc193b3JrLCBoaWRwcF9yZXNldF9oaV9yZXNfaGFuZGxlcik7CisJSU5J
+VF9ERUxBWUVEX1dPUksoJmhpZHBwLT53aGVlbF9tb2RlX2NoZWNrX3dvcmssCisJCQkgIGhpZHBw
+X3doZWVsX21vZGVfY2hlY2tfaGFuZGxlcik7CiAJbXV0ZXhfaW5pdCgmaGlkcHAtPnNlbmRfbXV0
+ZXgpOwogCWluaXRfd2FpdHF1ZXVlX2hlYWQoJmhpZHBwLT53YWl0KTsKIApAQCAtNDU3NCw2ICs0
+NjI5LDcgQEAgc3RhdGljIHZvaWQgaGlkcHBfcmVtb3ZlKHN0cnVjdCBoaWRfZGV2aWNlICpoZGV2
+KQogCWhpZF9od19zdG9wKGhkZXYpOwogCWNhbmNlbF93b3JrX3N5bmMoJmhpZHBwLT53b3JrKTsK
+IAljYW5jZWxfd29ya19zeW5jKCZoaWRwcC0+cmVzZXRfaGlfcmVzX3dvcmspOworCWNhbmNlbF9k
+ZWxheWVkX3dvcmtfc3luYygmaGlkcHAtPndoZWVsX21vZGVfY2hlY2tfd29yayk7CiAJbXV0ZXhf
+ZGVzdHJveSgmaGlkcHAtPnNlbmRfbXV0ZXgpOwogfQogCg==
+
+--b1=_k60ljnAys8QILyn4gPZmCg0bNYTzf2kpWRVXHkBBi0--
+
