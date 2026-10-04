@@ -1,181 +1,472 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ECF3D16F0
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 16:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791132696; cv=none; b=IsdAT7RbHN+t6f8dc/wj/WTPoPn4lJPeymUrVQqjt3gptl5Bv0ztGk+XBXovpyQZGtWXFS7XDKZ9f/F67Dy9CiHoAJ5Ak19qnil79lulK/vcMv7tgTJSER/ROk+zJobjaymUBX6W2ktKJlEr5579l8RlsueFr86d4Z8I+GBjIMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791132696; c=relaxed/simple;
-	bh=7wG9Ljo/wLQuUSFyuvqM5SlTjkxmEhtxmQbgpLCzXuA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MYjzzVRrWSSfC9sJ7iGa88o8SWLFtwuP05LfPxng+hMpnhPJiYrmIJQcQDT1JilbO3LVQpM/7yzTgxOPgDINXaLGdNtKuZUblK8nqugLmp61smBDX7dlqC0oSnHA9D1cV1nVomtrY3GQJv0QV5XLknJxQbALfh4ja7Zk2tVhoks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4iZ7ikq; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54332D23A6
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 17:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791134944; cv=pass; b=iPST0W/jWJ7NgYb9vBB/D2DMnlIDhdg2HIXNzjDkO+Zp+hJDivpZ9hHfXSZWm5Na/xBR4RV8rgfNzl6Cq6bDIiocm7txuY0Wg18nxChLqK0JuVORNXZgtud25if33ERE9qtXJkLVCYIfrGDQT0wj2CQyz3ogIEJPW+rH1w19Ysc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791134944; c=relaxed/simple;
+	bh=nKDzNh/yeilurEOUac1p5Sd7VWkoKKUpUmUXaqnA+JE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=npuHfyCxRj0ivNOvuB5lPQPW4qvrjAb11LRC0KYavQlK41X2A036SlPlj0Nvk1qTeDJYkJv0jjBIwfPY+gnNHIdo7ISIaJWS6WugASDmVMMJKV/PvkOjVIFIFZZMQKu5I8cuJQ1pv6ROTGTcJlzt7ngLF8Qua7IDjCeVa6WxjPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hB3EzjCj; arc=pass smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4iZ7ikq"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a1728d8dfcso625015e9.1
-        for <regressions@lists.linux.dev>; Sun, 04 Oct 2026 09:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hB3EzjCj"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48870973bddso275632f8f.1
+        for <regressions@lists.linux.dev>; Sun, 04 Oct 2026 10:29:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791134941; cv=none;
+        d=google.com; s=arc-20260327;
+        b=hVN7eIoW4k6eBDRxC/tKhr76qHLsfO5wvYxBW27ZSjIYsf5u4PZ0GImDuNQqAP8Ds0
+         bSBpJouAzFESJPiTaMhhCNqlMFJ8bB1Ddf4eN3H4LTByrHVTBlIo0kS3RSrBacjYNPpB
+         151e/JWJbHfF4qgZ3A3mwxwHqseqHGMW6UZ+ypgZneP+cVglKog0RObsQvLoxSreVEHx
+         bEqPBwYnyo3BG2PuoTE6UKt+PbBv7Nh/gVjSsgl8urtI4pe0Etaz77S6ADBTRa6/awgD
+         Nkom+djZNSBrP2Lm1xFn2pBtXpoNHfDDdra1tzRxegYJbVEj7omEBid+1d/b5qhOzSdN
+         bhhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=pz8Mohbk776cxYYJztLeYJf3DdX5MXJtzVfYSMqqboY=;
+        fh=XL/gTjjeyhE+PKs5lv1yFLrB8giRDPDMLaU5dpiKg2w=;
+        b=CA0oreJls5IynDou8CXkYwc6D0sMvNV3gMyexjXEciaSVwir15Bih/i7tEiPN+8qH/
+         LveYAKqwv/j4Bnr1YgH3Jj5YjcNGmldNUe1SZNlrwwfAW0a+6aNyXCtXMYCoZAfP8khL
+         R5223+orqNcN0QBk+ziQV9WE0MS/MEOV2StxoWpkhaQWMYw2+YMcWyYwE8joUdNlPWku
+         B0/vSJAQ1b/tIN/0xQVmT6TKqytd+pWzSIlCRvmlljLdcTCK17purSdX6kvx9frDldqI
+         IhLU/ZErKB7pzOCs8AetfR3sKI9CswrRwTj9sOCM6SXD+v8LkJd1VIiQJy9TYx8T9WjT
+         3KbA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791132692; x=1791737492; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NP4InVw4ZvTsXvnaGIApv16AhZMv/UaEABA2B83Ciew=;
-        b=P4iZ7ikqLRFhPTsySU7QC6ch48mui6fcHATvQcy2gnrRGgPPTTZrxC3qBh5U0hzoqO
-         b5JO8/NGUgnxbIslkzhgUYzj7g9sUft6aEJ1wBAc86cOCZhCQRjpgTyUEf6mdmI2q5bP
-         tQT9xeaC0J7vGaoEokpoyMheFRMOO48N9VjpxSaY3t74/j19biSMAHUa+I3AzDE0PyCZ
-         rDkJcigPRJW0KyUjDKvM6RxbYBaCpE49Es3/pnE8/m7fI4aD0E7qksvPEgVOJ2sq4YNa
-         k3LRZgb2RlMYZ0WmPn55tM466x4E7PzHDgyIaLlA2AmtE1fOo/gr1a1ZBTITyZHrKc+D
-         8r/A==
+        d=gmail.com; s=20251104; t=1791134941; x=1791739741; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=pz8Mohbk776cxYYJztLeYJf3DdX5MXJtzVfYSMqqboY=;
+        b=hB3EzjCjLxS5lJV4PWst8/I/+7ZgttPy0NekuvmI6IaJA+W7xYCZUDtbjcecSi7UG1
+         WcX9+DvmaECf7013WCL7EXHtfLe9A7T3rjjUhxwyYSeGEGI0pN6F0xfvde44K/NVjQ1l
+         JfbOXgIIS9Ypwyf4wCCQDuP2gY0Ysv9b1Fydj+V9tYJ7SG/PCjLlwKxkMM5z7rFERd2x
+         Hy/eAyZDoMwlvgBBHCceuxZpCqPYn545tK6YNTvs6J/KM5kx5+MCkZ0YQTuDQC22Gtst
+         B4nbTs+dFe9Ix9QPrroMh5IuhxNmaLNV0XOK2iObknqY/fQh8Dzk8CQspuQDS/TgJVJ0
+         JDWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791132692; x=1791737492;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=NP4InVw4ZvTsXvnaGIApv16AhZMv/UaEABA2B83Ciew=;
-        b=ZAk2w7eYOu/6u6lTdvXqgbsqyBMlonVOqxxZK9EHCvXCBDrYlF2yDFebm7YkmsJPkA
-         AkR2WrZzTXDbt2oWSc1v+sUpxNLdXngSYDXusMRpKw4tm3kmZ9O6RLHH3a+5+VvnH2zu
-         NM02J5oSRZjRRUf9zE5bS8VYWa9p/BoJboKFTzOT4iwBOp971qyFQ1RmJ6w8tmBnxxSX
-         A4CVR7K88bqDZPdrkQv9aQgyTIFmw8f/ZpzFW79uSiViiaHkbQLpSRajbvW4D3C6y05e
-         or4i2EhgP0G0A5yTykd4zFhKc3AuZ8RoVFE56RdY+oVmAHiRe1CRTh0tkvf+8y7cj87w
-         bqiQ==
-X-Forwarded-Encrypted: i=1; AKwUvByDOZKIp9AofH/kveV2lF2/n66/1Yfe/ljg7k2uzYpkh3yQ/iPDUNWHCkRlHDTbjJm25D4qxMDrNswEtA==@lists.linux.dev
-X-Gm-Message-State: AFuF++lCxduvZxqHRUgxcdDOj40b8aznUxyIVHbh4SmxKv/bZrr4OMwM
-	jmrMMSHAOPtWPDH1G9AeVkFhKOdlyC2t6HMYvVa6w413KSUqyF4EXehq
-X-Gm-Gg: AYBFou1ESy7krllWQIzb+Vz94kUVXcjFIzUChefPZHCD24R1ZblYhe4yrAsjYIp7sDC
-	KOJUCbk4tfVIQBwhATO7l9MHNEuQEn26NbJFbKGNO6foawXDBvP95QmLZbl2j+Kpt4RWgw2kxVe
-	7gjcYoA24GYKpV16tWcLA1mxj5/Thj4bayv58JJFHW8qvD5SZrIs5LXpD4Hbt2IHi7DtEzKcG+J
-	gI9UIAVXSUxhEeuseZr8ctKPgdmm2450ot1+21wNel/Jfm80FR0qkkkAUaBqRC7fVpxytm5PyZw
-	vhbE/X5uOqSewMFQTamj/6TTiexeLGWma6u0oghCNJlxrwWKBSWHWLbJqO+Pe0i40monLqnpky5
-	mJJBtr6KdUXYkFcxnYoW4tGW4KbHc5C9KeiaCWKNrlHNg7VHr2dRlON1fkSYfu3yrB3irpCaXg+
-	N9y66xQbFtdW/oeaxwEk6ujSgMtw7DJfbquhysaHEzQHdZ0tH8Li5sgsCUips0Q4E6BudlL7oLk
-	mE8+guy1V4=
-X-Received: by 2002:a05:600c:698d:b0:49d:1842:f001 with SMTP id 5b1f17b1804b1-4a1680e5865mr77354445e9.14.1791132692261;
-        Sun, 04 Oct 2026 09:51:32 -0700 (PDT)
-Received: from FranzSP11.fritz.box ([31.31.60.25])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a027725c6asm311375035e9.8.2026.10.04.09.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Oct 2026 09:51:31 -0700 (PDT)
-From: =?UTF-8?q?Fran=C3=A7ois=20Roux?= <franzelfranzel@gmail.com>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] power: sequencing: qcom-wcn: power off WLAN at probe
-Date: Sun,  4 Oct 2026 18:51:24 +0200
-Message-ID: <20261004165124.4277-1-franzelfranzel@gmail.com>
-X-Mailer: git-send-email 2.56.0
+        d=1e100.net; s=20260707; t=1791134941; x=1791739741;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=pz8Mohbk776cxYYJztLeYJf3DdX5MXJtzVfYSMqqboY=;
+        b=ylU/cC/EcCElgp8NJNQjof+jJmWMtrKlj2IAsvoc3+zse1l7s57ph7KJvmb/y2v2Z1
+         sikLFcyWfeo58XEoj79YzqAqQmYwhDo4pP9L+58vC6cX83p/GNhz7fPFa+GAaSPWyN76
+         C4La+bjJPEhXla1ip6Q1zJDDAfVH6mxm2Fn1TqdMWH7nsuGZ1Qgd0v6DuBBT6W0oxezt
+         hnqamQS5VKG75ihXuwI2YVC8D1gdLaMqauRIknk7+dRLx94uwr/qIMD8GiNqz5McP5gp
+         Q72Lti1+g2Pq3Ak9SGKkT/jvJgukye2dunmuYN813qukm+Ve6NcKzvnK7LEv48OzfQxR
+         A2Gw==
+X-Forwarded-Encrypted: i=1; AKwUvBw/LDkQd/NUNNM6LK21drb4JAYlVkYExuisQ871toP3g3kfk8VjiPdchACbLCFX5Xyanc5pG5icLtqMMg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKldUgVtTH4ERSnpd/e94DAU9meo98YXnkNQGLeLzsrMZGtdNt4
+	i8FdFjGA/uDHMCMchDurze5v+HdXRee4JU2W8fjfdHIbx/sohZX67jNhcsSykp4SUJC0K4DADBI
+	W1Mv3l3VayAOJLibCXLHEbW/H3FK1rzFg4jtp
+X-Gm-Gg: AYBFou1+jzgHnmN/u0Hqxcm5aBeK1rXihcKjSTAT8HMkXQZY3XfwP79U+eWvpjfMBW0
+	HMJ2X5Q88aHZcbtS/nXihtA+FEfyS8XSZWD9C6Xo61j2NGd2+7K41AAUXxBAH8Gou5UPWgCOjE4
+	l/y1iDzzvbaAA5K+4ArkvhYghcndgjemn5ifDT/uqry3Is90LMY7MkiatB/DxITUodgG+eS8tGA
+	EmHWacvVBYq1ewVbD2KsrevMspKVTHM7m4QMFDGD6W76u/lktKk+vsAKEdMeEemwsc97HMuf2Or
+	gNEVtpZI4WBzFwHfUVEv+c1k2yZDJ/d2UIQAtZJ3JbF6aCzbO6lHad8=
+X-Received: by 2002:a5d:54cd:0:b0:487:1577:9e33 with SMTP id
+ ffacd0b85a97d-48b068bf670mr18038858f8f.25.1791134940425; Sun, 04 Oct 2026
+ 10:29:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: John Doen <johndoen1965@gmail.com>
+Date: Sun, 4 Oct 2026 12:28:48 -0500
+X-Gm-Features: AclHuK-37N6r_tlttg0x4xvI3cfhNn-wbnmol2NuDn1a3WNjNTiEuIfYgZp3X9Q
+Message-ID: <CAPddu3kdTYPn51R05349V=KozM80+EL044fjDosteXvW9mOaQQ@mail.gmail.com>
+Subject: Re: PCI: bridge window undersized when child bridge windows are
+ larger than their alignment (regression since 3958bf16e2fe, v7.0)
+To: linux-pci@vger.kernel.org
+Cc: nbritton@exabit.io, bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, 
+	regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org
+Content-Type: multipart/mixed; boundary="000000000000deb234065d07199c"
 
-The WLAN enable GPIO is requested with GPIOD_ASIS and then kept at its
-current level, so that a WLAN module left powered on by the firmware is
-not switched off. The FIXME explains why: toggling it would take the
-PCIe link down, and the controller driver could not recover from that.
+--000000000000deb234065d07199c
+Content-Type: text/plain; charset="UTF-8"
 
-That reasoning held while the PCIe link was trained before the
-sequencer probed. Since commit b921aa3f8dec ("PCI/pwrctrl: Switch to
-pwrctrl create, power on/off, destroy APIs"), qcom_pcie_host_init()
-powers the endpoint through pwrctrl before it starts link training, and
-defers until the pwrctrl driver is bound. That driver cannot bind
-before this sequencer has probed. Power-on therefore always comes
-before link training, and keeping the firmware state is now harmful.
+ This is a follow-up to:
+https://mail-archive.com/amd-gfx@lists.freedesktop.org/msg152555.html
 
-On the Microsoft Surface Pro 11 (X1E80100), the WCN7850 sits on a
-PCIe port without a PERST# GPIO. While pci-pwrctrl-pwrseq is not yet
-bound, the host init is deferred about ten times, and each attempt
-powers the PHY and controller back down. The later power-on only sets
-a GPIO that is already high, so the chip is never reset and the link
-never comes up:
+Hi,
 
-  qcom-pcie 1c08000.pcie: Device found, but not active
+I appear to have another instance of this multi-composite-resource
+bridge-window undersizing regression, this time with two discrete NVIDIA
+GPUs behind AMD chipset PCIe switches.
 
-The endpoint is not enumerated and ath12k never probes. Bluetooth on
-the same chip fails too ("QCA Failed to send TLV segment (-110)").
+The allocation arithmetic looks equivalent to the original report, but I
+have not yet tested Ilpo's newer patch series. Please treat this as an
+additional likely instance rather than confirmation that the proposed
+series fixes this machine.
 
-Request the GPIO as GPIOD_OUT_LOW. The chip is then off when the
-sequencer probes, and pwrctrl powers it up cleanly right before link
-training. Drop the FIXME and the code that preserved the firmware
-state.
+The failure was reproduced on Ubuntu 26.04 with its 7.0.0-31-generic
+kernel. The same hardware allocated correctly with Ubuntu's
+6.17.0-42-generic kernel.
 
-Tested on a Surface Pro 11:
- - b921aa3f8dec plus a one-line version of this change: endpoint
-   enumerated at 2.4 s, ath12k and Bluetooth working.
- - next-20260929 plus this patch: "PCIe Gen.3 x2 link up" at 3.4 s,
-   ath12k and Bluetooth working, Wi-Fi connected.
-Without the change, neither kernel enumerates the endpoint.
+Summary
+=======
 
-The culprit was found by bisecting v6.17..v7.1, with the DTB and
-.config held constant.
+On Linux 7.0, forcing bridge resource reassignment gives the shared parent
+window only the plain sum of two composite child windows. The second child
+cannot start immediately after the first because both child windows inherit
+the alignment of their largest BAR.
 
-Fixes: b921aa3f8dec ("PCI/pwrctrl: Switch to pwrctrl create, power on/off, destroy APIs")
-Closes: https://lore.kernel.org/all/CAPjyS8dY0Q_o3XmFjuKZZsjhzhoSNL+ZGJtw5cQt8HiV3sUtxA@mail.gmail.com/
-Cc: stable@vger.kernel.org
-Assisted-by: LLM
-Signed-off-by: François Roux <franzelfranzel@gmail.com>
----
-Changes in v2:
-- Sign off with my full name.
-- Use the Assisted-by format from Documentation/process/coding-assistants.rst.
-- Add a Closes: tag pointing to the regression report.
-No code change.
+The later sibling bridge, 0000:0b:08.0, consequently receives neither its
+prefetchable nor non-prefetchable window. The NVIDIA GPU at 0000:11:00.0
+then has BAR0, BAR1, BAR3, its ROM, and its audio-function BAR unassigned.
 
-v1: https://lore.kernel.org/all/20261003091451.4727-1-franzelfranzel@gmail.com/
+The NVIDIA driver subsequently reports:
 
- drivers/power/sequencing/pwrseq-qcom-wcn.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+    NVRM: This PCI I/O region assigned to your NVIDIA device is invalid:
+    NVRM: BAR0 is 0M @ 0x0 (PCI:0000:11:00.0)
+    nvidia 0000:11:00.0: probe with driver nvidia failed with error -1
 
-diff --git a/drivers/power/sequencing/pwrseq-qcom-wcn.c b/drivers/power/sequencing/pwrseq-qcom-wcn.c
-index 7f88a29b2..636dd7e63 100644
---- a/drivers/power/sequencing/pwrseq-qcom-wcn.c
-+++ b/drivers/power/sequencing/pwrseq-qcom-wcn.c
-@@ -526,15 +526,8 @@ static int pwrseq_qcom_wcn_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
- 				     "Failed to get the Bluetooth enable GPIO\n");
- 
--	/*
--	 * FIXME: This should actually be GPIOD_OUT_LOW, but doing so would
--	 * cause the WLAN power to be toggled, resulting in PCIe link down.
--	 * Since the PCIe controller driver is not handling link down currently,
--	 * the device becomes unusable. So we need to keep this workaround until
--	 * the link down handling is implemented in the controller driver.
--	 */
- 	ctx->wlan_gpio = devm_gpiod_get_optional(dev, "wlan-enable",
--						 GPIOD_ASIS);
-+						 GPIOD_OUT_LOW);
- 	if (IS_ERR(ctx->wlan_gpio))
- 		return dev_err_probe(dev, PTR_ERR(ctx->wlan_gpio),
- 				     "Failed to get the WLAN enable GPIO\n");
-@@ -545,13 +538,6 @@ static int pwrseq_qcom_wcn_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(ctx->xo_clk_gpio),
- 				     "Failed to get the XO_CLK GPIO\n");
- 
--	/*
--	 * Set direction to output but keep the current value in order to not
--	 * disable the WLAN module accidentally if it's already powered on.
--	 */
--	gpiod_direction_output(ctx->wlan_gpio,
--			       gpiod_get_value_cansleep(ctx->wlan_gpio));
--
- 	ctx->clk = devm_clk_get_optional(dev, NULL);
- 	if (IS_ERR(ctx->clk))
- 		return dev_err_probe(dev, PTR_ERR(ctx->clk),
+The BAR allocation failure occurs before the NVIDIA driver probes, so this
+does not appear to originate in the NVIDIA driver.
 
-base-commit: 6474fa070f2b8013b4b87350b775b8c3be6e8aac
--- 
-2.56.0
+System
+======
 
+Distribution:
+
+    Ubuntu 26.04.1 LTS (Resolute)
+
+Failing kernel:
+
+    linux-image-7.0.0-31-generic 7.0.0-31.31
+
+The failing dmesg identifies it as:
+
+    Linux version 7.0.0-31-generic
+    #31-Ubuntu SMP PREEMPT_DYNAMIC
+    Ubuntu 7.0.0-31.31-generic 7.0.14
+
+Known-good kernel:
+
+    linux-image-6.17.0-42-generic 6.17.0-42.42+1
+
+CPU:
+
+    AMD Ryzen 9 9950X3D
+    x86_64
+    48-bit physical address space
+
+Motherboard/current DMI information:
+
+    Board vendor:   Micro-Star International Co., Ltd.
+    Board name:     PRO X870E-P WIFI (MS-7E70)
+    Board version:  2.0
+    BIOS vendor:    American Megatrends International, LLC.
+    BIOS version:   2.A52
+    BIOS date:      06/29/2026
+
+I did not save a separate DMI dump in the failing-boot artifact, so the BIOS
+information above is from the current machine. I believe it is unchanged
+from the failing test, but cannot prove that solely from the saved dmesg.
+
+GPU configuration at the time of the failing 7.0 capture:
+
+    0000:01:00.0  NVIDIA GeForce RTX 5090 [10de:2b85]
+    0000:0d:00.0  NVIDIA GeForce RTX 3090 [10de:2204]
+    0000:11:00.0  NVIDIA GeForce RTX 3090 [10de:2204]
+
+The RTX 5090 is attached directly under a separate root port. The two
+RTX 3090s are sibling endpoints behind the affected chipset/switch path.
+
+The machine now also contains an RTX 3060 behind 0000:0b:07.0. That GPU
+was added after the failing 7.0 capture and is not part of the comparison
+or arithmetic below. The current four-GPU configuration works on 6.17.
+
+Relevant topology during the failing test
+=========================================
+
+    0000:00:02.1  AMD GPP root port [1022:14db]
+      `-- 0000:03:00.0  AMD 600 Series switch upstream [1022:43f4]
+           `-- 0000:04:08.0  AMD 600 Series switch downstream [1022:43f5]
+                `-- 0000:0a:00.0  AMD 600 Series switch upstream [1022:43f4]
+                     `-- 0000:0b
+                          |-- 0000:0b:04.0 [bus 0d]
+                          |    |-- 0000:0d:00.0 RTX 3090 [10de:2204]
+                          |    `-- 0000:0d:00.1 NVIDIA HDA [10de:1aef]
+                          |-- 0000:0b:05.0 [bus 0e] -- Realtek RTL8126
+                          |-- 0000:0b:06.0 [bus 0f] -- Qualcomm WCN785x
+                          |-- 0000:0b:08.0 [bus 11]
+                          |    |-- 0000:11:00.0 RTX 3090 [10de:2204]
+                          |    `-- 0000:11:00.1 NVIDIA HDA [10de:1aef]
+                          |-- 0000:0b:0c.0 [bus 12] -- AMD USB
+                          `-- 0000:0b:0d.0 [bus 13] -- AMD SATA
+
+Failing test command line
+=========================
+
+The saved 7.0 boot used:
+
+    BOOT_IMAGE=/vmlinuz-7.0.0-31-generic
+    root=/dev/mapper/ubuntu--vg-ubuntu--lv
+    ro
+    crashkernel=2G-4G:320M,4G-32G:512M,32G-64G:1024M,64G-128G:2048M,128G-:4096M
+    pci=realloc=on
+    pci=resource_alignment=0000:00:02.1;0000:03:00.0;0000:04:08.0;0000:0a:00.0;0000:0b:04.0;0000:0b:08.0
+
+The resource_alignment list was used to force reassignment of the affected
+bridge path.
+
+This is an important limitation of my existing comparison: the failing 7.0
+capture used the targeted resource_alignment list, while the successful
+6.17 boot used pci=realloc=on without that list. The 6.17 kernel still had
+to reassign this hierarchy because the firmware-provided non-prefetchable
+window conflicted with AMDIF031:00.
+
+Prefetchable-window failure
+===========================
+
+Each RTX 3090 has:
+
+    BAR1: 0x800000000 = 32 GiB, prefetchable
+    BAR3: 0x02000000  = 32 MiB, prefetchable
+
+Therefore each downstream bridge needs a composite prefetchable window of:
+
+    0x802000000 = 32 GiB + 32 MiB
+
+The composite child window inherits 32 GiB alignment from BAR1.
+
+On the failing 7.0 boot, the parent at 0000:0a:00.0 was assigned:
+
+    0000:0a:00.0:
+      [mem 0x1000000000-0x2003ffffff 64bit pref]
+
+Its size is:
+
+    0x1004000000 = 64 GiB + 64 MiB
+
+This is exactly the plain sum of two 32 GiB + 32 MiB child windows.
+
+The first child was assigned successfully:
+
+    0000:0b:04.0:
+      [mem 0x1000000000-0x1801ffffff 64bit pref]
+
+This consumes 32 GiB + 32 MiB. Its exclusive end is 0x1802000000.
+
+Because the second child also requires 32 GiB alignment, it cannot start at
+0x1802000000. Its next legal start is 0x2000000000. Placing another
+0x802000000-byte child there requires an exclusive end of 0x2802000000.
+
+Thus the required parent span is:
+
+    0x1000000000-0x2801ffffff
+    size 0x1802000000 = 96 GiB + 32 MiB
+
+But Linux 7.0 allocated only:
+
+    size 0x1004000000 = 64 GiB + 64 MiB
+
+The shortfall is:
+
+    0x7fe000000 = 32 GiB - 32 MiB
+
+The kernel then reports:
+
+    pci 0000:0b:08.0: bridge window
+      [mem size 0x802000000 64bit pref]: can't assign; no space
+    pci 0000:0b:08.0: bridge window
+      [mem size 0x802000000 64bit pref]: failed to assign
+
+This appears to be the same arithmetic as the original Vega20 report,
+except that my composite windows contain a 32 GiB NVIDIA BAR1 plus a
+32 MiB BAR3 rather than a 32 GiB AMD BAR plus a 2 MiB doorbell BAR.
+
+On 6.17, the same hierarchy received:
+
+    0000:0a:00.0:
+      [mem 0xd000000000-0xe801ffffff 64bit pref]
+
+That window is 0x1802000000 bytes, exactly 96 GiB + 32 MiB.
+
+Both children then fit:
+
+    0000:0b:08.0:
+      [mem 0xd000000000-0xd801ffffff 64bit pref]
+
+    0000:0b:04.0:
+      [mem 0xe000000000-0xe801ffffff 64bit pref]
+
+Both RTX 3090 BAR1 and BAR3 resources were assigned.
+
+Non-prefetchable-window failure
+===============================
+
+The same boot also shows an analogous failure for the ordinary memory
+window.
+
+Each RTX 3090 branch contains approximately:
+
+    GPU BAR0:        16 MiB
+    GPU ROM:        512 KiB
+    HDA BAR0:        16 KiB
+
+With bridge-window granularity, each child requests a 17 MiB ordinary
+memory window. Its alignment is 16 MiB because of GPU BAR0.
+
+Linux 7.0 assigned the nested parent at 0000:0a:00.0:
+
+    [mem 0xf2000000-0xf46fffff]
+
+This is 39 MiB. The ordinary-memory child requirements below that parent
+are 17 + 1 + 2 + 17 + 1 + 1 = 39 MiB, again the plain sum.
+
+The two 17 MiB GPU child windows alone cannot be packed into 34 MiB because
+each requires a 16 MiB-aligned start. If the first begins at offset zero,
+it ends at 17 MiB. The second cannot begin until offset 32 MiB and ends at
+49 MiB. The smaller resources may fill some of the intervening gap, but
+they do not make the 39 MiB parent large enough.
+
+The first GPU child succeeds:
+
+    pci 0000:0b:04.0: bridge window
+      [mem 0xf2000000-0xf30fffff]: assigned
+
+The second fails:
+
+    pci 0000:0b:08.0: bridge window
+      [mem size 0x01100000]: can't assign; no space
+    pci 0000:0b:08.0: bridge window
+      [mem size 0x01100000]: failed to assign
+
+On 6.17, reassignment produced:
+
+    0000:00:02.1:
+      [mem 0xf2000000-0xf59fffff]              size 58 MiB
+    0000:0a:00.0:
+      [mem 0xf2000000-0xf57fffff]              size 56 MiB
+    0000:0b:04.0:
+      [mem 0xf2000000-0xf37fffff]              size 24 MiB
+    0000:0b:08.0:
+      [mem 0xf3800000-0xf4ffffff]              size 24 MiB
+
+Both GPU BAR0 resources were then assigned.
+
+Endpoint result on Linux 7.0
+============================
+
+Once 0000:0b:08.0 loses both bridge windows, allocation failure cascades to
+the endpoint. BAR0, BAR1, BAR3, the ROM, and the audio BAR all report
+"can't assign; no space". The resulting sysfs resources for GPU BAR0,
+BAR1, and BAR3 are all zero.
+
+NVIDIA then refuses to probe the device because BAR0 is zero. Only the RTX
+5090 and the first RTX 3090 were usable.
+
+Known-good result
+=================
+
+With 6.17.0-42 and:
+
+    pci=realloc=on module_blacklist=nouveau
+
+all relevant bridge windows and all physical BAR0, BAR1, and BAR3 resources
+were assigned.
+
+The system currently boots 6.17.0-42 and directly enumerates all four of
+its current NVIDIA GPUs: RTX 5090, RTX 3090, RTX 3060, and RTX 3090.
+
+Relationship to 3958bf16e2fe
+=============================
+
+The observed behavior seems consistent with the tail-side
+multi-composite-resource problem described in this thread:
+
+  * pbus_size_mem() sizes the parent as the plain sum of child sizes;
+  * each composite child is larger than, and not an exact multiple of, its
+    effective alignment;
+  * assignment then inserts alignment padding between sibling children;
+  * the parent did not budget for that padding;
+  * 6.17 allocates a large enough parent while 7.0 does not.
+
+The one-line max(r_size, align) -> ALIGN(r_size, align) change appears as if
+it would cover this particular fixed topology, but I understand from the
+discussion that it is not an acceptable general fix because it restores
+unnecessary over-allocation and can regress systems with constrained
+address space.
+
+I have not verified the exact Ubuntu source against commit 3958bf16e2fe,
+and I have not yet booted a kernel containing the newer proposed general
+solution. Therefore I cannot yet prove the regression attribution by an
+A/B test of the proposed patch.
+
+Questions
+=========
+
+1. Does this look like the same multiple-composite-resource sizing
+   regression to you?
+
+2. Would this NVIDIA/AMD-X870E topology be useful as another test case for
+   the newer series?
+
+3. If so, which exact branch or patch-series revision should I test?
+
+4. Is the intended solution expected to account for tail padding only when
+   multiple composite children are present, using the final calculated
+   alignment rather than unconditionally rounding every child to its own
+   alignment?
+
+5. Once accepted upstream, is this fix expected to be marked for stable
+   backport to 7.0.y? Ubuntu 26.04 uses the 7.0 kernel series.
+
+I have the complete failing 7.0 dmesg, complete successful 6.17 dmesg,
+focused sysfs resource dumps, and current lspci output available. I can
+provide sanitized copies or collect any additional read-only information
+requested.
+
+I can also test a candidate kernel, but this is a production multi-GPU
+machine and I need to preserve the known-good 6.17 boot entry. Any test
+would therefore be a one-time boot with a local-console and cold-power
+recovery path rather than immediately replacing the default kernel.
+
+Thanks,
+JD
+
+--000000000000deb234065d07199c
+Content-Type: text/plain; charset="US-ASCII"; name="6.17-pci-success.txt"
+Content-Disposition: attachment; filename="6.17-pci-success.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_muu3chhk0>
+X-Attachment-Id: f_muu3chhk0
+
+IyBOb3JtYWxpemVkIGV4Y2VycHQgZnJvbSBwcmU3LXN1Y2Nlc3Mta2VybmVsLmxvZyBhbmQgc3lz
+ZnMgc25hcHNob3RzLgpMaW51eCB2ZXJzaW9uIDYuMTcuMC00Mi1nZW5lcmljCkNvbW1hbmQgbGlu
+ZTogcGNpPXJlYWxsb2M9b24gbW9kdWxlX2JsYWNrbGlzdD1ub3V2ZWF1CjAwMDA6MDA6MDIuMSBN
+ZW1vcnkgYmVoaW5kIGJyaWRnZTogZjIwMDAwMDAtZjU5ZmZmZmYgW3NpemU9NThNXQowMDAwOjBi
+OjA0LjAgTWVtb3J5IGJlaGluZCBicmlkZ2U6IGYyMDAwMDAwLWYzN2ZmZmZmIFtzaXplPTI0TV0K
+MDAwMDowYjowOC4wIE1lbW9yeSBiZWhpbmQgYnJpZGdlOiBmMzgwMDAwMC1mNGZmZmZmZiBbc2l6
+ZT0yNE1dCjAwMDA6MTE6MDAuMCBCQVIwOiAweGY0MDAwMDAwLTB4ZjRmZmZmZmYKMDAwMDoxMTow
+MC4wIEJBUjE6IDB4ZDAwMDAwMDAwMC0weGQ3ZmZmZmZmZmYKMDAwMDoxMTowMC4wIEJBUjM6IDB4
+ZDgwMDAwMDAwMC0weGQ4MDFmZmZmZmYK
+--000000000000deb234065d07199c
+Content-Type: text/plain; charset="US-ASCII"; name="7.0.0-31-pci-failure.txt"
+Content-Disposition: attachment; filename="7.0.0-31-pci-failure.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_muu3chj01>
+X-Attachment-Id: f_muu3chj01
+
+IyBOb3JtYWxpemVkIGV4Y2VycHQgZnJvbSBicmlkZ2UtdGVzdC1rZXJuZWwubG9nICgyMDI2LTA5
+LTExKS4KIyBGdWxsIGhpc3RvcmljYWwgbG9nIG1heSBiZSBnaXRpZ25vcmVkOyB0aGlzIGV4Y2Vy
+cHQgaXMgZGVsaWJlcmF0ZWx5IHRyYWNrZWQuCkxpbnV4IHZlcnNpb24gNy4wLjAtMzEtZ2VuZXJp
+YwpwY2kgMDAwMDoxMTowMC4wOiBCQVIgMCBbbWVtIHNpemUgMHgwMTAwMDAwMCA2NGJpdF06IGNh
+bid0IGFzc2lnbjsgbm8gc3BhY2UKcGNpIDAwMDA6MTE6MDAuMDogQkFSIDAgW21lbSBzaXplIDB4
+MDEwMDAwMDAgNjRiaXRdOiBmYWlsZWQgdG8gYXNzaWduCnBjaSAwMDAwOjExOjAwLjA6IEJBUiAx
+IFttZW0gc2l6ZSAweDgwMDAwMDAwMCA2NGJpdCBwcmVmXTogY2FuJ3QgYXNzaWduOyBubyBzcGFj
+ZQpwY2kgMDAwMDoxMTowMC4wOiBCQVIgMyBbbWVtIHNpemUgMHgwMjAwMDAwMCA2NGJpdCBwcmVm
+XTogZmFpbGVkIHRvIGFzc2lnbgowMDAwOjBiOjA4LjAgTWVtb3J5IGJlaGluZCBicmlkZ2U6IFtk
+aXNhYmxlZF0KMDAwMDoxMTowMC4wIHJlc291cmNlIEJBUjA6IDB4MCAweDAgMHgwCjAwMDA6MTE6
+MDAuMCByZXNvdXJjZSBCQVIxOiAweDAgMHgwIDB4MAowMDAwOjExOjAwLjAgcmVzb3VyY2UgQkFS
+MzogMHgwIDB4MCAweDAK
+--000000000000deb234065d07199c--
