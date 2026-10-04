@@ -1,52 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217783BB687;
-	Sun,  4 Oct 2026 16:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CD32D73B8;
+	Sun,  4 Oct 2026 16:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791131410; cv=none; b=hQDQ/YP7RfJT6kOJ+eSGcLn7JzgeCMQyAJmT/x49X9gvYxqHGOcaGtCyhu3G8UIMHl5EOnKhSkdIucIILq4mJDQQi9A77u/+DcI6UoVcan+lvk7Qv4Dtr5PkF3MCdoQ8mLjBUM9ktcvnInuebv9wy4uuZLkmq+aRm5N27ZT0tzo=
+	t=1791131417; cv=none; b=YpnMhnCMF3J5joMKkRBP8aP9VwtETDRJpU+92dElc86Sy3I8UStYb7TPpAfdQI+0daqvUuSYgEErvmo4LMLmvWtbFxBlEZoQShuibuP04m+0phcS1VFfxGLvrjSMF/Ab5kxJg4grzcTxa49mfisUKgS9H7x/lnSqDQ49qQFiIn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791131410; c=relaxed/simple;
-	bh=YQ/ACaHRosvg4SG0+znIeowOKSMUx8BG0j/yARPxKjg=;
+	s=arc-20240116; t=1791131417; c=relaxed/simple;
+	bh=aRyoome8W4lSatphzOiJC9Q6pXg0plR+/j+LIQW2cHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vp19Q20v9n3eVLxMG0BMyvnPgdl6pUOArQ9aNrfMO9DdVMVbzSEmqdAS0cWNi6rYgXEVCda4itCNDOqzUp+sNDyjd7ROzeHmCNdgjwKxypJpfsFrhwObhip5LhwWuV/CN/KQ5BiVHbJufR33Pjrpqv+qR6105NnOOtbkdhtypTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3qREAR1; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=UVTEaA6k7Cy3mA4ZSARsIfAV4qh4OTGLq+mP8m7FCB756JHB5r/mjLuYSekBu/KJXLhOEItu76G9Y58bb6LJW5dEqacvCMRTluTri8M7l2k2K+nKOB0z7ksXiEvcOqri1frzjmSoZtUYHbYFcCyKPc+r4sAxVRtZxG70+h1txj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZI1DmCP1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3qREAR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D361F00893;
-	Sun,  4 Oct 2026 16:30:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZI1DmCP1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D381F00893;
+	Sun,  4 Oct 2026 16:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791131408;
-	bh=abwvW8pd8aknu6JYFlkRnqyJB0QZztdntdoOlO4ii6U=;
+	s=k20260515; t=1791131415;
+	bh=YW7U2dLcfAUO+2ue3Kr0wNWmEnHb7S/dwsSt2b5IUD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=m3qREAR1xjmdLcUNWSr3z2ZzGJrbzYuLSXdCIQI1dypOaINyWFhBnmHW9eGeYTDZt
-	 0qqT4AoqRGla4jurHCNn+ro1Qai3YO9AseWRoTai3NWIQJZiX9ZDGxRrYVMPueLUNU
-	 3I/InZFF9opDnAtYVjcYZf2Mg1A958PvZ5NXxJCXL4mpeZhHn1luLJTyppzXq4+8QY
-	 K2AKwE3MU7Vgng2TD8so6su2m/uLglbSA2SYSrjWIe4g/YzALXDy8Rk9WiugO3IEyZ
-	 kUk8TV+hehpFdU0hOR4CdgYy5WgerH/5IrjL0m/YDGs1K3cT/IQ/T/vRPTGr7OjZ00
-	 azYB9jcYS2Nmw==
+	b=ZI1DmCP1nAF1bElH6lctHd0Tq6H1t8/G2/gSiEbKrLiCjdHbpBWBf48xvtNcqU1U9
+	 IYGQLX2jwS/jWcimyyAWTfFo4sRQLjN5Uso7t1yOEKBaS6DgfagbopFZSmoCf8Kv1F
+	 chtzg88I+Ygj9+DmhBR3xGjw6i02z2EnbdYwY3dhad7l7Wi+dvbUbGPw7NYjtG6kO5
+	 cntupuVnAh1cphPZKM+fLSOrQzKHjFvmOFzwGFBAkaFjJeE+u8fR+gMLrVtsLOCExI
+	 +pGWJbk3KZ9a4IgSLEBbqseBoUH8ASD4V5KDVTIFhVVhjhlLEk5z9kxzT6t2yI59uL
+	 XuWwItwRIEcPQ==
 From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Erik Brangs <erik.brangs@gmx.de>,
+	benh@debian.org
 Cc: Sasha Levin <sashal@kernel.org>,
-	Alberto Garcia <berto@igalia.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Baokun Li <libaokun@linux.alibaba.com>,
-	Jan Kara <jack@suse.cz>,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Zhang Yi <yi.zhang@huawei.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	linux-ext4@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 7.2.y] ext4: don't enable large folios on encrypted inodes
-Date: Sun,  4 Oct 2026 12:29:42 -0400
-Message-ID: <2026-10-04-1-daily-reply-0004-ext4-large-folios-encrypted-7.2@kernel.org>
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	linux-bluetooth@vger.kernel.org,
+	1149377@bugs.debian.org,
+	Salvatore Bonaccorso <carnil@debian.org>
+Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth: btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore working on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests firmware)
+Date: Sun,  4 Oct 2026 12:29:45 -0400
+Message-ID: <2026-10-04-1-daily-reply-0007-bt540-asus-firmware@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260925153127.1472301-1-berto@igalia.com>
-References: <20260925153127.1472301-1-berto@igalia.com>
+In-Reply-To: <179104011040.2214689.5921682013387867802@eldamar.lan>
+References: <179104011040.2214689.5921682013387867802@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -55,10 +52,22 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-> Fix this by disabling large folios on encrypted inodes, as is
-> already done for inodes that use data journaling.
+> In Debian Erik Brangs reported that after the update from 6.12.107 to
+> 6.12.111, specifically with the backport of 980084de4d9b ("Bluetooth:
+> btusb: Add ASUS USB-BT540 for Realtek 8761CU") Bluetooth is not
+> anymore working, the full report is found at
+> https://bugs.debian.org/1149377 .
+>
+> | [   38.138881] Bluetooth: hci0: RTL: firmware file rtl_bt/rtl8761cu_fw not found
 
-Queued for 7.2, thanks.
+The stable code matches mainline. The failure is a missing firmware file:
+rtl_bt/rtl8761cu_fw.bin has been in linux-firmware only since 20251111,
+and Debian trixie's firmware-realtek 20250410-2 does not have it.
+
+Marcel, Luiz: could you, or Christoph Zwerschke as the author of the ID
+commit, send an upstream revert, or a fallback to ROM firmware when
+rtl8761cu_fw.bin is missing? Stable will take it for 7.2, 6.18 and 6.12
+through the normal Cc: stable route once it is in mainline.
 
 -- 
 Thanks,
