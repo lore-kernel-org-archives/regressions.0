@@ -1,39 +1,33 @@
-Received: from mta0.migadu.com (out-8.mta0.migadu.com [91.218.175.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057230E82B
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 11:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9FC313E03;
+	Sun,  4 Oct 2026 11:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791113272; cv=none; b=mgxP4GfScKI0nws7LUGwVIiRJTM541q5OM8sk7HhBpLIDt523TtLGkrIi3rTEt2OwTRrO3bw5BlWEokedca2DywpdtmeH8uIkIysKDko1DitzIlPeLpG+/WeuTZ5mBDTJDPQu9eiwzJGAMIPUok5xmYr5TTqSwA+IvHiNEwrluY=
+	t=1791114374; cv=none; b=CckdIcsTxVM5SJ1kqpuglTnYHvlEWd7bcl7NUdXq6qRumAB3FEm6zrCqVpJgzZyvYg9foEn2W1x1cUKiM6KEeVxELcbQRfqygEnbQo1UGsSzW4Kt9JYH3ovVh6QMoU48oCIVX1QAHLb/n+k0Z7VNDq7P6Yg2Ykm+7gpuwzU5vbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791113272; c=relaxed/simple;
-	bh=h43UOpL6Hc+OfEZNM9DXjh7w7MXAxyBqqbYKtCxy9g8=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=MB9kYY8IPV5yK8apHiqkw0Zb6BNXI5j8A85ELDg7jaW3MZB7tBy8TcjjBQDyIOLzaNOOhHpNajMk9qGPch5NKgF52ERD68NoiVRBeTapSUxdSj3LX5VDSgglxukk2fHrndUakBJjuSTNsrxFHD2+RD5sxpVPBpezPpjT2lZgo48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz; spf=pass smtp.mailfrom=gamesplit.cz; dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b=enaHjPEr; arc=none smtp.client-ip=91.218.175.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gamesplit.cz
+	s=arc-20240116; t=1791114374; c=relaxed/simple;
+	bh=BNCNvqlSdQgCGZglcBRKo95ngBtg2fwoeaiBlf8VQtM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AUUROwFDWCZYPtHUZRllmVXC6V12J2zQ4K1ekGvDKUOyebifd9k5U/3K12MoBP8l344xjGRQEHAUvQuwok8ylekCTaNVP9Olh6n/LVAUIsd9nfx2lKBsf6k0eCMlcBTwbftd4fs8+YfvwFwNnE3jsO13Aw+322yXn3piLkp9Aos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvXUOYB2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b="enaHjPEr"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=h43UOpL6Hc+OfEZNM9DXjh7w7MXAxyBqqbYKtCxy9g8=;
- c=simple/simple; d=gamesplit.cz;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791113264; v=1; x=1791718064;
- b=enaHjPErhhfGW3cmNeC0tx/jx7El/jUbbex9Kc7493KO6dQTFACqsKmtpd0TepmwHLgnxv+C
- GhXCsdoiYCsEaic4htPLqv4x6QXiBkBph/PPzHRvI1A1gePen+n9nZmGJkM2/3XCKQVbeP+gTQg
- RjV2upwf2SO0wkRWb+6T/pLbS0pWENMWysHlwt1BF2mmODeKRkiw4qch4iHnuHDfhmCNUUYGEwa
- X3WI+Q0UwJ5Ykq7fjfMaDkwDvqZmZfnJNZ67iiCc/OcxVIhYBxYpoJoAkX2JgHaXbTwAT3gGrmG
- FOUdvZ8PNqI0wYIjzeJBi5jJ1dEoUUxMyGra9Q9YDftog==
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 949cd09d41990197;
-	Sun, 04 Oct 2026 11:27:43 +0000
-X-Mizu-Trace-ID: 949cd09d41990197
-X-Migadu-Flow: FLOW_OUT
-Content-Type: multipart/mixed; boundary="------------XLwVAtFB30tvPF7FdHYnABd4"
-Message-ID: <72d144aa-bd56-4ee5-a504-9cfcb329eb44@gamesplit.cz>
-Date: Sun, 4 Oct 2026 13:27:43 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvXUOYB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB3F1F000FF;
+	Sun,  4 Oct 2026 11:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791114372;
+	bh=HR+Flyh6aOq+YBmyhdw6aQRstQVaH53Q+XG2o/BckCY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=QvXUOYB2TXNKa27HG2yT/mfKhjcX55Ox92w9jLAkcgxIlqqkLJCc76iMVFMgaOg9w
+	 a/gFfoXfqcR71AWpEcwy/qoR5o2ORanMxbuWvSE5+nWoXfMagTLOqIaouKJSds0d1D
+	 xbokGQP+TaojNSnMYBJH5YtXHMoxdHrpPm5AV1Ib3vzC8GRpC+JhiEPmQh1wpAScvD
+	 vcslQC17rw7wb6FGR1H+FEvBZJNnlpsRbePwpxl6e3L5nuObPH/FNWqcEBPAq51uif
+	 BSwikk6tPfnxgPYma6PBaNz4XO2Qx8uBaDoymu5y3dubJOCaEquMI0VAd8a+JYBGZm
+	 MJDFPjaSitgGw==
+Message-ID: <f0c52ecb-b85d-4a53-8329-a8d2fd5d72b8@kernel.org>
+Date: Sun, 4 Oct 2026 13:46:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,301 +35,93 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HID: logitech-hidpp: commit f0866517be93 breaks
- hi-res wheel scrolling over Lightspeed receiver (G903)
-To: Lauri Saurus <saurla@saurla.com>
-Cc: regressions@lists.linux.dev, jkosina@suse.com, jikos@kernel.org
-References: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz>
- <77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz>
- <0IXbR44wf-idjlLSV2kHpzPm88Rs_orpaG-CJumHqfydxGdMNnuobRi0Oz8lW2cdpibztLCb1HK2MpcAw3lgsCzSmugEbQBf70Zjooz6ZLY=@saurla.com>
-Content-Language: en-MW
-From: Frantisek Musil <lister@gamesplit.cz>
-In-Reply-To: <0IXbR44wf-idjlLSV2kHpzPm88Rs_orpaG-CJumHqfydxGdMNnuobRi0Oz8lW2cdpibztLCb1HK2MpcAw3lgsCzSmugEbQBf70Zjooz6ZLY=@saurla.com>
-
-This is a multi-part message in MIME format.
---------------XLwVAtFB30tvPF7FdHYnABd4
+Subject: Re: [REGRESSION] Commit 447cbe95ebb9 causes IOMMU DMA faults on
+ macvlan/vlan with bnxt_en
+To: Stefan Fleischmann <sfle@kth.se>, netdev@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: Michael Chan <michael.chan@broadcom.com>,
+ Pavan Chebbi <pavan.chebbi@broadcom.com>, regressions@lists.linux.dev,
+ Joe Damato <joe@dama.to>
+References: <20261004122616.56714cbd@nargothrond>
+Content-Language: en-US
+From: Eric Dumazet <edumazet@kernel.org>
+In-Reply-To: <20261004122616.56714cbd@nargothrond>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Lauri,
-
-Default: hires-smooth-resolution has no stored value in Solaar's config 
-(marked "sensitive", never persisted/auto-applied).
-
-Result across all 4 steps: scroll behavior never changes -- broken 
-(undivided "scrolls a lot") from the very first connect, stays that way 
-no matter what Solaar sets (low-res, high-res, or nothing).
-
-Logs show "HID++ 4.2 device connected." / "wheel multiplier = 8" firing 
-repeatedly and spontaneously (~every 15-50s), unrelated to anySolaar 
-action -- hi_res_scroll_enable() re-running on its own via thereceiver's 
-periodic reconnect notifications.
-
-One odd detail: the very first connect in step 5 
-got"__do_hidpp_send_message_sync:got hidpp error 09", disconnected, 
-thenreconnected cleanly right after (step5-plug-receiver.log, lines 
-25-26vs 33-35).
-
-Logs attached: step5-plug-receiver.log, step6-start-solaar.log, 
-step7-lowres.log, step8-hires.log
-
-Attached setwheelmode-trace.log: an strace of the actual SetWheelMode 
-write+ack on /dev/hidraw for the same "set low-res" command -- the 
-device cleanly acks mode=0x00. (Separate run from steps 5-8 above, so 
-not paired with a scroll-behavior check at that exact moment, but steps 
-7/8 already show the visible behavior is unaffected by this command 
-either way.)
-
-Thanks a lot for taking the time to look into this, I reallyappreciate it.
-
-Thanks,
-Frantisek
 
 
-Dne 04. 10. 26 v 13:04 Lauri Saurus napsal(a):
-> Hi.
->
-> Thanks for reporting this. I could take a look at the issue. Unfortunately I do not have the Logitech G903 LIGHTSPEED mouse, so I cannot reproduce the issue myself.
->
-> Could you provide me debug logs from the hid_logitech_hidpp driver when this issue happens? I propose following steps:
->
-> 1. Shutdown Solaar (not just the GUI but the whole process)
-> 2. Enable driver debug logging: sudo sh -c 'echo "module hid_logitech_hidpp +p" > /sys/kernel/debug/dynamic_debug/control'
-> 3. Unplug the lightspeed receiver
-> 4. Open terminal to monitor the journalctl: sudo journalctl -kf
-> 5. Plug the lightspeed receiver. Is the mouse now working with high resolution scroll enabled or not? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
-> 6. Start Solaar. Is the mouse scroll working now? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
-> 7. Apply low resolution scrolling from Solaar. Is the mouse scroll working now? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
-> 8. Apply high resolution scrolling from Solaar. Is the mouse scroll working now? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
->
-> Also please note what is your default value for high resolution scrolling in the Solaar config before running any steps.
->
-> If you can provide these logs I'll see if I can make anything out of it.
---------------XLwVAtFB30tvPF7FdHYnABd4
-Content-Type: text/x-log; charset=UTF-8; name="setwheelmode-trace.log"
-Content-Disposition: attachment; filename="setwheelmode-trace.log"
-Content-Transfer-Encoding: base64
+On 10/4/26 12:26, Stefan Fleischmann wrote:
+> Hi,
+> 
+> I have bisected a regression introduced in kernel 6.18.51 (and 7.2.3).
+> The issue is still present in 6.18.55 and 7.2.9. Verified by reverting
+> 1517d1996b52 (the equivalent of 447cbe95ebb9 in the 6.18 branch) on top
+> of 6.18.51 and 6.18.55.
+> 
+> The hardware is a Dell R640 server with Intel Xeon Silver 4210 and
+> Broadcom BCM57412 NetXtreme-E NIC.
+> 
+> The network interface is configured as an untagged interface and has a
+> couple of tagged VLAN interfaces configured on top. All of these are
+> used by LXC containers with Macvlan.
+> 
+> The interface comes up fine after boot, but after some time (anywhere
+> between 2 to 40 minutes) I see a DMA error in the kernel log (attached),
+> and the driver ends up tearing down the interface. It can be brought up
+> again after that, but it will hit a DMA error again after a while and
+> the interface goes down again.
+> 
+> I'm happy to provide more debug info if needed, or test patches.
 
-c3RyYWNlIG9mIGBzb2xhYXIgY29uZmlnICJHOTAzIExTIiBoaXJlcy1zbW9vdGgtcmVzb2x1
-dGlvbiBmYWxzZWAgb24gL2Rldi9oaWRyYXc3IChmZCAxOSksCmtlcm5lbCA3LjIuOC0yMDAu
-ZmM0NC54ODZfNjQsIHN0b2NrICh1bnBhdGNoZWQpIGhpZC1sb2dpdGVjaC1oaWRwcDoKCndy
-aXRlKDE5LCAiXDIxXDFcMzUrXDBcMFwwXDBcMFwwXDBcMFwwXDBcMFwwXDBcMFwwXDAiLCAy
-MCkgPSAyMAogIC0+IFNldFdoZWVsTW9kZSAoZmVhdHVyZSBpZHggMHgxRCwgZnVuY3Rpb24g
-MHgyMCwgU1cgaWQgMHhiKSwgcGFyYW1zWzBdPTB4MDAgKGludmVydD0wLCBoaWdoX3Jlcz0w
-LCB1c2VfaGlkcHA9MCkKcmVhZCgxOSwgICJcMjFcMVwzNStcMFwwXDBcMFwwXDBcMFwwXDBc
-MFwwXDBcMFwwXDBcMCIsIDMyKSA9IDIwCiAgLT4gYWNrOiBtb2RlPTB4MDAgY29uZmlybWVk
-IGJ5IHRoZSBkZXZpY2UgKGxvdy1yZXMgYWNjZXB0ZWQpCgooVGhpcyB3YXMgYSBzZXBhcmF0
-ZSBydW4sIG5vdCBwYWlyZWQgd2l0aCBhIHNjcm9sbCBjaGVjayBhdCB0aGlzIGV4YWN0Cm1v
-bWVudCAtLSBzZWUgdGhlIG1haW4gZW1haWwgZm9yIHN0ZXBzIDcvOCB3aGVyZSB0aGUgc2Ft
-ZSBjb21tYW5kIHdhcwpydW4gYW5kIHNjcm9sbCBiZWhhdmlvciB3YXMgY2hlY2tlZCBkaXJl
-Y3RseS4pCg==
---------------XLwVAtFB30tvPF7FdHYnABd4
-Content-Type: text/x-log; charset=UTF-8; name="step5-plug-receiver.log"
-Content-Disposition: attachment; filename="step5-plug-receiver.log"
-Content-Transfer-Encoding: base64
+Hi Stefan,
 
-xZnDrWogMDQgMTM6MTM6MTcgZmVkb3JhIGtlcm5lbDogQ0lGUzogVkZTOiBjaWZzX21vdW50
-IGZhaWxlZCB3L3JldHVybiBjb2RlID0gLTExMwrFmcOtaiAwNCAxMzoxNDoyMSBmZWRvcmEg
-a2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRjogSElE
-KysgNC4yIGRldmljZSBjb25uZWN0ZWQuCsWZw61qIDA0IDEzOjE0OjIyIGZlZG9yYSBrZXJu
-ZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDBGOiBEZXRlY3Rl
-ZCBISUQrKyAyLjAgaGktcmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNDoyMiBmZWRv
-cmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRjog
-d2hlZWwgbXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTQ6MzAgZmVkb3JhIGtlcm5lbDog
-dXNiIDUtNC4zOiBVU0IgZGlzY29ubmVjdCwgZGV2aWNlIG51bWJlciA4CsWZw61qIDA0IDEz
-OjE0OjM2IGZlZG9yYSBrZXJuZWw6IGhpZF9sb2dpdGVjaF9oaWRwcDogZHJpdmVycy9oaWQv
-aGlkLWxvZ2l0ZWNoLWhpZHBwLmM6IEhJRCsrOiBHb3QgbmFtZTogTG9naXRlY2ggTVggVmVy
-dGljYWwgQWR2YW5jZWQgRXJnb25vbWljIE1vdXNlCsWZw61qIDA0IDEzOjE0OjM2IGZlZG9y
-YSBrZXJuZWw6IGlucHV0OiBMb2dpdGVjaCBNWCBWZXJ0aWNhbCBBZHZhbmNlZCBFcmdvbm9t
-aWMgTW91c2UgYXMgL2RldmljZXMvdmlydHVhbC9taXNjL3VoaWQvMDAwNTowNDZEOkIwMjAu
-MDAxNC9pbnB1dC9pbnB1dDM4CsWZw61qIDA0IDEzOjE0OjM2IGZlZG9yYSBrZXJuZWw6IGxv
-Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDA1OjA0NkQ6QjAyMC4wMDE0OiBpbnB1dCxoaWRyYXcy
-OiBCTFVFVE9PVEggSElEIHYwLjA5IE1vdXNlIFtMb2dpdGVjaCBNWCBWZXJ0aWNhbCBBZHZh
-bmNlZCBFcmdvbm9taWMgTW91c2VdIG9uIDAwOjFhOjdkOmRhOjcxOjE1CsWZw61qIDA0IDEz
-OjE0OjM2IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDA1OjA0NkQ6
-QjAyMC4wMDE0OiBISUQrKyA0LjUgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTQ6
-MzcgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDU6MDQ2RDpCMDIw
-LjAwMTQ6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUg
-c3VwcG9ydArFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiB1c2IgNS00LjM6IG5l
-dyBmdWxsLXNwZWVkIFVTQiBkZXZpY2UgbnVtYmVyIDEwIHVzaW5nIHhoY2lfaGNkCsWZw61q
-IDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IHVzYiA1LTQuMzogTmV3IFVTQiBkZXZpY2Ug
-Zm91bmQsIGlkVmVuZG9yPTA0NmQsIGlkUHJvZHVjdD1jNTNhLCBiY2REZXZpY2U9NDAuMDMK
-xZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogdXNiIDUtNC4zOiBOZXcgVVNCIGRl
-dmljZSBzdHJpbmdzOiBNZnI9MSwgUHJvZHVjdD0yLCBTZXJpYWxOdW1iZXI9MArFmcOtaiAw
-NCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiB1c2IgNS00LjM6IFByb2R1Y3Q6IFVTQiBSZWNl
-aXZlcgrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiB1c2IgNS00LjM6IE1hbnVm
-YWN0dXJlcjogTG9naXRlY2gKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogbG9n
-aXRlY2gtZGpyZWNlaXZlciAwMDAzOjA0NkQ6QzUzQS4wMDE1OiBoaWRyYXczOiBVU0IgSElE
-IHYxLjExIEtleWJvYXJkIFtMb2dpdGVjaCBVU0IgUmVjZWl2ZXJdIG9uIHVzYi0wMDAwOjBm
-OjAwLjMtNC4zL2lucHV0MArFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiBsb2dp
-dGVjaC1kanJlY2VpdmVyIDAwMDM6MDQ2RDpDNTNBLjAwMTY6IGhpZHJhdzQ6IFVTQiBISUQg
-djEuMTEgTW91c2UgW0xvZ2l0ZWNoIFVTQiBSZWNlaXZlcl0gb24gdXNiLTAwMDA6MGY6MDAu
-My00LjMvaW5wdXQxCsWZw61qIDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNo
-LWRqcmVjZWl2ZXIgMDAwMzowNDZEOkM1M0EuMDAxNzogaGlkZGV2OTcsaGlkcmF3NTogVVNC
-IEhJRCB2MS4xMSBEZXZpY2UgW0xvZ2l0ZWNoIFVTQiBSZWNlaXZlcl0gb24gdXNiLTAwMDA6
-MGY6MDAuMy00LjMvaW5wdXQyCsWZw61qIDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGxv
-Z2l0ZWNoLWRqcmVjZWl2ZXIgMDAwMzowNDZEOkM1M0EuMDAxNzogZGV2aWNlIG9mIHR5cGUg
-ZVFVQUQgTGlnaHRzcGVlZCAxICgweDBjKSBjb25uZWN0ZWQgb24gc2xvdCAxCsWZw61qIDA0
-IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWRqcmVjZWl2ZXIgMDAwMzowNDZE
-OkM1M0EuMDAxNzogZGV2aWNlIG9mIHR5cGUgZVFVQUQgTGlnaHRzcGVlZCAxICgweDBjKSBj
-b25uZWN0ZWQgb24gc2xvdCA3CsWZw61qIDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGhp
-ZF9sb2dpdGVjaF9oaWRwcDogZHJpdmVycy9oaWQvaGlkLWxvZ2l0ZWNoLWhpZHBwLmM6IEhJ
-RCsrIFVuaWZ5aW5nOiBHb3Qgc2VyaWFsOiBlZS0wNy1kNC03OQrFmcOtaiAwNCAxMzoxNTow
-NSBmZWRvcmEga2VybmVsOiBoaWRfbG9naXRlY2hfaGlkcHA6IGRyaXZlcnMvaGlkL2hpZC1s
-b2dpdGVjaC1oaWRwcC5jOiBISUQrKyBVbmlmeWluZzogR290IG5hbWU6IExvZ2l0ZWNoIEc5
-MDMgTFMKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogaW5wdXQ6IExvZ2l0ZWNo
-IEc5MDMgTFMgYXMgL2RldmljZXMvcGNpMDAwMDowMC8wMDAwOjAwOjA4LjEvMDAwMDowZjow
-MC4zL3VzYjUvNS00LzUtNC4zLzUtNC4zOjEuMi8wMDAzOjA0NkQ6QzUzQS4wMDE3LzAwMDM6
-MDQ2RDo0MDg3LjAwMTgvaW5wdXQvaW5wdXQzOQrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEg
-a2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogaW5w
-dXQsaGlkcmF3NzogVVNCIEhJRCB2MS4xMSBLZXlib2FyZCBbTG9naXRlY2ggRzkwMyBMU10g
-b24gdXNiLTAwMDA6MGY6MDAuMy00LjMvaW5wdXQyOjEKxZnDrWogMDQgMTM6MTU6MDUgZmVk
-b3JhIGtlcm5lbDogaGlkX2xvZ2l0ZWNoX2hpZHBwOiBkcml2ZXJzL2hpZC9oaWQtbG9naXRl
-Y2gtaGlkcHAuYzogX19kb19oaWRwcF9zZW5kX21lc3NhZ2Vfc3luYzpnb3QgaGlkcHAgZXJy
-b3IgMDkKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAt
-ZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IERpc2Nvbm5lY3RlZArFmcOtaiAwNCAxMzox
-NTowNSBmZWRvcmEga2VybmVsOiBoaWRfbG9naXRlY2hfaGlkcHA6IGRyaXZlcnMvaGlkL2hp
-ZC1sb2dpdGVjaC1oaWRwcC5jOiBISUQrKyBVbmlmeWluZzogR290IHNlcmlhbDogNzMtNWQt
-OWQtNjEKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogaGlkX2xvZ2l0ZWNoX2hp
-ZHBwOiBkcml2ZXJzL2hpZC9oaWQtbG9naXRlY2gtaGlkcHAuYzogSElEKysgVW5pZnlpbmc6
-IEdvdCBuYW1lOiBMb2dpdGVjaCBDYW5keQrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2Vy
-bmVsOiBpbnB1dDogTG9naXRlY2ggQ2FuZHkgYXMgL2RldmljZXMvcGNpMDAwMDowMC8wMDAw
-OjAwOjA4LjEvMDAwMDowZjowMC4zL3VzYjUvNS00LzUtNC4zLzUtNC4zOjEuMi8wMDAzOjA0
-NkQ6QzUzQS4wMDE3LzAwMDM6MDQ2RDo0MDVGLjAwMTkvaW5wdXQvaW5wdXQ0MArFmcOtaiAw
-NCAxMzoxNTowNiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzow
-NDZEOjQwNUYuMDAxOTogaW5wdXQsaGlkcmF3ODogVVNCIEhJRCB2MS4xMSBLZXlib2FyZCBb
-TG9naXRlY2ggQ2FuZHldIG9uIHVzYi0wMDAwOjBmOjAwLjMtNC4zL2lucHV0Mjo3CsWZw61q
-IDA0IDEzOjE1OjA2IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAz
-OjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQg
-MTM6MTU6MDYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2
-RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFy
-ZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dpdGVj
-aC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogSElEKysgNC4yIGRldmljZSBj
-b25uZWN0ZWQuCsWZw61qIDA0IDEzOjE1OjA3IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhp
-ZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4OiBEZXRlY3RlZCBISUQrKyAyLjAgaGkt
-cmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dp
-dGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwgbXVsdGlwbGll
-ciA9IDgK
---------------XLwVAtFB30tvPF7FdHYnABd4
-Content-Type: text/x-log; charset=UTF-8; name="step6-start-solaar.log"
-Content-Disposition: attachment; filename="step6-start-solaar.log"
-Content-Transfer-Encoding: base64
+Thanks for the bisect and detailed report.
 
-xZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
-IDAwMDM6MDQ2RDo0MDg3LjAwMTg6IERpc2Nvbm5lY3RlZArFmcOtaiAwNCAxMzoxNTowNSBm
-ZWRvcmEga2VybmVsOiBoaWRfbG9naXRlY2hfaGlkcHA6IGRyaXZlcnMvaGlkL2hpZC1sb2dp
-dGVjaC1oaWRwcC5jOiBISUQrKyBVbmlmeWluZzogR290IHNlcmlhbDogNzMtNWQtOWQtNjEK
-xZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogaGlkX2xvZ2l0ZWNoX2hpZHBwOiBk
-cml2ZXJzL2hpZC9oaWQtbG9naXRlY2gtaGlkcHAuYzogSElEKysgVW5pZnlpbmc6IEdvdCBu
-YW1lOiBMb2dpdGVjaCBDYW5keQrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiBp
-bnB1dDogTG9naXRlY2ggQ2FuZHkgYXMgL2RldmljZXMvcGNpMDAwMDowMC8wMDAwOjAwOjA4
-LjEvMDAwMDowZjowMC4zL3VzYjUvNS00LzUtNC4zLzUtNC4zOjEuMi8wMDAzOjA0NkQ6QzUz
-QS4wMDE3LzAwMDM6MDQ2RDo0MDVGLjAwMTkvaW5wdXQvaW5wdXQ0MArFmcOtaiAwNCAxMzox
-NTowNiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
-NUYuMDAxOTogaW5wdXQsaGlkcmF3ODogVVNCIEhJRCB2MS4xMSBLZXlib2FyZCBbTG9naXRl
-Y2ggQ2FuZHldIG9uIHVzYi0wMDAwOjBmOjAwLjMtNC4zL2lucHV0Mjo3CsWZw61qIDA0IDEz
-OjE1OjA2IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6
-NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTU6
-MDYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVG
-LjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUg
-c3VwcG9ydArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRw
-cC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogSElEKysgNC4yIGRldmljZSBjb25uZWN0
-ZWQuCsWZw61qIDA0IDEzOjE1OjA3IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRl
-dmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4OiBEZXRlY3RlZCBISUQrKyAyLjAgaGktcmVzIHNj
-cm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
-aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgK
-xZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
-IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IEhJRCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOt
-aiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAw
-MzowNDZEOjQwNUYuMDAxOTogRGlkIG5vdCBkZXRlY3QgSElEKysgaGktcmVzIHNjcm9sbGlu
-ZyBoYXJkd2FyZSBzdXBwb3J0CsWZw61qIDA0IDEzOjE1OjU2IGZlZG9yYSBrZXJuZWw6IGxv
-Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2
-aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRl
-Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJRCsrIDQuMiBkZXZpY2Ug
-Y29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
-aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0ZWQgSElEKysgMi4wIGhp
-LXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9n
-aXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0
-IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzox
-NTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
-ODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3Jh
-IGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJ
-RCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2Vy
-bmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0
-ZWQgSElEKysgMi4wIGhpLXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVk
-b3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6
-IHdoZWVsIG11bHRpcGxpZXIgPSA4Cg==
---------------XLwVAtFB30tvPF7FdHYnABd4
-Content-Type: text/x-log; charset=UTF-8; name="step7-lowres.log"
-Content-Disposition: attachment; filename="step7-lowres.log"
-Content-Transfer-Encoding: base64
+Notice that 0xfc499000 is on an exact 4KB page boundary. This points to 
+a DMA read overrun where the Broadcom DMA engine reads past the end of a 
+buffer mapped in page 0xfc498xxx into the adjacent unmapped page 0xfc499000.
 
-xZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
-IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IEhJRCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOt
-aiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAw
-MzowNDZEOjQwNUYuMDAxOTogRGlkIG5vdCBkZXRlY3QgSElEKysgaGktcmVzIHNjcm9sbGlu
-ZyBoYXJkd2FyZSBzdXBwb3J0CsWZw61qIDA0IDEzOjE1OjU2IGZlZG9yYSBrZXJuZWw6IGxv
-Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2
-aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRl
-Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJRCsrIDQuMiBkZXZpY2Ug
-Y29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
-aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0ZWQgSElEKysgMi4wIGhp
-LXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9n
-aXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0
-IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzox
-NTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
-ODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3Jh
-IGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJ
-RCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2Vy
-bmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0
-ZWQgSElEKysgMi4wIGhpLXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVk
-b3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6
-IHdoZWVsIG11bHRpcGxpZXIgPSA4CsWZw61qIDA0IDEzOjE2OjQ0IGZlZG9yYSBrZXJuZWw6
-IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIg
-ZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTY6NDQgZmVkb3JhIGtlcm5lbDogbG9n
-aXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0
-IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzox
-Njo0NSBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
-ODcuMDAxODogSElEKysgNC4yIGRldmljZSBjb25uZWN0ZWQuCsWZw61qIDA0IDEzOjE2OjQ1
-IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4w
-MDE4OiBEZXRlY3RlZCBISUQrKyAyLjAgaGktcmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAx
-MzoxNjo0NSBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZE
-OjQwODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgK
---------------XLwVAtFB30tvPF7FdHYnABd4
-Content-Type: text/x-log; charset=UTF-8; name="step8-hires.log"
-Content-Disposition: attachment; filename="step8-hires.log"
-Content-Transfer-Encoding: base64
+Have you tried a recent net kernel ?
 
-xZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
-IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3Jv
-bGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVs
-OiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwgbXVs
-dGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gt
-aGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJRCsrIDQuMiBkZXZpY2UgY29u
-bmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRw
-cC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0ZWQgSElEKysgMi4wIGhpLXJl
-cyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRl
-Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IHdoZWVsIG11bHRpcGxpZXIg
-PSA4CsWZw61qIDA0IDEzOjE2OjQ0IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRl
-dmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4K
-xZnDrWogMDQgMTM6MTY6NDQgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
-IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3Jv
-bGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzoxNjo0NSBmZWRvcmEga2VybmVs
-OiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogSElEKysgNC4y
-IGRldmljZSBjb25uZWN0ZWQuCsWZw61qIDA0IDEzOjE2OjQ1IGZlZG9yYSBrZXJuZWw6IGxv
-Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4OiBEZXRlY3RlZCBISUQr
-KyAyLjAgaGktcmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNjo0NSBmZWRvcmEga2Vy
-bmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwg
-bXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTc6MTIgZmVkb3JhIGtlcm5lbDogbG9naXRl
-Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IEhJRCsrIDQuMiBkZXZpY2Ug
-Y29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNzoxMiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
-aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwNUYuMDAxOTogRGlkIG5vdCBkZXRlY3QgSElEKysg
-aGktcmVzIHNjcm9sbGluZyBoYXJkd2FyZSBzdXBwb3J0CsWZw61qIDA0IDEzOjE3OjEyIGZl
-ZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4
-OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTc6MTIgZmVkb3Jh
-IGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IERl
-dGVjdGVkIEhJRCsrIDIuMCBoaS1yZXMgc2Nyb2xsIHdoZWVsCsWZw61qIDA0IDEzOjE3OjEy
-IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4w
-MDE4OiB3aGVlbCBtdWx0aXBsaWVyID0gOAo=
+Could you please test whether disabling TSO or hardware VLAN offload 
+prevents the crash? (maybe adding one option at a time)
 
---------------XLwVAtFB30tvPF7FdHYnABd4--
+   # ethtool -K eno1np0 tso off
+
+   # ethtool -K eno1np0 tx-vlan-offload off
+
+Adding Joe to this thread, because some parts in
+tso_dma_map_init() or tso_start() might have bugs.
+
+# Disable USO on the physical interface
+ethtool -K eno1np0 tx-udp-segmentation off
+
+This reminds me on a prior attempt I made months ago to sanitize tso_start()
+
+Note that my email address has changed to edumazet@kernel.org
+
+Thanks.
+
+> 
+> I've already updated to the latest firmware released by Dell, the problem
+> persist. Here is some more info on the network device:
+> 
+> 18:00.0 Ethernet controller [0200]: Broadcom Inc. and subsidiaries BCM57412 NetXtreme-E 10Gb RDMA Ethernet Controller [14e4:16d6] (rev 01)
+> 	Subsystem: Broadcom Inc. and subsidiaries NetXtreme E-Series Advanced Dual-port 10Gb SFP+ Ethernet Network Daughter Card [14e4:4120]
+> 
+> # ethtool -i eno1np0
+> driver: bnxt_en
+> version: 7.2.9-1-generic
+> firmware-version: 238.1.168.0/pkg 38.11.70.00
+> expansion-rom-version:
+> bus-info: 0000:18:00.0
+> supports-statistics: yes
+> supports-test: yes
+> supports-eeprom-access: yes
+> supports-register-dump: yes
+> supports-priv-flags: no
+> 
+> Best,
+> Stefan
+
