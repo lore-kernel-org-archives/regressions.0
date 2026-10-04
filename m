@@ -1,127 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9FC313E03;
-	Sun,  4 Oct 2026 11:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FF9439F88;
+	Sun,  4 Oct 2026 13:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791114374; cv=none; b=CckdIcsTxVM5SJ1kqpuglTnYHvlEWd7bcl7NUdXq6qRumAB3FEm6zrCqVpJgzZyvYg9foEn2W1x1cUKiM6KEeVxELcbQRfqygEnbQo1UGsSzW4Kt9JYH3ovVh6QMoU48oCIVX1QAHLb/n+k0Z7VNDq7P6Yg2Ykm+7gpuwzU5vbI=
+	t=1791121170; cv=none; b=PPOlHSUX1jZJICRh9vjxwLO87NilXlPyiAHaEMdZArK9b3+m4Pf9w7sm5oEevMUiaqVp0rznOVUJxy3i5FNG+JgS+MUlHil2dxN8sIBi8QSgxbtdiw5DfVYTh0DszTx+D7i/J5LxHmcXxgDMddU97Iw3RIgN1lgoOVAKOmLloNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791114374; c=relaxed/simple;
-	bh=BNCNvqlSdQgCGZglcBRKo95ngBtg2fwoeaiBlf8VQtM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AUUROwFDWCZYPtHUZRllmVXC6V12J2zQ4K1ekGvDKUOyebifd9k5U/3K12MoBP8l344xjGRQEHAUvQuwok8ylekCTaNVP9Olh6n/LVAUIsd9nfx2lKBsf6k0eCMlcBTwbftd4fs8+YfvwFwNnE3jsO13Aw+322yXn3piLkp9Aos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvXUOYB2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791121170; c=relaxed/simple;
+	bh=fsJv2wKQCM7SUQ97KSaro7Q/sQy03qbggMnYw5xwUh4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=L7CZpr4XUXEmp4wJ67sx+mIFKOMRTY5nAUZ8FYKX1w3X6Q/6LkbIBsBeYLJrYdvnL/zJAkLF0RneHQqE/iMTLp/j8RflbHRCdHqzS+Ag0+dJp6XFS/0axIe/7TVmLyvDsK1dg3xTo0mMUhM7r8TFMWzoMXc3U7vh+JNPbuENTyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcOs3bFT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvXUOYB2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB3F1F000FF;
-	Sun,  4 Oct 2026 11:46:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcOs3bFT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5187D1F000FF;
+	Sun,  4 Oct 2026 13:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791114372;
-	bh=HR+Flyh6aOq+YBmyhdw6aQRstQVaH53Q+XG2o/BckCY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=QvXUOYB2TXNKa27HG2yT/mfKhjcX55Ox92w9jLAkcgxIlqqkLJCc76iMVFMgaOg9w
-	 a/gFfoXfqcR71AWpEcwy/qoR5o2ORanMxbuWvSE5+nWoXfMagTLOqIaouKJSds0d1D
-	 xbokGQP+TaojNSnMYBJH5YtXHMoxdHrpPm5AV1Ib3vzC8GRpC+JhiEPmQh1wpAScvD
-	 vcslQC17rw7wb6FGR1H+FEvBZJNnlpsRbePwpxl6e3L5nuObPH/FNWqcEBPAq51uif
-	 BSwikk6tPfnxgPYma6PBaNz4XO2Qx8uBaDoymu5y3dubJOCaEquMI0VAd8a+JYBGZm
-	 MJDFPjaSitgGw==
-Message-ID: <f0c52ecb-b85d-4a53-8329-a8d2fd5d72b8@kernel.org>
-Date: Sun, 4 Oct 2026 13:46:08 +0200
+	s=k20260515; t=1791121169;
+	bh=GsrDocJZdlQZzp7Ptz2pku4WR7O9fSJpN8UbwntIi3A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=ZcOs3bFTNsWZukdiTl3x+IP7PA8A2DliLliY5QfGjDg27+Z2MCB18ILo6snmzo0/W
+	 xo7htjt3Fp6s2EEBNA4CZgWLFFiRbq0z8Np7J7OeRAtXN2ddBRb/g5UHnWRAiyd805
+	 Qc+IDCsNXXpmRjHj/+DV/Bccru5g270fmeKKDXoo1IHTf4efZ4MQeDrqM7sKEyhii3
+	 53CjYfZTtvNNSMnt0k7ksGc3imoaU9C3dKqwB7fLCYpqzi5GE9gWTeB9zhvKQNp9me
+	 7tEtoSweYdktzE7hX/E7FHLU55YjOMVMelRl9n/74VzKyJAr8fnxGRYaL696gVLa5a
+	 BuW+FJdbiyOIA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Chris Bainbridge <chris.bainbridge@canonical.com>
+Cc: Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Jason Miu <jasonmiu@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,  regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
+	linux-mm@kvack.org, =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?=
+ <mclapinski@google.com>
+Subject: Re: [BUG] KHO handover hangs when memmap reserves PMEM
+In-Reply-To: <asE0R_f2r2TL-3Sy@px13> (Chris Bainbridge's message of "Sat, 3
+	Oct 2026 18:02:27 +0100")
+References: <asE0R_f2r2TL-3Sy@px13>
+Date: Sun, 04 Oct 2026 15:39:25 +0200
+Message-ID: <2vxzcxtplh4i.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Commit 447cbe95ebb9 causes IOMMU DMA faults on
- macvlan/vlan with bnxt_en
-To: Stefan Fleischmann <sfle@kth.se>, netdev@vger.kernel.org,
- stable@vger.kernel.org
-Cc: Michael Chan <michael.chan@broadcom.com>,
- Pavan Chebbi <pavan.chebbi@broadcom.com>, regressions@lists.linux.dev,
- Joe Damato <joe@dama.to>
-References: <20261004122616.56714cbd@nargothrond>
-Content-Language: en-US
-From: Eric Dumazet <edumazet@kernel.org>
-In-Reply-To: <20261004122616.56714cbd@nargothrond>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+Hi,
 
+On Sat, Oct 03 2026, Chris Bainbridge wrote:
 
-On 10/4/26 12:26, Stefan Fleischmann wrote:
-> Hi,
-> 
-> I have bisected a regression introduced in kernel 6.18.51 (and 7.2.3).
-> The issue is still present in 6.18.55 and 7.2.9. Verified by reverting
-> 1517d1996b52 (the equivalent of 447cbe95ebb9 in the 6.18 branch) on top
-> of 6.18.51 and 6.18.55.
-> 
-> The hardware is a Dell R640 server with Intel Xeon Silver 4210 and
-> Broadcom BCM57412 NetXtreme-E NIC.
-> 
-> The network interface is configured as an untagged interface and has a
-> couple of tagged VLAN interfaces configured on top. All of these are
-> used by LXC containers with Macvlan.
-> 
-> The interface comes up fine after boot, but after some time (anywhere
-> between 2 to 40 minutes) I see a DMA error in the kernel log (attached),
-> and the driver ends up tearing down the interface. It can be brought up
-> again after that, but it will hit a DMA error again after a while and
-> the interface goes down again.
-> 
-> I'm happy to provide more debug info if needed, or test patches.
+> Hello,
+>
+> I am reporting a regression in KHO handover.
+>
+> In the most recent Ubuntu 26.10 beta mini-ISO releases (2026-09-18 onwards),
+> the first kernel reserves RAM for the downloaded ISO with a memmap directive
+> such as memmap=<size>!4G, then kexecs a second kernel. On affected kernels, the
+> first kernel reaches "kexec_core: Starting new kernel", but the second kernel
+> produces no further output and QEMU spins at 100% CPU. On unaffected kernels,
+> the second kernel starts and finds /dev/pmem0 with the expected "Persistent
+> Memory (legacy)" range in /proc/iomem.
 
-Hi Stefan,
+Just to confirm, the first kernel boots without memmap= right?
 
-Thanks for the bisect and detailed report.
+If so, I have seen this before. Michal (+Cc) found this originally in
+our downstream test suite.
 
-Notice that 0xfc499000 is on an exact 4KB page boundary. This points to 
-a DMA read overrun where the Broadcom DMA engine reads past the end of a 
-buffer mapped in page 0xfc498xxx into the adjacent unmapped page 0xfc499000.
+I think the main problem is that the radix tree pages can be anywhere in
+memory. So on the first kernel, they can land in an area that the second
+kernel's memmap= reserves. So kho_memory_init() might end up using
+memory that memmap= reserved. I'm not sure why exactly the next kernel
+doesn't produce any output, but IIRC memmap= memory is not mapped to the
+direct map, so accessing those pages likely causes a page fault.
 
-Have you tried a recent net kernel ?
+It is not easy to fix. We would need to make memmap= aware of KHO and
+skip the radix tree pages, but that is pretty complicated to do for
+early boot code. And honestly, I don't think it is worth it either.
 
-Could you please test whether disabling TSO or hardware VLAN offload 
-prevents the crash? (maybe adding one option at a time)
+So I'd suggest you turn KHO off for the kexec that adds memmap= if you
+can.
 
-   # ethtool -K eno1np0 tso off
+>
+> A source bisect identified 3f2ad90060f6 ("kho: adopt radix tree for preserved
+> memory tracking") as the first bad commit; reverting it at the bisected
+> revision restored the handover. The regression appears related to KHO metadata
+> being accessed after the receiving kernel's memmap directive changes how the
+> metadata's physical range is mapped.
+>
+> #regzbot introduced: 3f2ad90060f6
+>
+> I have an AI-generated candidate fix that changes 22 files. I have not attached
+> or published it: although the AI did extensive verification on both x64 and
+> arm64, I cannot review or explain the complete change, so I am not submitting
+> it as a fix. If one of you thinks an unreviewed candidate would be useful for
+> further analysis, please let me know.
 
-   # ethtool -K eno1np0 tx-vlan-offload off
-
-Adding Joe to this thread, because some parts in
-tso_dma_map_init() or tso_start() might have bugs.
-
-# Disable USO on the physical interface
-ethtool -K eno1np0 tx-udp-segmentation off
-
-This reminds me on a prior attempt I made months ago to sanitize tso_start()
-
-Note that my email address has changed to edumazet@kernel.org
-
-Thanks.
-
-> 
-> I've already updated to the latest firmware released by Dell, the problem
-> persist. Here is some more info on the network device:
-> 
-> 18:00.0 Ethernet controller [0200]: Broadcom Inc. and subsidiaries BCM57412 NetXtreme-E 10Gb RDMA Ethernet Controller [14e4:16d6] (rev 01)
-> 	Subsystem: Broadcom Inc. and subsidiaries NetXtreme E-Series Advanced Dual-port 10Gb SFP+ Ethernet Network Daughter Card [14e4:4120]
-> 
-> # ethtool -i eno1np0
-> driver: bnxt_en
-> version: 7.2.9-1-generic
-> firmware-version: 238.1.168.0/pkg 38.11.70.00
-> expansion-rom-version:
-> bus-info: 0000:18:00.0
-> supports-statistics: yes
-> supports-test: yes
-> supports-eeprom-access: yes
-> supports-register-dump: yes
-> supports-priv-flags: no
-> 
-> Best,
-> Stefan
-
+-- 
+Regards,
+Pratyush Yadav
