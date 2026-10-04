@@ -1,79 +1,341 @@
-Received: from mail-106117.protonmail.ch (mail-106117.protonmail.ch [79.135.106.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-8.mta0.migadu.com [91.218.175.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1B331716D
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 11:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057230E82B
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 11:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791111871; cv=none; b=jbRovQyd/1m7ld8N7NI6pMfl9tjtDwia3hhftWlbWXDx/1RBlMjXJK6vNz7w8WxMsvtP/28C5+5IhI+x6aYm80XF/LYFybr2FcjHaPwJWbJEQU2QqNEOCBAIIBzsu3zOMQ3vG8ghBEdJyxXLU/lKliJUJ0zWdhJo7RGss2Xodz0=
+	t=1791113272; cv=none; b=mgxP4GfScKI0nws7LUGwVIiRJTM541q5OM8sk7HhBpLIDt523TtLGkrIi3rTEt2OwTRrO3bw5BlWEokedca2DywpdtmeH8uIkIysKDko1DitzIlPeLpG+/WeuTZ5mBDTJDPQu9eiwzJGAMIPUok5xmYr5TTqSwA+IvHiNEwrluY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791111871; c=relaxed/simple;
-	bh=/rqrMveZALHHpPzPfnXt52M2CU7mcprjFc8ipStbb0s=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BOGW3fl1F2lzjrzvFnzJT/0ERu4w+8/oL29Amqtmk1BGqZv3PgRpg8xkuCYDgcFldqGi0IGDbE6ZHKVfKYc5Pue915OsxT+X00gRHE7WSvJ+dnQHaSFW4D9EEOW4E9n8co/DgX2wynuEUY7cjtBrjMZNceGTkl3w5wSritnP4Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=saurla.com; spf=pass smtp.mailfrom=saurla.com; dkim=pass (2048-bit key) header.d=saurla.com header.i=@saurla.com header.b=n980oqqc; arc=none smtp.client-ip=79.135.106.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=saurla.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=saurla.com
+	s=arc-20240116; t=1791113272; c=relaxed/simple;
+	bh=h43UOpL6Hc+OfEZNM9DXjh7w7MXAxyBqqbYKtCxy9g8=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=MB9kYY8IPV5yK8apHiqkw0Zb6BNXI5j8A85ELDg7jaW3MZB7tBy8TcjjBQDyIOLzaNOOhHpNajMk9qGPch5NKgF52ERD68NoiVRBeTapSUxdSj3LX5VDSgglxukk2fHrndUakBJjuSTNsrxFHD2+RD5sxpVPBpezPpjT2lZgo48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz; spf=pass smtp.mailfrom=gamesplit.cz; dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b=enaHjPEr; arc=none smtp.client-ip=91.218.175.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gamesplit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=saurla.com header.i=@saurla.com header.b="n980oqqc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=saurla.com;
-	s=protonmail; t=1791111859; x=1791371059;
-	bh=/rqrMveZALHHpPzPfnXt52M2CU7mcprjFc8ipStbb0s=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=n980oqqcind/VFG2/LeFBC6XhrnLyv4RJOmKr4qpUjQ8+liu04ZqRrXDHVQOzyfVh
-	 jErHGNWfNH++NAjKB3DeN5r/EbFAGHfTaVNktBMtOKWOy5tC0LHWQbA2lwz/hu4pGo
-	 Ck0a/dV0UFi3qH67rba8wV6yJHkUVJw3laqtlDERgIXuP1EA5FqRgrDRBXNbdy/Ozm
-	 ISI7rhEzwu7L4eetxfw9lLWTN12w9Dt+toPT3yg8o0KKDiei4J1Ec4ErAJC2/bNkvK
-	 pEPzjqS2t37uvWfoXd69bArml5567ymS2xweRbv1aNPd1+NmyRwJyYR0H+2Mj7179R
-	 JHKSdaHKC37mA==
-Date: Sun, 04 Oct 2026 11:04:17 +0000
-To: Frantisek Musil <lister@gamesplit.cz>
-From: Lauri Saurus <saurla@saurla.com>
-Cc: regressions@lists.linux.dev, jkosina@suse.com, jikos@kernel.org
-Subject: Re: [REGRESSION] HID: logitech-hidpp: commit f0866517be93 breaks hi-res wheel scrolling over Lightspeed receiver (G903)
-Message-ID: <0IXbR44wf-idjlLSV2kHpzPm88Rs_orpaG-CJumHqfydxGdMNnuobRi0Oz8lW2cdpibztLCb1HK2MpcAw3lgsCzSmugEbQBf70Zjooz6ZLY=@saurla.com>
-In-Reply-To: <77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz>
-References: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz> <77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz>
-Feedback-ID: 198286868:user:proton
-X-Pm-Message-ID: d59e9fe4620b863d5256e0adcc2af9e802dd619f
+	dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b="enaHjPEr"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=h43UOpL6Hc+OfEZNM9DXjh7w7MXAxyBqqbYKtCxy9g8=;
+ c=simple/simple; d=gamesplit.cz;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791113264; v=1; x=1791718064;
+ b=enaHjPErhhfGW3cmNeC0tx/jx7El/jUbbex9Kc7493KO6dQTFACqsKmtpd0TepmwHLgnxv+C
+ GhXCsdoiYCsEaic4htPLqv4x6QXiBkBph/PPzHRvI1A1gePen+n9nZmGJkM2/3XCKQVbeP+gTQg
+ RjV2upwf2SO0wkRWb+6T/pLbS0pWENMWysHlwt1BF2mmODeKRkiw4qch4iHnuHDfhmCNUUYGEwa
+ X3WI+Q0UwJ5Ykq7fjfMaDkwDvqZmZfnJNZ67iiCc/OcxVIhYBxYpoJoAkX2JgHaXbTwAT3gGrmG
+ FOUdvZ8PNqI0wYIjzeJBi5jJ1dEoUUxMyGra9Q9YDftog==
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 949cd09d41990197;
+	Sun, 04 Oct 2026 11:27:43 +0000
+X-Mizu-Trace-ID: 949cd09d41990197
+X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/mixed; boundary="------------XLwVAtFB30tvPF7FdHYnABd4"
+Message-ID: <72d144aa-bd56-4ee5-a504-9cfcb329eb44@gamesplit.cz>
+Date: Sun, 4 Oct 2026 13:27:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] HID: logitech-hidpp: commit f0866517be93 breaks
+ hi-res wheel scrolling over Lightspeed receiver (G903)
+To: Lauri Saurus <saurla@saurla.com>
+Cc: regressions@lists.linux.dev, jkosina@suse.com, jikos@kernel.org
+References: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz>
+ <77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz>
+ <0IXbR44wf-idjlLSV2kHpzPm88Rs_orpaG-CJumHqfydxGdMNnuobRi0Oz8lW2cdpibztLCb1HK2MpcAw3lgsCzSmugEbQBf70Zjooz6ZLY=@saurla.com>
+Content-Language: en-MW
+From: Frantisek Musil <lister@gamesplit.cz>
+In-Reply-To: <0IXbR44wf-idjlLSV2kHpzPm88Rs_orpaG-CJumHqfydxGdMNnuobRi0Oz8lW2cdpibztLCb1HK2MpcAw3lgsCzSmugEbQBf70Zjooz6ZLY=@saurla.com>
 
-Hi.
+This is a multi-part message in MIME format.
+--------------XLwVAtFB30tvPF7FdHYnABd4
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thanks for reporting this. I could take a look at the issue. Unfortunately =
-I do not have the Logitech G903 LIGHTSPEED mouse, so I cannot reproduce the=
- issue myself.
+Hi Lauri,
 
-Could you provide me debug logs from the hid_logitech_hidpp driver when thi=
-s issue happens? I propose following steps:
+Default: hires-smooth-resolution has no stored value in Solaar's config 
+(marked "sensitive", never persisted/auto-applied).
 
-1. Shutdown Solaar (not just the GUI but the whole process)
-2. Enable driver debug logging: sudo sh -c 'echo "module hid_logitech_hidpp=
- +p" > /sys/kernel/debug/dynamic_debug/control'
-3. Unplug the lightspeed receiver
-4. Open terminal to monitor the journalctl: sudo journalctl -kf
-5. Plug the lightspeed receiver. Is the mouse now working with high resolut=
-ion scroll enabled or not? Copy the journalctl log from the monitoring term=
-inal until this point and attach in the response.
-6. Start Solaar. Is the mouse scroll working now? Copy the journalctl log f=
-rom the monitoring terminal until this point and attach in the response.
-7. Apply low resolution scrolling from Solaar. Is the mouse scroll working =
-now? Copy the journalctl log from the monitoring terminal until this point =
-and attach in the response.
-8. Apply high resolution scrolling from Solaar. Is the mouse scroll working=
- now? Copy the journalctl log from the monitoring terminal until this point=
- and attach in the response.
+Result across all 4 steps: scroll behavior never changes -- broken 
+(undivided "scrolls a lot") from the very first connect, stays that way 
+no matter what Solaar sets (low-res, high-res, or nothing).
 
-Also please note what is your default value for high resolution scrolling i=
-n the Solaar config before running any steps.
+Logs show "HID++ 4.2 device connected." / "wheel multiplier = 8" firing 
+repeatedly and spontaneously (~every 15-50s), unrelated to anySolaar 
+action -- hi_res_scroll_enable() re-running on its own via thereceiver's 
+periodic reconnect notifications.
 
-If you can provide these logs I'll see if I can make anything out of it.
+One odd detail: the very first connect in step 5 
+got"__do_hidpp_send_message_sync:got hidpp error 09", disconnected, 
+thenreconnected cleanly right after (step5-plug-receiver.log, lines 
+25-26vs 33-35).
+
+Logs attached: step5-plug-receiver.log, step6-start-solaar.log, 
+step7-lowres.log, step8-hires.log
+
+Attached setwheelmode-trace.log: an strace of the actual SetWheelMode 
+write+ack on /dev/hidraw for the same "set low-res" command -- the 
+device cleanly acks mode=0x00. (Separate run from steps 5-8 above, so 
+not paired with a scroll-behavior check at that exact moment, but steps 
+7/8 already show the visible behavior is unaffected by this command 
+either way.)
+
+Thanks a lot for taking the time to look into this, I reallyappreciate it.
+
+Thanks,
+Frantisek
+
+
+Dne 04. 10. 26 v 13:04 Lauri Saurus napsal(a):
+> Hi.
+>
+> Thanks for reporting this. I could take a look at the issue. Unfortunately I do not have the Logitech G903 LIGHTSPEED mouse, so I cannot reproduce the issue myself.
+>
+> Could you provide me debug logs from the hid_logitech_hidpp driver when this issue happens? I propose following steps:
+>
+> 1. Shutdown Solaar (not just the GUI but the whole process)
+> 2. Enable driver debug logging: sudo sh -c 'echo "module hid_logitech_hidpp +p" > /sys/kernel/debug/dynamic_debug/control'
+> 3. Unplug the lightspeed receiver
+> 4. Open terminal to monitor the journalctl: sudo journalctl -kf
+> 5. Plug the lightspeed receiver. Is the mouse now working with high resolution scroll enabled or not? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
+> 6. Start Solaar. Is the mouse scroll working now? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
+> 7. Apply low resolution scrolling from Solaar. Is the mouse scroll working now? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
+> 8. Apply high resolution scrolling from Solaar. Is the mouse scroll working now? Copy the journalctl log from the monitoring terminal until this point and attach in the response.
+>
+> Also please note what is your default value for high resolution scrolling in the Solaar config before running any steps.
+>
+> If you can provide these logs I'll see if I can make anything out of it.
+--------------XLwVAtFB30tvPF7FdHYnABd4
+Content-Type: text/x-log; charset=UTF-8; name="setwheelmode-trace.log"
+Content-Disposition: attachment; filename="setwheelmode-trace.log"
+Content-Transfer-Encoding: base64
+
+c3RyYWNlIG9mIGBzb2xhYXIgY29uZmlnICJHOTAzIExTIiBoaXJlcy1zbW9vdGgtcmVzb2x1
+dGlvbiBmYWxzZWAgb24gL2Rldi9oaWRyYXc3IChmZCAxOSksCmtlcm5lbCA3LjIuOC0yMDAu
+ZmM0NC54ODZfNjQsIHN0b2NrICh1bnBhdGNoZWQpIGhpZC1sb2dpdGVjaC1oaWRwcDoKCndy
+aXRlKDE5LCAiXDIxXDFcMzUrXDBcMFwwXDBcMFwwXDBcMFwwXDBcMFwwXDBcMFwwXDAiLCAy
+MCkgPSAyMAogIC0+IFNldFdoZWVsTW9kZSAoZmVhdHVyZSBpZHggMHgxRCwgZnVuY3Rpb24g
+MHgyMCwgU1cgaWQgMHhiKSwgcGFyYW1zWzBdPTB4MDAgKGludmVydD0wLCBoaWdoX3Jlcz0w
+LCB1c2VfaGlkcHA9MCkKcmVhZCgxOSwgICJcMjFcMVwzNStcMFwwXDBcMFwwXDBcMFwwXDBc
+MFwwXDBcMFwwXDBcMCIsIDMyKSA9IDIwCiAgLT4gYWNrOiBtb2RlPTB4MDAgY29uZmlybWVk
+IGJ5IHRoZSBkZXZpY2UgKGxvdy1yZXMgYWNjZXB0ZWQpCgooVGhpcyB3YXMgYSBzZXBhcmF0
+ZSBydW4sIG5vdCBwYWlyZWQgd2l0aCBhIHNjcm9sbCBjaGVjayBhdCB0aGlzIGV4YWN0Cm1v
+bWVudCAtLSBzZWUgdGhlIG1haW4gZW1haWwgZm9yIHN0ZXBzIDcvOCB3aGVyZSB0aGUgc2Ft
+ZSBjb21tYW5kIHdhcwpydW4gYW5kIHNjcm9sbCBiZWhhdmlvciB3YXMgY2hlY2tlZCBkaXJl
+Y3RseS4pCg==
+--------------XLwVAtFB30tvPF7FdHYnABd4
+Content-Type: text/x-log; charset=UTF-8; name="step5-plug-receiver.log"
+Content-Disposition: attachment; filename="step5-plug-receiver.log"
+Content-Transfer-Encoding: base64
+
+xZnDrWogMDQgMTM6MTM6MTcgZmVkb3JhIGtlcm5lbDogQ0lGUzogVkZTOiBjaWZzX21vdW50
+IGZhaWxlZCB3L3JldHVybiBjb2RlID0gLTExMwrFmcOtaiAwNCAxMzoxNDoyMSBmZWRvcmEg
+a2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRjogSElE
+KysgNC4yIGRldmljZSBjb25uZWN0ZWQuCsWZw61qIDA0IDEzOjE0OjIyIGZlZG9yYSBrZXJu
+ZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDBGOiBEZXRlY3Rl
+ZCBISUQrKyAyLjAgaGktcmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNDoyMiBmZWRv
+cmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAwRjog
+d2hlZWwgbXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTQ6MzAgZmVkb3JhIGtlcm5lbDog
+dXNiIDUtNC4zOiBVU0IgZGlzY29ubmVjdCwgZGV2aWNlIG51bWJlciA4CsWZw61qIDA0IDEz
+OjE0OjM2IGZlZG9yYSBrZXJuZWw6IGhpZF9sb2dpdGVjaF9oaWRwcDogZHJpdmVycy9oaWQv
+aGlkLWxvZ2l0ZWNoLWhpZHBwLmM6IEhJRCsrOiBHb3QgbmFtZTogTG9naXRlY2ggTVggVmVy
+dGljYWwgQWR2YW5jZWQgRXJnb25vbWljIE1vdXNlCsWZw61qIDA0IDEzOjE0OjM2IGZlZG9y
+YSBrZXJuZWw6IGlucHV0OiBMb2dpdGVjaCBNWCBWZXJ0aWNhbCBBZHZhbmNlZCBFcmdvbm9t
+aWMgTW91c2UgYXMgL2RldmljZXMvdmlydHVhbC9taXNjL3VoaWQvMDAwNTowNDZEOkIwMjAu
+MDAxNC9pbnB1dC9pbnB1dDM4CsWZw61qIDA0IDEzOjE0OjM2IGZlZG9yYSBrZXJuZWw6IGxv
+Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDA1OjA0NkQ6QjAyMC4wMDE0OiBpbnB1dCxoaWRyYXcy
+OiBCTFVFVE9PVEggSElEIHYwLjA5IE1vdXNlIFtMb2dpdGVjaCBNWCBWZXJ0aWNhbCBBZHZh
+bmNlZCBFcmdvbm9taWMgTW91c2VdIG9uIDAwOjFhOjdkOmRhOjcxOjE1CsWZw61qIDA0IDEz
+OjE0OjM2IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDA1OjA0NkQ6
+QjAyMC4wMDE0OiBISUQrKyA0LjUgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTQ6
+MzcgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDU6MDQ2RDpCMDIw
+LjAwMTQ6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUg
+c3VwcG9ydArFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiB1c2IgNS00LjM6IG5l
+dyBmdWxsLXNwZWVkIFVTQiBkZXZpY2UgbnVtYmVyIDEwIHVzaW5nIHhoY2lfaGNkCsWZw61q
+IDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IHVzYiA1LTQuMzogTmV3IFVTQiBkZXZpY2Ug
+Zm91bmQsIGlkVmVuZG9yPTA0NmQsIGlkUHJvZHVjdD1jNTNhLCBiY2REZXZpY2U9NDAuMDMK
+xZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogdXNiIDUtNC4zOiBOZXcgVVNCIGRl
+dmljZSBzdHJpbmdzOiBNZnI9MSwgUHJvZHVjdD0yLCBTZXJpYWxOdW1iZXI9MArFmcOtaiAw
+NCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiB1c2IgNS00LjM6IFByb2R1Y3Q6IFVTQiBSZWNl
+aXZlcgrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiB1c2IgNS00LjM6IE1hbnVm
+YWN0dXJlcjogTG9naXRlY2gKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogbG9n
+aXRlY2gtZGpyZWNlaXZlciAwMDAzOjA0NkQ6QzUzQS4wMDE1OiBoaWRyYXczOiBVU0IgSElE
+IHYxLjExIEtleWJvYXJkIFtMb2dpdGVjaCBVU0IgUmVjZWl2ZXJdIG9uIHVzYi0wMDAwOjBm
+OjAwLjMtNC4zL2lucHV0MArFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiBsb2dp
+dGVjaC1kanJlY2VpdmVyIDAwMDM6MDQ2RDpDNTNBLjAwMTY6IGhpZHJhdzQ6IFVTQiBISUQg
+djEuMTEgTW91c2UgW0xvZ2l0ZWNoIFVTQiBSZWNlaXZlcl0gb24gdXNiLTAwMDA6MGY6MDAu
+My00LjMvaW5wdXQxCsWZw61qIDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNo
+LWRqcmVjZWl2ZXIgMDAwMzowNDZEOkM1M0EuMDAxNzogaGlkZGV2OTcsaGlkcmF3NTogVVNC
+IEhJRCB2MS4xMSBEZXZpY2UgW0xvZ2l0ZWNoIFVTQiBSZWNlaXZlcl0gb24gdXNiLTAwMDA6
+MGY6MDAuMy00LjMvaW5wdXQyCsWZw61qIDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGxv
+Z2l0ZWNoLWRqcmVjZWl2ZXIgMDAwMzowNDZEOkM1M0EuMDAxNzogZGV2aWNlIG9mIHR5cGUg
+ZVFVQUQgTGlnaHRzcGVlZCAxICgweDBjKSBjb25uZWN0ZWQgb24gc2xvdCAxCsWZw61qIDA0
+IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWRqcmVjZWl2ZXIgMDAwMzowNDZE
+OkM1M0EuMDAxNzogZGV2aWNlIG9mIHR5cGUgZVFVQUQgTGlnaHRzcGVlZCAxICgweDBjKSBj
+b25uZWN0ZWQgb24gc2xvdCA3CsWZw61qIDA0IDEzOjE1OjA1IGZlZG9yYSBrZXJuZWw6IGhp
+ZF9sb2dpdGVjaF9oaWRwcDogZHJpdmVycy9oaWQvaGlkLWxvZ2l0ZWNoLWhpZHBwLmM6IEhJ
+RCsrIFVuaWZ5aW5nOiBHb3Qgc2VyaWFsOiBlZS0wNy1kNC03OQrFmcOtaiAwNCAxMzoxNTow
+NSBmZWRvcmEga2VybmVsOiBoaWRfbG9naXRlY2hfaGlkcHA6IGRyaXZlcnMvaGlkL2hpZC1s
+b2dpdGVjaC1oaWRwcC5jOiBISUQrKyBVbmlmeWluZzogR290IG5hbWU6IExvZ2l0ZWNoIEc5
+MDMgTFMKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogaW5wdXQ6IExvZ2l0ZWNo
+IEc5MDMgTFMgYXMgL2RldmljZXMvcGNpMDAwMDowMC8wMDAwOjAwOjA4LjEvMDAwMDowZjow
+MC4zL3VzYjUvNS00LzUtNC4zLzUtNC4zOjEuMi8wMDAzOjA0NkQ6QzUzQS4wMDE3LzAwMDM6
+MDQ2RDo0MDg3LjAwMTgvaW5wdXQvaW5wdXQzOQrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEg
+a2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogaW5w
+dXQsaGlkcmF3NzogVVNCIEhJRCB2MS4xMSBLZXlib2FyZCBbTG9naXRlY2ggRzkwMyBMU10g
+b24gdXNiLTAwMDA6MGY6MDAuMy00LjMvaW5wdXQyOjEKxZnDrWogMDQgMTM6MTU6MDUgZmVk
+b3JhIGtlcm5lbDogaGlkX2xvZ2l0ZWNoX2hpZHBwOiBkcml2ZXJzL2hpZC9oaWQtbG9naXRl
+Y2gtaGlkcHAuYzogX19kb19oaWRwcF9zZW5kX21lc3NhZ2Vfc3luYzpnb3QgaGlkcHAgZXJy
+b3IgMDkKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAt
+ZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IERpc2Nvbm5lY3RlZArFmcOtaiAwNCAxMzox
+NTowNSBmZWRvcmEga2VybmVsOiBoaWRfbG9naXRlY2hfaGlkcHA6IGRyaXZlcnMvaGlkL2hp
+ZC1sb2dpdGVjaC1oaWRwcC5jOiBISUQrKyBVbmlmeWluZzogR290IHNlcmlhbDogNzMtNWQt
+OWQtNjEKxZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogaGlkX2xvZ2l0ZWNoX2hp
+ZHBwOiBkcml2ZXJzL2hpZC9oaWQtbG9naXRlY2gtaGlkcHAuYzogSElEKysgVW5pZnlpbmc6
+IEdvdCBuYW1lOiBMb2dpdGVjaCBDYW5keQrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2Vy
+bmVsOiBpbnB1dDogTG9naXRlY2ggQ2FuZHkgYXMgL2RldmljZXMvcGNpMDAwMDowMC8wMDAw
+OjAwOjA4LjEvMDAwMDowZjowMC4zL3VzYjUvNS00LzUtNC4zLzUtNC4zOjEuMi8wMDAzOjA0
+NkQ6QzUzQS4wMDE3LzAwMDM6MDQ2RDo0MDVGLjAwMTkvaW5wdXQvaW5wdXQ0MArFmcOtaiAw
+NCAxMzoxNTowNiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzow
+NDZEOjQwNUYuMDAxOTogaW5wdXQsaGlkcmF3ODogVVNCIEhJRCB2MS4xMSBLZXlib2FyZCBb
+TG9naXRlY2ggQ2FuZHldIG9uIHVzYi0wMDAwOjBmOjAwLjMtNC4zL2lucHV0Mjo3CsWZw61q
+IDA0IDEzOjE1OjA2IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAz
+OjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQg
+MTM6MTU6MDYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2
+RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFy
+ZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dpdGVj
+aC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogSElEKysgNC4yIGRldmljZSBj
+b25uZWN0ZWQuCsWZw61qIDA0IDEzOjE1OjA3IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhp
+ZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4OiBEZXRlY3RlZCBISUQrKyAyLjAgaGkt
+cmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dp
+dGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwgbXVsdGlwbGll
+ciA9IDgK
+--------------XLwVAtFB30tvPF7FdHYnABd4
+Content-Type: text/x-log; charset=UTF-8; name="step6-start-solaar.log"
+Content-Disposition: attachment; filename="step6-start-solaar.log"
+Content-Transfer-Encoding: base64
+
+xZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
+IDAwMDM6MDQ2RDo0MDg3LjAwMTg6IERpc2Nvbm5lY3RlZArFmcOtaiAwNCAxMzoxNTowNSBm
+ZWRvcmEga2VybmVsOiBoaWRfbG9naXRlY2hfaGlkcHA6IGRyaXZlcnMvaGlkL2hpZC1sb2dp
+dGVjaC1oaWRwcC5jOiBISUQrKyBVbmlmeWluZzogR290IHNlcmlhbDogNzMtNWQtOWQtNjEK
+xZnDrWogMDQgMTM6MTU6MDUgZmVkb3JhIGtlcm5lbDogaGlkX2xvZ2l0ZWNoX2hpZHBwOiBk
+cml2ZXJzL2hpZC9oaWQtbG9naXRlY2gtaGlkcHAuYzogSElEKysgVW5pZnlpbmc6IEdvdCBu
+YW1lOiBMb2dpdGVjaCBDYW5keQrFmcOtaiAwNCAxMzoxNTowNSBmZWRvcmEga2VybmVsOiBp
+bnB1dDogTG9naXRlY2ggQ2FuZHkgYXMgL2RldmljZXMvcGNpMDAwMDowMC8wMDAwOjAwOjA4
+LjEvMDAwMDowZjowMC4zL3VzYjUvNS00LzUtNC4zLzUtNC4zOjEuMi8wMDAzOjA0NkQ6QzUz
+QS4wMDE3LzAwMDM6MDQ2RDo0MDVGLjAwMTkvaW5wdXQvaW5wdXQ0MArFmcOtaiAwNCAxMzox
+NTowNiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
+NUYuMDAxOTogaW5wdXQsaGlkcmF3ODogVVNCIEhJRCB2MS4xMSBLZXlib2FyZCBbTG9naXRl
+Y2ggQ2FuZHldIG9uIHVzYi0wMDAwOjBmOjAwLjMtNC4zL2lucHV0Mjo3CsWZw61qIDA0IDEz
+OjE1OjA2IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6
+NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTU6
+MDYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVG
+LjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUg
+c3VwcG9ydArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRw
+cC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogSElEKysgNC4yIGRldmljZSBjb25uZWN0
+ZWQuCsWZw61qIDA0IDEzOjE1OjA3IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRl
+dmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4OiBEZXRlY3RlZCBISUQrKyAyLjAgaGktcmVzIHNj
+cm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNTowNyBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
+aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgK
+xZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
+IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IEhJRCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOt
+aiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAw
+MzowNDZEOjQwNUYuMDAxOTogRGlkIG5vdCBkZXRlY3QgSElEKysgaGktcmVzIHNjcm9sbGlu
+ZyBoYXJkd2FyZSBzdXBwb3J0CsWZw61qIDA0IDEzOjE1OjU2IGZlZG9yYSBrZXJuZWw6IGxv
+Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2
+aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRl
+Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJRCsrIDQuMiBkZXZpY2Ug
+Y29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
+aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0ZWQgSElEKysgMi4wIGhp
+LXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9n
+aXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0
+IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzox
+NTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
+ODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3Jh
+IGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJ
+RCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2Vy
+bmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0
+ZWQgSElEKysgMi4wIGhpLXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVk
+b3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6
+IHdoZWVsIG11bHRpcGxpZXIgPSA4Cg==
+--------------XLwVAtFB30tvPF7FdHYnABd4
+Content-Type: text/x-log; charset=UTF-8; name="step7-lowres.log"
+Content-Disposition: attachment; filename="step7-lowres.log"
+Content-Transfer-Encoding: base64
+
+xZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
+IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IEhJRCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOt
+aiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAw
+MzowNDZEOjQwNUYuMDAxOTogRGlkIG5vdCBkZXRlY3QgSElEKysgaGktcmVzIHNjcm9sbGlu
+ZyBoYXJkd2FyZSBzdXBwb3J0CsWZw61qIDA0IDEzOjE1OjU2IGZlZG9yYSBrZXJuZWw6IGxv
+Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2
+aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRl
+Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJRCsrIDQuMiBkZXZpY2Ug
+Y29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
+aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0ZWQgSElEKysgMi4wIGhp
+LXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9n
+aXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0
+IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzox
+NTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
+ODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3Jh
+IGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJ
+RCsrIDQuMiBkZXZpY2UgY29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2Vy
+bmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0
+ZWQgSElEKysgMi4wIGhpLXJlcyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVk
+b3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6
+IHdoZWVsIG11bHRpcGxpZXIgPSA4CsWZw61qIDA0IDEzOjE2OjQ0IGZlZG9yYSBrZXJuZWw6
+IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIg
+ZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTY6NDQgZmVkb3JhIGtlcm5lbDogbG9n
+aXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0
+IEhJRCsrIGhpLXJlcyBzY3JvbGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzox
+Njo0NSBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQw
+ODcuMDAxODogSElEKysgNC4yIGRldmljZSBjb25uZWN0ZWQuCsWZw61qIDA0IDEzOjE2OjQ1
+IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4w
+MDE4OiBEZXRlY3RlZCBISUQrKyAyLjAgaGktcmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAx
+MzoxNjo0NSBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZE
+OjQwODcuMDAxODogd2hlZWwgbXVsdGlwbGllciA9IDgK
+--------------XLwVAtFB30tvPF7FdHYnABd4
+Content-Type: text/x-log; charset=UTF-8; name="step8-hires.log"
+Content-Disposition: attachment; filename="step8-hires.log"
+Content-Transfer-Encoding: base64
+
+xZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
+IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3Jv
+bGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVs
+OiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwgbXVs
+dGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gt
+aGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IEhJRCsrIDQuMiBkZXZpY2UgY29u
+bmVjdGVkLgrFmcOtaiAwNCAxMzoxNTo1NiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1oaWRw
+cC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogRGV0ZWN0ZWQgSElEKysgMi4wIGhpLXJl
+cyBzY3JvbGwgd2hlZWwKxZnDrWogMDQgMTM6MTU6NTYgZmVkb3JhIGtlcm5lbDogbG9naXRl
+Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IHdoZWVsIG11bHRpcGxpZXIg
+PSA4CsWZw61qIDA0IDEzOjE2OjQ0IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRl
+dmljZSAwMDAzOjA0NkQ6NDA1Ri4wMDE5OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4K
+xZnDrWogMDQgMTM6MTY6NDQgZmVkb3JhIGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNl
+IDAwMDM6MDQ2RDo0MDVGLjAwMTk6IERpZCBub3QgZGV0ZWN0IEhJRCsrIGhpLXJlcyBzY3Jv
+bGxpbmcgaGFyZHdhcmUgc3VwcG9ydArFmcOtaiAwNCAxMzoxNjo0NSBmZWRvcmEga2VybmVs
+OiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogSElEKysgNC4y
+IGRldmljZSBjb25uZWN0ZWQuCsWZw61qIDA0IDEzOjE2OjQ1IGZlZG9yYSBrZXJuZWw6IGxv
+Z2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4OiBEZXRlY3RlZCBISUQr
+KyAyLjAgaGktcmVzIHNjcm9sbCB3aGVlbArFmcOtaiAwNCAxMzoxNjo0NSBmZWRvcmEga2Vy
+bmVsOiBsb2dpdGVjaC1oaWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwODcuMDAxODogd2hlZWwg
+bXVsdGlwbGllciA9IDgKxZnDrWogMDQgMTM6MTc6MTIgZmVkb3JhIGtlcm5lbDogbG9naXRl
+Y2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDVGLjAwMTk6IEhJRCsrIDQuMiBkZXZpY2Ug
+Y29ubmVjdGVkLgrFmcOtaiAwNCAxMzoxNzoxMiBmZWRvcmEga2VybmVsOiBsb2dpdGVjaC1o
+aWRwcC1kZXZpY2UgMDAwMzowNDZEOjQwNUYuMDAxOTogRGlkIG5vdCBkZXRlY3QgSElEKysg
+aGktcmVzIHNjcm9sbGluZyBoYXJkd2FyZSBzdXBwb3J0CsWZw61qIDA0IDEzOjE3OjEyIGZl
+ZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4wMDE4
+OiBISUQrKyA0LjIgZGV2aWNlIGNvbm5lY3RlZC4KxZnDrWogMDQgMTM6MTc6MTIgZmVkb3Jh
+IGtlcm5lbDogbG9naXRlY2gtaGlkcHAtZGV2aWNlIDAwMDM6MDQ2RDo0MDg3LjAwMTg6IERl
+dGVjdGVkIEhJRCsrIDIuMCBoaS1yZXMgc2Nyb2xsIHdoZWVsCsWZw61qIDA0IDEzOjE3OjEy
+IGZlZG9yYSBrZXJuZWw6IGxvZ2l0ZWNoLWhpZHBwLWRldmljZSAwMDAzOjA0NkQ6NDA4Ny4w
+MDE4OiB3aGVlbCBtdWx0aXBsaWVyID0gOAo=
+
+--------------XLwVAtFB30tvPF7FdHYnABd4--
