@@ -1,85 +1,86 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6260F44A401
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 14:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF71D440A3E
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 14:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791122708; cv=none; b=uG2fnJUYhChGHFq2T6OXOsqwFGZAJvdtl4a7ZjxfqUy89xeT0vyATvj5y2t7IlWaZ4qNfxPdcwhKZt6aBthIXaNeR84YhrtF2CRY7LtTkRCJ9ZB0NthmOraar6eDCZKPtPIZOIimeDEWBnOzFw+7BeVfZc95VEEZbjXXPIzrHr0=
+	t=1791124067; cv=none; b=U53gfOI+vL75pI0dJ67KPmx+QRZX15O3lei/qpPXUXd+9h/hTMouq+mC7c91rB2SrFUPsekWuvq+17ETvPMvgHGz4guokmNbiN8fNX7M6DOAdeljBMC4A72Rvz8opLdVTY7PWjqCETx03BEeGtZSgpigOxQqfOgXErIRZz13xQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791122708; c=relaxed/simple;
-	bh=ahipVlefqOFSfshTS+hSpoItsZZy/luWwf8AZU0mU0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=b2SAXRlIVaNAYN/v1Ha+4J7IXTpbO8iWsUjyR9z4nUxm/67kG0yZFRNDYkU+VJRyhIze7iJU3B9dW9ipZ+++IF7G+1P8w5UnDadXjTGu1ny2z4j1InO0YqvcsRX0AvMTCSxTcxMjOJVaJ/xFnqtPJquAGrc3FcxnL0q04kynNCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=F1Oos3OJ; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1791124067; c=relaxed/simple;
+	bh=1KdpqyBuIjuLBvWYIW5i5vria/6OVyt65BvBNkWHUCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xib9cGGurdBvKKhq79pkyahXkRHH0TaeDgdQ8pqNebTuJEAUmcQsRowWuu1tlczHqmPeNqvaE7NBDBGu5C86Y3p7/FpwWu4afjTJbWoEl2oydZOI803odVBzATbsaYeF3wbpmOPnDYP9ewa/dQ+AuPiz3JJXetBvR0FPj7lva2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=p7SipqU1; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="F1Oos3OJ"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hyPR81MWwz79Vv
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 16:04:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1791122692;
-	bh=ahipVlefqOFSfshTS+hSpoItsZZy/luWwf8AZU0mU0Q=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=F1Oos3OJuIEuNy0FxFXXgDNcrw8kltI742dDvO3uZytAitDRWKmiEffJzcxLQLzfY
-	 jp4d455WVKvxZulSpkXSO0BXaCWmhUWVdyVBkBCEJUBQQ93ip7rWHTIB+DGVdvu0MO
-	 ocoxxiDPCcTTTgzSl16/+6OwGh3yupybYGR3iCvV1apdLsp1MOc9oOefNAdH9sB1nv
-	 jozKcXqcWRruho9pdogjnajjozVf36s/BWpF2yynNH0ydsbIjWmfFMxRW8WSn906Lt
-	 XmYttIIAwxcb7SVDG73lH8dUyOw34ELmPCnr4/w2670Xb6pEjgnF4ANw7qFxLipbfe
-	 N5oyV+VrelRVA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hyPR80gKbz79Vs
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 16:04:52 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hyPR76BFPz8svb
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 16:04:51 +0200 (CEST)
-Received: from [172.18.132.253] (unknown [185.104.138.131])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 36FED5F9DA
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 16:04:51 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 185.104.138.131) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[172.18.132.253]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5171190b-dcdd-4046-87f1-3817165c89ed@leemhuis.info>
-Date: Sun, 4 Oct 2026 16:04:40 +0200
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="p7SipqU1"
+From: Stian Halseth <stian@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1791124057;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f1mUDrEgHuD4xd6cPadDTTmFU27wOGNSESTtR/jQtY8=;
+	b=p7SipqU1iSvk3dnl5H7B7i2txRvHbGnjP0yF6uF//WDIdV3FFrL3sqF+C7ATM3n30FeTFg
+	dZ4GqX882XwM3OhNpBF1NQDHtZYn52tynDpUiWzsf03IkxDYpbFSlqoYglZ2Pe4bmT4wcn
+	l+kyd1pb7/qk5pq2tYFj1HPFVy2LVVg=
+To: Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [REGRESSION] tick/sched: /proc/stat idle time exceeds wall time since v7.2
+Date: Sun,  4 Oct 2026 16:27:24 +0200
+Message-ID: <20261004142724.3896396-1-stian@itx.no>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179112269146.205896.14954428894670673464@mxe9fb.netcup.net>
-X-NC-CID: +T8Ko9+CX4+SaAqPUuON9bjyeISkEmQFfd+u37CeF0sBdlpyZ+8=
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
+Since v7.2-rc1, /proc/stat counts more idle time than wall time on
+NO_HZ_IDLE kernels with TICK_CPU_ACCOUNTING. Monitoring that computes
+CPU usage as 1 minus the idle rate shows negative usage on idle
+machines.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Measured over 60 s with /proc/stat and the idle_sleeps counters in
+/proc/timer_list:
 
-#regzbot report:
-https://lore.kernel.org/lkml/20260920094508.39682-1-roman.stingler@gmail.com/
-#regzbot fix: 3fabd8ec206bd4
+  SPARC T7-1, 7.3-rc5, HZ=100, 256 CPUs:
+    idle per wall second 1.0057 on average, 1.44 on the worst CPU
+    (92 tick stops/s, 4.8 ms of excess per tick stop)
 
-#regzbot report:
-https://lore.kernel.org/lkml/20260920094508.39682-1-roman.stingler@gmail.com/
-#regzbot fix: perf/core: track the perf mlock gift separately
+  amd64 (Opteron 1214), 7.2.7, HZ=1000, 2 CPUs:
+    idle machine:                         +0.03% and +0.06%
+    a task waking every 3.7 ms on CPU 1:  +13.1% on CPU 1
+    (285 tick stops/s, 0.46 ms of excess per tick stop)
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5740
-#regzbot fix: 5a67d2e055897a
+On both machines the excess is about half a tick per tick stop.
+
+From reading the code (not bisected), I think the cause is that
+cf6444c3e1bb7 ("tick/sched: Unify idle cputime accounting") made
+dyntick-idle time and tick-sampled time share cpustat[CPUTIME_IDLE].
+On idle exit, kcpustat_dyntick_stop() accounts idle time up to now.
+The tick is then restarted on its old period, and the first tick
+accounts a whole TICK_NSEC through account_process_tick(), although
+the part of that period before the idle exit has just been accounted
+as idle. Before v7.2, /proc/stat read ts->idle_sleeptime, and the tick
+fed a counter it did not use, so nothing was counted twice.
+
+I have a fix that records the overlap in kcpustat_dyntick_stop() and
+leaves it out of the first tick. With it, idle per wall second is
+1.0000 on both machines, and -0.1% under the wakeup load at 280 tick
+stops/s. I am still testing it with IRQ_TIME_ACCOUNTING and with steal
+time in a KVM guest, and will send it when that is done.
+
+#regzbot introduced: cf6444c3e1bb7
+
+Stian
