@@ -1,101 +1,92 @@
-Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-104.mta0.migadu.com [91.218.175.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C585191F91
-	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 00:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA0254655
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 08:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791075117; cv=none; b=JvCvsnG4OdTy3oTJyCjAyNKVzmIUzQfwE8l1AVL+NesfM/GxBxh/VO0XpfL/cpbZ86hmz1tmdjLolmFb+n9cs8cHmOlqUQBVLcTmkus5jCBSuIWx/UX8n1Jbkbe5N7KbxyA9aqMbKCyiOQtOQeskhq26LpjwSjFcHg9Vf7L7RIQ=
+	t=1791104153; cv=none; b=BKmdaNMYFJjm36KohO+24r07K7doZ1hFA6btdTnLizYhjZLbdTDhGlQEashdXTrTWDIaeShvotrtTAc8kjnWK/sipeiArx11LunFC1eRUrctx94jsCEwt2e5l/1zm/HeRuDIte6IDHQ8kyNJrjxSvUnMEbnDDgbVBV3nYKlEMqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791075117; c=relaxed/simple;
-	bh=+xXRChb7pRTKeEKacaBfsTdJsfEptT6xDoTfO6eJkpA=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ea/U4AavBKBIDQMDCd4qXTmICF2Dwlik3W9wzO5VmlF80uSKeFWUIP9MH6HvEL4IdNiJo/OWQJjRH+DtKviHfraanshUn6t5GvnJaWHCAefedjijem/uwa2vD9P0Qokc6r4H9Vbb9MgDodXNJXYxSqF7ioIA72Qgb0ArMoSzvQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=kSqBw0Wb; arc=none smtp.client-ip=109.224.244.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1791104153; c=relaxed/simple;
+	bh=95FzXsUz9I2g/oj+AL1i7jzIP1yuWrft5Pt9H0Ql5q4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
+	 In-Reply-To:Content-Type; b=XCRvc2tYzSOZgUJCgdemMdw5q5+fRBWQ4vL1MDDil9pfxKVJSJHo3FaS+rkYVtu//v3+6jge20V6EvuIUI6zVudsGXNpuX3updalV6ny8Bxj9r0vOYrO4S4R8+8URAy4eelA0yCt8Izz2EDLQuZWRiXdmtAkpRSC8imKbsEGD+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz; spf=pass smtp.mailfrom=gamesplit.cz; dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b=rRNOn+On; arc=none smtp.client-ip=91.218.175.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gamesplit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="kSqBw0Wb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1791075102; x=1791334302;
-	bh=+xXRChb7pRTKeEKacaBfsTdJsfEptT6xDoTfO6eJkpA=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=kSqBw0WbR/0gTff/dbPKzurZq9fdCYlKgko5qUzlv4Jllsby2isilo9777hI+ugkx
-	 jM9lcbUDWvESLDMznr2FKvofHEVWKLigRpz7advQvpLYzgiXl8wBH0fP1EdhQm3TYF
-	 DM6dSVULvA8pXhMF5aLmARdZj0PN7oh4A5Qd7PDyI1zMmEQbJLzY9wB65HLLMXBAaQ
-	 zrlOUhfCeQ4y7qroMYjTo/aXtAg4kCphHmOaW4ICWbE/QNjnKkH4nugPpEwGkWJkNn
-	 t1NWVaTUeWNf1kyaTfHufZQMteoZnYuF4BhYJx2iZPWP2tYGw9KiDRkfzCtJ5NrzEG
-	 BqwVTNWcG7SgA==
-Date: Sun, 04 Oct 2026 00:51:40 +0000
-To: "rafael@kernel.org" <rafael@kernel.org>
-From: Charis Stratakis <c.stratakis@proton.me>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [REGRESSION] thermal: core: battery data corrupted after resume on ThinkPad P1 Gen2 since d33e89d12295
-Message-ID: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me>
-Feedback-ID: 224044180:user:proton
-X-Pm-Message-ID: 9b9be756796ff897da51b7220e70e8d7add16813
+	dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b="rRNOn+On"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=95FzXsUz9I2g/oj+AL1i7jzIP1yuWrft5Pt9H0Ql5q4=;
+ c=simple/simple; d=gamesplit.cz;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791104146; v=1; x=1791708946;
+ b=rRNOn+Onmc02mMNLdITIX7EssutR5XoXEPhfgpvz/Y+2nNdSdVYqdghWcy7uDgKQe1a6Cxte
+ YRFDJg5uDX7LiGwaEfv7BmFIUMdKZoZXTwRoEuamldVqyx/eYNS6gfI0gd7W5SjkJlNBFhzEole
+ 0DiIG882ykGMLheGDV8qnh4tTCjPM/zdRzVjavUd7ee9zD+i1W9hNgCHha56/0MxUGkzTlU49ed
+ UGsFSHYwpGHDlB8IS3Z1xxPSNONvWKaVXy+y2Ap6jEJ7+tY2LR0lVjpnus2Aekj2NqeyQESUnlx
+ i0MvkFxMC6MqiKybe4fWPj5ZozJ3MpmByylyKxLfBCv3Q==
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id a0701e863e5c39b9;
+	Sun, 04 Oct 2026 08:55:40 +0000
+X-Mizu-Trace-ID: a0701e863e5c39b9
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz>
+Date: Sun, 4 Oct 2026 10:55:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Frantisek Musil <lister@gamesplit.cz>
+Subject: [REGRESSION] HID: logitech-hidpp: commit f0866517be93 breaks hi-res
+ wheel scrolling over Lightspeed receiver (G903)
+Content-Language: en-MW
+Reply-To: Frantisek Musil <lister@gamesplit.cz>
+References: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz>
+To: regressions@lists.linux.dev
+Cc: jkosina@suse.com, jikos@kernel.org, saurla@saurla.com
+In-Reply-To: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
-On my ThinkPad P1 Gen2 with Fedora 44 I've noticed that the battery=C2=
-=A0percentage started showing garbage values, mainly showing less, while th=
-e battery was fully charged.
+Bisected regression, no maintainer response on Fedora Bugzilla in three 
+weeks: bugzilla.redhat.com/show_bug.cgi?id=2531858 
+<https://bugzilla.redhat.com/show_bug.cgi?id=2531858>
 
-I enlisted the help of Claude to help me debug this so I am providing the r=
-esults here. All the testing was done on my laptop and no vanilla kernel wa=
-s installed. Started with Fedora's build of 7.1.6 and currently I'm on 7.2.=
-8 with the same results.
+Logitech G903 LIGHTSPEED mouse, connected via its Lightspeed USB 
+receiver: hi-res wheel scrolling is broken from boot since kernel 7.2.4 
+(still broken in 7.2.8). Each wheel click delivers the full legacy 
+scroll value (120) in one event instead of ~8 subdivided hi-res steps 
+(15 each) -- feels like the wheel suddenly "speeds up". No userspace 
+config involved.
 
-Since v7.1, _BIX and _BST data read after resume from S3 on my Lenovo Think=
-Pad P1 Gen2 (latest BIOS 1.57) is often garbage, energy_full 327.97 Wh (des=
-ign 78 Wh), voltage_min_design 32.8 V, serial changes, or energy_now ~328 W=
-h giving 424%, reported percentage wrong until the next re-read. Same sympt=
-om as https://bugzilla.kernel.org/show_bug.cgi?id=3D218881, fixed in 494c7d=
-055081 ("thermal: core: Change PM notifier priority to the minimum").
+Bisected to:
+   f0866517be9345d8245d32b722574b8aecccb348
+"HID: logitech-hidpp: sync wheel multiplier on wheel mode changes"
+   Signed-off-by: Lauri Saurus <saurla@saurla.com>
+   Signed-off-by: Jiri Kosina <jkosina@suse.com>
 
-#regzbot introduced: d33e89d12295
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218881
+Connecting the same mouse via USB cable (no receiver) is unaffected -- 
+isolates this to the receiver/DJ reconnect path, where 
+hidpp_connect_event() fires repeatedly during normal use and the new 
+resync logic in this commit appears to desync the cached 
+wheel_multiplier from the device's real mode.
 
-Out of the suspend/resume cycles I logged on this machine, the battery data=
- came back corrupted in 0 of 39 on 7.0.11-7.0.14, 14 of 22 on 7.1.6-7.1.13 =
-and 5 of 12 on 7.2.5. 7.2.8 and mainline still carry the same code.
+Reverting this commit fixes it, confirmed stable on 
+kernel-7.2.8-200.fc44. A device-specific quirk limiting the resync to 
+not apply to the G903 did not fix it, so I don't have a minimal surgical 
+patch -- only a full revert to offer.
 
-d33e89d12295 dropped the INT_MIN-priority PM notifier and starts thermal zo=
-ne resume from dpm_complete(), so INT3403 _TMP now runs concurrently with t=
-he ACPI battery driver's _BIX refresh in battery_notify().
+HW: G903 LIGHTSPEED (046d:4087) via Lightspeed receiver (046d:c53a), 
+Fedora 44, kernel 7.1.13 (good) .. 7.2.8 (bad).
 
-Claude provided this explanation for the "firmware confusion" left unexplai=
-ned in 494c7d055081:
+Happy to test patches or provide more traces.
 
-the DSDT method \GTST, called by every INT3403 _TMP, writes the EC page sel=
-ector (HIID =3D 0x60) without taking the BATM
-mutex that the battery methods hold while paging through the same EC window=
-. EC register trace (ec.c dyndbg) at resume:
+Thanks,
+Frantisek Musil
 
-=C2=A0 =C2=A0 WR 81=3D02 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<- GBIX (=
-_BIX) selects battery page 2
-=C2=A0 =C2=A0 WR 81=3D60 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<- GTST f=
-rom a concurrent _TMP
-=C2=A0 =C2=A0 RD a2->3a a3->80 =C2=A0 =C2=A0<- _BIX reads "design voltage" =
-=3D 0x803A
-
-Test: 3 suspend/resume cycles (rtcwake + systemctl suspend), checking /sys/=
-class/power_supply/BAT0/{energy_full,voltage_min_design,serial_number} afte=
-r each. int3403_thermal loaded: 3/3 corrupted. Unloaded: 3/3 correct.
-
-I did not bisect though, the analysis of the responsible commit was perform=
-ed statically, happy to test patches, and can provide the DSDT/SSDT dump an=
-d full EC trace.
-
-This issue seems also similar to https://bugs.launchpad.net/ubuntu/+source/=
-linux/+bug/2070441
-
-Regards,
-Charalampos Stratakis
