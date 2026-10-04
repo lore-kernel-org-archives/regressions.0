@@ -1,81 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B984756B5;
-	Sun,  4 Oct 2026 17:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D27847F3D9
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 18:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791136423; cv=none; b=mPGBWbTB1LPJM58S0ZLXZMBc2hnkBxCaAQ/JK5ZDqd+oi58YVR/+4G9DcYIdnlEWSFTi/raz3i5icf+/pSZ8KbH3lsSThhg+M97Vwupb+XP1wrD/3/+fqhewRhsprN9xblO1801DzQMi2KMTyMXDye22jLaHd/5ZXGZuh0Pqr8w=
+	t=1791138330; cv=none; b=De/4QGkJp0dP9gmhCqGFZziQhZ9FYcEphBUFwhl5CYR99K0bPbZenHBBwRX7TigTiQJq30yqDk5UA5GMUnyHw0xe4DUXF8FMnOv4Vk83zOapKEkFIxFXMziomMZ18TEgwqqiVbzS10XF5E1aPbWVBBIJigT7X3SdFEeq8QxudSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791136423; c=relaxed/simple;
-	bh=yl8WttfpIX38MosSJb3rVSyrB67EpdYSZFKFMwwpgFs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LmETJJ7fpZ79SbmJVl5H4YEhJ8ccxZIbuifQLx8M53B963KHeq2kduHbyukH3/TFs96agoIQV5WVXQnc0wurfZTZo3XRt834f3nyV0UsqjzmapV12yyqbNvEaNnW6FQOUh4tQSbqYdbSknxVJ62y6aGE8u307TKdwNrrM4kVdEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoiadJJT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791138330; c=relaxed/simple;
+	bh=F1BF7ZhJBLxJ2rF4Nu+DwYItNVCoVTxgkn/uMcDkA5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KybUdJ17uGu2shXOpKJJOrOEEVOSSaLBtQE6W8YH9M8qkybXAqp4rdY8vktyAsn1ig4QxiNN7DtTfBWbfm2p+Q7vO0STRqr1tbTH5wLRiOQVrEb9GAvfGRH02uKkT5X+1TvIsYwJYj3chrRSadJs2s76gtIroIMOddGJhOExn8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=D3cEOvme; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoiadJJT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1167B1F000FF;
-	Sun,  4 Oct 2026 17:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791136416;
-	bh=dW2d3LGbBGSadjanQBD6Rhc29aMig4rkrP/cDF4hCPM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=QoiadJJTHbytHLLUgcMMJDU2oFapVhRXRlzl12k8kd8u1xmwsp91V3Vv5KdQJ8/8n
-	 SRnfB2A4IIMfYR5JpyY29iU+f88a4kaHKDpHr3HlX+Y/2Kdh/cEUvZFKyDjeQp+9sR
-	 fdXwZkKRN5on7IdkIwshDYEf/pgjqQW6kScfNW/Yk3BT4/s0+KDfaEPd8WKRNmZTkn
-	 K3NccYEeufnFJV7FH2iw27/6wrnSQPDhBnGg9gmyv2S6+421Jkv8hqxUWvc+lTzBjn
-	 w8rCq9In5zLZUrPSnFVq5PLTJPIxBMhg3QqnjJDetBIE2lvyL1LhuWZr5G5+6XRRhl
-	 JkK1N+yfcGN7A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Chris Bainbridge <chris.bainbridge@canonical.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Jason Miu
- <jasonmiu@google.com>,  Alexander Graf <graf@amazon.com>,  Ran Xiaokai
- <ran.xiaokai@zte.com.cn>,  regressions@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?=
- <mclapinski@google.com>
-Subject: Re: [BUG] KHO handover hangs when memmap reserves PMEM
-In-Reply-To: <asJc1GIBbCJ26akS@px13> (Chris Bainbridge's message of "Sun, 4
-	Oct 2026 16:09:00 +0100")
-References: <asE0R_f2r2TL-3Sy@px13> <2vxzcxtplh4i.fsf@kernel.org>
-	<asJc1GIBbCJ26akS@px13>
-Date: Sun, 04 Oct 2026 19:53:32 +0200
-Message-ID: <2vxzzewtjqsj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="D3cEOvme"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id A739F240028
+	for <regressions@lists.linux.dev>; Sun,  4 Oct 2026 20:25:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1791138320;
+	bh=F1BF7ZhJBLxJ2rF4Nu+DwYItNVCoVTxgkn/uMcDkA5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=D3cEOvmeqQYIv9ZVYmWcTV4lxl0d0MJelw8vdUv8x9wwqmuh0lkIrAYDei0Oi7Wni
+	 8TU3DuaH01OUPSfxB5lxvIi2WxRHtWrMtGOFnEB7WDpLWhvmULZLH16TInSlrkWQ71
+	 +7CyDxt1I+TTyd4K/mSzmUknCVFiZS0pY+WrPD9N1Pup1WJn1HUll8AH5HZIa8P5CE
+	 On9wFt6V7woEjCyXFoOVTNfNlep86LFHhwkPxJektxqyZSuz53pSIoAIzYl20fSd5r
+	 nf6MiCr5XsYZqLnManD200HZuLoHZIXfrHEFO+PU+UV2kE++M8QTneIxo9xzDIHAVC
+	 CEWziGQZb8mbA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hyWCf1XxGz6v19;
+	Sun,  4 Oct 2026 20:25:18 +0200 (CEST)
+Message-ID: <49b62a23-3e05-42de-b3ed-92294311cbdd@posteo.de>
+Date: Sun, 04 Oct 2026 18:25:20 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH v2] wifi: mt76: mt7925: keep MLD membership consistent
+ during link add
+To: Andrei Rusu de Castro <arc@empyreal.works>,
+ linux-wireless@vger.kernel.org, Devin Wittmayer <lucid_duck@justthetip.ca>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ linux-mediatek@lists.infradead.org
+References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
+ <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+ <c64f5fa6-4c61-45b6-a513-b971e59d7723@posteo.de>
+ <476e7721-580e-4a6b-86e5-5ed782a2c7ec@leemhuis.info>
+ <c9f984c4-e3c4-4e41-a502-99db97ce724b@posteo.de>
+ <20260829221319.25334-1-lucid_duck@justthetip.ca>
+ <d245c4b1-dfba-4507-85a2-c6883f5eae64@posteo.de>
+ <20261003180334.83575-1-lucid_duck@justthetip.ca>
+ <20261004-mt7925-mld-v2-results-248bb5e6404f@empyreal.works>
+ <20261004-mt7925-mld-v2-248bb5e6404f@empyreal.works>
+Content-Language: en-US, de-DE
+From: Jonas Hort <jonas.hort@posteo.de>
+In-Reply-To: <20261004-mt7925-mld-v2-248bb5e6404f@empyreal.works>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Oct 04 2026, Chris Bainbridge wrote:
+Hi Andrei,
 
-> On Sun, Oct 04, 2026 at 03:39:25PM +0200, Pratyush Yadav wrote:
->> 
->> Just to confirm, the first kernel boots without memmap= right?
->
-> Yes.
->
->> I think the main problem is that the radix tree pages can be anywhere in
->> memory. So on the first kernel, they can land in an area that the second
->> kernel's memmap= reserves. So kho_memory_init() might end up using
->> memory that memmap= reserved. I'm not sure why exactly the next kernel
->> doesn't produce any output, but IIRC memmap= memory is not mapped to the
->> direct map, so accessing those pages likely causes a page fault.
->
-> That's correct, kho_memory_init() page faults. It happens before the
-> serial console is available, so there is no output.
+Tested v2 on top of v7.3-rc5 on my setup:
 
-Yeah, then I think you need an extra kexec with KHO off to enable
-memmap=. Or I guess hot-unplug the memory you'd like to memmap= early on
-first boot, which should make sure no radix tree pages land there.
+   hardware   MT7925 PCIe (mt7925e)
+   firmware   20260813113118
+   AP         FritzBox 5690 Pro, FRITZ!OS 8.25
+   links      5GHz + 6GHz MLO (5200 + 6135 MHz)
 
-Apart from that, I don't have any good ideas to properly solve this
-problem.
+   stock 7.1.8 / 7.2-rc7   stalled after 3-5 minutes (WFDMA0 tail frozen)
+   v7.3-rc5 + v2           46 minutes, no stall
 
--- 
-Regards,
-Pratyush Yadav
+Both links stayed active throughout, with about 4.2 GB received and
+340 MB sent during the run. My watchdog (ping + WFDMA0 queue
+monitoring) did not trigger once.
+
+Tested-by: Jonas Hort <jonas.hort@posteo.de>
+
+Thanks for the fix!
+Jonas
