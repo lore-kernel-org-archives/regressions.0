@@ -1,412 +1,197 @@
-Received: from mail-dl2-f43.google.com (mail-dl2-f43.google.com [74.125.229.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ACB4DA9AC
-	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 18:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791225476; cv=pass; b=H6fy+N4OPTL7UznVag9nLYNzpHh0j3E2jzojtCt6XCS74mt6ObJsCZxpqpisl+mlsMKl1J6nYg8wnC3bzgqUun5nCdAO7dhIYhKe4WQ8X7h6HSQPgb8qGso0lfk2BLC26wxJe7+nsnM+RNa3NjsVnDrNotIW5NtefSCRKJgX/eQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791225476; c=relaxed/simple;
-	bh=TRxWNGFhdqQpfPO5v46Kexu45qU4McKCASsfdcBOpnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jvu8cXanpYvQTNEfZwIJOjj9BDtXsH4aPtDYf4I1nX/yYZrpCqMElq/I0+1MjO45w8TTeWlP2F59IFnzTIc6JoKaFAEbuOqe1Qrwcsu60l4UrJWkwf6n15bh59XwCWXVNwK0hdPuze/MMdCoLgqHKy50cyn95IzZz+pEWdGgOUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TXJYK34T; arc=pass smtp.client-ip=74.125.229.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044C83603EF
+	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 18:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791226341; cv=none; b=myiu8j3ZmLlXqm45yE0qt4BzoWJVZdlyylo0UvkzkD07li5P64c1bsOIxK23CukJkexXw8siaw8DcHiagGSTjOAPE4E0UvJ9tiMZcPCWKaiwn/ZYQ+M/jvD0e6xF+PsXWnJ3mjVtui328BDh2wCKbiukjgyz/VAmihrAgAzSeAk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791226341; c=relaxed/simple;
+	bh=1c7E4TNR3FgmLg/dW68RX19B3YDyGYoWUchSNWou5iU=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sFoR7XGu1t6WUZQGD2OKEtaGuHuHogL9WEd1Q+yq7X/GFO4E/fhkDSoqHMrCpPr6g+Gs72Rera8l8IP0axCq5gmO/JShuWVy1qLL7v1lvzK9GOSyUcrOp0uPtWxRZmxa3XmFeD8bvj+NLBDJMzvnmS4UQbDZGGRTtqXztAduRdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=sJKNRBlS; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXJYK34T"
-Received: by mail-dl2-f43.google.com with SMTP id a92af1059eb24-155b6c7d49bso731090c88.1
-        for <regressions@lists.linux.dev>; Mon, 05 Oct 2026 11:37:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791225473; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Gahi5WOSIRHY+8Xu16Z0EEF2YtO+TLZMRbKDweA1SZYIx+tf8XI9gtFxmQ8ewFapQe
-         0HgsNqh7goo2PvA7FwrQMKNgKCd+wQyB4avNs8VSsr+UXe+NzFX1FPe9GYAXUXJX3txP
-         vGcmTPr+qdMdnXo120IeK4nLH9eevHFa9jd7M7HW24hk41ua22l1T/k+kbxL7x/UvLLB
-         dB7CsRRxYlNJnKvXnVLKJoCFBH+C3lV+G1ZQaVBxwLnQMGlNRklTp8XGEpZiO1o5Hnna
-         hys6/g0DfWia7GPsbvMS+f2J6zfRghB+kcDR3bjferkj+IwugozPO4aB6SbLh9xm4vZ5
-         4LIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=hQlAwXEHFQ9S4vHabSWS5zY7cMkoUtpZoiB4ZpGvqWA=;
-        fh=757b14Y/iy0vUXRqhkdnxn1+SmgITxhrRYj1/hEZC0U=;
-        b=jDoLAmpCCsyzEmQUCZ6c0OKdaF/0r6SzM5e9j0H19W29+lMBamuf7S8T8TfCu+/k22
-         sbr274FWeb41FTm3DsZRyfSq5jgvx0VxdgcFCEsFuy2nlVjeH2ebdJeDt5Bt2JxODy0p
-         XD5H6f913ToSXNuWLCyNFzlU4Umeusoszjl7B35N1mX0gHp7Qg0sga8tpBYNVQlU/c/T
-         XmySyM7oVgF9l+gxWyRw1/MtzQhCHnCygoTRpUDyQ1b74jA1dtUzKd6ISg0PeQarSG7b
-         YCNR7lOeHVDfqsQNlZ6PADdpJlcW2ENOE/6jHKphWKFQMPViHXkggV2FCR9XFRlkqUcV
-         bvsg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791225473; x=1791830273; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=hQlAwXEHFQ9S4vHabSWS5zY7cMkoUtpZoiB4ZpGvqWA=;
-        b=TXJYK34TrzyFbp918iYIxGQNA+xtaNklB9BvIhuDvD4k+e3ourXLpa+goTyLkCmazT
-         bgv+7ZdRTSh4stK4gTAQlwBkyjTCxw2F3q68BYD+dIj4EcuzzkoIbFzdGsXHFPSwVtRs
-         s/1Y30rHx6jZC2azhTmBnxRSpx2Pa+guFJPr602CSReKqK/kIo2izVw0nnOIoO1Fefz1
-         nERl8gpCrjLt83l5hRRWBKf3CWNx1Kmbu7CBbl4kMDeKNG8E5I9OBuY/zWUrMMsYGq9B
-         jN8QCBB/lIDz2E9eCeB5HqoAx+8RFmSccIYqaBflA2WQH0jQZRbX/B/SbcuvXAGMzHpo
-         QRQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791225473; x=1791830273;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hQlAwXEHFQ9S4vHabSWS5zY7cMkoUtpZoiB4ZpGvqWA=;
-        b=VKqfWQpW2rEOuIqeAx8CILnpOpECOrpgFCS5H6eGM9wBLDwX5sljtEN3ZeB+YLRvci
-         i491cdUwREFpm5RX+WPKqgJmodywW4FTaKKnoAZAyWfIKM65N7QU07cnymQbKpDcSgQD
-         bBh9f7CpgzuENMR19ArY/83/HBvOqWqgdWyC62oIiK4A7w5qVT5ckPYT3T7+rgRQnwlv
-         D8lO1kruz/HFxe3b5GU9PQpOBamRL5oDQDPCde8qtl4Bo2a17hOnS6ZbKf4hxueU90gn
-         EOstojfQVIYSAdZnkdLLfXR4olBWefc0KNSAgfz1JD6V0564Mg/yu/yYOo/qWxOhAMpj
-         3Dhw==
-X-Forwarded-Encrypted: i=1; AKwUvByOPaKm3ulvPVARDC47TrLhWUobionNzbBPzYb1Gq+5bJQAtNc4Cbiuht3t4jnbQhR9tRXwGdIqJGW40A==@lists.linux.dev
-X-Gm-Message-State: AFuF++nUjivYYEk21AGj+BqVD8PnKr1pwuvabyqKjo7zxPLFli4mk29w
-	qcp/BEi7CAmK47IFsqbAP7apqV/5zEkfjVBB0N3ZXGZRpNGTmXS0CxulmxKNhEXn4kL6Ecit689
-	fjXS9C5eABz2b78iofSdsP9oXGKAiZ/M=
-X-Gm-Gg: AYBFou275iuNtUdF1yT4uKAlPixmRkSuD80nY9bQUMBBp38ng435J9eyg/vRtmweH9M
-	FCU/VKfPSKpQXFbx8BJQlcRmZAYa7OhELWjZhRzgFFWXVlG6aviFau7ba5pCfyyZ8FcojJBYq6n
-	pOUh0rdxdLhMmAXJS5fOx5sSRcrs3mAH5IKpXgJ2Kx2M3kdnunogHH7rATvNnoyJTnFHJG+9rru
-	qIhN1MYXgkXj+B6517kNxo1+l00wByp1pc3QTtcj/NL9nLW5oBLYPD5l5wB0DvDpV+4jWt6UT42
-	sovxIG27nxIsHgI9UlCwknJNXZxB9FAVCTCulbPhDDeSlcJGcbvJh6g1qW0XbFfbvs84JTCeJZx
-	JLQgDp5WlHZChTJmBGuSM9SQQoHvJRvjwisiCz4STnIgSZxKtMfa3KeCSylB5btPrbb7DasmHEO
-	6DPqZqACV1vCGolXiaMBypeZEGXLa56L0=
-X-Received: by 2002:a05:7023:b84:b0:14a:5284:1bf5 with SMTP id
- a92af1059eb24-14f5b9fd404mr18332616c88.13.1791225472710; Mon, 05 Oct 2026
- 11:37:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="sJKNRBlS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=5l5lyxbu2ncodewjokpvx55fgu.protonmail2; t=1791226334;
+	x=1791485534; bh=1c7E4TNR3FgmLg/dW68RX19B3YDyGYoWUchSNWou5iU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=sJKNRBlSryeY0Be9rbaPg5GetpPhe/0Xhg0PEUuMbBcPcd0XkSGZ5yCCHWBNt9j1X
+	 GI6iYMjWijargcPQhL85wKLVdfx7uAGV7tOiReIcJllLbKxghZe6l9hb0q9q2akyqa
+	 G8eroPjkvPoswuWtxtUTGnCqLRdCY0+8E1TOjgEq8D68fKv1CXSLK/46D57t4KPdUJ
+	 vgWF6MQC3bNu/e8GvrDwke+ft6g2gJnug6eBC0oaT4jLNRowuizLpZdSGYkiPLrNq2
+	 5amemALGY9gsC1+LH97IgqGa8k7KRVHiLQaFhk8okkSm0q1dhTq0m2S8MQeDYTG0x/
+	 +w4Q2qFPrr1Bw==
+Date: Mon, 05 Oct 2026 18:52:08 +0000
+To: "anthony.l.nguyen@intel.com" <anthony.l.nguyen@intel.com>
+From: ghrafn <ghrafn@proton.me>
+Cc: "dima.ruinskiy@intel.com" <dima.ruinskiy@intel.com>, "przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>, "vitaly.lifshits@intel.com" <vitaly.lifshits@intel.com>, "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] e1000e: heavy packet loss on Lenovo ThinkPad P14s Gen 5 (I219-LM, Meteor Lake) after K1 re-enable; fixed by disable-k1
+Message-ID: <_kB6DUeC6oOmJnK0FobVVJHADewewO3wzeFw_GrempgMu6s5CUwHpkT16Bwn8tXRq0k_CN4b2NY6API37M6mVciEpH6DKbTqK7f13KMpmgI=@proton.me>
+Feedback-ID: 206853795:user:proton
+X-Pm-Message-ID: 91f0185fe9051c7baf7bc19a3cd65128fa483646
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com>
-In-Reply-To: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com>
-From: "Perlow, Jason" <jperlow@gmail.com>
-Date: Mon, 5 Oct 2026 14:37:38 -0400
-X-Gm-Features: AclHuK_CcX3L73EjkzAgLR0Rz_ApNrzl0SBmsWs0SCnQ38SLSykgSI5uaAveYEw
-Message-ID: <CABZrw2FEsTL=qkFyrRbyET6-7ZvEu6-p8KS=4fH95vGQ2A0f1A@mail.gmail.com>
-Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
-To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev, Aditya Garg <aditya.garg@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed;
+ boundary="b1=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk"
 
-Follow-up: the trigger is one device, the T2 Secure Enclave function
-(106b:1802, 04:00.2).
+--b1=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk
+Content-Type: multipart/alternative;
+ boundary="b2=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk"
 
-To find which device matters I built a diagnostic kernel on v7.3-rc6
-(same config and recipe as the bisect, no revert). It adds a boot
-parameter, aer_anfe_skip=3D<list>, that leaves the Advisory Non-Fatal
-bit masked on the listed devices (a BDF, a vendor:device pair, or
-"all") and logs one line per device at unmask time. Without the
-parameter it behaves as v7.3-rc6 does.
+--b2=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-Each boot ran on the same MacBookPro16,1, with kernel messages
-streamed over the network. A cut means the machine powered off with
-no clean shutdown; every cut so far has come before 27 s.
+KEZvbGxvd2luZyB1cCBvbiB0aGlzIHJlZ3Jlc3Npb24gcmVwb3J0OiBbaHR0cHM6Ly9saXN0cy5v
+cGVud2FsbC5uZXQvbmV0ZGV2LzIwMjYvMDkvMTUvMjUzXShodHRwczovL2xpc3RzLm9wZW53YWxs
+Lm5ldC9uZXRkZXYvMjAyNi8wOS8xNS8yNTM/dXRtX3NvdXJjZT1jaGF0Z3B0LmNvbSkpCgpIaSwK
+CkkgYXBwZWFyIHRvIGJlIHNlZWluZyB0aGUgc2FtZSBpc3N1ZSBvbiBhIExlbm92byBUaGlua1Bh
+ZCBUMTQgR2VuIDYsIHdpdGggYW4gSW50ZWwgRXRoZXJuZXQgQ29ubmVjdGlvbiAoMjQpIEkyMTkt
+TE0gWzgwODY6NTdhMF0uCgpXaXRoIHRoZSBkZWZhdWx0IGUxMDAwZSBjb25maWd1cmF0aW9uIChk
+aXNhYmxlLWsxOiBvZmYpLCB3aXJlZCBFdGhlcm5ldCBleHBlcmllbmNlcyBzZXZlcmUgcGFja2V0
+IGxvc3MgZXZlbiB0byB0aGUgbG9jYWwgZ2F0ZXdheS4gVGhlIGludGVyZmFjZSBzdGlsbCBuZWdv
+dGlhdGVzIG5vcm1hbGx5IGF0IDEwMDAgTWIvcywgZnVsbCBkdXBsZXgsIGFuZCB0aGUgZTEwMDBl
+IHN0YXRpc3RpY3MgZG8gbm90IHJlcG9ydCBDUkMsIGZyYW1lLCBETUEsIG9yIG90aGVyIFJYIGVy
+cm9ycy4KCkZvciBleGFtcGxlOgoKJCBwaW5nIC1jIDEwIDE5Mi4xNjguMC4xCjEwIHBhY2tldHMg
+dHJhbnNtaXR0ZWQsIDMgcmVjZWl2ZWQsIDcwJSBwYWNrZXQgbG9zcwoKQVJQIHRyYWZmaWMgaXMg
+YWZmZWN0ZWQgYXMgd2VsbDoKCiQgc3VkbyBhcnBpbmcgLUkgZW5wMHMzMWY2IC1jIDIwIDE5Mi4x
+NjguMC4xCjIwIHBhY2tldHMgdHJhbnNtaXR0ZWQsIDExIHBhY2tldHMgcmVjZWl2ZWQsIDQ1JSB1
+bmFuc3dlcmVkCgpBIHRjcGR1bXAgb24gZW5wMHMzMWY2IHNob3dlZCB0aGUgb3V0Z29pbmcgSUNN
+UCBlY2hvIHJlcXVlc3RzLCBidXQgcmVwbGllcyB3ZXJlIGFic2VudCBmb3IgdGhlIGxvc3QgcGFj
+a2V0cy4KClRoZSBOSUMgaWRlbnRpZmllcyBhczoKCkludGVsIENvcnBvcmF0aW9uIEV0aGVybmV0
+IENvbm5lY3Rpb24gKDI0KSBJMjE5LUxNIFs4MDg2OjU3YTBdCgphbmQgdXNlcyBlMTAwMGUuCgpT
+ZXR0aW5nIHRoZSBleGlzdGluZyBwcml2YXRlIGZsYWc6CgojIGV0aHRvb2wgLS1zZXQtcHJpdi1m
+bGFncyBlbnAwczMxZjYgZGlzYWJsZS1rMSBvbgoKaW1tZWRpYXRlbHkgZWxpbWluYXRlcyB0aGUg
+cHJvYmxlbS4KCkFmdGVyIHNldHRpbmcgZGlzYWJsZS1rMToKCiQgcGluZyAtYyAzMCAxOTIuMTY4
+LjAuMQozMCBwYWNrZXRzIHRyYW5zbWl0dGVkLCAzMCByZWNlaXZlZCwgMCUgcGFja2V0IGxvc3MK
+cnR0IG1pbi9hdmcvbWF4L21kZXYgPSAwLjM4NC8wLjUzOC8wLjg4NS8wLjA5OCBtcwoKYW5kOgoK
+JCBzdWRvIGFycGluZyAtSSBlbnAwczMxZjYgLWMgMjAgMTkyLjE2OC4wLjEKMjAgcGFja2V0cyB0
+cmFuc21pdHRlZCwgMjAgcGFja2V0cyByZWNlaXZlZCwgMCUgdW5hbnN3ZXJlZAoKVGhlIHJlc3Vs
+dCBpcyByZXBlYXRhYmxlIHdpdGhpbiB0aGUgc2FtZSBzZXNzaW9uOiB0aGUgc2V2ZXJlIGxvY2Fs
+IHBhY2tldCBsb3NzIGRpc2FwcGVhcmVkIGltbWVkaWF0ZWx5IGFmdGVyIGRpc2FibGluZyBLMS4K
+ClN5c3RlbSBpbmZvcm1hdGlvbjoKCkxhcHRvcDoKCkxlbm92byBUaGlua1BhZCBUMTQgR2VuIDYK
+CkRNSSBzeXNfdmVuZG9yOgoKTEVOT1ZPCgpETUkgcHJvZHVjdF9uYW1lOgoKMjFRQ1MwMTYwMAoK
+RE1JIHByb2R1Y3RfdmVyc2lvbjoKClRoaW5rUGFkIFQxNCBHZW4gNgoKRE1JIGJvYXJkX25hbWU6
+CgoyMVFDUzAxNjAwCgpCSU9TOgoKTjRKRVQyOFcgKDEuMTggKSAoZGF0ZToKCjA2LzE2LzIwMjYK
+CikKCkNQVToKCkludGVsKFIpIENvcmUoVE0pIFVsdHJhIDUgMjM1VQoKS2VybmVsOgoKTGludXgg
+Ny4wLjAtMzgtZ2VuZXJpYwoKTklDOgoKMDA6MWYuNiBJbnRlbCBFdGhlcm5ldCBDb25uZWN0aW9u
+ICgyNCkgSTIxOS1MTSBbODA4Njo1N2EwXQoKZTEwMDBlIGZpcm13YXJlOgoKMC4xLTQKCkxpbms6
+CgoxMDAwIE1iL3MgRnVsbCBEdXBsZXgKCk9TOgoKVWJ1bnR1IDI2LjA0LjEgTFRTCgpJIGFtIGN1
+cnJlbnRseSB3b3JraW5nIGFyb3VuZCB0aGUgaXNzdWUgYnkgc2V0dGluZyBkaXNhYmxlLWsxIG9u
+LgoKVGhpcyBsb29rcyBzdWZmaWNpZW50bHkgc2ltaWxhciB0byB0aGUgcmVwb3J0ZWQgUDE0cyBH
+ZW4gNSBpc3N1ZSB0aGF0IEkgd2FudGVkIHRvIHJlcG9ydCB0aGUgYWRkaXRpb25hbCBhZmZlY3Rl
+ZCBwbGF0Zm9ybSBpbiBjYXNlIHRoZSBUMTQgR2VuIDYgYWxzbyBuZWVkcyB0byBiZSBhZGRlZCB0
+byBkaXNhYmxlX2sxX2xpc3QuCgpJJ20gaGFwcHkgdG8gdGVzdCBhIHBhdGNoIG9yIHByb3ZpZGUg
+YWRkaXRpb25hbCBkaWFnbm9zdGljcyBpZiB1c2VmdWwuCgpUaGFua3MsCkfDrXNsaQ==
 
- #  masked (skipped)                      result
- 1  all five functions that latch it      survived
- 2  04:00.0 04:00.1 04:00.2 04:00.3       survived, 343 s
-    (the four Apple functions only;
-    the AMD switch port 01:00.0 unmasked)
- 3  04:00.0 04:00.1 only                  powered off at 14 s
-    (NVMe and T2 Bridge; Enclave and
-    Audio unmasked)
- 4  04:00.2 only (106b:1802)              survived, 120 s
+--b2=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
 
-So the AMD switch port is not involved. Test 3 cuts with the Enclave
-and Audio unmasked, and test 4 survives with Audio still unmasked, so
-unmasking the bit on 04:00.2 alone is what triggers the power-off.
-Each case was run once; I can repeat them if that would help.
-
-I still do not know why the T2 reacts. No AER message is logged before
-the cut, and the Uncorrectable Error Status of that function is clear,
-so this is only about the Correctable path that the commit enables.
-
-Since the bit is only wrong on this one function, a quirk may be
-better than a revert: keep Advisory Non-Fatal Errors masked on Apple
-106b:1802, for example with a DECLARE_PCI_FIXUP_EARLY entry that makes
-pci_aer_init() leave the mask alone. I am happy to write and test
-that patch on both of my T2 machines if you tell me which form you
-prefer (a quirk flag in the PCI core, or a device-specific fixup).
-
-The diagnostic patch, the lspci -vvv output and the captured boot
-logs are available on request.
-
-Thanks,
-Jason Perlow
-
-On Mon, Oct 5, 2026 at 1:53=E2=80=AFPM Perlow, Jason <jperlow@gmail.com> wr=
-ote:
->
-> Hi Lukas, Bjorn,
->
-> Since commit eddba19b8b5f ("PCI/AER: Support Advisory Non-Fatal
-> Errors"), first in v7.3-rc1, an Apple MacBookPro16,1 (T2 chip) loses
-> power 17 to 24 s after boot. v7.2.9 is fine; v7.3-rc5 and v7.3-rc6 are
-> not. Bisection lands on that commit, and v7.3-rc6 with only that
-> commit reverted no longer powers off. aer.c has not changed since, as
-> of v7.3-rc6-3, so I expect it is still unfixed; I did not find an
-> existing report.
->
-> Hardware
-> --------
->
-> MacBookPro16,1 with an AMD Navi 14 dGPU and the Apple T2. The bisect
-> machine has a Core i7-9750H; a second unit of the same model, used for
-> cross-checks, has a Core i9-9980HK. I have not tested any other T2
-> model. The internal SSD, the T2 and the audio device are functions of
-> one Apple PCIe device behind root port 00:1b.0:
->
->   04:00.0 Apple ANS2 NVMe          [106b:2005]
->   04:00.1 Apple T2 Bridge          [106b:1801]
->   04:00.2 Apple T2 Secure Enclave  [106b:1802]
->   04:00.3 Apple Audio Device       [106b:1803]
->
-> Symptom
-> -------
->
-> The machine powers off abruptly 17 to 24 s after boot. There is no
-> shutdown sequence; the previous boot's journal simply ends. Nothing is
-> logged beforehand: no AER message, no oops, no lockup, no thermal
-> event. The T2 controls power on these machines, so I assume (but
-> cannot show) that the T2/SMC removes power.
->
-> Bisect
-> ------
->
-> v7.2.9 good, v7.3-rc5 bad. Vanilla mainline trees, no out-of-tree
-> patches in the kernel image, CONFIG_PCIEAER=3Dy,
-> CONFIG_ACPI_APEI_GHES=3Dy, kernel messages captured over the network.
-> 19 steps, 4 skipped because those trees oops early for an unrelated
-> reason (the ones I looked at were in thunderbolt icm_probe at about
-> 5 s). Good boots were watched for 55.8 to 69.7 s; bad boots stopped
-> logging between 17.9 and 24.1 s. The complete history, every commit
-> tested and every result, is in Appendix B, and the exact method in
-> Appendix A. The result:
->
->   # first bad commit: [eddba19b8b5f] PCI/AER: Support Advisory
->   # Non-Fatal Errors
->
-> Revert test, v7.3-rc6, same config:
->
->   v7.3-rc6 unmodified:            powers off at 16.7 s
->   only eddba19b8b5f reverted:     survives the full 64 s capture
->
-> With that revert on top of 7.3.0-rc6 plus the out-of-tree t2linux
-> series (one kernel image, built once), a normal desktop runs on both
-> MacBookPro16,1 units: the second one has been up for more than 45
-> minutes, and the bisect machine ran sessions of 32 and 22 minutes.
-> For completeness: the bisect machine once lost power after about 10
-> minutes while I was manually switching the display mux and powering
-> off the AMD GPU, which I do not expect the firmware to support. I
-> have not established the cause and have no evidence either way on
-> whether it is related.
->
-> Which devices are affected
-> --------------------------
->
-> On v7.2.9, where the Advisory Non-Fatal Error bit is still masked, the
-> Correctable Error Status register has AdvNonFatalErr latched on
-> exactly these functions, with every Uncorrectable Error Status
-> register clear:
->
->   04:00.0 04:00.1 04:00.2 04:00.3  (the Apple device above)
->   01:00.0 AMD Navi 10 XL PCIe switch upstream port [1002:1478]
->
-> The pattern is identical on both MacBookPro16,1 units (same model, so
-> this says nothing about other T2 models). The Titan Ridge 4C bridges
-> and NHI on the same machine do not have the bit set.
-> These devices report the advisory bit without any matching
-> Uncorrectable Error status, which looks like the "non-compliant
-> products" case the commit message mentions.
->
-> Only one of the two machines was used for the bisect and the
-> power-off tests above. I have not yet booted an unreverted 7.3 kernel
-> on the second one, so I cannot yet say that the power-off reproduces
-> there.
->
-> Control: an ASUS ROG Zephyrus M15 GU502LV (i7-10750H, RTX 2060, no
-> T2) has the same bit latched on its NVIDIA TU106 functions
-> [10de:10f9, 10de:1ada, 10de:1adb] and on Titan Ridge 2C [8086:15e7,
-> 8086:15e8, 8086:15e9]. It ran a 7.3.0-rc6 build with the commit
-> applied (plus the t2linux series) for more than 15 hours without a
-> problem, and the same reverted kernel image as above also runs on it
-> normally. So unmasking the bit is not harmful in general; something
-> specific to the T2 platform is.
->
-> What I do not know
-> ------------------
->
-> Which device triggers the power-off, and why. My guess, and it is
-> only a guess: treating a possible Advisory Non-Fatal Error as
-> non-Advisory and recovering through the uncorrectable path resets or
-> disturbs a T2 function, and the T2 then powers the machine down. I
-> intend to build a diagnostic kernel that can leave the bit masked per
-> device to find out which one.
->
-> Possibly related, different symptom: "PCI/portdev: Disable AER for
-> Titan Ridge 4C 2018" (Atharva Tiwari, January 2026) concerned AER
-> warnings on T2 iMacs.
->
-> What I am asking
-> ----------------
->
-> Which direction would you prefer: a revert, or a quirk that keeps
-> Advisory Non-Fatal Errors masked on the affected Apple functions (and
-> possibly the AMD switch port)? The t2linux project carries a revert
-> for now: https://github.com/t2linux/linux-t2-patches/pull/70
->
-> I can test patches on real hardware and can provide full lspci -vvv
-> output, the complete bisect log and the captured boot logs.
->
-> #regzbot introduced: eddba19b8b5f76d57424ee328a68fd495c5db857
->
-> Thanks,
-> Jason Perlow
->
->
-> APPENDIX A - METHOD
->
-> Machine: one MacBookPro16,1 for every boot below, running a Debian
-> trixie userland from its internal SSD. The distribution's 7.2.9 kernel
-> was the default boot entry between tests.
->
-> Build: git bisect in a clone of torvalds/linux (git.kernel.org). Each
-> candidate was built on a separate x86-64 build host (16 threads, gcc
-> 15.2.0, binutils 2.46) with the same recipe:
->
->   cp bisect-trimmed.config .config
->   make olddefconfig
->   make -j10 bindeb-pkg LOCALVERSION=3D-bisN-vanilla-rc0 \
->        KDEB_PKGVERSION=3D<release>-1
->
-> bisect-trimmed.config is a 7.3.0-rc5 configuration trimmed to build
-> quickly (2068 options built in, 204 modules). It has CONFIG_PCIEAER=3Dy,
-> CONFIG_PCIE_DPC=3Dy, CONFIG_PCIEASPM=3Dy, CONFIG_ACPI_APEI=3Dy and
-> CONFIG_ACPI_APEI_GHES=3Dy. The same file was used for all 19 steps and
-> for both v7.3-rc6 tests. No out-of-tree patches were applied to the
-> kernel. The release strings come from each tree's Makefile, so commits
-> on 7.2-based topic branches show as 7.2.0.
->
-> Boot: the .deb packages were installed on the laptop and booted through
-> a one-shot rEFInd entry; the default entry stayed the stable kernel.
-> Kernel command line for every test boot:
->
->   console=3Dtty0 ignore_loglevel keep_bootcon initcall_debug
->   printk.time=3D1 log_buf_len=3D16M panic=3D0 fbcon=3Dfont:TER16x32
->   systemd.show_status=3D1 systemd.unit=3Dmulti-user.target
->   modprobe.blacklist=3Dsbs,sbshc
->   systemd.mask=3Dncz-usb2-rescan.service
->   systemd.wants=3Dncz-netlog.service
->
-> (plus the root=3D options). So there was no graphical session. sbs and
-> sbshc are the ACPI smart battery drivers; ncz-usb2-rescan is an
-> unrelated distribution boot workaround. Steps 13 to 19 and the two
-> v7.3-rc6 tests also had module_blacklist=3Dthunderbolt,t2thunderbolt,
-> added after the early oopses (in thunderbolt icm_probe, at about 5 s)
-> had cost several skipped steps. Steps 1 to 12 ran with Thunderbolt
-> enabled.
->
-> Capture: a small userspace unit (ncz-netlog.service) streams /dev/kmsg
-> and the journal over TCP to a second machine from early multi-user
-> boot, so captures begin at roughly 10 s of uptime. Each capture file
-> records the uptime of its last line.
->
-> Verdicts:
->   good: the machine kept running and logging past the point where bad
->         kernels die (the cut always came before 25 s).
->   bad:  the capture stops before 45 s, the machine stays unreachable
->         for at least 60 s, and the next boot's journal shows the
->         previous boot ending with no clean shutdown.
->   skip: a kernel oops or panic in the capture or the previous boot's
->         journal.
->
-> After a cut the laptop does not restart by itself, so it was powered
-> on by hand and booted the stable kernel; the verdict was then confirmed
-> from the previous boot's journal.
->
-> Caveats:
->   - One machine was used for the bisect and for the power-off tests.
->   - No desktop session was running.
->   - sbs/sbshc were blocked on every boot, and Thunderbolt from step 13
->     on.
->   - The laptop was powered from, and networked through, a Thunderbolt
->     dock during the bisect. An earlier test of a T2-patched
->     7.3.0-rc5 kernel with the dock unplugged also lost power, but I
->     did not repeat the bisect undocked.
->   - Out-of-tree DKMS modules for the T2 hardware (t2smc, t2gmux,
->     t2smp, t2thunderbolt) were installed for these kernels and may
->     have been loaded, which would taint them. An earlier test with
->     those modules blocked still lost power.
->   - Step 12 ran 816 s before an unrelated oops, so it did not show
->     the cut and was treated as a skip rather than as good; this does
->     not change the result.
->   - The device that triggers the cut is not identified.
->
-> APPENDIX B - FULL BISECT HISTORY
->
-> Good: v7.2.9 (5fce161649b4). Bad: v7.3-rc5 (72d3fcf802c4). The first
-> commit tested is the merge base, "Linux 7.2". Observed =3D uptime of the
-> last line captured. Results: 8 good, 7 bad, 4 skip.
->
->  #  commit        result observed   subject
->  1  8d3ae59288f1  good   55.8 s     Linux 7.2
->  2  56ea4e86832d  good   67.7 s     nstree: check listing permission
->                                     before taking a namespace ref
->  3  93e4b3076b5f  bad    24.1 s     Merge tag 'char-misc-7.3-rc1'
->  4  21bd0802cd3f  good   60.1 s     Merge tag 'for-linus' (rdma)
->  5  0b0e645ed2c8  bad    22.9 s     Merge tag 'auxdisplay-v7.3-1'
->  6  e5f92606156a  good   69.5 s     Merge tag 'mm-nonmm-stable-2026-08-
->                                     22-16-57'
->  7  b6b019a1d9b9  good   69.2 s     Merge tag 'parisc-for-7.3-rc1'
->  8  b130a2caf5d3  skip   oops 5.3 s Merge branch
->                                     'pci/controller/tegra264'
->  9  455b454c87bb  good   69.0 s     i3c: mipi-i3c-hci: Add support for
->                                     AMD_PT I3C controller
-> 10  9bb52aa1972d  skip   oops 5.5 s Merge branch
->                                     'pci/controller/dwc-meson'
-> 11  b4b07fb82b9e  skip   oops 5.3 s Merge branch 'pci/wake'
-> 12  651fb94aaf24  skip   oops 816 s alpha/PCI: Fix I/O port accessor
->                                     argument order in
->                                     pci_legacy_write()
-> 13  625ae0ff41e5  bad    19.9 s     Merge branch 'pci/dt-binding'
-> 14  9f91b2b716a0  bad    19.1 s     Merge branch 'pci/procfs'
-> 15  ea55835bc538  bad    23.3 s     Merge branch 'pci/dpc'
-> 16  d358e9ad15c2  bad    22.3 s     Merge branch 'pci/aer'
-> 17  8446e1147f65  good   69.7 s     PCI/AER: Deduplicate logging of
->                                     Error Source Identification
-> 18  f141f74c45c6  good   67.6 s     PCI/AER: Move retrieval of FEP and
->                                     TLP Log into helper
-> 19  eddba19b8b5f  bad    17.9 s     PCI/AER: Support Advisory
->                                     Non-Fatal Errors
->
-> Full hashes of the decisive steps:
->   eddba19b8b5f76d57424ee328a68fd495c5db857  (first bad)
->   f141f74c45c6f774eebdb7e45bd609be5122bfa8  (last good before it)
->   8446e1147f65563d374ffa54dc3ba81adb1342c5
->
-> The v7.3-rc6 tests (a90ee4305c4a) used the same recipe and command line:
-> unmodified, power off at 16.7 s; with only eddba19b8b5f reverted,
-> survived the full 64 s capture.
->
-> --
-> Jason
+PHAgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4
+OyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1
+NSk7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyI+KDwvc3Bh
+bj48c3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyI+Rm9s
+bG93aW5nIHVwIG9uIHRoaXMgcmVncmVzc2lvbiByZXBvcnQ6IDwvc3Bhbj48YSBocmVmPSJodHRw
+czovL2xpc3RzLm9wZW53YWxsLm5ldC9uZXRkZXYvMjAyNi8wOS8xNS8yNTM/dXRtX3NvdXJjZT1j
+aGF0Z3B0LmNvbSI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsi
+Pmh0dHBzOi8vbGlzdHMub3BlbndhbGwubmV0L25ldGRldi8yMDI2LzA5LzE1LzI1Mzwvc3Bhbj48
+L2E+PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIHNhbnMtc2VyaWY7Ij4p
+PC9zcGFuPjwvcD48cD48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlm
+OyI+SGksPC9zcGFuPjwvcD48cD48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5z
+LXNlcmlmOyI+SSBhcHBlYXIgdG8gYmUgc2VlaW5nIHRoZSBzYW1lIGlzc3VlIG9uIGEgTGVub3Zv
+IFRoaW5rUGFkIFQxNCBHZW4gNiwgd2l0aCBhbiBJbnRlbCBFdGhlcm5ldCBDb25uZWN0aW9uICgy
+NCkgSTIxOS1MTSBbODA4Njo1N2EwXS48L3NwYW4+PC9wPjxwPjxzcGFuPldpdGggdGhlIGRlZmF1
+bHQgZTEwMDBlIGNvbmZpZ3VyYXRpb24gKDwvc3Bhbj48Y29kZT48c3Bhbj5kaXNhYmxlLWsxOiBv
+ZmY8L3NwYW4+PC9jb2RlPjxzcGFuPiksIHdpcmVkIEV0aGVybmV0IGV4cGVyaWVuY2VzIHNldmVy
+ZSBwYWNrZXQgbG9zcyBldmVuIHRvIHRoZSBsb2NhbCBnYXRld2F5LiBUaGUgaW50ZXJmYWNlIHN0
+aWxsIG5lZ290aWF0ZXMgbm9ybWFsbHkgYXQgMTAwMCBNYi9zLCBmdWxsIGR1cGxleCwgYW5kIHRo
+ZSBlMTAwMGUgc3RhdGlzdGljcyBkbyBub3QgcmVwb3J0IENSQywgZnJhbWUsIERNQSwgb3Igb3Ro
+ZXIgUlggZXJyb3JzLjwvc3Bhbj48L3A+PHA+PHNwYW4+Rm9yIGV4YW1wbGU6PC9zcGFuPjwvcD48
+cHJlPjxjb2RlPjxzcGFuPiQgcGluZyAtYyAxMCAxOTIuMTY4LjAuMQ0KMTAgcGFja2V0cyB0cmFu
+c21pdHRlZCwgMyByZWNlaXZlZCwgNzAlIHBhY2tldCBsb3NzPC9zcGFuPjwvY29kZT48L3ByZT48
+cD48c3Bhbj5BUlAgdHJhZmZpYyBpcyBhZmZlY3RlZCBhcyB3ZWxsOjwvc3Bhbj48L3A+PHByZT48
+Y29kZT48c3Bhbj4kIHN1ZG8gYXJwaW5nIC1JIGVucDBzMzFmNiAtYyAyMCAxOTIuMTY4LjAuMQ0K
+MjAgcGFja2V0cyB0cmFuc21pdHRlZCwgMTEgcGFja2V0cyByZWNlaXZlZCwgNDUlIHVuYW5zd2Vy
+ZWQ8L3NwYW4+PC9jb2RlPjwvcHJlPjxwPjxzcGFuPkEgPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250
+LWZhbWlseTogTWVubG8sIENvbnNvbGFzLCBDb3VyaWVyIE5ldywgbW9ub3NwYWNlOyI+dGNwZHVt
+cDwvc3Bhbj48c3Bhbj4gb24gZW5wMHMzMWY2IHNob3dlZCB0aGUgb3V0Z29pbmcgSUNNUCBlY2hv
+IHJlcXVlc3RzLCBidXQgcmVwbGllcyB3ZXJlIGFic2VudCBmb3IgdGhlIGxvc3QgcGFja2V0cy48
+L3NwYW4+PC9wPjxwPjxzcGFuPlRoZSBOSUMgaWRlbnRpZmllcyBhczo8L3NwYW4+PC9wPjxwcmU+
+PGNvZGU+PHNwYW4+SW50ZWwgQ29ycG9yYXRpb24gRXRoZXJuZXQgQ29ubmVjdGlvbiAoMjQpIEky
+MTktTE0gWzgwODY6NTdhMF08L3NwYW4+PC9jb2RlPjwvcHJlPjxwPjxzcGFuPmFuZCB1c2VzIGUx
+MDAwZS48L3NwYW4+PC9wPjxwPjxzcGFuPlNldHRpbmcgdGhlIGV4aXN0aW5nIHByaXZhdGUgZmxh
+Zzo8L3NwYW4+PC9wPjxwcmU+PGNvZGU+PHNwYW4+IyBldGh0b29sIC0tc2V0LXByaXYtZmxhZ3Mg
+ZW5wMHMzMWY2IGRpc2FibGUtazEgb248L3NwYW4+PC9jb2RlPjwvcHJlPjxwPjxzcGFuPmltbWVk
+aWF0ZWx5IGVsaW1pbmF0ZXMgdGhlIHByb2JsZW0uPC9zcGFuPjwvcD48cD48c3Bhbj5BZnRlciBz
+ZXR0aW5nIGRpc2FibGUtazE6PC9zcGFuPjwvcD48cHJlPjxjb2RlPjxzcGFuPiQgcGluZyAtYyAz
+MCAxOTIuMTY4LjAuMQ0KMzAgcGFja2V0cyB0cmFuc21pdHRlZCwgMzAgcmVjZWl2ZWQsIDAlIHBh
+Y2tldCBsb3NzDQpydHQgbWluL2F2Zy9tYXgvbWRldiA9IDAuMzg0LzAuNTM4LzAuODg1LzAuMDk4
+IG1zPC9zcGFuPjwvY29kZT48L3ByZT48cD48c3Bhbj5hbmQ6PC9zcGFuPjwvcD48cHJlPjxjb2Rl
+PjxzcGFuPiQgc3VkbyBhcnBpbmcgLUkgZW5wMHMzMWY2IC1jIDIwIDE5Mi4xNjguMC4xDQoyMCBw
+YWNrZXRzIHRyYW5zbWl0dGVkLCAyMCBwYWNrZXRzIHJlY2VpdmVkLCAwJSB1bmFuc3dlcmVkPC9z
+cGFuPjwvY29kZT48L3ByZT48cD48c3Bhbj5UaGUgcmVzdWx0IGlzIHJlcGVhdGFibGUgd2l0aGlu
+IHRoZSBzYW1lIHNlc3Npb246IHRoZSBzZXZlcmUgbG9jYWwgcGFja2V0IGxvc3MgZGlzYXBwZWFy
+ZWQgaW1tZWRpYXRlbHkgYWZ0ZXIgZGlzYWJsaW5nIEsxLjwvc3Bhbj48L3A+PHA+PHNwYW4+U3lz
+dGVtIGluZm9ybWF0aW9uOjwvc3Bhbj48L3A+PHByZT48Y29kZT48c3Bhbj48Yj5MYXB0b3A6PC9i
+PiAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICAgIExlbm92byBUaGlua1BhZCBU
+MTQgR2VuIDYNCjxiPkRNSSBzeXNfdmVuZG9yOjwvYj4gJm5ic3A7ICAgIDxzcGFuPkxFTk9WTzwv
+c3Bhbj4NCjxiPkRNSSBwcm9kdWN0X25hbWU6PC9iPiAgICA8c3Bhbj4yMVFDUzAxNjAwPC9zcGFu
+Pg0KPGI+RE1JIHByb2R1Y3RfdmVyc2lvbjo8L2I+IDxzcGFuPlRoaW5rUGFkIFQxNCBHZW4gNjwv
+c3Bhbj4NCjxiPkRNSSBib2FyZF9uYW1lOjwvYj4gJm5ic3A7ICAgIDxzcGFuPjIxUUNTMDE2MDA8
+L3NwYW4+DQo8Yj5CSU9TOjwvYj4gJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
+bmJzcDsgICAgPHNwYW4+TjRKRVQyOFcgKDEuMTggKSAoZGF0ZTogPHNwYW4+MDYvMTYvMjAyNjwv
+c3Bhbj4pPC9zcGFuPg0KPGI+Q1BVOjwvYj4gJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZu
+YnNwOyAmbmJzcDsgICAgIDxzcGFuPkludGVsKFIpIENvcmUoVE0pIFVsdHJhIDUgMjM1VTwvc3Bh
+bj4NCjxiPktlcm5lbDo8L2I+ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgICAg
+PHNwYW4+TGludXggNy4wLjAtMzgtZ2VuZXJpYzwvc3Bhbj4NCjxiPk5JQzo8L2I+ICZuYnNwOyAm
+bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICAgICAwMDoxZi42IEludGVsIEV0aGVy
+bmV0IENvbm5lY3Rpb24gKDI0KSBJMjE5LUxNIFs4MDg2OjU3YTBdDQo8Yj5lMTAwMGUgZmlybXdh
+cmU6PC9iPiAgICAgMC4xLTQNCjxiPkxpbms6PC9iPiAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
+cDsgJm5ic3A7ICZuYnNwOyAgICAxMDAwIE1iL3MgRnVsbCBEdXBsZXg8YnI+PGI+T1M6PC9iPiA8
+c3Bhbj4gICAgICAgICAgICAgICAgIFVidW50dSAyNi4wNC4xIExUUzwvc3Bhbj4gPC9zcGFuPjwv
+Y29kZT48L3ByZT48cD48c3Bhbj5JIGFtIGN1cnJlbnRseSB3b3JraW5nIGFyb3VuZCB0aGUgaXNz
+dWUgYnkgc2V0dGluZyA8L3NwYW4+PGNvZGU+PHNwYW4+ZGlzYWJsZS1rMTwvc3Bhbj48L2NvZGU+
+PHNwYW4+IG9uLjwvc3Bhbj48L3A+PHA+PHNwYW4+VGhpcyBsb29rcyBzdWZmaWNpZW50bHkgc2lt
+aWxhciB0byB0aGUgcmVwb3J0ZWQgUDE0cyBHZW4gNSBpc3N1ZSB0aGF0IEkgd2FudGVkIHRvIHJl
+cG9ydCB0aGUgYWRkaXRpb25hbCBhZmZlY3RlZCBwbGF0Zm9ybSBpbiBjYXNlIHRoZSBUMTQgR2Vu
+IDYgYWxzbyBuZWVkcyB0byBiZSBhZGRlZCB0byA8L3NwYW4+PGNvZGU+PHNwYW4+ZGlzYWJsZV9r
+MV9saXN0PC9zcGFuPjwvY29kZT48c3Bhbj4uPC9zcGFuPjwvcD48cD48c3Bhbj5JJ20gaGFwcHkg
+dG8gdGVzdCBhIHBhdGNoIG9yIHByb3ZpZGUgYWRkaXRpb25hbCBkaWFnbm9zdGljcyBpZiB1c2Vm
+dWwuPC9zcGFuPjwvcD48cD48c3Bhbj5UaGFua3MsPGJyPkfDrXNsaTwvc3Bhbj48L3A+
 
 
+--b2=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk--
 
---=20
-Jason Perlow | Argonaut Media Communications
+--b1=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk
+Content-Type: application/pgp-keys; name="publickey - ghrafn@proton.me - 0xBDFBA7A8.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - ghrafn@proton.me - 0xBDFBA7A8.asc"
 
-Voice/Text  (954) 242-3484 | jperlow@gmail.com | Blog: techbroiler.net
-Read my Tech and Food Industry articles: https://linktr.ee/jperlow
-Bluesky: https://bsky.app/profile/jperlow.bsky.social
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FYWtXSlN4WUpLd1lCQkFI
+YVJ3OEJBUWRBL0lGcXUwS2hkbHFoWFdFV1RUN1U5dlNISEVQcG10NVYKQ1hEQmVmcHhrbDdOSTJk
+b2NtRm1ia0J3Y205MGIyNHViV1VnUEdkb2NtRm1ia0J3Y205MGIyNHViV1UrCndzQVJCQk1XQ2dD
+REJZSnFSWWxMQXdzSkJ3a1FUTzFsNXFPdy9sdEZGQUFBQUFBQUhBQWdjMkZzZEVCdQpiM1JoZEds
+dmJuTXViM0JsYm5CbmNHcHpMbTl5WjBySVVkK2o4RzRDcFBkWjRxOGJzOFhZMGxaWFlVV20KQXVN
+aFBIY3FZc2xhQXhVS0NBUVdBQUlCQWhrQkFwc0RBaDRCRmlFRXZmdW5xRTVMYmtwUjNhL2FUTzFs
+CjVxT3cvbHNBQUlBK0FRQ3RleVk2eXhZb1UyMm9YZlkyN1l0TFJJeDg3WjRiV0prSEk1N2xpYU9N
+REFFQQp2QTFsQVFyaldGNHcrb0xadzF3RnNxaDc3Qy9FR0VQWVBHQi9mMG54UkFMT09BUnFSWWxM
+RWdvckJnRUUKQVpkVkFRVUJBUWRBN1JyQmJWcFFxUEhpOXQwVEFoNUtMZzRaZUhZT0lHZEoweE1B
+N2VLKzJoUURBUWdICndyNEVHQllLQUhBRmdtcEZpVXNKRUV6dFplYWpzUDViUlJRQUFBQUFBQndB
+SUhOaGJIUkFibTkwWVhScApiMjV6TG05d1pXNXdaM0JxY3k1dmNtZVZTZEVNSm9hRGJCeGtoN0Y1
+ajBOWDNUVlY5OEdSQTkyVFA0dFoKYkEvK3hRS2JEQlloQkwzN3A2aE9TMjVLVWQydjJrenRaZWFq
+c1A1YkFBQ212Z0VBaXZuUkVzbHhhM2lHCnVtb0lUYlJWTVFWcHlZTEVhV3dQSUFwTks0Uk1kTjhC
+QUpjKzhvU0FOOTg4aGRlV0lsSTF0SkMrSHVuWgpUd01DbjI0eHFXandxTDhFCj16VlZJCi0tLS0t
+RU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0K
 
-Need to schedule a meeting with me? https://bit.ly/3y8P3Gp
+--b1=_VWVH8wuGEEL49m243DEGbDFj6TrN8oxkHyt52za6pk--
+
