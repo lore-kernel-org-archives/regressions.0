@@ -1,107 +1,125 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08F130F7FF
-	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 05:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE4545560B
+	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 09:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791178772; cv=none; b=ZSogEefilWAwXZj1swTxQtDUK+Xe2WYP+ZIGS6asPxzO2Nbod5IB6A/pfKc4ix05YNYfB+Mlnr+hdpgxNTtgFqbQ+OmJAQxkbzbbEQKYarkS+v6OUE1cfLtYMOj5XvdmVht4L8I1zVG3DvqIFV3lkJxXVvIZe8lWU3Om1grjztE=
+	t=1791193457; cv=none; b=sNUCbGpYggnmKnbrlUYxRh2Tv5Tx3TorhhC5+b0mnazs1PlBDZ31TdqzyGadvO0SVTSyzOT0tm1yC3DAysjU9IK/VjjbleYhxjPlzqt3A/a0G3+Wlp7pYsRZis+QGjY/yGyzNZlhLPc/5uqyPuoaCP/NyFU/ePXJ6ej/bFeIfKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791178772; c=relaxed/simple;
-	bh=wn6TwPiZUgOclOBhAP50Vd7XXYb5ZsyE3vm1+WY+tCk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=ffHWT7miDFR0KEKiKIIHY59GLVwDhNcKieKeyW5rgfRJFpGZ3l7tcyrjKeR4rkNdhljyeuUsHavF76YGiL3frafcwiSqRsevuzxx1Ks8iRjekTJYC194ggvGoG1OCbD5xpdEUNOrhbNZtr8kZS77ou79AXIPcYwrpje26COshjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jUx9lE7H; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jUx9lE7H"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hynzW48HFz48DX
-	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 07:30:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1791178247;
-	bh=wn6TwPiZUgOclOBhAP50Vd7XXYb5ZsyE3vm1+WY+tCk=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=jUx9lE7HOycgUzLcpnkktxRZ5WiLH4S2k4Lky1Tt109jue9qe0tor+et7fXLnQbmS
-	 fmx/IS8ElXNg3SaHcygpyDRsFBuW+vpA9gfwgJklG9KXOq3Wi8bHVzpHWOOJIRjkqo
-	 2zmIAEklOL9GmCUPkOJUzkYJH7mbhFruJ0BwEPM/wHCVhO3VH3E9EQkTFVdstj9nJq
-	 GG5xXbTDdBiNPdRtEhyPyXvFo7HB/rD56u7seFvKTW3WHtR9s64NuKfQr1ORCp0Wuj
-	 rgURvA2wBdfj2Vv0kEoVKfLKPuVD7r4kEwOUU8leF1IkTkcsXenHWPF3RwWfJ+9vdD
-	 sJgli0Pl4gFjQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hynzW3RMpz456W
-	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 07:30:47 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hynzW1b8mz8sgw
-	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 07:30:47 +0200 (CEST)
-Received: from [10.100.0.149] (90-177-213-3.rck.o2.cz [90.177.213.3])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A95295FA80
-	for <regressions@lists.linux.dev>; Mon,  5 Oct 2026 07:30:42 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 90.177.213.3) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[10.100.0.149]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <d81824c1-f802-4488-960d-6545cbe51f6e@leemhuis.info>
-Date: Mon, 5 Oct 2026 07:30:42 +0200
+	s=arc-20240116; t=1791193457; c=relaxed/simple;
+	bh=GtNUkrjiyoR3HoJ+MKNfmUoiGx8WdpZWdDBCuQbciUs=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:MIME-Version:
+	 Message-Id:Content-Type; b=j3zZf0c5cuOtofK3WhSwC+KJTOTL+iq2pQg1GI5Ld0vYAsR1PZ1Vr4zZ8ggELp63SL4lT8lUfHbci0QkvbjcDJq3F5WjZLgeIfE/gMrhUTmC/e0cUFKjy0oqeNSjFV9EZgG9AY1zzrtpa9hPbU/iLkhaz/YDpRxWnm5wi7jl//g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id F257947BD2;
+	Mon, 05 Oct 2026 11:44:07 +0200 (CEST)
+Date: Mon, 05 Oct 2026 11:44:04 +0200
+From: Fabian =?iso-8859-1?q?Gr=FCnbichler?= <f.gruenbichler@proxmox.com>
+Subject: Re: [REGRESSION] Commit 447cbe95ebb9 causes IOMMU DMA faults on
+ macvlan/vlan with bnxt_en
+To: Eric Dumazet <edumazet@kernel.org>, Michael Chan
+	<michael.chan@broadcom.com>
+Cc: Joe Damato <joe@dama.to>, netdev@vger.kernel.org, Pavan Chebbi
+	<pavan.chebbi@broadcom.com>, regressions@lists.linux.dev, Stefan Fleischmann
+	<sfle@kth.se>, stable@vger.kernel.org
+References: <20261004122616.56714cbd@nargothrond>
+	<f0c52ecb-b85d-4a53-8329-a8d2fd5d72b8@kernel.org>
+	<20261004163532.3134dd41@nargothrond> <20261004192902.3ab3b7f3@nargothrond>
+	<919dcfaa-005f-4bfd-8889-39acda5f7a92@kernel.org>
+	<854f3985-a4ab-4014-b18d-9fead61602e1@kernel.org>
+	<CACKFLine2gKepH57mg5j2YYWsX-qU8-EfJfnqWiYUEhpXL1F9Q@mail.gmail.com>
+	<ef6eb827-71a6-40a6-a4b7-8e514ab595d3@kernel.org>
+In-Reply-To: <ef6eb827-71a6-40a6-a4b7-8e514ab595d3@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179117824283.2286747.4506403394906356823@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: A95295FA80
-X-NC-CID: Piub5qmBffClE+aeUqtI3EeHUEesq3tuiVrMuB1Mn4qN6M2Odmk=
+User-Agent: astroid/0.17.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1791193344.w5j2m55mib.astroid@yuna.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Bm-Milter-Handled: 55990f41-d878-4baa-be0a-ee34c49e34d2
+X-Bm-Transport-Timestamp: 1791193447309
 
+On October 5, 2026 3:59 am, Eric Dumazet wrote:
+>=20
+>=20
+> On 10/5/26 00:29, Michael Chan wrote:
+>>=20
+>> I think skb->len is not updated with the padded length here.  So the
+>> HW will drop the packet seeing that the length is too short.  There is
+>> another skb_put_padto() that might work better?
+>=20
+> +1 Exactly, thanks!
 
+FWIW, we suspect we have quite a few users running into this since
+importing upstream changes from 7.2.2-7.2.5.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Will report back once we've provided those users with a kernel with the
+below diff.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=222071
-#regzbot introduced: 2a70e5dc0301ad961b198f086a39e2479f6b8
-#regzbot title: usb: xhci_hcd: Resuming from hibernation fails with "Not
-enough host resources"
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c=20
+> b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> index=20
+> d7728d0c5b6e63ee72de9dea54426bb4c8b7a9fc..7ea27e81e88c5ca82a453b449982b79=
+1e8acc831=20
+> 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> @@ -486,7 +486,7 @@ static netdev_tx_t bnxt_start_xmit(struct sk_buff=20
+> *skb, struct net_device *dev)
+>          struct netdev_queue *txq;
+>          int i;
+>          dma_addr_t mapping;
+> -       unsigned int length, pad =3D 0;
+> +       unsigned int length;
+>          u32 len, free_size, vlan_tag_flags, cfa_action, flags;
+>          struct bnxt_ptp_cfg *ptp =3D bp->ptp_cfg;
+>          struct pci_dev *pdev =3D bp->pdev;
+> @@ -672,14 +672,12 @@ static netdev_tx_t bnxt_start_xmit(struct sk_buff=20
+> *skb, struct net_device *dev)
+>          }
+>=20
+>   normal_tx:
+> -       if (length < BNXT_MIN_PKT_SIZE) {
+> -               pad =3D BNXT_MIN_PKT_SIZE - length;
+> -               if (skb_pad(skb, pad))
+> -                       /* SKB already freed. */
+> -                       goto tx_kick_pending;
+> -               length =3D BNXT_MIN_PKT_SIZE;
+> +       if (skb_put_padto(skb, BNXT_MIN_PKT_SIZE)) {
+> +               /* SKB already freed. */
+> +               goto tx_kick_pending;
+>          }
+> -
+> +       length =3D skb->len;
+> +       len =3D skb_headlen(skb);
+>          mapping =3D dma_map_single(&pdev->dev, skb->data, len,=20
+> DMA_TO_DEVICE);
+>=20
+>          if (unlikely(dma_mapping_error(&pdev->dev, mapping)))
+> @@ -759,10 +757,7 @@ static netdev_tx_t bnxt_start_xmit(struct sk_buff=20
+> *skb, struct net_device *dev)
+>                  txbd->tx_bd_len_flags_type =3D cpu_to_le32(flags);
+>          }
+>=20
+> -       flags &=3D ~TX_BD_LEN;
+> -       txbd->tx_bd_len_flags_type =3D
+> -               cpu_to_le32(((len + pad) << TX_BD_LEN_SHIFT) | flags |
+> -                           TX_BD_FLAGS_PACKET_END);
+> +       txbd->tx_bd_len_flags_type |=3D cpu_to_le32(TX_BD_FLAGS_PACKET_EN=
+D);
+>=20
+>          netdev_tx_sent_queue(txq, skb->len);
+>=20
+>=20
+>=20
+>=20
+>=20
 
-#regzbot report:
-https://lore.kernel.org/all/DM6PR02MB5433F3C2A156335B6ED47756EA8E2@DM6PR02MB5433.namprd02.prod.outlook.com/
-#regzbot introduced: 4b490e0d103c
-#regzbot title: ALSA snd-ctxfi: no PCM playback
-
-#regzbot report: https://lore.kernel.org/all/ar_AuRr1eaZzOfw9@baldur/
-#regzbot introduced: 93b6c8d10fad
-#regzbot title: drm/msm/a8xx: failure during boot
-
-#regzbot report:
-https://lore.kernel.org/all/20261004122616.56714cbd@nargothrond/
-#regzbot introduced: 447cbe95ebb9
-#regzbot title: vlan: IOMMU DMA faults on macvlan/vlan with bnxt_en
-
-#regzbot report:
-https://lore.kernel.org/all/77888c45-0b12-4973-a9c8-9aa5d70eb1b5@gamesplit.cz/
-#regzbot introduced: f0866517be9345
-#regzbot title: HID: logitech-hidpp: hi-res wheel scrolling over
-Lightspeed receiver (G903) broken
-
-#regzbot report:
-https://lore.kernel.org/all/179104011040.2214689.5921682013387867802@eldamar.lan/
-
-#regzbot introduced: 980084de4d9b25
-#regzbot title: Bluetooth: btusb: bt stopped working due to missing firmware
