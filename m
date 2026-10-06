@@ -1,163 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140443B47D2
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 17:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791306494; cv=none; b=LGKKEY+FD3ktXcrI7bOaQVHcezgHOvbHihaNce7ZYujxY9dEXiu+i0fvkGyiXuoXoFwSH8evypdHq9Jpzf7H1VM1xlr6sIj6vzazBirHs3g3S1Vc8ORDx7Zt7EAAllTVPhEzs5uGDCFIepfbBQmOwT0OC0BTrD/UMwcGI8U4NIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791306494; c=relaxed/simple;
-	bh=h36t8Aak3xjosKV7ApMoYWbxB2QuJwp89eihxX+6udg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HnpoiVRP0uU7ZZ7Y8yXHpWE/oDa88CxEIqQH8FIm2Kli2pP2veZvzTLYbQdbXEx3zemMStck/ar3x3+ABj+TqUCsrrLk1Hv8ctlMPYvAQcgTFEg7xZcyOLQb0ffElxyg7swWAqlcn22hETBwkfNEtTtIzJtFjjUG1VS4hRaWCh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kf5/H9QX; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0165648F836
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 17:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791307092; cv=pass; b=XAlOZ0HRURhFWNKMO+DTt1nc0oHPUtgt6Rgnk7aRpHMaeVWv9LI1SFD+iBGbHw8TEUHVjBO/5kpHGQNRDpoCqF2IYTfUdxn61Psry8hGwywUQNt7fi8tXr7BMdSz6OGragP+Kl5FocUyUxtseLea2eQAxaA0rjsR/zcbSkh9zFs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791307092; c=relaxed/simple;
+	bh=Z7RWaUukp2vJp/lKLw/pvzkwQI1/3q3Xs3o+sRxD9Bw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=r79jX9WUptPVOHtpSaQOrUHam5dAEXWE/zJEqa2x25zCt2LzbvVwZfO48mP9RUVoxOxqBidUjGPtxbmvFeYZ7iPMJtQbX44tq3DEKuxRTLYwNqToV3mMto0oJGxvyjmHRh9XY/9TXiAekwpUTOFMT0LAOJ/86m+5om1o7s+f3wU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aaBV61yp; arc=pass smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kf5/H9QX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0E411F008A5
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 17:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791306492;
-	bh=F2pbNHA6Cquvp7JKUXcGKjJph/y7K4Neid4Wj2Yqaws=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=kf5/H9QXpa0VAotc8ZTuspgXQtiSldT8y4m2lJtqRO6x+U9PDuar2Cx910X7kdngD
-	 smWVJr2Ytl+xia7zGBIopWDyQQSS1wxaxVJnzrt4eZnzLY/K8n+qbyqjMrm80fLo3m
-	 rhvFWd5flSqRs6Dr2opAvLUakPmmE5Vm5rpw/YQI1umTbAYl3RDz4jP53YoAj7AKtj
-	 SaX9OQN8cJJ9OuA3qED5mhwr7FoPkcYjs94DGkQdG7kyfgSonE2aYm00LMu9hsBMsU
-	 k0w5tipwPv2CAQzInIxKmT9Jdob4suucZN1vMtawndX1cL8e4QxksiGIbcDNr0Mi6u
-	 Jf95opbjqUQ/A==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3a75f960be4so6520121fa.2
-        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 10:08:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBzIjKxxDDShSfKz3D2JkRKpsZt5CTmG7yntmPoQQwlSJY6l906rXi7FYydIo9gDf3eeL8WiOTE3PxJL1Q==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJikojqk3V4opg3mfqv3LKC11HsJtSH2Czoq0wHe79wH9m6X/gi
-	HK6uCHIoiPk5sM7vBIeJGQSq/WvZdTZwrFdo64AkGJVGgGuNjdcc/+yb7zxGdmIYRG05LYKuWSj
-	WPY/z6AWKCI1n5CsMEyYJJ4e6Ui+S3XI=
-X-Received: by 2002:a2e:bc1e:0:b0:3a9:7160:e83e with SMTP id
- 38308e7fff4ca-3a99ad25f3amr5707721fa.8.1791306491341; Tue, 06 Oct 2026
- 10:08:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaBV61yp"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-93e76469b93so148191085a.0
+        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 10:18:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791307088; cv=none;
+        d=google.com; s=arc-20260327;
+        b=hAhmCvWhb6AnLuLFvYG+40M5ZssLqzchcAbUwFPQH0/7cjx1CSw4faTtRHBLlV9SKD
+         +3u/ozEgM9ArOt01GVGHUMoAKbApIEPdO/7qE5g4YLXX+PMBlzfd0q4YRJhopfe9yfaT
+         oKTHFI/nD9L/8xI9o8h09aiZLQWHE8z0kIaO6YDK4EkXGLioHZ92lzTpRPX1mrLibUFA
+         Pg68AxyGv7bfYseMEdqbEV4DDhwSf+IHPGBnyz9K6J1i0jmqEe5670Xt2QcdM4eW/0aR
+         epeZ16VQBPwFO7PL6THLemCV8ElVmmNW91f9ewox1+n2T01n0lQz9fzgGXsBI/mx68KP
+         HtNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=IYoFhdR6a50T0V6unvIVYfJRbGq2pHrg3/lVy4LzpxI=;
+        fh=PCDOppbGfT3gNXrJjnyGJp2mvmcXDhjp7VBuCN1x/I8=;
+        b=n29frrchpvFReYRuadY29WAZORE9Uy8aimJ0t3Ve64z4ccTDXztBlXqaZq0JYPq3TI
+         mC0HryNrNrtJH20TP/B21eNjgsWFN+V8e8XgomDX3tCEm9nEEgNBPplpOWxYZaepsfs5
+         J/r/jyREPhJPK485c4IMeV6anfpOm/GnqIGK0GVTbGptIMtvwQKnxJch2CyuGtEX56Lo
+         AXK8iXAPS7qKTG5ZxZzdNDgxHR3BM41CvgaDqtC0TxmHEwoysIX2+QrTXh6qMscssQQr
+         ShtwIi2NQBVk/11Yzv9IOaG5Lc5EwwYcKnFJkxus1FUUwehKksP5KmfArVAhFINf49UO
+         xGrQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791307088; x=1791911888; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IYoFhdR6a50T0V6unvIVYfJRbGq2pHrg3/lVy4LzpxI=;
+        b=aaBV61ypcyf+4lpEaYi0TzAqST4U0EAeDc3MoPXN6aEIYlwNS9jATEhrijQzQyA9Sz
+         YQWqdwyrVDm++PvMjIKgk+3gcgVm3BoKq3MlKxqEogjVEdugsmUIcRGmMwLXBUtf7LDA
+         7E8rrjBYCaMHO4beqIJwt4K3lBQEc5aAfsUIeiKf02cRDuN0yLvs2RAQnkhpU+FFpiUz
+         fZqUkGxET78hVF4yL1pLYbKnMmXHbmars4Vx/3Dz8JCj1+Xqh0f4Y471J+jYOA8Zaxi8
+         qyOJjnlEUfSFvJ44POAMMMQESaCgNPk/+Nht36AhlqJHi+Py+njAV+V5oPdAaxyrYXvu
+         C3Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791307088; x=1791911888;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=IYoFhdR6a50T0V6unvIVYfJRbGq2pHrg3/lVy4LzpxI=;
+        b=yevKO4MhwZu6/nPbHrScYHWW1l/OLxhNdSt2prHZZXYIeLNlsysStSOTlQXwCfp6wk
+         iDATCX+H9N8t6ayhhe3NVahKmRk7xQzhMGMI2eT3T8bV2uvztAyNRktuB3rqpe/Zwg4h
+         cW9rwfSLqJVeN+VbCNt2CEPsNn6uBJthMjcGEYnNkOwlmasrEATcVrcylNUIbgiv/jqX
+         HJ8EWAHAAxG9WPSa590XnkKyF5/ATcnEIC3X76r2gP1zB6U7fDfHcTb3sH79R/6WEKAY
+         VJIat+hroSMC2KT4f2vWT1x9VTebWEIv9UrXqRa/IujOSN3d5oGrm/OZAC/k3CnTZyu4
+         9bPQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz1h4wZZAwuWX86DbUFsgwte86E0qxJ+MIu76kRhXmqLJIuDZvFlU1YuNdcPgpHc9DoXLelxE5oON2AGg==@lists.linux.dev
+X-Gm-Message-State: AFuF++mvyjmMADXdZK07BzEVi8q8Fa64HyhPlDx4viyoQ3KsNO6pS7rc
+	6MUDMjThIW8x3taXcet1Gtp6si4ZNWrwR8+f0+Kl8dWvu5hncSqQdFfFlzqeeCh6Y9kPUcj9cxV
+	q7zPJffRkHItVCAfONjpD/jWbBwyBrME=
+X-Gm-Gg: AYBFou09VZ48RoPWaD5PdK3GQJYK0AEO5RwUeOyewGkM8oxTUfjQFdoFiFUY4DCdUt1
+	CKUddkOm5ScVvwqtdOe59VbiMOEt5U6IMNIf5KiJKOwWfnfIOqtMNwePykeALsfAC0W3ilcBRNI
+	gcT6Cq95C/s81O/tTryog51Tvbx/0/cqXqqc8LaA2jkwSa1b19t0WMJkr5vKPmEX11eVpokt/S5
+	pdf/IHINwg4oEbn5PPQMl/pExJU2Q+QhGpbjQhEdJGk5Y6eHnB3DHFHb/JkAemNuxUK4If3IDul
+	pa5Rz6Qr2F4BjUidUInqiOUjeDLKBqZoH7coYHGeOV0OWE3IbklinH8MRu+HZ6w1ysK4O9VX+r+
+	AVXoS/ezi1rPp4lavqbmzgnVq2V99XWvx
+X-Received: by 2002:a05:620a:2584:b0:93e:795c:9d07 with SMTP id
+ af79cd13be357-93e8f382b1emr394780685a.35.1791307088187; Tue, 06 Oct 2026
+ 10:18:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com>
- <a6193df2-98f3-409f-b73f-5b91835a0107@kernel.org>
-In-Reply-To: <a6193df2-98f3-409f-b73f-5b91835a0107@kernel.org>
-From: Eric Dumazet <edumazet@kernel.org>
-Date: Tue, 6 Oct 2026 19:07:55 +0200
-X-Gmail-Original-Message-ID: <CAL4WiirwF6bZwocErCthJ+TUu7wipRfSibRBoKWjjkA2nVSrqQ@mail.gmail.com>
-X-Gm-Features: AclHuK94qiZU0AD2VKryl24P5rKTJxKe7JjW3M-u_EQacUnswxhPW-YFOySeCss
-Message-ID: <CAL4WiirwF6bZwocErCthJ+TUu7wipRfSibRBoKWjjkA2nVSrqQ@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] r8169: TX stall with checksum offload on
- VLAN frames with inline tag (REORDER_HDR off) since 1517d1996b52
-To: =?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>, 
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	nic_swsd@realtek.com, Sasha Levin <sashal@kernel.org>
+From: =?UTF-8?B?0JPQtdC+0YDQs9C40Lkg0JHQtdGA0LjQtNC30LU=?= <game.advencher229@gmail.com>
+Date: Tue, 6 Oct 2026 20:17:56 +0300
+X-Gm-Features: AclHuK9rzk0D650Q1s01qstkldc1WfPiCtqEKEuBYsW4iS9PUILAiEQMdqamknI
+Message-ID: <CAEhAYcrrRyZvNU4i+jznPW4jxS1F_s5iH6AMZE4_mVgLbtAhXQ@mail.gmail.com>
+Subject: Subject: [REGRESSION] mt7921e: ~20% lower throughput on first
+ association after boot (7.1/7.2), reconnect restores it
+To: linux-wireless@vger.kernel.org
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, 
+	Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Le mar. 6 oct. 2026 =C3=A0 18:27, Eric Dumazet <edumazet@kernel.org> a =C3=
-=A9crit :
->
->
->
-> On 10/6/26 13:45, Jan =C4=8Cerm=C3=A1k wrote:
-> > Hi,
-> >
-> > the Home Assistant OS recently shipped kernel update from 6.18.39 to
-> > 6.18.52 which was followed by a bunch of community reports about fatal
-> > network breakages [1] which had one thing in common - r8169 driver and
-> > configured VLANs. This manifested as network stall early in the setup
-> > of the system with dmesg events like this:
-> >
-> >> r8169 0000:03:00.0 enp3s0: NETDEV WATCHDOG: CPU: 7: transmit queue 0 t=
-imed out 6125 ms
-> >> r8169 0000:03:00.0 enp3s0: rtl_rxtx_empty_cond =3D=3D 0 (loop: 42, del=
-ay: 100).
-> >
-> > As there was no change in the r8169 driver itself, I focused on the
-> > vlan subsystem, where AI pointed me shortly to this suspect commit in
-> > the range: 1517d1996b5236fe69eccd9d253f725e06996eb1 ("vlan: fix
-> > skb_under_panic and races when toggling HW VLAN offload"), added in
-> > 6.18.51. I'm not referring to the mainline counterpart below for
-> > regzbot (447cbe95ebb9) as I can't confirm whether it triggers the bug
-> > there as well. FWIW there was another issue [2] with a similar
-> > combination recently in the regressions ML but that one seems
-> > unrelated, as disabling EEE fixed that issue, and it doesn't fix it
-> > here.
-> >
-> > I don't have the hardware myself, I asked for testing with this commit
-> > reverted, which confirmed that this change indeed started to cause
-> > trouble. However, it's obvious that the change itself is not bad, as
-> > it fixes another issue and the regression is scoped to very specific
-> > hardware/setup combo.
-> >
-> > Besides the revert, following workarounds were reported to fix the
-> > issue as well:
-> > - Disabling TX checksum offload with `ethtool.feature-tx off` in
-> > NetworkManager for the connection (HAOS doesn't have ethtool binary,
-> > hence this option instead of direct ethtool command)
-> > - Enabling REORDER_HDR with `ip link set enp1s0.100 type vlan reorder_h=
-dr on`
-> >
-> > Clearly, this needs rather esoteric setup to trigger the bug - I guess
-> > most systems set the REORDER_HDR flag by default, however, due to some
-> > legacy in the DBus interface that HAOS stack uses to configure the
-> > network [3], it was disabled. Anyway, I think that disabling it should
-> > not lead to driver breakage as we're seeing.
-> >
-> > So far it appears that this only affects RTL8168h/8111h, XID 541 -
-> > there isn't any report of another chip/XID combination yet.
-> > Unfortunately, as I said above, I don't have the hardware available
-> > for testing but I believe I'll find some community members who'll be
-> > willing to test a proposed fix for the issue if needed.
-> >
-> > [1] https://github.com/home-assistant/operating-system/issues/5019
-> > [2] https://lore.kernel.org/regressions/353419280.954808.1790290283530@=
-mail.yahoo.com/
-> > [3] https://github.com/home-assistant/supervisor/issues/7248
-> >
-> > #regzbot introduced: 1517d1996b5236fe69eccd9d253f725e06996eb1
-> > #regzbot link: https://github.com/home-assistant/operating-system/issue=
-s/5019
-> >
-> > Cheers,
-> > Jan
->
-> Ok this NIC can not perform tx csum offloads with vlans.
->
-> opts[1] only takes TD1_IPv4_CS and TCPHO (Transport Header Offset).
->
-> There is no IP header offset field in the descriptor. The MAC assumes
-> the IP header starts immediately at byte 14.
->
-> So we need to change vlan_dev_hard_header() to take into account
-> vlan_hw_offload_capable(real_dev->features, vlan->vlan_proto)
->
-> Can you test the following patch?
->
-> Thanks!
->
-> diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
-> index
-> cb8f3cdbf1f732c55a8a3d69ab5445988c953205..3a518ff064465e8ab978c66a28bf7df=
-579931256
-> 100644
-> --- a/net/8021q/vlan_dev.c
-> +++ b/net/8021q/vlan_dev.c
-> @@ -54,7 +54,9 @@ static int vlan_dev_hard_header(struct sk_buff *skb,
-> struct net_device *dev,
->          u16 vlan_tci =3D 0;
->          int rc;
->
-> -       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR)) {
-> +       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR) &&
-> +           !vlan_hw_offload_capable(READ_ONCE(vlan->real_dev->features),
-> +                                    vlan->vlan_proto)) {
->                  unsigned int hlen =3D READ_ONCE(dev->hard_header_len) +
->                                      READ_ONCE(dev->needed_headroom);
+Hi,
 
-Nope, scratch this. I need to spend more time on a proper fix.
+On my laptop the MT7921 (PCIe, mt7921e) gets about 20% lower TCP
+throughput on the first association after boot with 7.1.10 and 7.2.8.
+Simply re-associating (NetworkManager "connection up" on the same
+profile, nothing else changed) immediately restores full speed.
+6.18.55 is fast right from boot.
+
+Hardware / software
+- Lenovo IdeaPad 5 Pro 16ACH6 (82L5), Ryzen 7 5800H
+- 03:00.0 MEDIATEK MT7921 [14c3:7961], subsystem 17aa:e0bc,
+  ASIC revision 79610010
+- WM firmware ____010000, build 20260224110949 (linux-firmware
+  20260916; the MT7961 files are identical to 20260622)
+- Arch Linux kernels: 6.18.55-1-lts (good), 7.1.10-arch1-1 (bad),
+  7.2.8-arch1-2 (bad)
+- NetworkManager 1.58.1, wpa_supplicant 2.12, WPA3-SAE, CCMP
+- AP: TP-Link 802.11ac router (no HE), 5 GHz channel 48, 80 MHz
+- iw reports the same rates in both states (VHT-MCS 9, NSS 2, 80 MHz,
+  SGI, 866.7 Mbit/s rx/tx), signal -37..-52 dBm
+
+Measurement
+4 and 8 parallel HTTP downloads and 4 parallel uploads (curl, 8 s
+each) to an Ookla speedtest server 3-7 ms away (ping min/avg),
+bound directly to wlan0. The ISP plan tops out at ~530 Mbit/s,
+which is also what a phone on the same AP gets, so "fast" below is
+capped by the uplink.
+
+Results in Mbit/s (ranges over 2-3 rounds)
+
+  kernel   state                                  down     up
+  6.18.55  right after boot                       525-531  510-538
+  7.2.8    first association, ~5 h uptime         402-431  470-483
+  7.2.8    first association, fresh boot          340-431  368-430
+  7.2.8    first association, fresh boot          426-443  409-472
+  7.2.8     -> same boot, reconnect only          520-531  525-538
+  7.1.10   first association, fresh boot          359-426  421-496
+  7.1.10    -> regdb installed, RU, reconnect     519-531  521-537
+  7.1.10    -> regdomain back to 00, reconnect    522-530  530-539
+  7.1.10    -> modprobe -r + modprobe mt7921e     516-526  536-539
+              (plus one outlier at 388 down)
+
+The slow state persists for the whole session: on one 7.2.8 boot the
+journal shows a single association at boot and it was still slow
+about 5 hours later. The fast state after a reconnect has so far been
+observed for about 10 minutes without another re-association.
+
+Ruled out
+- power_save off (iw): no meaningful change (+~3%)
+- PCIe ASPM: disabling L1.1/L1.2 and then L1 for 03:00.0 via sysfs
+  on 7.1.10: no change
+- Regulatory: slow both with regulatory.db missing (world regdomain
+  00) and with wireless-regdb installed (driver sets RU before the
+  association). After a reconnect it is fast with either 00 or RU.
+- Firmware: the same files on all kernels
+- Association parameters are the same on the slow and the fast
+  association (SAE, PTK=CCMP GTK=CCMP)
+
+Not tested yet: Bluetooth coexistence (the combo chip's BT is powered
+with no devices connected; hci0 finishes setup ~4 s before the first
+Wi-Fi association) and suspend/resume. I have not bisected yet. I can
+test patches, enable debug options or try more kernels if that helps;
+I also have ethtool -S and station dumps from both states.
+
+#regzbot introduced: v6.18..v7.1
+
+Thanks,
+Georgy B.
