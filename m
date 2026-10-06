@@ -1,279 +1,371 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-5.mta0.migadu.com [91.218.175.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B2A2EDD53
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 18:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEB5375F80
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 18:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791310621; cv=none; b=SGxsxkr/VsfyVzbpCQFVvCOwBmQqHchXodbyceAKv1JUYFfY2tr9RPo89hRqN7X6U/hdVGwb4ZmJI7GnHpOYVX5+IIb/zj0GgDSid0WZQfFEJG1Vzex6BIQbKg4Z1NT3hS52+oUBSwCTso32h8KXTHslXZfoMz1O90N3EcsBQiI=
+	t=1791312363; cv=none; b=FXgrSP/bpOZ3iSF+XMvuzj8eaxeEQ0o5OEn8zzRpI3gTv0R43ph5Vz6vZOTCc8i17cUf45Wq2M48e4/P2m4dskIL5QmEgDmCTMqoCslw3FIrOBWYMrC8mxc7r07hFDSwBe7qCzzVisCsaYe9i1Yr2R6PGc0twZmeGCveE3oeHWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791310621; c=relaxed/simple;
-	bh=30DM1dlB4xJ8A7cSQJuq8TjBhktB7+c1xwhudJHedkw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J3JC/gDK6fW9t5DPYSli5pcHN0aI6QqTlpKhm0Z8FWo5VEza0pMHMJ34P/hWke2dCY/km4msN/EV67C2o00aVAR0kEsOboupF8TkGDFBKH+xVFFcHoo3Lslpc9WFVkhdft8PcZ1qRdLHbtBpXRr/1pjBEG4ykh1ZJ7kPkWL9+88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEAtDPo+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791312363; c=relaxed/simple;
+	bh=paP8qoeD8n8ss+o8PUBgpg9BkHu31CSK6uRZ3M1V7jI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=HIqiu0PKDMWaeiKa9pBk6gIsqBdU9XxBQMo17kIAZnQG7mIKuA0YBIXsVKi8z+BfD8o7wcv3JywoFJgILB7uXp7D6N6XwkGI+qWS+aVjKK7ieiBDJg6VldCJ6pLGYP8jGPpslyV37KONQvH+5PKOMxc9HIBGaLM2wOKJAPhJFVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FegmaBkR; arc=none smtp.client-ip=91.218.175.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEAtDPo+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DE11F008A3
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 18:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791310619;
-	bh=/qQgWZIWoeeo8NM7QjEOSkMaOjMn+PrW3wol+OaTg6Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=LEAtDPo+J4Oio9iL14H/E2Y8K1XL8TktF3qfpR4JkQ+leBeydhqHnqBLD0VmS05Cs
-	 skzT/bAyvB/LS3AH8BdPVhP8hdm5/dcn79X0r3zNytIisGhQSeURDHGsjpK+tZcH/E
-	 eQt0Vx4CT/WqW3eHNaGBU/mS/Q6l+PN1FHZsI8e+y0RZwrbbYDbM1HzRGjRiYETE2o
-	 rhyeJuStpPnOHbEg1DDnMl5FYsI/jfusMjJTfG9nhPzftMx8yJt3wDCPHCkLp+DJif
-	 fefeFPgroloUdQCTMVgzjcMSwh/WftS0PBYDvoJa1uJ7d2th5AEtM3UuOJ52LcwYlF
-	 6XNCF1dDgOURg==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6de1fd5f572so434463eaf.3
-        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 11:16:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBy2ZU0eHwqc/5pJOLxEewcb262dVr/Eg4LiDtA329vemYHEizpwdzxURVCYkABEf+PngnXw3+lcW7letw==@lists.linux.dev
-X-Gm-Message-State: AFuF++mdvECuB5aei/Mu3wJGb/yXKGtglNKQLo4pVsoYLIoKHICJEIMg
-	d74DWIrW6oG06kNw/d4lAkrfEqa5kg5xm8ole+qBi7AE8IzeDTAw7ARdl7A3h4bX5psD7RNIR5O
-	af/cWJVixS/EtyLYgK38p5P969Fx+stE=
-X-Received: by 2002:a4a:e910:0:b0:6b1:5735:b88e with SMTP id
- 006d021491bc7-6e551065ac8mr1918247eaf.6.1791310618902; Tue, 06 Oct 2026
- 11:16:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FegmaBkR"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=paP8qoeD8n8ss+o8PUBgpg9BkHu31CSK6uRZ3M1V7jI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791312358; v=1; x=1791917158;
+ b=FegmaBkRc6PSgkMuidwhG3avnZPc8AaS3RYIzJv9AN4ZKT9xBP5TnqOPnBmXo69N4hbhwqaB
+ ZkXyb1ta0fMK7i9T6FmCog8jjwHsYSvVH5nG/KP5EHCxQWdXNbXWqlL5G7gwrz0q+9/2wx9ZWjz
+ T8O2jU5uxKNycYLGw82V+p28=
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id f5599b8ca2260046;
+	Tue, 06 Oct 2026 18:45:48 +0000
+X-Mizu-Trace-ID: f5599b8ca2260046
+X-Migadu-Flow: FLOW_OUT
+Date: Wed, 07 Oct 2026 00:15:44 +0530
+From: Aditya Garg <aditya.garg@linux.dev>
+To: Alex Deucher <alexdeucher@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>
+CC: "Perlow, Jason" <jperlow@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
+User-Agent: Thunderbird for Android
+In-Reply-To: <CADnq5_O2TWeWEE1NsuCVvtWLKWyOiJHChPGP9CN4Zu=hvs+jmA@mail.gmail.com>
+References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com> <20261005231914.GA639967@bhelgaas> <CADnq5_O2TWeWEE1NsuCVvtWLKWyOiJHChPGP9CN4Zu=hvs+jmA@mail.gmail.com>
+Message-ID: <02FB87FF-9CFD-4CD6-BC94-1D2F7B9C4C94@linux.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com>
- <a6193df2-98f3-409f-b73f-5b91835a0107@kernel.org> <CAL4WiirwF6bZwocErCthJ+TUu7wipRfSibRBoKWjjkA2nVSrqQ@mail.gmail.com>
-In-Reply-To: <CAL4WiirwF6bZwocErCthJ+TUu7wipRfSibRBoKWjjkA2nVSrqQ@mail.gmail.com>
-From: Eric Dumazet <edumazet@kernel.org>
-Date: Tue, 6 Oct 2026 20:16:47 +0200
-X-Gmail-Original-Message-ID: <CAL4WiiqSmW093PDngLrUNiNA5GVKeM3+tAO7KMDJeyjYZ7GRzg@mail.gmail.com>
-X-Gm-Features: AclHuK_npeoQgQiFHlHXF0xFKwh-DYkOGnBzdSKiExLCyu4k-6GIIeNMicuP07w
-Message-ID: <CAL4WiiqSmW093PDngLrUNiNA5GVKeM3+tAO7KMDJeyjYZ7GRzg@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] r8169: TX stall with checksum offload on
- VLAN frames with inline tag (REORDER_HDR off) since 1517d1996b52
-To: =?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>, 
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	nic_swsd@realtek.com, Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Le mar. 6 oct. 2026 =C3=A0 19:07, Eric Dumazet <edumazet@kernel.org> a =C3=
-=A9crit :
->
-> Le mar. 6 oct. 2026 =C3=A0 18:27, Eric Dumazet <edumazet@kernel.org> a =
-=C3=A9crit :
-> >
-> >
-> >
-> > On 10/6/26 13:45, Jan =C4=8Cerm=C3=A1k wrote:
-> > > Hi,
-> > >
-> > > the Home Assistant OS recently shipped kernel update from 6.18.39 to
-> > > 6.18.52 which was followed by a bunch of community reports about fata=
-l
-> > > network breakages [1] which had one thing in common - r8169 driver an=
-d
-> > > configured VLANs. This manifested as network stall early in the setup
-> > > of the system with dmesg events like this:
-> > >
-> > >> r8169 0000:03:00.0 enp3s0: NETDEV WATCHDOG: CPU: 7: transmit queue 0=
- timed out 6125 ms
-> > >> r8169 0000:03:00.0 enp3s0: rtl_rxtx_empty_cond =3D=3D 0 (loop: 42, d=
-elay: 100).
-> > >
-> > > As there was no change in the r8169 driver itself, I focused on the
-> > > vlan subsystem, where AI pointed me shortly to this suspect commit in
-> > > the range: 1517d1996b5236fe69eccd9d253f725e06996eb1 ("vlan: fix
-> > > skb_under_panic and races when toggling HW VLAN offload"), added in
-> > > 6.18.51. I'm not referring to the mainline counterpart below for
-> > > regzbot (447cbe95ebb9) as I can't confirm whether it triggers the bug
-> > > there as well. FWIW there was another issue [2] with a similar
-> > > combination recently in the regressions ML but that one seems
-> > > unrelated, as disabling EEE fixed that issue, and it doesn't fix it
-> > > here.
-> > >
-> > > I don't have the hardware myself, I asked for testing with this commi=
-t
-> > > reverted, which confirmed that this change indeed started to cause
-> > > trouble. However, it's obvious that the change itself is not bad, as
-> > > it fixes another issue and the regression is scoped to very specific
-> > > hardware/setup combo.
-> > >
-> > > Besides the revert, following workarounds were reported to fix the
-> > > issue as well:
-> > > - Disabling TX checksum offload with `ethtool.feature-tx off` in
-> > > NetworkManager for the connection (HAOS doesn't have ethtool binary,
-> > > hence this option instead of direct ethtool command)
-> > > - Enabling REORDER_HDR with `ip link set enp1s0.100 type vlan reorder=
-_hdr on`
-> > >
-> > > Clearly, this needs rather esoteric setup to trigger the bug - I gues=
+
+
+On 6 October 2026 10:07:18=E2=80=AFpm IST, Alex Deucher <alexdeucher@gmail=
+=2Ecom> wrote:
+>On Mon, Oct 5, 2026 at 7:19=E2=80=AFPM Bjorn Helgaas <helgaas@kernel=2Eor=
+g> wrote:
+>>
+>> [+cc Alex]
+>>
+>> On Mon, Oct 05, 2026 at 01:53:55PM -0400, Perlow, Jason wrote:
+>> > Hi Lukas, Bjorn,
+>> >
+>> > Since commit eddba19b8b5f ("PCI/AER: Support Advisory Non-Fatal
+>> > Errors"), first in v7=2E3-rc1, an Apple MacBookPro16,1 (T2 chip) lose=
 s
-> > > most systems set the REORDER_HDR flag by default, however, due to som=
-e
-> > > legacy in the DBus interface that HAOS stack uses to configure the
-> > > network [3], it was disabled. Anyway, I think that disabling it shoul=
-d
-> > > not lead to driver breakage as we're seeing.
-> > >
-> > > So far it appears that this only affects RTL8168h/8111h, XID 541 -
-> > > there isn't any report of another chip/XID combination yet.
-> > > Unfortunately, as I said above, I don't have the hardware available
-> > > for testing but I believe I'll find some community members who'll be
-> > > willing to test a proposed fix for the issue if needed.
-> > >
-> > > [1] https://github.com/home-assistant/operating-system/issues/5019
-> > > [2] https://lore.kernel.org/regressions/353419280.954808.179029028353=
-0@mail.yahoo.com/
-> > > [3] https://github.com/home-assistant/supervisor/issues/7248
-> > >
-> > > #regzbot introduced: 1517d1996b5236fe69eccd9d253f725e06996eb1
-> > > #regzbot link: https://github.com/home-assistant/operating-system/iss=
-ues/5019
-> > >
-> > > Cheers,
-> > > Jan
-> >
-> > Ok this NIC can not perform tx csum offloads with vlans.
-> >
-> > opts[1] only takes TD1_IPv4_CS and TCPHO (Transport Header Offset).
-> >
-> > There is no IP header offset field in the descriptor. The MAC assumes
-> > the IP header starts immediately at byte 14.
-> >
-> > So we need to change vlan_dev_hard_header() to take into account
-> > vlan_hw_offload_capable(real_dev->features, vlan->vlan_proto)
-> >
-> > Can you test the following patch?
-> >
-> > Thanks!
-> >
-> > diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
-> > index
-> > cb8f3cdbf1f732c55a8a3d69ab5445988c953205..3a518ff064465e8ab978c66a28bf7=
-df579931256
-> > 100644
-> > --- a/net/8021q/vlan_dev.c
-> > +++ b/net/8021q/vlan_dev.c
-> > @@ -54,7 +54,9 @@ static int vlan_dev_hard_header(struct sk_buff *skb,
-> > struct net_device *dev,
-> >          u16 vlan_tci =3D 0;
-> >          int rc;
-> >
-> > -       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR)) {
-> > +       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR) &&
-> > +           !vlan_hw_offload_capable(READ_ONCE(vlan->real_dev->features=
-),
-> > +                                    vlan->vlan_proto)) {
-> >                  unsigned int hlen =3D READ_ONCE(dev->hard_header_len) =
-+
-> >                                      READ_ONCE(dev->needed_headroom);
+>> > power 17 to 24 s after boot=2E v7=2E2=2E9 is fine; v7=2E3-rc5 and v7=
+=2E3-rc6 are
+>> > not=2E Bisection lands on that commit, and v7=2E3-rc6 with only that
+>> > commit reverted no longer powers off=2E aer=2Ec has not changed since=
+, as
+>> > of v7=2E3-rc6-3, so I expect it is still unfixed; I did not find an
+>> > existing report=2E
+>>
+>> Alex reported something similar at
+>> https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D222095=2E
+>>
+>> Can you try the experiment mentioned there?  The patches Lukas
+>> mentioned don't apply cleanly on v7=2E3-rc1, but the conflict looks
+>> trivial?
 >
-> Nope, scratch this. I need to spend more time on a proper fix.
+>Lukas' patches fixes some boards, but unfortunately, I'm still seeing
+>failures on others=2E  Reverting the patch fixes those failures=2E  I've
+>updated the ticket=2E
 
-It seems this code is not needed anymore, and was the source of many
-bugs anyway.
-
-In modern Linux, core networking already has validate_xmit_vlan() in
-net/core/dev.c which handles software fallback tag insertion right before
-ndo_start_xmit when the lower device lacks HW VLAN TX offload.
-
-VLAN_FLAG_REORDER_HDR should be an RX option (controlling vlan_untag()).
-
-I am tempted with this (untested) approach
-
-diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
-index cb8f3cdbf1f732c55a8a3d69ab5445988c953205..7c1394ee2a653706c42f1b970e1=
-3664583d1cf36
-100644
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -49,47 +49,14 @@ static int vlan_dev_hard_header(struct sk_buff
-*skb, struct net_device *dev,
-                                unsigned int len)
- {
-        struct vlan_dev_priv *vlan =3D vlan_dev_priv(dev);
--       struct vlan_hdr *vhdr;
--       unsigned int vhdrlen =3D 0;
--       u16 vlan_tci =3D 0;
--       int rc;
--
--       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR)) {
--               unsigned int hlen =3D READ_ONCE(dev->hard_header_len) +
--                                   READ_ONCE(dev->needed_headroom);
--
--               if (skb_cow_head(skb, hlen) < 0)
--                       return -ENOMEM;
--               vhdr =3D skb_push(skb, VLAN_HLEN);
--
--               vlan_tci =3D vlan->vlan_id;
--               vlan_tci |=3D vlan_dev_get_egress_qos_mask(dev, skb->priori=
-ty);
--               vhdr->h_vlan_TCI =3D htons(vlan_tci);
--
--               /*
--                *  Set the protocol type. For a packet of type ETH_P_802_3=
-/2 we
--                *  put the length in here instead.
--                */
--               if (type !=3D ETH_P_802_3 && type !=3D ETH_P_802_2)
--                       vhdr->h_vlan_encapsulated_proto =3D htons(type);
--               else
--                       vhdr->h_vlan_encapsulated_proto =3D htons(len);
--
--               skb->protocol =3D vlan->vlan_proto;
--               type =3D ntohs(vlan->vlan_proto);
--               vhdrlen =3D VLAN_HLEN;
--       }
-+       struct net_device *real_dev =3D vlan->real_dev;
-
-        /* Before delegating work to the lower layer, enter our MAC-address=
- */
-        if (saddr =3D=3D NULL)
-                saddr =3D dev->dev_addr;
-
-        /* Now make the underlying real hard header */
--       dev =3D vlan->real_dev;
--       rc =3D dev_hard_header(skb, dev, type, daddr, saddr, len + vhdrlen)=
-;
--       if (rc > 0)
--               rc +=3D vhdrlen;
--       return rc;
-+       return dev_hard_header(skb, real_dev, type, daddr, saddr, len);
- }
-
- static inline netdev_tx_t vlan_netpoll_send_skb(struct vlan_dev_priv
-*vlan, struct sk_buff *skb)
-@@ -106,8 +73,8 @@ static netdev_tx_t vlan_dev_hard_start_xmit(struct
-sk_buff *skb,
-                                            struct net_device *dev)
- {
-        struct vlan_dev_priv *vlan =3D vlan_dev_priv(dev);
--       struct vlan_ethhdr *veth =3D (struct vlan_ethhdr *)(skb->data);
-        unsigned int len;
-+       u16 vlan_tci;
-        int ret;
-
-        /* Handle non-VLAN frames if they are sent to us, for example by DH=
-CP.
-@@ -115,13 +82,9 @@ static netdev_tx_t vlan_dev_hard_start_xmit(struct
-sk_buff *skb,
-         * NOTE: THIS ASSUMES DIX ETHERNET, SPECIFICALLY NOT SUPPORTING
-         * OTHER THINGS LIKE FDDI/TokenRing/802.3 SNAPs...
-         */
--       if (READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR ||
--           veth->h_vlan_proto !=3D vlan->vlan_proto) {
--               u16 vlan_tci;
--               vlan_tci =3D vlan->vlan_id;
--               vlan_tci |=3D vlan_dev_get_egress_qos_mask(dev, skb->priori=
-ty);
--               __vlan_hwaccel_put_tag(skb, vlan->vlan_proto, vlan_tci);
--       }
-+       vlan_tci =3D vlan->vlan_id;
-+       vlan_tci |=3D vlan_dev_get_egress_qos_mask(dev, skb->priority);
-+       __vlan_hwaccel_put_tag(skb, vlan->vlan_proto, vlan_tci);
-
-        skb->dev =3D vlan->real_dev;
-        len =3D skb->len;
+Considering the number of devices breaking has started increasing inspite =
+of being just in rc, that commit should be reverted=2E
+>
+>Alex
+>
+>>
+>> > Hardware
+>> > --------
+>> >
+>> > MacBookPro16,1 with an AMD Navi 14 dGPU and the Apple T2=2E The bisec=
+t
+>> > machine has a Core i7-9750H; a second unit of the same model, used fo=
+r
+>> > cross-checks, has a Core i9-9980HK=2E I have not tested any other T2
+>> > model=2E The internal SSD, the T2 and the audio device are functions =
+of
+>> > one Apple PCIe device behind root port 00:1b=2E0:
+>> >
+>> >   04:00=2E0 Apple ANS2 NVMe          [106b:2005]
+>> >   04:00=2E1 Apple T2 Bridge          [106b:1801]
+>> >   04:00=2E2 Apple T2 Secure Enclave  [106b:1802]
+>> >   04:00=2E3 Apple Audio Device       [106b:1803]
+>> >
+>> > Symptom
+>> > -------
+>> >
+>> > The machine powers off abruptly 17 to 24 s after boot=2E There is no
+>> > shutdown sequence; the previous boot's journal simply ends=2E Nothing=
+ is
+>> > logged beforehand: no AER message, no oops, no lockup, no thermal
+>> > event=2E The T2 controls power on these machines, so I assume (but
+>> > cannot show) that the T2/SMC removes power=2E
+>> >
+>> > Bisect
+>> > ------
+>> >
+>> > v7=2E2=2E9 good, v7=2E3-rc5 bad=2E Vanilla mainline trees, no out-of-=
+tree
+>> > patches in the kernel image, CONFIG_PCIEAER=3Dy,
+>> > CONFIG_ACPI_APEI_GHES=3Dy, kernel messages captured over the network=
+=2E
+>> > 19 steps, 4 skipped because those trees oops early for an unrelated
+>> > reason (the ones I looked at were in thunderbolt icm_probe at about
+>> > 5 s)=2E Good boots were watched for 55=2E8 to 69=2E7 s; bad boots sto=
+pped
+>> > logging between 17=2E9 and 24=2E1 s=2E The complete history, every co=
+mmit
+>> > tested and every result, is in Appendix B, and the exact method in
+>> > Appendix A=2E The result:
+>> >
+>> >   # first bad commit: [eddba19b8b5f] PCI/AER: Support Advisory
+>> >   # Non-Fatal Errors
+>> >
+>> > Revert test, v7=2E3-rc6, same config:
+>> >
+>> >   v7=2E3-rc6 unmodified:            powers off at 16=2E7 s
+>> >   only eddba19b8b5f reverted:     survives the full 64 s capture
+>> >
+>> > With that revert on top of 7=2E3=2E0-rc6 plus the out-of-tree t2linux
+>> > series (one kernel image, built once), a normal desktop runs on both
+>> > MacBookPro16,1 units: the second one has been up for more than 45
+>> > minutes, and the bisect machine ran sessions of 32 and 22 minutes=2E
+>> > For completeness: the bisect machine once lost power after about 10
+>> > minutes while I was manually switching the display mux and powering
+>> > off the AMD GPU, which I do not expect the firmware to support=2E I
+>> > have not established the cause and have no evidence either way on
+>> > whether it is related=2E
+>> >
+>> > Which devices are affected
+>> > --------------------------
+>> >
+>> > On v7=2E2=2E9, where the Advisory Non-Fatal Error bit is still masked=
+, the
+>> > Correctable Error Status register has AdvNonFatalErr latched on
+>> > exactly these functions, with every Uncorrectable Error Status
+>> > register clear:
+>> >
+>> >   04:00=2E0 04:00=2E1 04:00=2E2 04:00=2E3  (the Apple device above)
+>> >   01:00=2E0 AMD Navi 10 XL PCIe switch upstream port [1002:1478]
+>> >
+>> > The pattern is identical on both MacBookPro16,1 units (same model, so
+>> > this says nothing about other T2 models)=2E The Titan Ridge 4C bridge=
+s
+>> > and NHI on the same machine do not have the bit set=2E
+>> > These devices report the advisory bit without any matching
+>> > Uncorrectable Error status, which looks like the "non-compliant
+>> > products" case the commit message mentions=2E
+>> >
+>> > Only one of the two machines was used for the bisect and the
+>> > power-off tests above=2E I have not yet booted an unreverted 7=2E3 ke=
+rnel
+>> > on the second one, so I cannot yet say that the power-off reproduces
+>> > there=2E
+>> >
+>> > Control: an ASUS ROG Zephyrus M15 GU502LV (i7-10750H, RTX 2060, no
+>> > T2) has the same bit latched on its NVIDIA TU106 functions
+>> > [10de:10f9, 10de:1ada, 10de:1adb] and on Titan Ridge 2C [8086:15e7,
+>> > 8086:15e8, 8086:15e9]=2E It ran a 7=2E3=2E0-rc6 build with the commit
+>> > applied (plus the t2linux series) for more than 15 hours without a
+>> > problem, and the same reverted kernel image as above also runs on it
+>> > normally=2E So unmasking the bit is not harmful in general; something
+>> > specific to the T2 platform is=2E
+>> >
+>> > What I do not know
+>> > ------------------
+>> >
+>> > Which device triggers the power-off, and why=2E My guess, and it is
+>> > only a guess: treating a possible Advisory Non-Fatal Error as
+>> > non-Advisory and recovering through the uncorrectable path resets or
+>> > disturbs a T2 function, and the T2 then powers the machine down=2E I
+>> > intend to build a diagnostic kernel that can leave the bit masked per
+>> > device to find out which one=2E
+>> >
+>> > Possibly related, different symptom: "PCI/portdev: Disable AER for
+>> > Titan Ridge 4C 2018" (Atharva Tiwari, January 2026) concerned AER
+>> > warnings on T2 iMacs=2E
+>> >
+>> > What I am asking
+>> > ----------------
+>> >
+>> > Which direction would you prefer: a revert, or a quirk that keeps
+>> > Advisory Non-Fatal Errors masked on the affected Apple functions (and
+>> > possibly the AMD switch port)? The t2linux project carries a revert
+>> > for now: https://github=2Ecom/t2linux/linux-t2-patches/pull/70
+>> >
+>> > I can test patches on real hardware and can provide full lspci -vvv
+>> > output, the complete bisect log and the captured boot logs=2E
+>> >
+>> > #regzbot introduced: eddba19b8b5f76d57424ee328a68fd495c5db857
+>> >
+>> > Thanks,
+>> > Jason Perlow
+>> >
+>> >
+>> > APPENDIX A - METHOD
+>> >
+>> > Machine: one MacBookPro16,1 for every boot below, running a Debian
+>> > trixie userland from its internal SSD=2E The distribution's 7=2E2=2E9=
+ kernel
+>> > was the default boot entry between tests=2E
+>> >
+>> > Build: git bisect in a clone of torvalds/linux (git=2Ekernel=2Eorg)=
+=2E Each
+>> > candidate was built on a separate x86-64 build host (16 threads, gcc
+>> > 15=2E2=2E0, binutils 2=2E46) with the same recipe:
+>> >
+>> >   cp bisect-trimmed=2Econfig =2Econfig
+>> >   make olddefconfig
+>> >   make -j10 bindeb-pkg LOCALVERSION=3D-bisN-vanilla-rc0 \
+>> >        KDEB_PKGVERSION=3D<release>-1
+>> >
+>> > bisect-trimmed=2Econfig is a 7=2E3=2E0-rc5 configuration trimmed to b=
+uild
+>> > quickly (2068 options built in, 204 modules)=2E It has CONFIG_PCIEAER=
+=3Dy,
+>> > CONFIG_PCIE_DPC=3Dy, CONFIG_PCIEASPM=3Dy, CONFIG_ACPI_APEI=3Dy and
+>> > CONFIG_ACPI_APEI_GHES=3Dy=2E The same file was used for all 19 steps =
+and
+>> > for both v7=2E3-rc6 tests=2E No out-of-tree patches were applied to t=
+he
+>> > kernel=2E The release strings come from each tree's Makefile, so comm=
+its
+>> > on 7=2E2-based topic branches show as 7=2E2=2E0=2E
+>> >
+>> > Boot: the =2Edeb packages were installed on the laptop and booted thr=
+ough
+>> > a one-shot rEFInd entry; the default entry stayed the stable kernel=
+=2E
+>> > Kernel command line for every test boot:
+>> >
+>> >   console=3Dtty0 ignore_loglevel keep_bootcon initcall_debug
+>> >   printk=2Etime=3D1 log_buf_len=3D16M panic=3D0 fbcon=3Dfont:TER16x32
+>> >   systemd=2Eshow_status=3D1 systemd=2Eunit=3Dmulti-user=2Etarget
+>> >   modprobe=2Eblacklist=3Dsbs,sbshc
+>> >   systemd=2Emask=3Dncz-usb2-rescan=2Eservice
+>> >   systemd=2Ewants=3Dncz-netlog=2Eservice
+>> >
+>> > (plus the root=3D options)=2E So there was no graphical session=2E sb=
+s and
+>> > sbshc are the ACPI smart battery drivers; ncz-usb2-rescan is an
+>> > unrelated distribution boot workaround=2E Steps 13 to 19 and the two
+>> > v7=2E3-rc6 tests also had module_blacklist=3Dthunderbolt,t2thunderbol=
+t,
+>> > added after the early oopses (in thunderbolt icm_probe, at about 5 s)
+>> > had cost several skipped steps=2E Steps 1 to 12 ran with Thunderbolt
+>> > enabled=2E
+>> >
+>> > Capture: a small userspace unit (ncz-netlog=2Eservice) streams /dev/k=
+msg
+>> > and the journal over TCP to a second machine from early multi-user
+>> > boot, so captures begin at roughly 10 s of uptime=2E Each capture fil=
+e
+>> > records the uptime of its last line=2E
+>> >
+>> > Verdicts:
+>> >   good: the machine kept running and logging past the point where bad
+>> >         kernels die (the cut always came before 25 s)=2E
+>> >   bad:  the capture stops before 45 s, the machine stays unreachable
+>> >         for at least 60 s, and the next boot's journal shows the
+>> >         previous boot ending with no clean shutdown=2E
+>> >   skip: a kernel oops or panic in the capture or the previous boot's
+>> >         journal=2E
+>> >
+>> > After a cut the laptop does not restart by itself, so it was powered
+>> > on by hand and booted the stable kernel; the verdict was then confirm=
+ed
+>> > from the previous boot's journal=2E
+>> >
+>> > Caveats:
+>> >   - One machine was used for the bisect and for the power-off tests=
+=2E
+>> >   - No desktop session was running=2E
+>> >   - sbs/sbshc were blocked on every boot, and Thunderbolt from step 1=
+3
+>> >     on=2E
+>> >   - The laptop was powered from, and networked through, a Thunderbolt
+>> >     dock during the bisect=2E An earlier test of a T2-patched
+>> >     7=2E3=2E0-rc5 kernel with the dock unplugged also lost power, but=
+ I
+>> >     did not repeat the bisect undocked=2E
+>> >   - Out-of-tree DKMS modules for the T2 hardware (t2smc, t2gmux,
+>> >     t2smp, t2thunderbolt) were installed for these kernels and may
+>> >     have been loaded, which would taint them=2E An earlier test with
+>> >     those modules blocked still lost power=2E
+>> >   - Step 12 ran 816 s before an unrelated oops, so it did not show
+>> >     the cut and was treated as a skip rather than as good; this does
+>> >     not change the result=2E
+>> >   - The device that triggers the cut is not identified=2E
+>> >
+>> > APPENDIX B - FULL BISECT HISTORY
+>> >
+>> > Good: v7=2E2=2E9 (5fce161649b4)=2E Bad: v7=2E3-rc5 (72d3fcf802c4)=2E =
+The first
+>> > commit tested is the merge base, "Linux 7=2E2"=2E Observed =3D uptime=
+ of the
+>> > last line captured=2E Results: 8 good, 7 bad, 4 skip=2E
+>> >
+>> >  #  commit        result observed   subject
+>> >  1  8d3ae59288f1  good   55=2E8 s     Linux 7=2E2
+>> >  2  56ea4e86832d  good   67=2E7 s     nstree: check listing permissio=
+n
+>> >                                     before taking a namespace ref
+>> >  3  93e4b3076b5f  bad    24=2E1 s     Merge tag 'char-misc-7=2E3-rc1'
+>> >  4  21bd0802cd3f  good   60=2E1 s     Merge tag 'for-linus' (rdma)
+>> >  5  0b0e645ed2c8  bad    22=2E9 s     Merge tag 'auxdisplay-v7=2E3-1'
+>> >  6  e5f92606156a  good   69=2E5 s     Merge tag 'mm-nonmm-stable-2026=
+-08-
+>> >                                     22-16-57'
+>> >  7  b6b019a1d9b9  good   69=2E2 s     Merge tag 'parisc-for-7=2E3-rc1=
+'
+>> >  8  b130a2caf5d3  skip   oops 5=2E3 s Merge branch
+>> >                                     'pci/controller/tegra264'
+>> >  9  455b454c87bb  good   69=2E0 s     i3c: mipi-i3c-hci: Add support =
+for
+>> >                                     AMD_PT I3C controller
+>> > 10  9bb52aa1972d  skip   oops 5=2E5 s Merge branch
+>> >                                     'pci/controller/dwc-meson'
+>> > 11  b4b07fb82b9e  skip   oops 5=2E3 s Merge branch 'pci/wake'
+>> > 12  651fb94aaf24  skip   oops 816 s alpha/PCI: Fix I/O port accessor
+>> >                                     argument order in
+>> >                                     pci_legacy_write()
+>> > 13  625ae0ff41e5  bad    19=2E9 s     Merge branch 'pci/dt-binding'
+>> > 14  9f91b2b716a0  bad    19=2E1 s     Merge branch 'pci/procfs'
+>> > 15  ea55835bc538  bad    23=2E3 s     Merge branch 'pci/dpc'
+>> > 16  d358e9ad15c2  bad    22=2E3 s     Merge branch 'pci/aer'
+>> > 17  8446e1147f65  good   69=2E7 s     PCI/AER: Deduplicate logging of
+>> >                                     Error Source Identification
+>> > 18  f141f74c45c6  good   67=2E6 s     PCI/AER: Move retrieval of FEP =
+and
+>> >                                     TLP Log into helper
+>> > 19  eddba19b8b5f  bad    17=2E9 s     PCI/AER: Support Advisory
+>> >                                     Non-Fatal Errors
+>> >
+>> > Full hashes of the decisive steps:
+>> >   eddba19b8b5f76d57424ee328a68fd495c5db857  (first bad)
+>> >   f141f74c45c6f774eebdb7e45bd609be5122bfa8  (last good before it)
+>> >   8446e1147f65563d374ffa54dc3ba81adb1342c5
+>> >
+>> > The v7=2E3-rc6 tests (a90ee4305c4a) used the same recipe and command =
+line:
+>> > unmodified, power off at 16=2E7 s; with only eddba19b8b5f reverted,
+>> > survived the full 64 s capture=2E
+>> >
+>> > --
+>> > Jason
