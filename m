@@ -1,161 +1,122 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0165648F836
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 17:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791307092; cv=pass; b=XAlOZ0HRURhFWNKMO+DTt1nc0oHPUtgt6Rgnk7aRpHMaeVWv9LI1SFD+iBGbHw8TEUHVjBO/5kpHGQNRDpoCqF2IYTfUdxn61Psry8hGwywUQNt7fi8tXr7BMdSz6OGragP+Kl5FocUyUxtseLea2eQAxaA0rjsR/zcbSkh9zFs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791307092; c=relaxed/simple;
-	bh=Z7RWaUukp2vJp/lKLw/pvzkwQI1/3q3Xs3o+sRxD9Bw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=r79jX9WUptPVOHtpSaQOrUHam5dAEXWE/zJEqa2x25zCt2LzbvVwZfO48mP9RUVoxOxqBidUjGPtxbmvFeYZ7iPMJtQbX44tq3DEKuxRTLYwNqToV3mMto0oJGxvyjmHRh9XY/9TXiAekwpUTOFMT0LAOJ/86m+5om1o7s+f3wU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aaBV61yp; arc=pass smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DF4380FD5
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 18:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791309750; cv=none; b=NQGZttTx0Ih/r4uqGe23F7rDnu0CP2aYLru0EUln9eyeFR24TJq7JIdsUs/6YcAAc3bzoBolwRJ4sbhpu0hx74rtoxQbYCHqpM9PkeSwaunrBJcxtBIoSHeyig150eHrzeDxvxJGrjj+ejDjvluHUEC5UmBR4t7+us3vhDQT9ts=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791309750; c=relaxed/simple;
+	bh=jnlchJcNHOTA3hCgCNu/QH0mNd666/ZUs0I8Qyb/Cuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLx1Lz9D2HQmyjPhwlRyqsgTSW/5u7LEx2fc0yX1FZuVWhwjPc2aCpDEA46snwMlUKBUJf+SQDsZHY2L7LuHC+rmv4gnjmxD1HLUVtxaKZrQ0s90goQ/NUYWL4OYDPqwJDyOswefk2FEGq5SM1bmtx3ZqgzH+St35anOdnC0sJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=iXCQQb7e; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaBV61yp"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-93e76469b93so148191085a.0
-        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 10:18:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791307088; cv=none;
-        d=google.com; s=arc-20260327;
-        b=hAhmCvWhb6AnLuLFvYG+40M5ZssLqzchcAbUwFPQH0/7cjx1CSw4faTtRHBLlV9SKD
-         +3u/ozEgM9ArOt01GVGHUMoAKbApIEPdO/7qE5g4YLXX+PMBlzfd0q4YRJhopfe9yfaT
-         oKTHFI/nD9L/8xI9o8h09aiZLQWHE8z0kIaO6YDK4EkXGLioHZ92lzTpRPX1mrLibUFA
-         Pg68AxyGv7bfYseMEdqbEV4DDhwSf+IHPGBnyz9K6J1i0jmqEe5670Xt2QcdM4eW/0aR
-         epeZ16VQBPwFO7PL6THLemCV8ElVmmNW91f9ewox1+n2T01n0lQz9fzgGXsBI/mx68KP
-         HtNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=IYoFhdR6a50T0V6unvIVYfJRbGq2pHrg3/lVy4LzpxI=;
-        fh=PCDOppbGfT3gNXrJjnyGJp2mvmcXDhjp7VBuCN1x/I8=;
-        b=n29frrchpvFReYRuadY29WAZORE9Uy8aimJ0t3Ve64z4ccTDXztBlXqaZq0JYPq3TI
-         mC0HryNrNrtJH20TP/B21eNjgsWFN+V8e8XgomDX3tCEm9nEEgNBPplpOWxYZaepsfs5
-         J/r/jyREPhJPK485c4IMeV6anfpOm/GnqIGK0GVTbGptIMtvwQKnxJch2CyuGtEX56Lo
-         AXK8iXAPS7qKTG5ZxZzdNDgxHR3BM41CvgaDqtC0TxmHEwoysIX2+QrTXh6qMscssQQr
-         ShtwIi2NQBVk/11Yzv9IOaG5Lc5EwwYcKnFJkxus1FUUwehKksP5KmfArVAhFINf49UO
-         xGrQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791307088; x=1791911888; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=IYoFhdR6a50T0V6unvIVYfJRbGq2pHrg3/lVy4LzpxI=;
-        b=aaBV61ypcyf+4lpEaYi0TzAqST4U0EAeDc3MoPXN6aEIYlwNS9jATEhrijQzQyA9Sz
-         YQWqdwyrVDm++PvMjIKgk+3gcgVm3BoKq3MlKxqEogjVEdugsmUIcRGmMwLXBUtf7LDA
-         7E8rrjBYCaMHO4beqIJwt4K3lBQEc5aAfsUIeiKf02cRDuN0yLvs2RAQnkhpU+FFpiUz
-         fZqUkGxET78hVF4yL1pLYbKnMmXHbmars4Vx/3Dz8JCj1+Xqh0f4Y471J+jYOA8Zaxi8
-         qyOJjnlEUfSFvJ44POAMMMQESaCgNPk/+Nht36AhlqJHi+Py+njAV+V5oPdAaxyrYXvu
-         C3Nw==
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="iXCQQb7e"
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D42D03F853
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 18:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1791309745;
+	bh=7VPKoVET0WZyi57RaxQihc41cTq7wyN7m0LKNzGgdxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=iXCQQb7eMUz6yrDWGGHjys9Hk8X8xESHiDdK6/Kw1dF0MeM+QNScH5KwV3Jiru7uF
+	 Gx3XEEURkz68rqkJCfMU1u3x1Su+wX0EDsw8ifCOQsNsa9VrZukipeU6EbpAM33eUd
+	 qnhBTHGGTwlKTqDva5gkhNAkYXEdKyHLP4BbTmeJo4xOImkJhWuSY3exE7Fr9biCUh
+	 7+r+kaLSsAcg6vTymSB7zs1R3Ss636pEAaDQMCAzBn8HLz46MjGk9n0mgAZx0sE1Kn
+	 q+0nQ6Whk8vMUozrz6XRNfAWeVPcVQH8L0lbWjbdmD/ea9KIUaDs9BSvoiWP0c0h7m
+	 B/R2HL7ZZMV8Tez/1Ir+ul61vzohbnvEgHf9i2D5U4FEpd3M8K1Esncvoiid/2E0fg
+	 z/ICOAD8F7rGui87lERnWMc+KiV5MQGvYwoxpW5BbJKt83cfA5DmKkNE6WHmfc5bpp
+	 DIADmnf2lu8n8sIfIeV46b2gryI1Jdr9QwHDKEOQRsMe0CSddmP5AdP1CFfKqfFLI8
+	 eX/Xq9fqh3ItsxIiUovEj5BmNs2Yf0Ve8RAlkKPKE2V2pZs/QY904cEBjyjTlV1J0W
+	 ETrvoryJpNi0GRL5jnjwsAwtQZga0m0BRszqa3yLo0yjYun4oD3axrKZ4O8eVbLx5d
+	 WHABfP7ahaGTatWHcyCxsSO0=
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a01b112fa2so45869895e9.1
+        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 11:02:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791307088; x=1791911888;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=IYoFhdR6a50T0V6unvIVYfJRbGq2pHrg3/lVy4LzpxI=;
-        b=yevKO4MhwZu6/nPbHrScYHWW1l/OLxhNdSt2prHZZXYIeLNlsysStSOTlQXwCfp6wk
-         iDATCX+H9N8t6ayhhe3NVahKmRk7xQzhMGMI2eT3T8bV2uvztAyNRktuB3rqpe/Zwg4h
-         cW9rwfSLqJVeN+VbCNt2CEPsNn6uBJthMjcGEYnNkOwlmasrEATcVrcylNUIbgiv/jqX
-         HJ8EWAHAAxG9WPSa590XnkKyF5/ATcnEIC3X76r2gP1zB6U7fDfHcTb3sH79R/6WEKAY
-         VJIat+hroSMC2KT4f2vWT1x9VTebWEIv9UrXqRa/IujOSN3d5oGrm/OZAC/k3CnTZyu4
-         9bPQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz1h4wZZAwuWX86DbUFsgwte86E0qxJ+MIu76kRhXmqLJIuDZvFlU1YuNdcPgpHc9DoXLelxE5oON2AGg==@lists.linux.dev
-X-Gm-Message-State: AFuF++mvyjmMADXdZK07BzEVi8q8Fa64HyhPlDx4viyoQ3KsNO6pS7rc
-	6MUDMjThIW8x3taXcet1Gtp6si4ZNWrwR8+f0+Kl8dWvu5hncSqQdFfFlzqeeCh6Y9kPUcj9cxV
-	q7zPJffRkHItVCAfONjpD/jWbBwyBrME=
-X-Gm-Gg: AYBFou09VZ48RoPWaD5PdK3GQJYK0AEO5RwUeOyewGkM8oxTUfjQFdoFiFUY4DCdUt1
-	CKUddkOm5ScVvwqtdOe59VbiMOEt5U6IMNIf5KiJKOwWfnfIOqtMNwePykeALsfAC0W3ilcBRNI
-	gcT6Cq95C/s81O/tTryog51Tvbx/0/cqXqqc8LaA2jkwSa1b19t0WMJkr5vKPmEX11eVpokt/S5
-	pdf/IHINwg4oEbn5PPQMl/pExJU2Q+QhGpbjQhEdJGk5Y6eHnB3DHFHb/JkAemNuxUK4If3IDul
-	pa5Rz6Qr2F4BjUidUInqiOUjeDLKBqZoH7coYHGeOV0OWE3IbklinH8MRu+HZ6w1ysK4O9VX+r+
-	AVXoS/ezi1rPp4lavqbmzgnVq2V99XWvx
-X-Received: by 2002:a05:620a:2584:b0:93e:795c:9d07 with SMTP id
- af79cd13be357-93e8f382b1emr394780685a.35.1791307088187; Tue, 06 Oct 2026
- 10:18:08 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791309745; x=1791914545;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7VPKoVET0WZyi57RaxQihc41cTq7wyN7m0LKNzGgdxA=;
+        b=aeIJYDOz94VZuKBOFBHsrW3DrbcrlGg0UUN/o+GT9k5Oq7of9F50je3qjaJwmTHbir
+         lMqAPpl8Ck8gQ4MDFtV2Awjw0HvryfpMbDO0krECa6EVlDW3SpruEeVmbCZs3q7+STsf
+         8ViKtC1QZIOku7/ec1Yo7TerurTLVQkYvPlBxQyZTLg8fBuaIj1vT3g7FmRaZjGeb3mG
+         ygjM2NUy0Qvhw5wPJygN+s0h4fM5jiTmu/IE1AIGhdq9qAE9dSRGal68FwzPCLH3p46B
+         E5XP8Ndae40VYsXWt8NopSbq04c1rr4QVslq8yFxVZ91KaIQXd4M9HUltRxXYB3XLDu+
+         Ap4w==
+X-Forwarded-Encrypted: i=1; AKwUvBxbD5ZN6dAp7WY5QBBBB+h+Q7tjxBJ/6hfv0FxmTzICnTBcVSy2K7mRydDCcePmiFAGjPMdkW2Xv9PZxg==@lists.linux.dev
+X-Gm-Message-State: AFuF++meVEBEMKbB6MUksh1BlprmtKRiZ1JqlEQqTuziocdmgSvEa4/u
+	IysSs9tRXbO8fOBggqhVVS5LognfKifKPoOimEJV7I4vSYWRqXODe4CotE1RKGcNHWFDFKTMwOe
+	R+mDRZkPMwMepN8fzBCiG3/GL6j38WbxG6lToSLLdkxUAP6f4R7Zsu1NMj/aCorxNvcsG028GjZ
+	7cnALa
+X-Gm-Gg: AYBFou0wZMiPHtWvIcqTqiQIexjq9a/2qA8Nze2T/bJJyBsBAmIHTkU8K6YA/Efrgdm
+	ABR47JOTIFChlvY1ofr9i9mosVmZrNyLSqjmxQECc5qFSY0OG1eKL3OyIRBXupmbk5cURRxzzeu
+	c+08QsTeWQVg37+OB8YveSGE6tosPVu+gGUeDtcujAwLOpqvdwkY3UJHJY0L4AaduJDe+rTXsFL
+	rEOarDgmPnQ9RG3RooBJTMiTo2Y6/dvCKMRcdJme7auNMHudBwZ70WXTvhhAz3aLCUcK6+2LLwb
+	pobCj9+KlrlfbIB/yYyy5Q99PIdItsUV0tBAENyVNRY8KwHTLHu3VhiYZmWVGqgGOxDKldj0SiL
+	cwTwmXN8=
+X-Received: by 2002:a05:600c:1c16:b0:4a1:7832:dfd6 with SMTP id 5b1f17b1804b1-4a17b5340c8mr40388875e9.5.1791309745299;
+        Tue, 06 Oct 2026 11:02:25 -0700 (PDT)
+X-Received: by 2002:a05:600c:1c16:b0:4a1:7832:dfd6 with SMTP id 5b1f17b1804b1-4a17b5340c8mr40388535e9.5.1791309744934;
+        Tue, 06 Oct 2026 11:02:24 -0700 (PDT)
+Received: from px13 ([2a06:5902:822:4600:6f35:9ac4:c6c9:f701])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a17f493761sm5540315e9.2.2026.10.06.11.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Oct 2026 11:02:24 -0700 (PDT)
+Date: Tue, 6 Oct 2026 19:02:22 +0100
+From: Chris Bainbridge <chris.bainbridge@canonical.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Jason Miu <jasonmiu@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Alexander Graf <graf@amazon.com>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-mm@kvack.org
+Subject: Re: [BUG] KHO handover hangs when memmap reserves PMEM
+Message-ID: <asU2AD6DxGSD0ek4@px13>
+References: <asE0R_f2r2TL-3Sy@px13>
+ <asTTo3AFzQoqZLoP@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: =?UTF-8?B?0JPQtdC+0YDQs9C40Lkg0JHQtdGA0LjQtNC30LU=?= <game.advencher229@gmail.com>
-Date: Tue, 6 Oct 2026 20:17:56 +0300
-X-Gm-Features: AclHuK9rzk0D650Q1s01qstkldc1WfPiCtqEKEuBYsW4iS9PUILAiEQMdqamknI
-Message-ID: <CAEhAYcrrRyZvNU4i+jznPW4jxS1F_s5iH6AMZE4_mVgLbtAhXQ@mail.gmail.com>
-Subject: Subject: [REGRESSION] mt7921e: ~20% lower throughput on first
- association after boot (7.1/7.2), reconnect restores it
-To: linux-wireless@vger.kernel.org
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <asTTo3AFzQoqZLoP@kernel.org>
 
-Hi,
+On Tue, Oct 06, 2026 at 12:55:31PM +0200, Mike Rapoport wrote:
+> On Sat, Oct 03, 2026 at 06:02:27PM +0100, Chris Bainbridge wrote:
+> > Hello,
+> > 
+> > I am reporting a regression in KHO handover.
+> > 
+> > In the most recent Ubuntu 26.10 beta mini-ISO releases (2026-09-18 onwards),
+> > the first kernel reserves RAM for the downloaded ISO with a memmap directive
+> > such as memmap=<size>!4G, then kexecs a second kernel. On affected kernels, the
+> > first kernel reaches "kexec_core: Starting new kernel", but the second kernel
+> > produces no further output and QEMU spins at 100% CPU. On unaffected kernels,
+> > the second kernel starts and finds /dev/pmem0 with the expected "Persistent
+> > Memory (legacy)" range in /proc/iomem.
+> 
+> TO make sure I understand this correctly, you enable KHO in the builds of
+> the installer kernel and then the installer command line explicitly enables
+> KHO.
 
-On my laptop the MT7921 (PCIe, mt7921e) gets about 20% lower TCP
-throughput on the first association after boot with 7.1.10 and 7.2.8.
-Simply re-associating (NetworkManager "connection up" on the same
-profile, nothing else changed) immediately restores full speed.
-6.18.55 is fast right from boot.
+Yes.
 
-Hardware / software
-- Lenovo IdeaPad 5 Pro 16ACH6 (82L5), Ryzen 7 5800H
-- 03:00.0 MEDIATEK MT7921 [14c3:7961], subsystem 17aa:e0bc,
-  ASIC revision 79610010
-- WM firmware ____010000, build 20260224110949 (linux-firmware
-  20260916; the MT7961 files are identical to 20260622)
-- Arch Linux kernels: 6.18.55-1-lts (good), 7.1.10-arch1-1 (bad),
-  7.2.8-arch1-2 (bad)
-- NetworkManager 1.58.1, wpa_supplicant 2.12, WPA3-SAE, CCMP
-- AP: TP-Link 802.11ac router (no HE), 5 GHz channel 48, 80 MHz
-- iw reports the same rates in both states (VHT-MCS 9, NSS 2, 80 MHz,
-  SGI, 866.7 Mbit/s rx/tx), signal -37..-52 dBm
+> Is there anything you actually preserve with KHO when kexec'ing the second
+> kernel?
 
-Measurement
-4 and 8 parallel HTTP downloads and 4 parallel uploads (curl, 8 s
-each) to an Ookla speedtest server 3-7 ms away (ping min/avg),
-bound directly to wlan0. The ISP plan tops out at ~530 Mbit/s,
-which is also what a phone on the same AP gets, so "fast" below is
-capped by the uplink.
-
-Results in Mbit/s (ranges over 2-3 rounds)
-
-  kernel   state                                  down     up
-  6.18.55  right after boot                       525-531  510-538
-  7.2.8    first association, ~5 h uptime         402-431  470-483
-  7.2.8    first association, fresh boot          340-431  368-430
-  7.2.8    first association, fresh boot          426-443  409-472
-  7.2.8     -> same boot, reconnect only          520-531  525-538
-  7.1.10   first association, fresh boot          359-426  421-496
-  7.1.10    -> regdb installed, RU, reconnect     519-531  521-537
-  7.1.10    -> regdomain back to 00, reconnect    522-530  530-539
-  7.1.10    -> modprobe -r + modprobe mt7921e     516-526  536-539
-              (plus one outlier at 388 down)
-
-The slow state persists for the whole session: on one 7.2.8 boot the
-journal shows a single association at boot and it was still slow
-about 5 hours later. The fast state after a reconnect has so far been
-observed for about 10 minutes without another re-association.
-
-Ruled out
-- power_save off (iw): no meaningful change (+~3%)
-- PCIe ASPM: disabling L1.1/L1.2 and then L1 for 03:00.0 via sysfs
-  on 7.1.10: no change
-- Regulatory: slow both with regulatory.db missing (world regdomain
-  00) and with wireless-regdb installed (driver sets RU before the
-  association). After a reconnect it is fast with either 00 or RU.
-- Firmware: the same files on all kernels
-- Association parameters are the same on the slow and the fast
-  association (SAE, PTK=CCMP GTK=CCMP)
-
-Not tested yet: Bluetooth coexistence (the combo chip's BT is powered
-with no devices connected; hci0 finishes setup ~4 s before the first
-Wi-Fi association) and suspend/resume. I have not bisected yet. I can
-test patches, enable debug options or try more kernels if that helps;
-I also have ethtool -S and station dumps from both states.
-
-#regzbot introduced: v6.18..v7.1
-
-Thanks,
-Georgy B.
+No. kho=off is a valid workaround for the mini ISO. I only reported it
+as a regression here because this was working until the bisected commit
+was merged. If this is intended behaviour then it is not a problem.
