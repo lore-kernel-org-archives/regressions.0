@@ -1,71 +1,66 @@
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88813CB542
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 21:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCED71A6822;
+	Tue,  6 Oct 2026 21:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791322116; cv=none; b=quvSP+gu16J4iuaRAvQmxGhbb52DSysLJcuXVEYN6VdZq91/NBO6uORWTox/XuAGybdJpWMzkxy/D9l3sf7EF9fiNzbwX0FFOIfLEEwNc5TQLjERsLMmzQV9ipUEZy4D+6YsvWCIddybtTYgck2p4Uno8SQEn3K5ifSlMa1dE9c=
+	t=1791322605; cv=none; b=H48C6Dm1UgsU5j0H7dc0e0mEHdWm5B+1mZxd5ycYy6v2DbaTUJqYCeaJpsq1/XJBv/S8yPZ/YDwz76pZzn48aAij31v+fRr13QjM6IpdXRnfKjrnqF4PG898gIP93bdgdqJ1mu6hCGUsd7g5lmWHIzjK6vbcUgql7lh20k4L4xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791322116; c=relaxed/simple;
-	bh=172AY1LtbJ9WzIpzs71jiNNlhd1CxbpWXlAYp+Gs8ss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hs3Y3kVWluZHS9RsMqZBUu2y8PYX8kSY2CGyxNBbjea5CrMhID4HFquN7e62vi4not8OYa3I18SfL4dhDjGOmK7AD2eWgBbc9jKziKZzXUM8crCfs2inSzhl19IBh/nAE11cIohSDeS7gnw+Lz5u41+y+WcVMZAbK11q+W/o9xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id 05AA710606;
-	Tue, 06 Oct 2026 23:19:11 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id CEC7960F5533; Tue,  6 Oct 2026 23:19:10 +0200 (CEST)
-Date: Tue, 6 Oct 2026 23:19:10 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, "Perlow, Jason" <jperlow@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Aditya Garg <aditya.garg@linux.dev>
-Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
-Message-ID: <asVlzjaUFAoowH-r@wunner.de>
-References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com>
- <20261005231914.GA639967@bhelgaas>
- <CADnq5_O2TWeWEE1NsuCVvtWLKWyOiJHChPGP9CN4Zu=hvs+jmA@mail.gmail.com>
+	s=arc-20240116; t=1791322605; c=relaxed/simple;
+	bh=sdS5EMotLbBFut5HidI6DaxqgnT0fZqEyOmzsGz62T0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Lp1kl1Q5jNJrenHLOYHd1ZFKd/2G2LmOV+r+8O4xfGIhdSqjr9ItkHwMr54B6L2O/CojJ6ARha4A/dTyq5SDEoswPMx8yiPsMDJ28X8g4B6irl2Do37PyA3oSres+pGKPEbkFYF2q9SE1Wzm7AVniBoEud60KIvbX3MB8KFU+eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+oPLv+x; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+oPLv+x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460791F0089C;
+	Tue,  6 Oct 2026 21:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791322604;
+	bh=H00qTEtUiM2ixmGGSKOBHZyblRAnzgYmrRT3CM/7lHg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Z+oPLv+x6i+AHS8e9w1HbgrAxZbSM7irn3ek7UE+wnQoYNqGqiLtWR4gyLqiBiBMs
+	 TP3pwzvT5a8EGyYHyvUMa8ytZ2OFDb508K4kS4dQMxtxKWVWu/aYflAaFofxzqEdCO
+	 1HKxmRdVKHOMoHJX3C/c5CNmH12ZPefFmbVhul4jIgMfo3xYVtsLknUMmxUrvkSlje
+	 e7z0S2fp/illBAKo8TOVoLKYuY1Pv7BoQ3FZK9hf9lgqfPgIn/9uZVRRMRv0sGam3s
+	 lEiEJ2WB5XhWcedV03Hxj8rXee64g4NtJc2S8GkTBNObNtFc+20XxMyFsYi787ZpMk
+	 XXk1K6rQF2tiQ==
+From: Sasha Levin <sashal@kernel.org>
+To: Eric Dumazet <edumazet@kernel.org>,
+	=?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>
+Cc: Sasha Levin <sashal@kernel.org>,
+	Michael Chan <michael.chan@broadcom.com>,
+	Joe Damato <joe@dama.to>,
+	netdev@vger.kernel.org,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	Stefan Fleischmann <sfle@kth.se>
+Subject: Re: [REGRESSION] Commit 447cbe95ebb9 causes IOMMU DMA faults on macvlan/vlan with bnxt_en
+Date: Tue,  6 Oct 2026 17:35:52 -0400
+Message-ID: <2026-10-06-1-daily-reply-0020-bnxt-en-vlan-447cbe95@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261005145430.12777c2c@nargothrond>
+References: <20261005145430.12777c2c@nargothrond>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADnq5_O2TWeWEE1NsuCVvtWLKWyOiJHChPGP9CN4Zu=hvs+jmA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 06, 2026 at 12:37:18PM -0400, Alex Deucher wrote:
-> On Mon, Oct 5, 2026 at 7:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > Alex reported something similar at
-> > https://bugzilla.kernel.org/show_bug.cgi?id=222095.
-> 
-> Lukas' patches fixes some boards, but unfortunately, I'm still seeing
-> failures on others.  Reverting the patch fixes those failures.  I've
-> updated the ticket.
+> I'm testing the patch on v6.18.55, and it looks good so far. 5 hours and
+> counting without any issues.
 
-I've added an analysis of the dmesg output as well as a patch.
-It looks like the BIOS is raising a false alarm in that it signals
-a Fatal Error even though the Uncorrectable Error Status register is
-blank.  The patch causes such events to be reported, but otherwise
-ignored (i.e. no recovery is attempted for a false alarm).
+Thanks for the bisect. The root cause is the bnxt_en small-packet padding
+and DMA length bug Eric Dumazet identified, not 447cbe95ebb9 ("vlan: fix
+skb_under_panic and races when toggling HW VLAN offload") itself, so we
+will not revert the vlan fix. Once Eric's "bnxt_en: fix DMA mapping length
+for padded small packets" lands in mainline, we will backport it to all
+affected stable trees.
 
-Newly enabled functionality like Advisory Non-Fatal Errors causes
-BIOS code paths to be exercised which likely haven't been tested
-by firmware validation folks, hence the fallout.  However I believe
-ultimately we *want* to see those errors being reported because they
-may point to BIOS issues which flew under the radar so far.
-
+-- 
 Thanks,
-
-Lukas
+Sasha
