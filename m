@@ -1,95 +1,118 @@
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ADD200110
-	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 03:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84CB3C1D56
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 08:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791255729; cv=none; b=uSRHhE0WjLeZDlaYIvSMZBGRlQYIHliHViJQ+i/+qEzVzjrvyvi7LioGTz68dsr00e6NrFpgeR6Mv4CKtaqjd85yT7QE1mYibSXx40ZeZHP4TDzvtAhLkATxUHTkjVUw2J4X7zkO+08IMDf3qSQDgQ8GsCv5IMvxozY4zoYp6X0=
+	t=1791273805; cv=none; b=ZOzPRB1/w75X0QLBsidviQ0LDMP3tru57U1STER3U0E9a3dZs2VoMLmulxST6TlOh06YrwaqTqKODtFzgNxMGmo4LpVuilk1XnPqWV0gnrNd9p6bxJTmENEA0a8ccmQyzkNBnTpuBKuRlV0puYKMD6tI4DswNyw5HNVlAU58He4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791255729; c=relaxed/simple;
-	bh=b15E84kfB8rqaYJ7OrtsC5/SG72PD/BU+DwCNGnv1ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hg/me6XeImIsx9oSvrwh7PYMmR1mNvwBqfBmcgNJ0n/xHQ0KUhhTHWbc6qYYMdthMfklgSP88jFPbWUuOaqa6V0PafqW0wMKBL5NIHnzK9H2uYQikuGweqolaqQXvG0/vh6O/f0PcP8Ue0baIjgaK14+bXaTRntIYN4POWaP2PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout3.hostsharing.net (Postfix) with ESMTPS id 55432C24;
-	Tue, 06 Oct 2026 04:56:50 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 17816627ED97; Tue,  6 Oct 2026 04:56:50 +0200 (CEST)
-Date: Tue, 6 Oct 2026 04:56:50 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: "Perlow, Jason" <jperlow@gmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, Aditya Garg <aditya.garg@linux.dev>,
-	Alex Deucher <alexdeucher@gmail.com>
-Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
-Message-ID: <asRjch1fMBslk07D@wunner.de>
-References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com>
- <20261005231914.GA639967@bhelgaas>
- <CABZrw2F=pOOq7+puKohtYMihYqWCevCFc7rkAOETW4T5Nf4n8Q@mail.gmail.com>
+	s=arc-20240116; t=1791273805; c=relaxed/simple;
+	bh=nPvPw7A9YAIxMjZ4/b6RvdHVeDmDsPUX45cjSQ90p/0=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DXQAA0YiP/h796eDPqrQ5C8uV3PTmDOFBY88RhIM4HlO2PRJ3XIT73AFfi94TZDcCWTgdZJLLT3Szj5bl8tFvYjj1IVamZ2IxbOK7RXBRz827io+kawt4o9BgymLeM9zgqVxKL5a6d9lUcg61A6Vv2a3fZnV0+kx0QUPQJTfZnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaNa3tt4; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaNa3tt4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B621F0089C
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 08:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791273800;
+	bh=r+KgD9DoUrWu5arzVLlDs3fSXX52ocXw8x+r8c9Z1cw=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=CaNa3tt4uTwfPlcLhPdln6QJYXq+DP9tyPKPke9OHd/6cACMGxqPmf28yD9Hdupgg
+	 MfloJhes60g10D4cKYMXig6Llvow7IQBSVlg0Ng9S4ESqVnANgTwhUWFedjRzGdy1A
+	 yQjini86leUZHV3bHOjvrVtwVX74DMIS/UqSbCkPDdFg1CZsN+1L7w6lhkK3QwRe1t
+	 q82nXvzKMwgZajTmrtvhGR+vGSA8/URn6WxKXigKDM0xUTXRCRDh2DssmEu7HNLV1X
+	 iRQdEtgPlbszuE59FOYYJat3v4+3RHRBSxw0A7vqomOc4bceJtLwr/DDCIs+p4/V+C
+	 x8JQptANGSq5g==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5ba4180a65aso206835e87.2
+        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 01:03:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzpCG+pbnaM7tZq/zxLe1O0saulqV2rzuREmHPdBommXeQ0qtSUelVikG46l9P3ehgZucLkyP68KqSbaA==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKkX1+reXsRIICSSE1bAOQIo/+JxCriJZlJASQEh5tFTbQ6K++Y
+	19CLRZk9bOMdnD74hDPzoBELTb24wH5mxpt+BVJJwetezPJrloEixkCno+5I5YE664Tp3Pi0nGl
+	kHkyq/U+3IKKlJjYlE1H64z3ikupg7xUKcO+hH/zxkQ==
+X-Received: by 2002:a05:6512:683:b0:5bb:a4ba:8ded with SMTP id
+ 2adb3069b0e04-5bccc718dd2mr276015e87.44.1791273799477; Tue, 06 Oct 2026
+ 01:03:19 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 6 Oct 2026 11:03:17 +0300
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 6 Oct 2026 11:03:17 +0300
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20261004165124.4277-1-franzelfranzel@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABZrw2F=pOOq7+puKohtYMihYqWCevCFc7rkAOETW4T5Nf4n8Q@mail.gmail.com>
+References: <20261004165124.4277-1-franzelfranzel@gmail.com>
+Date: Tue, 6 Oct 2026 11:03:17 +0300
+X-Gmail-Original-Message-ID: <CAMRc=Mf_szZhsZEB8pmZkGh5pB6AEims68rc1tXE=XGAcMuEvg@mail.gmail.com>
+X-Gm-Features: AclHuK9nmK19llwqJ_oPdR-YeWv5o1OfhU6oMZraAD3H4lY4H8sCG9gdf0YepLk
+Message-ID: <CAMRc=Mf_szZhsZEB8pmZkGh5pB6AEims68rc1tXE=XGAcMuEvg@mail.gmail.com>
+Subject: Re: [PATCH v2] power: sequencing: qcom-wcn: power off WLAN at probe
+To: Manivannan Sadhasivam <mani@kernel.org>, =?UTF-8?Q?Fran=C3=A7ois_Roux?= <franzelfranzel@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 05, 2026 at 08:17:12PM -0400, Perlow, Jason wrote:
-> > > My guess, and it is
-> > > only a guess: treating a possible Advisory Non-Fatal Error as
-> > > non-Advisory and recovering through the uncorrectable path resets or
-> > > disturbs a T2 function, and the T2 then powers the machine down.
+On Sun, 4 Oct 2026 18:51:24 +0200, "Fran=C3=A7ois Roux"
+<franzelfranzel@gmail.com> said:
+> The WLAN enable GPIO is requested with GPIOD_ASIS and then kept at its
+> current level, so that a WLAN module left powered on by the firmware is
+> not switched off. The FIXME explains why: toggling it would take the
+> PCIe link down, and the controller driver could not recover from that.
+>
+> That reasoning held while the PCIe link was trained before the
+> sequencer probed. Since commit b921aa3f8dec ("PCI/pwrctrl: Switch to
+> pwrctrl create, power on/off, destroy APIs"), qcom_pcie_host_init()
+> powers the endpoint through pwrctrl before it starts link training, and
+> defers until the pwrctrl driver is bound. That driver cannot bind
+> before this sequencer has probed. Power-on therefore always comes
+> before link training, and keeping the firmware state is now harmful.
+>
+> On the Microsoft Surface Pro 11 (X1E80100), the WCN7850 sits on a
+> PCIe port without a PERST# GPIO. While pci-pwrctrl-pwrseq is not yet
+> bound, the host init is deferred about ten times, and each attempt
+> powers the PHY and controller back down. The later power-on only sets
+> a GPIO that is already high, so the chip is never reset and the link
+> never comes up:
+>
+>   qcom-pcie 1c08000.pcie: Device found, but not active
+>
+> The endpoint is not enumerated and ath12k never probes. Bluetooth on
+> the same chip fails too ("QCA Failed to send TLV segment (-110)").
+>
+> Request the GPIO as GPIOD_OUT_LOW. The chip is then off when the
+> sequencer probes, and pwrctrl powers it up cleanly right before link
+> training. Drop the FIXME and the code that preserved the firmware
+> state.
+>
+> Tested on a Surface Pro 11:
+>  - b921aa3f8dec plus a one-line version of this change: endpoint
+>    enumerated at 2.4 s, ath12k and Bluetooth working.
+>  - next-20260929 plus this patch: "PCIe Gen.3 x2 link up" at 3.4 s,
+>    ath12k and Bluetooth working, Wi-Fi connected.
+> Without the change, neither kernel enumerates the endpoint.
+>
+> The culprit was found by bisecting v6.17..v7.1, with the DTB and
+> .config held constant.
+>
+> Fixes: b921aa3f8dec ("PCI/pwrctrl: Switch to pwrctrl create, power on/off=
+, destroy APIs")
+> Closes: https://lore.kernel.org/all/CAPjyS8dY0Q_o3XmFjuKZZsjhzhoSNL+ZGJtw=
+5cQt8HiV3sUtxA@mail.gmail.com/
+> Cc: stable@vger.kernel.org
+> Assisted-by: LLM
+> Signed-off-by: Fran=C3=A7ois Roux <franzelfranzel@gmail.com>
+> ---
 
-Advisory Non-Fatal Errors aren't handled through the Uncorrectable
-Error code path.  The kernel just reports and clears the errors.
+Mani: this looks good to me, any objections to me queuing it for v7.3?
 
-And if the device has a driver and that driver implements the
-->cor_error_detected callback() in struct pci_error_handlers,
-that callback is invoked.  (Currently only the CXL driver
-implements the callback.)
-
->   masked only on 04:00.2 (Apple T2 Secure Enclave, 106b:1802):
->       stays up (120 s)
-[...]
-> So here the trigger is unmasking Advisory Non-Fatal Errors on that
-> one function.
-
-That's quite unexpected.  Maybe there's a bug in the PCIe IP which
-Apple used for the T2 Secure Enclave device (which I believe is a
-fully-fledged arm64 CPU with a PCIe port in Endpoint mode).
-
-Another explanation might be that there's a watchdog on the T2 device
-which monitors its Config Space and triggers a poweroff whenever
-some suspicious register mutation is detected.  I'm just guessing
-here because this is really weird.
-
-macOS likely never unmasks the bit and so they never saw this during
-validation testing.  Is the T2 device visible on Windows?  If it is,
-it seems Windows doesn't support and unmask Advisory Non-Fatal Errors
-either.
-
-> Would you accept a quirk that keeps the bit masked on Apple
-> 106b:1802?
-[...]
-> I am happy to write and test that, or any other patch you
-> would like tried on this machine, and I can send lspci -vvv and the
-> journals.
-
-A quirk does sound like the only possible solution.  However I'd
-really like to see lspci and dmesg output with the bit unmasked
-shortly before poweroff to get a full understanding.
-
-Thanks!
-
-Lukas
+Bart
