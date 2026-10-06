@@ -1,145 +1,377 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy2-f29.google.com (mail-dy2-f29.google.com [74.125.229.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32CF499F35;
-	Tue,  6 Oct 2026 16:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791304078; cv=none; b=h1EO509AeMq4d3iB1XC5jEii9PWHTa5rhp5hQa2WKDdd8qlPYiI+fc3jc3638ih0vwVQHvPLg1BRbxB52GQXxIx2SczrFQb0pw/ydXjlJnGs5favzdI0FkndV1fY6jgO93Jbg3TnIxS1Bxq6Kk9w0uggYiSiazvWbw34r9joV4w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791304078; c=relaxed/simple;
-	bh=einZpVySWHR7THz/woUWSFbPbcaKQ1JxeslA9nIItWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CtS+zQL6bU08d14QasjbxBQPFHseDMUSjm5+gfruQaygXZDrmqHeS41qjcCGUSNezNNjy6yTUrbcLwoI18SkKGDQ/cssviYDzXEyr4hw+M117jBZ36xjrRCO84kxfnJe3+CrMHiaQ9Hh+zeixMyIYoIg44RLRlQ330fjWlVTaMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JH4Cr+MS; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA2649E134
+	for <regressions@lists.linux.dev>; Tue,  6 Oct 2026 16:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.29
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791304654; cv=pass; b=ZdgeMKKSm7D1ByTNIDX/Awd22jAsVojDxnvqVpHEAsCt9fbCazQMv/sS1KLsh3jdB1SIbvWyrVLrvE1Y0Ws6M+R7KaYjJM0J9jbBw5jni6KUgqpMOGoBIlHgFpBXZUN17VxW65YirvBLLWrLp10FTkNwgPp9Bm6H4LKndwfN1Uk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791304654; c=relaxed/simple;
+	bh=23GE1//HToMw9BjSOTu4Uf9FoVBIUTHZpdiz7HmOaR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OQyZX9o9NwEzHvqks+pmiuWF2KACOoulkY94uB2vvM3RymQgNHXz9Ee5sKQBbwH6dJq6dq3dJVDJfa3MpsDvw6XDr6MAM/bRLWWdUW5wnsgRfn7iMuhMhihWznojYrpiIxRKE6TQ7k7qnNejmyB//vDHdaoiVZ2W0hX1DY/fBFE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HKf75YUF; arc=pass smtp.client-ip=74.125.229.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JH4Cr+MS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49D91F0089B;
-	Tue,  6 Oct 2026 16:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791304077;
-	bh=oAdk92A+HQ3nvb4p8Km296vmXq5e9pwl0DRvbbfWM8Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JH4Cr+MSu9bsoMSxpDlIA4FxF1DlalnJhCgyNtBA1IvTi09NIrKW1CJipKUuFvfWV
-	 yP8Qg7CFPZm1tiHH/IaUi84lTtdKwY/iu1uJIyowqpGUmgpkG/2vkGM25CEsgNKuK8
-	 xYo262SsdCC9bSeJCJbhD1vrkdUObQdkOHTbvPMa5/LLWeDDZk9DJYSFtPh2wYHi2p
-	 xLIAlm5eig2muBn2rP/l3QnRCegK1IjzQ/P9CHtZLdQeyc5Smb/q7SzFmsYuvnXXIg
-	 7FIzjBOdhh6e6+5/WdqETQthQHYt2KIgJ29PF+haMES6OYUPi7/L03PmJOS8rq+Jo+
-	 90ljtzIiXaXIA==
-Message-ID: <a6193df2-98f3-409f-b73f-5b91835a0107@kernel.org>
-Date: Tue, 6 Oct 2026 18:27:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKf75YUF"
+Received: by mail-dy2-f29.google.com with SMTP id 5a478bee46e88-3514b002c40so85178eec.3
+        for <regressions@lists.linux.dev>; Tue, 06 Oct 2026 09:37:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791304651; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mxRVFBdw+cT9mzGV4bK1Qn1NrQBbr30ZqF3NL7S7R1SFijKxCD0a62Vo0SjWEhBuXk
+         bSH45hnuCrc3VuoeWxoyf6s7NnN0N23OgwloUIg7Ho2UdvyjXKJGNKDz3iGJlyp5ymyX
+         mqqtgj4eggFdaQeRaGrxFTxnS6KlzG5sBjYYJJ1i5Ym9rgUg5L+PmA37VQ66ActbltSU
+         t7UXkyYaomDNkmdG1ydXNV5sssS+SjJBIs1AxPIicnysGutRS+tkPWQmY0dHccOqy+sx
+         Bvtf8OetAlAiTmlbnsSDHfGY5hNnKKwa4Oagf8C6Bw4HsAIv+tJI5njHdwRigpQhMBEY
+         3ZWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+3SsWHI7CKVsQNG4RpYPJ3G/TaNahQqmd6cNGHFfokw=;
+        fh=YNVTeZ2MvzMWmSDD3avvJerPBMTELPrSYmNHxbwyyrU=;
+        b=FTNsVVXTfJp5JF8JBM39YbyY8rQhMk8zOOi1uQBbo8uTQgpFb60ScvCJVoEhi4V7wH
+         DDLQi+YuSsNeBeBRVx/BGcBZ5zF2fV+DNQpjpvIpHwPRaaK7X6mJ+pa7qFZNDJPfsOyb
+         GorEDjuIe/cKQ6Yu+KwL5IkRrqTpv06JmvVYC49l6l7w8eF3/6xSArJIyl0K7NZsbJIV
+         PivhPdy8s7gmzJuJGkC+KnBfE+ftfNcduSYA/0+zvTWUVuDSLPa6L8Qarje2a+LAhM4x
+         aFAF1nOQwXqWKwcV5SVw+Zyg/ZMlX9lfHvvfcWRbDQwV/XxFAo5TFUdQcT9SIJLkTqH+
+         EtLA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791304651; x=1791909451; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+3SsWHI7CKVsQNG4RpYPJ3G/TaNahQqmd6cNGHFfokw=;
+        b=HKf75YUFb2U1BjyIrHPdNKbgPiuYiLdniqXFIZNgzFkiytIhQ8CE2sYqqokFbn4tsp
+         QBmIvGYjNKybwXwx7ayfDW/aXQe5859h1pdltVipRl2MYx647bjj4IKVrzMLWtrEyKcO
+         UPxjPoZAun23V15zHIH+gkQ/lpJv6AgVAVxc3eMGaqmhSgXyxCv8GVa+cdQRrNZRhr8c
+         jP3BtgciFpkiw4Z2B8+BqBXijnVCNXR5s6MBXcHmLRW12t8YOXFBsOFJcNkhb48sFOXX
+         4L8L9krontEDIQRrfixQ9OYlQbAOnMpEv7L3SbWnF+HIsei+pXsHrjdIMpY+HsYKbGLh
+         ndWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791304651; x=1791909451;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+3SsWHI7CKVsQNG4RpYPJ3G/TaNahQqmd6cNGHFfokw=;
+        b=YwzrBnz2J7I9E+VXlJEuH8n2j0yvh56O3W69Pzdq01ZX7tg6wGZtTKNlvvcOvauz/D
+         AUO18Sn4K41+r1Fzg1ALoAMn7P0AVp3IV1AEgC+AmvP3ycJC79JDdiWlXwWJL+Pj+kkX
+         lzx607xvfpft7YIpFIsb+qevcLLxijxBNM+/ChRB+EhrRof80F6Q4EXrzKA5ykQZpH9V
+         qDE45WZulnU4GBkswACUv6KDADW69Q/pwSagAygMbJZ+rniq49SsTtp18Cu8Ea81Jq2q
+         XIW6lev91Wf0ohHKf2OqUgljKFtdsafZlTN2tNRbCMT/msuxO25ZNy8w/Or2LJ42lkep
+         BWUg==
+X-Forwarded-Encrypted: i=1; AKwUvBzoxYHK/h1Y93o2G2mdDbdaF1AtJL/GP6622QcodFiyIKe6HyFsGDDahhGpq0fGvkpldtgQtmbVaiWeEQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++mRkNubPdFfiXGLyb92ptu+C0+Z642RXLOLhpXrKcqoIhAeVpPx
+	NoTsF2nOMPM8XC6kI44Qj/pIETqyKH6lLiT1bYiLVMBtEc3hu2nvLCTT0i1aT1xRR3CVG+YkAnV
+	sBI5LTPHQpwFpdRQPJhTpdBRkGBI8Beg=
+X-Gm-Gg: AYBFou3/2MpctLOf3CpkyDYMtf9CfyZDw9uK0b7LHcsHTMmqnExZnKtatGotinC2KL8
+	xq5XPnruhqqcf3qb9AkWorKJbI43efiV09p+CRuDpubci90so5skCCtCdULKFeCl9alMQ+CSd4p
+	CB1Tj5NBywHl2q6Om3qjByQolkrXg1s3B+/b7vg5XeeC5v1Tp7YXyqqvd+82Y57Bl1LDcQyD7TU
+	SSTX7tUnFUhfKXv7EvxAK4hVcapr6O2zIVG6eao3uTNC+hRRiG0pMa/BPBFL6T/O6U+KtESNwuk
+	SGfcGd0BWPCpmAwdN6CNFuVBrYfI5As1TqOcOEs4yqLSQKg7P4rcbOA6CFjauidnZexLbfKe2aW
+	8SpgBZkcwNstDoFfVQwplHWHijCLfT73qHxWI7fdyiA==
+X-Received: by 2002:a05:701b:2516:b0:144:ff51:2d73 with SMTP id
+ a92af1059eb24-14f5b11e751mr26261761c88.2.1791304650585; Tue, 06 Oct 2026
+ 09:37:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] r8169: TX stall with checksum offload on
- VLAN frames with inline tag (REORDER_HDR off) since 1517d1996b52
-To: =?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>,
- Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, nic_swsd@realtek.com,
- Sasha Levin <sashal@kernel.org>, edumazet@kernel.org
-References: <CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com>
-Content-Language: en-US
-From: Eric Dumazet <edumazet@kernel.org>
-In-Reply-To: <CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com>
+ <20261005231914.GA639967@bhelgaas>
+In-Reply-To: <20261005231914.GA639967@bhelgaas>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 6 Oct 2026 12:37:18 -0400
+X-Gm-Features: AclHuK-BIaWcWgCEtEbjE0ty4LupnIxIkwW2Z1OGfGkwHjdyvUjnPWl3akWUrI4
+Message-ID: <CADnq5_O2TWeWEE1NsuCVvtWLKWyOiJHChPGP9CN4Zu=hvs+jmA@mail.gmail.com>
+Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Perlow, Jason" <jperlow@gmail.com>, Lukas Wunner <lukas@wunner.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Aditya Garg <aditya.garg@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Oct 5, 2026 at 7:19=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> [+cc Alex]
+>
+> On Mon, Oct 05, 2026 at 01:53:55PM -0400, Perlow, Jason wrote:
+> > Hi Lukas, Bjorn,
+> >
+> > Since commit eddba19b8b5f ("PCI/AER: Support Advisory Non-Fatal
+> > Errors"), first in v7.3-rc1, an Apple MacBookPro16,1 (T2 chip) loses
+> > power 17 to 24 s after boot. v7.2.9 is fine; v7.3-rc5 and v7.3-rc6 are
+> > not. Bisection lands on that commit, and v7.3-rc6 with only that
+> > commit reverted no longer powers off. aer.c has not changed since, as
+> > of v7.3-rc6-3, so I expect it is still unfixed; I did not find an
+> > existing report.
+>
+> Alex reported something similar at
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D222095.
+>
+> Can you try the experiment mentioned there?  The patches Lukas
+> mentioned don't apply cleanly on v7.3-rc1, but the conflict looks
+> trivial?
 
+Lukas' patches fixes some boards, but unfortunately, I'm still seeing
+failures on others.  Reverting the patch fixes those failures.  I've
+updated the ticket.
 
-On 10/6/26 13:45, Jan Čermák wrote:
-> Hi,
-> 
-> the Home Assistant OS recently shipped kernel update from 6.18.39 to
-> 6.18.52 which was followed by a bunch of community reports about fatal
-> network breakages [1] which had one thing in common - r8169 driver and
-> configured VLANs. This manifested as network stall early in the setup
-> of the system with dmesg events like this:
-> 
->> r8169 0000:03:00.0 enp3s0: NETDEV WATCHDOG: CPU: 7: transmit queue 0 timed out 6125 ms
->> r8169 0000:03:00.0 enp3s0: rtl_rxtx_empty_cond == 0 (loop: 42, delay: 100).
-> 
-> As there was no change in the r8169 driver itself, I focused on the
-> vlan subsystem, where AI pointed me shortly to this suspect commit in
-> the range: 1517d1996b5236fe69eccd9d253f725e06996eb1 ("vlan: fix
-> skb_under_panic and races when toggling HW VLAN offload"), added in
-> 6.18.51. I'm not referring to the mainline counterpart below for
-> regzbot (447cbe95ebb9) as I can't confirm whether it triggers the bug
-> there as well. FWIW there was another issue [2] with a similar
-> combination recently in the regressions ML but that one seems
-> unrelated, as disabling EEE fixed that issue, and it doesn't fix it
-> here.
-> 
-> I don't have the hardware myself, I asked for testing with this commit
-> reverted, which confirmed that this change indeed started to cause
-> trouble. However, it's obvious that the change itself is not bad, as
-> it fixes another issue and the regression is scoped to very specific
-> hardware/setup combo.
-> 
-> Besides the revert, following workarounds were reported to fix the
-> issue as well:
-> - Disabling TX checksum offload with `ethtool.feature-tx off` in
-> NetworkManager for the connection (HAOS doesn't have ethtool binary,
-> hence this option instead of direct ethtool command)
-> - Enabling REORDER_HDR with `ip link set enp1s0.100 type vlan reorder_hdr on`
-> 
-> Clearly, this needs rather esoteric setup to trigger the bug - I guess
-> most systems set the REORDER_HDR flag by default, however, due to some
-> legacy in the DBus interface that HAOS stack uses to configure the
-> network [3], it was disabled. Anyway, I think that disabling it should
-> not lead to driver breakage as we're seeing.
-> 
-> So far it appears that this only affects RTL8168h/8111h, XID 541 -
-> there isn't any report of another chip/XID combination yet.
-> Unfortunately, as I said above, I don't have the hardware available
-> for testing but I believe I'll find some community members who'll be
-> willing to test a proposed fix for the issue if needed.
-> 
-> [1] https://github.com/home-assistant/operating-system/issues/5019
-> [2] https://lore.kernel.org/regressions/353419280.954808.1790290283530@mail.yahoo.com/
-> [3] https://github.com/home-assistant/supervisor/issues/7248
-> 
-> #regzbot introduced: 1517d1996b5236fe69eccd9d253f725e06996eb1
-> #regzbot link: https://github.com/home-assistant/operating-system/issues/5019
-> 
-> Cheers,
-> Jan
+Alex
 
-Ok this NIC can not perform tx csum offloads with vlans.
-
-opts[1] only takes TD1_IPv4_CS and TCPHO (Transport Header Offset).
-
-There is no IP header offset field in the descriptor. The MAC assumes 
-the IP header starts immediately at byte 14.
-
-So we need to change vlan_dev_hard_header() to take into account
-vlan_hw_offload_capable(real_dev->features, vlan->vlan_proto)
-
-Can you test the following patch?
-
-Thanks!
-
-diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
-index 
-cb8f3cdbf1f732c55a8a3d69ab5445988c953205..3a518ff064465e8ab978c66a28bf7df579931256 
-100644
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -54,7 +54,9 @@ static int vlan_dev_hard_header(struct sk_buff *skb, 
-struct net_device *dev,
-         u16 vlan_tci = 0;
-         int rc;
-
--       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR)) {
-+       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR) &&
-+           !vlan_hw_offload_capable(READ_ONCE(vlan->real_dev->features),
-+                                    vlan->vlan_proto)) {
-                 unsigned int hlen = READ_ONCE(dev->hard_header_len) +
-                                     READ_ONCE(dev->needed_headroom);
-
-
+>
+> > Hardware
+> > --------
+> >
+> > MacBookPro16,1 with an AMD Navi 14 dGPU and the Apple T2. The bisect
+> > machine has a Core i7-9750H; a second unit of the same model, used for
+> > cross-checks, has a Core i9-9980HK. I have not tested any other T2
+> > model. The internal SSD, the T2 and the audio device are functions of
+> > one Apple PCIe device behind root port 00:1b.0:
+> >
+> >   04:00.0 Apple ANS2 NVMe          [106b:2005]
+> >   04:00.1 Apple T2 Bridge          [106b:1801]
+> >   04:00.2 Apple T2 Secure Enclave  [106b:1802]
+> >   04:00.3 Apple Audio Device       [106b:1803]
+> >
+> > Symptom
+> > -------
+> >
+> > The machine powers off abruptly 17 to 24 s after boot. There is no
+> > shutdown sequence; the previous boot's journal simply ends. Nothing is
+> > logged beforehand: no AER message, no oops, no lockup, no thermal
+> > event. The T2 controls power on these machines, so I assume (but
+> > cannot show) that the T2/SMC removes power.
+> >
+> > Bisect
+> > ------
+> >
+> > v7.2.9 good, v7.3-rc5 bad. Vanilla mainline trees, no out-of-tree
+> > patches in the kernel image, CONFIG_PCIEAER=3Dy,
+> > CONFIG_ACPI_APEI_GHES=3Dy, kernel messages captured over the network.
+> > 19 steps, 4 skipped because those trees oops early for an unrelated
+> > reason (the ones I looked at were in thunderbolt icm_probe at about
+> > 5 s). Good boots were watched for 55.8 to 69.7 s; bad boots stopped
+> > logging between 17.9 and 24.1 s. The complete history, every commit
+> > tested and every result, is in Appendix B, and the exact method in
+> > Appendix A. The result:
+> >
+> >   # first bad commit: [eddba19b8b5f] PCI/AER: Support Advisory
+> >   # Non-Fatal Errors
+> >
+> > Revert test, v7.3-rc6, same config:
+> >
+> >   v7.3-rc6 unmodified:            powers off at 16.7 s
+> >   only eddba19b8b5f reverted:     survives the full 64 s capture
+> >
+> > With that revert on top of 7.3.0-rc6 plus the out-of-tree t2linux
+> > series (one kernel image, built once), a normal desktop runs on both
+> > MacBookPro16,1 units: the second one has been up for more than 45
+> > minutes, and the bisect machine ran sessions of 32 and 22 minutes.
+> > For completeness: the bisect machine once lost power after about 10
+> > minutes while I was manually switching the display mux and powering
+> > off the AMD GPU, which I do not expect the firmware to support. I
+> > have not established the cause and have no evidence either way on
+> > whether it is related.
+> >
+> > Which devices are affected
+> > --------------------------
+> >
+> > On v7.2.9, where the Advisory Non-Fatal Error bit is still masked, the
+> > Correctable Error Status register has AdvNonFatalErr latched on
+> > exactly these functions, with every Uncorrectable Error Status
+> > register clear:
+> >
+> >   04:00.0 04:00.1 04:00.2 04:00.3  (the Apple device above)
+> >   01:00.0 AMD Navi 10 XL PCIe switch upstream port [1002:1478]
+> >
+> > The pattern is identical on both MacBookPro16,1 units (same model, so
+> > this says nothing about other T2 models). The Titan Ridge 4C bridges
+> > and NHI on the same machine do not have the bit set.
+> > These devices report the advisory bit without any matching
+> > Uncorrectable Error status, which looks like the "non-compliant
+> > products" case the commit message mentions.
+> >
+> > Only one of the two machines was used for the bisect and the
+> > power-off tests above. I have not yet booted an unreverted 7.3 kernel
+> > on the second one, so I cannot yet say that the power-off reproduces
+> > there.
+> >
+> > Control: an ASUS ROG Zephyrus M15 GU502LV (i7-10750H, RTX 2060, no
+> > T2) has the same bit latched on its NVIDIA TU106 functions
+> > [10de:10f9, 10de:1ada, 10de:1adb] and on Titan Ridge 2C [8086:15e7,
+> > 8086:15e8, 8086:15e9]. It ran a 7.3.0-rc6 build with the commit
+> > applied (plus the t2linux series) for more than 15 hours without a
+> > problem, and the same reverted kernel image as above also runs on it
+> > normally. So unmasking the bit is not harmful in general; something
+> > specific to the T2 platform is.
+> >
+> > What I do not know
+> > ------------------
+> >
+> > Which device triggers the power-off, and why. My guess, and it is
+> > only a guess: treating a possible Advisory Non-Fatal Error as
+> > non-Advisory and recovering through the uncorrectable path resets or
+> > disturbs a T2 function, and the T2 then powers the machine down. I
+> > intend to build a diagnostic kernel that can leave the bit masked per
+> > device to find out which one.
+> >
+> > Possibly related, different symptom: "PCI/portdev: Disable AER for
+> > Titan Ridge 4C 2018" (Atharva Tiwari, January 2026) concerned AER
+> > warnings on T2 iMacs.
+> >
+> > What I am asking
+> > ----------------
+> >
+> > Which direction would you prefer: a revert, or a quirk that keeps
+> > Advisory Non-Fatal Errors masked on the affected Apple functions (and
+> > possibly the AMD switch port)? The t2linux project carries a revert
+> > for now: https://github.com/t2linux/linux-t2-patches/pull/70
+> >
+> > I can test patches on real hardware and can provide full lspci -vvv
+> > output, the complete bisect log and the captured boot logs.
+> >
+> > #regzbot introduced: eddba19b8b5f76d57424ee328a68fd495c5db857
+> >
+> > Thanks,
+> > Jason Perlow
+> >
+> >
+> > APPENDIX A - METHOD
+> >
+> > Machine: one MacBookPro16,1 for every boot below, running a Debian
+> > trixie userland from its internal SSD. The distribution's 7.2.9 kernel
+> > was the default boot entry between tests.
+> >
+> > Build: git bisect in a clone of torvalds/linux (git.kernel.org). Each
+> > candidate was built on a separate x86-64 build host (16 threads, gcc
+> > 15.2.0, binutils 2.46) with the same recipe:
+> >
+> >   cp bisect-trimmed.config .config
+> >   make olddefconfig
+> >   make -j10 bindeb-pkg LOCALVERSION=3D-bisN-vanilla-rc0 \
+> >        KDEB_PKGVERSION=3D<release>-1
+> >
+> > bisect-trimmed.config is a 7.3.0-rc5 configuration trimmed to build
+> > quickly (2068 options built in, 204 modules). It has CONFIG_PCIEAER=3Dy=
+,
+> > CONFIG_PCIE_DPC=3Dy, CONFIG_PCIEASPM=3Dy, CONFIG_ACPI_APEI=3Dy and
+> > CONFIG_ACPI_APEI_GHES=3Dy. The same file was used for all 19 steps and
+> > for both v7.3-rc6 tests. No out-of-tree patches were applied to the
+> > kernel. The release strings come from each tree's Makefile, so commits
+> > on 7.2-based topic branches show as 7.2.0.
+> >
+> > Boot: the .deb packages were installed on the laptop and booted through
+> > a one-shot rEFInd entry; the default entry stayed the stable kernel.
+> > Kernel command line for every test boot:
+> >
+> >   console=3Dtty0 ignore_loglevel keep_bootcon initcall_debug
+> >   printk.time=3D1 log_buf_len=3D16M panic=3D0 fbcon=3Dfont:TER16x32
+> >   systemd.show_status=3D1 systemd.unit=3Dmulti-user.target
+> >   modprobe.blacklist=3Dsbs,sbshc
+> >   systemd.mask=3Dncz-usb2-rescan.service
+> >   systemd.wants=3Dncz-netlog.service
+> >
+> > (plus the root=3D options). So there was no graphical session. sbs and
+> > sbshc are the ACPI smart battery drivers; ncz-usb2-rescan is an
+> > unrelated distribution boot workaround. Steps 13 to 19 and the two
+> > v7.3-rc6 tests also had module_blacklist=3Dthunderbolt,t2thunderbolt,
+> > added after the early oopses (in thunderbolt icm_probe, at about 5 s)
+> > had cost several skipped steps. Steps 1 to 12 ran with Thunderbolt
+> > enabled.
+> >
+> > Capture: a small userspace unit (ncz-netlog.service) streams /dev/kmsg
+> > and the journal over TCP to a second machine from early multi-user
+> > boot, so captures begin at roughly 10 s of uptime. Each capture file
+> > records the uptime of its last line.
+> >
+> > Verdicts:
+> >   good: the machine kept running and logging past the point where bad
+> >         kernels die (the cut always came before 25 s).
+> >   bad:  the capture stops before 45 s, the machine stays unreachable
+> >         for at least 60 s, and the next boot's journal shows the
+> >         previous boot ending with no clean shutdown.
+> >   skip: a kernel oops or panic in the capture or the previous boot's
+> >         journal.
+> >
+> > After a cut the laptop does not restart by itself, so it was powered
+> > on by hand and booted the stable kernel; the verdict was then confirmed
+> > from the previous boot's journal.
+> >
+> > Caveats:
+> >   - One machine was used for the bisect and for the power-off tests.
+> >   - No desktop session was running.
+> >   - sbs/sbshc were blocked on every boot, and Thunderbolt from step 13
+> >     on.
+> >   - The laptop was powered from, and networked through, a Thunderbolt
+> >     dock during the bisect. An earlier test of a T2-patched
+> >     7.3.0-rc5 kernel with the dock unplugged also lost power, but I
+> >     did not repeat the bisect undocked.
+> >   - Out-of-tree DKMS modules for the T2 hardware (t2smc, t2gmux,
+> >     t2smp, t2thunderbolt) were installed for these kernels and may
+> >     have been loaded, which would taint them. An earlier test with
+> >     those modules blocked still lost power.
+> >   - Step 12 ran 816 s before an unrelated oops, so it did not show
+> >     the cut and was treated as a skip rather than as good; this does
+> >     not change the result.
+> >   - The device that triggers the cut is not identified.
+> >
+> > APPENDIX B - FULL BISECT HISTORY
+> >
+> > Good: v7.2.9 (5fce161649b4). Bad: v7.3-rc5 (72d3fcf802c4). The first
+> > commit tested is the merge base, "Linux 7.2". Observed =3D uptime of th=
+e
+> > last line captured. Results: 8 good, 7 bad, 4 skip.
+> >
+> >  #  commit        result observed   subject
+> >  1  8d3ae59288f1  good   55.8 s     Linux 7.2
+> >  2  56ea4e86832d  good   67.7 s     nstree: check listing permission
+> >                                     before taking a namespace ref
+> >  3  93e4b3076b5f  bad    24.1 s     Merge tag 'char-misc-7.3-rc1'
+> >  4  21bd0802cd3f  good   60.1 s     Merge tag 'for-linus' (rdma)
+> >  5  0b0e645ed2c8  bad    22.9 s     Merge tag 'auxdisplay-v7.3-1'
+> >  6  e5f92606156a  good   69.5 s     Merge tag 'mm-nonmm-stable-2026-08-
+> >                                     22-16-57'
+> >  7  b6b019a1d9b9  good   69.2 s     Merge tag 'parisc-for-7.3-rc1'
+> >  8  b130a2caf5d3  skip   oops 5.3 s Merge branch
+> >                                     'pci/controller/tegra264'
+> >  9  455b454c87bb  good   69.0 s     i3c: mipi-i3c-hci: Add support for
+> >                                     AMD_PT I3C controller
+> > 10  9bb52aa1972d  skip   oops 5.5 s Merge branch
+> >                                     'pci/controller/dwc-meson'
+> > 11  b4b07fb82b9e  skip   oops 5.3 s Merge branch 'pci/wake'
+> > 12  651fb94aaf24  skip   oops 816 s alpha/PCI: Fix I/O port accessor
+> >                                     argument order in
+> >                                     pci_legacy_write()
+> > 13  625ae0ff41e5  bad    19.9 s     Merge branch 'pci/dt-binding'
+> > 14  9f91b2b716a0  bad    19.1 s     Merge branch 'pci/procfs'
+> > 15  ea55835bc538  bad    23.3 s     Merge branch 'pci/dpc'
+> > 16  d358e9ad15c2  bad    22.3 s     Merge branch 'pci/aer'
+> > 17  8446e1147f65  good   69.7 s     PCI/AER: Deduplicate logging of
+> >                                     Error Source Identification
+> > 18  f141f74c45c6  good   67.6 s     PCI/AER: Move retrieval of FEP and
+> >                                     TLP Log into helper
+> > 19  eddba19b8b5f  bad    17.9 s     PCI/AER: Support Advisory
+> >                                     Non-Fatal Errors
+> >
+> > Full hashes of the decisive steps:
+> >   eddba19b8b5f76d57424ee328a68fd495c5db857  (first bad)
+> >   f141f74c45c6f774eebdb7e45bd609be5122bfa8  (last good before it)
+> >   8446e1147f65563d374ffa54dc3ba81adb1342c5
+> >
+> > The v7.3-rc6 tests (a90ee4305c4a) used the same recipe and command line=
+:
+> > unmodified, power off at 16.7 s; with only eddba19b8b5f reverted,
+> > survived the full 64 s capture.
+> >
+> > --
+> > Jason
