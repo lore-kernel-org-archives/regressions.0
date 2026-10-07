@@ -1,97 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-73.mta1.migadu.com [95.215.58.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049D82F616A;
-	Wed,  7 Oct 2026 06:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9D73368BD
+	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 06:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791353518; cv=none; b=MWD5yG2CGSmpBsIw15nC8o2YwACJEVXFEjkMJj4teIGOSQWKHxci0VYBjtISf7hHa55TcctzyexZrsBpQaV6lrCykLH4CFap3Sad+U2VlDfODZa78cLDw98BFkDRpvd1lD3XjQHpjTzn5jdJOWay+Puc622Kw65awrMP9xQleFE=
+	t=1791356277; cv=none; b=Pao+IsPAdiO6OX4YBE+YXyqtpJVS68NuIbvgKdL0Rju/0/7MQ3n7/+4R5ykZkT0WGRG4SyTRtGC4DHEXCA2KAPnSdqZ0uiX6/AhwzY4WCaWMUhy3uhMu/as5JfkKg2NBqtpGuJ8wgukZPhsFRSFB5UdEwRWWtCKO9EiihfSChD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791353518; c=relaxed/simple;
-	bh=RiidPASTt6jyBz3Coh9BgHlpFZQ3PdK4p4NxzKF6bVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZ9CCCyhNBov7pxfkjCkw2d3mrLqvI4nXS+0rCXLIH2xe99PlsxVd2NWf0KmyyohDngKbBVf4W59QpExbwgJ3tNWXG4lRDyP6EMD+x85fzS3goMfs0JYwhdRj3n2qy2NmrHH7O8ZjVRcCqUQDwGFtTiXFhip+QZrCSmEHzURkyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUXRZ7/p; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791356277; c=relaxed/simple;
+	bh=bgvAnuDBKrah+1oAtquFA8au46xffNkrUC44ySLVSKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KBZpUM0Y+1Da4i8gauVTGtCwab8XcHwtaw8zCvyvvCq8f2n48oSkNziwlF4pxCTtVeoKHYoycs4DVwgJXKbuZJFyCjz+zrdI7Q29qJIirSGExnzRQxkXUFBCDrLcaCS+EQDHl0BZHEcFjC093FYn6PkeEOY+Y8MpQaLhmsgb9Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B0YWh+Nd; arc=none smtp.client-ip=95.215.58.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUXRZ7/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788F71F0089B;
-	Wed,  7 Oct 2026 06:11:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791353517;
-	bh=SHTNYtREyl/jHXCf21L5IlTPz5bWxE9lwwBn75z0B7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GUXRZ7/pbe/AJpkN5e5FcdLKuJgDihokRM9FwbQxVdtvp+2LRSkZRdVJpTE58W4V6
-	 NadEbJJreUG5ZHlSm5lZ/kScR9TQREkuTlYMfmadYLCnnhcsFnoxqr2OiLnEUNZWuq
-	 ezVr4PgORcyU4YJMkI9wQr6DJOzeoucauYENm7ogq5W1+ZswY3InNw/cE9J6Qp5m7D
-	 cvQCMK5tlmnYwkiHKEmF5ux/U5Wfqstw1sIxE2ErO9W6TbmevR9YrLXjkXZrkcTvuD
-	 NW0AbPYQSCmA2pBAFsyhQ7q7ZYL7z/j4tXZa8uou3/iBwv4XtuDPfDM2G1wFOlRTFC
-	 ONz6uDRN7u2yA==
-Date: Wed, 7 Oct 2026 08:11:50 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Chris Bainbridge <chris.bainbridge@canonical.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Jason Miu <jasonmiu@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org
-Subject: Re: [BUG] KHO handover hangs when memmap reserves PMEM
-Message-ID: <asXipik00P2Oa1Zo@kernel.org>
-References: <asE0R_f2r2TL-3Sy@px13>
- <asTTo3AFzQoqZLoP@kernel.org>
- <asU2AD6DxGSD0ek4@px13>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B0YWh+Nd"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=bgvAnuDBKrah+1oAtquFA8au46xffNkrUC44ySLVSKM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791356274; v=1; x=1791961074;
+ b=B0YWh+Ndi+A8YaD6Nm8Dak/ypGH07WrnsNbMOPO8eXSg34VGg/uR1d12ff8VhvP41Oeql1S1
+ burcC77iHtgwiCvmfNyfAwlSSAKtq99OlXu4pDHz4yD8PrWzh9Xl9dh2Jk12P2LaEMu+/do/mpg
+ 74GGU7KbFeihOaOv9hxO0+0c=
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 81353408bb37fdb6;
+	Wed, 07 Oct 2026 05:42:35 +0000
+X-Mizu-Trace-ID: 81353408bb37fdb6
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <9866b263-ab09-4609-8885-62b68049bc33@linux.dev>
+Date: Wed, 7 Oct 2026 11:12:33 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <asU2AD6DxGSD0ek4@px13>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
+To: Lukas Wunner <lukas@wunner.de>
+Cc: "Perlow, Jason" <jperlow@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ Alex Deucher <alexdeucher@gmail.com>
+References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com>
+ <20261005231914.GA639967@bhelgaas>
+ <CABZrw2F=pOOq7+puKohtYMihYqWCevCFc7rkAOETW4T5Nf4n8Q@mail.gmail.com>
+ <asRjch1fMBslk07D@wunner.de> <2a7a97cc-7ad0-4e6f-845a-dd841d36079b@linux.dev>
+ <asTDCW28kKBfKAVs@wunner.de>
+Content-Language: en-US
+From: Aditya Garg <aditya.garg@linux.dev>
+In-Reply-To: <asTDCW28kKBfKAVs@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 06, 2026 at 07:02:22PM +0100, Chris Bainbridge wrote:
-> On Tue, Oct 06, 2026 at 12:55:31PM +0200, Mike Rapoport wrote:
-> > On Sat, Oct 03, 2026 at 06:02:27PM +0100, Chris Bainbridge wrote:
-> > > Hello,
-> > > 
-> > > I am reporting a regression in KHO handover.
-> > > 
-> > > In the most recent Ubuntu 26.10 beta mini-ISO releases (2026-09-18 onwards),
-> > > the first kernel reserves RAM for the downloaded ISO with a memmap directive
-> > > such as memmap=<size>!4G, then kexecs a second kernel. On affected kernels, the
-> > > first kernel reaches "kexec_core: Starting new kernel", but the second kernel
-> > > produces no further output and QEMU spins at 100% CPU. On unaffected kernels,
-> > > the second kernel starts and finds /dev/pmem0 with the expected "Persistent
-> > > Memory (legacy)" range in /proc/iomem.
-> > 
-> > TO make sure I understand this correctly, you enable KHO in the builds of
-> > the installer kernel and then the installer command line explicitly enables
-> > KHO.
+
+
+On 06-10-2026 03:14 pm, Lukas Wunner wrote:
+> On Tue, Oct 06, 2026 at 02:01:52PM +0530, Aditya Garg wrote:
+>> On 06-10-2026 08:26 am, Lukas Wunner wrote:
+>>> On Mon, Oct 05, 2026 at 08:17:12PM -0400, Perlow, Jason wrote:
+>>>>   masked only on 04:00.2 (Apple T2 Secure Enclave, 106b:1802):
+>>>>       stays up (120 s)
+>>> [...]
+>>>> So here the trigger is unmasking Advisory Non-Fatal Errors on that
+>>>> one function.
+>>>
+>>> That's quite unexpected.  Maybe there's a bug in the PCIe IP which
+>>> Apple used for the T2 Secure Enclave device (which I believe is a
+>>> fully-fledged arm64 CPU with a PCIe port in Endpoint mode).
+> [...]
+>>> macOS likely never unmasks the bit and so they never saw this during
+>>> validation testing.  Is the T2 device visible on Windows?  If it is,
+>>> it seems Windows doesn't support and unmask Advisory Non-Fatal Errors
+>>> either.
+>>
+>> T2 device is visible on Windows as well as "System Device"
 > 
-> Yes.
+> It looks like lspci is also available as a Windows binary:
 > 
-> > Is there anything you actually preserve with KHO when kexec'ing the second
-> > kernel?
+> https://github.com/pciutils/pciutils/releases/tag/v3.15.0
+> https://eternallybored.org/misc/pciutils/
 > 
-> No. kho=off is a valid workaround for the mini ISO.
+> Could you double-check whether it unmasks Advisory Non-Fatal Errors
+> in the Uncorrectable Error Mask Register, on the T2 or any other device?
 
-I'd even say that setting CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=n and even
-CONFIG_KEXEC_HANDOVER=n is a reasonable choice for a distro kernel.
+The Windows build seems to be too old> 
+> Thanks!
+> 
+> Lukas
 
-We don't have CONFIG_EXPERIMENTAL anymore, otherwise kho and luo would be
-gated by it.
-
-> I only reported it as a regression here because this was working until
-> the bisected commit was merged. If this is intended behaviour then it is
-> not a problem.
-
-Thanks for the clarification. 
-
-This is a bug, but since it happens for a combination of an opt-in option
-(kho) and a hack (memmap=) I consider it low priority.
-
--- 
-Sincerely yours,
-Mike.
