@@ -1,91 +1,91 @@
-Received: from mta0.migadu.com (out-83.mta0.migadu.com [91.218.175.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9042483BC8
-	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 10:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689B9490C15
+	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 10:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791369630; cv=none; b=TPq9s2Akrpv6ZOnnRax8aQ5fk6HB4by0/WrECvBH7uyJo1ionqD0YzUHGTACJW4o+iXVqj5HRzkDit/82AAPG2u7bqaoA6PleORBTU2cz1a88mnxsfscZC4GVYIdysd3FgRazNRFXXkXG3+XXu2K+MUvtfpNHh6MY90XhMM/bg8=
+	t=1791369875; cv=none; b=gmAYsl6MuvlhQZn98ACMxC2oNv476Ff7ArnhSd8O7hCEzTDKcJj+/ZIp4HQow0QOIResiUM+YZLsNmV320NuIiVxpfA07DYBN7NVhEySybalHAnUaxzb5Mqpx/xAdvjy3nr/n/okg2VN9DI/fDgh4eHs/JD1RpUv7cZHsTSEDPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791369630; c=relaxed/simple;
-	bh=FDzcKVus+TL3O3kjbTF5oZn+yi6hvjNayEw4B6qJCCI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=tYZqW99eZAGGfASQGkvUGPMr4KlzmYhPABufik3oDNzBkqOtRVTq3GSHToeEx+QCud4pmMkg8YtfRlIccbvTzuR00UiTn/xj3XMAuCzFscVajBQiPhMIVNJirCp8o/TvnoeZTtGBq8mxSDdTGRNv6Gxu4taJM9YGsxGIF2vvvYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qYsdbYzY; arc=none smtp.client-ip=91.218.175.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791369875; c=relaxed/simple;
+	bh=XUI4IBT1AHM+WS8afOBXSDy1+qMEJ7pG3D6us0CT6UU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rp/tWnGkWQqwAcOyeDnSFhFT9cwt9rszebFJGRUW7EfFongT2/FGddnFfdJdlWtFdrxpxbsmIM0A5ep7qXLwNlSeW89YlGzjuyEuZsxE/J+NEFdxxozQYtv99cV9r8cMwBNtMxpu4sqCPst6B5uadQbcV5DArBdHyPd3AKdENEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aubZZp6H; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qYsdbYzY"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=FDzcKVus+TL3O3kjbTF5oZn+yi6hvjNayEw4B6qJCCI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791369594; v=1; x=1791974394;
- b=qYsdbYzYban0rvQShR4JxKfCJNSnLU4XU3N+XDxhaOPlgCzOjsuiv0CiccxIaBET/aKwQDIm
- 0T1DhQJ838WY0NgedOS/58AEK2WsNRGNAEFOzro3IjJLlzJdfmo0Pw8KFsKyPRcqtHZz8NLgH6Q
- xSZqnHS6wcdB2CaDfWFilaA4=
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 2512af27f42dab7f;
-	Wed, 07 Oct 2026 10:39:51 +0000
-X-Mizu-Trace-ID: 2512af27f42dab7f
-X-Migadu-Flow: FLOW_OUT
-Date: Wed, 07 Oct 2026 16:09:43 +0530
-From: Aditya Garg <aditya.garg@linux.dev>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Lukas Wunner <lukas@wunner.de>,
- Alex Deucher <alexdeucher@gmail.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>, "Perlow, Jason" <jperlow@gmail.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] PCI/AER: MacBookPro16,1 powers off ~20 s after boot
-User-Agent: Thunderbird for Android
-In-Reply-To: <8925d288-a496-4fcc-9545-7647dfc9ea63@leemhuis.info>
-References: <CABZrw2HcaOh3DHTJtxU5dXrb3Vg19scr6+qR-xe_+R7rME35_Q@mail.gmail.com> <20261005231914.GA639967@bhelgaas> <CADnq5_O2TWeWEE1NsuCVvtWLKWyOiJHChPGP9CN4Zu=hvs+jmA@mail.gmail.com> <asVlzjaUFAoowH-r@wunner.de> <8925d288-a496-4fcc-9545-7647dfc9ea63@leemhuis.info>
-Message-ID: <F405BE2D-9C00-4E72-B5C4-BA2FD5348E84@linux.dev>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aubZZp6H"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4j08c06C9Bz3ypX;
+	Wed,  7 Oct 2026 12:33:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791369216;
+	bh=XUI4IBT1AHM+WS8afOBXSDy1+qMEJ7pG3D6us0CT6UU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aubZZp6HY1K4YPD3VvN/i5tMA47ouI7WJTsOh28rWzjH41zNSBpYq2fZlCnh3tjjs
+	 V/iLSfqreDhYcW4W4agWUQ5Watt9bs939oAmM41/Nh3Vxm5K5ymB0mQncUqg3Ncr8o
+	 C7V0bNpc401DdeR96o9n4W8y38xbHTTqdBw/e8tLoI38wdkFpuq4KjDj230pPn5QQk
+	 yKOB7Z02AGUYMQ4+1s7RyktG2uZ/1EUKqa27m2YWO41Q3mdHwxQBBRbRh86gyMEiT7
+	 oCis8T7Yj/clA+Sx9Mt6QcsY+3z2vm9HRC8tPXga4jlTCI/3cGk+vOxfGdgeHTvWlG
+	 Jalh5UjN1FUUw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4j08c05V4Nz3ynm;
+	Wed,  7 Oct 2026 12:33:36 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j08bz5ybqz8svJ;
+	Wed,  7 Oct 2026 12:33:35 +0200 (CEST)
+Received: from [192.168.142.51] (90-182-211-1.rcp.o2.cz [90.182.211.1])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 125485FA36;
+	Wed,  7 Oct 2026 12:33:35 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 90.182.211.1) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[192.168.142.51]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <cce34174-a70a-4e59-9c35-fd74309b0fb5@leemhuis.info>
+Date: Wed, 7 Oct 2026 12:33:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Commit 447cbe95ebb9 causes IOMMU DMA faults on
+ macvlan/vlan with bnxt_en
+To: Sasha Levin <sashal@kernel.org>, Eric Dumazet <edumazet@kernel.org>,
+ =?UTF-8?Q?Fabian_Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>
+Cc: Michael Chan <michael.chan@broadcom.com>, Joe Damato <joe@dama.to>,
+ netdev@vger.kernel.org, Pavan Chebbi <pavan.chebbi@broadcom.com>,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ Stefan Fleischmann <sfle@kth.se>
+References: <20261005145430.12777c2c@nargothrond>
+ <2026-10-06-1-daily-reply-0020-bnxt-en-vlan-447cbe95@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <2026-10-06-1-daily-reply-0020-bnxt-en-vlan-447cbe95@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179136921539.2615039.13155272119453694887@mxe9fb.netcup.net>
+X-NC-CID: 3D5EpOl4fJDoODSbkXR/FVrrWtWpL+c30msiSWuHHrO1kgcezxQ=
 
+On 10/6/26 23:35, Sasha Levin wrote:
+>> I'm testing the patch on v6.18.55, and it looks good so far. 5 hours and
+>> counting without any issues.
+> 
+> Thanks for the bisect. The root cause is the bnxt_en small-packet padding
+> and DMA length bug Eric Dumazet identified, not 447cbe95ebb9 ("vlan: fix
+> skb_under_panic and races when toggling HW VLAN offload") itself, so we
+> will not revert the vlan fix. Once Eric's "bnxt_en: fix DMA mapping length
+> for padded small packets" lands in mainline, we will backport it to all
+> affected stable trees.
 
+FWIW, better wait a little longer till a fix for another regression
+447cbe95ebb9 exposed in another driver is fixed, too:
+https://lore.kernel.org/all/CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com/
 
-On 7 October 2026 3:59:17=E2=80=AFpm IST, Thorsten Leemhuis <regressions@l=
-eemhuis=2Einfo> wrote:
->On 10/6/26 23:19, Lukas Wunner wrote:
->> On Tue, Oct 06, 2026 at 12:37:18PM -0400, Alex Deucher wrote:
->>> On Mon, Oct 5, 2026 at 7:19 PM Bjorn Helgaas <helgaas@kernel=2Eorg> wr=
-ote:
->>>> Alex reported something similar at
->>>> https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D222095=2E
->>>
->>> Lukas' patches fixes some boards, but unfortunately, I'm still seeing
->>> failures on others=2E  Reverting the patch fixes those failures=2E  I'=
-ve
->>> updated the ticket=2E
->>=20
->> I've added an analysis of the dmesg output as well as a patch=2E
->> It looks like the BIOS is raising a false alarm in that it signals
->> a Fatal Error even though the Uncorrectable Error Status register is
->> blank=2E  The patch causes such events to be reported, but otherwise
->> ignored (i=2Ee=2E no recovery is attempted for a false alarm)=2E
->>=20
->> Newly enabled functionality like Advisory Non-Fatal Errors causes
->> BIOS code paths to be exercised which likely haven't been tested
->> by firmware validation folks, hence the fallout=2E  However I believe
->> ultimately we *want* to see those errors being reported because they
->> may point to BIOS issues which flew under the radar so far=2E
->Well, not disagreeing, but given that we have two regression reports
->(one speaking about multiple machines being broken) and we are close to
->-rc7 I wonder:
->
->Is this something we should quickly revert or disable for now and retry
->again later? Maybe multiple mainline devel cycles if needed?
+Ciao, Thorsten
 
-I think the patch needs vigorous testing on a variety of hardware before b=
-eing mainlined=2E For now a revert seems to be a good solution to ensure we=
- don't have a broken 7=2E3 for multiple devices=2E Also, we are close a new=
- LTS kernel, it's really not a good thing to have a broken one=2E
