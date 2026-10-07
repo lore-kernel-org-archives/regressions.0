@@ -1,202 +1,382 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E340948F026;
-	Wed,  7 Oct 2026 11:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B95447607C
+	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 12:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791373131; cv=none; b=Hv10xwM8toeP1YoxJAQxp/UPKTG9e0JH7jTaId4IqOYksmkw1F5f7LURKU5e+YBAIJv6mbbc1tBEmCn+yVkBqHztocy2Y3HhGovZDcMfE5OzWsphmTZO1Im9nKX8vl1FOuB3G+6ERAiSyUkncc50c5amA3cEcnvZSx8aSudFXNo=
+	t=1791376346; cv=none; b=PGkq5ChH1SutCQSIs3CrnbKcTO5aCEIbiJJDSTCL6gYAy1k8nhqlNhuxpd3n/+BwoB5r7uN1+UYouo/WPwGQPAhnJuUJuK5OZykE4tZUiB8vOD7z3ZmPqMzOhDEB99HaLSipwQrJqjmi8QdOd+cbrtazpgSQX/+up768zCrncwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791373131; c=relaxed/simple;
-	bh=kMv38oKrSaZISHsXYT59RwNnazGK8B9aVUUcQ6OMGMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ekq44PZ0Add8JvEpLr3vx+f+kvnQFFQn8q6sJXjGUeL/M5zR+jyD1hGLDe3/1tWyhHwb0yFS1unaJJWNl0PZTDUPwiTZFxF/3qmCrP/qvQlnwIQl5jMwJ1ni3TyWHP//T7L5Hm0aFO6Tcga/iE9LYt7ZhZRTrWuLwjZIW5Ou4aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbnIABJ4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791376346; c=relaxed/simple;
+	bh=Jc90DrgkmkCJP1d2Pn4L/y2dewlgSz0NqzIH+8ytKFA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=p0ZvRKbXI0T+kragx+Jtzqx8jXmcwbDNdVJBLQBJ0rx9PNS+zGfR354SJm1/2mPaKJ8H+cY1Mh9/NIQ7B7IrzojB7SFhm5rt68jvcd4fiE14ZK1OqZT2kA4LGCeh4uItcIsf18lxfLVR7TD9ipE5KWErwGTZvSxtcko574dkHo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=hji6i0Iw; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbnIABJ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D76A01F0089F;
-	Wed,  7 Oct 2026 11:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791373100;
-	bh=YHMH+keh5NxbxbkzO6Wkar3DFeK8/2kdXEFzdfkNl7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DbnIABJ4pIB1VpM1zub2Z5WRvnkL+2HK58CqmNzdKXZg29ZW88/UdxUhxTboAujj7
-	 vs7i01FwduYQXN3wTxEJWeRiKzsEx1pT3CiqA/tNArrC6do7rhFEkF6CqzJyhsJFHX
-	 v8Txz5wS8f/6yZXkCi8DJffCJp1U/NvgRp1Uvvlm7R5gFrrzDpibhHiD33mbbHmCla
-	 sXhaMk3gWlfbXuzwWC6/8PlwQ6mlv7Q80p3WT4l0cDtsc7/I2PZxbQzVbtFSax84kz
-	 KZBvx4l0kEzJfQei/GAx7aobiqhl9AnhVaeyuri4f97LqvEvIiwyS+iLqsIu6TUWxM
-	 ltXP9ruaTqHdw==
-Date: Wed, 7 Oct 2026 13:38:17 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Stian Halseth <stian@itx.no>
-Cc: Thomas Gleixner <tglx@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched/cputime: Don't account idle time twice after
- dyntick-idle
-Message-ID: <asYvKTW5qrxi3Wlp@localhost.localdomain>
-References: <20261005194010.168299-1-stian@itx.no>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="hji6i0Iw"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 4404A240103
+	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 14:32:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1791376329;
+	bh=fczfhEFWLc2TCU+JCu6EcM1jW34Ct6CugUZBv9ftY2Q=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=hji6i0IwhCNIupTxGau11OeLZauT6TiLfcf5zEC6RSJ3xHzuDLJRtB+EIEaMUwCsm
+	 75xE1nIXDsk4pvsM84r+ZbnMmuKX6FMzvYa+l1eKhSZHvVTDrDUBgdIVwlmRuYp6Sw
+	 JdWnv9YYi5za6aZigq/VQpJqsa7qmc4b41sB6rF2ncOuuPUPO1ngN2tTSG0PsPYjy9
+	 OJ3z10uujCoOOHFClKYTFIiB3KTjZEjg2+yRE561+peLftfIgJjjWhWkWM/JICX+A5
+	 exlzaJwFqDJanM7ESEFMHthYPSme4ucWUPqP3gLfcmsJ1dpqw6yRGG0B3mqDFV++y1
+	 BMKI6PRFMkFBw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4j0CDm1Zr6z9rxK;
+	Wed,  7 Oct 2026 14:32:07 +0200 (CEST)
+Message-ID: <c333b53c-b6f5-435d-82f0-d966f5cfb60a@posteo.de>
+Date: Wed, 07 Oct 2026 12:32:09 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Language: en-US, de-DE
+To: linux-ata@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+From: Hans-Joachim Lange <lange-achim@posteo.de>
+Subject: =?UTF-8?Q?PROBLEM=3A_Kernel_6=2E8=2Ex=3A_VFS=3A_Unable_to_mount_roo?=
+ =?UTF-8?Q?t_fs_on_unknown-block=280=2C0=29_=E2=80=93_SATA_=28Intel_AHCI=29_?=
+ =?UTF-8?Q?not_detected?=
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20261005194010.168299-1-stian@itx.no>
 
-Le Mon, Oct 05, 2026 at 09:40:10PM +0200, Stian Halseth a �crit :
-> On idle exit the dyntick-idle accounting accounts the time up to now,
-> then the tick is restarted on its old period. The first tick accounts a
-> whole TICK_NSEC to whatever runs, although the part of that period
-> before the idle exit has just been accounted as idle time, or with
-> IRQ_TIME_ACCOUNTING as IRQ time. That is up to a full tick per idle
-> exit, and /proc/stat reports more idle time than wall time.
-> 
-> Record how much of the current tick period dyntick-idle has accounted,
-> and leave it out of the tick that ends the period.
-> 
-> Fixes: cf6444c3e1bb7 ("tick/sched: Unify idle cputime accounting")
-> Link: https://lore.kernel.org/all/20261004142724.3896396-1-stian@itx.no/
-> Signed-off-by: Stian Halseth <stian@itx.no>
+Hello,
 
-Looks good, just a few nits:
+I am experiencing a regression: kernel 5.15.x boots fine, but 6.8.x
+fails with "Kernel panic - not syncing: VFS: Unable to mount root fs
+on unknown-block(0,0)". The SATA controller (Intel, rev 06) is not
+detected; /dev/sda never appears. The ahci module is present in the
+initramfs but does not load.
 
-> @@ -468,18 +468,34 @@ static void kcpustat_idle_start(struct kernel_cpustat *kc, u64 now)
->  	write_seqcount_end(&kc->idle_sleeptime_seq);
->  }
->  
-> -void kcpustat_dyntick_stop(u64 now)
-> +void kcpustat_dyntick_stop(u64 now, u64 tick_start)
->  {
->  	struct kernel_cpustat *kc = kcpustat_this_cpu;
->  
->  	if (!vtime_generic_enabled_this_cpu()) {
->  		WARN_ON_ONCE(!kc->idle_dyntick);
-> +		if (kc->idle_tick_period != tick_start) {
-> +			kc->idle_tick_period = tick_start;
-> +			kc->idle_tick_overlap = 0;
-> +		}
-> +		tick_start = max(tick_start, kc->idle_dyntick_entry);
-> +		if (now > tick_start)
+[1.] One line summary:
+     Kernel 6.8.x fails to detect Intel SATA AHCI controller; /dev/sda 
+not created.
 
-We probably should warn if now < tick_start.
+[2.] Full description:
+     On a [Laptop-Modell], Linux Mint 21.x, kernel 5.15.x boots normally.
+     Kernel 6.8.x panics during initramfs: "VFS: Unable to mount root fs
+     on unknown-block(0,0)". The initramfs contains ahci.ko, sd_mod.ko,
+     libahci.ko, libata.ko (verified with lsinitramfs). No shell is
+     reachable (break=bottom, rdinit=/usr/bin/sh both fail). Secure Boot
+     was disabled during testing.
 
-> +			kc->idle_tick_overlap += now - tick_start;
->  		kcpustat_idle_stop(kc, now);
->  		kc->idle_dyntick = false;
->  		vtime_dyntick_stop();
->  	}
->  }
->  
-> +/*
-> + * The first tick after dyntick-idle covers a period that the dyntick-idle
-> + * accounting may already have accounted in part.
-> + */
-> +static inline u64 kcpustat_tick_overlap(void)
-> +{
-> +	return __this_cpu_xchg(kernel_cpustat.idle_tick_overlap, 0);
+[3.] Keywords:
+     ahci, sata, ata, initramfs, boot, regression
 
-We don't need that to be an atomic xchg. It can be a plain swap.
+[4.] Kernel version:
+     Working:  5.15.0-xx-generic
+     Broken:   6.8.0-xx-generic
 
-> +}
-> +
->  void kcpustat_dyntick_start(u64 now)
->  {
->  	struct kernel_cpustat *kc = kcpustat_this_cpu;
-> @@ -487,6 +503,7 @@ void kcpustat_dyntick_start(u64 now)
->  	if (!vtime_generic_enabled_this_cpu()) {
->  		vtime_dyntick_start();
->  		kc->idle_dyntick = true;
-> +		kc->idle_dyntick_entry = now;
->  		kcpustat_idle_start(kc, now);
->  	}
->  }
-> @@ -555,6 +572,11 @@ u64 kcpustat_field_iowait(int cpu)
->  }
->  EXPORT_SYMBOL_GPL(kcpustat_field_iowait);
->  #else
-> +static inline u64 kcpustat_tick_overlap(void)
-> +{
-> +	return 0;
-> +}
-> +
->  static u64 kcpustat_field_dyntick(int cpu, enum cpu_usage_stat idx,
->  				  bool compute_delta, ktime_t now)
->  {
-> @@ -695,12 +717,13 @@ void account_process_tick(struct task_struct *p, int user_tick)
->  	if (kcpustat_idle_dyntick())
->  		return;
->  
-> +	cputime = TICK_NSEC - kcpustat_tick_overlap();
-> +
->  	if (irqtime_enabled()) {
-> -		irqtime_account_process_tick(p, user_tick, 1);
-> +		irqtime_account_process_tick(p, user_tick, cputime);
->  		return;
->  	}
->  
-> -	cputime = TICK_NSEC;
->  	steal = steal_account_process_time(ULONG_MAX);
->  
->  	if (steal >= cputime)
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index 6c3fea3867139..1c5cefbb10812 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -763,13 +763,20 @@ static ktime_t tick_forward_now(ktime_t expires, ktime_t now)
->  	return expires + TICK_NSEC;
->  }
->  
-> -static void tick_nohz_restart(struct tick_sched *ts, ktime_t now)
-> +static ktime_t tick_nohz_restart_expires(struct tick_sched *ts, ktime_t now)
->  {
->  	ktime_t expires = ts->last_tick;
->  
->  	if (now >= expires)
->  		expires = tick_forward_now(expires, now);
->  
-> +	return expires;
+[5.] Oops/Panic message:
+     Kernel panic - not syncing: VFS: Unable to mount root fs on 
+unknown-block(0,0)
 
-This should always update ts->last_tick so that we don't need to do
-the division twice on dyntick stop.
+[7.] Environment:
+     Distro: Linux Mint 21.x (Ubuntu 22.04 based)
+     Arch: x86_64
+     Controller: Intel Corporation [SATA controller] (rev 06)
+     Kernel driver in use (on 5.15): ahci
 
-> +}
-> +
-> +static void tick_nohz_restart(struct tick_sched *ts, ktime_t now)
-> +{
-> +	ktime_t expires = tick_nohz_restart_expires(ts, now);
-> +
->  	if (tick_sched_flag_test(ts, TS_FLAG_HIGHRES)) {
->  		hrtimer_start(&ts->sched_timer,	expires, HRTIMER_MODE_ABS_PINNED_HARD);
->  	} else {
-> @@ -1329,6 +1336,16 @@ unsigned long tick_nohz_get_idle_calls_cpu(int cpu)
->  	return ts->idle_calls;
->  }
->  
-> +static void tick_nohz_dyntick_stop(struct tick_sched *ts, ktime_t now)
-> +{
-> +	ktime_t tick_start = now;
-> +
-> +	if (!tick_nohz_full_cpu(smp_processor_id()))
+     lspci -k output:
+    00:00.0 Host bridge: Intel Corporation Gemini Lake Host Bridge (rev 06)
+     DeviceName: Onboard - Other
+00:00.1 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Dynamic Platform and Thermal Framework Processor 
+Participant (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Dynamic Platform and Thermal Framework Processor Participant
+     Kernel driver in use: proc_thermal
+     Kernel modules: processor_thermal_device_pci_legacy
+00:02.0 VGA compatible controller: Intel Corporation GeminiLake [UHD 
+Graphics 600] (rev 06)
+     DeviceName: Onboard - Video
+     Kernel driver in use: i915
+     Kernel modules: i915
+00:0e.0 Multimedia audio controller: Intel Corporation Celeron/Pentium 
+Silver Processor High Definition Audio (rev 06)
+     DeviceName: Onboard - Sound
+     Subsystem: Realtek Semiconductor Co., Ltd. Celeron/Pentium Silver 
+Processor High Definition Audio
+     Kernel driver in use: sof-audio-pci-intel-apl
+     Kernel modules: snd_hda_intel, snd_soc_skl, snd_sof_pci_intel_apl
+00:0f.0 Communication controller: Intel Corporation Celeron/Pentium 
+Silver Processor Trusted Execution Engine Interface (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Trusted Execution Engine Interface
+     Kernel driver in use: mei_me
+     Kernel modules: mei_me
+00:12.0 SATA controller: Intel Corporation Celeron/Pentium Silver 
+Processor SATA Controller (rev 06)
+     DeviceName: Onboard - SATA
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor SATA 
+Controller
+     Kernel driver in use: ahci
+     Kernel modules: ahci
+00:13.0 PCI bridge: Intel Corporation Gemini Lake PCI Express Root Port 
+(rev f6)
+     Subsystem: Intel Corporation Gemini Lake PCI Express Root Port
+     Kernel driver in use: pcieport
+00:14.0 PCI bridge: Intel Corporation Gemini Lake PCI Express Root Port 
+(rev f6)
+     Subsystem: Intel Corporation Gemini Lake PCI Express Root Port
+     Kernel driver in use: pcieport
+00:15.0 USB controller: Intel Corporation Celeron/Pentium Silver 
+Processor USB 3.0 xHCI Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor USB 
+3.0 xHCI Controller
+     Kernel driver in use: xhci_hcd
+     Kernel modules: xhci_pci
+00:16.0 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 0 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 0
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:16.1 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 1 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 1
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:16.2 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 2 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 2
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:16.3 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 3 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 3
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:17.0 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 4 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 4
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:17.1 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 5 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 5
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:17.2 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 6 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 6
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:17.3 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor I2C 7 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 7
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:18.0 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO UART Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO UART Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:18.1 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO UART Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO UART Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:18.2 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO UART Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO UART Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:18.3 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO UART Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO UART Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:19.0 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO SPI Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO SPI Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:19.1 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO SPI Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO SPI Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:19.2 Signal processing controller: Intel Corporation Celeron/Pentium 
+Silver Processor Serial IO SPI Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Serial IO SPI Host Controller
+     Kernel driver in use: intel-lpss
+     Kernel modules: intel_lpss_pci
+00:1c.0 SD Host controller: Intel Corporation Celeron/Pentium Silver 
+Processor SDA Standard Compliant SD Host Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor SDA 
+Standard Compliant SD Host Controller
+     Kernel driver in use: sdhci-pci
+     Kernel modules: sdhci_pci
+00:1e.0 SD Host controller: Intel Corporation Device 31d0 (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Device 7270
+     Kernel driver in use: sdhci-pci
+     Kernel modules: sdhci_pci
+00:1f.0 ISA bridge: Intel Corporation Celeron/Pentium Silver Processor 
+LPC Controller (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor LPC 
+Controller
+     Kernel driver in use: lpc_ich
+     Kernel modules: lpc_ich
+00:1f.1 SMBus: Intel Corporation Celeron/Pentium Silver Processor 
+Gaussian Mixture Model (rev 06)
+     DeviceName: Onboard - Other
+     Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
+Gaussian Mixture Model
+     Kernel driver in use: i801_smbus
+     Kernel modules: i2c_i801
+01:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8821CE 
+802.11ac PCIe Wireless Network Adapter
+     Subsystem: Realtek Semiconductor Co., Ltd. RTL8821CE 802.11ac PCIe 
+Wireless Network Adapter
+     Kernel modules: rtw88_8821ce, rtw_8821ce, 8821ce
 
-Just don't check tick_nohz_full_cpu(), it will fall into the
-vtime_generic_enabled_this_cpu() anyway.
+     dmesg | grep -iE "ata|sata|ahci" (on 5.15.x):
+    [    0.000000] BIOS-e820: [mem 
+0x000000006dd70000-0x000000006dd80fff] ACPI data
+[    0.000000] reserve setup_data: [mem 
+0x0000000000000000-0x000000000003efff] usable
+[    0.000000] reserve setup_data: [mem 
+0x000000000003f000-0x000000000003ffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x0000000000040000-0x000000000009dfff] usable
+[    0.000000] reserve setup_data: [mem 
+0x000000000009e000-0x00000000000fffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x0000000000100000-0x000000000fffffff] usable
+[    0.000000] reserve setup_data: [mem 
+0x0000000010000000-0x0000000012150fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x0000000012151000-0x00000000607a9017] usable
+[    0.000000] reserve setup_data: [mem 
+0x00000000607a9018-0x00000000607b9057] usable
+[    0.000000] reserve setup_data: [mem 
+0x00000000607b9058-0x000000006b4bbfff] usable
+[    0.000000] reserve setup_data: [mem 
+0x000000006b4bc000-0x000000006dd6ffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x000000006dd70000-0x000000006dd80fff] ACPI data
+[    0.000000] reserve setup_data: [mem 
+0x000000006dd81000-0x000000006dde0fff] ACPI NVS
+[    0.000000] reserve setup_data: [mem 
+0x000000006dde1000-0x000000006e1e6fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x000000006e1e7000-0x000000006ea3cfff] usable
+[    0.000000] reserve setup_data: [mem 
+0x000000006ea3d000-0x000000006ea3dfff] ACPI NVS
+[    0.000000] reserve setup_data: [mem 
+0x000000006ea3e000-0x000000006ea3ffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x000000006ea40000-0x000000006eb14fff] usable
+[    0.000000] reserve setup_data: [mem 
+0x000000006eb15000-0x000000006ebc4fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x000000006ebc5000-0x000000006effffff] usable
+[    0.000000] reserve setup_data: [mem 
+0x000000006f000000-0x000000007fffffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000d0000000-0x00000000d0ffffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000d3709000-0x00000000d3709fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000e0000000-0x00000000efffffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000fe042000-0x00000000fe044fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000fe900000-0x00000000fe902fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000fec00000-0x00000000fec00fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000fed01000-0x00000000fed01fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000fee00000-0x00000000fee00fff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x00000000ff800000-0x00000000ffffffff] reserved
+[    0.000000] reserve setup_data: [mem 
+0x0000000100000000-0x00000001ffffffff] usable
+[    0.024880] NODE_DATA(0) allocated [mem 0x1fffd6000-0x1ffffffff]
+[    0.203122] Memory: 5547680K/5931444K available (16393K kernel code, 
+4402K rwdata, 11004K rodata, 3296K init, 18764K bss, 383508K reserved, 
+0K cma-reserved)
+[    0.370364] Register File Data Sampling: Mitigation: Clear Register File
+[    0.718375] ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
+[    0.932015] ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
+[    0.932228] libata version 3.00 loaded.
+[    1.936203] Write protecting the kernel read-only data: 30720k
+[    1.936858] Freeing unused kernel image (text/rodata gap) memory: 2036K
+[    1.937125] Freeing unused kernel image (rodata/data gap) memory: 1284K
+[    2.238334] ahci 0000:00:12.0: version 3.0
+[    2.249922] ahci 0000:00:12.0: AHCI 0001.0301 32 slots 2 ports 6 Gbps 
+0x3 impl SATA mode
+[    2.249929] ahci 0000:00:12.0: flags: 64bit ncq sntf pm clo only pmp 
+pio slum part deso sadm sds apst
+[    2.256735] scsi host0: ahci
+[    2.260141] scsi host1: ahci
+[    2.260198] ata1: SATA max UDMA/133 abar m2048@0x80040000 port 
+0x80040100 irq 124
+[    2.260204] ata2: SATA max UDMA/133 abar m2048@0x80040000 port 
+0x80040180 irq 124
+[    2.575597] ata2: SATA link down (SStatus 4 SControl 300)
+[    2.737540] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[    2.739515] ata1.00: ATA-9: SSD 1TB, X0606B0, max UDMA/133
+[    2.740480] ata1.00: 1953525168 sectors, multi 1: LBA48 NCQ (depth 
+32), AA
+[    2.744572] ata1.00: configured for UDMA/133
+[    2.745087] scsi 0:0:0:0: Direct-Access     ATA      SSD 1TB          
+6B0  PQ: 0 ANSI: 5
+[    6.125323] EXT4-fs (sda4): mounted filesystem with ordered data 
+mode. Opts: (null). Quota mode: none.
+[    7.231564] cfg80211: Loading compiled-in X.509 certificates for 
+regulatory database
+[    7.253660] systemd[1]: systemd-hwdb-update.service - Rebuild 
+Hardware Database was skipped because of an unmet condition check 
+(ConditionNeedsUpdate=/etc).
+[    9.645970] EXT4-fs (sda5): mounted filesystem with ordered data 
+mode. Opts: (null). Quota mode: none.
 
-Thanks!
+[X.] Notes:
+     - ahci.ko is present in initramfs but not loaded
+     - No initramfs shell reachable (break=bottom, rdinit both fail)
+     - Secure Boot disabled during testing
+     - First broken kernel: 6.x.x (if known)
+     - Last working kernel: 5.15.x
 
+Thank you
 
-> +		tick_start = tick_nohz_restart_expires(ts, now) - TICK_NSEC;
-> +
-> +	kcpustat_dyntick_stop(now, tick_start);
-> +}
-
-
--- 
-Frederic Weisbecker
-SUSE Labs
