@@ -1,261 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from GVZP280CU018.outbound.protection.outlook.com (mail-swedencentralazon11022094.outbound.protection.outlook.com [52.101.82.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C974E388878;
-	Tue,  6 Oct 2026 22:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791324007; cv=none; b=W4MLzP1GD5Hv6aAk8Mo96Nn/H/BqhLpto30rzW17m0rlFXWqJkXMlFZn3/zQrU42/loxSLeUm7XBP4FqKl1Gar7+UtJApAs36F5HyaQmEqV+mDCq9F3rdlY/ywuCZSvyGW88OEHsw2zdJnEwXWCr1qx8U9DRSpu0SWwEwqzuzyw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791324007; c=relaxed/simple;
-	bh=brk0PvIILN+5DqrtGOIk4U1m9qBEHZjx6IWEAQIa1Cg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=utq7+91PeSfjHFB9VPsY2DDxkxzK4HjkgQAZSSNhingFsOXf4fBKuvPxog5ksrc1rFDOF02XJ3w5NN4HeBnGcJrnvYrRdovatTxMwZ/lUH8wZgh+hOQVP3vEah/t361kJo5IzekCw4zqTEthcjKz8PHMR/0GPstea1LOZXMN/EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4GcnhcU; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096CC3CFF6C
+	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 05:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.82.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791352627; cv=fail; b=V0VOyAYiVy4oaYQ9OOwd0ORIeZbSM0XSSZfAiDI0z5ja33vNx6honj484zv6749R/1D2wOi+llf8lmAB05MwXa+DgtM4TMC9x6NIcDMFkUQrykNTtGlXB56zS9rIVP6+MOOG3u6bXfvZ66JZ6Prrm/zi70ZC9uTcSoLz1SMGclk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791352627; c=relaxed/simple;
+	bh=R7ukRC4N2TIU3wPeT6dOPWNnfH3XvbJvH6SdIc71igw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=EomEWQTOPf7Ej4GubO1fMnQiROZKdxVm/NXE9/2K9t9uby3hhao9VVm/HY+q8Hk4oVmx6qzrlp3gRWYqUUwfFE6kSphSK1Y8nUgIdS9dsLvBlvmirzTttivwzHfR7C9za4PtcbS3pIy6/AYIPhy7iVLhS+K9bim0V5x84kW9gGM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=DgLC+6VC; arc=fail smtp.client-ip=52.101.82.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4GcnhcU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504791F0089B;
-	Tue,  6 Oct 2026 22:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791324005;
-	bh=JAZHPiWR5j0jM9LKWbiM25hgRJqvybtekBb6aLKSHzo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=m4GcnhcUYgBwZ6K14h3yjXkKTj+kIYHqfuu5yHLdsAW/rqpjQqgqrwz3dlpq8lRCa
-	 wghyJ334cx1DLRUPJxIFoS2BUuvrOWdNlf6XzfPR1o0KspnjmgUNIDliMzPVvYtECV
-	 3ACnyslLEn/L3qt7mKKPrCry2WYenGbw17OuMj1zDffsNMxOYXghqQyqOtw3yDrDm4
-	 tW9opOQV9SxyFSHPdKuIH6TbV9Hvj2crP3D02yauTPvIk1muxOafItivOzyFAUACWH
-	 XhWvhLy6wteaEuPVuvh3ZOzw48oES5gQHKrG+IlA4+Xllz0A4h8603VNkU6lPox3gc
-	 1kmoEASKNPO9w==
-Message-ID: <4c98eff5-c8c7-43ee-b59a-adb833978816@kernel.org>
-Date: Tue, 6 Oct 2026 23:59:53 +0200
+	dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="DgLC+6VC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jEvRo1u+e8uyaWrY2UF/thYyB0vJW4WA2SlGyFiOLR/Q8QFpXyVTwQcxWLQ4GoGv9wSN+bgVRgnbC7fVmIMjsBdCdH1WZJ0pEZfCvHVK80J1tPTWkIwc0Je3XQ6GW8fxeN2MVA3qEaNtqQ3sVY7fVNRH1gaMhWNqbTQha1vFK32/ReYk4K9ewlvdp8xKmh82GYvUw1pE2IY26YGFjve/Cdj4avP1Q2RzK+LAPiZubAhBSNp1HZ0H2iBAjtnvU0kLwtkwbJs9PhnUm/MQUNjWRLFgRPqrHvTI80BUw/LsDoMawEclhslMSZ2lj4fg/S7jBQE2cX7Oqm1mTe5ssAMs9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gncYjaI/qFSw8MTeEHHeK2eW3Kh8lZZeaA+SysWEut8=;
+ b=Yj28fZYrJ3czHKz432lkqHSQJwK2j0ASuCO5khBZhSvcPqMtnquCgBFDUFV8+REkR+8/SKOo6e3aVV3qZvKuD7Jfur3xWWMNp9wSPl4aODLmGmw1c4iiGaCUY+n8xBwkXT1LdE2wT6CC/5y7Rmq2zcBYi6GCrD/tH3mZhsG2P9mHIL04+OG4QeZoQqqmQPmbxBz3MrntxybFh7rWxZiCY71M93qOX6rH/CXCdawpWLpL5kT5DdKuSFhA/R8b82O5OpiQXaUORiSM90YMgrilASLe1DuE/rtfTFWoYcUFQ+lqD/C6YGOXKIxD/ZONfnp1PYWc/+htwgrPRr+ODnrVfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gaisler.com; dmarc=pass action=none header.from=gaisler.com;
+ dkim=pass header.d=gaisler.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gncYjaI/qFSw8MTeEHHeK2eW3Kh8lZZeaA+SysWEut8=;
+ b=DgLC+6VCq5mR1BJOgtcrArqC4nOHuGO59ELfLTw5cx0KO+asxdDiOXaF+5L5qxQLsg9++IlM4n2B9+fPSuOupJzYlJZ1HsEQZJJv3p2j+55eXNhDSU4lRYq7zd6GKR8u4wTOxl6RQUTJcZy1juB/z61RrIWJUaIzDToWsTKsfwiTr9CVSg0MPRR7dIzE6cFC/JiQeD4W547zbwVCdFpBp1KOloKz341K8wTzN6dFesm7WsMYG2CHLe70oON1rBPMAVpnmtnVhi52t4/sBP3bczqDRwMDDV6kz+5QeQnkooCH2NamUXQGrbnToJf1CJkmXo2BDZ5iRAsjbD+D9Hz3ig==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gaisler.com;
+Received: from MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM (2603:10a6:190:2f::5)
+ by GVYP280MB2223.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:34d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.15; Wed, 7 Oct
+ 2026 05:57:00 +0000
+Received: from MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::1f13:f10:e16b:7939]) by MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::1f13:f10:e16b:7939%4]) with mapi id 15.21.0472.016; Wed, 7 Oct 2026
+ 05:57:00 +0000
+Message-ID: <8f605908-3315-4e05-b30a-5f298f93635e@gaisler.com>
+Date: Wed, 7 Oct 2026 07:56:59 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] sparc64: Fix comparator problem with timer interrupts
+To: Stian Halseth <stian@itx.no>, tglx@kernel.org, davem@davemloft.net,
+ sparclinux@vger.kernel.org
+Cc: Tony Rodriguez <unixpro1970@gmail.com>, linux-kernel@vger.kernel.org,
+ thomas.weissschuh@linutronix.de, regressions@lists.linux.dev,
+ glaubitz@physik.fu-berlin.de, linux@leemhuis.info,
+ torvalds@linux-foundation.org
+References: <20260519022421.5978-1-unixpro1970@gmail.com>
+ <20260831180728.3097740-1-stian@itx.no>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20260831180728.3097740-1-stian@itx.no>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: GV2PEPF0001A334.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:401::699) To MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:2f::5)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] r8169: TX stall with checksum offload on
- VLAN frames with inline tag (REORDER_HDR off) since 1517d1996b52
-From: Eric Dumazet <edumazet@kernel.org>
-To: =?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>,
- Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, nic_swsd@realtek.com,
- Sasha Levin <sashal@kernel.org>
-References: <CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com>
- <a6193df2-98f3-409f-b73f-5b91835a0107@kernel.org>
- <CAL4WiirwF6bZwocErCthJ+TUu7wipRfSibRBoKWjjkA2nVSrqQ@mail.gmail.com>
- <CAL4WiiqSmW093PDngLrUNiNA5GVKeM3+tAO7KMDJeyjYZ7GRzg@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAL4WiiqSmW093PDngLrUNiNA5GVKeM3+tAO7KMDJeyjYZ7GRzg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MM0P280MB495062:EE_|GVYP280MB2223:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2552528-8fc1-4191-0f09-08df2437cdb4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|23010399003|10067099003|56012099006|11063799006|4143699003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	uKPVBsYLJVktFpS0wPdMCg/KbKgINs9vOBWCVuBOqmQchokgPc8O3u/3GWBS8B2QIAlKD9R7+zgeKRJXoU0+36FJYdXyduq0PEZqNg4hWaQu0oVNOwTposTm6EJdDbG5dIGWpxUs7XiHm8gdzSF/2YULOmUNWCKJnsE93eIYpIq33fIQYPYC/hx1CVOW+fB0mHTgpzhClNT4Dfgy0KieLtiT15C/SbLDj8znThvo4f3E296j97j+B0+XicATujrRc8bwqGlAHbfVGTQ19qJbhHJrfEOUnXN90isil2doQlawHshb4vC1YXV9F8jWzU2OyCmDJTW3q1fIlp1UcrPzxtSUV80E21JJjqi5R819cHOJkdj5TiNaSECNsxqMXsljtiv1XAeRHWENsrjbFll4hNVkeqaCH13xOj57QSk8DuGQu0G+Ryjy33CMHnZZeSvq2ExlKSShkQ4ubg7LHvPJO+gJiH4M4sGQOZki2DsEjOSKHNQbScfYk7K+OqTE/MwNke9ljEea0MildpWmezgLibzoCUvEqGvbRLJS1FNqTAj01C4xPJE6uwMEDU36dH8pEV+Ho2C+0l7RdXLrERulc+DZGUDqP/C9wPhwEsZk16LZuGoylU1KuxiaTy/Ge4A9
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(23010399003)(10067099003)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WFBrNXJidmJJRDVueHM4cmJiS3JKMFhHUGYrOEVJTS9xQ1lXdlptSUFBK3ky?=
+ =?utf-8?B?NWlldDEwMWllOTRaTUY0N2NrYmltalhsbllsTzdnb1VnaWphaWN2amZONitV?=
+ =?utf-8?B?VTRtYldsRFVsOThSaVJXeGhXWi9LaXVENTh0cmlxQ2d4N0dIRkFEbFJhVzgz?=
+ =?utf-8?B?dzJtbjhDaThSclVOeStHRFZYbndFL1JLOXdTQzRBaWxkZnRqRncvSWJ0TTFk?=
+ =?utf-8?B?Rmg5N3lJNlYrVi82eHpPQjZ4RWtzNmFRa1RRTStkaVdKL3lwZm5ka1hUOG5N?=
+ =?utf-8?B?RUtYMG9RYXNBZFFmK1R3cE1PRjJ3M0dKUlloZ0gwWTdxTXZWTFhjQ0RoTGw1?=
+ =?utf-8?B?MkVMMUVPNUEwbHZKNmVSb2M0SVZmVGlLNHkwMDRUdFFuSHBab3l5YTNCRFov?=
+ =?utf-8?B?bEdHNHVHOXVCTDZYZVNDRTFhMXBtRHd3QWV1STFHekpxZlpsVUJ2dnFDejJv?=
+ =?utf-8?B?dEh4UGxlWlBTTHMrV29PZ2xnY3RkSEpmaHM1MWZva2Q0VTZGV2FqYUVYcENB?=
+ =?utf-8?B?YWh4L3UvM29UcWNScmtGZWp6em5XNnZMbzJ2L3dsbGNXQVJlbE5TeGxpWGdH?=
+ =?utf-8?B?MkZaaE92anJIR2NydDVwYmxVTnNtdVVBQUZFTlQ2bGRGb2o0dHdtNHJkVDcy?=
+ =?utf-8?B?TWdBOGozRVBRZENCSkJrc0F6L3FpWXk3dnQ0d2tGMXR2UHdYaHQ3Tm9PWVlz?=
+ =?utf-8?B?MmxWRlczY2J5NmRPNlRnSGRzZkpzY0IxaFVBeVJqUlJYalV4TW84WGc4dUlC?=
+ =?utf-8?B?MlM4RjhXUjRiZzlpVkVaNnNJVnkrbTRwQTd5S0RhbUFwYkZweFpCRnVMamJ6?=
+ =?utf-8?B?M0FUVmlDYUkzakFlcmdoU0ZlMEVxTzhwazN4dFJBcDNDNW5PTUt4a1hFSjRX?=
+ =?utf-8?B?Wk1ZYTJ4TXp4UGxwUmkrY291Kzh2aFlGQUdpTWZ5Q1I3am5VKzU0N3gxdHIz?=
+ =?utf-8?B?VjhlOGs4bmxKcnJkRmRBTnVGd2dIODh0a1o0eWhMWFVXNzJrNGJaQnlyK3Zi?=
+ =?utf-8?B?VVNOdlo0ZmliYmt4bERCL1g4TnlHb3BrWGt5K3hpcS84dWFMZHFHTEJaMm5X?=
+ =?utf-8?B?UUQwM0dPdFQ3bzI0RUxicWdmMmV4VlBOa1lycEIyVTI2ZkZoeG1McHB3MzFZ?=
+ =?utf-8?B?MW1FVWNtUWUzQm5LY3ExRzlBUDFvaThnbHUwb0tuQkdSUHVSbDFwN0E3N091?=
+ =?utf-8?B?QzczZGRMZnpSR1hoN1VPaEJ1bHkrYjN4YjNTQ1FiQ1JpeGI1UTJUVXloYTlr?=
+ =?utf-8?B?SmkyUnV0bDRuVFhPcmJYN2NwbEhaNXZKbDBjdzFrS1E3bEliQTJMTUlOWjNs?=
+ =?utf-8?B?dTE4TkpYckNWWUFrbnY3TXNFT0JzTGp5Y2hKaytFZTZPZzc2czF1bWFxSjh1?=
+ =?utf-8?B?WmxNU0RxSnRJTmhDMWpzMm1keTl3NTd3MjNqTUZONWFtaEJIMnQzR1ZxaWVk?=
+ =?utf-8?B?YWJ3cUx6VmlkSnJ6S2xTLzFUY1ZGRjRKNmI2TzlqNWJKZzBxeFhQelR1Tmgy?=
+ =?utf-8?B?UW8vSWVMNjRvM2pHcnk5TFZhTjFrY1k0OUo3bGtGYTJoOS9uQkRSeTNrZThq?=
+ =?utf-8?B?ZUgxdHdVQUlaR2dqTldMVHovSXM2MnlRUEdlSlE2Wm05dFhtRWprclpnd3ll?=
+ =?utf-8?B?cXBGemhCVDg3TUxjTXpKWDBmR2d4c3BxNEJkK0thQTZqRzVJSzhMRi9pVUNs?=
+ =?utf-8?B?UVlQR21iZWx6NTBzODVYaWpoNzlRQjV0VkFEZ3IrNitGQ0dYOW9YekhOeXdz?=
+ =?utf-8?B?OXBQWmNlQzVjTTJMQ3FSbGlHZzliWVd4eWdIMjQxNENvZnFQeHRhTHFJakRp?=
+ =?utf-8?B?eVg1R1hSSDFSUkRBQ0JYeHNjRmc5R3NteWlaVjdRanNUOC84VU0xZ3R3M3dp?=
+ =?utf-8?B?Y2pqak1IdkM4SldLZVAxOXdVRHg0b3VXdDl2RVRhOUlmWVRrMmpiQXdlZHdX?=
+ =?utf-8?B?RmVFeGFFVDRtWGVrb2d1ckVkWldWcXk4MjR2NHp3UjcxNXRwWlc2S090R0xK?=
+ =?utf-8?B?UVAxSVRBK2lDV1VIUHNUZnllMkE4dEduZC9sTGZBYU1ZdEcwZ0g1ZDU0bVlI?=
+ =?utf-8?B?S2FDZVFPb25XWmh6WUZFbnRlclBNT0ZBR1RmMGxRNU84TXVSYmM3cDcvcysv?=
+ =?utf-8?B?alJmMy9HOEFES0RwOHNKTWU4NXhGZXhnUE04VUJJQjlhbUpPNU5kNHhqZ0s2?=
+ =?utf-8?B?K0hRQ0JEU2FPa1hpNWpISXJLSXc4VmdjNGg2clk1VHMrZDVUa3JWYXJLZ1kv?=
+ =?utf-8?B?ZGpnKzkxaG9JSkUxOWJzbWlmVldicHBIOGdOTEk0Z3Z3Ymt4R3BINnZQanNO?=
+ =?utf-8?B?a0ZOaWhyU1dXR2tHN09UNEdmWGFwYVJ0a0ZlQ0RLQ0VzSmVMZkZONmVEcGxM?=
+ =?utf-8?Q?gm8gJOufUUGwmP48=3D?=
+X-OriginatorOrg: gaisler.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2552528-8fc1-4191-0f09-08df2437cdb4
+X-MS-Exchange-CrossTenant-AuthSource: MM0P280MB495062.SWEP280.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2026 05:57:00.3833
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 91fa4a59-2167-458a-8318-e45d80469d7e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y61bDqNuANMZ4t+SYH1SHD6MPO3Y8G57yNBEsgGmOrNAEV8ntl0f5lf6K+cZTS/yRlDCCCpxUrKwtOWn2jNeqc55V5sm6TmGEcZCZBBliTw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVYP280MB2223
 
+On 2026-08-31 20:07, Stian Halseth wrote:
+> From: Tony Rodriguez <unixpro1970@gmail.com>
+> 
+> The tick/stick/hbtick add_compare() implementations program the
+> comparator and then check whether the write took effect in time:
+> 
+> 	exp = read_cnt() + delta_ticks;
+> 	write_cmp(exp);
+> 	return (read_cnt() - exp) > 0;
+> 
+> A nonzero return value means the expiry time was already reached
+> before the comparator write could take effect, so the interrupt may
+> never fire, and the caller retries with a new expiry:
+> 
+> 	return tick.add_compare(delta_ticks) ? -ETIME : 0;
+> 
+> The check only fails the write when the counter has advanced past the
+> expiry time, but not when it is equal to it. In the equal case it is
+> unknown whether the comparator write took effect before or after the
+> counter reached the expiry value, so the compare match - and with it
+> the timer interrupt - may have been missed. add_compare() then
+> reports success, the caller does not retry, and the CPU is left with
+> no pending timer interrupt.
+> 
+> This results in stalled hrtimers and RCU stalls / hangs under load,
+> observed on SPARC S7-2 and T7-1 systems:
+> 
+>     rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+>     rcu: rcu_sched kthread timer wakeup didn't happen for 5259 jiffies!
+>     rcu:     Possible timer handling issue on cpu=100 timer-softirq=15
+> 
+> Treat counter == expiry as failure as well, so the caller retries
+> with a new expiry time. After this change S7-2 and T7-1 systems no
+> longer hang.
+> 
+> Diagnosed-by: Thomas Gleixner <tglx@kernel.org>
+> Link: https://lore.kernel.org/all/87tssb6olo.ffs@tglx/
+> Link: https://lore.kernel.org/all/871pfcznw0.ffs@tglx/
+> Link: https://lore.kernel.org/all/20260519022421.5978-1-unixpro1970@gmail.com/
+> Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
+> [stian: rewrote the changelog per review of v2, retested]
+> Signed-off-by: Stian Halseth <stian@itx.no>
+> ---
+> v3:
+>  - rewrite the changelog: describe the write/readback ordering and the
+>    direction of the equal-compare case per Thomas Gleixner's review
+>    https://lore.kernel.org/all/878q9fxywc.ffs@tglx/
+>    (the code change is identical to v2)
+>  - add the Link: tags to the original debugging discussion
+>  - picked up with Tony's agreement after v2 stalled
+>    https://lore.kernel.org/all/10382506-3f57-4b33-8356-34f23fb5f153@gmail.com/
+> 
+> Tested on an UltraSPARC T4-1 (sun4v, stick variant): 9.1M hrtimer
+> reprograms in 90s across 32 threads with 10-500us expiries, no
+> stalls, no lost wakeups (worst oversleep 657us).
+> 
+>  arch/sparc/kernel/time_64.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/sparc/kernel/time_64.c b/arch/sparc/kernel/time_64.c
+> --- a/arch/sparc/kernel/time_64.c
+> +++ b/arch/sparc/kernel/time_64.c
+> @@ -146,7 +146,7 @@
+>  			     : "=r" (new_tick));
+>  	new_tick &= ~TICKCMP_IRQ_BIT;
+>  
+> -	return ((long)(new_tick - (orig_tick+adj))) > 0L;
+> +	return ((long)(new_tick - (orig_tick+adj))) >= 0L;
+>  }
+>  
+>  static unsigned long tick_add_tick(unsigned long adj)
+> @@ -277,7 +277,7 @@
+>  			     : "=r" (new_tick));
+>  	new_tick &= ~TICKCMP_IRQ_BIT;
+>  
+> -	return ((long)(new_tick - (orig_tick+adj))) > 0L;
+> +	return ((long)(new_tick - (orig_tick+adj))) >= 0L;
+>  }
+>  
+>  static unsigned long stick_get_frequency(void)
+> @@ -411,7 +411,7 @@
+>  
+>  	val2 = __hbird_read_stick() & ~TICKCMP_IRQ_BIT;
+>  
+> -	return ((long)(val2 - val)) > 0L;
+> +	return ((long)(val2 - val)) >= 0L;
+>  }
+>  
+>  static unsigned long hbtick_get_frequency(void)
+> --
+> 2.53.0
 
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
 
-On 10/6/26 20:16, Eric Dumazet wrote:
-> Le mar. 6 oct. 2026 à 19:07, Eric Dumazet <edumazet@kernel.org> a écrit :
->>
->> Le mar. 6 oct. 2026 à 18:27, Eric Dumazet <edumazet@kernel.org> a écrit :
->>>
->>>
->>>
->>> On 10/6/26 13:45, Jan Čermák wrote:
->>>> Hi,
->>>>
->>>> the Home Assistant OS recently shipped kernel update from 6.18.39 to
->>>> 6.18.52 which was followed by a bunch of community reports about fatal
->>>> network breakages [1] which had one thing in common - r8169 driver and
->>>> configured VLANs. This manifested as network stall early in the setup
->>>> of the system with dmesg events like this:
->>>>
->>>>> r8169 0000:03:00.0 enp3s0: NETDEV WATCHDOG: CPU: 7: transmit queue 0 timed out 6125 ms
->>>>> r8169 0000:03:00.0 enp3s0: rtl_rxtx_empty_cond == 0 (loop: 42, delay: 100).
->>>>
->>>> As there was no change in the r8169 driver itself, I focused on the
->>>> vlan subsystem, where AI pointed me shortly to this suspect commit in
->>>> the range: 1517d1996b5236fe69eccd9d253f725e06996eb1 ("vlan: fix
->>>> skb_under_panic and races when toggling HW VLAN offload"), added in
->>>> 6.18.51. I'm not referring to the mainline counterpart below for
->>>> regzbot (447cbe95ebb9) as I can't confirm whether it triggers the bug
->>>> there as well. FWIW there was another issue [2] with a similar
->>>> combination recently in the regressions ML but that one seems
->>>> unrelated, as disabling EEE fixed that issue, and it doesn't fix it
->>>> here.
->>>>
->>>> I don't have the hardware myself, I asked for testing with this commit
->>>> reverted, which confirmed that this change indeed started to cause
->>>> trouble. However, it's obvious that the change itself is not bad, as
->>>> it fixes another issue and the regression is scoped to very specific
->>>> hardware/setup combo.
->>>>
->>>> Besides the revert, following workarounds were reported to fix the
->>>> issue as well:
->>>> - Disabling TX checksum offload with `ethtool.feature-tx off` in
->>>> NetworkManager for the connection (HAOS doesn't have ethtool binary,
->>>> hence this option instead of direct ethtool command)
->>>> - Enabling REORDER_HDR with `ip link set enp1s0.100 type vlan reorder_hdr on`
->>>>
->>>> Clearly, this needs rather esoteric setup to trigger the bug - I guess
->>>> most systems set the REORDER_HDR flag by default, however, due to some
->>>> legacy in the DBus interface that HAOS stack uses to configure the
->>>> network [3], it was disabled. Anyway, I think that disabling it should
->>>> not lead to driver breakage as we're seeing.
->>>>
->>>> So far it appears that this only affects RTL8168h/8111h, XID 541 -
->>>> there isn't any report of another chip/XID combination yet.
->>>> Unfortunately, as I said above, I don't have the hardware available
->>>> for testing but I believe I'll find some community members who'll be
->>>> willing to test a proposed fix for the issue if needed.
->>>>
->>>> [1] https://github.com/home-assistant/operating-system/issues/5019
->>>> [2] https://lore.kernel.org/regressions/353419280.954808.1790290283530@mail.yahoo.com/
->>>> [3] https://github.com/home-assistant/supervisor/issues/7248
->>>>
->>>> #regzbot introduced: 1517d1996b5236fe69eccd9d253f725e06996eb1
->>>> #regzbot link: https://github.com/home-assistant/operating-system/issues/5019
->>>>
->>>> Cheers,
->>>> Jan
->>>
->>> Ok this NIC can not perform tx csum offloads with vlans.
->>>
->>> opts[1] only takes TD1_IPv4_CS and TCPHO (Transport Header Offset).
->>>
->>> There is no IP header offset field in the descriptor. The MAC assumes
->>> the IP header starts immediately at byte 14.
->>>
->>> So we need to change vlan_dev_hard_header() to take into account
->>> vlan_hw_offload_capable(real_dev->features, vlan->vlan_proto)
->>>
->>> Can you test the following patch?
->>>
->>> Thanks!
->>>
->>> diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
->>> index
->>> cb8f3cdbf1f732c55a8a3d69ab5445988c953205..3a518ff064465e8ab978c66a28bf7df579931256
->>> 100644
->>> --- a/net/8021q/vlan_dev.c
->>> +++ b/net/8021q/vlan_dev.c
->>> @@ -54,7 +54,9 @@ static int vlan_dev_hard_header(struct sk_buff *skb,
->>> struct net_device *dev,
->>>           u16 vlan_tci = 0;
->>>           int rc;
->>>
->>> -       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR)) {
->>> +       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR) &&
->>> +           !vlan_hw_offload_capable(READ_ONCE(vlan->real_dev->features),
->>> +                                    vlan->vlan_proto)) {
->>>                   unsigned int hlen = READ_ONCE(dev->hard_header_len) +
->>>                                       READ_ONCE(dev->needed_headroom);
->>
->> Nope, scratch this. I need to spend more time on a proper fix.
-> 
-> It seems this code is not needed anymore, and was the source of many
-> bugs anyway.
-> 
-> In modern Linux, core networking already has validate_xmit_vlan() in
-> net/core/dev.c which handles software fallback tag insertion right before
-> ndo_start_xmit when the lower device lacks HW VLAN TX offload.
-> 
-> VLAN_FLAG_REORDER_HDR should be an RX option (controlling vlan_untag()).
-> 
-> I am tempted with this (untested) approach
-> 
-> diff --git a/net/8021q/vlan_dev.c b/net/8021q/vlan_dev.c
-> index cb8f3cdbf1f732c55a8a3d69ab5445988c953205..7c1394ee2a653706c42f1b970e13664583d1cf36
-> 100644
-> --- a/net/8021q/vlan_dev.c
-> +++ b/net/8021q/vlan_dev.c
-> @@ -49,47 +49,14 @@ static int vlan_dev_hard_header(struct sk_buff
-> *skb, struct net_device *dev,
->                                  unsigned int len)
->   {
->          struct vlan_dev_priv *vlan = vlan_dev_priv(dev);
-> -       struct vlan_hdr *vhdr;
-> -       unsigned int vhdrlen = 0;
-> -       u16 vlan_tci = 0;
-> -       int rc;
-> -
-> -       if (!(READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR)) {
-> -               unsigned int hlen = READ_ONCE(dev->hard_header_len) +
-> -                                   READ_ONCE(dev->needed_headroom);
-> -
-> -               if (skb_cow_head(skb, hlen) < 0)
-> -                       return -ENOMEM;
-> -               vhdr = skb_push(skb, VLAN_HLEN);
-> -
-> -               vlan_tci = vlan->vlan_id;
-> -               vlan_tci |= vlan_dev_get_egress_qos_mask(dev, skb->priority);
-> -               vhdr->h_vlan_TCI = htons(vlan_tci);
-> -
-> -               /*
-> -                *  Set the protocol type. For a packet of type ETH_P_802_3/2 we
-> -                *  put the length in here instead.
-> -                */
-> -               if (type != ETH_P_802_3 && type != ETH_P_802_2)
-> -                       vhdr->h_vlan_encapsulated_proto = htons(type);
-> -               else
-> -                       vhdr->h_vlan_encapsulated_proto = htons(len);
-> -
-> -               skb->protocol = vlan->vlan_proto;
-> -               type = ntohs(vlan->vlan_proto);
-> -               vhdrlen = VLAN_HLEN;
-> -       }
-> +       struct net_device *real_dev = vlan->real_dev;
-> 
->          /* Before delegating work to the lower layer, enter our MAC-address */
->          if (saddr == NULL)
->                  saddr = dev->dev_addr;
-> 
->          /* Now make the underlying real hard header */
-> -       dev = vlan->real_dev;
-> -       rc = dev_hard_header(skb, dev, type, daddr, saddr, len + vhdrlen);
-> -       if (rc > 0)
-> -               rc += vhdrlen;
-> -       return rc;
-> +       return dev_hard_header(skb, real_dev, type, daddr, saddr, len);
->   }
-> 
+Picking this up to my for-next.
 
-Note to testers:
-
-My LLM agreed with the change in vlan_dev_hard_header() (above), but said
-that no change was needed in vlan_dev_hard_start_xmit() (below)
-
-
->   static inline netdev_tx_t vlan_netpoll_send_skb(struct vlan_dev_priv
-> *vlan, struct sk_buff *skb)
-> @@ -106,8 +73,8 @@ static netdev_tx_t vlan_dev_hard_start_xmit(struct
-> sk_buff *skb,
->                                              struct net_device *dev)
->   {
->          struct vlan_dev_priv *vlan = vlan_dev_priv(dev);
-> -       struct vlan_ethhdr *veth = (struct vlan_ethhdr *)(skb->data);
->          unsigned int len;
-> +       u16 vlan_tci;
->          int ret;
-> 
->          /* Handle non-VLAN frames if they are sent to us, for example by DHCP.
-> @@ -115,13 +82,9 @@ static netdev_tx_t vlan_dev_hard_start_xmit(struct
-> sk_buff *skb,
->           * NOTE: THIS ASSUMES DIX ETHERNET, SPECIFICALLY NOT SUPPORTING
->           * OTHER THINGS LIKE FDDI/TokenRing/802.3 SNAPs...
->           */
-> -       if (READ_ONCE(vlan->flags) & VLAN_FLAG_REORDER_HDR ||
-> -           veth->h_vlan_proto != vlan->vlan_proto) {
-> -               u16 vlan_tci;
-> -               vlan_tci = vlan->vlan_id;
-> -               vlan_tci |= vlan_dev_get_egress_qos_mask(dev, skb->priority);
-> -               __vlan_hwaccel_put_tag(skb, vlan->vlan_proto, vlan_tci);
-> -       }
-> +       vlan_tci = vlan->vlan_id;
-> +       vlan_tci |= vlan_dev_get_egress_qos_mask(dev, skb->priority);
-> +       __vlan_hwaccel_put_tag(skb, vlan->vlan_proto, vlan_tci);
-> 
->          skb->dev = vlan->real_dev;
->          len = skb->len;
+Thanks,
+Andreas
 
