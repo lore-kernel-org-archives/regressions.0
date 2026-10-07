@@ -1,269 +1,274 @@
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083CA4AC16D
-	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 14:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791381852; cv=pass; b=hab+LDNF0Bndf6gs/BjkO2pkJMO79Xrn52Uw+hFF+b92wb6nLHpsJmc+jqyCRHMLfbe1ctJoOG0iHgklTMqatRp7v1RNYpzivJ6wO2GJMMCehVs09TPlQgw4GaZvbss2m+SbYA42nt4kn1E+Q8OYTotKaAg7YOc1tGmyEmxPwlg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791381852; c=relaxed/simple;
-	bh=WSTXJWJsccwE3DOevttIxWtqRZIpylg3FDM0jvpjHdY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=U0xqv8tQsDluAncp/JNwtMfWZxfHT75MLzpLeCA4R/sIcRXGcoWu20qpz/vQ2Mw2fOIS+jM2ESEIdgC9rUsnnBA674TYVI2H0ag5uWQ8t4pwqbG6W0txXzn3bErQFOBHnVPj2Ljn2rjGpNEwUiQOQRb/A/FGXE8WhZYChNwzZWA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=syncnow.net; spf=pass smtp.mailfrom=syncnow.net; dkim=pass (1024-bit key) header.d=syncnow.net header.i=@syncnow.net header.b=Tx7nAItH; arc=pass smtp.client-ip=74.125.82.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=syncnow.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=syncnow.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2717F443C0F
+	for <regressions@lists.linux.dev>; Wed,  7 Oct 2026 14:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791383406; cv=none; b=AefZOowu0JO+dc6W3bPNwTqWsEgzCHXSN7x+noRXCfuHdj1suW8B159crQJisYUWPBkjkscR5sDWuy/DfHaVHtG9SQDHWK6zGRfZ4BVESYBibjDH/QbsAaFTA3daCxuOBOEgCCeM+ZDDzOuhiNkFX6yV5ECqMfWGt2GH+SQCBSc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791383406; c=relaxed/simple;
+	bh=YdwXa+gYPV2xPSIZFSFUvZVHY6ZdJN0bSPvFhhGvJQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CQtIov1001wgSYtIgmp1fQoIqYeDikz8EcJlSOwkwFrcSvvtW5wdlUBz2V1LhgecBZWrk71jHI19ILXqcJvmxhEqY5dz+SKTcDX0OnGH5qMpIrBmnGTZ9lX8kzX0Wy8kiwApQZEQ+svl/Aumwqh5gNmG2zVT16HHssueAAzOGuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=d7DZedTW; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=syncnow.net header.i=@syncnow.net header.b="Tx7nAItH"
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-30b6dad2382so4164759eec.0
-        for <regressions@lists.linux.dev>; Wed, 07 Oct 2026 07:04:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791381844; cv=none;
-        d=google.com; s=arc-20260327;
-        b=dICDeIiJ65ocdpQsqvQeK/tZnhtT5spdRE4iA3IPS7FK/CLf2EvkAvnliPMj3vSzxr
-         GpsKp3x3bwEufqyzgEykZPPMh0SdjZQCpQIgVzBzuk/lKQKmuSoB068gTiIgbx0fdTH3
-         OYQzhmJG8P4KrG7t98iq3T8QNjPymZDrO/mHtHd6uA5gAQugRJvxZCvhByBqY5XYnCSt
-         Q0ePb3OB2ymeuQVUGENXFyrfvotCN3W+awulvckbI53f/A4Y6JpeqjekSWDNZ5OuPOlO
-         yRHGPkdeeUprzaXDBeNyrbimRF2gWeqHmuW7/gxOOCGJPSfAgannu6EQHeVaw72CKL7W
-         iw5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=UnBOAEW74UYhKxlvKCCeJRZujwBr1zgnkVj5Sw1+Xzk=;
-        fh=TkSZOE9M+t6hdTfsdls4XdeXhBvtNbOAWVF5ev8EnFM=;
-        b=IKe1HXaGCpmnclVU3qAkmCf4rxm0PwBhsevkCS5GxAm5SG2sjlgO2OCTHheV4rs0Cs
-         pLp72uExlxAuL2UOLvjEP9VNhloPICCH0jaTiKSDKgMM698Gb9BPZa+n4yH8N0u4qmU7
-         tt+4Bu4E6hjY4Z76ofz5P13MTl9WH+uICHlkyecUdTJQwOSTgeApxzuILtc9XCb1Ft8W
-         V2R0DiQNfoGYBL8DiUeOmYLupLiiettzo3W7irMZZrv5adejMBakdOEXhiIesXa+1jTv
-         kmyG1imiq7/6XHPQDxpzOBa5lrUTe2mMhZL5hJlXDD1M4F+1JuFtdD3Ttrqe5SwK0asS
-         lOOQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=syncnow.net; s=syncnow.net; t=1791381844; x=1791986644; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=UnBOAEW74UYhKxlvKCCeJRZujwBr1zgnkVj5Sw1+Xzk=;
-        b=Tx7nAItHqNRLO/3j2l2f9gq/keyIaeeP9KIfBe/HXXscOXh4TrckApQmtyMzH5g6n3
-         Mz9LUoPfOlFy85s9lfwp1kiuR6aG3hMi5lVS92faA5eCVEOzNkg7/xRNOpHOMyyY0nbk
-         3fURXKKgp1lIpSekDbKUSpGmM/5sHbU87yU5k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791381844; x=1791986644;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=UnBOAEW74UYhKxlvKCCeJRZujwBr1zgnkVj5Sw1+Xzk=;
-        b=Mr0j3gLk4ut6yP5Y7t18HtY+kZvkWl6EVso9NDOacItAydkWT/vphxHFJTwHZd5jPY
-         JOhakczmhD+MKw6hM/MCYk8c2icjkm/MtED9HmRM1FNTCfZO0CEFyiMUd0+zEQFQpL+O
-         0W7JZX/LWHGYHPr7Pgf/g1UMCwCcxxtUtndHPbn98c8Azmu/FUhr8gkAkanqOGXalG8G
-         6/YjIHcJetJKzi94o8Q7kNhmG93SRoFfncp/Pg1VR/4dydtu+lkszNZs7+t3ekdpWj7+
-         Ihq1SeB9SmroYE58K/JLrYp2iHm4AJezYb0zb7/WtuEWnLDVn4VSUXPBRpCrq568q1MG
-         ppgw==
-X-Forwarded-Encrypted: i=1; AKwUvBx4RPgFS79rKb0AAcYHWtj6X0GOJhRMYyK4KuVAFcXOyGpKPl9p8XHaYKKvChplmcO5ClKaJ2v+PLC5AQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJ9Ua39N3VQcel9PUJW3TgQEu3G9r/ML41b3GgR/13c8pA82+om
-	DLon7KObRPPZnjpYlG5ejjmkKq6HfjbOiWH4TfVR8LeCTxvAQk6tKZVO3C4BBrznOXY3a0bAfRp
-	Zq2dDRi8dFDHevefD0HKZG2Pcv9oRjNjzNjoCTU35sw==
-X-Gm-Gg: AYBFou2R4LhI/m5EZk1aDZAOd2lquNjpuK2pA5hu3MttwFhZVXQwuTzZELca99Be8hW
-	YX2dZ8ptolSyXIUXqorUc8GEN4OVg9zRiHpmSIuInY7N5ga2brCVZf7YfbaKMWLvIiyBRUQY4I4
-	oxRgpMnV8ytmj3Uhuy4yEteVnCyXkmrz8g0Ce5je2KlibmgnrOV9SPyihP0xcsipdDGiCfzkOaC
-	PdtVlFuu99jgHcdKcVj+hTwayJ1NHjKlJ62nMD4epOVdvSn6EcukBQnpIMSu+Bq8+5txToIvOAr
-	UFRA6BtZZOinGQf3ejJbLtySYDLdxFSj7+YNvV3MplAbnS7ciukrpe3vruJWgAfJO4q4YKFwGGU
-	vDfCdlOxcng==
-X-Received: by 2002:a05:7301:7d10:b0:351:1567:41b7 with SMTP id
- 5a478bee46e88-3515de27067mr2546675eec.29.1791381843329; Wed, 07 Oct 2026
- 07:04:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="d7DZedTW"
+From: Stian Halseth <stian@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1791383398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gukTut55doiAIV/L2DTCknRd5UGNYzDqxIrYIRuSdpk=;
+	b=d7DZedTWMsICLOFTGjrtaMLbnwqJpUgnLbby597Ebwcss8hqARWraf1AlFcRLmWBl+Uh1a
+	cy72JTBb/8fR6wX5OtSiPwzIDVeIMXrRLcSXRQDuL296SGG5PzwQSYt1ipcuZ7OPdHeBQy
+	cysEbg21/jDV94H7c44WwKnMPd+3dcE=
+To: Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] sched/cputime: Don't account idle time twice after dyntick-idle
+Date: Wed,  7 Oct 2026 16:29:50 +0200
+Message-ID: <20261007142950.547604-1-stian@itx.no>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: "SyncNOW.net - Armando Araujo Filho" <armando.araujo@syncnow.net>
-Date: Wed, 7 Oct 2026 11:03:26 -0300
-X-Gm-Features: AclHuK8-af_saXV7TA-LG8aXCH3DnogGPa18MEoCv0DNrdN9_7ez1NZBzDsFSEc
-Message-ID: <CACKGD6t4Bz1M_-9cNJ8vuNAYnXg5abb_UxmDAoFpW36yP4DnhQ@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no link
-To: andiwild@gmail.com
-Cc: bhelgaas@google.com, blaaaat@hotmail.com, edwardmalik95@icloud.com, 
-	helgaas@kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	macro@orcam.me.uk, regressions@leemhuis.info, regressions@lists.linux.dev, 
-	restafvalendergelijke@outlook.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Maciej, Bjorn, all,
+On idle exit the dyntick-idle accounting accounts the time up to now,
+then the tick is restarted on its old period. The first tick accounts a
+whole TICK_NSEC to whatever runs, although the part of that period
+before the idle exit has just been accounted as idle time, or with
+IRQ_TIME_ACCOUNTING as IRQ time. That is up to a full tick per idle
+exit, and /proc/stat reports more idle time than wall time.
 
-Another active-link case for 72780f796468 ("PCI: Always lift 2.5GT/s
-restriction in PCIe failed link retraining"). It answers two open
-questions in this thread:
+Record how much of the current tick period dyntick-idle has accounted,
+and leave it out of the tick that ends the period.
 
-  - Maciej asked for HASD results. On this port HASD is clear
-    (SpeedDis-), so the HASD check Andreas proposed would not help here.
-  - This case never reaches the error path (no "retraining failed"),
-    so falling back to 2.5GT/s on failure, as Thomas suggested, would
-    not help either.
+Fixes: cf6444c3e1bb7 ("tick/sched: Unify idle cputime accounting")
+Link: https://lore.kernel.org/all/20261004142724.3896396-1-stian@itx.no/
+Signed-off-by: Stian Halseth <stian@itx.no>
+---
+v3:
+- Warn if now < tick_start (Frederic)
+- Read and clear the overlap with plain accesses instead of
+  __this_cpu_xchg() (Frederic)
+- Store the forwarded expiry in ts->last_tick, so that the tick restart
+  that follows does not forward it again (Frederic)
+- Drop the tick_nohz_full_cpu() check, vtime_generic_enabled_this_cpu()
+  covers it (Frederic)
 
-On a Huawei server the onboard BMC VGA controller, a Gen1-only
-endpoint, sits behind a firmware-clamped PCH root port. After the quirk
-lifts the clamp, the endpoint is missing from the bus scan, even though
-the quirk reports no error and the link is up at 2.5GT/s afterwards.
-A rescan finds the device again. Reproduced on Arch Linux 7.2.7. The
-Proxmox bisection gives the same 7.0.14-6 -> 7.0.14-7 boundary that
-Aoxtj and Mich found.
+Retested on the SPARC T7-1 and the x86_64 KVM guest, also with
+nohz_full=1, without IRQ_TIME_ACCOUNTING and with highres=off. Same
+results as v2.
 
-A note on how this report was produced: I am a network/infrastructure
-engineer, not a kernel developer. I noticed the problem (loss of video
-on a Proxmox upgrade), ran all the tests on the hardware, and collected
-the logs, register dumps and kernel bisection below. The analysis was
-done with an AI assistant (Anthropic's Claude): it compared the dmesg
-and lspci output between kernels, identified the link-speed quirk and
-the relevant commit, suggested the setpci recovery test, and drafted
-this report. All data below was captured on the machine and I have
-checked it against the raw logs. The interpretation in the "our guess"
-paragraph and the suggestions at the end should be read as
-hypotheses, not as kernel expertise on my part.
+v2: https://lore.kernel.org/all/20261005194010.168299-1-stian@itx.no/
+v1: https://lore.kernel.org/all/20261004184701.4112237-1-stian@itx.no/
 
-Kernels tested
---------------
+ include/linux/kernel_stat.h |  7 +++++--
+ kernel/sched/cputime.c      | 39 +++++++++++++++++++++++++++++++------
+ kernel/time/tick-sched.c    | 22 ++++++++++++++++-----
+ 3 files changed, 55 insertions(+), 13 deletions(-)
 
-Same hardware and configuration throughout:
+diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
+index 9ca6c2259dfea..6e252048b5ade 100644
+--- a/include/linux/kernel_stat.h
++++ b/include/linux/kernel_stat.h
+@@ -40,6 +40,9 @@ struct kernel_cpustat {
+ 	seqcount_t	idle_sleeptime_seq;
+ 	u64		idle_entrytime;
+ 	u64		idle_stealtime[2];
++	u64		idle_dyntick_entry;
++	u64		idle_tick_period;
++	u64		idle_tick_overlap;
+ #endif
+ 	u64		cpustat[NR_STATS];
+ };
+@@ -111,7 +114,7 @@ static inline unsigned long kstat_cpu_irqs_sum(unsigned int cpu)
+ #ifdef CONFIG_HAVE_VIRT_CPU_ACCOUNTING_IDLE
+ 
+ static inline void kcpustat_dyntick_start(u64 now) { }
+-static inline void kcpustat_dyntick_stop(u64 now) { }
++static inline void kcpustat_dyntick_stop(u64 now, u64 tick_start) { }
+ static inline void kcpustat_irq_enter(u64 now) { }
+ static inline void kcpustat_irq_exit(u64 now) { }
+ static inline bool kcpustat_idle_dyntick(void) { return false; }
+@@ -132,7 +135,7 @@ static inline u64 kcpustat_field_iowait(int cpu)
+ #else /* !CONFIG_HAVE_VIRT_CPU_ACCOUNTING_IDLE */
+ 
+ extern void kcpustat_dyntick_start(u64 now);
+-extern void kcpustat_dyntick_stop(u64 now);
++extern void kcpustat_dyntick_stop(u64 now, u64 tick_start);
+ extern void kcpustat_irq_enter(u64 now);
+ extern void kcpustat_irq_exit(u64 now);
+ extern u64 kcpustat_field_idle(int cpu);
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 06bddaa738e52..faac7c2066d84 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -381,9 +381,9 @@ void thread_group_cputime(struct task_struct *tsk, struct task_cputime *times)
+  * softirq as those do not count in task exec_runtime any more.
+  */
+ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+-					 int ticks)
++					 u64 cputime)
+ {
+-	u64 other, cputime = TICK_NSEC * ticks;
++	u64 other;
+ 
+ 	/*
+ 	 * When returning from idle, many ticks can get accounted at
+@@ -418,7 +418,7 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+ 
+ #else /* !CONFIG_IRQ_TIME_ACCOUNTING: */
+ static inline void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+-						int nr_ticks) { }
++						u64 cputime) { }
+ #endif /* !CONFIG_IRQ_TIME_ACCOUNTING */
+ 
+ #if defined(CONFIG_NO_HZ_COMMON) && !defined(CONFIG_HAVE_VIRT_CPU_ACCOUNTING_IDLE)
+@@ -468,18 +468,38 @@ static void kcpustat_idle_start(struct kernel_cpustat *kc, u64 now)
+ 	write_seqcount_end(&kc->idle_sleeptime_seq);
+ }
+ 
+-void kcpustat_dyntick_stop(u64 now)
++void kcpustat_dyntick_stop(u64 now, u64 tick_start)
+ {
+ 	struct kernel_cpustat *kc = kcpustat_this_cpu;
+ 
+ 	if (!vtime_generic_enabled_this_cpu()) {
+ 		WARN_ON_ONCE(!kc->idle_dyntick);
++		if (kc->idle_tick_period != tick_start) {
++			kc->idle_tick_period = tick_start;
++			kc->idle_tick_overlap = 0;
++		}
++		tick_start = max(tick_start, kc->idle_dyntick_entry);
++		if (!WARN_ON_ONCE(now < tick_start))
++			kc->idle_tick_overlap += now - tick_start;
+ 		kcpustat_idle_stop(kc, now);
+ 		kc->idle_dyntick = false;
+ 		vtime_dyntick_stop();
+ 	}
+ }
+ 
++/*
++ * The first tick after dyntick-idle covers a period that the dyntick-idle
++ * accounting may already have accounted in part.
++ */
++static inline u64 kcpustat_tick_overlap(void)
++{
++	struct kernel_cpustat *kc = kcpustat_this_cpu;
++	u64 overlap = kc->idle_tick_overlap;
++
++	kc->idle_tick_overlap = 0;
++	return overlap;
++}
++
+ void kcpustat_dyntick_start(u64 now)
+ {
+ 	struct kernel_cpustat *kc = kcpustat_this_cpu;
+@@ -487,6 +507,7 @@ void kcpustat_dyntick_start(u64 now)
+ 	if (!vtime_generic_enabled_this_cpu()) {
+ 		vtime_dyntick_start();
+ 		kc->idle_dyntick = true;
++		kc->idle_dyntick_entry = now;
+ 		kcpustat_idle_start(kc, now);
+ 	}
+ }
+@@ -555,6 +576,11 @@ u64 kcpustat_field_iowait(int cpu)
+ }
+ EXPORT_SYMBOL_GPL(kcpustat_field_iowait);
+ #else
++static inline u64 kcpustat_tick_overlap(void)
++{
++	return 0;
++}
++
+ static u64 kcpustat_field_dyntick(int cpu, enum cpu_usage_stat idx,
+ 				  bool compute_delta, ktime_t now)
+ {
+@@ -695,12 +721,13 @@ void account_process_tick(struct task_struct *p, int user_tick)
+ 	if (kcpustat_idle_dyntick())
+ 		return;
+ 
++	cputime = TICK_NSEC - kcpustat_tick_overlap();
++
+ 	if (irqtime_enabled()) {
+-		irqtime_account_process_tick(p, user_tick, 1);
++		irqtime_account_process_tick(p, user_tick, cputime);
+ 		return;
+ 	}
+ 
+-	cputime = TICK_NSEC;
+ 	steal = steal_account_process_time(ULONG_MAX);
+ 
+ 	if (steal >= cputime)
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 6c3fea3867139..4e293f81e4dc1 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -763,12 +763,18 @@ static ktime_t tick_forward_now(ktime_t expires, ktime_t now)
+ 	return expires + TICK_NSEC;
+ }
+ 
++static void tick_nohz_forward_last_tick(struct tick_sched *ts, ktime_t now)
++{
++	if (now >= ts->last_tick)
++		ts->last_tick = tick_forward_now(ts->last_tick, now);
++}
++
+ static void tick_nohz_restart(struct tick_sched *ts, ktime_t now)
+ {
+-	ktime_t expires = ts->last_tick;
++	ktime_t expires;
+ 
+-	if (now >= expires)
+-		expires = tick_forward_now(expires, now);
++	tick_nohz_forward_last_tick(ts, now);
++	expires = ts->last_tick;
+ 
+ 	if (tick_sched_flag_test(ts, TS_FLAG_HIGHRES)) {
+ 		hrtimer_start(&ts->sched_timer,	expires, HRTIMER_MODE_ABS_PINNED_HARD);
+@@ -1329,6 +1335,12 @@ unsigned long tick_nohz_get_idle_calls_cpu(int cpu)
+ 	return ts->idle_calls;
+ }
+ 
++static void tick_nohz_dyntick_stop(struct tick_sched *ts, ktime_t now)
++{
++	tick_nohz_forward_last_tick(ts, now);
++	kcpustat_dyntick_stop(now, ts->last_tick - TICK_NSEC);
++}
++
+ void tick_nohz_idle_restart_tick(void)
+ {
+ 	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
+@@ -1341,7 +1353,7 @@ void tick_nohz_idle_restart_tick(void)
+ 		 * no tiny amount of idle time is accounted twice.
+ 		 */
+ 		ts->idle_entrytime = ktime_get();
+-		kcpustat_dyntick_stop(ts->idle_entrytime);
++		tick_nohz_dyntick_stop(ts, ts->idle_entrytime);
+ 		tick_nohz_restart_sched_tick(ts, ts->idle_entrytime);
+ 	}
+ }
+@@ -1385,7 +1397,7 @@ void tick_nohz_idle_exit(void)
+ 
+ 	if (tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+ 		now = ktime_get();
+-		kcpustat_dyntick_stop(now);
++		tick_nohz_dyntick_stop(ts, now);
+ 		tick_nohz_idle_update_tick(ts, now);
+ 	}
+ 
+-- 
+2.43.0
 
-  Good  Proxmox VE 7.0.2-6, 7.0.12-1, 7.0.14-1, 7.0.14-6
-        (7.0.14-6 = Ubuntu-7.0.0-28.28i2, stable 6.18.38 / 7.1.3)
-  Bad   Proxmox VE 7.0.14-7, 7.0.14-8
-        (7.0.14-7 = Ubuntu-7.0.0-28.28i3, stable 6.18.39 / 7.1.4)
-  Bad   Arch Linux 7.2.7-arch1-1 (official 2026.10.01 live ISO)
-
-Hardware
---------
-
-  DMI: Huawei Technologies Co., Ltd. Tecal RH2285 V2-12L/BC11SRSC1,
-       BIOS RMISV055 02/02/2013
-  CPU: 2x Xeon E5 v2 (Ivy Bridge-EP), PCH C600/X79
-
-  Affected path:
-    00:1c.3  Root Port 4  [8086:1d16] (rev b6)  LnkCap 5GT/s x1
-             SltCap HotPlug- Surprise- (not hot-plug capable)
-      03:00.0  XGI Z11/Z11M VGA [18ca:0027]
-               Subsystem Huawei [19e5:2013]     LnkCap 2.5GT/s x1
-               (PCIe v1 endpoint, Gen1-only; the BMC's video device)
-
-Register state, good vs. bad
-----------------------------
-
-  00:1c.3 (root port)     good (7.0.14-6)     bad (7.0.14-7, 7.2.7)
-  LnkCap                  5GT/s x1            5GT/s x1
-  LnkCtl2 Target Speed    2.5GT/s (firmware)  5GT/s (lifted)
-  LnkCtl2 HASD            SpeedDis-           SpeedDis-
-  LnkSta                  2.5GT/s x1          2.5GT/s x1
-  03:00.0 enumerated      yes                 NO
-
-The link is up (x1) after the quirk too. It just comes back at
-2.5GT/s, the most the endpoint supports.
-
-dmesg, Arch Linux 7.2.7-arch1-1
--------------------------------
-
-  Linux version 7.2.7-arch1-1 (linux@archlinux) ... #1 SMP
-PREEMPT_DYNAMIC Mon, 21 Sep 2026
-  ...
-  [    1.019207] pci 0000:00:1c.0: removing 2.5GT/s downstream link
-speed restriction
-  [    2.019409] pci 0000:00:1c.0: retraining failed
-  [    3.019695] pci 0000:00:1c.2: removing 2.5GT/s downstream link
-speed restriction
-  [    4.020409] pci 0000:00:1c.2: retraining failed
-  [    5.021634] pci 0000:00:1c.3: [8086:1d16] type 01 class 0x060400
-PCIe Root Port
-  [    5.021666] pci 0000:00:1c.3: PCI bridge to [bus 03]
-  [    5.021673] pci 0000:00:1c.3:   bridge window [io  0x3000-0x3fff]
-  [    5.021678] pci 0000:00:1c.3:   bridge window [mem 0x94b00000-0x94bfffff]
-  [    5.021690] pci 0000:00:1c.3:   bridge window [mem
-0x90000000-0x93ffffff 64bit pref]
-  [    5.021718] pci 0000:00:1c.3: removing 2.5GT/s downstream link
-speed restriction
-  [    5.021770] pci 0000:00:1c.3: PME# supported from D0 D3hot D3cold
-  ...
-  [    5.045412] pci 0000:00:1c.3: PCI bridge to [bus 03]
-  [    5.076827] vgaarb: loaded                       <- no VGA device
-
-00:1c.0 and 00:1c.2 are empty ports, the case v3 covers.
-
-On the good kernels the same scan finds the endpoint right away:
-
-  pci 0000:03:00.0: [18ca:0027] type 00 class 0x030000 PCIe Endpoint
-  pci 0000:03:00.0: BAR 0 [mem 0x90000000-0x93ffffff pref]
-  pci 0000:03:00.0: Video device with shadowed ROM at [mem
-0x000c0000-0x000dffff]
-  pci 0000:03:00.0: vgaarb: setting as boot VGA device
-
-How this differs from the other active-link reports
----------------------------------------------------
-
-In Aoxtj's, Mich's and Thomas's cases the retrain fails, the error
-path runs, and the link is left down (x0 / DLLLA=0). Here:
-
-  - there is no "retraining failed" message; the quirk returns about
-    50 us after "removing 2.5GT/s ...";
-  - the link is up afterwards (2.5GT/s x1);
-  - the endpoint is healthy and comes back with a rescan (below).
-
-So the device is only missing because bus 03 is scanned too early.
-
-Our guess, not verified: the retrain takes the link down and back up
-(the endpoint cannot do 5GT/s and falls back to 2.5GT/s). The wait in
-the quirk may see DLLLA still set from before the link went down and
-return at once. The bus below is then scanned while the link is still
-retraining, and nothing answers. That would fit the 50 us return and
-the missing error message. A one-line pci_info() of LNKSTA right after
-pcie_set_target_speed() would show whether this is right. I can run
-that, or Andreas's earlier diagnostic, if useful.
-
-Recovery at runtime
--------------------
-
-Restoring the firmware clamp, retraining and rescanning brings the
-device back:
-
-  # setpci -s 00:1c.3 CAP_EXP+0x30.w=0001:000f   # LnkCtl2 TLS = 2.5GT/s
-  # setpci -s 00:1c.3 CAP_EXP+0x10.w=0020:0020   # LnkCtl Retrain Link
-  # sleep 1
-  # echo 1 > /sys/bus/pci/rescan
-
-  pci 0000:03:00.0: [18ca:0027] type 00 class 0x030000 PCIe Endpoint
-  pci 0000:03:00.0: vgaarb: VGA device added:
-decodes=io+mem,owns=none,locks=none
-  pcieport 0000:00:1c.3: ASPM: current common clock configuration is
-inconsistent, reconfiguring
-  pci 0000:03:00.0: BAR 0 [mem 0x90000000-0x93ffffff pref]: assigned
-  pci 0000:03:00.0: BAR 1 [mem 0x94200000-0x9423ffff]: assigned
-  pci 0000:03:00.0: BAR 2 [io  0x3000-0x307f]: assigned
-
-By then the boot VGA console is already lost, so this only shows that
-the device is still there.
-
-Observations
-------------
-
-1. HASD is clear on this port, so a HASD-based check would not catch
-   this case.
-
-2. The failure is not in the error path, so a 2.5GT/s fallback on
-   failure would not help either.
-
-3. The retrain gains nothing here: the endpoint only supports 2.5GT/s
-   and the link comes back at that speed. I realise the endpoint is
-   not enumerated yet when the quirk runs on the port, so knowing its
-   speed in advance may not be simple.
-
-4. If an active link is retrained, waiting for it to actually go down
-   and come back (or for the device to become ready) before the bus
-   below is scanned might prevent the device going missing.
-
-5. Like Mich's Dell and HP machines, this is an older Intel server
-   platform where firmware clamps the ports on purpose. A command-line
-   opt-out would give users of such machines a workaround other than
-   staying on an older kernel.
-
-I can test patches on this machine with a mainline or live kernel and
-can provide full dmesg and lspci -vvv from good and bad kernels.
-
-Thanks,
-Armando Araujo Filho
