@@ -1,65 +1,77 @@
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280D34D0CDC
-	for <regressions@lists.linux.dev>; Fri,  9 Oct 2026 11:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9864BEE53;
+	Fri,  9 Oct 2026 11:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791545775; cv=none; b=Td/Y1pwAktJcP0z255AoVCkP4oTIyYbiTNbjDKC/SyrUPHG8KwxVZAIMN3i+u2zzb4E+xJPqTTW32Q7EcNpflobR3hgxmFK70BRwGmAW+5w2AQcZcFYM+PAMAU79O3bKFLsprz8hZprvog75hnyobjbFRv6iWc4iRjz3fAwmpkE=
+	t=1791546581; cv=none; b=R4Slt9xHoXMK6sCsASp0LGMkFv0ZvS++5acncY5C7R6PK7zazrjYtFIgFSvvaDFSYWKbdXl03AmQ/yoefM6XnyrDStQj7Db7f8MmTK9tNxDQp+EQ2sYtR0JM1CUgX1Sp/Nwn9pZbBgmPpmOGi3antKblhlEqZgZd9f8LaAscZXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791545775; c=relaxed/simple;
-	bh=JlnCd2TfwnI4qtAiVgUVZkbu8ICfs8xqWzEE7rFgv64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EPJWBbLScBaIhB7OMhTdXIC+28k3r1DrYCYa/Pd+dDXeC1MUwY6sP45/geWoKb1sSAQGaRFRf/k2rXY+1x4bUa/Hob+9OnXUq4v04F22Ml3Fj0pyMfb6+oUMqeFu5Tiba9WJspIEQvzkPJrYLS9pqhEW69j/7u1tsy7Sn0ofagk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id ED779479BC;
-	Fri, 09 Oct 2026 13:36:03 +0200 (CEST)
-Message-ID: <19cdc3df-fcdc-405d-be05-d018b09932d9@proxmox.com>
-Date: Fri, 9 Oct 2026 13:36:02 +0200
+	s=arc-20240116; t=1791546581; c=relaxed/simple;
+	bh=qqpWBb6K0zxBB49oafd/WyrzEvAjnkElc6lknN10aDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o/+QmwG92eBhVTr9O6ZrsXYUubR+RzCyejEKT/dN1eDw1WURrtn4eCfyrjY6V4YoNYts80Ic3zUgtZ0bOIq6Y3Oev1mWIZhbyayTAikP8AyXdegkb8AMy6oJBcL27bU5wQRibkphLFASRCO4g3ag69PYgeky3VWgHUhT3wMp7q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlS+lTP+; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlS+lTP+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE491F00898;
+	Fri,  9 Oct 2026 11:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791546572;
+	bh=CIyXD8wTbt3nZtZ5v+UTmUyElDBfr2EMxvYLIBrKQjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dlS+lTP+H5P82dbQnhwsvIM7M2QtStqmsl4/8YzjCzNW6nLQ7fP8nsOklLjxqTKPQ
+	 oYyz3qaFva9yrKND7feZiBP/cu35e6EXNoqOg83EZMKYRPDASNzelMKz9TAjAEs74k
+	 N54vGN8f0Sml53COFVjxziwLs/b4+UrmgiGqtZv9XWp1UpiwBHSlhyLKS2FwbXAg2B
+	 eQ30QhMBjz3D94amAxWAZER5pNcMRxma+o2rDxVog7tbwZgnDwzbeGTZRmqrRzVz4I
+	 psXifW/L5Yt67dIraRL5PzgHqJEu2mfnWT3Yb7EqrVwNUn9vKkQO/31Fw3waw8y/XH
+	 oK76Uv2O1NUrQ==
+Date: Fri, 9 Oct 2026 12:49:25 +0100
+From: Lee Jones <lee@kernel.org>
+To: Andrej Scek <scek.andrej@gmail.com>
+Cc: linux-input@vger.kernel.org,
+	Basavaraj Natikar <basavaraj.natikar@amd.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	srinivas.pandruvada@linux.intel.com,
+	Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] amd_sfh: accelerometer broken since 6.19 ("Event
+ data for report 1 was too short (15 vs 14)")
+Message-ID: <20261009114925.GB199624@google.com>
+References: <CADrS85612m-Hh-G4BJmOhy-y6r3Ni3kD8_GM-2QRBeWWEEZWuA@mail.gmail.com>
+ <CADrS857iYjafXEZcHRSmeOFjrzs0DYG5Dp2PeS0n669cHBjAuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-To: M M <restafvalendergelijke@outlook.com>,
- "armando.araujo@syncnow.net" <armando.araujo@syncnow.net>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@leemhuis.info" <regressions@leemhuis.info>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <DU2PPFBE35756D171CD64356C8D8DF3C2F8AB922@DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM>
-Content-Language: en-US, de-DE
-From: Thomas Lamprecht <t.lamprecht@proxmox.com>
-In-Reply-To: <DU2PPFBE35756D171CD64356C8D8DF3C2F8AB922@DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Bm-Milter-Handled: 55990f41-d878-4baa-be0a-ee34c49e34d2
-X-Bm-Transport-Timestamp: 1791545763101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADrS857iYjafXEZcHRSmeOFjrzs0DYG5Dp2PeS0n669cHBjAuQ@mail.gmail.com>
 
-On 09/10/2026 12:53, M M wrote:
-> Thank you Armando for the detailed follow-up. It's "good" to see this problem is still active, though Proxmox is really slow with this. In the meantime we are 1,5 month ahead and without the much needed security updates related to the kernel.
-> I can only hope there will be some progress soon on their behalf, but it's pretty much quiet at Proxmox in general.
+On Fri, 02 Oct 2026, Andrej Scek wrote:
 
-Please stop CC'ing random people and Proxmox email addresses that half
-not even exist, that's just spamming, please stop that. Also not sure
-what your talking w.r.t. security updates, we release fixes in our kernel
-on a steady stream and are up-to-date here.
+> Update: this looks like it is caused by
+> 
+>   0a3fe972a7cb ("HID: core: Mitigate potential OOB by removing bogus memset()")
+> 
+> which was backported to the 6.18.y and 6.19.y stable trees on 2026-04-11.
+> 6.18.16 predates that backport and works; 6.19.12 and 7.2.8 contain it and
+> fail. The AMD SFH sends 14-byte reports where the descriptor declares 15, and
+> those are now rejected instead of zero-padded. (This corrects my earlier note
+> that hid-core had no relevant changes; I had only checked v6.18..v6.19.)
+> 
+> The same symptom on another AMD SFH device (Legion Go S, "18 vs 14"):
+> https://github.com/ublue-os/bazzite/issues/5796
+> 
+> So AMD SFH (hid-amdsfh 1022:0001) probably needs to be covered by whatever
+> short-report quirk/fix is adopted for this.
+> 
+> #regzbot introduced: 0a3fe972a7cb
 
-Besides, our downstream info about this was that one user tried the patch
-and it did not work for them and you could not confirm this either as
-requested in the same reply telling you [0], so we did not look at this
-at all due to waiting on feedback. btw. did you actually test this now
-confirming it fixes the issues on your system?
-As v3 on its own would leave most of our reports broken, revert is more
-likely to help here for the broader masses and will be the route we
-look into.
+This is on my radar.  Leave it with me.
 
-[0]: https://bugzilla.proxmox.com/show_bug.cgi?id=7969#c8
-
+-- 
+Lee Jones
