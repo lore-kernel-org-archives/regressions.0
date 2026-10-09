@@ -1,392 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazolkn19013079.outbound.protection.outlook.com [52.103.35.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A8C47ECD8;
-	Fri,  9 Oct 2026 07:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791531227; cv=none; b=obqGC/obR+TfUG8NeEKiG5GF/paxI0BZOdEVFNLWgqGJ+wMkXsjtr4rTzVCcYkjoChPjXUH3UTt/Erx4JdkWufBA5dwI8YnUJGpWOUqHcp1ht/aQtKw7kw+abldcSt/y5IDNdyM/MjejlSfQ0U6EwqWljKlRTgNLwOCJunzXt1U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791531227; c=relaxed/simple;
-	bh=ah0uvXYioNuN1PjSOB3yd/XKsnr8OOzFFwurbShFXJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hA2SpKM5bkoH02e+zVNlF4/SH/DlQF/pJW+Srv6zEhR1ie5is/iFzOyEupcHPm5TspvJKHzcA+/moDJOOKD9cpLcM/TsQbXSU7b335NKS+EOEgYUfLtHmS1Nvs4jplmj2S1lSE0qCZO6eJ08VjjU3zKNv46bXFjp2ba1/LyzABI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9ZgFVQe; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345E24CC611
+	for <regressions@lists.linux.dev>; Fri,  9 Oct 2026 11:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.35.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791544901; cv=fail; b=igdXfAeKvitTErS3qm8mb7VQRQQI8mLiXh+ilteCVz4WcHtdImgiJbjx+UeNUwJOZlUQvd5QlVmgz39vMhWX7Aq7KUK0JMe6n/b+muxUxd6KycjZTIFVvQZt1NcDaqy/KJ+eyMsZXWy8f3tMG4/KHnSBJnbSowC4LTFzXnY2WvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791544901; c=relaxed/simple;
+	bh=f9Kjohq4hNaSaUDvoi9jMVGVqKPb7CugVicjjPQujTs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=V8zg6Gr/MuRvmvTyhhc9vRHIutsSrF2ensFyU8Y+9NazZ2ytzesk6Jm7lGr8Pq+woXaqWY7lwMvNJRnfprACfKAatojOXplAhMAcSTzu7KH/yh3s0KcYWGdfsn5iFro3GR8CPkSL2swg7ioYCLz7uldwk++xOk+I2YLaDjJXUlg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=UImEE1kQ; arc=fail smtp.client-ip=52.103.35.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9ZgFVQe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DF8C1F000FF;
-	Fri,  9 Oct 2026 07:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791531225;
-	bh=++BKtTpjGmPNZdWoozsVFxoIxe6EF8BLGALpPJPcYqc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=e9ZgFVQeyMiZh69gsRgLtopfNhG8XUfvykM+J35uFFNB7lIGIsm6I3QlHuysraZDB
-	 uUg8jakh0ne0wXBWe7mZI4jc+TFpCXkcz74syUagpdJg/suLqjZotgYWptpIsQDEUy
-	 zCW7icW78W8XAFhVpQ80Os/yKFyQZFpUdM2KbpZBPe7ke6w9SRAv31d0J5xYszbwSD
-	 ImjCwKc3/BAYdUlLIJO+TGpLyjTVg8BfXdYH0M8fPftYXW/A/w/SUWcdZj0EPZaT+t
-	 n4xNR3hWgz81QJVLlirwLMAw47sKcgcNuiSrwLLuv91FFnBpEwuqNw2v7DVbDtXaiy
-	 n8kjWpj3jCzVA==
-Message-ID: <1b9f33d6-f887-432a-83ec-292ff43eccdd@kernel.org>
-Date: Fri, 9 Oct 2026 09:33:42 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="UImEE1kQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yaxczAjcuwJlFQHp55vG+5BNeVFDwDYyUQ8VjwJBoSER0C50O2K/o33Z/gcVRPxHH+GGZfjvPXKWHVBHFmTCWvKWlUIui01mHGrO4kJdIRBrsg3P1V+goeAFgrSdiuN8SeWNKfqDCsLuxh5YA6pDMAbx2gx02YeXtlIkLhxXzfuX7yf9PYm42Vo5ejnimaRRiqJe16ZZBHSFavoRQLFDWOP3a50Wa3RftnIPjzet+ZfRrQMhTAofHXWvAGEgrNVVU5xNnziftxv/jFTo9qMZsg2Y/Fhsmi0cafceQGL/rzYWDnSib0bQC48YYjKRqp7n0H2HFVuOTs53y9G8I4ZVuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f9Kjohq4hNaSaUDvoi9jMVGVqKPb7CugVicjjPQujTs=;
+ b=R9BFrJwMVbmnBmq0EfhbD01oGqW2wg4jRtcWE3SB7GU8oHvkc5bi+bXy4ixC78lnUo1xy8U+tzd8rnB45JpXV5+y1dUHscS0b4zCAvXfM4v8e5WhD9tgdSWRJlVJ1mipsu13Ostoj/ikFAwP0b6wPi5mwWjD1QzTmVAkOGy5h8/Oh8cmrUX9SKpxtK8iNXc0QH4jPyfs6qU8USoepkvUAwptRP0ysi2CBwhgeiqioOqxDNRBaegpGcaBoC1+BW+wTKgrn2AfDAfP6hMOfxhsxeqDnpyhJAarScowwfbgfiubsSHG6OHH9IP933S+Amfh/2EbCY/877IRmeljaDgH+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f9Kjohq4hNaSaUDvoi9jMVGVqKPb7CugVicjjPQujTs=;
+ b=UImEE1kQaUhrUWt9VtimCpB40bWbxudzCM7XzlyyTlsuoLrCZV1cKxVBl2t1zjnzC1gX7TDVLQ1Wp7D9ksICUMJST/V9e1lbgGHkjY2lNH5E8PVkmK3h3uJIFeZNj7nhW87jJrd/xxwmqkCmWnhk6TDRbN8+lUTi8LTLsv4jxPWm9vGPGgMT8I3H0jqAIE03J74vGRd1rhf26iL3QAckY5udbzIuFP+Rb3ikGET1lZjDySoRlupQIJc8/g+W+zelXxvQSyW3hlKIIvMOdho31SM1TjU9HVzETQe1g8dZu8yekdhxckWeTH1P5C65U9+b73TQgF/9mCjBXUBGgytXKA==
+Received: from DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM (2603:10a6:18:3::aa2)
+ by PAXP189MB1950.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:281::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.24; Fri, 9 Oct
+ 2026 11:21:29 +0000
+Received: from DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM
+ ([fe80::edfc:2b73:2e6b:c893]) by DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM
+ ([fe80::edfc:2b73:2e6b:c893%3]) with mapi id 15.21.0496.015; Fri, 9 Oct 2026
+ 11:21:28 +0000
+From: M M <restafvalendergelijke@outlook.com>
+To: "CACKGD6t4Bz1M_-9cNJ8vuNAYnXg5abb_UxmDAoFpW36yP4DnhQ@mail.gmail.com"
+	<CACKGD6t4Bz1M_-9cNJ8vuNAYnXg5abb_UxmDAoFpW36yP4DnhQ@mail.gmail.com>
+CC: Andreas Wild <andiwild@gmail.com>, "blaaaat@hotmail.com"
+	<blaaaat@hotmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	"helgaas@kernel.org" <helgaas@kernel.org>, "edwardmalik95@icloud.com"
+	<edwardmalik95@icloud.com>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "regressions@leemhuis.info"
+	<regressions@leemhuis.info>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "Maciej W. Rozycki" <macro@orcam.me.uk>,
+	"d.csapak@proxmox.com" <d.csapak@proxmox.com>, "f.ebner@proxmox.com"
+	<f.ebner@proxmox.com>, "f.gruenbichler@proxmox.com"
+	<f.gruenbichler@proxmox.com>, "s.ivanov@proxmox.com" <s.ivanov@proxmox.com>,
+	"t.lamprecht@proxmox.com" <t.lamprecht@proxmox.com>,
+	"f.gruenbichler@proxmox.com" <f.gruenbichler@proxmox.com>,
+	"m.maurer@proxmox.com" <m.maurer@proxmox.com>
+Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
+ link
+Thread-Topic: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
+ link
+Thread-Index: AQHdV9vC8awG/tAuK0CulBv+L5Ruprb1EHmb
+Date: Fri, 9 Oct 2026 11:21:28 +0000
+Message-ID:
+ <DU2PPFBE35756D1154B16C7170AEC95EB56AB922@DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM>
+References:
+ <DU2PPFBE35756D171CD64356C8D8DF3C2F8AB922@DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM>
+In-Reply-To:
+ <DU2PPFBE35756D171CD64356C8D8DF3C2F8AB922@DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM>
+Accept-Language: nl-NL, en-US
+Content-Language: nl-NL
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PPFBE35756D1:EE_|PAXP189MB1950:EE_
+x-ms-office365-filtering-correlation-id: dbe7111f-37ca-4a72-61dd-08df25f7768e
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|24021099003|25010399006|4140399003|8062599012|19110799012|31061999003|15030799006|37011999003|15080799012|51005399006|8060799015|2607281247196008|440099028|102099032|40105399003|3412199025;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?gv6fjBCHM1NLBG6JQS4m5QxYHwVEfozeumG0OyQq8kXSgGivMZRWsC5swy?=
+ =?iso-8859-1?Q?Oa2APL9cDFrj9gMzQQ8ETBebP2H+Ry5QL6WMIlNUJRLGlYjmYBlekQI08a?=
+ =?iso-8859-1?Q?QCfgQ1dd+UDIXdAncTzphHpOoGukpR00vELmc/IJ8LRjIGj0mCjbToljDL?=
+ =?iso-8859-1?Q?7V0hXOiczbZpg5iFGKZsHBrHF5sPWuirmIpLyM/owkA5KBylgRSx8Jliao?=
+ =?iso-8859-1?Q?5FkOeI5QX6Cok5ZyhCd4EocgMWELvl0YsiZ9ZgVAnhnjBA7yerH1uTEGxB?=
+ =?iso-8859-1?Q?GAmJLmo+vNIrgMwr/XZCmpCkq6AXMzb8c0AnUdl76/3JRbDcWDII7SZx07?=
+ =?iso-8859-1?Q?GM0eb/oEDtb39VGR5hS8GNky0O5qZjIhTH9aQk4QVIUDRWQGT+RIF1vw8/?=
+ =?iso-8859-1?Q?8ccPZ2AOYBbS79Wlgqhj3+8U1J4wchHpcXqzRy/DupfvRtBr0CsBFcTFru?=
+ =?iso-8859-1?Q?PHfbUruNaD0xQjCaeoOpDZWqIgsCBRutV8gbUhzDfqFGvi+1B3v/sWzqnS?=
+ =?iso-8859-1?Q?JzX3VimU5YNk8ZrXDDw0zTf41Epi4cSKqgmg8TkFKj6gSaXp1azGpLTuWO?=
+ =?iso-8859-1?Q?VGzx+PDnAgSWP8lIjpSILgTF7V7cEMaGfKhynkPJZMhIa3qCcXLbbkPpkg?=
+ =?iso-8859-1?Q?OEbgchHMLDOwOMsS5y3Qj6hv9jPMI9tmHoVc603KaBSODUEL+Rt/pfTaQo?=
+ =?iso-8859-1?Q?ilE+lJtXvVNSk0nDVfCZWJ8d+7H1ALJaMfW7ENFsRlqqjXg3m7jFC55D4c?=
+ =?iso-8859-1?Q?0WfiDcQMqAC7mBxDWi9tbMsG3a6txsiIzpU5lxJghHNJbVplAa0G4CA9yj?=
+ =?iso-8859-1?Q?XUO63fhFXt2xCZJLBZUnxebhuGCSuB+Iz1A7sm4ND/Zn34euNSiOseptaI?=
+ =?iso-8859-1?Q?cWeZUoEx55G35eKoFps3tWZpIUmObIY649EA2QDrOFCtEEGLvXPf5A1LcR?=
+ =?iso-8859-1?Q?4YgO2JzPj/HyMdhjC1GmlfJA/8R/v9BfE3efEj7lhFN7iuowhbFZMGWKlT?=
+ =?iso-8859-1?Q?RsnYba1vmJtbrX2U65rPZGsfjgLLsWDAfpCU1s?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?oI0OkRPEgRY5KnjhBbIShTnMGkZYM+FZM0x9/Xp53MJwNeIhUYufMUCi4Q?=
+ =?iso-8859-1?Q?j3vYyoziP8ubfQ4q9twQI1+NN3dLuBwcCeYm21W8s6NX4F7M1IzcCW4ce8?=
+ =?iso-8859-1?Q?fzKQ5AtlqqplgdGr4BN5ft+4EM+PRK0NUXFfijpGeVdytODO8w9yLVHrrj?=
+ =?iso-8859-1?Q?7HffpOd58wM7nT4PwMNShlsq0ENJUybQ1a/J+fniMcVA392kZ5pe21b0Y5?=
+ =?iso-8859-1?Q?dT4KCm4D9KynENL+sTSYIQ1Oi8qquM+xlTZlfQJXyPCo0NZ3r/3um5D336?=
+ =?iso-8859-1?Q?T7GwP0pe7q5z08N3vxCddaiEnqf93QR04Xxl5OUf9hc9yW2BiXDVZtg8m/?=
+ =?iso-8859-1?Q?Vv3FJ+VCP2gFUUytYKPXaKvZ2jX5J30ly4Cw/vIR36zFMBnG2VZEff1nNd?=
+ =?iso-8859-1?Q?zKK462SkoUgV2fivyULipgerKbsbL/igmpJOn3G5ECgXvQKYQjYxyDn6VI?=
+ =?iso-8859-1?Q?OW1xurFFvMLahl+GcPoI4V/HXXeONUsEYbAsmcQKxuPZEITbDUuw6oSilg?=
+ =?iso-8859-1?Q?6y0Ijllh/2g9gx0gEvB6otTPlVGpLqkssPfMuo6xIW8L6xyXgxhwLDkNKq?=
+ =?iso-8859-1?Q?HAL3HDy7KosHJHUxmJ8VTeWhcIWmlsCx09lZUnpvpvXGsbeWpzxOUqyfl8?=
+ =?iso-8859-1?Q?SWwpzgd/MWRwL+2Aqgm0NjtGqANZQdaO+Ik4qP6fEcZeZoJ2Op+erhxic2?=
+ =?iso-8859-1?Q?rvqxS4DJoaEddAq/p7KRqohPazKoS8LoRxFSQB/AAw0tLEgOjm3YTH8+hi?=
+ =?iso-8859-1?Q?KlvUYwgKua1n3Mh063lA6aQH//ja1wTH+bgVFKc989tx0Bv/8mnbI1aofM?=
+ =?iso-8859-1?Q?XWwHNYFG6CWLr9IfdgUMHc4z6croz70TAw07cB6j6TFJ0bCHaWS2ngz3MG?=
+ =?iso-8859-1?Q?/5cIArzJpXhvjNj+Q04xCPMcOacKNn425tivzjtIHn7fTpevandd19tq3a?=
+ =?iso-8859-1?Q?8D1LQDKr4y4LUyx23tA12H2wNdH9DokSzvH7Z0QnmpTPsqgXolAqfHgSFK?=
+ =?iso-8859-1?Q?7cfvDn3lwWSz67Akv4dy/1rHJNq63IQKeUFNQViXHExpsBqZDKrwn4m4rR?=
+ =?iso-8859-1?Q?+4YCWX24oft0dtZ45djEbcSlt/CdPyoRwFZD8iOxUm6U8pfoGfcyh3Wyrs?=
+ =?iso-8859-1?Q?RLOiFQYRUGDzZn1Nwx571K7hxYMeZpwM/xI2uSaDVAn/jkw/bTgGX/55Cc?=
+ =?iso-8859-1?Q?Qu7O6fkqLf/6VkHGRRxXmyOou/QhnPZhttOJg4tOSpfFIQPFweJwe7o2Rn?=
+ =?iso-8859-1?Q?i5mYQ+ihVBsU4iPPIHLsn74icjhiUQMwCbvU0pIhbxvIkIKpkSTgIXw67r?=
+ =?iso-8859-1?Q?1nVUwyxPJQbvE5chozkmOl8q19cUkkaMAnqWXOfAPcPl1u+V2FeOqknU92?=
+ =?iso-8859-1?Q?udhqJwyZYtB/Gpz1IGmOJYNqAkg6SYS8AlSEchNl2a6brXaPtFBptBfl4C?=
+ =?iso-8859-1?Q?UAUUo8X+dshw0i/9myhxw9AEyYa7s/T/3W+NsoEA2plzpUcuBS2S+SzYYa?=
+ =?iso-8859-1?Q?fepXiUBll8YjIBz2s1I81f?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_PROBLEM=3A_Kernel_6=2E8=2Ex=3A_VFS=3A_Unable_to_mou?=
- =?UTF-8?Q?nt_root_fs_on_unknown-block=280=2C0=29_=E2=80=93_SATA_=28Intel_AH?=
- =?UTF-8?Q?CI=29_not_detected?=
-To: Hans-Joachim Lange <lange-achim@posteo.de>, linux-ide@vger.kernel.org
-Cc: cassel@kernel.org, regressions@lists.linux.dev
-References: <c096264c-640f-4491-b242-399bba9cbbac@posteo.de>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <c096264c-640f-4491-b242-399bba9cbbac@posteo.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PPFBE35756D1.EURP189.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbe7111f-37ca-4a72-61dd-08df25f7768e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2026 11:21:28.5652
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXP189MB1950
 
-On 2026/10/07 14:40, Hans-Joachim Lange wrote:
-> Hello,
-> 
-> I am experiencing a regression: kernel 5.15.x boots fine, but 6.8.x
-> fails with "Kernel panic - not syncing: VFS: Unable to mount root fs
-> on unknown-block(0,0)". The SATA controller (Intel, rev 06) is not
-> detected; /dev/sda never appears. The ahci module is present in the
-> initramfs but does not load.
-> 
-> [1.] One line summary:
->      Kernel 6.8.x fails to detect Intel SATA AHCI controller; /dev/sda 
-> not created.
-
-Please try again with at least the latest stable kernel, or ideally the latest
-mainline kernel (7.3-rc6 as of this week). And also please try to capture the
-boot messages with the bad kernel. Hard to say what's happening without that.
-You can use network console or simply a video/pictures of the screen where we
-can see the ata messages.
-
-> 
-> [2.] Full description:
->      On a [Laptop-Modell], Linux Mint 21.x, kernel 5.15.x boots normally.
->      Kernel 6.8.x panics during initramfs: "VFS: Unable to mount root fs
->      on unknown-block(0,0)". The initramfs contains ahci.ko, sd_mod.ko,
->      libahci.ko, libata.ko (verified with lsinitramfs). No shell is
->      reachable (break=bottom, rdinit=/usr/bin/sh both fail). Secure Boot
->      was disabled during testing.
-> 
-> [3.] Keywords:
->      ahci, sata, ata, initramfs, boot, regression
-> 
-> [4.] Kernel version:
->      Working:  5.15.0-xx-generic
->      Broken:   6.8.0-xx-generic
-> 
-> [5.] Oops/Panic message:
->      Kernel panic - not syncing: VFS: Unable to mount root fs on 
-> unknown-block(0,0)
-> 
-> [7.] Environment:
->      Distro: Linux Mint 21.x (Ubuntu 22.04 based)
->      Arch: x86_64
->      Controller: Intel Corporation [SATA controller] (rev 06)
->      Kernel driver in use (on 5.15): ahci
-> 
->      lspci -k output:
->     00:00.0 Host bridge: Intel Corporation Gemini Lake Host Bridge (rev 06)
->      DeviceName: Onboard - Other
-> 00:00.1 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Dynamic Platform and Thermal Framework Processor 
-> Participant (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Dynamic Platform and Thermal Framework Processor Participant
->      Kernel driver in use: proc_thermal
->      Kernel modules: processor_thermal_device_pci_legacy
-> 00:02.0 VGA compatible controller: Intel Corporation GeminiLake [UHD 
-> Graphics 600] (rev 06)
->      DeviceName: Onboard - Video
->      Kernel driver in use: i915
->      Kernel modules: i915
-> 00:0e.0 Multimedia audio controller: Intel Corporation Celeron/Pentium 
-> Silver Processor High Definition Audio (rev 06)
->      DeviceName: Onboard - Sound
->      Subsystem: Realtek Semiconductor Co., Ltd. Celeron/Pentium Silver 
-> Processor High Definition Audio
->      Kernel driver in use: sof-audio-pci-intel-apl
->      Kernel modules: snd_hda_intel, snd_soc_skl, snd_sof_pci_intel_apl
-> 00:0f.0 Communication controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Trusted Execution Engine Interface (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Trusted Execution Engine Interface
->      Kernel driver in use: mei_me
->      Kernel modules: mei_me
-> 00:12.0 SATA controller: Intel Corporation Celeron/Pentium Silver 
-> Processor SATA Controller (rev 06)
->      DeviceName: Onboard - SATA
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor SATA 
-> Controller
->      Kernel driver in use: ahci
->      Kernel modules: ahci
-> 00:13.0 PCI bridge: Intel Corporation Gemini Lake PCI Express Root Port 
-> (rev f6)
->      Subsystem: Intel Corporation Gemini Lake PCI Express Root Port
->      Kernel driver in use: pcieport
-> 00:14.0 PCI bridge: Intel Corporation Gemini Lake PCI Express Root Port 
-> (rev f6)
->      Subsystem: Intel Corporation Gemini Lake PCI Express Root Port
->      Kernel driver in use: pcieport
-> 00:15.0 USB controller: Intel Corporation Celeron/Pentium Silver 
-> Processor USB 3.0 xHCI Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor USB 
-> 3.0 xHCI Controller
->      Kernel driver in use: xhci_hcd
->      Kernel modules: xhci_pci
-> 00:16.0 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 0 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 0
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:16.1 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 1 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 1
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:16.2 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 2 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 2
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:16.3 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 3 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 3
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:17.0 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 4 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 4
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:17.1 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 5 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 5
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:17.2 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 6 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 6
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:17.3 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor I2C 7 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor I2C 7
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:18.0 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO UART Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO UART Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:18.1 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO UART Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO UART Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:18.2 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO UART Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO UART Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:18.3 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO UART Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO UART Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:19.0 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO SPI Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO SPI Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:19.1 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO SPI Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO SPI Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:19.2 Signal processing controller: Intel Corporation Celeron/Pentium 
-> Silver Processor Serial IO SPI Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Serial IO SPI Host Controller
->      Kernel driver in use: intel-lpss
->      Kernel modules: intel_lpss_pci
-> 00:1c.0 SD Host controller: Intel Corporation Celeron/Pentium Silver 
-> Processor SDA Standard Compliant SD Host Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor SDA 
-> Standard Compliant SD Host Controller
->      Kernel driver in use: sdhci-pci
->      Kernel modules: sdhci_pci
-> 00:1e.0 SD Host controller: Intel Corporation Device 31d0 (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Device 7270
->      Kernel driver in use: sdhci-pci
->      Kernel modules: sdhci_pci
-> 00:1f.0 ISA bridge: Intel Corporation Celeron/Pentium Silver Processor 
-> LPC Controller (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor LPC 
-> Controller
->      Kernel driver in use: lpc_ich
->      Kernel modules: lpc_ich
-> 00:1f.1 SMBus: Intel Corporation Celeron/Pentium Silver Processor 
-> Gaussian Mixture Model (rev 06)
->      DeviceName: Onboard - Other
->      Subsystem: Intel Corporation Celeron/Pentium Silver Processor 
-> Gaussian Mixture Model
->      Kernel driver in use: i801_smbus
->      Kernel modules: i2c_i801
-> 01:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8821CE 
-> 802.11ac PCIe Wireless Network Adapter
->      Subsystem: Realtek Semiconductor Co., Ltd. RTL8821CE 802.11ac PCIe 
-> Wireless Network Adapter
->      Kernel modules: rtw88_8821ce, rtw_8821ce, 8821ce
-> 
->      dmesg | grep -iE "ata|sata|ahci" (on 5.15.x):
->     [    0.000000] BIOS-e820: [mem 
-> 0x000000006dd70000-0x000000006dd80fff] ACPI data
-> [    0.000000] reserve setup_data: [mem 
-> 0x0000000000000000-0x000000000003efff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000000003f000-0x000000000003ffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x0000000000040000-0x000000000009dfff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000000009e000-0x00000000000fffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x0000000000100000-0x000000000fffffff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x0000000010000000-0x0000000012150fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x0000000012151000-0x00000000607a9017] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000607a9018-0x00000000607b9057] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000607b9058-0x000000006b4bbfff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006b4bc000-0x000000006dd6ffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006dd70000-0x000000006dd80fff] ACPI data
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006dd81000-0x000000006dde0fff] ACPI NVS
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006dde1000-0x000000006e1e6fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006e1e7000-0x000000006ea3cfff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006ea3d000-0x000000006ea3dfff] ACPI NVS
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006ea3e000-0x000000006ea3ffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006ea40000-0x000000006eb14fff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006eb15000-0x000000006ebc4fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006ebc5000-0x000000006effffff] usable
-> [    0.000000] reserve setup_data: [mem 
-> 0x000000006f000000-0x000000007fffffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000d0000000-0x00000000d0ffffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000d3709000-0x00000000d3709fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000e0000000-0x00000000efffffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000fe042000-0x00000000fe044fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000fe900000-0x00000000fe902fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000fec00000-0x00000000fec00fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000fed01000-0x00000000fed01fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000fee00000-0x00000000fee00fff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x00000000ff800000-0x00000000ffffffff] reserved
-> [    0.000000] reserve setup_data: [mem 
-> 0x0000000100000000-0x00000001ffffffff] usable
-> [    0.024880] NODE_DATA(0) allocated [mem 0x1fffd6000-0x1ffffffff]
-> [    0.203122] Memory: 5547680K/5931444K available (16393K kernel code, 
-> 4402K rwdata, 11004K rodata, 3296K init, 18764K bss, 383508K reserved, 
-> 0K cma-reserved)
-> [    0.370364] Register File Data Sampling: Mitigation: Clear Register File
-> [    0.718375] ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
-> [    0.932015] ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
-> [    0.932228] libata version 3.00 loaded.
-> [    1.936203] Write protecting the kernel read-only data: 30720k
-> [    1.936858] Freeing unused kernel image (text/rodata gap) memory: 2036K
-> [    1.937125] Freeing unused kernel image (rodata/data gap) memory: 1284K
-> [    2.238334] ahci 0000:00:12.0: version 3.0
-> [    2.249922] ahci 0000:00:12.0: AHCI 0001.0301 32 slots 2 ports 6 Gbps 
-> 0x3 impl SATA mode
-> [    2.249929] ahci 0000:00:12.0: flags: 64bit ncq sntf pm clo only pmp 
-> pio slum part deso sadm sds apst
-> [    2.256735] scsi host0: ahci
-> [    2.260141] scsi host1: ahci
-> [    2.260198] ata1: SATA max UDMA/133 abar m2048@0x80040000 port 
-> 0x80040100 irq 124
-> [    2.260204] ata2: SATA max UDMA/133 abar m2048@0x80040000 port 
-> 0x80040180 irq 124
-> [    2.575597] ata2: SATA link down (SStatus 4 SControl 300)
-> [    2.737540] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [    2.739515] ata1.00: ATA-9: SSD 1TB, X0606B0, max UDMA/133
-> [    2.740480] ata1.00: 1953525168 sectors, multi 1: LBA48 NCQ (depth 
-> 32), AA
-> [    2.744572] ata1.00: configured for UDMA/133
-> [    2.745087] scsi 0:0:0:0: Direct-Access     ATA      SSD 1TB          
-> 6B0  PQ: 0 ANSI: 5
-> [    6.125323] EXT4-fs (sda4): mounted filesystem with ordered data 
-> mode. Opts: (null). Quota mode: none.
-> [    7.231564] cfg80211: Loading compiled-in X.509 certificates for 
-> regulatory database
-> [    7.253660] systemd[1]: systemd-hwdb-update.service - Rebuild 
-> Hardware Database was skipped because of an unmet condition check 
-> (ConditionNeedsUpdate=/etc).
-> [    9.645970] EXT4-fs (sda5): mounted filesystem with ordered data 
-> mode. Opts: (null). Quota mode: none.
-> 
-> [X.] Notes:
->      - ahci.ko is present in initramfs but not loaded
->      - No initramfs shell reachable (break=bottom, rdinit both fail)
->      - Secure Boot disabled during testing
->      - First broken kernel: 6.x.x (if known)
->      - Last working kernel: 5.15.x
-> 
-> Thank you
-
-
--- 
-Damien Le Moal
-Western Digital Research
+Thank you Armando for the detailed follow-up. It's "good" to see this probl=
+em is still active, though Proxmox is really slow with this. In the meantim=
+e we are 1,5 month ahead and without the much needed security updates relat=
+ed to the kernel.=0A=
+I can only hope there will be some progress soon on their behalf, but it's =
+pretty much quiet at Proxmox in general.=
