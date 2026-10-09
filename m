@@ -1,138 +1,239 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a14-42.smtp-out.amazonses.com (a14-42.smtp-out.amazonses.com [54.240.14.42])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A514F55AD
-	for <regressions@lists.linux.dev>; Fri,  9 Oct 2026 18:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791569496; cv=pass; b=olsCIxkTqcxtQhLc00juYp5dyyuzk3d5yakzgrH40HFrjLuvamqiH9C97Ewf4LnZKOkZybGgBtyuX+BxK+FbhZIG5mrcZKpHISvyAeGDbkEKZjafDGatsMe3RShEIY2QBSiiGAfoUu9yvMbPGFtTLyR2qsTY26HBHFD+J8bPdCU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791569496; c=relaxed/simple;
-	bh=WdgR+YdkAuXsXE819GZyZO+BI0w8tx59DEQncF9OA9k=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=U9BN3q/iFJFVY+HJrMrKPN9HO2ZU0PIUJ/0MRbNYgly5QCn/HHDR93BKXsSX6YiDscL8eAzMYLOhTvJa0RftPaLF2rG9uKX8BUGacmXLKmdbehS0LwcGHdcthIYisRv+gyOqPxTkYRBLCCMQzbC/xatLK6hwLatETzyX/amFYuo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IF/+/0he; arc=pass smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04E54F4743;
+	Fri,  9 Oct 2026 19:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.14.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791574905; cv=none; b=aVEEOggko5Zkna7AikYJ30Q3U766nEY/qIRasfWnJ+3lONkW0/MpwbHsv1mU+URPXB4TyIqIfCW7fNELiRuf9TjOTQXa4bViU47MJxgVjDaYkGlU85nWemM25XF2M8JjC7ZVQ/0o1tjbqJc2W3zg/3Dx1OkAl7aiw7BeRVZZ61Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791574905; c=relaxed/simple;
+	bh=zo2hHrAETes0BxoLPKZMZ693zKCAzqOlZOVWCwq+IDQ=;
+	h=From:To:Cc:Subject:Message-ID:Date:MIME-Version:Content-Type; b=ZVW1Rd3ByGCyVGm8S5weUxl1J0fGvYzetwj/3eEvTNTWGTSA7HS2VkZiGUo3g8v6JO4toIW5Uzcm9xs56MB9hggtrzqC+bT+G+u5wcwFyUVjQpO+fzwIzuG2sWCYY9KR0/or/S5mPl6YP/vjqFv4eDLWsOPZQhks7uiiyYU8ins=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nicolasfalesy.com; spf=pass smtp.mailfrom=send.nicolasfalesy.com; dkim=pass (1024-bit key) header.d=nicolasfalesy.com header.i=@nicolasfalesy.com header.b=FX0iCcFF; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=o9IdWwpl; arc=none smtp.client-ip=54.240.14.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nicolasfalesy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=send.nicolasfalesy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IF/+/0he"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6aa97edc48cso4968283a12.3
-        for <regressions@lists.linux.dev>; Fri, 09 Oct 2026 11:11:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791569494; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Qpm4FwqwRVQc5RkHZyjb7TlJY/liiBxCi7hVM/pJBJ2iK/NDKXN9RhwMWbXBXkPkjZ
-         cHTLjzWh3qiALlwrIQ9vVmTCupM/wBT1P85Trx+9e0JXfWJJzyWbuNCEOvAYZYPKg58M
-         Zvq3VOVtxbVuKL4I3YxmDRdMPwyM6TWPPA9mqJ1awq+YOK92Jxb9ZE9yz/yLQQ15YYS2
-         ZNJDZyKUsttcxyg3a+5lZlgA3xm1KlaVeagNygU7AhHFbyreQbf2d5nToXv2Ud6i3VYA
-         HK0/pDLAqfI7W0HfkC1NjFi0ghvwVkTo9/zxDx8tKUqgZQSVtY0R8I9oIo3iCKFHjTwo
-         c8Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=No4eTPnZ+UxSBkx9itGIleDNkZefe+ociK7F/sLwaY8=;
-        fh=xkjGMtHiaXSTUoSjerTwY7LwkV7V+9m5Nb6Dxmlq7L8=;
-        b=W1qjkPMkAf2mP3s3GPVHc/YyuYl84/TbrXxofoODP0v78lSH3J4nFBrv17kgiTGDL4
-         cBR7guPNwsfT4jHkrCegYz+xgaXnuZGjdBcqD9dM1r1MAb4mCMUQKSu+C12bkFVYFJxJ
-         XgpSaorczy/tXlCXhjN7KWtv62ClWp8lVp6mFsPdSe/teaOixpHrT4QqEkcfzLz3ATrb
-         CATAsCE5eO86rnk7+02WHVp1Vbu9+VKydTdr35bsaQ0jwUeMm8xnYf9Tk29M1BFnMFoj
-         PNMDmstNqTjRgHsuGlsgaZ1DrkCcHKub5y/7uOL9vMdCiLUwibpUcookKvctu7HzgWDH
-         cN6w==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791569494; x=1792174294; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=No4eTPnZ+UxSBkx9itGIleDNkZefe+ociK7F/sLwaY8=;
-        b=IF/+/0he/1kP3qXRT2S/Fo5Vmhe9D0ThpRIeaGDHm45huh7epdkI1aySyqTx5ME60l
-         uncP+Qrgpw0uJGJvTmHE72LH0SW8zu7+Iq3YCl5B/WjUP9VVUw39ol/GHQkZwVBY+3Bb
-         KSKpETPE3o51fbs6sa62r/3RSjtuShccKdocdy6DKBpsFlm5nGoBDDUVTKYsl/7PSxTq
-         vymkZJ0WDRvwQbhx167kdbers8fciSjVrZSJkBio+tLxTSVpBo890MBKtW/AW5fZOV05
-         3qiYZ61L8rXdcucrmfCCuARP9pHjSk5RjDkZ86V/6ejc0PZOZoHH0vKdHiEJATUWbuMR
-         zatg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791569494; x=1792174294;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=No4eTPnZ+UxSBkx9itGIleDNkZefe+ociK7F/sLwaY8=;
-        b=mI9NuHm/IUWC3m4zcUODNhh4fv6J+ROk1yddUHf6glMifNae21mmCUvyRWQ7ZoIHge
-         N1S8Q0LvwFWR7UyqXY06+sQBj+NVTCTdG/s4ivhIbNN24RBr5XFyhgCiaPzu/Na2kRRC
-         CL9TQg5CVBnaTYPJIeERZdMSs+UAAWXyYFcUKiqZMU0Me0QelUa2BjUQiDnXYm3xH0jO
-         ZHcZeW4Y8F6eQ/LcqP01vqW6Q9fFHZnMBn+9NrKAj70wMpCV2VE+OJwrMjdEdvvAaqpo
-         wiD8JsqhXYQCfQ6ObE0HBh9wMwgXPooEWuci/3khUkESUZKO0dSQG9jxyw3VCLkvG7q2
-         zFWQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzUz6URgoZuTPOFrD/7RGPPKET5yvdlfCbezQjUNcBcUfsL+BqezZh72/2K0+p16pyWh/tKNpEg6T0bRg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYK5Ec5E6s6bkTctdsjZ9sA+ZVk1r52HC0GN1CkOk29ZENEWCx00
-	GrcpWQR4pyrYipGgMfGKk60ViEqvVKGtrZLkggFtzG03Jbyv1tfatrOYUqnZsPoZDzugTjP22kd
-	bPCl7v51ME3gGeQHMDPJoi5opj6TfYMU=
-X-Gm-Gg: AYBFou1mF55Ome7piwDbXFAnStHqiq3GWhTtSVPA90Wjz7ZE/s+UNWHTAG5t0e8Hg/Z
-	s/zDAe/r5BAzNswe8hSOoF5oUTdswqCSMLcjjd0vf6Lwiv4hGh8o3x2lXhAcxzoeWWnL8lsaBB6
-	+v5ZXCOm/F2TS95+wEAFR0KX0Q3qIQJng92ZMhcW9s8O99/ub9O3yhOBje37VAwneVUTBhtRmbA
-	jIVsTVoI2RODNmBgl9vVNABrjq6P4f5W+vDERPNEDrCfM/mmzuwq2shpeH7FOxFKnbHOuJqmCXo
-	+d7Rfn9eOVA31+lQj2pm1FQm+9ijNc4L3WE0EMKDGaihJ9PkVGFmAB7Uat/ZACrIzOJLWfCItuB
-	x8G5MDbj4tjos3BUl9kvcDBrZWp27fq4SBjkFwdaw
-X-Received: by 2002:a17:907:bb49:b0:c29:62d8:68af with SMTP id
- a640c23a62f3a-c31a9ffda78mr277596866b.47.1791569493771; Fri, 09 Oct 2026
- 11:11:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nicolasfalesy.com header.i=@nicolasfalesy.com header.b="FX0iCcFF";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="o9IdWwpl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple; s=resend;
+	d=nicolasfalesy.com; t=1791574894;
+	h=From:To:Cc:Reply-To:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type;
+	bh=zo2hHrAETes0BxoLPKZMZ693zKCAzqOlZOVWCwq+IDQ=;
+	b=FX0iCcFFcno0z74mhSy0D92djf9ZvP7EOnN4SyFgtvHgyFOWx3JtGfm+34IOwS0D
+	SlyhQ7Ytl2adrzBQWzRuGRRZtU6HI0Ir8AeivmpPNoERqzpem6SXHKzrGIJ+NfIDX44
+	k6Y/YCX+Mc176+OJhbNGUVJ9mt6Qae2lMQZO7hyo=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1791574894;
+	h=From:To:Cc:Reply-To:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type:Feedback-ID;
+	bh=zo2hHrAETes0BxoLPKZMZ693zKCAzqOlZOVWCwq+IDQ=;
+	b=o9IdWwplYefV+66L8k8YRNQgtSXB5DkWO0ySiSd1LLaC1mPBjpbgkhizIACdaet4
+	a9vK/jv6dxggCFIiWSpB5IzRU4ATmnBAURm55fE6cK4xGG8fWEiUK4qNXH0CHXcg9TX
+	QcBHo3fdyhB+zSHpP26XW0xSASmeTpcip+cMhUXw=
+From: Nicolas Falesy <nicolas@nicolasfalesy.com>
+To: linkinjeon@kernel.org, sj1557.seo@samsung.com
+Cc: yuezhang.mo@sony.com, exfat@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, hch@lst.de, djwong@kernel.org, 
+	nfalesy@gmail.com
+Reply-To: nfalesy@gmail.com
+Subject: [REGRESSION 7.2] exfat: stale dentry buffer of a deleted directory
+ overwrites new file data
+Message-ID: <010001a1222f66ba-0c745f29-d4fe-4862-93ff-1db2055b05fc-000000@email.amazonses.com>
+Content-Transfer-Encoding: 7bit
+Date: Fri, 9 Oct 2026 19:41:34 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: =?UTF-8?B?Um9nZXIgQWxhc8Og?= <vonbloom@gmail.com>
-Date: Fri, 9 Oct 2026 20:11:22 +0200
-X-Gm-Features: AclHuK_0U45sdGLsb4_JlQaS2HixZO7FmF0_k12UyuRozwqXHB_NNtmWhZpkzdQ
-Message-ID: <CAELqY9==Ter2XQPRp=gjW5T75T+7kcZCXpn5roF2L6tY6mQNxw@mail.gmail.com>
-Subject: [REGRESSION] btrfs: fs-verity "FILE CORRUPTED" on readahead of
- compressed extents since 7.2
-To: linux-btrfs@vger.kernel.org
-Cc: fsverity@lists.linux.dev, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Feedback-ID: :1.us-east-1.ab+1BOhI2G8lKXniYmrQtu8hqInlQv0hMf7S3fw6DdXZuhPmWRop4As2nYC+PvMCg/MeYgni+TDnIGoO6UR5+695Ups99kH4xr2cW/T33RKlxcJfmzZvDG+/D2zFM008PnQSMHraaQXnsyHltCPK4i0yAdm73tum8YqlC4670Nc=:1.us-east-1.QSNtDRXSTq9sAuvRl56h5mypgasnQ5yDLNpVzTnziu0=:AmazonSES
+X-SES-Outgoing: 2026.10.09-54.240.14.42
+
+Resent as plain text from a different address: the earlier copies
+from my Gmail were rejected by the lists for containing HTML.
+Sorry to the maintainers for the duplicates.
 
 Hi,
 
-(Resent with a subject line: the first copy went out without one,
-sorry for the noise.)
+Since v7.2, exfat can silently corrupt a newly written file: if a
+directory with entries is deleted and its cluster is then reused for
+file data, the deleted directory's dirty dentry buffer_head is still
+in the block device mapping, and a later flush of the bdev (fsync,
+syncfs, umount) writes it over the new data. The file reads back with
+one 512-byte sector replaced by the deleted directory's (now
+"not in use") directory entries. No error is reported.
 
-Since 7.2, reading an fs-verity file on btrfs mounted with
-compress=zstd:1 logs "FILE CORRUPTED" for compressed extents read
-through readahead, although every read succeeds:
+It reproduces 100% of the time on v7.2.x and v7.3-rc6, and not at all
+on v7.1.11 or v6.18.55. It happens with buffered writes (with or
+without fsync) and with O_DIRECT. A syncfs() between the delete and
+the new write avoids it.
 
-  fs-verity (vda3, inode 58996): FILE CORRUPTED! pos=8912896,
-  level=-1, want_hash=sha512:...
+#regzbot introduced: v7.1..v7.2
 
-(one line in dmesg, wrapped here). The positions are mostly multiples
-of 128 KiB. read() returns no error and the data is correct: the
-synchronous re-read passes verification. We hit it with composefs
-(bootc) objects on the root filesystem of a laptop, and reproduced it
-on a second machine and in a VM.
+Reproducer (run as root; any non-exFAT working directory):
 
-Reproducer (root, any btrfs mounted with compress=zstd:1):
+---8<---
+#!/bin/sh
+set -e
+W=${1:-/tmp/exfat-repro}
+mkdir -p "$W/mnt"; cd "$W"
+truncate -s 0 img; truncate -s 256M img
+mkfs.exfat img >/dev/null
+DEV=$(losetup -f --show img)
+mount -t exfat "$DEV" mnt
+# A pushes the next allocation to ~188 MiB, where D's cluster goes.
+dd if=/dev/zero of=mnt/A bs=1M count=188 status=none
+mkdir mnt/D
+touch mnt/D/f0 mnt/D/f1 mnt/D/f2
+umount mnt; mount -t exfat "$DEV" mnt       # start with clean buffers
+rm mnt/D/f0 mnt/D/f1 mnt/D/f2               # dirties D's dentry buffer
+rmdir mnt/D                                 # frees D's cluster
+rm mnt/A
+# B reuses A's clusters, then D's freed cluster (file offset 188M).
+head -c 200M /dev/urandom > ref
+cp ref mnt/B
+umount mnt; mount -t exfat "$DEV" mnt
+if cmp ref mnt/B; then R=PASS; else R=FAIL; fi
+umount mnt; losetup -d "$DEV"; rm -f img ref
+echo "$R: exfat stale dentry repro on $(uname -r)"
+[ "$R" = PASS ]
+---8<---
 
-  cd /mnt/btrfs-zstd
-  find /usr/lib -maxdepth 1 -name '*.so*' -size +500k -print0 |
-    xargs -0 cat | head -c 60M > f
-  sync
-  fsverity enable --hash-alg=sha512 f
-  echo 3 > /proc/sys/vm/drop_caches
-  cat f > /dev/null
-  dmesg | grep -c 'FILE CORRUPTED'     # 10 here
+On an affected kernel it prints, every time:
 
-Same data with chattr +m before writing (uncompressed): no messages.
-Reading with POSIX_FADV_RANDOM: no messages.
+  ref mnt/B differ: char 197132289, line ...
+  FAIL: exfat stale dentry repro on 7.3.0-rc6
 
-Tested on Arch Linux's kernels (no out-of-tree patches) in a KVM
-guest, virtio disk:
+Results
 
-- bad: 7.2.2-arch1, 7.2.7-arch1, 7.2.9-arch1
-- good: 7.1.11-arch1, 7.0.14-arch1, 6.18.55-lts
+All runs in a KVM guest (4 vCPU, 4 GiB), image on tmpfs behind a
+loop device, mkfs.exfat from exfatprogs 1.4.3 with default options
+(256 MiB volume, 4 KiB clusters, 512-byte sectors).
 
-Also on bare metal (two NVMe laptops, Intel and AMD) with
-7.2.9-cachyos. A similar symptom in 6.16.8 was fixed by "btrfs: fix
-incorrect readahead expansion length" (Oct 2025).
+"nofsync/fsync/O_DIRECT" is a harness equivalent to the script above
+that writes B (filling the volume minus 1 MiB) with a per-4KiB-block
+pattern and checks it with O_DIRECT reads after a remount; "syncfs"
+adds a syncfs() on the mount between the deletes and writing B.
 
-#regzbot introduced: v7.1..v7.2.2
+  kernel                     nofsync  fsync  O_DIRECT  syncfs  script
+  6.18.55 (Arch linux-lts)    0/20    0/10    0/10     0/10    0/5
+  7.1.11  (Arch linux)        0/20    0/10    0/10     0/10    0/5
+  7.2.5   (distro build)     20/20   10/10   10/10     0/10    5/5
+  7.2.9   (Arch linux)       20/20   10/10   10/10     0/10    5/5
+  7.3-rc6 (defconfig +
+           kvm_guest +
+           EXFAT_FS/LOOP)    20/20   10/10   10/10     0/10    5/5
 
-I can test patches.
+(n/N = corrupted runs / runs.) Every corrupted run had exactly one
+bad 512-byte sector, always at file offset 197132288 (188 MiB), which
+is the disk location of the deleted directory's cluster
+(volume offset 199249920).
 
-Roger
+Observed bytes
+
+First 64 bytes of the bad sector (7.3-rc6, buffered, no fsync; the
+same layout on every kernel, only timestamps/checksum vary):
+
+  05 02 e3 79 20 00 00 00 38 98 49 5d 38 98 49 5d
+  38 98 49 5d ac ac 80 80 80 00 00 00 00 00 00 00
+  40 03 00 07 13 c2 00 00 00 10 00 00 00 00 00 00
+  00 00 00 00 08 bc 00 00 00 10 00 00 00 00 00 00
+
+i.e. a File entry (0x85) and Stream Extension entry (0xC0) with the
+InUse bit cleared: the deleted entries of a file inside the removed
+directory (this harness used 4 KiB files named "zqfile0".."zqfile2";
+first cluster 0xbc08, length 0x1000). The rest of the 4 KiB cluster
+holds B's correct data; only the one sector whose buffer was dirtied
+by the deletes is overwritten.
+
+Analysis (hypothesis, from reading v7.3-rc6 fs/exfat)
+
+exfat accesses directory entries through buffer_heads of the block
+device (sb_bread() on s_bdev). Deleting the files in D marks their
+entries free in D's cluster and dirties that buffer
+(exfat_remove_entries() -> exfat_put_dentry_set() ->
+exfat_update_bhs(), fs/exfat/dir.c). After exfat_rmdir(), D's
+cluster is freed when the inode is evicted (exfat_evict_inode() ->
+__exfat_truncate() -> exfat_free_cluster()), but nothing cleans or
+forgets the dirty buffer, so it stays dirty in the bdev mapping.
+
+Up to v7.1 this was harmless: file data went through
+exfat_get_block() and __block_write_begin_int() /
+do_direct_IO(), which call clean_bdev_bh_alias()/clean_bdev_aliases()
+for newly allocated (buffer_new) blocks, dropping any stale bdev
+buffer for the reused blocks.
+
+In v7.2, commit 82a81a7352bc ("exfat: add iomap buffered I/O
+support") and 867b9c96dc83 ("exfat: add iomap direct I/O support")
+moved data I/O to iomap. __exfat_iomap_begin() (fs/exfat/iomap.c)
+allocates clusters via exfat_map_cluster() and sets IOMAP_F_NEW, but
+nothing calls clean_bdev_aliases() for the new clusters any more. The
+file data is written through the inode's mapping, and the later
+sync_blockdev() (exfat_file_fsync(), or sync_filesystem() at syncfs /
+umount) writes the stale dentry buffer over it. That fits all of the
+above: always exactly one sector, at the freed directory cluster;
+fixed by syncfs() between delete and write (the buffer is written
+back to its old, still-free place first); FAT/vfat, still on
+buffer_heads for data, did not show it (0/60 with an equivalent
+harness on 7.2.5).
+
+A candidate fix (not a formal patch; tested only with this
+reproducer, all cases above 0/N on v7.3-rc6 with it applied):
+
+--- a/fs/exfat/iomap.c
++++ b/fs/exfat/iomap.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/iomap.h>
+ #include <linux/pagemap.h>
++#include <linux/buffer_head.h>
+ 
+ #include "exfat_raw.h"
+ #include "exfat_fs.h"
+@@ -77,6 +78,21 @@
+ 	if (err)
+ 		goto out;
+ 
++	/*
++	 * New clusters may still have dirty buffer_heads in the bdev
++	 * mapping (e.g. dentries of a just-removed directory).  Drop
++	 * them, as __block_write_begin_int() did for buffer_new
++	 * blocks, so a later bdev flush cannot write stale metadata
++	 * over the new file data.
++	 */
++	if (balloc) {
++		sector_t first = exfat_cluster_to_sector(sbi, cluster);
++		sector_t nr = (sector_t)num_clusters <<
++			      sbi->sect_per_clus_bits;
++
++		clean_bdev_aliases(sb->s_bdev, first, nr);
++	}
++
+ 	cluster_offset = exfat_cluster_offset(sbi, offset);
+ 	cluster_length = exfat_cluster_to_bytes(sbi, num_clusters);
+ 
+
+An alternative would be to bforget()/clean the directory's buffers
+when its clusters are freed (exfat_free_cluster(),
+fs/exfat/fatent.c), but other freed metadata clusters could have the
+same problem, so cleaning aliases on allocation (as the buffer_head
+path did) seems the more complete fix. I have not checked whether
+other iomap paths (e.g. page_mkwrite / fallocate) also allocate
+clusters without it.
+
+Workaround
+
+Call syncfs() (or sync) on the exFAT mount after deleting
+directories and before writing new data, or avoid v7.2+ for exFAT
+volumes until fixed.
+
+Disclosure: I found this while building a tool with an AI coding
+assistant (Claude), which also helped with the analysis and the
+candidate fix. The reproducer and every result above were run on the
+kernels listed.
+
+Thanks,
+Nicolas Falesy
