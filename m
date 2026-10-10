@@ -1,128 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A073225B08D
-	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 10:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29FF4A3877
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 12:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791628395; cv=none; b=GmMBp7wa1NLpHfxkfXUngC25yry1HRZe1dm97GI8tmzqJieDP7PfZj6RksU6DXWvzg6fN9S4Hzxbe3+s/ksTFRyo3vlnMQ6FtdobbngIiYsQ8fm+f26SBSDaXjGK5kcNtVZEPYLbm76gzS8YqiKwIWTBIgC6q6gomCzeiDjB/xE=
+	t=1791636333; cv=none; b=sWOPoSeMF3+O0bSHXa3ZjTXaYq6H8rW61omsisH0eV1kW1Db0F1rnbmHQ157XpcFy14UanTrK7weHxzN1q3NWMaQBRcTB7ouN8SQCmyUG2YxFjJ5hjtcI7JJk81FOHloc5kMqSp03p/eQyIQ1EzX36nbd/fj+RqmZ9iF/p+ewu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791628395; c=relaxed/simple;
-	bh=cXpXyyAxJEQk85gzl9TTiU5pF79hr7iF/5HP6KNcpRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=fSibOyGcf2jAWhg3lp0Bbv4akIcI8Rf86AkxhUkIQpKUmFnKmWQlriKoKFkHjKmKKFLtOt/W7Yo5XFuWHgiO+B5NH2sYpSr0o/M5WhDMo24XM9EPUGFs0NKStt19wrQK/An+oL15B2Ps42VdgiIffPAPRL6E35OAU5o+P7tKlpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HgnV/I92; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1791636333; c=relaxed/simple;
+	bh=+N35eRB1/+8vuA8TF49TTq/ynuoK2bxAscwd7Uj95UY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=QaEqWUgXnpLRnHwx3C7kcbVgU+AFV4xvQeeB9Db4i4u4t72nSPfy/mIOohxIow5zvQqla8KJpc83gvu29o7RtnuIxvxFd+liyWsgDHXxqdCteQl94wRROZOpLnKi+Gy6/Bb+JTcVfNI+GZx9CwXg/SasHG7As94KKCkBBj6ZcPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mCG1BivO; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgnV/I92"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1791628393;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uW5cF2qGp1fynNQG0JX/YHgwzhjHkih1Eex3WwO1Nwo=;
-	b=HgnV/I92kXG01DTKMkUrP2dX39BoAXibQbyQoob/tNrAJcuHgbkLCmfYQS9k8Ywes+MwZq
-	RisB6mUykI8mh7V1hiKDPeBQRILWpR5F74PFyG1HFTe+BEkFlkN9roAEef4i1Kn40TxQt8
-	AHjuOhXsDHZqjbcpN7vDEVuZQmWiySU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-115-U1XRIZGLOriN84BmfV1tSA-1; Sat, 10 Oct 2026 10:33:12 +0000
-X-MC-Unique: U1XRIZGLOriN84BmfV1tSA-1
-X-Mimecast-MFC-AGG-ID: U1XRIZGLOriN84BmfV1tSA_1791628391
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a1895ffc83so4133295e9.3
-        for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 03:33:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791628391; x=1792233191;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=uW5cF2qGp1fynNQG0JX/YHgwzhjHkih1Eex3WwO1Nwo=;
-        b=hULHiU0RG6tRlnXEyWAwZyO8HNwouAhUZjiwTNtJ4KzNTtHjJlDSD8kJYlMmTdtf89
-         8jFHW+fswRn2mKiBmiQyjRjI4aOs55V8DxM1obDdR9+MMYoVv8/f0XQ+Z0WowauZSdtl
-         HjrfimpTiHBB0N4fU6Bn7oZcLdmqDjTfePbXlm3icPiFYrC8EM0ReZpFntTjj6z4fTdf
-         yPI9PIGQLlkm5bRTVvSZTKyk/NgKAN4M/AgsyY0ihRogKlMq9xFEqZUO9ZmJAK4DIjS9
-         zeQG4vqCCbckzw8wnSlWhNl5vsNC3owbvlCKomyvx+fChDwsIxbQ5xG+W76WJP4cRIt2
-         tMRQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz/P2pdEqDAg+3eNR2nM2c3oymLgoJRsQwczcHjIVfSBtHmh+M1jLGANE6cUBXe9EiNi+ivojFY3I6gbQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYK+VWLGXgPKHWrR+3A6gFEsCO+JazhJh8J9RI04xAIJCXn4bzXu
-	zTzKRJglCiJANY2+9EXEyjTrmWj7ejLT8/LmUAPXc6HMRnX4boZtXLByAkETIP1VSS1A9ujLTkb
-	946ZM3AgTPHVvm6OmWVgEvfisloGePvrHKVjT4trB5zx83qxQLDnqXlLIpCeddnwP
-X-Gm-Gg: AYBFou1iUtiWFC3na/l8sHuj7WwTPj0SELfzX0VLjAW2Xeq0rDGa5gvcYEJPs5qAbNV
-	MHchQj5NivZS2efOnAVOe8fAJHGT69yquS/u29N2/0hILmXwJA0EdnPNC3Ng8Uozplja2pjZ1Ns
-	JqHMGXkLHmePNAs3o1qLgLO6I0M6dS5yt03UmV4qmF/fDeg86xYoPdaHY0zaXPc8QiQ+QXbfROe
-	qNjXNjjt3xOuQk2jp+rOMs0GrMVA03rJQPj5f8jOuoa97MjncB6D3WAfe+YZCEFKDqGxHqehLQY
-	lJ45TJxli/vKVeUxcMcM+l9N7S7LWh78WNs50xg4PF7eF7vTxyhhqW3sqogMYPAJeOWvoFA=
-X-Received: by 2002:a05:600c:3510:b0:4a1:7033:5b55 with SMTP id 5b1f17b1804b1-4a18e4cc437mr94488425e9.21.1791628390808;
-        Sat, 10 Oct 2026 03:33:10 -0700 (PDT)
-X-Received: by 2002:a05:600c:3510:b0:4a1:7033:5b55 with SMTP id 5b1f17b1804b1-4a18e4cc437mr94487985e9.21.1791628390226;
-        Sat, 10 Oct 2026 03:33:10 -0700 (PDT)
-Received: from redhat.com ([2a06:c701:73fb:d100:601d:d7d4:d03f:527b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db98c3a13sm8328544f8f.25.2026.10.10.03.33.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Oct 2026 03:33:08 -0700 (PDT)
-Date: Sat, 10 Oct 2026 06:33:05 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Sasha Levin <sashal@kernel.org>, workflows@vger.kernel.org,
-	ksummit@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, corbet@lwn.net,
-	skhan@linuxfoundation.org, rdunlap@infradead.org,
-	broonie@kernel.org, tytso@mit.edu,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 2/2] agents: add a skill to determine Fixes tags
-Message-ID: <20261010063228-mutt-send-email-mst@kernel.org>
-References: <cover.1791499378.git.sashal@kernel.org>
- <7fa126fd22b4449cf63a7045f7cd959e106fac87.1791499378.git.sashal@kernel.org>
- <c3ce794d-1ac2-4ef3-9e5c-1e171bd77a89@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mCG1BivO"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4j23Nb71wlz8Mh1
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 14:45:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791636320;
+	bh=+N35eRB1/+8vuA8TF49TTq/ynuoK2bxAscwd7Uj95UY=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=mCG1BivOjgEW2EEChiwEU+3c/tn/b9kFR56ZB47y/dAut0mmQwUHfsHIZJl7Dm1rV
+	 kE9OlcyZlnl7xhUhPVZixTCQP+plhtHm4oh7pmBl+CogElKzRVR1CSdyrexGXFxLpi
+	 2oHnjXObKDWd9e89KBxQ8cTPOPbOAsPXWDDReJIMy6XM+fzYEl8Y7kqM9uG31G5Qww
+	 NpawUSSCBNP2TsNbdFq32xHPW/oyQXII31EBhiB9+nc4eE2AOCDweifbejbMPMmSVg
+	 eMTdBRtLu6dntMfT/782Zatv+3fqXsJ1PXkPJ1LUI071yYmeJsc6NBGQSPz+zVRDeI
+	 ydLDjbwnnFzAg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4j23Nb6Lzcz4xFJ
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 14:45:19 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j23Nb4q6yz8sb3
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 14:45:19 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0EF6D5FA0A
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 14:45:19 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <7a6c2dd3-0595-4fcf-b2cd-e5c22c552f0f@leemhuis.info>
+Date: Sat, 10 Oct 2026 14:45:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <c3ce794d-1ac2-4ef3-9e5c-1e171bd77a89@leemhuis.info>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: OwgRnB6uYPwE4_8lZlXfzq45ZgaTHJBo5LkcIurrnCg_1791628391
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179163631924.3411612.17598010565263186087@mxe9fb.netcup.net>
+X-NC-CID: kF7YmbuoC2RvkoiP8tlMSj5b3Clq3xW8rQKiDWZ73F8753fpvKM=
 
-On Sat, Oct 10, 2026 at 11:40:56AM +0200, Thorsten Leemhuis wrote:
-> On 10/9/26 00:54, Sasha Levin wrote:
-> >
-> > +A ``Fixes:`` tag identifies the commit that introduced the bug being fixed. [...]
-> 
-> Sorry for partly hijacking this, but it seems appropriate while we are
-> at it:
-> 
-> What exactly is the right commit to specify when it comes to a
-> regression caused by a change that exposed a way older bug? The change
-> that exposed it? The change that introduced it in the first place? Both?
-> I'd tend to "both", but I guess some people might consider this as too
-> noisy.
-> 
-> I've seen occasional discussions about this and our docs for humans are
-> a bit vague here:
-> 
-> Documentation/process/submitting-patches.rst says:
-> ""If your patch fixes a bug in a specific commit, e.g. you found an
-> issue using git bisect, please use the ‘Fixes:’ tag with at least the
-> first 12 characters of the SHA-1 ID, and the one line summary.
-> [...]
-> A Fixes: tag indicates that the patch fixes a bug in a previous commit.
-> It is used to make it easy to determine where an issue originated""
-> 
-> And Documentation/process/5.Posting.rst says:
-> ""One tag is used to refer to earlier commits which introduced problems
-> fixed by the patch:""
-> 
-> Ciao, Thorsten
 
-I'd say the one exposed it. this way it is useful to answer
-the question "do i need this fix".
+
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/netdev/CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com/
+#regzbot introduced: 1517d1996b5236fe69eccd9d253f725e06996eb1
+#regzbot fix: vlan: do not insert the vlan header in vlan_dev_hard_header()
+
+#regzbot report:
+https://lore.kernel.org/lkml/CANzgjV0YWUX6=ZGTbn4KEKqQmVhsZTsDPeRf0Nfq=YFT1eoPzA@mail.gmail.com/
+#regzbot introduced: ffe8a0c6b552
+#regzbot title: pinctrl: amd: Don't clear S4 wake bits at probe causes
+power off to reboot AMD Ryzen laptop
+#regzbot fix: pinctrl: amd: Clear S4 wake bits when firmware has _AEI
+
+#regzbot report:
+https://lore.kernel.org/netdev/4F0FAEB6-A13B-47F3-BFF1-C706686C6F64@gmail.com/
+#regzbot introduced: f19186bb71d0a6
+#regzbot title: net: TCP through relays broken when the peer's network
+drops ICMP
+
+#regzbot report:
+https://lore.kernel.org/all/CAELqY9%3DeoM-v816v2otCNitOgAFnrWZ776F3RECwPOwKveA%3Dzw@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/all/CAELqY9%3D%3DTer2XQPRp%3DgjW5T75T%2B7kcZCXpn5roF2L6tY6mQNxw@mail.gmail.com/
+#regzbot title: btrfs: fs-verity "FILE CORRUPTED" on readahead of
+compressed extents
+#regzbot fix: btrfs: fix the fsverity callback where unexpected range is
+verified
+
+#regzbot report:
+https://lore.kernel.org/all/20261010071811.20483-1-yiyu@yiyuzhou.io/
+#regzbot dup:
+https://lore.kernel.org/all/20261010064407.11030-1-yiyu@yiyuzhou.io/
+#regzbot fix: xhci: give back halted TD when skipping endpoint reset
+after disconnect
+
+
+
 
