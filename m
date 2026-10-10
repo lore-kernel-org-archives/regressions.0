@@ -1,107 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FA03515CD;
-	Sat, 10 Oct 2026 13:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BA13BAD93
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 16:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791639937; cv=none; b=JVdjl3pfDqaWpbE0gNPkH3mIwLMdUM/Pb5VXPUCS8f7gV+pHFrHQdNtj1/peCZz/BEOkh0lsf/orKUrcX9USW3UPSMuiMHApbiPMim+yXyV4M5/tn8YX+yYooM+ZMlcMj6RjPjDDODHJpov5DlktBCKruRwbWUuUMbbHLPsRmB8=
+	t=1791648347; cv=none; b=Wn5VSTIjdFpV2+neK51h/tu1GmPWrd8E78Bqvlg/2Raf9m0lJA2m7+XBIHbHoH3a6MziSkwTRg1A/I0dUXN6QRllD6NFQVAcJYYVV6i79XmJSsI+h5zEK876IfPXwJmuUaCB9VKEHbVoCLBx6ii7WfJ1IpZn6m1mxLu7oxYwa2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791639937; c=relaxed/simple;
-	bh=ym2Zzvw3LJt6VG0b/1J0g+H6sSy5Icu1B9BdR7mkcc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpTgPqhNmMob378Ca/2MtfHBOMa/nRcXI6+UPuLCpERCoM2tAfBiLj1wKyOa7aBORVB7nQWJ9PYBJvYXKRFxihoZIAdo1WPQ2vFtc2Fu0QgasqrjqUBkoZSaUIAoNdn/vd0VKMVMwz/x0Wj9TojSZUpT9WegcXTE+f+J65tgbUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cxf1u295; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791648347; c=relaxed/simple;
+	bh=wQdw3JX5ndOoXhyPVmXBmiwk8XrKSyi0L/4mIulB9as=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z1WOxlwnCsHD5RqqBDfduaQW3XowFlZffakTkIg+FI7wfqqkrQRtZI5AKVW1uphPOX4dw6CO2VACV8tJULoDP8CtX1RGdB49+5Ma1Ie97mpJ2g5SciUpZ7QdLsdrhgywH/mK00SatYfpArJ5m1OEDBNa9D++to7eueYhieonX78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=COMtQ1FV; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cxf1u295"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8431F000FF;
-	Sat, 10 Oct 2026 13:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791639936;
-	bh=4dN/mCtTBXYJ2pasLy+uq66Ba+EYdlz12Wgok4NPMsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Cxf1u295b8s5o6wBwMxRCtC68LIhvpfDQqaL/e77DWMfI9ZK+osFTgv4QwVRzbjea
-	 rSD/Xihfr8DSYO3ofgcl1EUDBnHwlUAPws3SIBR0UgXr/Pgo0Bsn+Zb8w3BjPIvUJC
-	 r2MXaFpLIQKl9T7zlQTTh6Ejbpr9MnnUEiuwBe/qyplxvtNDzQaUljX/t47myoTDlg
-	 oabkjxIlyxRxBLVYtOqOwU3qsayJwowErGAv9knMu0mQGjs/ptXr3V13PH2aeaal2S
-	 b47pU13NZN65n2F6qCoiBEJXac4nBfY789q/LfG13KA6RZUMc7E045foC0epMJEyvP
-	 GbR/4NT25MTrw==
-Date: Sat, 10 Oct 2026 09:45:24 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
-	ksummit@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, corbet@lwn.net,
-	skhan@linuxfoundation.org, rdunlap@infradead.org,
-	broonie@kernel.org, tytso@mit.edu,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 2/2] agents: add a skill to determine Fixes tags
-Message-ID: <aspBdHTZxEVA8Cbl@laps>
-References: <cover.1791499378.git.sashal@kernel.org>
- <7fa126fd22b4449cf63a7045f7cd959e106fac87.1791499378.git.sashal@kernel.org>
- <c3ce794d-1ac2-4ef3-9e5c-1e171bd77a89@leemhuis.info>
- <20261010063228-mutt-send-email-mst@kernel.org>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="COMtQ1FV"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4j27qh3mJCzKpBP;
+	Sat, 10 Oct 2026 18:05:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1791648336;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uwp+j9u+zh5eUsQg83XhstHrX5D3CdZnHuilk3mN0x8=;
+	b=COMtQ1FVIh2OqB1txY1PZGAAQiViicQht6rFqveq0FSIXqFB4pLXV4T8RXgJK28jgx16DT
+	jMn9ZPgxyaI7vFV2sejvkx4SopKd0T858fwopBO3nQQIoC001NHtAZoQBhiOCw+pJVjLfo
+	Wsthygxu36NzaEahKOYK0pCkP+ck/5jn1Zuyg+QYUiX0zMYzATttwC9pgzLNbHLk2GMyOf
+	3xVVwgNqQvo6Jb1Js5zYqJQpVVl+5I2wKDWJ1PumdEO7l5ip2+uGFBlFxwliQn+h0256qd
+	Sgwt7yALJD7wLbJAAYnhM9pvhpIxyQnsJOryUws81Ygbjh2mHYUEwlaflfvUAw==
+From: Alexander Gruhlke <gruhlke@mailbox.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lukas Wunner <lukas@wunner.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Williamson <alex@shazbot.org>,
+	Hui Wang <hui.wang@canonical.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Alexander Gruhlke <gruhlke@mailbox.org>
+Subject: [PATCH 0/2] PCI: Wait after FLR for devices that don't honor Immediate Readiness
+Date: Sat, 10 Oct 2026 18:05:27 +0200
+Message-ID: <20261010160529.27974-1-gruhlke@mailbox.org>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20261010063228-mutt-send-email-mst@kernel.org>
+X-MBO-RS-META: ybsihy8n4km8gma9g6uey4ijs7z8zyos
+X-MBO-RS-ID: bcd52fdcef416b7adae
 
-On Sat, Oct 10, 2026 at 06:33:05AM -0400, Michael S. Tsirkin wrote:
->On Sat, Oct 10, 2026 at 11:40:56AM +0200, Thorsten Leemhuis wrote:
->> On 10/9/26 00:54, Sasha Levin wrote:
->> >
->> > +A ``Fixes:`` tag identifies the commit that introduced the bug being fixed. [...]
->>
->> Sorry for partly hijacking this, but it seems appropriate while we are
->> at it:
->>
->> What exactly is the right commit to specify when it comes to a
->> regression caused by a change that exposed a way older bug? The change
->> that exposed it? The change that introduced it in the first place? Both?
->> I'd tend to "both", but I guess some people might consider this as too
->> noisy.
->>
->> I've seen occasional discussions about this and our docs for humans are
->> a bit vague here:
->>
->> Documentation/process/submitting-patches.rst says:
->> ""If your patch fixes a bug in a specific commit, e.g. you found an
->> issue using git bisect, please use the ‘Fixes:’ tag with at least the
->> first 12 characters of the SHA-1 ID, and the one line summary.
->> [...]
->> A Fixes: tag indicates that the patch fixes a bug in a previous commit.
->> It is used to make it easy to determine where an issue originated""
->>
->> And Documentation/process/5.Posting.rst says:
->> ""One tag is used to refer to earlier commits which introduced problems
->> fixed by the patch:""
->>
->> Ciao, Thorsten
->
->I'd say the one exposed it. this way it is useful to answer
->the question "do i need this fix".
+Since v7.2, VFIO passthrough of a Samsung 990 PRO NVMe [144d:a80c] fails
+on the second VM start (QEMU: "invalid PCI interrupt pin 255"), and the
+device is inaccessible until reboot.  Reverting 10baa9b4df40 ("PCI: Drop
+unnecessary retries when restoring BARs") fixes it.
 
-I'd suggest the original commit that introduced the issue, or if you really
-want to - add two Fixes: tags.
+The drive advertises Immediate Readiness, so pcie_flr() doesn't wait,
+but it returns ~0 for 1-7 ms after every FLR.  The config restore is
+lost, and vfio-pci then saves and later restores an all-ones config
+space.  The Root Port has RRS Software Visibility enabled, and the drive
+returns ~0 rather than RRS, so pci_dev_wait() wouldn't catch it either.
+That is the same problem as the open d591f6804e7e regression with the
+Intel [8086:0a54], hence patch 1.
 
-My reasoning is that if there were holes around the reachability of the issue
-in the past, we want to land the fix on all relevant trees, rather than just
-the ones affected by the most recent case that enabled it to happen.
+Tested on v7.2.9 (Ryzen 9 7950X, X670E): with the series, three VM
+starts in a row work and pci_dev_wait() reports "ready 1ms" to "ready
+7ms after FLR".  Applies to pci/next.
 
-For example, let's say an issue was introduced in v6.5 and was reachable by one
-codepath. Later, in v6.7, we refactored some code and made is issue benign by
-removing the only codepath that could reach it. Even later, a new commit in
-v7.0 made the issue reachable again.
+Another user reports the same with a 990 EVO Plus [144d:a80d]:
+https://bbs.archlinux.org/viewtopic.php?id=314833
 
-If our Fixes: tag points to the v7.0 re-introduction, then we will miss the
-backport to the v6.6 tree.
+#regzbot introduced: 10baa9b4df40
+
+Alexander Gruhlke (2):
+  PCI: Don't treat ~0 as ready in pci_dev_wait() with RRS SV
+  PCI: Wait for readiness after FLR even with Immediate Readiness
+
+ drivers/pci/pci.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
 -- 
-Thanks,
-Sasha
+2.56.0
+
