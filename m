@@ -1,100 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from forward.mxwww.masterlogin.de (mxwww.masterlogin.de [95.129.51.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5748023BD17
-	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 02:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C9F383339
+	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 02:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.129.51.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791598661; cv=none; b=nTs8aa8auR9ngeS4UURpGHtUt4S8y+w3gXqVgU/LCx9/+qufslUDYN74iEzeE4oFx6XSvyx2aDtG7lK0gxqBdQQd9K9SzjN7dfC1Tx/Sd3c+KJuPUnmkMMbWwbkL62izBk5Kw1w4FCkBKHP+6gZ5XkZ13cGGxCjb/7Q3JdgfAy8=
+	t=1791599138; cv=none; b=f82rFnmdJTbvWZguxrUx4djv0iPY60YKPTH4663tpf1DOtOD2LzDk/8DyK9ltEYIRtd+yZmV0ze5vNyt1k8/YmUkSOkFe2xpFetFS1xsMdKW7jKPmUBtOY8/kLtC+n6c2vnL9Uovcu1GtIFLcuqBu/D3xPIMadp22LEk9Cft0/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791598661; c=relaxed/simple;
-	bh=gYpbgl2GZgyL4Hg+QxycNzx80e45YZlInf4plZKf8V8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HwXjpuPCgddyWGuQBo9DY5HMoD9cTN2eZpdZXdTS0/aHqNbdcGrsJhh98Pxmaee5v8bwWETRYgVSyeyl/mmseqrpyT7XdIG6FKm32tWF+lIZZQdyVrzlGmfnN5KPIBgJC1kD7ATHR5eYDbQjrE25hxrmW/6fDO4ahlDM/FW51co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRcbgkF9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791599138; c=relaxed/simple;
+	bh=km3jZchuziAQlJjH02bGkzu2uqL5cRrKV4HdcP+Pfz4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XVnpY8ioksohuBzd7/MHt2kXkf/UahdDwE+l+Sw5BN5tUANVIJ7GykDk6jHTvNUwJwM/lpZEZF1vgVEsDPE2T0ivdlc6t50YuE5dsPlOnUr0zSW2/vjz4mCvIcpLs+a7juOoz052AFRagafZRY7rXLP9di5nMIhaYCVxWv16Iac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pe.de; spf=pass smtp.mailfrom=0pe.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=w3waspj/; arc=none smtp.client-ip=95.129.51.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pe.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pe.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRcbgkF9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F339B1F000FF
-	for <regressions@lists.linux.dev>; Sat, 10 Oct 2026 02:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791598659;
-	bh=WFDctbzgPknbzeG/yi0t3GFYlXJxdai12qYrzoDBQyk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=RRcbgkF9mi9YSm5B8vC4lQODEEJNGBrhmpXUmf8qCt0+hYQPFbGAp/WD6D+oj/wJv
-	 lpqcdXEocjzOhEtm0GoqoBCFb5siT9ITmLwwDL94OxkeJFU11GWyqoQq0SXprgZPcD
-	 KxK0YsxbAOFFlxWhXPYwrzDiwtKdo7KcZ5Y6urWJgXa5FO8wi7IXZfzU4FMDyyW0sS
-	 tNatJvIgmgTlfv/a2iUvG2s16T6tx5/VVbT+o4utIdCf40R0Ealp5/SSVxLl9G8c2A
-	 uuXbFBRkGlvvxorrcbclQ5BctYmCBXIVFzD9c5bx0dz/fz579GxAxjqK0v8j4yglto
-	 sLRePByXClXog==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6b1755b8c10so330538a12.3
-        for <regressions@lists.linux.dev>; Fri, 09 Oct 2026 19:17:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBy77qyptXs2jzFQN1bWnesM94tpj3A4iK1aYKTF3qv8EQuHArV/NBz9rb0jFJWhzicL9JLegBiGmTPdZw==@lists.linux.dev
-X-Gm-Message-State: AFq9FYLP1UKyd+xlASUD3rr7hqyAUd6SBAhyMxzzKZ8RkBNFRfKahj9D
-	sWw5w3KmRTUSp9ue8XBCcMvGHAP+dyEN12JJ5eZ4qGcGQSn64trIWSutxF5bIOfX6UwEGF47mOS
-	7RJ6KUS1yG5/Wd4Q1UYUt8zkBILCz8GQ=
-X-Received: by 2002:a17:907:8686:b0:c31:6ba6:3108 with SMTP id
- a640c23a62f3a-c31aa0f6588mr379464366b.47.1791598657585; Fri, 09 Oct 2026
- 19:17:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="w3waspj/"
+Received: from mxout3.routing.net (unknown [192.168.10.111])
+	by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id 73FD082C3F;
+	Sat, 10 Oct 2026 02:25:34 +0000 (UTC)
+Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
+	by mxout3.routing.net (Postfix) with ESMTP id 4002F605BA;
+	Sat, 10 Oct 2026 02:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=routing; t=1791599134;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i+h7lDJU8m54d4aU9LHWn640ahYL6/I5nFJ1o7A36vU=;
+	b=w3waspj/n2JMn9fz8+DWBwasEcMehncPlnk7G/jitrb0Ar+F6nU9flmSC6Lt9/YjEGmyy8
+	dXoIFNRwmplKKMDkeBosAr4jyukY8j1VlpZwZ6Mv3Ak+bkZFLUgfL85t/pV4msJ2PetbnL
+	j/UGk3YZaQr4Rnmzf2EXtknzAAhYRxo=
+Received: from [IPV6:2003:dd:f29:d200:aa1:36ff:fe8c:79db] (p200300dd0f29d2000aa136fffe8c79db.dip0.t-ipconnect.de [IPv6:2003:dd:f29:d200:aa1:36ff:fe8c:79db])
+	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id DBA384006C;
+	Sat, 10 Oct 2026 02:25:33 +0000 (UTC)
+Message-ID: <0bd012e7-4115-4401-b067-1ab616918729@0pe.de>
+Date: Sat, 10 Oct 2026 04:25:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <010001a1222f66ba-0c745f29-d4fe-4862-93ff-1db2055b05fc-000000@email.amazonses.com>
-In-Reply-To: <010001a1222f66ba-0c745f29-d4fe-4862-93ff-1db2055b05fc-000000@email.amazonses.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Sat, 10 Oct 2026 11:17:25 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd9EkVrdKjsmcd96OFc7pf=2WA8KMUBhRPZROkUOdkV=SA@mail.gmail.com>
-X-Gm-Features: AclHuK9CnmF-Cf56ITpAxH0BBJD0BVV6mYdsFpm31QpZauc77VpyFsAA04zJ4o0
-Message-ID: <CAKYAXd9EkVrdKjsmcd96OFc7pf=2WA8KMUBhRPZROkUOdkV=SA@mail.gmail.com>
-Subject: Re: [REGRESSION 7.2] exfat: stale dentry buffer of a deleted
- directory overwrites new file data
-To: nfalesy@gmail.com
-Cc: sj1557.seo@samsung.com, yuezhang.mo@sony.com, exfat@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev, hch@lst.de, djwong@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: ath12k: spurious beacon-loss disconnects on WCN7850 (regression
+ in 7.2.6)
+Content-Language: en-US
+From: Izzet Beltir <ath12k-bug-list-09192026@0pe.de>
+To: ath12k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org, regressions@lists.linux.dev
+References: <3e2b5994-cd7d-4d44-a821-f34cbd06e7e0@0pe.de>
+In-Reply-To: <3e2b5994-cd7d-4d44-a821-f34cbd06e7e0@0pe.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Mail-ID: e61ef95d-8f20-459e-9cc4-73a74f90328e
+
+#regzbot invalid: not a kernel regression - the beacons really are 
+missing, and a second client with a different vendor's chipset and 
+driver misses them at the same instants
 
 Hi,
 
-> A candidate fix (not a formal patch; tested only with this
-> reproducer, all cases above 0/N on v7.3-rc6 with it applied):
->
-> --- a/fs/exfat/iomap.c
-> +++ b/fs/exfat/iomap.c
-> @@ -7,6 +7,7 @@
->
->  #include <linux/iomap.h>
->  #include <linux/pagemap.h>
-> +#include <linux/buffer_head.h>
->
->  #include "exfat_raw.h"
->  #include "exfat_fs.h"
-> @@ -77,6 +78,21 @@
->         if (err)
->                 goto out;
->
-> +       /*
-> +        * New clusters may still have dirty buffer_heads in the bdev
-> +        * mapping (e.g. dentries of a just-removed directory).  Drop
-> +        * them, as __block_write_begin_int() did for buffer_new
-> +        * blocks, so a later bdev flush cannot write stale metadata
-> +        * over the new file data.
-> +        */
-> +       if (balloc) {
-> +               sector_t first = exfat_cluster_to_sector(sbi, cluster);
-> +               sector_t nr = (sector_t)num_clusters <<
-> +                             sbi->sect_per_clus_bits;
-> +
-> +               clean_bdev_aliases(sb->s_bdev, first, nr);
-> +       }
-> +
->         cluster_offset = exfat_cluster_offset(sbi, offset);
->         cluster_length = exfat_cluster_to_bytes(sbi, num_clusters);
-Thanks for the report and fixes! Your fix seems to miss clusters
-allocated by fallocate() or an extending ftruncate(). These operations
-allocate clusters before data I/O, so balloc is false when the
-clusters are later mapped for writing, and clean_bdev_aliases() can be
-skipped. Could you send a patch that moves the cleanup to
-exfat_alloc_cluster(), using one call per contiguous range?
+I have to retract my report. I am sorry for the noise - my bisection was 
+confounded and my conclusion was wrong. Please disregard the regression 
+claim; there is no evidence that anything in ath12k changed for the worse.
+
+What I got wrong
+
+I reported that ath12k stops accounting received beacons while the link 
+is alive, and that this started with kernel 7.2.6 because 7.2.4 had run 
+for 11 days without a single event. I missed that the machine was 
+powered off from 2026-09-22 to 2026-10-05. Kernel 7.2.4 therefore never 
+ran while the actual trigger was present. The per-day counts I sent are 
+real, but the kernel is not what distinguishes them.
+
+What it actually is
+
+A second client on the same AP misses beacons at the same instants: an 
+older laptop with an Intel chipset running iwlwifi on an older kernel. 
+Cluster boundaries from both machines' journals:
+
+                    old client (iwlwifi)    current client (ath12k)
+   cluster 1        16:08:15 - 16:14:42     16:08:27 - 16:13:04
+   cluster 2        20:25:46 - 20:36:37     20:26:30 - 20:31:53
+   cluster 3        00:41:41 - 00:48:20     00:42:02 - 00:47:14
+
+Two vendors, two drivers, two kernels, same seconds. The iwlwifi side 
+logs exactly the condition I measured on the ath12k side:
+
+   iwlwifi 0000:04:00.0: missed beacons exceeds threshold, but receiving 
+data.
+                         Stay connected, Expect bugs.
+   iwlwifi 0000:04:00.0: missed_beacons:19, missed_beacons_since_rx:1
+
+So the beacons genuinely are not arriving, for both clients, and my 
+measurement that unicast data keeps flowing at normal latency throughout 
+still stands - it just means the AP (or something in the environment) 
+stops delivering beacons while continuing to serve data. The clusters 
+recur on a free-running ~4h17m period whose phase survives reboots and 
+power-off, which also points away from anything on the client. I am now 
+investigating the AP, an AVM FRITZ!Box 5690 Pro.
+
+The one thing that may still be of interest
+
+iwlwifi has explicit tolerance for this situation and stays associated 
+when beacons are missing but data is being received. ath12k has no such 
+tolerance and tears the connection down after the mac80211 timeout, 
+costing about 10 s of connectivity each time - in my case 20-28 times a 
+day while the environment misbehaves.
+
+I am not reporting that as a bug, and I am not asking for it on the 
+strength of one site. But if a similar relaxation is considered 
+reasonable for ath12k, it would have turned a visible outage into a 
+logged warning here. Happy to test anything in that direction.
+
+Again, sorry for the misdirected report. The measurements in it are 
+sound; the conclusion was not.
+
+Regards,
+Izzet Beltir
