@@ -1,93 +1,78 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A58E352C52
-	for <regressions@lists.linux.dev>; Sun, 11 Oct 2026 16:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0327B348C7B
+	for <regressions@lists.linux.dev>; Sun, 11 Oct 2026 16:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791737342; cv=none; b=kptUnlAh0WSN0f/mVHbgK/EEiMINXcnRAHYiJHBN0gyoT+5rxyPpbIDVFnXbD74/o8ls4bpxdxzkLBv1HAThmXtYLbPK7YJIJyWkLQ4QhCe9wNzvUY5YBKJIUZmCXgrSbgbR6OpRwweYavngsZ8YkQ4So34WCPptnqlejAspGzk=
+	t=1791737402; cv=none; b=FkNTYsmO3D712x3AIWlW40HKSTliHlpih4iARN7HbKRp6dj6s5/yFGbFWr67ARKQDC4fGb5W0TRkb2UvSmNLyuiO1Si8gqH1am32yCyHgvj/zZ0AuD9AbJM3gDH7eYtHRqM8lV12awlZfIxxr6+Zk2RbhziPeHJgIP7S4TcOEYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791737342; c=relaxed/simple;
-	bh=FKfgpR8zMF2/vU7G+VjwWWvlWk6W6Tago6pqkc6YiKo=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TWshXfJUldw6GU2RMq5xuucHgcpKmW2BH3sg5iZhGHJgLnwd8xhmL2MVkYUqGTUMpuxMs0ukAzIeGwMwAOIt3Xpvg136d5ah4Hc+MXkyPSIYPCQzeNfMZ75spwMHpB1z4x5OSgrt/j6dzb0Yy/PmUQFqgXAIabJxtjaSGjiqYNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=qyVaMzq/; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1791737402; c=relaxed/simple;
+	bh=jW7qFfYaPTIHT7+WxIP915i4+xod11JStOTHqdJWPv0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GmC4WkG4faHZz8WzR7xJfozl0+xSO9yySF02HaA0NIG2/hUMsBdyn6L3dugB7xDUqcnmUKS4USLnK+AlqoYtZ0BA0d30lH9ZMbDX44gb2exz546GDR5rSQ8I1+DxndvJEJ3vnyDAJUgjacrgPqJ3ed5uva81BNJPp3fuy9mcPaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=U1OkwTPq; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="qyVaMzq/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1791737329; x=1791996529;
-	bh=LarrssuBABWPTwg1p8etRRP2viISHVBLfh4RBo5CEoM=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=qyVaMzq/u8r5g4Gz6ZL8ftUFpsJcA5Gmcdv8a6rsWuzkaWsaDa07q+ksblU8yL7jJ
-	 wwBAQZmgqRngwtu+FTB+41IYqyXKhUdUYrlh17oR1BZbpepc0TgWMdoSJb11ACyGfZ
-	 LtgQLCMj3bKVpJDFgQyyDr49jARfeW2gfv6rI2NqmkzPU1X4DkOrc3K4uYltYv4J9p
-	 8FHNPqO32/GYkSaazqK28LwdDa9c/71bWb2P74Up4/wtc2Tj3xjBWscTWe19PCU1Su
-	 KwT/epRzKSjSG84zYA2c/Y0qEelEoBqFNOyBg/Q+K1srXeHIzx/Ew4GOz1zO0au1yM
-	 fUEOeb9MZ18xQ==
-Date: Sun, 11 Oct 2026 16:48:46 +0000
-To: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>, Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>, Andi Shyti <andi.shyti@kernel.org>
-From: Birk Skyum <birk.skyum@pm.me>
-Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v2] i2c: qcom-geni: Fix hardcoded clock index in SE_GENI_CLK_SEL
-Message-ID: <179173732257.29426.7905170638383807320@pm.me>
-Feedback-ID: 21326998:user:proton
-X-Pm-Message-ID: 5c6754ccefadb41aa845cd9bb2131df664c89160
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="U1OkwTPq"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4j2mmP2mB6z8trS;
+	Sun, 11 Oct 2026 18:49:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1791737397;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=puqRLr73K8ZyLUEwINqfs9xudJKVr1Yd0xT41SauKfg=;
+	b=U1OkwTPqH6PFLKaXtlM8xyOnVRkAo5fXVV+DVNW1QKsKfJiSsu9fiE3/6BY/ox6OYyzdX4
+	o77VT3nHCV+TcRxNySHRPUoDxnRo4+I7inv27lGXaxeAkxqsQ09EU+eLdcdvCx2IHPmsGB
+	bktRyX7JxAcDOT81JVZZ/UE+Gy8tuQyttfid7g2v8QJPLkj3rwTvIcfeSa6iVCHS2DCZVF
+	smEpctgFXUsPqbrMfj/7sx7L5u80TO+5Y/2GvPP61KBQQTUKqe1hC3heYtm8kvT/1sraml
+	Ic6pmWw1Mrnjy1bsIMd8ruVYeR9PnVvK1iAYQDdD9PpNeBQIe/5tJt7EgdsFgg==
+From: Alexander Gruhlke <gruhlke@mailbox.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Williamson <alex@shazbot.org>,
+	Hui Wang <hui.wang@canonical.com>,
+	Linux-Fan <info@masysma.net>,
+	sashiko-bot@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] PCI: Don't treat ~0 as ready in pci_dev_wait() with RRS SV
+Date: Sun, 11 Oct 2026 18:49:55 +0200
+Message-ID: <20261011164955.24425-1-gruhlke@mailbox.org>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <sashiko-outbox-167316@kernel.org>
+References: <sashiko-outbox-167316@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: y8hkoyuzkrqiqn6k5jqgrw4wzckfp7zm
+X-MBO-RS-ID: 90b6639bb35dd80443b
 
-Hi Viken,
+On Sun, Oct 11, 2026 at 04:41:42PM +0000, sashiko-bot@kernel.org wrote:
+> Does this cause pci_dev_wait() to exit prematurely for Virtual Functions
+> (VFs) that return ~0 under Configuration RRS Software Visibility?
 
-This change takes away the built-in keyboard and touchpad of the Lenovo
-Yoga Slim 7x (x1e80100). It reached stable as 139efdb3ee6e in 7.2.9,
-and with it the laptop has no keyboard, also at the disk passphrase
-prompt.
+Yes, but that's the current behavior for all devices; the patch only
+changes it for non-VFs.
 
-With the change the first transfer on the keyboard's bus fails.
+VFs could be covered by reading the Command register when the Vendor ID
+reads ~0 and waiting while that is ~0, too.  Devices that are ready would
+still need only one read.
 
-  geni_i2c b80000.i2c: Bus arbitration lost, clock line undriveable
-  i2c_hid_of 1-003a: failed to fetch HID descriptor: -11
-  i2c_hid_of 1-002c: failed to fetch HID descriptor: -110
-
-The touchscreen on a80000.i2c keeps working. Both buses are set to
-400 kHz in the device tree.
-
-To narrow it down I took a 7.2.8 kernel that works on this laptop and
-replaced only i2c-qcom-geni.ko, built from the same tree. It is a
-distribution build of 7.2.8 whose patches touch neither this driver nor
-qcom-geni-se.
-
-  7.2.8 driver                                keyboard works
-  7.2.9 driver (its five qcom-geni commits)   keyboard and touchpad dead
-  7.2.9 driver with 139efdb3ee6e reverted     keyboard works
-
-One thing I can see from the outside. The driver does not set the rate
-of the SE clock. Without the change clk_summary shows the clocks of the
-I2C controllers at 19.2 MHz, so the 19.2 MHz table is used and
-SE_GENI_CLK_SEL is 0. With the change the same clocks read 32 MHz.
-
-                                      without     with
-  gcc_qupv3_wrap0_s0_clk (b80000)    19200000    32000000
-  gcc_qupv3_wrap1_s0_clk (a80000)    19200000    32000000
-
-So as far as I can tell these buses now run from the 32 MHz source with
-the 32 MHz table. I have not found why that fails on b80000 and not on
-a80000.
-
-I have not tested mainline, which carries the change as cb97bf3d4f91.
-The same backport is in 6.18.y (5815329988ac) and 6.12.y
-(f5d0302416aa), which I have not tested either. I can test patches on
-this laptop.
-
-#regzbot introduced: cb97bf3d4f91
+Lukas, Bjorn: should I do that in v3, or keep the current form?
 
 Thanks,
-Birk
-
+Alexander
