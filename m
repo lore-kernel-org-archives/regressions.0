@@ -1,54 +1,46 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68D2314D13
-	for <regressions@lists.linux.dev>; Sun, 11 Oct 2026 16:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714743242D4;
+	Sun, 11 Oct 2026 16:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791736736; cv=none; b=o9HcXwYoFiEHmKP2GkElB+RcXZ7LWtOJwkt88GyxA/Z3j2J6O8F6YEIKszE9LjNcaZ8KC214Hsy2ZNFOFdCIptB4T4MsMiPaGoPn9qyU2epDmvB0sm3hH4OwE6sNTsacaTPNpRPd2N4Iw98Ww1hOjafl5XPPN7Y8BewG3QyKi/0=
+	t=1791737312; cv=none; b=I+viTdD1vW60KgXAQNi2tAsrjsneeri0BxxDrk6aHxtb7J/q62napvNk1DW2GrZp6eFNm2LiR8HPKMBRlv0jkx5Ai5khW7XI6ercW3ViYXOVzDSWx7fmW8MLbtcXfO3X3gTbozrpqVw2kQvikis7YNzWHljXiNgI8FwjXiMg/Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791736736; c=relaxed/simple;
-	bh=ATpH8AyNJDHhXj19fmBxktMPczSIxpTHUzLqYdZuhj0=;
+	s=arc-20240116; t=1791737312; c=relaxed/simple;
+	bh=ceX0y89UUVz9U7ls50mCoBmp0+WIsJO5QLMcqyFZxiU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oTlzq3mc/K9sF2mZQ6RWbpmT9BrpLgwLEDOsLPlAfHvB3PHBFugYwYYZyHGJ8YhdL9v19vfQOiEairZf+7/bc6p1lAr1rpB3fIkoCrhxtfR9LISQ+TXXOb7Auo57wRiBJcarDBra+TARTyxuAhc6osYVe/D94aal1cmhV3jMKMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=L+vJmefA; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	 MIME-Version; b=MnwGWRhALiOc6VPZtidKnXfa7QqxHArpPXM6bL+3FYrHnYA59m5djtJSD5OgmjeMbJzLZL7KHnYS89h9C4vS0GSra2vdVC4hJCUbiEOVofJVZd/02SSvwf+wobgxPktZOgcqvRa+oKw9wk4NL9rXSqO+hVSPp3VcRHEZSOMys50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSE0TfPv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="L+vJmefA"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4j2mWT18grzKnmJ;
-	Sun, 11 Oct 2026 18:38:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1791736725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ATpH8AyNJDHhXj19fmBxktMPczSIxpTHUzLqYdZuhj0=;
-	b=L+vJmefAaCCYvgkYRW0uiEl5l2tboX9PGtzH/39m54Uc/0QFT3csKfVdyqrXwcVyjwmk20
-	ArGASOzgVbkQsVA3C3/CMVg23V4UtjFy5F5mVd9JsK0zStxP/Xydvv0qTJSVl+I3JldVwh
-	2V9zkgY684XKtcmgLNZmuiwSm6JI1lZgvAAlnS4h01nrqxkLgZuJXe+YAUhlvMzfydgP/1
-	Be8WpXno2msZmWM27IC3QcGIfybxB1eIqyanVHuC8NCT9knIHuRDbKcsdYs9eP2mY9wfLd
-	sLlmXArO2oM/UY9J7FAPoxL9Sykof/RuW8mJaE8ZT7CPPzcud8H3Yiu5giCOIQ==
-From: Alexander Gruhlke <gruhlke@mailbox.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lukas Wunner <lukas@wunner.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Alex Williamson <alex@shazbot.org>,
-	Hui Wang <hui.wang@canonical.com>,
-	linux-pci@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSE0TfPv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C47D1F0089B;
+	Sun, 11 Oct 2026 16:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791737311;
+	bh=Q7tT1SDl4YdX5RcbkRRYcjRQ9SlIxlFUt/7U8GBNUto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=YSE0TfPvHTE8eFd/U7b7CmXyTF7T4QLyWA+af3bSbF7R5+Gm4YWLeHeVpr3Kfc1xg
+	 CiTMXU17T9Veocs88CybRG+LLVd5Y5wrV8ypQ7Tq8gyGG9ms98Us7ieHwP648qVg+2
+	 699v+ufySBdJ6jCf93qjOTO/n85qR78aPWUHehsVh2r8J9JeFYw3rSF9bBuJeYwLvZ
+	 KXZjavP18GQHj+6fKi+70MMELFt9w5FLYe0coCbwOKzujmcHHakkj2XCzZXsVjamj8
+	 DhqyFq8N4P8byKau84DFMqWUD6cJYnCc347uo7uhm4nlDB0Owo5GNiIRRnX3/iL5we
+	 6p74sA1BkcYBQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev,
+	Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 0/2] PCI: Wait after FLR for devices that don't honor Immediate Readiness
-Date: Sun, 11 Oct 2026 18:38:43 +0200
-Message-ID: <20261011163843.21825-1-gruhlke@mailbox.org>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261010160529.27974-1-gruhlke@mailbox.org>
-References: <20261010160529.27974-1-gruhlke@mailbox.org>
+	Lubos Rendek <l.rendek@proxmox.com>
+Subject: Re: [REGRESSION] 7.2.4: nfsd sends CB_OFFLOAD with all-zero stateid, async NFSv4.2 COPY never completes
+Date: Sun, 11 Oct 2026 12:48:08 -0400
+Message-ID: <2026-10-11-1-daily-reply-0001-nfsd-cb-offload-zero-stateid@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <7cc824c4-632d-49df-ae5e-cfcbb5bf76ad@proxmox.com>
+References: <7cc824c4-632d-49df-ae5e-cfcbb5bf76ad@proxmox.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -56,7 +48,13 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: 1ehb5q5z4nnohi3htn7xdtpos8zedqdz
-X-MBO-RS-ID: 170e9bdfccd2237f23b
 
-v2: https://lore.kernel.org/r/20261011163249.18479-1-gruhlke@mailbox.org
+> Since 7.2.4, an NFSv4.2 server-side COPY between two exports of a Linux
+> NFS server never completes, because nfsd sends CB_OFFLOAD with an
+> all-zero stateid.
+
+Queued the fix for 7.2 and 6.18, thanks.
+
+-- 
+Thanks,
+Sasha
