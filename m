@@ -1,77 +1,106 @@
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B824445C6ED
-	for <regressions@lists.linux.dev>; Sun, 11 Oct 2026 15:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D77A344021
+	for <regressions@lists.linux.dev>; Sun, 11 Oct 2026 16:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791731694; cv=none; b=SYS3ykZ2HBdZEIfpJBmG7ko8E8tpBF2Yo5T7umIiDSiqT5+t/fuUgw58uJSnXv65GQXeKgGnIthpPkKzt0KxryTJ9fFaEdm88NCjZl1Cejp+XrAKUXXxM5PDzmyJheZ4eS6I1LBWbkvTveA2CljZiEETktBfkB6CeUCO4DBKmN4=
+	t=1791736380; cv=none; b=hO7nCurEyahifIA+C9aZW5hLgwdskiE1baH3gBjE0gCtdDPM7AAo5y7IpBXOmgkDiqR+JfvlL+vjBr+hxH7WLv/FFBw6JnqWQCMtJ2C240/QNbuOyFArYDZjYA2Y7LnDSLEi110b+O+DrpkxhmwPdo2DBMqD3H1xw8Ah2AcpbgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791731694; c=relaxed/simple;
-	bh=vDgatWtYnwE039GoIRVXyzRL17p8/QYPeLRw+0Ll0TY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cq8v2clOlp0Flbkmgg+HA23C9ew83d3GQIqZ/73f+DwT+mviSzaNMH6lwoqg6fxyCSj6ukAOdwB7bPXMn8tTxOaDC2623oyb+XgCAm28CSJ8zV/U3cfkF2Q5v66kg7pa77JmTb6CbzcX3d7SQGhxaUXda8DdYOGcdpcGlf7HUOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	s=arc-20240116; t=1791736380; c=relaxed/simple;
+	bh=/cuBUaquJ2a07DhLKJpcdd1MlzI9nlDsrijVzpfKbC4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NpkBrncybfYMREPMtVPJ4VzdbFSUJ90t2Q2DZIe8o35fwUK0sdZlDg2w2Nl6ftuG4lTsQ1KsosIwBfAXL21y/7nBQQGLVjYUfsgWYrscsGeknm1c7t241AU9X+J0Vc6WAmMEM09pZLwHtAIPAeUW0fPi9tI04BRKhW670fbXg4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=aaNevFrD; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="aaNevFrD"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id 3EC7510F7A;
-	Sun, 11 Oct 2026 17:14:49 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 136B76107905; Sun, 11 Oct 2026 17:14:49 +0200 (CEST)
-Date: Sun, 11 Oct 2026 17:14:49 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alexander Gruhlke <gruhlke@mailbox.org>
-Cc: bhelgaas@google.com, rafael@kernel.org, alex@shazbot.org,
-	hui.wang@canonical.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH 1/2] PCI: Don't treat ~0 as ready in pci_dev_wait() with
- RRS SV
-Message-ID: <asun6Yq3cGBY3SXE@wunner.de>
-References: <asqFthqcsDkUU6Sg@wunner.de>
- <20261011082408.17274-1-gruhlke@mailbox.org>
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4j2mNk3YZ4zMlD7;
+	Sun, 11 Oct 2026 18:32:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1791736374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sYYycMqiVoFa/In0q5D6DkIyhVz7l1DSpsMozbaO9Mk=;
+	b=aaNevFrDBY4/BnVUFn3fce1d8/Lf6xGMO9mu0Cw0hk/Zf+tBpOwRdcU9haHXw9glnp3yiT
+	sJEW+mhr6FNbsHz7om9i0npoTfRaH7Qw9kdKKaJqGn6tkh8rRW47D2iad12hmbdGWEDguO
+	YqKEdtaANLVchnxf3Pczbi4CnUIMoT23UgxTEffbu2EO5vEi0ccskgnlXzLP27SkEUM38a
+	g0LO041FEujMHf/YTHyNcDYj1wt28NYkf37Ybz6epl82mvERuOw1txSrvS15c8fuEGmGKg
+	4ryzN54AqPx5kYBGQdYIVKb/8jjgUxTSIKA/4Hp7FI3E6oT6RhwFSF2gw8NPvw==
+From: Alexander Gruhlke <gruhlke@mailbox.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lukas Wunner <lukas@wunner.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Williamson <alex@shazbot.org>,
+	Hui Wang <hui.wang@canonical.com>,
+	Linux-Fan <info@masysma.net>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Alexander Gruhlke <gruhlke@mailbox.org>
+Subject: [PATCH v2 0/2] PCI: Wait after FLR for devices that don't honor Immediate Readiness
+Date: Sun, 11 Oct 2026 18:32:47 +0200
+Message-ID: <20261011163249.18479-1-gruhlke@mailbox.org>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261011082408.17274-1-gruhlke@mailbox.org>
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: wcbrptn7dtw79cc8dsx9thu4bp6dbs79
+X-MBO-RS-ID: 84e71635b72763824ef
 
-On Sun, Oct 11, 2026 at 10:24:08AM +0200, Alexander Gruhlke wrote:
-> On Sat, Oct 10, 2026 at 08:36:38PM +0200, Lukas Wunner wrote:
-> > I think it's sufficient if you just change the if-condition like this:
-> >
-> > -			if (!pci_bus_rrs_vendor_id(id))
-> > +			if (!pci_bus_rrs_vendor_id(id) &&
-> > +			    !PCI_POSSIBLE_ERROR(id)) {
-> >
-> > I don't see the need for the extra read of the Command register
-> > you're performing.
-> 
-> The Vendor ID of a VF always reads ~0, so with that condition, an FLR
-> of a VF below a Root Port with RRS SV would poll until the 60 s timeout
-> and fail.  That's why the branch without RRS SV reads the Command
-> register, too (see the comment above the loop).  I'll mention it in the
-> commit message.
+Since v7.2, VFIO passthrough of a Samsung 990 PRO NVMe [144d:a80c] fails
+on the second VM start, and the device is inaccessible until reboot.  The
+drive advertises Immediate Readiness but returns ~0 for up to 7 ms after
+FLR, so since 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring
+BARs") the config restore after FLR is lost.
 
-Ah okay, thanks for the clarification.  So how about:
+Patch 1 ignores Immediate Readiness on that drive.  A 990 EVO Plus
+[144d:a80d] reports the same errors [1], but it isn't confirmed to
+advertise Immediate Readiness, so it's not included.
 
--			if (!pci_bus_rrs_vendor_id(id))
-+			if (!pci_bus_rrs_vendor_id(id) &&
-+			    (!PCI_POSSIBLE_ERROR(id) || dev->is_virtfn))
+Patch 2 is independent and keeps pci_dev_wait() from treating ~0 as
+ready with RRS Software Visibility, which also affects the Intel
+[8086:0a54] in the open d591f6804e7e regression.  Hui, Linux-Fan: testing
+patch 2 on that drive would be appreciated.
 
-Per PCIe r7.1 sec 9.4.3.3.1, VFs may respond with RRS Completions
-under certain circumstance, so the Vendor ID does not *always* read
-as 0xffff, despite sec 7.5.1.1.1 saying so.  The above should handle
-that correctly (unless I've botched it again).
+Tested on v7.2.9 (Ryzen 9 7950X, X670E, drive firmware 1B2QJXD7): with
+patch 1, three VM starts in a row work, and every FLR reports "ready 0ms
+after FLR".  After updating the drive to firmware 8B2QJXD7, it still
+advertises Immediate Readiness but responds right after FLR, and plain
+v7.2.9 works, so only older firmware is affected.
 
-Thanks,
+Patch 2 in this form is only tested for regressions, as the drive no
+longer shows the problem.  v1's variant, which read the Command register,
+was tested against it, and the drive's Vendor ID read ~0 while it wasn't
+ready.  Applies to pci/next.
 
-Lukas
+Changes since v1:
+- Replace the pcie_flr() change with a quirk for the 990 PRO (Lukas)
+- pci_dev_wait(): check the Vendor ID for ~0 except on VFs instead of
+  reading the Command register, and "may return" in the comment (Lukas)
+- Swap the patch order, as the quirk alone fixes the regression
+
+v1: https://lore.kernel.org/r/20261010160529.27974-1-gruhlke@mailbox.org
+
+[1] https://bbs.archlinux.org/viewtopic.php?id=314833
+
+Alexander Gruhlke (2):
+  PCI: Ignore Immediate Readiness on Samsung 990 PRO NVMe
+  PCI: Don't treat ~0 as ready in pci_dev_wait() with RRS SV
+
+ drivers/pci/pci.c    |  8 +++++---
+ drivers/pci/quirks.c | 11 +++++++++++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+-- 
+2.56.0
+
