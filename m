@@ -1,82 +1,43 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417A3399377
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 18:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3FD425898;
+	Mon, 12 Oct 2026 22:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791831098; cv=none; b=JJci6hsZnePlZFOzMKwcE9Ne7k9rT+/kgAnn6+9U0ODe6YXduic3CUM2dS+eUgvg0z6HPxTCZm3+NIfZKwjmFNYJbZuRiJmsKAbPBei7hndAgwMbMuDYHignjFh8Ofxe4zC1BeJc+3OFt/AAHIGdJuK0kasYN5bmllYYPFZeJa8=
+	t=1791843814; cv=none; b=rZqnE2vAFTktykNVxW0YYv2afxOxA5yh8igFT46K5pjtWBuTUqRCc3c5frsybBU7y8exswRTWakgw3oON1Ql3LfdHK7R6Gv2mdiGWtEefHe4Bbc/kUxMVuPK628z8bbT/vSvIhvi7rwj/L4SdVikOxCN+1LzBfb2NIbNwB9qNp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791831098; c=relaxed/simple;
-	bh=eg8iQH53XMr6U9fhAElssnduDO8S6/m8PGLFcG3o0cI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JQGKMplMr6R9twWUlAsdPE+xpjCvx2yElbfjl9WRyD2jRaVAkibevEGrEyhs/sMaa+CrwxKuEutFaQNsGEXWr0n+i1KXwXuu3lUlDkP021v2FEjBHtS4WIvrSdVorTUJIF3LBPgm7HDD4AABxfOcjIwyLjDIOGbOs5xsF2KfjOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=atAw9NdT; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791843814; c=relaxed/simple;
+	bh=DBJ4pJTxT6Rb9UBkZ2YQD0NglIFhCzvUKQ3qx9/XYp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Ytx4BBbBTs4mfzUswwG10OQr/uUDaqBycznLrmIc847VXIv1yszLO35whYmuLIoGEhGFdZ5pDa0ExxNde25LyYWtPwGWOcz5eogwGcyzSKv3/VAK3c/Lm7bdbI3HfczC5mlTHpTyG5EECOAG0w9PtWBtiIO7WJ0sptHSYTcGCaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUxisRdU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atAw9NdT"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a168355946so19258505e9.0
-        for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 11:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791831095; x=1792435895; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Ky+Mh+cO5xMBG7Bn/5pO6nl62hMlLNRWkoqZnT1lz8o=;
-        b=atAw9NdTMa1au4bJBHs524qlwg8U90aDgAfVYXKkdTJjzgLsNvqx+lboErfTsrdcTU
-         VA4/cxVszCPTVcXGD8ETgMfQZpRojXyIk69jq12BpdVYJCBgiNJ6Rk2HX389OT3lmWBD
-         bCCN+qLNCK5PGgcj1FLTFnQiO8V4af8E/sd2BgzsUeIhsI/JiRQXb3zVVHS07r8Ojwej
-         GV9AXcEuSICwjO03PtX22uoG6KZNdK5bTHdAGeq89IOEQPalgWPbEXQKriSpY7/I3MJm
-         WWS2Uc6fx8ZJ+hSSPT/eCLQYyv5kxxFERzHwL5qunV8CnNWXwouSm9v1plqfT647jZPJ
-         4WHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791831095; x=1792435895;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ky+Mh+cO5xMBG7Bn/5pO6nl62hMlLNRWkoqZnT1lz8o=;
-        b=v610ahiVBh5ep1vtDIp8hjLorbIXLZH6HxF95dJnbu+BasGxaawkGBk+tme9M6I1i7
-         xtdnSYtVJLJiBoRzmeOpKta4b5Bh/8syl/qfD/8aSNXKlBt9IGbPRLvTyeQHqU3A519Y
-         JyVLuvpqwf7hklBRpsxQK/MjHP8cZPpw4rIZxPZZhi9lybM3oAUslmW3MBub99URZpN0
-         YV4T8+mAmfr+sDlDm9hXRGjropVwLbq5GWW0rmfce0sNNYNAoVANp319MU5/CDSAPdnh
-         eR0PFSoDchzma8JoBMzPFA4ypNCh57JyW/uu/6chN2rKQAKbHbl8l0Ujqr4hcZ7TiMVN
-         Wz7w==
-X-Forwarded-Encrypted: i=1; AKwUvBx1T3B2j2w3ITYCAv/4g7WgjbaCkffdH/Rq37ukLhVzWrP9z9TaRwP5ghxDzI0A9k61wP6TiIImwflgMQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKlip1/xxoLGYS5Vc3hdHobwUZsm7IlKNN2Vhg+M/yeTm4uxA5G
-	kddVU7Z4UPgw1CAwrjrlSa+zPB0hK2YZowlvyMz3iN+bj4vYzrNFu8oK
-X-Gm-Gg: AYBFou0c2ulhC5RTw3E/awYRgkbYKhTl0mjmVv/bSYRHvseT5OYyC8oVtnfhky/7u0a
-	FA6GkX3UmGHYe4AhBTj5Mq5x9VW87e1Bfph/OMjZ5l3f06Zhn/1675O45kLuukwrT8VqiY9qKIH
-	v5PHAO7U4xp3aoGx30Ux5Jvff7j6CDJThYhzMcXosguWSvcV4O3ZztuXjTsn57gEdV/vh/mQGC2
-	utLjshzwzw1uIan/qG5fxdphbQq13UMQtxg5pHlAapwwEO3msI+TAwwd7JVzqn/o+OWGK8wBxe4
-	R9feQYVrK6TsmqNRXawLGWce0Qnv0DCM4dDtpkyzthNsWPd95XU+CR4lBOyzm7cZej+QOclb4m2
-	Q/ZsWaaHosOWBlq9/7bgaZNxeJoub5g4LlxuBgle8Ui+pCC0gxZTmxXbCpBJplozt0ZMxZGSIOg
-	PHZAS7G61bEp/UtBTJn+T4zLsZ5J24gaYRsm2Zh+zLKqdpPwd6Ja+h6jj+E+5U18+jXQF4RDSfg
-	qGIFPKrxuUsx5iq3peHlYmShqdyD+4WrJgQwrn+BzOjZQKQ6D2HyyA0eokFt4dJkDM6YnEVjkh4
-	a3bBeFM1ciYwGd3JXooJARse1PNMKnLfPDNEwlef+So7OiP5581gbJ/9nTBAWdFXbQbC7rBOuvb
-	7Q1IHd6E=
-X-Received: by 2002:a05:600c:6297:b0:4a0:62d:4424 with SMTP id 5b1f17b1804b1-4a18e4a1756mr196491005e9.8.1791831095315;
-        Mon, 12 Oct 2026 11:51:35 -0700 (PDT)
-Received: from unknown748F3CBA5068 (dynamic-2a02-3100-a8ab-0f01-016a-c770-797f-eaee.310.pool.telefonica.de. [2a02:3100:a8ab:f01:16a:c770:797f:eaee])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18bb68abfsm336946215e9.0.2026.10.12.11.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2026 11:51:34 -0700 (PDT)
-Date: Mon, 12 Oct 2026 20:51:33 +0200
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Rob Clark <rob.clark@oss.qualcomm.com>, 
-	Jianfeng Liu <liujianfeng1994@gmail.com>, Diederik de Haas <diederik@cknow-tech.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vkoul@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [RFC PATCH 0/3] dma-buf: warn-only mode for DMABUF_DEBUG
-Message-ID: <as0r7Q4dHt9gQm_8@gmail.com>
-References: <20261005064133.7305-1-kmehltretter@gmail.com>
- <d1ef135e-1b5d-4656-9229-348c7029efbb@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUxisRdU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B59D1F0089B;
+	Mon, 12 Oct 2026 22:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791843812;
+	bh=GTd4VLReYg7xyozF0HzNASJhv28istpJzAjSxKqTyNQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=JUxisRdUaCoAOYNq0aOfwMJeW88Q0uydQNiD3D0CChAGZSrjhB6AOEqTc1qrl5Bz7
+	 YYXQuBZ0HmyT3auNap07HmD45cJR9/+SbbVmgueRvtFND/MWi6NQqhGqtgQ+5QrN8O
+	 2KiZ1vlE+3HJs7qUovNtkZI8fTtipierr9XTbPKQOGfFnX3MT84BwVWdedq6QEDd0A
+	 Y7dYtqLcgjKogaQJQpCZMQ6RhxVPP9af3kB2HLpJFNBcPp7sW0sobYZu6sf9QN2VlW
+	 XU7zjBoWvxEaTx+oTmx1cIuPrjZSmRlQxbdN/hEZm5rPfZD9MZWxL2iseVAw0LhRmB
+	 1B4YSFK4/b6/Q==
+Date: Mon, 12 Oct 2026 17:23:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexander Gruhlke <gruhlke@mailbox.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Williamson <alex@shazbot.org>,
+	Hui Wang <hui.wang@canonical.com>, Linux-Fan <info@masysma.net>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3 0/2] PCI: Wait after FLR for devices that don't honor
+ Immediate Readiness
+Message-ID: <20261012222331.GA1411603@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -85,25 +46,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d1ef135e-1b5d-4656-9229-348c7029efbb@leemhuis.info>
+In-Reply-To: <20261011190145.23621-1-gruhlke@mailbox.org>
 
-On Mon, Oct 12, 2026 at 10:12:02AM +0100, Thorsten Leemhuis wrote:
+On Sun, Oct 11, 2026 at 09:01:43PM +0200, Alexander Gruhlke wrote:
+> Since v7.2, VFIO passthrough of a Samsung 990 PRO NVMe [144d:a80c] fails
+> on the second VM start, and the device is inaccessible until reboot.  The
+> drive advertises Immediate Readiness but returns ~0 for up to 7 ms after
+> FLR, so since 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring
+> BARs") the config restore after FLR is lost.
 > 
-> What's the status here given that 7.3 will likely be released in a few
-> days? Note, I can see from the discussion that this is a complex problem
-> that can't be quickly solved. That's how it is sometimes. But I wonder
-> if the current state of things is the best compromise for now or if
-> Rob's revert or some other option would be better.
+> Patch 1 ignores Immediate Readiness on that drive.  Firmware 8B2QJXD7
+> fixes it, but the Revision ID and Subsystem ID don't change, so the
+> quirk can't tell firmware versions apart.  A 990 EVO Plus [144d:a80d]
+> reports the same errors [1], but it isn't confirmed to advertise
+> Immediate Readiness, so it's not included.
 > 
+> Patch 2 is independent and keeps pci_dev_wait() from treating ~0 as
+> ready with RRS Software Visibility, which also affects the Intel
+> [8086:0a54] in the open d591f6804e7e regression.  Hui, Linux-Fan: testing
+> patch 2 on that drive would be appreciated.
+> 
+> Tested on v7.2.9 (Ryzen 9 7950X, X670E): with patch 1 and drive firmware
+> 1B2QJXD7, three VM starts in a row work, and every FLR reports "ready
+> 0ms after FLR".  With firmware 8B2QJXD7, plain v7.2.9 works.
+> 
+> Patch 2 is only tested for regressions, as the drive no longer shows the
+> problem: below a Root Port with RRS SV, three VM starts work and every
+> FLR reports "ready 0ms after FLR".  The VF path is untested with the
+> patch, but on another machine, an X550 VF below a Root Port with RRS SV
+> reads ~0 from the Vendor ID and valid data from the Command register
+> 100 ms after FLR.  v1's variant, which read the Command register, was
+> tested against the old firmware, and the drive's Vendor ID read ~0
+> while it wasn't ready.  Applies to pci/next.
+> 
+> Changes since v2:
+> - Patch 1: add Lukas's Reviewed-by
+> - Patch 2: read the Command register on VFs whose Vendor ID reads ~0
+>   instead of treating them as ready (Lukas, sashiko)
+> 
+> v2: https://lore.kernel.org/r/20261011163249.18479-1-gruhlke@mailbox.org
+> v1: https://lore.kernel.org/r/20261010160529.27974-1-gruhlke@mailbox.org
+> 
+> [1] https://bbs.archlinux.org/viewtopic.php?id=314833
+> 
+> Alexander Gruhlke (2):
+>   PCI: Ignore Immediate Readiness on Samsung 990 PRO NVMe
+>   PCI: Don't treat ~0 as ready in pci_dev_wait() with RRS SV
+> 
+>  drivers/pci/pci.c    | 14 ++++++++++----
+>  drivers/pci/quirks.c | 11 +++++++++++
+>  2 files changed, 21 insertions(+), 4 deletions(-)
 
-I think reverting my commit 143755bdabaa ("dma-buf: Make DMABUF_DEBUG
-default to y on DEBUG_KERNEL kernels") is the best interim solution for
-v7.3.
-
-Christian, Sumit, could one of you apply Jianfeng's revert before the
-final release?
-
-https://lore.kernel.org/r/20260926022026.10539-1-liujianfeng1994@gmail.com/
-
-Thanks,
-Karl
+Applied to pci/reset for v7.4, thank you!
