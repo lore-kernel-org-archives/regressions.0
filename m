@@ -1,85 +1,82 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEDD190473
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417A3399377
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 18:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791826109; cv=none; b=fLVxxOWNHaTt97JqqotEt08ALUSveN7iPLnDkCP4qqGfJgNlGp63s4cN3biV7wJ9V3snVT9LGAsCNJMf16ZZu91owLRoM6gtfHt7mwgEXiryfr/4txYQ3liogx54uMOYBEKtkUgVqISV+mGuXD212+8u/t3eiyk1YIumuIfs6Tw=
+	t=1791831098; cv=none; b=JJci6hsZnePlZFOzMKwcE9Ne7k9rT+/kgAnn6+9U0ODe6YXduic3CUM2dS+eUgvg0z6HPxTCZm3+NIfZKwjmFNYJbZuRiJmsKAbPBei7hndAgwMbMuDYHignjFh8Ofxe4zC1BeJc+3OFt/AAHIGdJuK0kasYN5bmllYYPFZeJa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791826109; c=relaxed/simple;
-	bh=AXdyOooEc3hDa63HwNXV9g3HS0K5zwoBhEQ215I6LyU=;
+	s=arc-20240116; t=1791831098; c=relaxed/simple;
+	bh=eg8iQH53XMr6U9fhAElssnduDO8S6/m8PGLFcG3o0cI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RqnX0qeNc38+ybjd0tI+8xerh3G9rWX4X5AvEtVFqS/RMc6WJeyNILF3dWqUocM6xCq7qPMw+WGd3XaqnUSz3JOLwut9b4mWkVOqSH2iSx2TkdBMk+6EaDLZ5GK2K7oov34pw+IXnbCnxAhTvRhICPpZseoWvaJyqqi9KW9j23I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tKhdLOQt; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQGKMplMr6R9twWUlAsdPE+xpjCvx2yElbfjl9WRyD2jRaVAkibevEGrEyhs/sMaa+CrwxKuEutFaQNsGEXWr0n+i1KXwXuu3lUlDkP021v2FEjBHtS4WIvrSdVorTUJIF3LBPgm7HDD4AABxfOcjIwyLjDIOGbOs5xsF2KfjOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=atAw9NdT; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKhdLOQt"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a172eb31f0so15830705e9.1
-        for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 10:28:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atAw9NdT"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a168355946so19258505e9.0
+        for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 11:51:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791826107; x=1792430907; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1791831095; x=1792435895; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=YveKtGz1EIX08GUJXyM9GGRIHFuaJbA/DcyfZ3t4Uc4=;
-        b=tKhdLOQtBBstleUuOq+kmOi+gT1fOAWN4c9z33iMDKFPywc4eVb5sVRgRGhVt7JhwZ
-         T/fEhOlKDn/tjkQXE2poYUbjQZOSuIjWeTxuckzpQNZpVCKafL4tit6MZhJPHJaXuCTA
-         iimDXXO4zT/TXfmn+uX7stqr04vraHy4bkKhgmxYYUfIQpmwZFNfrWfk9Og/9w/2llnr
-         XGuRVvYmleHfnrF7ZIeDHbXKOipWVJhQhEApg5m6ut6VfG4kt4b0a6gvlf9bOa5mJRSe
-         2U35O6kCe6sSqs2231sKbLW9YZYJL4Wicb0HcJ1C/ABNoVnzLD59fptrmAth8FU5djoE
-         8S0Q==
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Ky+Mh+cO5xMBG7Bn/5pO6nl62hMlLNRWkoqZnT1lz8o=;
+        b=atAw9NdTMa1au4bJBHs524qlwg8U90aDgAfVYXKkdTJjzgLsNvqx+lboErfTsrdcTU
+         VA4/cxVszCPTVcXGD8ETgMfQZpRojXyIk69jq12BpdVYJCBgiNJ6Rk2HX389OT3lmWBD
+         bCCN+qLNCK5PGgcj1FLTFnQiO8V4af8E/sd2BgzsUeIhsI/JiRQXb3zVVHS07r8Ojwej
+         GV9AXcEuSICwjO03PtX22uoG6KZNdK5bTHdAGeq89IOEQPalgWPbEXQKriSpY7/I3MJm
+         WWS2Uc6fx8ZJ+hSSPT/eCLQYyv5kxxFERzHwL5qunV8CnNWXwouSm9v1plqfT647jZPJ
+         4WHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791826107; x=1792430907;
+        d=1e100.net; s=20260707; t=1791831095; x=1792435895;
         h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=YveKtGz1EIX08GUJXyM9GGRIHFuaJbA/DcyfZ3t4Uc4=;
-        b=CnSWD9EHo1goKbReBJiCxXIg8MnDn5W4q5x3uB6gtaOl3uxGZtwyAFAL4urQeiDwtO
-         siAc33bStfKfVLPoJjM0Y6GwKr+LG/2v6plLHOGZ+W9jFByW2LAc/ic6NldtWHKNa9Gs
-         1WXbIFuAbNPArOEXPC7SunpO2C+OWhJLgoLSXGSDSRQycJ+ZHv9N3EFdxINb8jMb8TwZ
-         qb0yC1e/t9PJLm549KuzI6yfZNFy5Id/ZmJ+xEWFlHAcviKdvOpJwK3AuA2zFeI410/K
-         H3qBax8wyH4U+MbLZve34ljrgYlytLWYvC4RhupOcWynx6elqNNBCau6xt9CvQGn5tb3
-         8PDQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwuaqLHwAqiXjE2/u415Yb3Nfhq5NsZ+WpsDqM1A/XMl6pllq+K73AERi9qxxnHHlLvI+MEHOLufTQjgA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIM/njo/76wAdJ8jDFKgw/CnSXNGnHsYSVMs3B6SWguBnAX0Mo1
-	kQV3neZiLTdE2pQTNnUIqppgA5qDqnr7i4QG5ZPwIiwciANBEBTT0LQU
-X-Gm-Gg: AYBFou1urIVPr/sel0+5gtyelYLeRx/HmD1IclprjZaJjHrARVzy+t84ouX8HLRRRih
-	kQUrfWqJ/VRmcGiWtRViH4G4jU/G0TtQRDK/RAl6qQ7odPaGzCPAckQi0p8ZvSISseQzA5QOFlU
-	npVc70cnq7u3Ps5F8DBMvuNhVJ+ylqqFQbpFk3KhrJHPNpgWBE2JX0xtLcfY3zlkjSWsrqn1lTO
-	dTHKlv/JcAEcMxJWAGUpicVEwb3YDIMxvwVEocOquMlMJetvagSm7e5y+Q5zlm7mYeyPWSqHFOE
-	agXHOdSkVbYX2kwSaHAD19iq2rVWYcyhDt6xi/euKayXufSLYKZVmpxHz0keVnouO2AoO+imvvU
-	+NrNYiC0l1ZUvG4Ynl/I00FMGQP+tUAKFYKfWs9cJIc6W9bv1i4FlPfB4iKM9/FQe7efH1lrSdq
-	q2rcP4NKD0tw6TuL0B+BzqgjOOvXSAS1+0JcuBFZHhdPq/uMeLoaLIb6DlRAx/CzwpqmPjbxxh9
-	jzZIDJd94PIU6Pb3WmV1ndqsbuWMoHIgQ==
-X-Received: by 2002:a05:600c:310b:b0:4a1:813f:2a5b with SMTP id 5b1f17b1804b1-4a18e4a9da8mr184355265e9.14.1791826106280;
-        Mon, 12 Oct 2026 10:28:26 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18be97d1esm480991455e9.8.2026.10.12.10.28.23
+        bh=Ky+Mh+cO5xMBG7Bn/5pO6nl62hMlLNRWkoqZnT1lz8o=;
+        b=v610ahiVBh5ep1vtDIp8hjLorbIXLZH6HxF95dJnbu+BasGxaawkGBk+tme9M6I1i7
+         xtdnSYtVJLJiBoRzmeOpKta4b5Bh/8syl/qfD/8aSNXKlBt9IGbPRLvTyeQHqU3A519Y
+         JyVLuvpqwf7hklBRpsxQK/MjHP8cZPpw4rIZxPZZhi9lybM3oAUslmW3MBub99URZpN0
+         YV4T8+mAmfr+sDlDm9hXRGjropVwLbq5GWW0rmfce0sNNYNAoVANp319MU5/CDSAPdnh
+         eR0PFSoDchzma8JoBMzPFA4ypNCh57JyW/uu/6chN2rKQAKbHbl8l0Ujqr4hcZ7TiMVN
+         Wz7w==
+X-Forwarded-Encrypted: i=1; AKwUvBx1T3B2j2w3ITYCAv/4g7WgjbaCkffdH/Rq37ukLhVzWrP9z9TaRwP5ghxDzI0A9k61wP6TiIImwflgMQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKlip1/xxoLGYS5Vc3hdHobwUZsm7IlKNN2Vhg+M/yeTm4uxA5G
+	kddVU7Z4UPgw1CAwrjrlSa+zPB0hK2YZowlvyMz3iN+bj4vYzrNFu8oK
+X-Gm-Gg: AYBFou0c2ulhC5RTw3E/awYRgkbYKhTl0mjmVv/bSYRHvseT5OYyC8oVtnfhky/7u0a
+	FA6GkX3UmGHYe4AhBTj5Mq5x9VW87e1Bfph/OMjZ5l3f06Zhn/1675O45kLuukwrT8VqiY9qKIH
+	v5PHAO7U4xp3aoGx30Ux5Jvff7j6CDJThYhzMcXosguWSvcV4O3ZztuXjTsn57gEdV/vh/mQGC2
+	utLjshzwzw1uIan/qG5fxdphbQq13UMQtxg5pHlAapwwEO3msI+TAwwd7JVzqn/o+OWGK8wBxe4
+	R9feQYVrK6TsmqNRXawLGWce0Qnv0DCM4dDtpkyzthNsWPd95XU+CR4lBOyzm7cZej+QOclb4m2
+	Q/ZsWaaHosOWBlq9/7bgaZNxeJoub5g4LlxuBgle8Ui+pCC0gxZTmxXbCpBJplozt0ZMxZGSIOg
+	PHZAS7G61bEp/UtBTJn+T4zLsZ5J24gaYRsm2Zh+zLKqdpPwd6Ja+h6jj+E+5U18+jXQF4RDSfg
+	qGIFPKrxuUsx5iq3peHlYmShqdyD+4WrJgQwrn+BzOjZQKQ6D2HyyA0eokFt4dJkDM6YnEVjkh4
+	a3bBeFM1ciYwGd3JXooJARse1PNMKnLfPDNEwlef+So7OiP5581gbJ/9nTBAWdFXbQbC7rBOuvb
+	7Q1IHd6E=
+X-Received: by 2002:a05:600c:6297:b0:4a0:62d:4424 with SMTP id 5b1f17b1804b1-4a18e4a1756mr196491005e9.8.1791831095315;
+        Mon, 12 Oct 2026 11:51:35 -0700 (PDT)
+Received: from unknown748F3CBA5068 (dynamic-2a02-3100-a8ab-0f01-016a-c770-797f-eaee.310.pool.telefonica.de. [2a02:3100:a8ab:f01:16a:c770:797f:eaee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18bb68abfsm336946215e9.0.2026.10.12.11.51.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2026 10:28:23 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 0CEB6DC09FD; Mon, 12 Oct 2026 19:28:23 +0200 (CEST)
-Date: Mon, 12 Oct 2026 19:28:22 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
+        Mon, 12 Oct 2026 11:51:34 -0700 (PDT)
+Date: Mon, 12 Oct 2026 20:51:33 +0200
+From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Sasha Levin <sashal@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Erik Brangs <erik.brangs@gmx.de>, benh@debian.org,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-bluetooth@vger.kernel.org, 1149377@bugs.debian.org
-Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth:
- btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore
- working on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests
- firmware)
-Message-ID: <as0YtvgukA-Gp-D-@eldamar.lan>
-References: <179104011040.2214689.5921682013387867802@eldamar.lan>
- <2026-10-04-1-daily-reply-0007-bt540-asus-firmware@kernel.org>
- <24ce058a-28b5-4499-9ded-eec9544b80ec@leemhuis.info>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Rob Clark <rob.clark@oss.qualcomm.com>, 
+	Jianfeng Liu <liujianfeng1994@gmail.com>, Diederik de Haas <diederik@cknow-tech.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [RFC PATCH 0/3] dma-buf: warn-only mode for DMABUF_DEBUG
+Message-ID: <as0r7Q4dHt9gQm_8@gmail.com>
+References: <20261005064133.7305-1-kmehltretter@gmail.com>
+ <d1ef135e-1b5d-4656-9229-348c7029efbb@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -88,50 +85,25 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <24ce058a-28b5-4499-9ded-eec9544b80ec@leemhuis.info>
+In-Reply-To: <d1ef135e-1b5d-4656-9229-348c7029efbb@leemhuis.info>
 
-Ciao Thorsten,
-
-Thanks for looking into this regression as well.
-
-On Mon, Oct 12, 2026 at 02:00:18PM +0200, Thorsten Leemhuis wrote:
-> On 10/4/26 18:29, Sasha Levin wrote:
-> >> In Debian Erik Brangs reported that after the update from 6.12.107 to
-> >> 6.12.111, specifically with the backport of 980084de4d9b ("Bluetooth:
-> >> btusb: Add ASUS USB-BT540 for Realtek 8761CU") Bluetooth is not
-> >> anymore working, the full report is found at
-> >> https://bugs.debian.org/1149377 .
-> >>
-> >> | [   38.138881] Bluetooth: hci0: RTL: firmware file rtl_bt/rtl8761cu_fw not found
-> > 
-> > The stable code matches mainline. The failure is a missing firmware file:
-> > rtl_bt/rtl8761cu_fw.bin has been in linux-firmware only since 20251111,
-> > and Debian trixie's firmware-realtek 20250410-2 does not have it.
-> > 
-> > Marcel, Luiz: could you, or Christoph Zwerschke as the author of the ID
-> > commit, send an upstream revert, or a fallback to ROM firmware when
-> > rtl8761cu_fw.bin is missing? Stable will take it for 7.2, 6.18 and 6.12
-> > through the normal Cc: stable route once it is in mainline.
+On Mon, Oct 12, 2026 at 10:12:02AM +0100, Thorsten Leemhuis wrote:
 > 
-> Hmmm, that was a week (granted: with the LPC) ago and nothing happened.
-> Anyone working on this?
+> What's the status here given that 7.3 will likely be released in a few
+> days? Note, I can see from the discussion that this is a complex problem
+> that can't be quickly solved. That's how it is sometimes. But I wonder
+> if the current state of things is the best compromise for now or if
+> Rob's revert or some other option would be better.
 > 
-> If not: Should we revert 980084de4d9b and its backports? Or only the
-> backports to older stable series?
-> 
-> Strictly speaking it should be the former due to our policies wrt to
-> firmware -- but I guess most users of a more recent kernels also have a
-> newer firmware, so I wonder if reverting the change might do more harm
-> then good now.
 
-If my understanding is correct from a earlier fixed regression in the
-ariea, aka
-https://lore.kernel.org/regressions/0fd8c1c9-7f56-4bcb-a727-e4386d8ef094@online.de/
-should then not only 980084de4d9b ("Bluetooth: btusb: Add ASUS
-USB-BT540 for Realtek 8761CU") be reverted, but as well along
-6f0624b4427e ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek
-8761CU") and as well 4a23ce935f74 ("Bluetooth: btrtl: Add the support
-for RTL8761CUV")?
+I think reverting my commit 143755bdabaa ("dma-buf: Make DMABUF_DEBUG
+default to y on DEBUG_KERNEL kernels") is the best interim solution for
+v7.3.
 
-Regards,
-Salvatore
+Christian, Sumit, could one of you apply Jianfeng's revert before the
+final release?
+
+https://lore.kernel.org/r/20260926022026.10539-1-liujianfeng1994@gmail.com/
+
+Thanks,
+Karl
