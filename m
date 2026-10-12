@@ -1,78 +1,71 @@
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A50B47143B
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 09:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AD4472F91
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 10:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791797775; cv=none; b=Lzdc5Q2cr+ksWgqdMHXK4WN6IUWxom3eJsO8pCevLBRZq16pNzfBMmZCahYAemQvIJFTow18vpnafGPCb4q2p9O5qHYxs/3R2m/YBxsV+0kpbZuZRGhxNz+1iBKk6GaCaUkwFbczwwc2TMQXj/WTn8j3qkYHmJbtSkaZ614Ez78=
+	t=1791799929; cv=none; b=K8VukgA0Lts1ROzDQV9CatnHgrQZjS6mxNWzD1t71ymxgdE7MNSVigpSpQwxP/yXGA1Z55Ud7wEv9y7luUf+ym+MVseXuGvF26MH2n0urenZVD4K5D4SlWoaN1UQeUeszSkJTW814bUs20XiYcQ0gqvOyLnygI2dChhFUMN0Pbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791797775; c=relaxed/simple;
-	bh=HwgH6cNjuXA3qdiLh4L4A0y5gykjUezqzlq6XPMZfV8=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:MIME-Version:
-	 Message-Id:Content-Type; b=bMrdhX3dgS/FDUcZ1acXttkVs1MMOgCSP1Y4e2Btc/XuC/V+Hlwz+foBHV8gHMpwXt1r8gViDr8e71rqn1ECSKGQq+sJae86XCj/T5NMev759s3/eUm661VMR87LTqAPntru7D1czTQxuT5HdcvDD87Xuqh44wJH8IM3pL+nNOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 1225A47F80;
-	Mon, 12 Oct 2026 11:36:11 +0200 (CEST)
-Date: Mon, 12 Oct 2026 11:36:07 +0200
-From: Fabian =?iso-8859-1?q?Gr=FCnbichler?= <f.gruenbichler@proxmox.com>
-Subject: Re: [REGRESSION] 7.2.4: nfsd sends CB_OFFLOAD with all-zero stateid,
- async NFSv4.2 COPY never completes
-To: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org
-Cc: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, Lubos Rendek
-	<l.rendek@proxmox.com>, regressions@lists.linux.dev
-References: <7cc824c4-632d-49df-ae5e-cfcbb5bf76ad@proxmox.com>
-	<2026-10-11-1-daily-reply-0001-nfsd-cb-offload-zero-stateid@kernel.org>
-In-Reply-To: <2026-10-11-1-daily-reply-0001-nfsd-cb-offload-zero-stateid@kernel.org>
+	s=arc-20240116; t=1791799929; c=relaxed/simple;
+	bh=MtT+iP3cKBw24ZFL3MLI6cV8yBFqbIdjvWW6CIqA4sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UO3gHIBQZVFkHYjRmhXzKmoFThwqz3r5NEOQ0+Z3frc4YUzKR7tyDJnmd3Jj6BfVbLUdZNNXh2bdUG3IjgacfXONFwzI8sA/ZITJodsW49HG0NhKtlXDLAbdEqqsfi3ipASTFepPQ3vmBfN7Hi4+WFRQnT1K9Wz8KYbfe2MhosA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout2.hostsharing.net (Postfix) with ESMTPS id 11F9D10F63;
+	Mon, 12 Oct 2026 12:11:57 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E32A8600E1CF; Mon, 12 Oct 2026 12:11:56 +0200 (CEST)
+Date: Mon, 12 Oct 2026 12:11:56 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Alexander Gruhlke <gruhlke@mailbox.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Williamson <alex@shazbot.org>,
+	Hui Wang <hui.wang@canonical.com>, Linux-Fan <info@masysma.net>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] PCI: Don't treat ~0 as ready in pci_dev_wait()
+ with RRS SV
+Message-ID: <asyybNwDFi7hNpZN@wunner.de>
+References: <20261011190145.23621-1-gruhlke@mailbox.org>
+ <20261011190145.23621-3-gruhlke@mailbox.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: astroid/0.17.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1791797151.oll70jtyaa.astroid@yuna.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Bm-Milter-Handled: 55990f41-d878-4baa-be0a-ee34c49e34d2
-X-Bm-Transport-Timestamp: 1791797770509
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261011190145.23621-3-gruhlke@mailbox.org>
 
-On October 11, 2026 6:48 pm, Sasha Levin wrote:
->> Since 7.2.4, an NFSv4.2 server-side COPY between two exports of a Linux
->> NFS server never completes, because nfsd sends CB_OFFLOAD with an
->> all-zero stateid.
->=20
-> Queued the fix for 7.2 and 6.18, thanks.
+On Sun, Oct 11, 2026 at 09:01:45PM +0200, Alexander Gruhlke wrote:
+> @@ -1235,8 +1237,12 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>  
+>  		if (root && root->config_rrs_sv) {
+>  			pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
+> -			if (!pci_bus_rrs_vendor_id(id))
+> -				break;
+> +			if (!pci_bus_rrs_vendor_id(id)) {
+> +				if (PCI_POSSIBLE_ERROR(id) && dev->is_virtfn)
+> +					pci_read_config_dword(dev, PCI_COMMAND, &id);
+> +				if (!PCI_POSSIBLE_ERROR(id))
+> +					break;
+> +			}
+>  		} else {
+>  			pci_read_config_dword(dev, PCI_COMMAND, &id);
+>  			if (!PCI_POSSIBLE_ERROR(id))
 
-AFAICT (for 7.2.x) you queued a full pick of
+Lean and clean, thank you.  The additional pci_read_config_dword()
+exceeds 80 chars, but I guess Bjorn can fix that up when applying
+if he dislikes it.
 
-f307b4f7ed17 nfsd: split nfsd4_copy into transient and durable async copy o=
-bjects
-
-in
-
-0b2963340727 nfsd: split nfsd4_copy into transient and durable async copy o=
-bjects
-
-despite Jeff stating the following up-thread:
-
-> We should probably just take Lubos' two-line fix as a separate one-off
-> patch for stable. Backporting the COPY code refactor is too risky IMO.
-
-Was this intentional, or an accident?
-
-FWIW, the full refactor would include two more patches:
-
-d6edc2a72513efce59eaf85acb204d2ddac71892 nfsd: drop dead COPY-vs-COPYNOTIFY=
- type handling from s2s stateid IDR
-80c376183411300b4c99977c66f3f84f64b38676 nfsd: make the copy offload statei=
-d a first-class nfs4_stid
-
-so this is kind of half-way between the discussed options..
-
-Fabian
-
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
