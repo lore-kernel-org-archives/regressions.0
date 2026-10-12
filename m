@@ -1,156 +1,96 @@
-Received: from ustc.edu.cn (smtp.ustc.edu.cn [202.38.64.46])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0FAA457E71
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 08:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.38.64.46
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17A0314D1F
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 09:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791793324; cv=none; b=ZtlWE3VbYdnvIXPkwIvOF7wSCX99NZOjU1mplOSkOye0iGDzsdBp5plKX5VPrWJKV9XxkwtHhP8isCqIlIvO8CtCwyfjm16ei3r2g7Y0r9k4zBAoAU9xwWqMdl7NUrebuFxPuQh4aNgGMR7apKohRp22pvAsHjxRY1WEAYrHphM=
+	t=1791797372; cv=none; b=n9w4W/4qWERus4/CYsrgGjo/aXLSJuXM5LAqRvXXpC+gRWCqlvqjL6ToftYaAVMqm/jyFbHboIovPDPue0wPdyH15G7RRS8fPh8U3PGIn2IWdEnh2ZwDacOxmSVstvqWbqzU1AyWXApAJ6OqRHuFIwxVq56AIkpHCdhQyvljNPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791793324; c=relaxed/simple;
-	bh=vPP16qn4C5KCsIbBIItXVGI7k5gu0Vnv6h/g9ZwAWf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EVwY1FWgRFAQzCsywhlzLiQE4aU6Wrj0PZVMAxPoku2xOa2EqIRjP6+yrwp7NCTXA8qYVVdBj4N7AqKHVDJy/E4LFPgZkcmKZULg5b/Uj8KYJghWH4HOSHyjcFnc2Tb3CuA5EaxnOk6un8tMcwUAvjnjHhXup5o1vTZfeS52zGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.ustc.edu.cn; spf=pass smtp.mailfrom=mail.ustc.edu.cn; dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b=P7PQUFrZ; arc=none smtp.client-ip=202.38.64.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.ustc.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.ustc.edu.cn
+	s=arc-20240116; t=1791797372; c=relaxed/simple;
+	bh=GiYKZwKicQfpDucHXmpw3zfcGdRte5J8W6PuREJCZh4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=IV0tOrLz1pB/SPnm8wjlxMchH0MNFcBZUkeMg7ZZyfgvYK6YwRL8LoxalDcVk+kI/9Q4Bmhn3hTjbaZyzBI4kTwnq6qbgzc8rxrUgQpJJsiu4DcOvO/8RFlx5SOAqGgxW+Z3/HYmCyNwZfSToGRdN0NUBbBFukEw+THT+Teg4DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CPongErz; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="P7PQUFrZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mail.ustc.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-	Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version;
-	bh=r+wOrf6FFyJ+EZXWLP0+IkKhy9CSHDGdtllvWnItISo=; b=P7PQUFrZS5SzI
-	wGPSamHskF879wnVPyOoss6Du3FMOGUUQG2ZKYLAplb8Uf1mZXAH1agVK5zWwGLO
-	ojmExMgaRTcxKH8rgkbSk1OBwZoJbZo+J0o8UQGIJbxu41nQx4rRPu1xfBBkbIXy
-	H78wMaT2SSYQxcpkVxbrCPdkbdUBgM=
-Received: from [127.0.1.1] (unknown [114.214.192.228])
-	by mailimap2024 (Coremail) with SMTP id 3pYKCgBHNx6lmMxq5yDXAQ--.122S2;
-	Mon, 12 Oct 2026 16:21:57 +0800 (CST)
-From: Qianhui Xu <xiaqinghuan@mail.ustc.edu.cn>
-To: linux-arm-msm@vger.kernel.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abelvesa@kernel.org>,
- Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [Regression v3] SM8750: cambistmclkcc + camcc together hard-reset the
- SoC on display blank
-Date: Mon, 12 Oct 2026 16:21:56 +0800
-Message-ID: <179179331695.677917.11557670447411700010@mail.ustc.edu.cn>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CPongErz"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4j3Bwm00xPz6GRj
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 11:28:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791797320;
+	bh=GiYKZwKicQfpDucHXmpw3zfcGdRte5J8W6PuREJCZh4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=CPongErzG1Lgcpe9MIqMqF7C4QkXezrN0qkY3zD0oC1TOZn+XPYQMsTrQF+ufNN08
+	 Kox44ZiuoIPgxc77pulD5R3SPCM3N0LREtWi9D3C8QSCILtJVrtgHVF5RKZ2EcfPN9
+	 zulcdGt4a1Enit+6yvm81L7AOXsMAxTIrl+paCMkmeoDKLMBNk8l4Dzbuk0OROsopT
+	 6FijfD+IZo0KBEAsp2IT3zT2YMQ4PS+/vVxRoamIAoJ/KE33reurJ1AaAHN9BWaBoU
+	 Bo9dX13avjnL+FgvVyAJ0BYo8960xA6RJJfH+LmEmkDtrrrEaTnaBd8BpLBP6LAxF7
+	 Z8tw3JfEVYvXQ==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4j3Bwl6QQtz4y8w
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 11:28:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j3Bwl0wvLz8td0
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 11:28:39 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 98CF65FA6D
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 11:28:38 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <8d51103f-c232-445c-90cc-32e1b4aa5073@leemhuis.info>
+Date: Mon, 12 Oct 2026 11:28:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-CM-TRANSID:3pYKCgBHNx6lmMxq5yDXAQ--.122S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFy5tF43tw1UWFy8KF4DArb_yoW7GrWrpF
-	Z5Ga1fJr4DtryS9a1Ivw18Za4S93ykKan8Ar1rGryUAa15Gr1xtF1Ika1UXasrGrnayF40
-	vr4qqws7AF4vkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
-	MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-	UI43ZEXa7IU5moGJUUUUU==
-X-CM-SenderInfo: 50ld1x5qjk3t3q6ptxnoox23vfohv3gofq/1tbiAREKB2rBkwcEggAXsz
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179179731879.2875485.9821727767759693905@mxe9fb.netcup.net>
+X-NC-CID: kSb/BrR7Iy24dsLfw4MR5pAKnH1i/oEWHnJrmciSyg+WMQRevTU=
 
-Hi,
 
-Third revision of a regression report about SM8750 (Lenovo Y700 4th gen tablet,
-TB322FC, board dts sm8750-lenovo-elden) being hard-reset by the camera clock
-controllers when the display is blanked.
 
-DELIVERY NOTE (please read): the two earlier revisions (2026-10-08 and
-2026-10-10) do not appear in the linux-arm-msm archive, and neither does any
-[Regression] mail from this address. If an older copy of this report reaches you
-later from a moderation queue, please ignore it and review this revision: the
-data below supersedes it, and it also withdraws two of its claims.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-### Corrections to the earlier revisions
+#regzbot report:
+https://lore.kernel.org/netdev/CAPa5EdCj3v17tB-SF2JNecq5Q8s1Pranr-XzAFWNpNTBPgPG7w@mail.gmail.com/
+#regzbot introduced: 447cbe95ebb9
 
-1. "The trigger is the cambistmclkcc block specifically" is wrong. With a strict
-   user-space gate on the same kernel (modules probed, all clocks unprepared, no
-   consumers, no camss/cci/regulator drivers loaded):
+#regzbot report:
+https://lore.kernel.org/lkml/010001a1222f66ba-0c745f29-d4fe-4862-93ff-1db2055b05fc-000000@email.amazonses.com/
+#regzbot introduced: 82a81a7352bc
 
-     cam = 0                     blank, hold 60 s, resume  -> alive
-     camcc-sm8750 only           blank, hold, resume       -> alive
-     cambistmclkcc-sm8750 only   blank, hold, resume       -> alive
-     both loaded                 first real blank           -> SoC reset
+#regzbot report:
+https://lore.kernel.org/all/7cc824c4-632d-49df-ae5e-cfcbb5bf76ad@proxmox.com/
+#regzbot fix: nfsd: split nfsd4_copy into transient and durable async
+copy objects
 
-   The earlier single-module results were gate artifacts: our older blank test
-   did not verify that the panel actually left the active state.
-
-2. The "bind cambistmclkcc to MX only" workaround (be79b256d, attached to the
-   previous revision) is withdrawn. We rebuilt the device tree only, restoring
-   the upstream binding (power-domains = <&rpmhpd RPMHPD_MMCX>, <&rpmhpd
-   RPMHPD_MX> + low_svs) and verified that the control build reproduces our
-   baseline DTB byte for byte. The SoC still resets, with an RPMh vote tail
-   identical to the MX-only build. The power-domain binding is not the lever,
-   and our "half-built bare clock controller collides with a collapsing rail"
-   story is therefore not confirmed - please treat it as an open question, not
-   as a root cause. No fix patch is attached to this revision.
-
-### Death signature (what we can measure)
-
-- SoC level reset, not a software crash: no pstore and no kernel message, the
-  USB PHY drops, and the device reboots by itself into the flashed OS. In the
-  five death events we instrumented today the recovery was always automatic,
-  28-42 s after the USB disconnect; two of them were confirmed by an SSH login
-  showing a new boot_id.
-- PMIC: dumping all SPMI slaves through debugfs before and after the event shows
-  the PON register block (0x1300..0x13ff of the main PMIC) byte-identical, i.e.
-  no latched PON reason and no fault bit. The SoC hardware watchdog is disabled
-  ("Hard watchdog permanently disabled"), so this is not a watchdog reset.
-- Tracing: the last frames are the compositor enabling disp_cc_mdss_* clocks
-  (blank direction). On a bench where the panel did not initialize, the death
-  moves to the resume direction (GPU domain bring-up) - the death point follows
-  the display power transition.
-- Interconnect: BCM/RPMh votes during a dying blank are identical in address and
-  shape to a surviving blank (MC0, SH0, SH1, ACV) and icc_set_bw paths look
-  normal, so this does not look like a NoC bandwidth vote problem.
-- Pinning the GPU power/control to "on" (no GPU runtime resume on resume) does
-  not prevent the reset.
-
-### Reproduction
-
-- mainline 7.2 based tree, no vendor patches affecting clocks or genpd.
-- modprobe cambistmclkcc-sm8750 and camcc-sm8750.
-- real display blank from userspace (org.gnome.ScreenSaver.SetActive(true),
-  DSI DPMS off; no s2idle or system suspend involved) -> reset within seconds.
-- on benches where the panel fails to initialize, the same reset is provoked by
-  the resume direction instead (SetActive(false)).
-
-### Questions
-
-1. Is cambistmclkcc supposed to be usable as a bare clock controller with no
-   GDSC and no consumer? The failure needs BOTH camcc and cambistmclkcc to be
-   probed. Is there a hardware coupling that requires the camcc side to be
-   powered while the camera BIST block keeps its AHB clock and PLL programmed?
-   (The maili/hawi camss RFC adds both nodes together, which makes us suspect
-   they are not independent on this generation.)
-2. Is there a documented ordering constraint between the camera BIST block and
-   display power/clock collapse (dispcc) on the shared MMCX/MX domains? Any
-   display power transition, blank or resume, with both controllers loaded
-   takes the SoC down instantly, and we cannot see that interaction in the clock
-   or genpd code paths.
-3. Which reset-reason source exists on SM8750 that we could read from Linux after
-   such an event? PON latches nothing and there is no pstore. Is there an AOP or
-   CPUCp crash/health register, or a smem scatter area, that records
-   "PS_HOLD dropped" versus "cold reset"?
-4. Until the root cause is known, what default would you recommend for
-   distributions: an always-on vote for cambistmclkcc, a required vdd_mx supply
-   binding, or deferring cambistmclkcc probe until the display is off? We can
-   test any of these on hardware and report back.
-
-We can run further experiments (registers, traces, chip revisions) on request.
-
-Thanks,
-Xuqianhui (elden bring-up, Lenovo Y700 Gen4 / SM8750)
-
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5955
+#regzbot introduced: 5f08eee9c3fb
+#regzbot title: drm/radeon: screen freezes due to fence waiters hanging
+indefinitely
