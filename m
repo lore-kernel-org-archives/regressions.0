@@ -1,95 +1,112 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6834A8FE5
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 15:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A714A5EB4;
+	Mon, 12 Oct 2026 16:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820681; cv=none; b=imkZJ8CpZ9OLBNVqdnWIg1hKzIA94AeA2iY8by8SgqP1y6ma4YZ+Zx1x9HtfCCgdvLh9y3CGcjXraCStIywB01G2nkDXec5GANvgIRZxzPT+Xe1p5AW3my8ELZJWWmnui4sLrvCs2RlJtGSecxN1Y0mNuutil5lC5avBioTudfc=
+	t=1791822153; cv=none; b=WyBaaX2ak+M51w5avu+aw90EoLHA76iCbtZKLdcIpA9OMhfkuVfQcGwWr0PNnau2FfgfT/gReTTuRvBxyJYTjgXn8UMfNPM1c79IG4KD6tGCCWGwwcF5r4ixeO7/mMo8xf/XEfIIzGuQTVf2uTz69wiD/NpHt9KoupyOzueRbK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820681; c=relaxed/simple;
-	bh=6h3L5F2bCABvKUhtGBfjENFjhoz6ntyUCFLIBk/lpFw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Bvp+0Y2zeJzMVr5hCZtMOry3BJj6BrI7ppqtikR8kEltT5cNVEcCCTxVcHvPDqax1MjBAbWl8MYhkZpEnU/Rgj6n4V6sxYXF/qFkL67KDT1y0VHHYv54yuYhtji0btvS7bKwx/kPtPifF2pbLle8xL0Ruf4sN6I0oIFTNGFlOLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bxKvBHYX; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1791822153; c=relaxed/simple;
+	bh=bElcF85UnTsPsK3JmZkckN1qWbGReCw8cJlM4YW08SY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzPRugMJYl4x4CZbIL1MPnUqOqv0SOsyWX8/PCw3Tpgl2ezeMC0qlx3GII83Gz+PKq1T8R0ukD2TmlK8408dinxfXH2J6l0W83TUpYlUw3TzVeXJdJJ80wbW4Ayhn9rhtTVQWetg1Db+21WnlMKIYHdCdIuyhrWvWSEQkhL6pz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glTKqFKR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bxKvBHYX"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j3MYx64pmz4DqS
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1791820677;
-	bh=6h3L5F2bCABvKUhtGBfjENFjhoz6ntyUCFLIBk/lpFw=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=bxKvBHYXDwormHFhBmtbbcGD/jF8iwFMMxt8yJc03+2wVXIW02bvNyz5bqGPIr/Wr
-	 m6hYeaX11Ga/lRAqYyAjRiUtOT/SLusHZ3tKLpPIRkhPQW+S3jewcn2tbvKwJ2fWbm
-	 C5Mwz+srdF7sFiFygYbABV3XrCZT69AcXccxx/2Kjd1XBQBxYy4ttm7tJFfI26H2br
-	 /rWjk7mZr34afRumkILvofCUVRmSYmnblZ3iE3bIACiBsYxCej66ngsA+03b7AITs3
-	 6qLbdewCcIQK92G7zL0EnKqz4W+WRTFRlXQl5ZRK8YlC+DA/dFbZvWTFj6jqQOoW8P
-	 f4dLmD4r95pSg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j3MYx5P30z4DWC
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:57 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j3MYx3YY9z8sb7
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:57 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E7EC95FA0A
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:56 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <6a9e41a6-5acc-4e7b-8516-8c78935e5f6e@leemhuis.info>
-Date: Mon, 12 Oct 2026 17:57:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glTKqFKR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50551F0089C;
+	Mon, 12 Oct 2026 16:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791822151;
+	bh=ujVlQVHq5JIQ0O1pcio2HBL6zzvo1/h8W5FdQ/HFDtw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=glTKqFKRA/lzgraEST5OyD7TVH8Xu3LxK2obpvhfPcMC2356ApAlxVAqGTyQHyst9
+	 c+pqw6cXo9IyynvNGf5J37T19hoWN7POrnGTk4nDaZcZRBkrUuskNuzdsPiJvBR8Jn
+	 gsnZw54RYV3AiCfWvHdZteUzpVtVIEZrfcpTSbQDCbJWiMoqKcjOiUOHbjh5GKZqnV
+	 urziov9pq42Hl5VVkY6b3hlUddeazbr+pQmtAWCinw4hVHXZcOeMjv7by+zdygmrV3
+	 8FuN25QV6QGVhfmOonKOWdEtu/+5Q8I7j3MTczT+pBPtFFiBrH51mXKM41Fraiou+j
+	 lf6TUYTo/ODkg==
+Date: Mon, 12 Oct 2026 21:52:23 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: =?utf-8?B?RnJhbsOnb2lz?= Roux <franzelfranzel@gmail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] power: sequencing: qcom-wcn: power off WLAN at probe
+Message-ID: <as0JBsiiR1T94Adj@debian>
+References: <20261004165124.4277-1-franzelfranzel@gmail.com>
+ <CAMRc=Mf_szZhsZEB8pmZkGh5pB6AEims68rc1tXE=XGAcMuEvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179182067715.918715.17816616785004694637@mxe9fb.netcup.net>
-X-NC-CID: iYkxteG/qGgfIfhXT4YjhmWTKwfSbwRsbtMR2dBtyP0n10dvXoU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mf_szZhsZEB8pmZkGh5pB6AEims68rc1tXE=XGAcMuEvg@mail.gmail.com>
 
+On Tue, Oct 06, 2026 at 11:03:17AM +0300, Bartosz Golaszewski wrote:
+> On Sun, 4 Oct 2026 18:51:24 +0200, "François Roux"
+> <franzelfranzel@gmail.com> said:
+> > The WLAN enable GPIO is requested with GPIOD_ASIS and then kept at its
+> > current level, so that a WLAN module left powered on by the firmware is
+> > not switched off. The FIXME explains why: toggling it would take the
+> > PCIe link down, and the controller driver could not recover from that.
+> >
+> > That reasoning held while the PCIe link was trained before the
+> > sequencer probed. Since commit b921aa3f8dec ("PCI/pwrctrl: Switch to
+> > pwrctrl create, power on/off, destroy APIs"), qcom_pcie_host_init()
+> > powers the endpoint through pwrctrl before it starts link training, and
+> > defers until the pwrctrl driver is bound. That driver cannot bind
+> > before this sequencer has probed. Power-on therefore always comes
+> > before link training, and keeping the firmware state is now harmful.
+> >
+> > On the Microsoft Surface Pro 11 (X1E80100), the WCN7850 sits on a
+> > PCIe port without a PERST# GPIO. While pci-pwrctrl-pwrseq is not yet
+> > bound, the host init is deferred about ten times, and each attempt
+> > powers the PHY and controller back down. The later power-on only sets
+> > a GPIO that is already high, so the chip is never reset and the link
+> > never comes up:
+> >
+> >   qcom-pcie 1c08000.pcie: Device found, but not active
+> >
+> > The endpoint is not enumerated and ath12k never probes. Bluetooth on
+> > the same chip fails too ("QCA Failed to send TLV segment (-110)").
+> >
+> > Request the GPIO as GPIOD_OUT_LOW. The chip is then off when the
+> > sequencer probes, and pwrctrl powers it up cleanly right before link
+> > training. Drop the FIXME and the code that preserved the firmware
+> > state.
+> >
+> > Tested on a Surface Pro 11:
+> >  - b921aa3f8dec plus a one-line version of this change: endpoint
+> >    enumerated at 2.4 s, ath12k and Bluetooth working.
+> >  - next-20260929 plus this patch: "PCIe Gen.3 x2 link up" at 3.4 s,
+> >    ath12k and Bluetooth working, Wi-Fi connected.
+> > Without the change, neither kernel enumerates the endpoint.
+> >
+> > The culprit was found by bisecting v6.17..v7.1, with the DTB and
+> > .config held constant.
+> >
+> > Fixes: b921aa3f8dec ("PCI/pwrctrl: Switch to pwrctrl create, power on/off, destroy APIs")
+> > Closes: https://lore.kernel.org/all/CAPjyS8dY0Q_o3XmFjuKZZsjhzhoSNL+ZGJtw5cQt8HiV3sUtxA@mail.gmail.com/
+> > Cc: stable@vger.kernel.org
+> > Assisted-by: LLM
+> > Signed-off-by: François Roux <franzelfranzel@gmail.com>
+> > ---
+> 
+> Mani: this looks good to me, any objections to me queuing it for v7.3?
+> 
 
+No objections from me. As the commit message stated clearly, we no longer need
+to rely on firmware configured state.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-#regzbot report:
-https://lore.kernel.org/all/7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn/
-#regzbot resolve: inconclusive: people can't reproduce, likely a
-microbenchmark issue
+- Mani
 
-#regzbot report:
-https://lore.kernel.org/lkml/CANGjgd=RwMy=29OYG14b6kkoF1uBHz67jTGge5Nubb-XemMvBg@mail.gmail.com/
-#regzbot resolve: Jan Kara considers it a scalability regression is
-acceptable tradeoff, but plans to work on this
-
-#regzbot report:
-https://lore.kernel.org/lkml/096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com/
-#regzbot resolve: inconclusive: performance regression and seems people
-lost interest
-
-#regzbot report:
-https://lore.kernel.org/linuxppc-dev/CADyY0-5M0+N1u45RVZN3Tf52iKaXcvKeUaqgdw-wP1B_4zuA0w@mail.gmail.com/
-#regzbot fix: 6b28e0e7a07353
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
