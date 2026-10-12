@@ -1,103 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83CC4A8A39
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 15:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6834A8FE5
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 15:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820571; cv=none; b=GN/uH6f7z8jVoST+yNOB8gaKaroPjkAmbbv1hKTNdFZsspAOmn4mK0lBsRmJHvyhhJPJ2q8c5A5eeOdaaXCmUu+2PUUkP9yNGh3Vu8TXYmzn0pioKbvoIh2xwK8nzvHYZ6mvWIwBPlOrXEDU/RMm73CLN4q7BCEXgxZkq07GJX4=
+	t=1791820681; cv=none; b=imkZJ8CpZ9OLBNVqdnWIg1hKzIA94AeA2iY8by8SgqP1y6ma4YZ+Zx1x9HtfCCgdvLh9y3CGcjXraCStIywB01G2nkDXec5GANvgIRZxzPT+Xe1p5AW3my8ELZJWWmnui4sLrvCs2RlJtGSecxN1Y0mNuutil5lC5avBioTudfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820571; c=relaxed/simple;
-	bh=F8TxNbzPoPpeOKAIMlDONgvTVGQu2v1xJvBOhBytrPA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=s89LGIurxcj9mvhoPmquUATKslGQzunkSs+X3b1u9rs/HXk2arSi0sFOvJMUeWo9kuoFF8mIVtyrtK0clCpcQna8VtVNQlfTcZOb7lAtmFINGMIEv5yPEEF46XIYHm0OgVlw8oY4gbFb6ZuyJrDpCilk/UzOgqBih5ZyVE7qUmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlrli8/w; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791820681; c=relaxed/simple;
+	bh=6h3L5F2bCABvKUhtGBfjENFjhoz6ntyUCFLIBk/lpFw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Bvp+0Y2zeJzMVr5hCZtMOry3BJj6BrI7ppqtikR8kEltT5cNVEcCCTxVcHvPDqax1MjBAbWl8MYhkZpEnU/Rgj6n4V6sxYXF/qFkL67KDT1y0VHHYv54yuYhtji0btvS7bKwx/kPtPifF2pbLle8xL0Ruf4sN6I0oIFTNGFlOLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bxKvBHYX; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlrli8/w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791820570; x=1823356570;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=F8TxNbzPoPpeOKAIMlDONgvTVGQu2v1xJvBOhBytrPA=;
-  b=dlrli8/wvbhatkTRWXqIkzTp+MOhqYSajVHTY+SEd5mmMK3cr+6KcUrD
-   KUg6vrEm9PeI0Oqhx/C0qWNMGZMoc/AaXsWghWHAE3EBtkOr2E6O4bblx
-   ZGkk6fs2nc0uJtGDtwVc1ObbRQacJL4CMT5IM5TP8miw6op0S5Vdud+A/
-   TZ2/mmRW1GSK9/BlhNrv5ThixfT862D0YGgBOKwuzBVhoOf+T5OLiwyHK
-   pHGmCf/fmUaamcCRghcFIzgf9y3vkkalJrMNpN6VldU5HIpbYQMn0JKfg
-   3T9PkWLmENw80KdPVVIf87LZr15SJHf2Hv4d7eRqyoCNwrzAM1f5PcuXo
-   g==;
-X-CSE-ConnectionGUID: LGSkvW0SQ7+5ZIbZoPrZ0A==
-X-CSE-MsgGUID: eLlmfEPjQrSEj/fb+n27Qg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="625463"
-X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="625463"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:56:09 -0700
-X-CSE-ConnectionGUID: ebtEE5rbREmyhX9hYdD/XQ==
-X-CSE-MsgGUID: voR0x8qcQeW2r36sxaKJHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
-   d="scan'208";a="970372"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:56:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?utf-8?q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Qiling Zhu <kmatzkaczor244@gmail.com>, 
- Oleksii Kryvenko <diver.ua@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, 
- platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20261010031827.3306077-1-dmitry.torokhov@gmail.com>
-References: <20261010031827.3306077-1-dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix deadlock in hotkey
- input open/close
-Message-Id: <179182055606.17897.2748712319508628576.b4-ty@b4>
-Date: Mon, 12 Oct 2026 18:55:56 +0300
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bxKvBHYX"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j3MYx64pmz4DqS
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791820677;
+	bh=6h3L5F2bCABvKUhtGBfjENFjhoz6ntyUCFLIBk/lpFw=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=bxKvBHYXDwormHFhBmtbbcGD/jF8iwFMMxt8yJc03+2wVXIW02bvNyz5bqGPIr/Wr
+	 m6hYeaX11Ga/lRAqYyAjRiUtOT/SLusHZ3tKLpPIRkhPQW+S3jewcn2tbvKwJ2fWbm
+	 C5Mwz+srdF7sFiFygYbABV3XrCZT69AcXccxx/2Kjd1XBQBxYy4ttm7tJFfI26H2br
+	 /rWjk7mZr34afRumkILvofCUVRmSYmnblZ3iE3bIACiBsYxCej66ngsA+03b7AITs3
+	 6qLbdewCcIQK92G7zL0EnKqz4W+WRTFRlXQl5ZRK8YlC+DA/dFbZvWTFj6jqQOoW8P
+	 f4dLmD4r95pSg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j3MYx5P30z4DWC
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:57 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j3MYx3YY9z8sb7
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:57 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E7EC95FA0A
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:57:56 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <6a9e41a6-5acc-4e7b-8516-8c78935e5f6e@leemhuis.info>
+Date: Mon, 12 Oct 2026 17:57:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+X-PPP-Message-ID: <179182067715.918715.17816616785004694637@mxe9fb.netcup.net>
+X-NC-CID: iYkxteG/qGgfIfhXT4YjhmWTKwfSbwRsbtMR2dBtyP0n10dvXoU=
 
-On Fri, 09 Oct 2026 20:18:24 -0700, Dmitry Torokhov wrote:
 
-> Commit d6479c25ecef ("platform/x86: thinkpad_acpi: Use
-> input_device_enabled()") changed hotkey_poll_setup() to acquire
-> tpacpi_inputdev->mutex and call input_device_enabled(tpacpi_inputdev).
-> 
-> However, the input core already holds dev->mutex when invoking a
-> device's open() and close() callbacks. Because hotkey_inputdev_open()
-> and hotkey_inputdev_close() call into hotkey_poll_setup(), attempting to
-> acquire tpacpi_inputdev->mutex again results in an immediate
-> self-deadlock.
-> 
-> [...]
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent cycle or is clearly a regression
-fix.
+#regzbot report:
+https://lore.kernel.org/all/7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn/
+#regzbot resolve: inconclusive: people can't reproduce, likely a
+microbenchmark issue
 
-The list of commits applied:
-[1/1] platform/x86: thinkpad_acpi: fix deadlock in hotkey input open/close
-      commit: 16a7b5e0e4e3ba9997658b218559fff7ac1ccfb3
+#regzbot report:
+https://lore.kernel.org/lkml/CANGjgd=RwMy=29OYG14b6kkoF1uBHz67jTGge5Nubb-XemMvBg@mail.gmail.com/
+#regzbot resolve: Jan Kara considers it a scalability regression is
+acceptable tradeoff, but plans to work on this
 
---
- i.
+#regzbot report:
+https://lore.kernel.org/lkml/096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com/
+#regzbot resolve: inconclusive: performance regression and seems people
+lost interest
+
+#regzbot report:
+https://lore.kernel.org/linuxppc-dev/CADyY0-5M0+N1u45RVZN3Tf52iKaXcvKeUaqgdw-wP1B_4zuA0w@mail.gmail.com/
+#regzbot fix: 6b28e0e7a07353
+
 
