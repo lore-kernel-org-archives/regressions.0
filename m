@@ -1,112 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A714A5EB4;
-	Mon, 12 Oct 2026 16:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEDD190473
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 17:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791822153; cv=none; b=WyBaaX2ak+M51w5avu+aw90EoLHA76iCbtZKLdcIpA9OMhfkuVfQcGwWr0PNnau2FfgfT/gReTTuRvBxyJYTjgXn8UMfNPM1c79IG4KD6tGCCWGwwcF5r4ixeO7/mMo8xf/XEfIIzGuQTVf2uTz69wiD/NpHt9KoupyOzueRbK8=
+	t=1791826109; cv=none; b=fLVxxOWNHaTt97JqqotEt08ALUSveN7iPLnDkCP4qqGfJgNlGp63s4cN3biV7wJ9V3snVT9LGAsCNJMf16ZZu91owLRoM6gtfHt7mwgEXiryfr/4txYQ3liogx54uMOYBEKtkUgVqISV+mGuXD212+8u/t3eiyk1YIumuIfs6Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791822153; c=relaxed/simple;
-	bh=bElcF85UnTsPsK3JmZkckN1qWbGReCw8cJlM4YW08SY=;
+	s=arc-20240116; t=1791826109; c=relaxed/simple;
+	bh=AXdyOooEc3hDa63HwNXV9g3HS0K5zwoBhEQ215I6LyU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzPRugMJYl4x4CZbIL1MPnUqOqv0SOsyWX8/PCw3Tpgl2ezeMC0qlx3GII83Gz+PKq1T8R0ukD2TmlK8408dinxfXH2J6l0W83TUpYlUw3TzVeXJdJJ80wbW4Ayhn9rhtTVQWetg1Db+21WnlMKIYHdCdIuyhrWvWSEQkhL6pz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glTKqFKR; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=RqnX0qeNc38+ybjd0tI+8xerh3G9rWX4X5AvEtVFqS/RMc6WJeyNILF3dWqUocM6xCq7qPMw+WGd3XaqnUSz3JOLwut9b4mWkVOqSH2iSx2TkdBMk+6EaDLZ5GK2K7oov34pw+IXnbCnxAhTvRhICPpZseoWvaJyqqi9KW9j23I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tKhdLOQt; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glTKqFKR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50551F0089C;
-	Mon, 12 Oct 2026 16:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791822151;
-	bh=ujVlQVHq5JIQ0O1pcio2HBL6zzvo1/h8W5FdQ/HFDtw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=glTKqFKRA/lzgraEST5OyD7TVH8Xu3LxK2obpvhfPcMC2356ApAlxVAqGTyQHyst9
-	 c+pqw6cXo9IyynvNGf5J37T19hoWN7POrnGTk4nDaZcZRBkrUuskNuzdsPiJvBR8Jn
-	 gsnZw54RYV3AiCfWvHdZteUzpVtVIEZrfcpTSbQDCbJWiMoqKcjOiUOHbjh5GKZqnV
-	 urziov9pq42Hl5VVkY6b3hlUddeazbr+pQmtAWCinw4hVHXZcOeMjv7by+zdygmrV3
-	 8FuN25QV6QGVhfmOonKOWdEtu/+5Q8I7j3MTczT+pBPtFFiBrH51mXKM41Fraiou+j
-	 lf6TUYTo/ODkg==
-Date: Mon, 12 Oct 2026 21:52:23 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: =?utf-8?B?RnJhbsOnb2lz?= Roux <franzelfranzel@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] power: sequencing: qcom-wcn: power off WLAN at probe
-Message-ID: <as0JBsiiR1T94Adj@debian>
-References: <20261004165124.4277-1-franzelfranzel@gmail.com>
- <CAMRc=Mf_szZhsZEB8pmZkGh5pB6AEims68rc1tXE=XGAcMuEvg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKhdLOQt"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a172eb31f0so15830705e9.1
+        for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 10:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791826107; x=1792430907; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=YveKtGz1EIX08GUJXyM9GGRIHFuaJbA/DcyfZ3t4Uc4=;
+        b=tKhdLOQtBBstleUuOq+kmOi+gT1fOAWN4c9z33iMDKFPywc4eVb5sVRgRGhVt7JhwZ
+         T/fEhOlKDn/tjkQXE2poYUbjQZOSuIjWeTxuckzpQNZpVCKafL4tit6MZhJPHJaXuCTA
+         iimDXXO4zT/TXfmn+uX7stqr04vraHy4bkKhgmxYYUfIQpmwZFNfrWfk9Og/9w/2llnr
+         XGuRVvYmleHfnrF7ZIeDHbXKOipWVJhQhEApg5m6ut6VfG4kt4b0a6gvlf9bOa5mJRSe
+         2U35O6kCe6sSqs2231sKbLW9YZYJL4Wicb0HcJ1C/ABNoVnzLD59fptrmAth8FU5djoE
+         8S0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791826107; x=1792430907;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YveKtGz1EIX08GUJXyM9GGRIHFuaJbA/DcyfZ3t4Uc4=;
+        b=CnSWD9EHo1goKbReBJiCxXIg8MnDn5W4q5x3uB6gtaOl3uxGZtwyAFAL4urQeiDwtO
+         siAc33bStfKfVLPoJjM0Y6GwKr+LG/2v6plLHOGZ+W9jFByW2LAc/ic6NldtWHKNa9Gs
+         1WXbIFuAbNPArOEXPC7SunpO2C+OWhJLgoLSXGSDSRQycJ+ZHv9N3EFdxINb8jMb8TwZ
+         qb0yC1e/t9PJLm549KuzI6yfZNFy5Id/ZmJ+xEWFlHAcviKdvOpJwK3AuA2zFeI410/K
+         H3qBax8wyH4U+MbLZve34ljrgYlytLWYvC4RhupOcWynx6elqNNBCau6xt9CvQGn5tb3
+         8PDQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwuaqLHwAqiXjE2/u415Yb3Nfhq5NsZ+WpsDqM1A/XMl6pllq+K73AERi9qxxnHHlLvI+MEHOLufTQjgA==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIM/njo/76wAdJ8jDFKgw/CnSXNGnHsYSVMs3B6SWguBnAX0Mo1
+	kQV3neZiLTdE2pQTNnUIqppgA5qDqnr7i4QG5ZPwIiwciANBEBTT0LQU
+X-Gm-Gg: AYBFou1urIVPr/sel0+5gtyelYLeRx/HmD1IclprjZaJjHrARVzy+t84ouX8HLRRRih
+	kQUrfWqJ/VRmcGiWtRViH4G4jU/G0TtQRDK/RAl6qQ7odPaGzCPAckQi0p8ZvSISseQzA5QOFlU
+	npVc70cnq7u3Ps5F8DBMvuNhVJ+ylqqFQbpFk3KhrJHPNpgWBE2JX0xtLcfY3zlkjSWsrqn1lTO
+	dTHKlv/JcAEcMxJWAGUpicVEwb3YDIMxvwVEocOquMlMJetvagSm7e5y+Q5zlm7mYeyPWSqHFOE
+	agXHOdSkVbYX2kwSaHAD19iq2rVWYcyhDt6xi/euKayXufSLYKZVmpxHz0keVnouO2AoO+imvvU
+	+NrNYiC0l1ZUvG4Ynl/I00FMGQP+tUAKFYKfWs9cJIc6W9bv1i4FlPfB4iKM9/FQe7efH1lrSdq
+	q2rcP4NKD0tw6TuL0B+BzqgjOOvXSAS1+0JcuBFZHhdPq/uMeLoaLIb6DlRAx/CzwpqmPjbxxh9
+	jzZIDJd94PIU6Pb3WmV1ndqsbuWMoHIgQ==
+X-Received: by 2002:a05:600c:310b:b0:4a1:813f:2a5b with SMTP id 5b1f17b1804b1-4a18e4a9da8mr184355265e9.14.1791826106280;
+        Mon, 12 Oct 2026 10:28:26 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18be97d1esm480991455e9.8.2026.10.12.10.28.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2026 10:28:23 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 0CEB6DC09FD; Mon, 12 Oct 2026 19:28:23 +0200 (CEST)
+Date: Mon, 12 Oct 2026 19:28:22 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sasha Levin <sashal@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Erik Brangs <erik.brangs@gmx.de>, benh@debian.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	linux-bluetooth@vger.kernel.org, 1149377@bugs.debian.org
+Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth:
+ btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore
+ working on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests
+ firmware)
+Message-ID: <as0YtvgukA-Gp-D-@eldamar.lan>
+References: <179104011040.2214689.5921682013387867802@eldamar.lan>
+ <2026-10-04-1-daily-reply-0007-bt540-asus-firmware@kernel.org>
+ <24ce058a-28b5-4499-9ded-eec9544b80ec@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf_szZhsZEB8pmZkGh5pB6AEims68rc1tXE=XGAcMuEvg@mail.gmail.com>
+In-Reply-To: <24ce058a-28b5-4499-9ded-eec9544b80ec@leemhuis.info>
 
-On Tue, Oct 06, 2026 at 11:03:17AM +0300, Bartosz Golaszewski wrote:
-> On Sun, 4 Oct 2026 18:51:24 +0200, "François Roux"
-> <franzelfranzel@gmail.com> said:
-> > The WLAN enable GPIO is requested with GPIOD_ASIS and then kept at its
-> > current level, so that a WLAN module left powered on by the firmware is
-> > not switched off. The FIXME explains why: toggling it would take the
-> > PCIe link down, and the controller driver could not recover from that.
-> >
-> > That reasoning held while the PCIe link was trained before the
-> > sequencer probed. Since commit b921aa3f8dec ("PCI/pwrctrl: Switch to
-> > pwrctrl create, power on/off, destroy APIs"), qcom_pcie_host_init()
-> > powers the endpoint through pwrctrl before it starts link training, and
-> > defers until the pwrctrl driver is bound. That driver cannot bind
-> > before this sequencer has probed. Power-on therefore always comes
-> > before link training, and keeping the firmware state is now harmful.
-> >
-> > On the Microsoft Surface Pro 11 (X1E80100), the WCN7850 sits on a
-> > PCIe port without a PERST# GPIO. While pci-pwrctrl-pwrseq is not yet
-> > bound, the host init is deferred about ten times, and each attempt
-> > powers the PHY and controller back down. The later power-on only sets
-> > a GPIO that is already high, so the chip is never reset and the link
-> > never comes up:
-> >
-> >   qcom-pcie 1c08000.pcie: Device found, but not active
-> >
-> > The endpoint is not enumerated and ath12k never probes. Bluetooth on
-> > the same chip fails too ("QCA Failed to send TLV segment (-110)").
-> >
-> > Request the GPIO as GPIOD_OUT_LOW. The chip is then off when the
-> > sequencer probes, and pwrctrl powers it up cleanly right before link
-> > training. Drop the FIXME and the code that preserved the firmware
-> > state.
-> >
-> > Tested on a Surface Pro 11:
-> >  - b921aa3f8dec plus a one-line version of this change: endpoint
-> >    enumerated at 2.4 s, ath12k and Bluetooth working.
-> >  - next-20260929 plus this patch: "PCIe Gen.3 x2 link up" at 3.4 s,
-> >    ath12k and Bluetooth working, Wi-Fi connected.
-> > Without the change, neither kernel enumerates the endpoint.
-> >
-> > The culprit was found by bisecting v6.17..v7.1, with the DTB and
-> > .config held constant.
-> >
-> > Fixes: b921aa3f8dec ("PCI/pwrctrl: Switch to pwrctrl create, power on/off, destroy APIs")
-> > Closes: https://lore.kernel.org/all/CAPjyS8dY0Q_o3XmFjuKZZsjhzhoSNL+ZGJtw5cQt8HiV3sUtxA@mail.gmail.com/
-> > Cc: stable@vger.kernel.org
-> > Assisted-by: LLM
-> > Signed-off-by: François Roux <franzelfranzel@gmail.com>
-> > ---
+Ciao Thorsten,
+
+Thanks for looking into this regression as well.
+
+On Mon, Oct 12, 2026 at 02:00:18PM +0200, Thorsten Leemhuis wrote:
+> On 10/4/26 18:29, Sasha Levin wrote:
+> >> In Debian Erik Brangs reported that after the update from 6.12.107 to
+> >> 6.12.111, specifically with the backport of 980084de4d9b ("Bluetooth:
+> >> btusb: Add ASUS USB-BT540 for Realtek 8761CU") Bluetooth is not
+> >> anymore working, the full report is found at
+> >> https://bugs.debian.org/1149377 .
+> >>
+> >> | [   38.138881] Bluetooth: hci0: RTL: firmware file rtl_bt/rtl8761cu_fw not found
+> > 
+> > The stable code matches mainline. The failure is a missing firmware file:
+> > rtl_bt/rtl8761cu_fw.bin has been in linux-firmware only since 20251111,
+> > and Debian trixie's firmware-realtek 20250410-2 does not have it.
+> > 
+> > Marcel, Luiz: could you, or Christoph Zwerschke as the author of the ID
+> > commit, send an upstream revert, or a fallback to ROM firmware when
+> > rtl8761cu_fw.bin is missing? Stable will take it for 7.2, 6.18 and 6.12
+> > through the normal Cc: stable route once it is in mainline.
 > 
-> Mani: this looks good to me, any objections to me queuing it for v7.3?
+> Hmmm, that was a week (granted: with the LPC) ago and nothing happened.
+> Anyone working on this?
 > 
+> If not: Should we revert 980084de4d9b and its backports? Or only the
+> backports to older stable series?
+> 
+> Strictly speaking it should be the former due to our policies wrt to
+> firmware -- but I guess most users of a more recent kernels also have a
+> newer firmware, so I wonder if reverting the change might do more harm
+> then good now.
 
-No objections from me. As the commit message stated clearly, we no longer need
-to rely on firmware configured state.
+If my understanding is correct from a earlier fixed regression in the
+ariea, aka
+https://lore.kernel.org/regressions/0fd8c1c9-7f56-4bcb-a727-e4386d8ef094@online.de/
+should then not only 980084de4d9b ("Bluetooth: btusb: Add ASUS
+USB-BT540 for Realtek 8761CU") be reverted, but as well along
+6f0624b4427e ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek
+8761CU") and as well 4a23ce935f74 ("Bluetooth: btrtl: Add the support
+for RTL8761CUV")?
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Salvatore
