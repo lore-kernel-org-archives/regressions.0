@@ -1,38 +1,55 @@
-Received: from mta0.migadu.com (out-219.mta0.migadu.com [91.218.175.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E74A2D9ECB
-	for <regressions@lists.linux.dev>; Sun, 11 Oct 2026 23:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054EC44238B
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 07:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791761065; cv=none; b=W+vA89Y5kDrWg1JPZSOjnN/27UyN0ZB4um0JFFqlzsFNEHpJdcIRcmCZrrnIsut7P+Bs/vRHyypiZg1qGgOttf5EDWtzpuMa+mftZ2I3ycUkMzRkPY7bxG1G3LzSndFiLVF/dhOt/TOD4S0tsRuXYfCO8f6idQ0TuSS6AESzM2M=
+	t=1791788878; cv=none; b=t0VYK6rpmIkiwOdr2lqZ3dgcEEul4F/MdPJUExk6E1SSekfNRrq1/boAz8RqimPNeK3fUL/A1PQJ2me/RvvTRFEoQ4WXFqfDK92YlqVz0eFCzjW1nhjDWasFuZ7aC2uCtzZO6C0S07pe083c+5JfvabAprMbkY5JP1z7LRSzwx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791761065; c=relaxed/simple;
-	bh=m3BnwrsBCC4fx6HgcsIF/WVlyi1eQ5XkT/eV2797Vq0=;
+	s=arc-20240116; t=1791788878; c=relaxed/simple;
+	bh=i5BIRVAPpniOISGJ/i5CsM5ZpN/mj5rHCcHGicli75k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KKRnsVDRwzzN1bP04llRU4AtpBCZ1wz/I4kVIfbjGAFs71MQXvFRQzeKy/tM1CMBXbpuQnRiG7N1MzknIUEjCAfNcsWjCAw4d/iPJvP3PQeL9f+MjpVQq2iJuVPRMvZQQtw0VoQYBkOHxZHzkM6wxsCA9MmGtEYFX3SawyJDNAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz; spf=pass smtp.mailfrom=gamesplit.cz; dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b=PgFwjlni; arc=none smtp.client-ip=91.218.175.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gamesplit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gamesplit.cz
+	 In-Reply-To:Content-Type; b=N68HBoKPXM57G5Y4yWnuwsI/5wdW03NLqTijLZU5Rfl+n26wvKkAtrK2OlCL6bz+v2TfrijmlWRJgXyHvRw9Rm9ZLXYc85L4gVJy+I///vwd3bhGFA1pUPVA1l6SOCxJ8Z0HfDv0HYluFwy+A8ksLtNeG3mCFgjEhTuBZZkpIB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=KEGgUBw5; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gamesplit.cz header.i=@gamesplit.cz header.b="PgFwjlni"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=m3BnwrsBCC4fx6HgcsIF/WVlyi1eQ5XkT/eV2797Vq0=;
- c=simple/simple; d=gamesplit.cz;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791761056; v=1; x=1792365856;
- b=PgFwjlniIPxc5fdT2+g4rWmjHWsdcOHr16R3vo+Qoe1YnvO3qzF2g8rAyeQcLpA9ytvXhUgm
- yNzErdrTtFObfjBbd/ahd0stkkUg8NdxpVY4qtSYFyxLTAeWQpW9dPc3mDA173TzdbwfegZ7GQl
- MpDrt7tRzTilIgJoJRTJpafIDZ04q5KvIfRz+zbwwesJ5+UEUv71UFVbHLL9YL6u99vtZ3hcuxl
- ACqzRW9QXFxt2W3S8hDswlgYL4gNwk2CRoL4/iTtGAlV7c5jCC2g+9xgaKZcJFYWyusEV0lMS+k
- IN3QNYqmNK40bNuuoMZPb21zfq29eW5souFMzx/G/ysgg==
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 5c0e0f3868ab07ac;
-	Sun, 11 Oct 2026 23:24:16 +0000
-X-Mizu-Trace-ID: 5c0e0f3868ab07ac
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <787cd8e0-d0f4-46c2-96ce-3920cffecc2a@gamesplit.cz>
-Date: Mon, 12 Oct 2026 01:24:15 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="KEGgUBw5"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j37p961tyz4CN8;
+	Mon, 12 Oct 2026 09:07:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791788865;
+	bh=i5BIRVAPpniOISGJ/i5CsM5ZpN/mj5rHCcHGicli75k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KEGgUBw51XKEHFsoKPSUYd0h0P1wwCRlCi6pUAg1GQkOLWsAyXDh0gcIQlHTAfnvB
+	 Mf10nBTYRpdKrFl46l6TuNn/836VNoQV40OcXjZgZshcYNG5uT88FPeeWQL4rEvLCd
+	 F46CR508UtmGXuOfIDlnc+I3RZE2XPpquUOSwvRye8tHY9bkMQXiRbKCHCSd85Ff+/
+	 rdGIEgPIj0eXKCXCWFryMSNwVXLSTKpqhNqe1Pmq0oE9KiKSg6dobxh4+yPl9pPOia
+	 1OZUM+tbQGNLWdmP5EdcbG4BNyEqCMm/4BqASsXkjiIkpDMZdaJMJwTyyhlKK78IkD
+	 sj5zLEp+AFivg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j37p94l9Xz4CFN;
+	Mon, 12 Oct 2026 09:07:45 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j37p86G9nz8tfd;
+	Mon, 12 Oct 2026 09:07:44 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 98C085FA1C;
+	Mon, 12 Oct 2026 09:07:35 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <a64dc5d0-eb09-4482-b8b3-16d8d015e2bc@leemhuis.info>
+Date: Mon, 12 Oct 2026 09:07:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,68 +57,80 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HID: logitech-hidpp: commit f0866517be93 breaks
- hi-res wheel scrolling over Lightspeed receiver (G903)
-Content-Language: en-MW
-To: Lauri Saurus <saurla@saurla.com>
-Cc: Jiri Kosina <jikos@kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "jkosina@suse.com" <jkosina@suse.com>
-References: <9950dea5-ccff-4ca1-a7ab-98e2b494a284@gamesplit.cz>
- <pI2--urSOUMdyRKpMPDftneDAGdGm05IPF8Xt8FhYnOLhbErUDQRh_6Yq1wqKW6559W2APlI2QtM03TJOrjRobiIoUSsMOrutYfyZP0W3OY=@saurla.com>
- <dfbc41ec-7200-4178-9bc2-a8b4d6b9654e@gamesplit.cz>
- <Qcqpyk51pmEh4pab4ob63O_xwOfVnMZbRigEHshfaClUdXYlQgHvsdGqCqGyI8o8XctHqVSDpoTW5Ngsyz03wlX9ghiv8dpLREphQW8Gppg=@saurla.com>
- <d9ec6806-e5e9-46c0-9b66-d35f26e5fb51@gamesplit.cz>
- <WWHkaf8Fk3zaWHcBeGqqPKAYV1H_94FretNmyieXeN_Tqk8zTSw98uJYmTYRSDZbIjPfSGLQynGQXq4c9lAqDx19B1s7cbXCgJxgKEG_dW8=@saurla.com>
- <cb961991-b746-4f8f-bb76-c597b35a908b@gamesplit.cz>
- <pFprW5RFjs9iH705M5zdueiM6SNAbThCFeYaiQxtN2yUUCdthyn0YY0ZZGdbQFMIbR598puKKBU0E3X6pEwMPpiczEO8pk1vayojyY6EEwM=@saurla.com>
- <20954143-d35e-4d08-8e9e-1a7be0ff2343@gamesplit.cz>
- <s3TGXgN0OxCsL9qEsHjcTAFxET86V72Zbk3JlqOByNHJrfX8MbSfi-MxH6yP_JYXEtV1_7EmqZMQU8xaRG8PEZmRTrNGvLZV7RsrFbxIfPQ=@saurla.com>
-From: Frantisek Musil <lister@gamesplit.cz>
-In-Reply-To: <s3TGXgN0OxCsL9qEsHjcTAFxET86V72Zbk3JlqOByNHJrfX8MbSfi-MxH6yP_JYXEtV1_7EmqZMQU8xaRG8PEZmRTrNGvLZV7RsrFbxIfPQ=@saurla.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] i2c: qcom-geni: Fix hardcoded clock index in
+ SE_GENI_CLK_SEL
+To: Birk Skyum <birk.skyum@pm.me>,
+ Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
+ Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
+ Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+References: <179173732257.29426.7905170638383807320@pm.me>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <179173732257.29426.7905170638383807320@pm.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179178885607.2571480.10778353119121245415@mxe9fb.netcup.net>
+X-NC-CID: 8Q6MsXqw5AlrJChlWYXUT1ubh9yG509Hi9+8C29qBzL9iKyaUA0=
 
-Hi Lauri,
+On 10/11/26 18:48, Birk Skyum wrote:
+> 
+> This change takes away the built-in keyboard and touchpad of the Lenovo
+> Yoga Slim 7x (x1e80100). It reached stable as 139efdb3ee6e in 7.2.9,
+> and with it the laptop has no keyboard, also at the disk passphrase
+> prompt.
 
-> To me this sounds like you might have the scrolling speed set too high at the desktop/compositor/browser side? This would explain why commit f0866517be93 made the lo-res feel too fast also.
+Not my area of expertise, but from a quick look it sounds a lot like
+this will be fixed by this with will likely be fast-tracked to stable
+once mainlined:
 
-You were right, and I'm sorry for all the noise - this was not a kernel 
-bug at all.
+i2c: qcom-geni: restore tSCL with 32MHz I2C fast-mode
+https://lore.kernel.org/all/20260929041444.9837-1-daniel@quora.org/
 
-Root cause: in my KDE config (~/.config/kcminputrc) there was an 
-explicit per-device override:
+Could you take a closer look please and maybe even confirm?
 
-   [Libinput][1133][16519][Logitech G903 LS]
-   ScrollFactor=7
+Ciao, Thorsten
 
-It was almost certainly something I set myself months ago, back on 
-Fedora 42/43, to compensate for the old kernel bug you described - where 
-low-res mode only sent one REL_WHEEL_HI_RES event of value 15 per click 
-instead of 120, making low-res feel extremely slow. Cranking the desktop 
-multiplier to 7x made that old, genuinely slow low-res usable again at 
-the time.
+> With the change the first transfer on the keyboard's bus fails.
+> 
+>   geni_i2c b80000.i2c: Bus arbitration lost, clock line undriveable
+>   i2c_hid_of 1-003a: failed to fetch HID descriptor: -11
+>   i2c_hid_of 1-002c: failed to fetch HID descriptor: -110
+> 
+> The touchscreen on a80000.i2c keeps working. Both buses are set to
+> 400 kHz in the device tree.
+> 
+> To narrow it down I took a 7.2.8 kernel that works on this laptop and
+> replaced only i2c-qcom-geni.ko, built from the same tree. It is a
+> distribution build of 7.2.8 whose patches touch neither this driver nor
+> qcom-geni-se.
+> 
+>   7.2.8 driver                                keyboard works
+>   7.2.9 driver (its five qcom-geni commits)   keyboard and touchpad dead
+>   7.2.9 driver with 139efdb3ee6e reverted     keyboard works
+> 
+> One thing I can see from the outside. The driver does not set the rate
+> of the SE clock. Without the change clk_summary shows the clocks of the
+> I2C controllers at 19.2 MHz, so the 19.2 MHz table is used and
+> SE_GENI_CLK_SEL is 0. With the change the same clocks read 32 MHz.
+> 
+>                                       without     with
+>   gcc_qupv3_wrap0_s0_clk (b80000)    19200000    32000000
+>   gcc_qupv3_wrap1_s0_clk (a80000)    19200000    32000000
+> 
+> So as far as I can tell these buses now run from the 32 MHz source with
+> the 32 MHz table. I have not found why that fails on b80000 and not on
+> a80000.
+> 
+> I have not tested mainline, which carries the change as cb97bf3d4f91.
+> The same backport is in 6.18.y (5815329988ac) and 6.12.y
+> (f5d0302416aa), which I have not tested either. I can test patches on
+> this laptop.
+> 
+> #regzbot introduced: cb97bf3d4f91
+> 
+> Thanks,
+> Birk
 
-Once commit f0866517be93 fixed low-res to correctly send the full 
-120-equivalent per click (matching hi-res), that leftover 7x multiplier 
-was still there - so now BOTH hi-res and low-res get multiplied by 7, 
-which is what made everything feel "extremely fast" on my system. 
-Nothing to do with your commit being wrong; it was doing exactly what it 
-should.
-
-I reset ScrollFactor to 1 (default) and scrolling is now correct in both 
-hi-res and low-res, on the stock kernel, no reverts or patches needed. 
-Also confirmed with a clean VM (default desktop, no
-ScrollFactor override) that scrolling was fine there the whole time, on 
-both old and new kernels - which is what first made me suspect a local 
-config issue rather than a kernel regression.
-
-Sorry for the wild goose chase, and thanks a lot for the time you put 
-into this, especially writing the debug patch and buying a G903 to test 
-with yourself.
-
-I've got a handful of other Logitech mice lying around too, so if you 
-ever need testing on hidpp wheel behavior on different models, happy to 
-help out.
-
-Frantisek
