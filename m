@@ -1,72 +1,122 @@
-Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582C33F8707
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 12:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C03445FFDF
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 12:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791807932; cv=none; b=U4tttIYxuuv2s57MFOajuXeEi+MPbV6F88YCp/9BiLmnRBwiw2gpn/qI+DrGmdp3Aqio6g75pvHvgKxcT3wD0TBn3aFLR3COi/n7LRkkSK6dFPdE9XisemL9BqLwCPd9GEJxPlOJNJbEJ/wHkZAvN/FMyyj34lZ/6OpSE3kmlfw=
+	t=1791808740; cv=none; b=ryz1JSJrO92ZM58Bei/jJLueF7loWZ59gJxDJauff2QP+8R9JmukLzgOEZim+dpzwwcK3Hr7SjhkVCOGB7Ouyyaq8pgVgka3qlMjsanrMPixSdBqj5DdLx+EdRQVQHBHPLefzPj/FpXhqRKnhFznpEwN6tlhKCdyUw7pn9pXQYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791807932; c=relaxed/simple;
-	bh=+tyotRnLu0g1WmKLBehpS2t6CZeerzYl834hP2cfgEc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DrKyFIWdLMFIlkkcIJOctSiTfbjhgXetaEKASGJAcCO1gTNXT4eIAjraU33on5aUV1pn1XoUoLaYDv4egb0haMAuqmN5Mq5s3A61MkyDThvHAM6dE/O4AAiPJcpMri8PgQdpZSQyArQeR+8Ji21tcj5UnsAZHr3CdxthR8C3p/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=pNbs+mro; arc=none smtp.client-ip=109.224.244.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1791808740; c=relaxed/simple;
+	bh=GADo4kEjTcatUcLLb20qz0T3U/mE0RvVELXnPDPVbPM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=EkjsYe865WGFk5qErFr5icVZcwTcJrIAQ7vpU0RlxSI/ColKPRjELXCPF6uMNRldRIVZQP/uAWVvtr7NnnaJwyr4tLr7enlXQAIU1TEGQfxy/IAUzxLPFhPvLwu55zl2s28OmdxJF+z/j9NZEglh9PTXFlBtL0cQKETi6tDs7Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ALCwnMJT; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="pNbs+mro"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1791807929; x=1792067129;
-	bh=+tyotRnLu0g1WmKLBehpS2t6CZeerzYl834hP2cfgEc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=pNbs+mroBU1EfxQM4PN714I20bY8vpLfcS2CEjISbdafyXfP/3O/Es8PIYe0b6KXe
-	 NPb3JESJz/6pif7ltkKeZghh/H3OmVBr/bP3GsrfIYLZjMxHuUIq+xykYzgbf8r6vX
-	 miIGka/pZYahCX80u3MgkSrIJSBmNGgHfDscejeXJ+lvz5ret6CRjbhPXrEV8REL9z
-	 zj/nOukLRh9HleN0ScHRR6BBOLA1HbjxoUVsIszX/fyJ23ihNoU/0s8bVFzyX8VEh2
-	 kmSIEHBx99GwbzeY2bJtdK2WKc7XrCqJTmUXkU8eDESxZzVP78QbACiy9SmOk4SRAO
-	 qUh6mdAZQgNmg==
-Date: Mon, 12 Oct 2026 12:25:25 +0000
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-From: Birk Skyum <birk.skyum@pm.me>
-Cc: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>, Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>, Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v2] i2c: qcom-geni: Fix hardcoded clock index in SE_GENI_CLK_SEL
-Message-ID: <179180792331.14777.16389002783262980921@pm.me>
-In-Reply-To: <a64dc5d0-eb09-4482-b8b3-16d8d015e2bc@leemhuis.info>
-References: <179173732257.29426.7905170638383807320@pm.me> <a64dc5d0-eb09-4482-b8b3-16d8d015e2bc@leemhuis.info>
-Feedback-ID: 21326998:user:proton
-X-Pm-Message-ID: b5b7e05147e20ddb6d3421be287e44ac8c51055b
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ALCwnMJT"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j3H0j4N9Jz9GfV
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 14:32:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791808341;
+	bh=GADo4kEjTcatUcLLb20qz0T3U/mE0RvVELXnPDPVbPM=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=ALCwnMJTLX03zfmcsgorszI0stZvv5XUVYiNB7/62V6NOjzsLdXG9X5DmZYQMQXJE
+	 WEZ/TTmEMC0durzSUT5DeFqBJssOYAp02mPWRQROLu3itZ8LMwKrWTvE8IovlMj7vu
+	 y5QWvZseXfQQK6EwbF96Bf3GJ7NVEf2e7VgHl9WfLa8sLteFLF6/JJU3Ao90nR3gWI
+	 T00I0oydIzBLR+oyf+yWiSqI9lkUOfGAoD65rwfsQ6S1XPAP03HgeyZ97wK/dDO4o+
+	 0T2YmQBBGEafITpny18spASw1ZsxHvZCirMctNLLTVtJ7covEjnCOCcnXRv5kMTsxw
+	 lGPMVY7ulx59Q==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j3H0j3jXhz7wCk
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 14:32:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j3H0j0DKhz8tfT
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 14:32:20 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 535875FA0A
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 14:32:20 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <c4ec7d7a-928b-4cfb-b653-e33795ae6337@leemhuis.info>
+Date: Mon, 12 Oct 2026 14:32:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179180834051.3631506.3318153970074122218@mxe9fb.netcup.net>
+X-NC-CID: b6BvDZ7FqB4qD3p5esLioKU8vIfygg94S8SAQXDId32U+oEC5Ok=
 
-On 10/12/26 09:07, Thorsten Leemhuis wrote:
-> Not my area of expertise, but from a quick look it sounds a lot like
-> this will be fixed by this with will likely be fast-tracked to stable
-> once mainlined:
->
-> i2c: qcom-geni: restore tSCL with 32MHz I2C fast-mode
-> https://lore.kernel.org/all/20260929041444.9837-1-daniel@quora.org/
->
-> Could you take a closer look please and maybe even confirm?
 
-It is the same problem, and that patch fixes it here. Thanks for the
-pointer, I had not found that thread.
 
-With the 7.2.9 driver plus the patch the keyboard, touchpad and
-touchscreen of this laptop work again. I have sent a Tested-by to that
-thread.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-#regzbot monitor: https://lore.kernel.org/r/20260929041444.9837-1-daniel@qu=
-ora.org/
+#regzbot report:
+https://lore.kernel.org/lkml/20261010064407.11030-1-yiyu@yiyuzhou.io/
+#regzbot title: usb: xhci: devices drop off the bus and might be dead
+until reboot
 
-Thanks,
-Birk
+#regzbot report:
+https://lore.kernel.org/lkml/20261011.cachefiles-partial-zeros.pchmelar@innovatrics.com/
+#regzbot title: cachefiles: reading a file whose cache object is only
+partly filled returns wrong data
+
+#regzbot report:
+https://lore.kernel.org/stable/CANBVYRCL=8QdLxGg4S6qrahrFtwJxhv-aSGpW7-1S=%2BiOe4ZGA@mail.gmail.com/
+#regzbot fix: a154f7b9f197b3
+
+#regzbot report:
+https://lore.kernel.org/lkml/CAAuFnRTyva1_3tsF3vrMBL%2BTLS1YL4EgUPT2c3O9k7A9hWUMnA@mail.gmail.com/
+#regzbot fix: 87db7795cbaa
+
+#regzbot report:
+https://lore.kernel.org/alsa-devel/DM6PR02MB5433F3C2A156335B6ED47756EA8E2@DM6PR02MB5433.namprd02.prod.outlook.com/
+#regzbot fix: 4fa0c91c2c4c
+
+#regzbot report:
+https://lore.kernel.org/regressions/e7087d42-5e74-4d85-b1c5-b11eff235d41@web.de/
+#regzbot fix: b5c4823cf3e49b
+
+#regzbot report:
+https://lore.kernel.org/lkml/CAC2BP3LyU5Qc80YTk7nq4vS96QKiufyAAdkNjVMr_DvcO=9K8w@mail.gmail.com/
+#regzbot fix:  0a04c0cb8606
+
+#regzbot report: https://lore.kernel.org/lkml/asXipik00P2Oa1Zo@kernel.org/
+#regzbot resolve: low priority, as it is a combination of an opt-in
+option (kho) and a hack (memmap=)
+
+#regzbot report:
+https://lore.kernel.org/all/179173732257.29426.7905170638383807320@pm.me/
+#regzbot fix: i2c: qcom-geni: restore tSCL with 32MHz I2C fast-mode
+
+#regzbot report:
+https://lore.kernel.org/platform-driver-x86/CAO84%2BxJLVW_9_D9-8cwJYv_Vz%2BLK7nJqRaG-1P4_eeLrQmSiWw@mail.gmail.com/
+#regzbot fix: platform/x86: asus-wmi: fix screenpad power state detection
+
 
