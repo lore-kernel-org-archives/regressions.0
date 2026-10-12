@@ -1,113 +1,103 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C104ABBC4
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 15:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83CC4A8A39
+	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 15:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820367; cv=none; b=db6+0GO/3qzRGDmSQ5g+geBypBpGJqV6sLdl3dmSSzIAbwzO8xOYRKNmw7eQc1KNeIr3qG741fpyhfzKTAvSS1A4Vl0UOtkPmPQpue3Rrkwkb6hqEa9FNZGfrqyblxa0XGc0UirgJoM0WYCeNGewLCZD7A4hfUru2NSVZCJg0vU=
+	t=1791820571; cv=none; b=GN/uH6f7z8jVoST+yNOB8gaKaroPjkAmbbv1hKTNdFZsspAOmn4mK0lBsRmJHvyhhJPJ2q8c5A5eeOdaaXCmUu+2PUUkP9yNGh3Vu8TXYmzn0pioKbvoIh2xwK8nzvHYZ6mvWIwBPlOrXEDU/RMm73CLN4q7BCEXgxZkq07GJX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820367; c=relaxed/simple;
-	bh=hygyd5zmMGXvFm7+2BspxyK/OLvbvLr1S1Fr2zHUSPU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=psl1Hwr7xSeZMLnjz8VoYit4VCGfaHLASdMLMeHDxRMI94uh8dulb5VJ4pAcEAJSWrgJHzcNLHNdntiuI3fRtzmyqSU6e9Puff4myQN5nG8IMumCQWgZDl42AEYERk8ipZabMC3n1uOI1AJnnAymxQ7hDxUEtJGy4dl2J1BQwDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WnUu+Lla; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1791820571; c=relaxed/simple;
+	bh=F8TxNbzPoPpeOKAIMlDONgvTVGQu2v1xJvBOhBytrPA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=s89LGIurxcj9mvhoPmquUATKslGQzunkSs+X3b1u9rs/HXk2arSi0sFOvJMUeWo9kuoFF8mIVtyrtK0clCpcQna8VtVNQlfTcZOb7lAtmFINGMIEv5yPEEF46XIYHm0OgVlw8oY4gbFb6ZuyJrDpCilk/UzOgqBih5ZyVE7qUmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlrli8/w; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WnUu+Lla"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j3MRv3gLcz9Ly1;
-	Mon, 12 Oct 2026 17:52:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1791820363;
-	bh=hygyd5zmMGXvFm7+2BspxyK/OLvbvLr1S1Fr2zHUSPU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WnUu+LlaEqfFte+mag0SfeGGibZt+e2gjIn83vS1VlrKCxF/k337Un/jr4+HesNjN
-	 QeWLH6AAn5iPQ6BRAnb3X7L3M791TCKUNrv3SgxVhHOhZC+vozGMKVTZ0den+SS0rx
-	 Nc+iC1LIiW+e54b6gw6UZ9OP7/cDwCKZ1M89v70jt+/3jkVZ57U6+sC1eOIzN+Vojx
-	 doRWy7vme4tup2Ou3NtKvYKu7aAzO2U1SGftqfbpGiGNPjMJ5O1v8EPDH8Jq9zZpPp
-	 BRZsJqQUoat8uwzGcIdqFiVGbPXYy+HGYDMdf+n4lVmxQeSExrHGPSMz6y/BQVbYt6
-	 r6rK+gQbeC68A==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j3MRv2zTXz7wZy;
-	Mon, 12 Oct 2026 17:52:43 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j3MRt5hk4z8svT;
-	Mon, 12 Oct 2026 17:52:42 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3330D5FA0A;
-	Mon, 12 Oct 2026 17:52:42 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <e320fab5-d4d4-40fd-b032-d64554e5c0b0@leemhuis.info>
-Date: Mon, 12 Oct 2026 17:52:41 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlrli8/w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791820570; x=1823356570;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=F8TxNbzPoPpeOKAIMlDONgvTVGQu2v1xJvBOhBytrPA=;
+  b=dlrli8/wvbhatkTRWXqIkzTp+MOhqYSajVHTY+SEd5mmMK3cr+6KcUrD
+   KUg6vrEm9PeI0Oqhx/C0qWNMGZMoc/AaXsWghWHAE3EBtkOr2E6O4bblx
+   ZGkk6fs2nc0uJtGDtwVc1ObbRQacJL4CMT5IM5TP8miw6op0S5Vdud+A/
+   TZ2/mmRW1GSK9/BlhNrv5ThixfT862D0YGgBOKwuzBVhoOf+T5OLiwyHK
+   pHGmCf/fmUaamcCRghcFIzgf9y3vkkalJrMNpN6VldU5HIpbYQMn0JKfg
+   3T9PkWLmENw80KdPVVIf87LZr15SJHf2Hv4d7eRqyoCNwrzAM1f5PcuXo
+   g==;
+X-CSE-ConnectionGUID: LGSkvW0SQ7+5ZIbZoPrZ0A==
+X-CSE-MsgGUID: eLlmfEPjQrSEj/fb+n27Qg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="625463"
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="625463"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:56:09 -0700
+X-CSE-ConnectionGUID: ebtEE5rbREmyhX9hYdD/XQ==
+X-CSE-MsgGUID: voR0x8qcQeW2r36sxaKJHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="970372"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 08:56:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?utf-8?q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Qiling Zhu <kmatzkaczor244@gmail.com>, 
+ Oleksii Kryvenko <diver.ua@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20261010031827.3306077-1-dmitry.torokhov@gmail.com>
+References: <20261010031827.3306077-1-dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix deadlock in hotkey
+ input open/close
+Message-Id: <179182055606.17897.2748712319508628576.b4-ty@b4>
+Date: Mon, 12 Oct 2026 18:55:56 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] iwlwifi IO_PAGE_FAULT and Master Disable Timed Out
-To: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>,
- Chris Bainbridge <chris.bainbridge@gmail.com>,
- "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>
-Cc: "Berg, Johannes" <johannes.berg@intel.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <amzVtgQb2p-_nShU@debian.local>
- <DS0PR11MB78800B96A0FE637DC5390E4AA3D62@DS0PR11MB7880.namprd11.prod.outlook.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <DS0PR11MB78800B96A0FE637DC5390E4AA3D62@DS0PR11MB7880.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179182036254.916946.193245867647113137@mxe9fb.netcup.net>
-X-NC-CID: O65oeUgYbdELQmmjMuZizHrhAiH0KDrimmTzhhciNC9tT/bRvUE=
+X-Mailer: b4 0.15.2
 
-On 8/2/26 09:24, Korenblit, Miriam Rachel wrote:
->> -----Original Message-----
->> From: Chris Bainbridge <chris.bainbridge@gmail.com>
->> Sent: Friday, July 31, 2026 8:05 PM
->> To: Grumbach, Emmanuel <emmanuel.grumbach@intel.com>
->> Cc: Berg, Johannes <johannes.berg@intel.com>; Korenblit, Miriam Rachel
->> <miriam.rachel.korenblit@intel.com>; linux-wireless@vger.kernel.org;
->> regressions@lists.linux.dev
->> Subject: [REGRESSION] iwlwifi IO_PAGE_FAULT and Master Disable Timed Out
->>
->> 0eaa1f245ac0 ("wifi: iwlwifi: mvm: don't support the reset handshake for old
->> firmwares") introduced an intermittent boot regression on my laptop:
->> [...]
-> 
-> Yes, seems like you are right.
-> Thanks for the report!
-> 
-> I am attaching a fix candidate, I'd appreciate if you could test it.
-Miri, Chris, what happened to this regression fix? From the outside it
-looks like it fell through the cracks, but well, it's easy to miss
-something from there, that's why I'm asking.
+On Fri, 09 Oct 2026 20:18:24 -0700, Dmitry Torokhov wrote:
 
-Ciao, Thorsten
-
-> From 825098f2de2bc63e5ce180213d9fad040f644fb2 Mon Sep 17 00:00:00 2001
-> From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-> Date: Sun, 2 Aug 2026 10:16:13 +0300
-> Subject: [PATCH] wifi: iwlwifi: mvm: properly check the FW version
-> Organization: Intel Israel (74) Limited
+> Commit d6479c25ecef ("platform/x86: thinkpad_acpi: Use
+> input_device_enabled()") changed hotkey_poll_setup() to acquire
+> tpacpi_inputdev->mutex and call input_device_enabled(tpacpi_inputdev).
 > 
-> The mentioned commit aimed to disable fw reset handshake for FWs which
-> their API version is less than 77.
-> But the check is incorrect: in the old format, we should use
-> IWL_UCODE_API, and for the new TLV format - fw.ucode_ver.
-> Since iwlmvm handles only FWs with the new format, we can always use
-> here fw.ucode_ver.
+> However, the input core already holds dev->mutex when invoking a
+> device's open() and close() callbacks. Because hotkey_inputdev_open()
+> and hotkey_inputdev_close() call into hotkey_poll_setup(), attempting to
+> acquire tpacpi_inputdev->mutex again results in an immediate
+> self-deadlock.
 > 
-> Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
 > [...]
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
+
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: fix deadlock in hotkey input open/close
+      commit: 16a7b5e0e4e3ba9997658b218559fff7ac1ccfb3
+
+--
+ i.
 
