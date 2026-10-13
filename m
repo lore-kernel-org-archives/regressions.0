@@ -1,82 +1,75 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DC32EA749;
-	Tue, 13 Oct 2026 04:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A8B39F162
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 05:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791867434; cv=none; b=Gk0zJQXvXBUo8uuprCNCX69AYeD1mMk1Kpqx1rZrqNqXxMw7Ovz+HvDkLQFYRqFxGrG9oX4s3UmfyYmOX5neRbXTheAq33L6fnW/yFBzSj99KRUUsL5gRewnupDO4OqU8rzGXPY+iuebz5iIcKheVDAwBf+2e/sTon2hYox1Olo=
+	t=1791869705; cv=none; b=oZX8RMFuQba2wkOSwH2z8EHxt1cWF1vL1Xb1vljAYTz7IwlvHcffjkLd83VI6T5SUuad4zHndgMK9BgsOCPJrKEFIzl0ffwC0m8a9CFiVxXV0XTA3nT22qIDg+7KCtHveMG5xBWDpqQUqOZ8xnOk1+0r1bb7+rCNX9EoY4Ot9Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791867434; c=relaxed/simple;
-	bh=m7WD5JVyztuBXOQBNShzaLvDDxmsGU7L1mNhyVgSFZI=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=KDdK+PmTnp50HD/uGRN3hBkQ9Q+umxogc9z3Yh1V5x/AWy0QR5squs4blil1r9f8LbeUFLtyAVXUUoR+GtNZU87zCy1d4g2C0xb5tKMMDHW8Z+gS3xS/yoTgqDEpbRUMlx8OpRX3Jilv1gYOx1FxrdvApaBu/NWrqyey7cs4YyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CPEhfc4Q; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1791869705; c=relaxed/simple;
+	bh=1VhxKLrhWBiAy0eAwQAwxIUNrjz/xoi3XdqEFckbF/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J2BQffV/ChYA/Mq57WOIa4mb94oOKuuzVHWoHabDOu0L7eDkz5++chH7s/iOhXLitOlBHx4RA830ZQTnglJ05mdJz0ydufP5UW04pfwlnqrL0QIYZTVxVy/exg6Ya5lYbnXpC1XXH4+C4L5bAnFTjnTXZDsBDzl40o3W3H8EmTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=FMXl4S0A; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CPEhfc4Q"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:46f5:32b8:ff94:7599:1aae])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 24A731E4;
-	Tue, 13 Oct 2026 06:55:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1791867308;
-	bh=m7WD5JVyztuBXOQBNShzaLvDDxmsGU7L1mNhyVgSFZI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=CPEhfc4QkfD4iHH26HwwSHtBZneKBryjhLrEz1fi+dEBlsk58Cat/QmwcqtsHP2OG
-	 joXijqXx/t1OnoBBApejg0x6aKIX8HSEVUB9xGaRHYe3kKFT+sz83fbSnEMCLOb38g
-	 tw+zoN4iYFKo6FsveVFGCRK34OrWQK2aDK4OQbAA=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="FMXl4S0A"
+Received: from mail01.layka.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 827F880DAC;
+	Tue, 13 Oct 2026 07:34:59 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id W4iAY6EFKXxY; Tue, 13 Oct 2026 07:34:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1791869698; bh=1VhxKLrhWBiAy0eAwQAwxIUNrjz/xoi3XdqEFckbF/Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=FMXl4S0AgM4goRxIIPr+lEbOKorOZe+jIOJOPiEXVxUkWXWrxu7bg1ut4r/ucwRsE
+	 iDEHlY0MQIwlqxfRFfys0nrEhVsrx3OLb0rCXoMrdazc4Xzuqvv/2T2BQwAgiExoCt
+	 5h8eDjR6lftXye9tsmS7JhVv3IpWH4w5hh4S9CNs12QGe59y7UfpvQ74dWu1dKUka7
+	 SiHZq1Kfx23KivJmdGVMYUUaXtePMLON5qUF8rbfY8aycQz1efLc7QmzuuQ0DAYeFh
+	 Dz7jtxGmFCMWi3kJlKCCepoIhZauJGWA3kkr8N+CHu8xQOCU0wXcxSDq/oQiNkvZDU
+	 3jrtmmocYfI+w==
+From: =?UTF-8?q?Ali=20Ahmet=20Memi=C5=9F?= <aliamemis@disroot.org>
+To: Charis Stratakis <c.stratakis@proton.me>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Armin Wolf <W_Armin@gmx.de>,
+	linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ACPI: battery: Re-read battery information in the complete callback
+Date: Tue, 13 Oct 2026 08:34:46 +0300
+Message-ID: <20261013053447.43175-1-aliamemis@disroot.org>
+In-Reply-To: <RzdkKLBwqo3DyCK02-SY8TzjXuAuqzmM5cuV7LddeKdLyZhPu_av9VmcP8a7ZE5Uzt1sJo4AoMaN9reZpMo6jSQ2P1G3ooDL1rn2atKO2O8=@proton.me>
+References: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me> <20261012225141.13683-1-aliamemis@disroot.org> <20261012225841.15260-1-aliamemis@disroot.org> <RzdkKLBwqo3DyCK02-SY8TzjXuAuqzmM5cuV7LddeKdLyZhPu_av9VmcP8a7ZE5Uzt1sJo4AoMaN9reZpMo6jSQ2P1G3ooDL1rn2atKO2O8=@proton.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a6b71984-cd0b-4e81-a240-ec05abc6327a@leemhuis.info>
-References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com> <a6b71984-cd0b-4e81-a240-ec05abc6327a@leemhuis.info>
-Subject: Re: [REGRESSION] bcm2835-audio fails to register on vchiq-bus in monolithic kernels since 6.19 (VCHIQ destaging?)
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: uajain@igalia.com, Stefan Wahren <wahrenst@gmx.net>, linux-staging@lists.linux.dev, linux-rpi-kernel@lists.infradead.org, regressions@lists.linux.dev
-To: Martin Wetterwald <martin@wetterwald.eu>, Thorsten Leemhuis <regressions@leemhuis.info>, florian.fainelli@broadcom.com, gregkh@linuxfoundation.org
-Date: Tue, 13 Oct 2026 10:27:05 +0530
-Message-ID: <179186742507.11414.3709235533520575164@freya>
-User-Agent: alot/0.13.dev38+g8e372ce37.d20260925
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Martin, Thorsten,
+On Tue, Oct 13, 2026 at 01:40:17AM +0000, Charis Stratakis wrote:
+> 18 of 20 on stock against 0 of 20 patched.
+>
+> Tested-by: Charalampos Stratakis <c.stratakis@proton.me>
 
-Quoting Thorsten Leemhuis (2026-10-12 18:53:13)
-> On 9/21/26 12:07, Martin Wetterwald wrote:
->=20
-> > After moving from 6.18.52 to 6.19 (still present in 7.2.6), the bcm2835
-> > Headphones sound card no longer appears on my Raspberry Pi 3 Model B Re=
-v 1.2
-> > (arm64). 6.18.52 works with the exact same userspace.
-> > [...]
-> > My suspect is this commit:
-> >=20
-> >   aa125180c673881f88b528600b57865dc158b3a7
-> >   ("platform/raspberrypi: Destage VCHIQ interface")
-> >=20
-> > I could not bisect to a single commit,
->=20
-> Hmm, no answer, so it seems nobody really cares. A bisection might help.
-> Or at least validating your suspicion, hence: why can't you check the
-> parent of aa125180c6738 and aa125180c6738 itself? Or at least the range
-> with that commit in it? And is latest 7.3-rc still broken?
->=20
+Thanks for testing.
 
-Sorry, this got lost in my inbox last month. It's likely my series that=20
-destaged VCHIQ broke the ordering as Martin suspects. I always tested with =
+[...]
 
-modules enabled so didn't encounter this issue.
+> Would a plausibility check in acpi_battery_get_state() be welcome for that, re-
+> evaluating _BST once and warning FW_BUG when capacity_now exceeds
+> design_capacity by a wide margin?
 
-I'll look into how we can ensure the VCHIQ bus gets registered before=20
-peripheral drivers (like audio here) when CONFIG_MODULES=3Dn. If someone=20
-already knows what to do, pointers are appreciated :-)
-
-> Ciao, Thorsten
-
-Thanks,
-Jai
+I'd rather not.  It only hides the absurd values and the plausible wrong
+ones still get through.  If the runtime race turns out to matter, taking
+BATM around the INT3403 _TMP on these two models would fix it where it
+happens.
