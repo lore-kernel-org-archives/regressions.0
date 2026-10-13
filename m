@@ -1,102 +1,179 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A535172E3;
-	Tue, 13 Oct 2026 16:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD43652269C
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 17:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791908840; cv=none; b=r3R9To4uyXFgPZ/tSI2izNuSQvmCCZk5cKxIzLvuzJhgOeBCtvqzgiPlF8hxM3uUa/zYSfx3jNmGmdWGjD904NpLUViGoS6eiqLIxxJvKOpnlaaw4w9cTcrjxdgch0sHrkfxOk+6PDGyl4OFYBF64l1IMRMDfTI7DcmUuxpUx+0=
+	t=1791912184; cv=none; b=io0kmydwOEqFUlhikbmgkpf1KaN26khW7cYKNXk5ALHTbxhfDKaPNRb0taLcZ5HrVT1NhQ8ZhfXuJqnj9IKezFo/1JjXxsAuonIKlaBo0JRwGCi6urOstbBA54LsA6VlUWupot5fvxijlPmDNn9/WSozYbXO5UZsiglrZ0nKNBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791908840; c=relaxed/simple;
-	bh=shKJgZGIZFLzoHitxdERk+7/62vgv0+CoGsFsHHoCMI=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=uz8nRdy6b7ITh5WEkDkN64JIhSolVDT5pIkWvsA185DoxkGXfDgQQ1F4Me0V+WlBeuEPuyyyehEzGd++9BvN0uo2R7GgQKAGxQUR+cX9ByjXuXox0CFeox3HNGAYa2cu0p9AXhLMNm0v0bY8gGizAYnyIaQkMyo7AGRVY/Pg3dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rgP43o8L; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1791912184; c=relaxed/simple;
+	bh=6oHp6iOgu3vSfUvFoKGR28aA37BnryUeRpYDhY2R2Vw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EHrvArwXSWmdcdKPsF6kjJQZa+qvaatR+xyq9b2s9cb08v8v5qhA7m40wvZk6TT8wWLqiPoUW39j7K/cV5BuxRebZi1Aomnz4dcMGH9HLSKb203vyoRRu/5XmuEskoMVcAZ7K/N3XayftKIQp7HPhQ/kG5XQweyWKwQArrRSsg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bM4vImJe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rgP43o8L"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:46f5:32b8:ff94:7599:1aae])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E2C34230;
-	Tue, 13 Oct 2026 18:25:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1791908714;
-	bh=shKJgZGIZFLzoHitxdERk+7/62vgv0+CoGsFsHHoCMI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=rgP43o8LhCvfC1SbvJSrRxJBUKppE11ZS1DuyXq90Y1itX2aXXxg9jpzh04btvdef
-	 PNIfKLPD9vUyQzBrktYA8hYLLCrX/1+e6tju1cWcO8Hq0DsYaUEamUaqy7i0aPNFd0
-	 8ZFsaEhLIF4rnDgE6xA2AYDNli+Tt/QAE6qLw4Mc=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bM4vImJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1AC21F00899
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 17:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791912182;
+	bh=58vcH4XOh3Uxb0/yHZpvGzQapqHFOqeDk7/phElXVhw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=bM4vImJeNOabcnbRhYbq9bIHyCVf6FStYaRomHk+BwpDrO8rxLv/G/eqw/PQT4a4O
+	 9zdDaMeFWhCffixJHEoQ6Q01mBo+I89j+lWWvCy4PB/z8l/10Bgo6hgo34ToVcVrI9
+	 Lzj1m/uhPzx5smipyd+L9dSHjKU/91/R1Q/wFVbcCRmCsP3dWI2LNSG3bpFYPuKExD
+	 +PfJTT7QOVaDF//gYqAjKu3nnXEGnLaCTOA0lJy0pSuWStN4EVTJNFIPls9OifnZsE
+	 JFwN3qFYqyRdnLx5JdVtMARHzUV+xTCOwQq5U9UFMW5wvo61rg264FFxbda+3yxpcZ
+	 LskmvOEsJjBXg==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5ba328513b9so2621380e87.1
+        for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 10:23:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzpL/d5F3MCkz1r3c/4ZrCx/eq91l0xdUGTy9wRIPi5JfJN6QGTkac422f9VUsbf51HCW1EXXr3at+hEA==@lists.linux.dev
+X-Gm-Message-State: AFq9FYImzjeIYhC5ynjQSRWF9ojs1OMPGbUHBQAP/X6vmcL+Jrh5zDt4
+	bI8zd2VcwQxLsJv6vVHLgcjWdsX/xg7F/Y05lV2ZtafwRym8PUf6AMfquPLrx/zsds5c3VTwrJP
+	BXHgjSUw7cfM03Ly5yNjYrrK5fXqu9+0=
+X-Received: by 2002:a05:6512:1389:b0:5b8:f3d5:f301 with SMTP id
+ 2adb3069b0e04-5bcde35148bmr4362168e87.6.1791912181025; Tue, 13 Oct 2026
+ 10:23:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me>
+ <20261012225141.13683-1-aliamemis@disroot.org> <fb993dd3-ee56-4e3d-aa16-573f011518f1@oss.qualcomm.com>
+ <CAJZ5v0gS4agVUkCO6M=VW4Wi2y1-s+k23bpzmX9aAZ0Rsv4z9Q@mail.gmail.com> <044e9df4-1399-4ceb-80f8-f7cfe031d04f@oss.qualcomm.com>
+In-Reply-To: <044e9df4-1399-4ceb-80f8-f7cfe031d04f@oss.qualcomm.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 13 Oct 2026 19:20:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0isCM3K3U6HSdDnvXzBX41AgQMFYxqLx3KvMA0W_91-ew@mail.gmail.com>
+X-Gm-Features: AclHuK8Dko4T7OiAi5h3jqpw8o-XWUajlqhmOiANoa1OJ9welDWIOCCTNuHuWCM
+Message-ID: <CAJZ5v0isCM3K3U6HSdDnvXzBX41AgQMFYxqLx3KvMA0W_91-ew@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: battery: Re-read battery information in the
+ complete callback
+To: johannes.goede@oss.qualcomm.com
+Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, =?UTF-8?Q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>, 
+	Len Brown <lenb@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
+	Charis Stratakis <c.stratakis@proton.me>, linux-acpi@vger.kernel.org, 
+	linux-pm@vger.kernel.org, regressions@lists.linux.dev, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20261013131435.1454019-1-martin@wetterwald.eu>
-References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com> <20261013131435.1454019-1-martin@wetterwald.eu>
-Subject: Re: [PATCH] platform/raspberrypi: vchiq: register bus at subsys_initcall
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stefan Wahren <wahrenst@gmx.net>, Phil Elwell <phil@raspberrypi.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Umang Jain <uajain@igalia.com>, Kees Cook <kees@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, Martin Wetterwald <martin@wetterwald.eu>
-To: Florian Fainelli <florian.fainelli@broadcom.com>, Martin Wetterwald <martin@wetterwald.eu>
-Date: Tue, 13 Oct 2026 21:57:10 +0530
-Message-ID: <179190883032.11414.8457896168331458036@freya>
-User-Agent: alot/0.13.dev38+g8e372ce37.d20260925
 
-Hi Martin,
+Hi Hans,
 
-Thanks for the quick fix.
-
-Quoting Martin Wetterwald (2026-10-13 18:44:35)
-> Since the VCHIQ interface was moved out of staging, its bus is no longer
-> guaranteed to be registered before its client drivers. bcm2835-audio,
-> still in drivers/staging, registers at device_initcall level and now
-> runs first:
->=20
->   Driver 'bcm2835-audio' was unable to register with bus_type
->   'vchiq-bus' because the bus was not initialized.
->=20
-> Register the bus and the platform driver at subsys_initcall so the bus
-> exists before any client driver, independently of link order. The
-> platform driver probe already returns -EPROBE_DEFER while the firmware
-> is not ready, so probing earlier is safe. When built as modules, this is
-> equivalent to module_init() and nothing changes.
->=20
-> Tested on Raspberry Pi 1B rev2, 1B+, 2B, 3B and 4B with VCHIQ and
-> bcm2835-audio both builtin and both as modules.
->=20
-> Fixes: aa125180c673 ("platform/raspberrypi: Destage VCHIQ interface")
-> Reported-by: Martin Wetterwald <martin@wetterwald.eu>
-> Link: https://lore.kernel.org/r/CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R=
-272j6Bs4tg@mail.gmail.com/
-> Closes: https://lore.kernel.org/r/CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio=
-5R272j6Bs4tg@mail.gmail.com/
-> Signed-off-by: Martin Wetterwald <martin@wetterwald.eu>
-
-Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-
-Thanks,
-  Jai
-
-> ---
->  drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c b/d=
-rivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c
-> index e78641703252..d35f5ac5c2e2 100644
-> --- a/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c
-> +++ b/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c
-> @@ -1462,7 +1462,7 @@ static int __init vchiq_driver_init(void)
-> =20
->  	return ret;
->  }
-> -module_init(vchiq_driver_init);
-> +subsys_initcall(vchiq_driver_init);
-> =20
->  static void __exit vchiq_driver_exit(void)
->  {
-> --=20
-> 2.55.0
+On Tue, Oct 13, 2026 at 3:36=E2=80=AFPM <johannes.goede@oss.qualcomm.com> w=
+rote:
 >
+> Hi Rafael,
+>
+> On 13-Oct-26 13:58, Rafael J. Wysocki (Intel) wrote:
+> > On Tue, Oct 13, 2026 at 11:33=E2=80=AFAM <johannes.goede@oss.qualcomm.c=
+om> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 13-Oct-26 00:46, Ali Ahmet Memi=C5=9F wrote:
+> >>> Since commit d33e89d12295 ("thermal: core: Suspend thermal zones late=
+r
+> >>> and resume them earlier"), thermal zones are resumed from dpm_complet=
+e(),
+> >>> before the PM_POST_SUSPEND notifier that re-reads _BIX and _BST. On
+> >>> ThinkPad P1 Gen2 and P53, INT3403 _TMP calls \GTST which switches the=
+ EC
+> >>> page selector (HIID) without taking the BATM mutex used by the batter=
+y
+> >>> methods. ACPICA releases the interpreter lock around EC accesses
+> >>
+> >> I'm wondering if this "ACPICA releases the interpreter lock around EC
+> >> accesses" is not the real problem here.
+> >
+> > Yes, it most likely is.
+> >
+> > What actually happens is that ACPICA drops the interpreter lock and
+> > the namespace lock in several cases listed in the
+> > acpi_ex_exit_interpreter() documentation comment, the majority of
+> > which involve having to wait.
+> >
+> > The bottom line though is that the interpreter and namespace locks
+> > cannot be expected to be held throughout AML evaluation because it is
+> > not known in advance if any of the cases in question will appear.
+> >
+> >> Recently I've learned / heard
+> >> from a trusted source that Windows ACPI subsystem is very much single
+> >> threaded. So it is nice that ACPI has these mutexes and other stuff
+> >> to support multi-threading but as long as Windows ACPI interpreter is
+> >> not multi-threaded I think we may need to consider to copy Windows
+> >> behavior.
+> >
+> > This is also my conclusion, at least to some extent.
+> >
+> > The problem with it though is that in some cases parallel evaluation
+> > of AML is actually useful.  For example, say two PCI devices are
+> > powered up at the same time and AML waits for each of them.  The async
+> > suspend/resume aligns those waits to take place simultaneously instead
+> > of serializing them which allows some time to be saved.
+> >
+> >> So maybe the EC accesses should keep the interpreter lock locked durin=
+g
+> >> EC accesses.
+> >
+> > The problem here is that it is hard to say in advance whether or not
+> > _BIX or _BST will access the EC and whether or not that will clash
+> > with _TMP evaluation for a seemingly unrelated thermal zone.
+> >
+> >> And even go further and maybe we need to introduce a big-acpi-lock,
+> >> which I guess the interpreter lock more or less is? And just serialize
+> >> all ACPI accesses since most ACPI tables clearly do not handle
+> >> multi-threaded access to ACPI methods well ?
+> >
+> > I would be inclined to do so except for device power management
+> > methods, that is _ON, _OFF, and _PSx, that are not the problematic
+> > ones, at least as far as I know.
+>
+> That sounds like a reasonable compromise which should fix both
+> this case as well as help with bko221065 .
+>
+> >> Another example of multi-threaded ACPI calls causing problems is:
+> >>
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+> >
+> > Right.
+> >
+> > So I guess the idea would be to add locking to acpi_evaluate_object()?
+>
+> Yes that seems like a nice single point of entry to do this where
+> all the various helpers eventually end up.
+
+That, of course, would require updating ACPICA code and I'm not sure
+if doing it upstream is useful.  For example, if some hosts already
+use locking around acpi_evaluate_object(), this modification won't
+help them and it will certainly be a change in behavior.
+
+This means that we'll likely end up with a Linux-specific divergence
+from the upstream which can be lived with, but it won't be nice.
+
+> > An alternative might be to introduce an "exclusive" variant of
+> > acpi_evaluate_object() with built-in locking and use it in the cases
+> > that are known-problematic.
+>
+> So here we have _TMP and _BIX / _BST and in bko221065 we have
+> a bunch of again batteyr methods + UCSI racing. I'm afraid if
+> we add something like acpi_evaluate_object_exclusive() we'll end
+> up eventually using that almost everywhere.
+
+While I think that your concern is valid, this can be done without
+touching the ACPICA code at all.
+
+Also, we don't actually know how many "bad" cases there are and so far
+we have identified a few.  If they are not too widespread, changing
+behavior everywhere for everyone may not be adequate.
+
+> Maybe do things the other way around and serializing all the calls
+> by default and adding an acpi_evaluate_object_unlocked() to be used
+> in cases where we want the speedup of multi-threading like
+> the _ON, _OFF and _PSx you mentioned above ?
+
+Yes, depending on which way is more practical, that can be done.
