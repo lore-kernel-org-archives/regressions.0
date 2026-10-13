@@ -1,61 +1,113 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-106118.protonmail.ch (mail-106118.protonmail.ch [79.135.106.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BF73A5435
-	for <regressions@lists.linux.dev>; Mon, 12 Oct 2026 22:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C64C414434
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 01:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791845935; cv=none; b=Jmupq1dqqTg5BUJSmD8aQkZvo7xfHeFyMF7m4c4xXqneBDTWpLBCYd46kNfM4dxx9bVjrqbEgvgxEdp+rNGfDvwixO/y3IUqhlY2BaHbXQw9uYGuZlx0f9GDxi/u6GXDfPnILOh3OEizxy2kEIMAs+2AzBaOxtDonv66cpbQgfM=
+	t=1791855628; cv=none; b=NYUgCTp7RXRubCvya+4rsc2FYBx+K3GMfpxAL7kflq24t4tHM4S0zFGJiGwKEDqBGmU3l4Nv5CNwzDPqn9RyiVm/+5m7QDeAc41++p/SDA62J1bxEPUwlNWEryciibmdhtEcf30WEh+GyBgLMuJpxuPB+uTybTJjf2+g5BECWUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791845935; c=relaxed/simple;
-	bh=HEEje7McDOxETsPcHD0Fa1nv4xRG1TwxJAGb1MDDAus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tNxZqL0fUGS/2WTW4IDr3qxI2f8phzj42YDOhFOoVW+YINwJV1fSBzfaqmyvvPImeIWz4qXWmWu8+5yQj/j2X56wv5ZUeLmelIlUkVMOGrAM4Qw4cA+ks/L+H7SCUEmmrFhrELqrikq6qOiifflR+wWOfira4prii9QDWTH9tWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=DlTbccM1; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1791855628; c=relaxed/simple;
+	bh=qj0/+cMxaIjvgJPXNv2KdAcvS7E+bqvRcs7uhBsEU8M=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NktD5xgzmcO3TBA/Ql2HnEsgO2A/K8tdRAAfdkGuCl7qMy0EqvJyCp7vT33GFBe1OfqmzLw4rytdABL+EzKvG8Jy+vIUw23JE6dx2ftpDasDxi4xynyldceBhGCw0TBdt2/05GAPTbuzs+bvjKZdALuXPYN5tUHo45+Xr+ECx0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=jXDAt/ZK; arc=none smtp.client-ip=79.135.106.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="DlTbccM1"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id CD26280D5F;
-	Tue, 13 Oct 2026 00:58:52 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id n7j6skB5oEUT; Tue, 13 Oct 2026 00:58:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1791845932; bh=HEEje7McDOxETsPcHD0Fa1nv4xRG1TwxJAGb1MDDAus=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DlTbccM10HWjMz1OL+3wToVKcE7x8qHI01ipL8K1aqtOEG27M++Rjk6uukzGRs1B5
-	 vKHahqOL7EL6trBrwl3ntH1ljhq/xtL6DVUEWXuukiTHWiiOQEm6OVFuCvG8WoPpC2
-	 DDsnoIeARStHj5Gg2L8NwcfKuU0R6Zinq1wBbZ+pEP5BoitjBN+desxVNUgH1BnAbM
-	 kXOqGH1oEjMZcFaM9kfRUe27MDBwov9FhSfGsTrqxNHWYC4lTXurgKpcJBkALUzhqp
-	 aHquQibydzMgV65DpUK2Sdu2MEaL0uqa065cLb4TRgJt2BahS9qVOQt7QoQAQiKNug
-	 uZXfOcQj37FlQ==
-From: =?UTF-8?q?Ali=20Ahmet=20Memi=C5=9F?= <aliamemis@disroot.org>
-To: Charis Stratakis <c.stratakis@proton.me>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Armin Wolf <W_Armin@gmx.de>,
-	linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="jXDAt/ZK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1791855620; x=1792114820;
+	bh=HoWCXQr+g599YdKydg+WnwnnXEKIjUbnMEfi/3N88JE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=jXDAt/ZK6RWS6OOn5eA1IsPVyzbWfw6ulFmcImX46OBCKHeyYFWjhncw9MjY1Fhd2
+	 j+5SGF4NHlgLI9vAR9xnhzgmS/FGvB779L33WHZ5/F5TAUwnAjJaXP98v/btdTyLIW
+	 +e90zW+/dODvVxa75BgqR09UgcEJ4aWktXIuzLTldV9cF9z6IxmnOtwIHOvxxpsxjL
+	 vH5aAIod83mrAKu1JzHqAF9LVCfe++27SA7olhR6Z9DCgrryEQC0CCZrb5x5cY5nPH
+	 DqoGM5VTYaEW3pt3waiw7PvhuqVIKHJ9CshLJLdLE/X323kDrYak3FmYHk/xPiTHzZ
+	 QKBfS+G9fw/IA==
+Date: Tue, 13 Oct 2026 01:40:17 +0000
+To: =?utf-8?Q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>
+From: Charis Stratakis <c.stratakis@proton.me>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Armin Wolf <W_Armin@gmx.de>, linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org, regressions@lists.linux.dev, Mark Pearson <mpearson-lenovo@squebb.ca>, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] ACPI: battery: Re-read battery information in the complete callback
-Date: Tue, 13 Oct 2026 01:58:40 +0300
-Message-ID: <20261012225841.15260-1-aliamemis@disroot.org>
-In-Reply-To: <20261012225141.13683-1-aliamemis@disroot.org>
-References: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me> <20261012225141.13683-1-aliamemis@disroot.org>
+Message-ID: <RzdkKLBwqo3DyCK02-SY8TzjXuAuqzmM5cuV7LddeKdLyZhPu_av9VmcP8a7ZE5Uzt1sJo4AoMaN9reZpMo6jSQ2P1G3ooDL1rn2atKO2O8=@proton.me>
+In-Reply-To: <20261012225841.15260-1-aliamemis@disroot.org>
+References: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me> <20261012225141.13683-1-aliamemis@disroot.org> <20261012225841.15260-1-aliamemis@disroot.org>
+Feedback-ID: 224044180:user:proton
+X-Pm-Message-ID: 73d09911cc629e8dc5db4d7b2310de8aeb35d0a7
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Charis, could you test this on the P1 Gen2?
+On Tuesday, October 13th, 2026 at 12:58 AM, Ali Ahmet Memi=C5=9F <aliamemis=
+@disroot.org> wrote:
 
-(Resending with the lists in Cc, the first one only went to you.)
+> Hi Charis, could you test this on the P1 Gen2?
+>=20
+
+I've rebuilt the Fedora 7.2.10 kernel with the patch for F44 to test it, th=
+e hunks are identical to 7.3-rc7. As before, no vanilla
+kernel was installed, all testing on my laptop, with Claude's help.
+
+The test is cycles of "rtcwake -m no -s 25; systemctl suspend", checking en=
+ergy_full, voltage_min_design and serial_number
+after each resume, with int3403_thermal loaded throughout. I ran it as ABA =
+so that nothing else could drift:
+
+  7.2.8-200.fc44, stock          10 of 10 resumes corrupted
+  7.2.10 + this patch             0 of 20 resumes corrupted
+  7.2.8-200.fc44, stock again     8 of 10 resumes corrupted
+
+18 of 20 on stock against 0 of 20 patched.
+
+Tested-by: Charalampos Stratakis <c.stratakis@proton.me>
+
+Here is what Claude reports, hope it makes sense as I don't have much knowl=
+edge of the kernel's workings:
+
+
+Both flavours from my report show up: energy_full =3D 328.1x Wh, which make=
+s
+capacity read ~20%, together with voltage_min_design =3D 32.81x V, and one
+cycle with energy_now =3D 328960000, i.e. 424%, with energy_full intact. On=
+e
+bad cycle is worth singling out because it supports the \GTST explanation,
+it returned voltage_min_design correctly as 15360000 while energy_full was
+328160000. So the page selector flips in the middle of _BIX and which
+fields come back wrong depends on where in the read the _TMP burst lands,
+rather than the whole structure being read from page 0x60.
+
+I also traced the EC (ec.c dyndbg) on the patched kernel for one resume,
+which shows the ordering the patch relies on:
+
+  .223100  WR 81=3D01, 00, 02, 06, 04, 05 with the 0xA0-0xAF reads, i.e.
+           _BIX and _BST from the complete callback
+  .236664  last battery page selection
+  .239670  WR 81=3D60, first \GTST
+  .270916  last of 13 consecutive \GTST bursts
+
+Nothing from the battery is interleaved among those bursts, and the next
+battery access is 5.7s later from userspace polling. Worth noting that
+"Restarting tasks: Done" (.240802) and "PM: suspend exit" (.251365) both
+fall inside the \GTST burst, so PM_POST_SUSPEND, where the refresh used to
+happen, is right in the middle of it.
+
+The firmware bug itself is of course untouched, so a _BST that races a _TMP
+at runtime can still return garbage. Those were the transient 424% readings
+and they self-heal on the next read because of the 1s cache. Would a
+plausibility check in acpi_battery_get_state() be welcome for that, re-
+evaluating _BST once and warning FW_BUG when capacity_now exceeds
+design_capacity by a wide margin? It would sit next to the existing
+workarounds there. I realise it only catches the obviously absurd values
+and not wrong ones that look plausible, so I am not sure it is worth it.
+
+Regards,
+Charalampos Stratakis
