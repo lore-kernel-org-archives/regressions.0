@@ -1,144 +1,84 @@
-Received: from mta1.migadu.com (out-203.mta1.migadu.com [95.215.58.203])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B45503BE3
-	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA8550AC23
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791897139; cv=none; b=a0BPBFgoeBlhzx102eEQBRcjtq1GxBsPANqjzOlyZ/+Ih9sE4lg6jcgjYHMcNjFJ0N9avsyUZbMa/lOkIKUMHwTDa/mrFuzJpamFJt8UOWXhLoeliBXJXzI5bWFHB/yZgBq20CcYKspcdHmjuoSH7s3ck6t4Wg6w8SZ5at/Uqs8=
+	t=1791897299; cv=none; b=ZPQHGrIAZHg95jlGHgWILegDDOn96BIb/o0o/ecIuN2yDGIBNTyAKxVvE8TaTNor38mMH/qSi34TQhQNzig8QlRZ+muqy2a1XAYOJDlcMNoFV2DLZ+MBBrbiWPPbaknjeG1+L/aVGIUsZLYylQa95igsEV9pg3NVxK9EN5sKFKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791897139; c=relaxed/simple;
-	bh=GxGoMm4vBKXboCWqEywkB1ImT232d0kryycTPDywOvA=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=ngsGkpI2I5vAjgBlUOsn20M063afPN2JSaCNuV5fo/vInYFBm1uPHUV2DUPzOQKbIn6wZutDj20aHA16iOT2JUfR3McFyxzTfmbC1MHEahmgnbFvYrLFzTMnux93rxtvRqdm8Tqbq4Wv7kSeruy0DApHhYiS141py5PgS+2yCfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kzZB8/lw; arc=none smtp.client-ip=95.215.58.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791897299; c=relaxed/simple;
+	bh=0fV3ANaLM6I/JweRjyqGgPdr/O3IoIHM7sDBOsZsjFY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sKb40sk6wKyl+n9O8ale905du/wzEOdkDAVSteV7PU1REkDemZG/FEz8WvBGDiAbrWM8mL/cRiweTXpbILooHkZAoHxcRy1GVubQAmNROzORfoM6q6o5xamZl4Xi74OjIYfY1cFeOA2zWegZsTAd5xRPYXDsHoBvG4VLjfw2jDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ooDT349h; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kzZB8/lw"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=GxGoMm4vBKXboCWqEywkB1ImT232d0kryycTPDywOvA=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791897134; v=1; x=1792501934;
- b=kzZB8/lwMeNbLUdjZV8TbLFvLtF/o6EeW3PgDCK1gNj1AtCu4JTADoRJAj7+NAEiWAI1SD+I
- ZB98d8xRPaNVKGRWOmr/TuRrhhwIgwtPKyDbYQJCvk5cmojxhNPFHD1mKBrWB1SORqZKqVI9Xnz
- ZT353KTwb/kXSmHdCxkGwcxk=
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 66a73f73837eb63b;
-	Tue, 13 Oct 2026 13:12:14 +0000
-X-Mizu-Trace-ID: 66a73f73837eb63b
-X-Migadu-Flow: FLOW_OUT
-Date: Tue, 13 Oct 2026 16:12:04 +0300
-From: Denis Benato <denis.benato@linux.dev>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Ahmed Yaseen <yaseen@ghoul.dev>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Antheas Kapenekakis <lkml@antheas.dev>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Kerim Kabirov <the.privat33r+linux@pm.me>,
-	GameBurrow <gameburrow@pm.me>, regressions@lists.linux.dev,
-	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Message-ID: <2f85200c-ecc3-4318-9156-16ace09cac7f@linux.dev>
-In-Reply-To: <fe51a4ac-540f-4d14-ba76-b69b0eb17164@leemhuis.info>
-References: <20260828104159.62399-1-yaseen@ghoul.dev> <20260828104159.62399-2-yaseen@ghoul.dev> <fe51a4ac-540f-4d14-ba76-b69b0eb17164@leemhuis.info>
-Subject: Re: [PATCH v2] HID: usbhid: skip interrupt IN polling for devices
- with no input reports
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ooDT349h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B6E01F0089E
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791897298;
+	bh=TyGH6GdHih1QQ8QFEiJNBr1trBQdTr947Zk5c3LahUQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=ooDT349hExUcHsGFec+u0PeSnsNZZXt2KFtvc/LJC3jZE47c5q1wFDALeEwlcguUc
+	 T8S3jLCHxI1UjGYWNS3AUeZcNB8Dl1SMsD5FD+KBd9e/t0Q9vDYf9kWC+OOawerWYf
+	 zWW8DeAnCUtfo7gn3ScHXlil9zXGimui+r5oo0CAae/yb/FOXnBUhLTFhp+TkH7RSM
+	 DFtv1UpOLoa5TyiZwTaHBECY3n9wgcxG3xI318QCvtb2tVvpg4naRNHY7BYP9ubD52
+	 95BZg8q3dfZdAm02l+DEgIC5gn8sAqyhQVnAIMSCA0aPmbmd8uyLqOnrC6GwzEbLO2
+	 lXSx7OuAS9o2A==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5bb7c6980f1so2261312e87.2
+        for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 06:14:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxQad2sWDxS9O3bHY0XZcwK7mWhLoZqzx+HJNyYUcWmYYIx1zN+Qft04btdEwKiEvfZWqZKx2egzhNiTg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIM2cf2JFsC2HHAxd8O6FH39AsX2oI4TWBjmjNFrunjiAJz5D01
+	tV0YyByRulV4AIhocZCDQdruYew5BRRVLkUyCD6IaryMW/G7osCT1bw1HJVFONh8kHzSCjaMIAf
+	af61ND7jpnwQHu2EkEKPXZuT17YYlnP8=
+X-Received: by 2002:a05:6512:3b0e:b0:5bc:b23c:f7f1 with SMTP id
+ 2adb3069b0e04-5bcde8d7662mr4490203e87.61.1791897296680; Tue, 13 Oct 2026
+ 06:14:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me>
+ <20261012225141.13683-1-aliamemis@disroot.org> <fb993dd3-ee56-4e3d-aa16-573f011518f1@oss.qualcomm.com>
+ <CAJZ5v0gS4agVUkCO6M=VW4Wi2y1-s+k23bpzmX9aAZ0Rsv4z9Q@mail.gmail.com> <20261013123055.46306-1-aliamemis@disroot.org>
+In-Reply-To: <20261013123055.46306-1-aliamemis@disroot.org>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 13 Oct 2026 15:12:51 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j8G+H9kNbUEsjoBVMVQD3UcvpbxTVtZZM=CedS+EONsA@mail.gmail.com>
+X-Gm-Features: AclHuK9hBROyGubJc7w6LulOME4sELoZkzJ6owxrsFXl9zDy-hFQLKHX4hitTlk
+Message-ID: <CAJZ5v0j8G+H9kNbUEsjoBVMVQD3UcvpbxTVtZZM=CedS+EONsA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: battery: Re-read battery information in the
+ complete callback
+To: =?UTF-8?Q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, johannes.goede@oss.qualcomm.com, 
+	Len Brown <lenb@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
+	Charis Stratakis <c.stratakis@proton.me>, linux-acpi@vger.kernel.org, 
+	linux-pm@vger.kernel.org, regressions@lists.linux.dev, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <2f85200c-ecc3-4318-9156-16ace09cac7f@linux.dev>
 
-13 ott 2026 15:55:33 Thorsten Leemhuis <regressions@leemhuis.info>:
-
-> On 8/28/26 12:42, Ahmed Yaseen wrote:
->> usbhid starts polling a device's interrupt IN endpoint on open
->> (usbhid_open() -> hid_start_in()). If the report descriptor declares no
->> input reports there is nothing to read there, so the poll is useless,
->> and on some composite devices it is also harmful.
->>
->> The ASUS ROG N-Key keyboards expose a second, input-less interface used
->> only for RGB control via feature reports. Opening its hidraw node (any
->> hidraw reader does, including SDL/Steam Input or a plain cat) starts the
->> pointless IN poll and keypress reports on the keyboard interface get
->> dropped for as long as the node stays open: a lost key-down drops a
->> letter, a lost key-up leaves the key stuck. usbmon shows the dropped
->> reports never reach the URB layer.
->>
->> The useless poll itself is long-standing; commit 4ac74ea68f64 ("HID:
->> asus: early return for ROG devices") is what exposes it on these
->> devices by keeping the input-less interface alive instead of ejecting
->> it, so its hidraw node can be opened and the poll started.
+On Tue, Oct 13, 2026 at 2:31=E2=80=AFPM Ali Ahmet Memi=C5=9F <aliamemis@dis=
+root.org> wrote:
 >
-> Hmmm, what's the status here? Ahmed, is this still needed, or was this
-> fixed in some other way? From the the outside it looks a lot like this
-> regression fix feel through the cracks, but would be good to get into
-> 7.4-rc1 to finally fix the dropped keypress reports.
+> On Tue, Oct 13, 2026 at 01:58:15PM +0200, Rafael J. Wysocki (Intel) wrote=
+:
+> > An alternative might be to introduce an "exclusive" variant of
+> > acpi_evaluate_object() with built-in locking and use it in the cases
+> > that are known-problematic.
 >
+> An exclusive variant would have to be used on both sides here, for
+> _BIX/_BST and for the INT3403 _TMP, since it is \GTST in _TMP that
+> switches the page.  I can do that and test it the same way.
 
-Hi Thorsten,
+Sounds good.
 
-This is very much needed and we had to include it in OGC kernel to avoid hi=
-d devices resetting constantly.
+> Should this patch still go in for the regression meanwhile?
 
-It is a very important fix and we are waiting for inclusion upstream becaus=
-e games becomes flat out unplayable with certain combination of tools.
-
-Best regards,
-Denis Benato
-
-> Ciao, Thorsten
->> Skip the poll in usbhid_open() when the device has no input reports.
->> Feature reports and hidraw output keep working over the control and OUT
->> endpoints, so the interface is otherwise unaffected.
->>
->> Fixes: 4ac74ea68f64 ("HID: asus: early return for ROG devices")
->> Link: https://discuss.cachyos.org/t/keyboard-input-issues-on-asus-rog-st=
-rix-16-2025-with-cachyos-during-gaming/30823
->> Link: https://github.com/ublue-os/bazzite/issues/4590
->> Cc: stable@vger.kernel.org
->> Tested-by: Kerim Kabirov <the.privat33r+linux@pm.me>
->> Tested-by: GameBurrow <gameburrow@pm.me>
->> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
->> Reviewed-by: Denis Benato <denis.benato@linux.dev>
->> ---
->> drivers/hid/usbhid/hid-core.c | 9 ++++++++-
->> 1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core=
-.c
->> index 96b0181cf819..d7cf2b56e117 100644
->> --- a/drivers/hid/usbhid/hid-core.c
->> +++ b/drivers/hid/usbhid/hid-core.c
->> @@ -688,7 +688,14 @@ static int usbhid_open(struct hid_device *hid)
->>
->> =C2=A0=C2=A0=C2=A0 set_bit(HID_OPENED, &usbhid->iofl);
->>
->> -=C2=A0=C2=A0 if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
->> +=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0 * ALWAYS_POLL devices are already polled from usbhid=
-_start(), and a
->> +=C2=A0=C2=A0=C2=A0 * device with no input reports has nothing to send o=
-n the interrupt
->> +=C2=A0=C2=A0=C2=A0 * IN endpoint. In some cases polling is harmful: on =
-the ASUS ROG
->> +=C2=A0=C2=A0=C2=A0 * N-Key keyboards it makes the sibling interface dro=
-p keypresses.
->> +=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0 if ((hid->quirks & HID_QUIRK_ALWAYS_POLL) ||
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&hid->report_enum[HID_I=
-NPUT_REPORT].report_list)) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 res =3D 0;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto Done;
->> =C2=A0=C2=A0=C2=A0 }
->>
->> base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
-
+No, it only addresses system resume while the same race may occur if
+user space reads the thermal zone temperature during a battery
+notification, for example.  All of that needs to be addressed.
