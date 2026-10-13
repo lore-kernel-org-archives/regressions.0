@@ -1,87 +1,55 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC293509EEE
-	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC60519DE8
+	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791898578; cv=none; b=ET86pHNF7YFJ4w+LoFUnm21DdlRact9dVTBgq//8k4BgIwHqcYfinhsd/mCX3ThFtLjPyAEb8NCdzKRUHelCgYrxin29ELDAWx7wENcIpFCAS1KXorO0bk0+LUJ0mTXyAHVkhg+gMdJhQMFcArw0wxdL+4DT2DUQMhoZ7iqi+cc=
+	t=1791899049; cv=none; b=hmAHxDmhQdH8X9IPmGHalZy9QxfpEh3NZedqExBYiUJB/TWQ++oa7T+WPinZ1MG3ED8RZhpWybO8rKji8TZNbUKaNRHpR4q6SrwVeRQJfV5s+I/b7ZCoahpjoWASKSO7af28NWufyzlKp9iimW+6LGV8RE4SMhr4TaZHX54MdBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791898578; c=relaxed/simple;
-	bh=Lgk9ryxB4wlwUpPpSqjkNiShbk84CUmjVZpN3Z805q8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Tx3Agm90N0UTI437UvbW6/ERlWtcq5ufLSmNcAf0OCNcfMQNOCycfZlxwyHxXRVo+aIjd3gxiYarlmsHepIjPay55WLBo89Yc0hlnkUw/5mbO7pocTfdyj/SPY7AP8V7JaAYR/cUOve3rQmNN0dh4yroQMAluVPEiTxXZ7UKeVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EnpB4CIG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=hBVUMocW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1791899049; c=relaxed/simple;
+	bh=kn1pWwRqpSQrn5KGooof/V03NDOuyyBzzBkT7Vi6SwU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p/N4Y8ElAfhUZAIDIg1YjP47um0MIrQKTaOvEaebmysY917NAmfsnRGI+mjHtk6V4NKJ1T+uReSyho0KH+2Ety2c67LtxFdnFQcrxSiFEwW7mFFCEzATIBiQmrbF7o26DV4tnbIvl7FLmgKq7ounAOoT9K7hplNOb8iBN6K/qLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EPog4h01; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EnpB4CIG";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="hBVUMocW"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69D9ssTj174333
-	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:36:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XHPs2aSg7qSq8sMw0lMTSM9cUyOJg6fhbZjMyvCBsuk=; b=EnpB4CIGyiyHOCa/
-	WJm8PKkFr7sbTbIFH25UjbupMh8sqKOQHk2Euz9Su4u859F3Dt18GjHbaFbXe49g
-	pqkvtglbzqJ7X4BZd3Qsm55k685ADZXtLuv17lARW9VdbbUwFZz1M7oPeTisU+AA
-	VlMNvpBgQaVpvhRdWdpYY4bSZSBTJheXZMXdyNprtO39lbNtEgpO86k053vRr6EV
-	Xf88FwqlkYpYtR0LqdEW1JNg1Zv23mPV1y4aqpd4sSWPQ8PvonXXgzFyrCUZpLPd
-	QhvqN4dkFd7qBP0s7qMWAsj5ztTv58e2Ikkajdkgns/QoPiRUTxJ5Kz1gqiHuh+d
-	RKsowg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h9daqt8hy-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 13:36:16 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93caf6c528aso520461785a.0
-        for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 06:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1791898575; x=1792503375; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XHPs2aSg7qSq8sMw0lMTSM9cUyOJg6fhbZjMyvCBsuk=;
-        b=hBVUMocWxJujt1tcvftj64P79ZaYM2orWdUCpZwECW/pj7OGun/YBgaHoLyr7D5Ppc
-         nPewxwtv2iPkPll8YUJk/upyjDWMgNgcTObHmOlsZMsA8NbEwc0YZn3W6ADnjSfR4JmP
-         Mfs5KtZZvzUcQBKbXVDodlmo4qbC2XT867XwbFzcZhmVNC7mzSSEnNKpNiHk4CFDL5PU
-         l/9ho1DhKMm1V8NUv5RVJVq/nVAaLk4qJH/lJcusJwQ8Pr8vAI3ZbiIaJtYPwRHR/MGC
-         Ie3dy3qIEjfoVf81dF92oKmaHmKv3fDtCIo2HTj202hAvL9LWfDo+7k+8SEC7yaQZgh3
-         fN0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791898575; x=1792503375;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XHPs2aSg7qSq8sMw0lMTSM9cUyOJg6fhbZjMyvCBsuk=;
-        b=s+m5Y1AXBkxlHajcjQw9DRxq/cqnXtf/vNlIjQK4Mb8ixRZF2pjJBnEYwyUUXr60KT
-         +6iMuMmlER7OcHmYortXLbfNfKvqqKzwWAiGg1oztoVoJNzM6tO/w1SpAmJhRXmQH/04
-         4f4Zam5rSBN9aIXTfbeqQfkZXcCDqR8eTUckwH3uwYZAsZoERG57kMRcPqN9B/GORw/g
-         bTIvCjCe5epmNJPui7XCmaSSvnG7Jkab3uBv59wRmaltV2ioHUFxdRpWDNnrRx7n9Ayv
-         MdnuGby4nLDJAhjlujs3eYcQgYfiFsLraZ5nV6/pcIvPFR3Z2PBHqN/TKkpInJXRyNeo
-         +u7A==
-X-Forwarded-Encrypted: i=1; AKwUvBzqFRN/6FU0iRqlW1+RmN54IyUy0HovgkLj44y9G0zdLIyu/qhbT6k0ab1/XMqgDp0gJNWOq+NFayBx7w==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKNXqS7qjm4bXB+EBleJhbKENtPKjbFnAOhg9pgH576kDQy4SuK
-	4ZkDFjHjJhXDKyDHqkYejofHvhLwyCQyNe5Xiow5wirYiUIheZEgXZvzaOpCvYlQzYrren/7etz
-	nyhMK8t9N/ewc/mmh3+5REU55dzZfxplPkadNB3mL6HFuHP0p/YyOF8JjYIxeyOmclA==
-X-Gm-Gg: AYBFou3tGfqGeGOeHhZ/QWYIYCW47QypmRm0c3+CIsDZPUWV+trFvGuW10VdTp1Of+y
-	xJemv7JggCWQrnmyVaLoXFLYEMvNKss8z2d8ROtBOd4i0Aagc/yaLvVtqHmhKuZ4EvvnmxnQl6T
-	V3xqPAsPVV4aib0NkaWGklqhJEOqDLleqBzCfZY8uKogov0vO7BSQVnEUHmQrmdrvGNzSIV7a6m
-	GJMR3l4B5PjVIsh2D476geaqn5UTla+gvttzGRhjZBTM/XAeG6QMxA1votbeBxqc5qrHUEvjb4f
-	9sz0DCbYpcXXimSqhnP3dMjQiLPo3qPNWUY6bYk9Na6rrJatfgxkvXYd17Xv1Y9sPejqukRdNYJ
-	O2/Hpj3qRepuyIWKIXztCKwoRAPDTY1R/YTIlM7RUuy02fHVGxOgfFJYuCS3SOwVpHERjjlhSV/
-	OTl/3XjIIhdVy9fs4lBwuRrxGF4G7MJsOGgx3UTKqICMLZimNDnk3HZTk8JZuAt9iPHA==
-X-Received: by 2002:a05:620a:3705:b0:93e:4ede:893c with SMTP id af79cd13be357-93ebd1dff48mr1978374885a.14.1791898574767;
-        Tue, 13 Oct 2026 06:36:14 -0700 (PDT)
-X-Received: by 2002:a05:620a:3705:b0:93e:4ede:893c with SMTP id af79cd13be357-93ebd1dff48mr1978366785a.14.1791898574001;
-        Tue, 13 Oct 2026 06:36:14 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b1c27f0f3esm2632349a12.27.2026.10.13.06.36.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Oct 2026 06:36:13 -0700 (PDT)
-Message-ID: <044e9df4-1399-4ceb-80f8-f7cfe031d04f@oss.qualcomm.com>
-Date: Tue, 13 Oct 2026 15:36:11 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EPog4h01"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4j3wWv1Qg1z8B09;
+	Tue, 13 Oct 2026 15:43:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791898987;
+	bh=kn1pWwRqpSQrn5KGooof/V03NDOuyyBzzBkT7Vi6SwU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EPog4h01ga+F8U3shEq7EMlLuCDz3HXb7iY9xLYTkixzfoVzjfJD+O/HRjG9ADSLv
+	 Mx1VLeEzB6kJntJRTHlUZfyMdAGP1X3me3Mtkh5M7sf8LP6PpK4O13rik3qk8+IKfU
+	 c9+EpsiaT8lPB8BhDT+wWTarOn8mKYTem+CiaKGii2duzSwBNlRTwLXiZcJD1GJqKJ
+	 2KweN/+YbwoccjK3vJTpedsVqWBp/5yHAAslWokb/h8fzT8QWYZO+lZyX/S7keLpWX
+	 oztl5IJwR8XlQa8OWqVNwJ5PMHo0MDh8KyGg5aHxX6qqvD2DfSGRllbhnzZvAifJBE
+	 BZkiTMTlcSXsg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4j3wWv0hpxz4y7n;
+	Tue, 13 Oct 2026 15:43:07 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j3wWs1dMTz8tfq;
+	Tue, 13 Oct 2026 15:43:05 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8117F5FB0E;
+	Tue, 13 Oct 2026 15:43:04 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <144d54c1-fc08-4135-82ba-7cab417ebc3a@leemhuis.info>
+Date: Tue, 13 Oct 2026 15:43:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -89,144 +57,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: johannes.goede@oss.qualcomm.com
-Subject: Re: [PATCH] ACPI: battery: Re-read battery information in the
- complete callback
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: =?UTF-8?Q?Ali_Ahmet_Memi=C5=9F?= <aliamemis@disroot.org>,
-        Len Brown <lenb@kernel.org>, Armin Wolf <W_Armin@gmx.de>,
-        Charis Stratakis <c.stratakis@proton.me>, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, regressions@lists.linux.dev,
-        Mark Pearson <mpearson-lenovo@squebb.ca>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <37N_jFulf7n-Z55NfKfE71C_wVPxYvZ0xD_iRUg2fXu7TypDiF5PStQ6siSfVBih6fThg5WoPes8U5ZQpfVm_teMFcUGXFxz2DdMbfSWuws=@proton.me>
- <20261012225141.13683-1-aliamemis@disroot.org>
- <fb993dd3-ee56-4e3d-aa16-573f011518f1@oss.qualcomm.com>
- <CAJZ5v0gS4agVUkCO6M=VW4Wi2y1-s+k23bpzmX9aAZ0Rsv4z9Q@mail.gmail.com>
-Content-Language: en-US, nl
-In-Reply-To: <CAJZ5v0gS4agVUkCO6M=VW4Wi2y1-s+k23bpzmX9aAZ0Rsv4z9Q@mail.gmail.com>
+Subject: Re: [REGRESSION] 7.1: apple-gmux backlight dead on MacBookPro13,3 -
+ PCI bridge left with VGA enable set and VGA 16-bit decode cleared, aliasing
+ legacy VGA I/O over the gmux ports
+To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ Haram Choi <haram@choiharam.com>
+Cc: dri-devel@lists.freedesktop.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <CAAKWd2_MZSC=A2EHuEw3=eECr1QfaqrhYawW=njt5muk=5sA_A@mail.gmail.com>
+ <0102019fcb5d411c-e0a555b7-46da-43a1-bd9d-6cb120f58a7f-000000@eu-west-1.amazonses.com>
+ <ap_yIeUyNu5WxSnX@intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <ap_yIeUyNu5WxSnX@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: tgQdLk_d1ctTegZ2wtHQrYUFW7sAmtpv
-X-Authority-Analysis: v=2.4 cv=FZuiV5+6 c=1 sm=1 tr=0 ts=6ace33d0 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=MZlWtUBn__QG1sgtjpgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDEzMDA1NCBTYWx0ZWRfX9LkdTovHGdm7
- MIvNTllb9nqlZPY/YUQ3Xz+pH1/SG7uz64aePeJkKDlv1z/pYo6VN42GcubLs366BbzGsgQMEcN
- +AlvUEFmU4e3g0LTWxJO7BaktJn2iGo=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDEzMDA1NCBTYWx0ZWRfX6nA4GM2vsE87
- 725tFXlhlSOIgGcT9TyWSJR+Ln/jgeVqy97Fe2eOzm5XdcIIa+3K/mfJ+KdorYTBrstwjLhyXnu
- NXsxbpoInXmbA3VjPrandfqI1XUU8UlzuK9TZG+UdbAuUoF+I08h+Rj3Bp9UARmjPsJtJUYI+NZ
- VQ+wiHPrKoZTsk4E5YfaXUO9e1FACV5HqpoGcSBnw25sQWk89d4Bh7rl7fVIuumGru6Oy/rkNcr
- sb36yJ/PWv8K+04fD9A6wNBCsLwFEjASM4eY7bULmoOqCEtcn+KslrJEhvgVLenILZ/2/rQMQKf
- 4yNeasPi8TeEeYiiQpBir1Qi+ZYN5lz6gtufQoQbeZScsbOCjP/NDMZxe0tABZfjD2quK0wFi9K
- x9X9/vJdKBtmUyt2ZYBRbLTmklIryvwvCUPKpaeeypBHwo/o7uhrc92fbHzAkGxtpJUZRbvW0qy
- nHsAmBpDloJjEbJ829A==
-X-Proofpoint-ORIG-GUID: tgQdLk_d1ctTegZ2wtHQrYUFW7sAmtpv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-13_01,2026-10-09_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 impostorscore=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 phishscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2610080000
- definitions=main-2610130054
+X-PPP-Message-ID: <179189898482.895600.241311855441224226@mxe9fb.netcup.net>
+X-NC-CID: v4imGa248cozeojC2LcUIjjt27yx0htnngaRM5/r3+Ng7SF8B04=
 
-Hi Rafael,
-
-On 13-Oct-26 13:58, Rafael J. Wysocki (Intel) wrote:
-> On Tue, Oct 13, 2026 at 11:33 AM <johannes.goede@oss.qualcomm.com> wrote:
+On 9/8/26 13:31, Ville Syrjälä wrote:
+> On Tue, Aug 04, 2026 at 06:01:54AM +0000, Haram Choi wrote:
+>> I think I have found the commit. It is not in drivers/pci at all, and
+>> my previous suspicion of 94555ea9a048 was wrong. Apologies to Simon
+>> for the noise.
 >>
->> Hi,
+>> The regression is:
 >>
->> On 13-Oct-26 00:46, Ali Ahmet Memiş wrote:
->>> Since commit d33e89d12295 ("thermal: core: Suspend thermal zones later
->>> and resume them earlier"), thermal zones are resumed from dpm_complete(),
->>> before the PM_POST_SUSPEND notifier that re-reads _BIX and _BST. On
->>> ThinkPad P1 Gen2 and P53, INT3403 _TMP calls \GTST which switches the EC
->>> page selector (HIID) without taking the BATM mutex used by the battery
->>> methods. ACPICA releases the interpreter lock around EC accesses
+>>   cc6ed470caa2 ("drm/i915/vga: Avoid VGA arbiter during
+>>                  intel_vga_disable() for iGPUs")
+>>   Ville Syrjala <ville.syrjala@linux.intel.com>, 2025-12-08
 >>
->> I'm wondering if this "ACPICA releases the interpreter lock around EC
->> accesses" is not the real problem here.
+>> I have added Ville, intel-gfx and dri-devel to Cc.
+>[...]
 > 
-> Yes, it most likely is.
-> 
-> What actually happens is that ACPICA drops the interpreter lock and
-> the namespace lock in several cases listed in the
-> acpi_ex_exit_interpreter() documentation comment, the majority of
-> which involve having to wait.
-> 
-> The bottom line though is that the interpreter and namespace locks
-> cannot be expected to be held throughout AML evaluation because it is
-> not known in advance if any of the cases in question will appear.
-> 
->> Recently I've learned / heard
->> from a trusted source that Windows ACPI subsystem is very much single
->> threaded. So it is nice that ACPI has these mutexes and other stuff
->> to support multi-threading but as long as Windows ACPI interpreter is
->> not multi-threaded I think we may need to consider to copy Windows
->> behavior.
-> 
-> This is also my conclusion, at least to some extent.
-> 
-> The problem with it though is that in some cases parallel evaluation
-> of AML is actually useful.  For example, say two PCI devices are
-> powered up at the same time and AML waits for each of them.  The async
-> suspend/resume aligns those waits to take place simultaneously instead
-> of serializing them which allows some time to be saved.
-> 
->> So maybe the EC accesses should keep the interpreter lock locked during
->> EC accesses.
-> 
-> The problem here is that it is hard to say in advance whether or not
-> _BIX or _BST will access the EC and whether or not that will clash
-> with _TMP evaluation for a seemingly unrelated thermal zone.
-> 
->> And even go further and maybe we need to introduce a big-acpi-lock,
->> which I guess the interpreter lock more or less is? And just serialize
->> all ACPI accesses since most ACPI tables clearly do not handle
->> multi-threaded access to ACPI methods well ?
-> 
-> I would be inclined to do so except for device power management
-> methods, that is _ON, _OFF, and _PSx, that are not the problematic
-> ones, at least as far as I know.
+> Sounds to me like the best fix would be to explicitly enable
+> 16 bit decoding on the bridges on these machines. That would
+> guarantee that apple-gmux works regardless of which GPU
+> drivers are loaded, and in which order.
+Was this regression ever addressed? From the outside it looks like it
+feel through the cracks, but well, it easy to miss something from where
+I stand.
 
-That sounds like a reasonable compromise which should fix both
-this case as well as help with bko221065 .
-
->> Another example of multi-threaded ACPI calls causing problems is:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=221065
-> 
-> Right.
-> 
-> So I guess the idea would be to add locking to acpi_evaluate_object()?
-
-Yes that seems like a nice single point of entry to do this where
-all the various helpers eventually end up.
-
-> An alternative might be to introduce an "exclusive" variant of
-> acpi_evaluate_object() with built-in locking and use it in the cases
-> that are known-problematic.
-
-So here we have _TMP and _BIX / _BST and in bko221065 we have
-a bunch of again batteyr methods + UCSI racing. I'm afraid if
-we add something like acpi_evaluate_object_exclusive() we'll end
-up eventually using that almost everywhere.
-
-Maybe do things the other way around and serializing all the calls
-by default and adding an acpi_evaluate_object_unlocked() to be used
-in cases where we want the speedup of multi-threading like
-the _ON, _OFF and _PSx you mentioned above ?
-
-Regards,
-
-Hans
-
-
-
+Ciao, Thorsten
