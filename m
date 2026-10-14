@@ -1,300 +1,317 @@
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886255581F7
-	for <regressions@lists.linux.dev>; Tue, 13 Oct 2026 22:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B00637B020
+	for <regressions@lists.linux.dev>; Wed, 14 Oct 2026 04:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791930984; cv=none; b=OuiULpIm6GldxkN8Vs8tfYF6x/a84sH+rh3gVTomCWTlINycT1I8d+c9CnrxiGT23bR1F0oPqvVpB83t+w1ZwIui1o7ZZJml4+vSUWcvY49i2J0KKrtJ3AUgER9N8CFUf5x3WRQkbX5+dd1fK1SJTJQsauswkFJvNuv/iI/IhhQ=
+	t=1791950772; cv=none; b=CtZ4s562ddH5f6M8AE62q9EAYA7T+DHEMdZDlmD8cZ+xcP7vPJFx6v0hLmfuhPYGKsxkUV0ydCOMCltmqZ+Xhowu7NRdZju1/8W14v+FqyIhoAc3XsEowDKUr98zz/p63mkxM72aBycUuat8ZC37+6WNtafwxryyohpXBaM+u08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791930984; c=relaxed/simple;
-	bh=MxW/p9SoaEWXyK/ASzLf3lihmJ+Hxe4/oV/+cjH4Vbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sc1V4cpadpD4ekENCbziLX4BivbcOpi9615Jv2McOrHJriKxCarmC7ZA7kswCQW3zRzHLdgAa2Q3n/NFqfEbsP1AgIB7PQIBqAvWX9ELvImlDKlNi55mv7NADBrME8VI+GwMh28/oVYVZHPiWV3OdYDy2rcPUDdZ604X8L9Mj6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=az+kQ+Jx; arc=none smtp.client-ip=178.156.171.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1791950772; c=relaxed/simple;
+	bh=LH2w2e58s0hMh/1Ujw4HzDq1xyZUpLVa95o5G0UmSU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uhcJ6bfrXMvgDc6kbc5dBtWPT9UXOuwfsfyXOG/BTHxvV+14ZP21fS9CrryLXdJUkGLHIlhJ2yXPGX14ni872AWOZ1R6jirD9k9w+Y1tMKtW2t14mWqblBpBa4DclC1B1fxKkSLIGxO22FqWEN6cW1KGbqMxAHGgp6JCXKGIfvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Ad1cpx1U; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="az+kQ+Jx"
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id 9892D5E4E4
-	for <regressions@lists.linux.dev>; Wed, 14 Oct 2026 01:36:12 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Ad1cpx1U"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j4HfQ2T6zz9DPn;
+	Wed, 14 Oct 2026 06:05:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1791950702;
+	bh=LH2w2e58s0hMh/1Ujw4HzDq1xyZUpLVa95o5G0UmSU8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ad1cpx1U6z8j2+N6hb7YzJmrIzkAqvtdWE7PFP4Orlbs1VO9gIHMFvZXLPOx3yvRc
+	 pD4mo2j2Pd2KmYWs10BoYKiJHPrOUCVG2CynwgIMbtambWOmiA4or2/D/q/76VJywz
+	 Ju5yxWXpye8e/6asQeUius1lFi2wVTIaBuX1qAHuDKCkNLgtbOXHWxw5JPrJ59gjoa
+	 g6aJJv98vL2FTTb0Fv0fqIhjnSEdluh5F5hDjWzcUc5ir1KyEnGZi7/GR1AmXvKirM
+	 PMKHes+GxgOWITnGutH9ZTIXXBD/HrwZCcxH7dp+VWe/AtDzhyYB2jnNlJFisdB+xa
+	 wMd5wa+DZdymw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j4HfQ1msjz7x0H;
+	Wed, 14 Oct 2026 06:05:02 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id 10D2B5E56E
-	for <regressions@lists.linux.dev>; Wed, 14 Oct 2026 01:36:11 +0300 (EEST)
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id D23DD1FE008
-	for <regressions@lists.linux.dev>; Wed, 14 Oct 2026 01:36:09 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1791930970;
-	bh=SYCWzrGSScC3HWN5RckZZWD1Lre/uOiFxeWF9xM/pjY=;
-	h=Received:From:Subject:To;
-	b=az+kQ+JxRN7LsVPRZKrSwWULvtEqR+URyntNv/TaGR4l8L/Fc4vFCjUuddtGN2ly2
-	 ol+L3RRIqlBElRGg6YGfNzhwFgIMWAwljnb16AIuqLoh1a9ST0yMMLjTkWlzHt9t/G
-	 ztfKCLlTKTfH+FClmagm7RyNlEZvov30P02e8Z2I5N3f1Ti1STshC1IDhuol8B+wJT
-	 Mv3RPnM4IF34VxuMTRchLM+Zudqgj40EljdL8/36skGuLHbaF63drylNZpzQ3vK93u
-	 uVWHURxF0RyEK7tJOsimpJYBudlh/q1T+uC/g4Pvd2BQUdw30h1SdMOQ161yJDCCWS
-	 mldAdzX7Ik1bA==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.210.175) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pf1-f175.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pf1-f175.google.com with SMTP id
- d2e1a72fcca58-88b7d853b11so2246923b3a.1
-        for <regressions@lists.linux.dev>;
- Tue, 13 Oct 2026 15:36:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AKwUvBxjXH6YlouqVYPWDSqG6i8VXD9p+YHaYar71qui/VZMWSt0zXhOtTdGcmV0s9nOBX5rW82LaI7kOB+GlQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKYCH18rZdGXDo31DUgqMivVxtNz5oI8QmrMu1lS3AJCZ0p3gZO
-	uJZ8QqroqFAPAUhQ/U7rB45g8uHmougKnCMJYkeE7CGFFpQnCG/q61o95qg7uaEMY/otAaBqJsg
-	f4ZQuen0oHdPoNGeOyo8ST/Gw2bB/sAI=
-X-Received: by 2002:a05:6a00:9284:b0:890:e1ff:3bac with SMTP id
- d2e1a72fcca58-897c3ef925emr10844320b3a.8.1791930968155; Tue, 13 Oct 2026
- 15:36:08 -0700 (PDT)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j4HfP2HLSz8svC;
+	Wed, 14 Oct 2026 06:05:01 +0200 (CEST)
+Received: from [192.168.44.19] (unknown [185.238.219.103])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0491C5FAB2;
+	Wed, 14 Oct 2026 06:04:53 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 185.238.219.103) smtp.mailfrom=linux@leemhuis.info smtp.helo=[192.168.44.19]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <1dcf2ee8-02f7-41af-b1f4-bff3a16a2c90@leemhuis.info>
+Date: Wed, 14 Oct 2026 06:04:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260828104159.62399-1-yaseen@ghoul.dev>
- <20260828104159.62399-2-yaseen@ghoul.dev>
- <fe51a4ac-540f-4d14-ba76-b69b0eb17164@leemhuis.info>
- <CAGwozwEdQ+EEjfzHM_DAtoygsch=BXR8VWd1yHeKA-BaS=hCUA@mail.gmail.com>
- <e097faae-6184-4498-9c64-c5736f3b3ac8@ghoul.dev>
-In-Reply-To: <e097faae-6184-4498-9c64-c5736f3b3ac8@ghoul.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 14 Oct 2026 00:35:56 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwHsWtA2eAmgPMpbmtuxkfVJc0Qby6t0ws16U_Ya=1ZwRA@mail.gmail.com>
-X-Gm-Features: AclHuK_sMJcqGS3LYiw3hdkqgDIznHqojWzKhqkbW_2uYXllk6j4qxTPkcRvlUM
-Message-ID: 
- <CAGwozwHsWtA2eAmgPMpbmtuxkfVJc0Qby6t0ws16U_Ya=1ZwRA@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: usbhid: skip interrupt IN polling for devices
- with no input reports
-To: Ahmed Yaseen <yaseen@ghoul.dev>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Denis Benato <denis.benato@linux.dev>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Alan Stern <stern@rowland.harvard.edu>,
-	Kerim Kabirov <the.privat33r+linux@pm.me>, GameBurrow <gameburrow@pm.me>,
-	regressions@lists.linux.dev, linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] tools/bootconfig: Consolidate xbc_init() to error
+ message wrapper
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Sang-Heon Jeon <ekffu200098@gmail.com>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <178913597653.248794.1237187523153227751.stgit@devnote2>
+ <178913599508.248794.10388592925402087434.stgit@devnote2>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
+ JcsZYLDKRHTQ/Lalw9L1HI3NRwK+9ayjg31wFdekgsuPbu4x5RGDIfyNpd378Upa8SUmvHik
+ apCnzsxPTEE4Z2KUxBIwTvg+snEjgZ03EIQEi5cKmnlaUynNqv3xaGstx5jMCEnR2X54rH8j
+ QPvo2l5/79Po58f6DhxV2RrOrOjQIQcPZ6kUqwLi6EQOi92NS9Uy6jbZcrMqPIRqJZ/tTKIR
+ OLWsEjNrc3PMcve+NmORiEgLFclN8kHbPl1tLo4M5jN9xmsa0OZv3M0katqW8kC1hzR7mhz+
+ Rv4MgnbkPDDO086HjQBlS6Zzo49fQB2JErs5nZ0mwkqlETu6emhxneAMcc67+ZtTeUj54K2y
+ Iu8kk6ghaUAfgMqkdIzeSfhO8eURMhvwzSpsqhUs7pIj4u0TPN8OFAvxE/3adoUwMaB+/plk
+ sNe9RsHHPV+7LGADZ6OzOWWftk34QLTVTcz02bGyxLNIkhY+vIJpZWX9UrfGdHSiyYThHCIy
+ /dLz95b9EG+1tbCIyNynr9TjIOmtLOk7ssB3kL3XQGgmdQ+rJ3zckJUQapLKP2YfBi+8P1iP
+ rKkYtbWk0u/FmCbxcBA31KqXQZoR4cd1PJ1PDCe7/DxeoYMVuwARAQABzSdUaG9yc3RlbiBM
+ ZWVtaHVpcyA8bGludXhAbGVlbWh1aXMuaW5mbz7CwZQEEwEKAD4CGwMFCwkIBwMFFQoJCAsF
+ FgIDAQACHgECF4AWIQSoq8a+lZZX4oPULXVytubvTFg9LQUCaOO74gUJHfEI0wAKCRBytubv
+ TFg9Lc4iD/4omf2z88yGmior2f1BCQTAWxI2Em3S4EJY2+Drs8ZrJ1vNvdWgBrqbOtxN6xHF
+ uvrpM6nbYIoNyZpsZrqS1mCA4L7FwceFBaT9CTlQsZLVV/vQvh2/3vbj6pQbCSi7iemXklF7
+ y6qMfA7rirvojSJZ2mi6tKIQnD2ndVhSsxmo/mAAJc4tiEL+wkdaX1p7bh2Ainp6sfxTqL6h
+ z1kYyjnijpnHaPgQ6GQeGG1y+TSQFKkb/FylDLj3b3efzyNkRjSohcauTuYIq7bniw7sI8qY
+ KUuUkrw8Ogi4e6GfBDgsgHDngDn6jUR2wDAiT6iR7qsoxA+SrJDoeiWS/SK5KRgiKMt66rx1
+ Jq6JowukzNxT3wtXKuChKP3EDzH9aD+U539szyKjfn5LyfHBmSfR42Iz0sofE4O89yvp0bYz
+ GDmlgDpYWZN40IFERfCSxqhtHG1X6mQgxS0MknwoGkNRV43L3TTvuiNrsy6Mto7rrQh0epSn
+ +hxwwS0bOTgJQgOO4fkTvto2sEBYXahWvmsEFdLMOcAj2t7gJ+XQLMsBypbo94yFYfCqCemJ
+ +zU5X8yDUeYDNXdR2veePdS3Baz23/YEBCOtw+A9CP0U4ImXzp82U+SiwYEEQIGWx+aVjf4n
+ RZ/LLSospzO944PPK+Na+30BERaEjx04MEB9ByDFdfkSbM7BTQRSeAENARAAzu/3satWzly6
+ +Lqi5dTFS9+hKvFMtdRb/vW4o9CQsMqL2BJGoE4uXvy3cancvcyodzTXCUxbesNP779JqeHy
+ s7WkF2mtLVX2lnyXSUBm/ONwasuK7KLz8qusseUssvjJPDdw8mRLAWvjcsYsZ0qgIU6kBbvY
+ ckUWkbJj/0kuQCmmulRMcaQRrRYrk7ZdUOjaYmjKR+UJHljxLgeregyiXulRJxCphP5migoy
+ ioa1eset8iF9fhb+YWY16X1I3TnucVCiXixzxwn3uwiVGg28n+vdfZ5lackCOj6iK4+lfzld
+ z4NfIXK+8/R1wD9yOj1rr3OsjDqOaugoMxgEFOiwhQDiJlRKVaDbfmC1G5N1YfQIn90znEYc
+ M7+Sp8Rc5RUgN5yfuwyicifIJQCtiWgjF8ttcIEuKg0TmGb6HQHAtGaBXKyXGQulD1CmBHIW
+ zg7bGge5R66hdbq1BiMX5Qdk/o3Sr2OLCrxWhqMdreJFLzboEc0S13BCxVglnPqdv5sd7veb
+ 0az5LGS6zyVTdTbuPUu4C1ZbstPbuCBwSwe3ERpvpmdIzHtIK4G9iGIR3Seo0oWOzQvkFn8m
+ 2k6H2/Delz9IcHEefSe5u0GjIA18bZEt7R2k8CMZ84vpyWOchgwXK2DNXAOzq4zwV8W4TiYi
+ FiIVXfSj185vCpuE7j0ugp0AEQEAAcLBfAQYAQoAJgIbDBYhBKirxr6Vllfig9QtdXK25u9M
+ WD0tBQJo47viBQkd8QjTAAoJEHK25u9MWD0tCH8P/1b+AZ8K3D4TCBzXNS0muN6pLnISzFa0
+ cWcylwxX2TrZeGpJkg14v2R0cDjLRre9toM44izLaz4SKyfgcBSj9XET0103cVXUKt6SgT1o
+ tevoEqFMKKp3vjDpKEnrcOSOCnfH9W0mXx/jDWbjlKbBlN7UBVoZD/FMM5Ul0KSVFJ9Uij0Z
+ S2WAg50NQi71NBDPcga21BMajHKLFzb4wlBWSmWyryXI6ouabvsbsLjkW3IYl2JupTbK3viH
+ pMRIZVb/serLqhJgpaakqgV7/jDplNEr/fxkmhjBU7AlUYXe2BRkUCL5B8KeuGGvG0AEIQR0
+ dP6QlNNBV7VmJnbU8V2X50ZNozdcvIB4J4ncK4OznKMpfbmSKm3t9Ui/cdEK+N096ch6dCAh
+ AeZ9dnTC7ncr7vFHaGqvRC5xwpbJLg3xM/BvLUV6nNAejZeAXcTJtOM9XobCz/GeeT9prYhw
+ 8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
+ K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
+ pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
+In-Reply-To: <178913599508.248794.10388592925402087434.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <179193097010.1333796.3947827215316535726@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.6 at linux3247.grserver.gr
-X-Virus-Status: Clean
+ <179195069455.2974564.12429534590425620214@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 0491C5FAB2
+X-NC-CID: w5HpWYNoY9cxHDgAmgfF+y8E30IDI+j8dB0WDZ/1Wi62gDjJixg=
 
-On Wed, 14 Oct 2026 at 00:29, Ahmed Yaseen <yaseen@ghoul.dev> wrote:
->
-> On 10/13/26 18:11, Antheas Kapenekakis wrote:
-> > On Tue, 13 Oct 2026 at 14:55, Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> On 8/28/26 12:42, Ahmed Yaseen wrote:
-> >>> usbhid starts polling a device's interrupt IN endpoint on open
-> >>> (usbhid_open() -> hid_start_in()). If the report descriptor declares =
-no
-> >>> input reports there is nothing to read there, so the poll is useless,
-> >>> and on some composite devices it is also harmful.
-> >>>
-> >>> The ASUS ROG N-Key keyboards expose a second, input-less interface us=
-ed
-> >>> only for RGB control via feature reports. Opening its hidraw node (an=
-y
-> >>> hidraw reader does, including SDL/Steam Input or a plain cat) starts =
-the
-> >>> pointless IN poll and keypress reports on the keyboard interface get
-> >>> dropped for as long as the node stays open: a lost key-down drops a
-> >>> letter, a lost key-up leaves the key stuck. usbmon shows the dropped
-> >>> reports never reach the URB layer.
-> >>>
-> >>> The useless poll itself is long-standing; commit 4ac74ea68f64 ("HID:
-> >>> asus: early return for ROG devices") is what exposes it on these
-> >>> devices by keeping the input-less interface alive instead of ejecting
-> >>> it, so its hidraw node can be opened and the poll started.
-> >>
-> >> Hmmm, what's the status here? Ahmed, is this still needed, or was this
-> >> fixed in some other way? From the the outside it looks a lot like this
-> >> regression fix feel through the cracks, but would be good to get into
-> >> 7.4-rc1 to finally fix the dropped keypress reports.
->
-> Hi Thorsten,
->
-> Yes, this patch is still very much needed upstream. The current status of=
- this patch is as follows:
->
-> On upstream kernel, this is still waiting to be merged.
-> On the OGC Kernel this has been available since 7.1.3 (since July 21)
-> On Nobara kernel and G14 kernel, this has been available since 7.1.4 (sin=
-ce around mid July)
-> On CachyOS kernel some users have opened an issue and a PR on the CachyOS=
- kernel repo and kernel patches repos respectively.
->
-> The issue itself is still present in upstream kernel and I'm still waitin=
-g for a response from the maintainers. I hope this can be merged upstream A=
-SAP.
->
-> It is still a major issue and I have recently encountered users who had s=
-witched away from Linux to other operating systems for this reason as well.=
- Reports of this issue still come to us in varying ways and we ask these us=
-ers to use one of the kernels with fixes installed. In the case of Fedora a=
-nd Arch users, this would mean the OGC kernel, Nobara, or G14 kernel. For D=
-ebian-based distros, the issue is not yet present as the patch that made th=
-is issue become visible is not yet available there. However, when the patch=
- 4ac74ea68f64 ("HID: asus: early return for ROG devices") is available in a=
-n LTS kernel, all users of Debian-based distributions will get this regress=
-ion as well, so I believe some urgency is also required here.
->
-> Best Regards,
-> Yaseen
-> >
-> > Hi Thorsen,
-> > there haven't been widespread issues with stuck keys on Asus recently,
-> > except one regression with the fan key that merged recently.
->
-> Hi Antheas,
->
-> As explained above, we do still get these reports. We have users in the (=
-previously ASUS now OGC) discord server, cachyos forum, bazzite repo issues=
-, reddit, etc that do report these issues and multiple commenters who claim=
- they have the same issue.
->
-> Some of these issues that I found at the time of writing it are linked in=
- the cover letter of this patchset. Other users reported this in the discor=
-d server later, and many users write it off as a one-off issue or a bug wit=
-h a certain game and those who hit the issue repeatedly either report to us=
-, roll back kernel, or even switch to an alternative like Windows. Kerim an=
-d GameBurrow who helped with my testing for example, were users who were ab=
-le to reliably recreate the issue in certain games. The reproduction cases =
-in the patch description (e.g. running cat on the hidraw node) came from th=
-em and trigger it consistently.
->
-> >
-> > This fix targets hid core, so merging it could cause regressions on
-> > other devices.
->
-> This fix has not caused any regressions so far, and I do not see a scenar=
-io where it would. The patch only affects devices with 0 input reports. Add=
-itionally, we have the patch on so many widely used kernels and has been pr=
-esent in them for the last 3 months, along with multiple users who added th=
-is patch manually with my guidance. The fix itself is to simply not poll an=
-y devices that have no input reports to provide. The reason why other devic=
-es are unaffected is explained in the patch description and my additional p=
-roof is the hundreds of users that use the Nobara kernel, G14 kernel, and t=
-he OGC kernel collectively.
->
-> >
-> > Denis can comment on whether he fixed the regression that primarily
-> > lies in the software he maintains separately. I am not sure SDL causes
-> > this issue
->
-> As one of the maintainers of asusctl myself, I believe I can comment on t=
-his as well. There was an issue in asusctl previously that opened the hidra=
-w, and it was patched by Denis months ago. However this did not fix the iss=
-ue that polling the hidraw by other means (Steam/Proton and even a simple c=
-at does this) still triggered the bug. That is what my patch fixes.
->
-> I would like to also highlight that this is originally a logical issue in=
- the kernel that should not have been there in the first place, and if a de=
-vice regresses because of this fix, it is a device that needs quirking and =
-not the other way around. That said, even for malformed input reports which=
- you have described in your v1 response, they would still be unaffected as =
-we only skip when there are 0 reports. The quirk HID_QUIRK_ALWAYS_POLL exis=
-ts exactly for this reason, and anything without that quirk and no input re=
-ports has no business being polled.
->
-> If the maintainers still prefer it, I would be happy to have this as a qu=
-irk for only the ASUS keyboard device instead. I have explained all my reas=
-oning for this approach in the cover letter and as mentioned, no regression=
-s have been reported so far.
->
-> Best Regards,
-> Yaseen
->
-> >
-> > Best,
-> > Antheas
-> >
-> >> Ciao, Thorsten
-> >>> Skip the poll in usbhid_open() when the device has no input reports.
-> >>> Feature reports and hidraw output keep working over the control and O=
-UT
-> >>> endpoints, so the interface is otherwise unaffected.
-> >>>
-> >>> Fixes: 4ac74ea68f64 ("HID: asus: early return for ROG devices")
-> >>> Link: https://discuss.cachyos.org/t/keyboard-input-issues-on-asus-rog=
--strix-16-2025-with-cachyos-during-gaming/30823
-> >>> Link: https://github.com/ublue-os/bazzite/issues/4590
-> >>> Cc: stable@vger.kernel.org
-> >>> Tested-by: Kerim Kabirov <the.privat33r+linux@pm.me>
-> >>> Tested-by: GameBurrow <gameburrow@pm.me>
-> >>> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
-> >>> Reviewed-by: Denis Benato <denis.benato@linux.dev>
-> >>> ---
-> >>>  drivers/hid/usbhid/hid-core.c | 9 ++++++++-
-> >>>  1 file changed, 8 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-c=
-ore.c
-> >>> index 96b0181cf819..d7cf2b56e117 100644
-> >>> --- a/drivers/hid/usbhid/hid-core.c
-> >>> +++ b/drivers/hid/usbhid/hid-core.c
-> >>> @@ -688,7 +688,14 @@ static int usbhid_open(struct hid_device *hid)
-> >>>
-> >>>       set_bit(HID_OPENED, &usbhid->iofl);
-> >>>
-> >>> -     if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
-> >>> +     /*
-> >>> +      * ALWAYS_POLL devices are already polled from usbhid_start(), =
-and a
-> >>> +      * device with no input reports has nothing to send on the inte=
-rrupt
-> >>> +      * IN endpoint. In some cases polling is harmful: on the ASUS R=
-OG
-> >>> +      * N-Key keyboards it makes the sibling interface drop keypress=
-es.
-> >>> +      */
-> >>> +     if ((hid->quirks & HID_QUIRK_ALWAYS_POLL) ||
-> >>> +         list_empty(&hid->report_enum[HID_INPUT_REPORT].report_list)=
-) {
+On 9/11/26 16:13, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Use init_xbc_with_error() for all bootconfig initialization in the
+> bootconfig tool instead of showing errors in different way.
+> 
+> This simplifies the code logic and make it easy to maintain.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Ok, I remember our conversation a few months ago.
+Masami, Andrew, this patch is now twice in -next:
 
-The hid descriptor should not affect device behavior.
+e732d7c18d4d6a ("tools/bootconfig: consolidate xbc_init() to error
+message wrapper") [merged via: "9eae8e94e61f20 ("Merge branch
+'mm-nonmm-stable' of
+https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")"; next-20261012]
 
-Just because a hid descriptor does not have input reports, you should
-not change the kernel's functionality.
+78715511921cc8 ("tools/bootconfig: Consolidate xbc_init() to error
+message wrapper") [merged via: "71ee85976d09e8 ("Merge branch 'for-next'
+of
+https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git")";
+next-20261013]
 
-During development, it can be the case a hid device has a partial hid
-descriptor. hidraw does not look at or care about the hid protocol of
-a device. This is what hiddev is for.
+Which I guess it what caused this build error for me:
+""">> main.c:53:13: error: redefinition of ‘show_xbc_error’
+>>    53 | static void show_xbc_error(const char *data, const char *msg, int pos)
+>>       |             ^~~~~~~~~~~~~~
+>> main.c:20:13: note: previous definition of ‘show_xbc_error’ with type ‘void(const char *, const char *, int)’
+>>    20 | static void show_xbc_error(const char *data, const char *msg, int pos)
+>>       |             ^~~~~~~~~~~~~~
+>> main.c:74:12: error: redefinition of ‘init_xbc_with_error’
+>>    74 | static int init_xbc_with_error(char *buf, int len)
+>>       |            ^~~~~~~~~~~~~~~~~~~
+>> main.c:41:12: note: previous definition of ‘init_xbc_with_error’ with type ‘int(char *, int)’
+>>    41 | static int init_xbc_with_error(char *buf, int len)
+>>       |            ^~~~~~~~~~~~~~~~~~~
+>> main.c:41:12: warning: ‘init_xbc_with_error’ defined but not used [-Wunused-function]
+>> make: *** [Makefile:21: bootconfig] Error 1
+"""
+Ciao, Thorsten
 
-As it stands this is a heuristic
-
-If the kernel has a bug with how it handles polling on devices without
-input reports, you need to find the underlying issue and fix that. if
-not, you should quirk hid-asus by appending HID_QUIRK_ALWAYS_POLL if
-dev->tp. You never responded to my comment so at least by my side I
-considered the problem resolved.
-
-Antheas
-
-> >>>               res =3D 0;
-> >>>               goto Done;
-> >>>       }
-> >>>
-> >>> base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
->
->
->
+> ---
+> Changes in v2:
+>  - Remove redundant buffer copy in init_xbc_with_error().
+> ---
+>  tools/bootconfig/main.c |  100 ++++++++++++++++++++---------------------------
+>  1 file changed, 43 insertions(+), 57 deletions(-)
+> 
+> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+> index aff169ba75b8..652e491b9c33 100644
+> --- a/tools/bootconfig/main.c
+> +++ b/tools/bootconfig/main.c
+> @@ -21,6 +21,39 @@
+>  #define BOOTCONFIG_FOOTER_SIZE	\
+>  	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+>  
+> +static void show_xbc_error(const char *data, const char *msg, int pos)
+> +{
+> +	int lin = 1, col, i;
+> +
+> +	if (pos < 0) {
+> +		pr_err("Error: %s.\n", msg);
+> +		return;
+> +	}
+> +
+> +	/* Note that pos starts from 0 but lin and col should start from 1. */
+> +	col = pos + 1;
+> +	for (i = 0; i < pos; i++) {
+> +		if (data[i] == '\n') {
+> +			lin++;
+> +			col = pos - i;
+> +		}
+> +	}
+> +	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
+> +
+> +}
+> +
+> +static int init_xbc_with_error(char *buf, int len)
+> +{
+> +	const char *msg;
+> +	int ret, pos;
+> +
+> +	ret = xbc_init(buf, len, &msg, &pos);
+> +	if (ret < 0)
+> +		show_xbc_error(buf, msg, pos);
+> +
+> +	return ret;
+> +}
+> +
+>  static int xbc_show_value(struct xbc_node *node, bool semicolon)
+>  {
+>  	const char *val, *eol;
+> @@ -197,7 +230,6 @@ static int load_xbc_from_initrd(int fd, char **buf)
+>  	int ret;
+>  	uint32_t size = 0, csum = 0, rcsum;
+>  	char magic[BOOTCONFIG_MAGIC_LEN];
+> -	const char *msg;
+>  
+>  	ret = fstat(fd, &stat);
+>  	if (ret < 0)
+> @@ -249,52 +281,9 @@ static int load_xbc_from_initrd(int fd, char **buf)
+>  		return -EINVAL;
+>  	}
+>  
+> -	ret = xbc_init(*buf, size, &msg, NULL);
+> -	/* Wrong data */
+> -	if (ret < 0) {
+> -		pr_err("parse error: %s.\n", msg);
+> -		return ret;
+> -	}
+> -
+> -	return size;
+> -}
+> -
+> -static void show_xbc_error(const char *data, const char *msg, int pos)
+> -{
+> -	int lin = 1, col, i;
+> -
+> -	if (pos < 0) {
+> -		pr_err("Error: %s.\n", msg);
+> -		return;
+> -	}
+> -
+> -	/* Note that pos starts from 0 but lin and col should start from 1. */
+> -	col = pos + 1;
+> -	for (i = 0; i < pos; i++) {
+> -		if (data[i] == '\n') {
+> -			lin++;
+> -			col = pos - i;
+> -		}
+> -	}
+> -	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
+> +	ret = init_xbc_with_error(*buf, size);
+>  
+> -}
+> -
+> -static int init_xbc_with_error(char *buf, int len)
+> -{
+> -	char *copy = strdup(buf);
+> -	const char *msg;
+> -	int ret, pos;
+> -
+> -	if (!copy)
+> -		return -ENOMEM;
+> -
+> -	ret = xbc_init(buf, len, &msg, &pos);
+> -	if (ret < 0)
+> -		show_xbc_error(copy, msg, pos);
+> -	free(copy);
+> -
+> -	return ret;
+> +	return ret < 0 ? ret : size;
+>  }
+>  
+>  static int show_xbc_kernel_cmdline(void)
+> @@ -423,9 +412,8 @@ static int apply_xbc(const char *path, const char *xbc_path)
+>  	char *buf, *data;
+>  	size_t total_size;
+>  	struct stat stat;
+> -	const char *msg;
+>  	uint32_t size, csum;
+> -	int pos, pad;
+> +	int pad;
+>  	int ret, fd;
+>  
+>  	ret = load_xbc_file(xbc_path, &buf);
+> @@ -438,6 +426,13 @@ static int apply_xbc(const char *path, const char *xbc_path)
+>  		size++;
+>  	csum = xbc_calc_checksum(buf, size);
+>  
+> +	/* Verify the data format */
+> +	ret = init_xbc_with_error(buf, size);
+> +	if (ret < 0) {
+> +		free(buf);
+> +		return ret;
+> +	}
+> +
+>  	/* Backup the bootconfig data */
+>  	data = calloc(size + BOOTCONFIG_ALIGN + BOOTCONFIG_FOOTER_SIZE, 1);
+>  	if (!data) {
+> @@ -446,15 +441,6 @@ static int apply_xbc(const char *path, const char *xbc_path)
+>  	}
+>  	memcpy(data, buf, size);
+>  
+> -	/* Check the data format */
+> -	ret = xbc_init(buf, size, &msg, &pos);
+> -	if (ret < 0) {
+> -		show_xbc_error(data, msg, pos);
+> -		free(data);
+> -		free(buf);
+> -
+> -		return ret;
+> -	}
+>  	printf("Apply %s to %s\n", xbc_path, path);
+>  	xbc_get_info(&ret, NULL);
+>  	printf("\tNumber of nodes: %d\n", ret);
 
