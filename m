@@ -1,94 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831EBC8CE;
-	Thu, 15 Oct 2026 00:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6C1282F34
+	for <regressions@lists.linux.dev>; Thu, 15 Oct 2026 00:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792023319; cv=none; b=ADg2xIBoZPh1hL8qWSrfbzSedfmUqeESMXnKeVTLInRLmWNQ251vNB9+glYojR1PmuFlLynfg+FYN602LGYgeI7k01sF3Cd8piwOgghDArkE8Ewohg/AzaCvXMFXzG1ogQo9cka5axRpfF9ZhmfPyrBCqtcPZfyF7MiW3UXPxlE=
+	t=1792025698; cv=none; b=PdI4Sg/2803/nrjP5jfb6U7ItU5GNgG2ncq4ykuVAmNRrFNR3yor2jyO2g9TktvUQtuDXdquzVmfzq3HGhSLazNjTvJ3NZZjtL3c439XHjyzkCHbye73APZMeuXVHPM+oWrpZFeX5mIX9kat0Wk734p6Cbt7o1DtvWmMvwowfmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792023319; c=relaxed/simple;
-	bh=UsDG9kfDxd/2k1VapBH87PTBBUwyRDmBw4Na/K/UQyY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-Id; b=FBWOwAFl8IejgO0BKcOAIJ6vUuz5YmT6Of+66tJP/KuE5XynopBVnvyrgvMJkIRMIOR3eHTjksGV3RBkHkcb8dln0GWFGrhGLveV/PGfRox3PS/r6jPrtSOnNCMl4gs/YXuBWIcSfIYyxY/JVIuALIja2SJk6GEWS+GA00quzM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3pMNRjk; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3pMNRjk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06451F000C4;
-	Thu, 15 Oct 2026 00:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792023318;
-	bh=0qxweQ3nR9WEGRFyiRmVZV79kJCBfaEjOPO3LF2GMds=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=T3pMNRjk3Khltt1RwSbhY7DnUfXFXEyuMB3yxNH2Rep0WCMfUIm6V7STHpja6RM57
-	 XSy2Dq8aBWOC0Dc5U2Khd/g5NkA3ZSXkYJ1TIjkRxdALrcdMscG1AiRWsAI8Sm8odc
-	 dxpoqNiBLN8bx6nDIbFsqBvlQA8/KoXrhviQvxwBnK1x5G/b0GXFPP0tmB3zAOHwLx
-	 p88Cg7+22YOtCjQNI2yDwOqpNzADgYHXkWOdfOJLgDTwKV9Z2zxlLdu0EPsFmcHsi6
-	 8UVRS63lB+nwT8Ge+KKkMpntfZkZWd0h2Cmh+iglij5mEjay5UqSzMeIOykoRSgalw
-	 LDqmzjLme5EZA==
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Sang-Heon Jeon <ekffu200098@gmail.com>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Mark Brown <broonie@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 2/4] tools/bootconfig: Consolidate xbc_init() to error
- message wrapper
-Date: Thu, 15 Oct 2026 09:15:14 +0900
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261013212351.ce16d411abeb7e710eed5157@linux-foundation.org>
-References: 178913597653.248794.1237187523153227751.stgit@devnote2
- 178913599508.248794.10388592925402087434.stgit@devnote2
- 1dcf2ee8-02f7-41af-b1f4-bff3a16a2c90@leemhuis.info
- <20261013212351.ce16d411abeb7e710eed5157@linux-foundation.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1792025698; c=relaxed/simple;
+	bh=UcXfq2s8RBg/mdMLs5Sze1N6LCsFPoK+hasLw7OL0Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gUGDqdMpOuJh+e+0XrlVMRSiPA+IOqxmL54a9OWZjm8f4mGpclPPoCxe8zMF8h4OsqEriqPNkGh3YGXmSGboW0Mk6aVFsg9iOOdxSqk9gDFZoHpwOCzt7v+qzkLlqYy1SBKKaAUhTtTYr0hk0n9oUgkfZHg3H9nJNp9ELNWBOUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 5958242301;
+	Thu, 15 Oct 2026 02:54:48 +0200 (CEST)
+From: Lubos Rendek <l.rendek@proxmox.com>
+To: stable@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Chuck Lever <cel@kernel.org>,
+	linux-nfs@vger.kernel.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>
+Subject: [PATCH 7.2.y] nfsd: fix all-zero stateid in CB_OFFLOAD for async COPY
+Date: Thu, 15 Oct 2026 11:53:40 +1100
+Message-ID: <20261015005340.550134-1-l.rendek@proxmox.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <bb39cba3-c4a3-4fc4-b078-c92752cf483a@proxmox.com>
+References: <bb39cba3-c4a3-4fc4-b078-c92752cf483a@proxmox.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <20261015001516.A06451F000C4@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Bm-Milter-Handled: 55990f41-d878-4baa-be0a-ee34c49e34d2
+X-Bm-Transport-Timestamp: 1792025687393
 
-On Tue, 13 Oct 2026 21:23:51 -0700, Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Wed, 14 Oct 2026 06:04:52 +0200 Thorsten Leemhuis <linux@leemhuis.info> wrote:
->
-> > On 9/11/26 16:13, Masami Hiramatsu (Google) wrote:
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > Use init_xbc_with_error() for all bootconfig initialization in the
-> > > bootconfig tool instead of showing errors in different way.
-> > > 
-> > > This simplifies the code logic and make it easy to maintain.
-> > > 
-> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Masami, Andrew, this patch is now twice in -next:
-> > 
-> > e732d7c18d4d6a ("tools/bootconfig: consolidate xbc_init() to error
-> > message wrapper") [merged via: "9eae8e94e61f20 ("Merge branch
-> > 'mm-nonmm-stable' of
-> > https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")"; next-20261012]
-> > 
-> > 78715511921cc8 ("tools/bootconfig: Consolidate xbc_init() to error
-> > message wrapper") [merged via: "71ee85976d09e8 ("Merge branch 'for-next'
-> > of
-> > https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git")";
-> > next-20261013]
->
-> OK, thanks, I'll drop the mm.git copy.
+[ There is no upstream commit: this fixes the 7.2.y backport of
+  d0beaee498e1. Mainline fixed the problem as part of the async COPY
+  rework in commit f307b4f7ed17 ("nfsd: split nfsd4_copy into transient
+  and durable async copy objects"), which is too risky to backport. ]
 
-Thanks Andrew, I'll keep this in bootconfig/for-next branch. 
+Since commit 14b978e8d05c ("nfsd: fix stale s2s_cp_stateids IDR entry
+for async COPY"), nfsd4_copy() calls dup_copy_fields() before the copy
+stateid is created and then writes the new stateid only into the COPY
+result. The async copy's own cp_res.cb_stateid stays zero, so
+nfsd4_send_cb_offload() sends CB_OFFLOAD with an all-zero stateid. The
+client cannot match it to its pending COPY and waits forever in
+nfs42_proc_copy().
 
->
-> I was surprised to see bootconfig patches in the linux-trace tree, but
-> it seems that's where they're hosted.
+Also copy the new stateid into async_copy->cp_res.cb_stateid. Calling
+dup_copy_fields() after nfs4_init_copy_state() instead is not an
+option, because dup_copy_fields() also copies cp_stateid and would
+overwrite the stateid that the backport moved to the async copy.
 
-Yes, since it was introduced for boot-time tracing originally.
+Tested on 7.2.10 with an NFSv4.2 server-side COPY between two
+exports: with this change the copy completes and CB_OFFLOAD carries
+the same stateid as the COPY reply. Without it, cp(1) hangs on 7.2.4
+and 7.2.9; the affected code in nfsd4_copy() is the same in 7.2.10.
 
-Thank you,
+Fixes: 14b978e8d05c ("nfsd: fix stale s2s_cp_stateids IDR entry for async COPY")
+Closes: https://lore.kernel.org/stable/7cc824c4-632d-49df-ae5e-cfcbb5bf76ad@proxmox.com/
+Assisted-by: Claude:claude-opus-5-5
+Signed-off-by: Lubos Rendek <l.rendek@proxmox.com>
+---
+ fs/nfsd/nfs4proc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 939749709..7c2955796 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2243,6 +2243,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 			goto out_dec_async_copy_err;
+ 		memcpy(&result->cb_stateid, &async_copy->cp_stateid.cs_stid,
+ 			sizeof(result->cb_stateid));
++		memcpy(&async_copy->cp_res.cb_stateid, &async_copy->cp_stateid.cs_stid,
++		       sizeof(async_copy->cp_res.cb_stateid));
+ 		if ((READ_ONCE(copy->nf_dst->nf_file->f_mode) &
+ 			       FMODE_NOCMTIME) != 0)
+ 			async_copy->attr_update = true;
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.47.3
+
+
