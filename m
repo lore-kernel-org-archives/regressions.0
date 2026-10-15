@@ -1,56 +1,44 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1139A4A485F;
-	Thu, 15 Oct 2026 11:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8894C18A6DB;
+	Thu, 15 Oct 2026 11:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792062809; cv=none; b=n1Yeq+1tGR3CH+HzBiBSF43sVDQa+CxALvtgnABGFtp3GatgIiRUXG4O4rs3AxHVAZAqVlzc9fHwVQhEVz+bnNTRU3bb+KS1QIl3lU4y1nbPojXUYLTz0ua8Cyj50pUnNQieT+T94C7+DnR2oquhDj6nTGOn5rK4E3R69STie0Q=
+	t=1792065170; cv=none; b=Z/WL3+bSq4h6n2vriFn9FD7x6vHJhN1N7NdpNjU+dT/E2+OXjSKIMbq7nxrRwepIYHoLplvnkdlB/4XH9b/BgGkuqG12ZVLaqQNNlDXwNYBFejpckVzbb98TAJ0ueBRMrhImfBiSTk903JaXowSCzjJuMfemOR2Wwp6PL1RUpW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792062809; c=relaxed/simple;
-	bh=LrfilnFuB9fhW2urtvpexuMosoSCb5THhAwDoH3hzgk=;
+	s=arc-20240116; t=1792065170; c=relaxed/simple;
+	bh=2sQJXFyArpysCD9tVrNpkqhP5VFkJtWpl4LxV8vfjiI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIeVuB/ZGSPXIKCv1enw2fWr6G8t5YnCtISxptMRvta+gCoDUjjyTIXmqRoEKz1i9HPXyP+9JhcU+eS+9mG0ZRL8sKNuB718t+YbxaSsBWKejHrqmQLxpEFZIL69LwjeSj5+KoTlyl+PjfBPzCHgX0gsEXVwcYq9WUzRekcW+14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Sqt3USTI; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=V6RZSttjLJ3nbAowD+cYuiQIX4fhkkb3GQVjuHWQUSRieW8UojTjLppKueuPMRa6bK9F3aJoGIExkSOqztu1Qgh0KAMz5Te/lAEk741wyvvEGbWgOw24SMAJj0/HuYK0WoJTcYxEE/GL/hiU+0wFMoYdV83lYDXZjO1GNTMOXH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ/rBYLc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sqt3USTI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xCpOlcL+L3VN03MDzmyIIb+BcnT/3D5y0X9zY5PMyU4=; b=Sqt3USTIEU7/88FDN6gmZRHig0
-	2MpwR3ROScPjifIDVw+PEVscx1q+KB51XRkDjGYO/ENXkJisn53yZr4LkogPVMu72cA20IIz6YZUa
-	QaDVdEFOoLmh+mBaO+qXFNoNwVrwIFS1ofth/KtNXYq/jxjGjnWYNdzzMAC81SuKHwrPrPAKrg/oy
-	Y7GSqWcePFaQzoOw8i6ZNBBsAAQ0I+k2X17F+6YmhBcvlGoc1MxtzayRJAqpk3Tj9AdTEpcgouQXj
-	88Gawnmx2WaCKae6WKIwI7rv2EHvb3rVfIgO0p26dDg5gJUnWSJiQmFy5X1Sv39Ui8ShWSqBoXiB8
-	fzppfZkw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.5 #2 (Red Hat Linux))
-	id 1xHJOg-00000000I41-1BAN;
-	Thu, 15 Oct 2026 11:13:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DB2043006DD; Thu, 15 Oct 2026 13:13:16 +0200 (CEST)
-Date: Thu, 15 Oct 2026 13:13:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Antoine HURET <antoine.huret@bull.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] perf: Rewrite core context handling breaks
- multiplexed cgroup events
-Message-ID: <20261015111316.GJ4121339@noisy.programming.kicks-ass.net>
-References: <PR3PR07MB69223331EED5BEBE150375B7849C2@PR3PR07MB6922.eurprd07.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ/rBYLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D1D1F000C4;
+	Thu, 15 Oct 2026 11:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792065169;
+	bh=sC72EAmoifBVTLDVj0wP5wmbgewZfK5wW+3tvU4ypAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kJ/rBYLcU9+AT5KZS7DdXNoxHHiA7p/tBxuSj9SdeuDX3SwkNYCOK6rMElDbIKpSd
+	 slYAbvxbr/99RMRAV0C9R4Do//LZaggIJHnktZ7NXJDUbKRR6ouEBYamAsLMt1Fijr
+	 mrIXPtbmJiLOIOqZezaZbz7QnyPttA0gu/jJRFP88nx6OLUvxKQ+7c0YM2oRJ1vyC2
+	 xBLTj7LUp3A2MXcLTc6z2NzJHgx5EYzYal6DSef40zEdO/3lc8z+ifMX7XTpoYA6Te
+	 BEoHcyKghzTdPdOYtGENPO5WG/IqVhk8Wy44SVXrC/uOBBL8wMGotd6aeUHN8ftG/Y
+	 05IFduzs89D5g==
+Date: Thu, 15 Oct 2026 13:52:45 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Birk Skyum <birk.skyum@pm.me>
+Cc: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>, 
+	Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, Daniel J Blueman <daniel@quora.org>, 
+	Sasha Levin <sashal@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Manikanta Mylavarapu <quic_mmanikan@quicinc.com>, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] Revert "i2c: qcom-geni: Fix hardcoded clock index in
+ SE_GENI_CLK_SEL"
+Message-ID: <atC-ZZLkXs3yM6l4@zenone.zhora.eu>
+References: <20261014130805.48840-1-birk.skyum@pm.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,99 +47,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PR3PR07MB69223331EED5BEBE150375B7849C2@PR3PR07MB6922.eurprd07.prod.outlook.com>
+In-Reply-To: <20261014130805.48840-1-birk.skyum@pm.me>
 
-On Thu, Oct 15, 2026 at 09:03:42AM +0000, Antoine HURET wrote:
+Hi Birk,
 
-/me mutters something about having to go install and learn docker and
-what's wrong with simple shells scripts that poke about in /cgroup
-filesystems :-)
+On Wed, Oct 14, 2026 at 01:08:08PM +0000, Birk Skyum wrote:
+> This reverts commit cb97bf3d4f91453b881acaf8e9f0cc47bb40b604.
+> 
+> With that commit the keyboard and touchpad of the Lenovo Yoga Slim 7x
+> (x1e80100) are dead, also at the disk passphrase prompt, on 7.2.9 and on
+> v7.3-rc7. The first transfer on their bus fails.
+> 
+>   geni_i2c b80000.i2c: Bus proto err, noisy/unexpected start/stop
+>   i2c_hid_of 1-003a: failed to fetch HID descriptor: -5
+> 
+> With the commit the I2C serial engine clocks read 32 MHz, without it
+> 19.2 MHz. A fix for the 32 MHz fast-mode timing is still being
+> discussed, so go back to the previous behaviour for 7.3. This brings
+> back the hardcoded index 0 in SE_GENI_CLK_SEL.
+> 
+> On v7.3-rc7 with only i2c-qcom-geni.ko swapped, the keyboard is dead
+> without this revert and works with it.
+> 
+> Fixes: cb97bf3d4f91 ("i2c: qcom-geni: Fix hardcoded clock index in SE_GENI_CLK_SEL")
+> Reported-by: Birk Skyum <birk.skyum@pm.me>
+> Closes: https://lore.kernel.org/r/179173732257.29426.7905170638383807320@pm.me
+> Link: https://lore.kernel.org/r/ae03e7a3-75f1-42df-b0e6-0e64358be647@oss.qualcomm.com
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Birk Skyum <birk.skyum@pm.me>
 
-> Analysis
-> ========
-> 
-> A cgroup event takes its times from a per-cpu cgroup clock.
-> That clock only moves forward when update_cgrp_time_from_cpuctx() or
-> update_cgrp_time_from_event() is called: on a cgroup switch, on a read
-> of an active event, and in ctx_sched_out().
-> 
-> Up to v6.1, perf_rotate_context() went through ctx_sched_out(), which
-> updated the cgroup clock. Since bd2756811766, it only updates ctx->time
-> (update_context_time()) before __pmu_ctx_sched_out().
-> 
-> So between two cgroup switches, the rotations see a frozen cgroup
-> clock. The events rotated out lose the running time they accumulated,
-> and the next update (usually the read) credits the whole interval to
-> the events that happen to be on the PMU at that moment.
-> 
-> Supporting this: a task from another cgroup waking up every 0.5 ms on
-> the same CPU (each wake-up goes through perf_cgroup_switch()) makes
-> the values correct again.
-> 
-> 
-> Proposed fix
-> ============
-> 
-> Update the cgroup clock in the rotation, as before v6.2:
-> 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc)
->  	if (cpu_event) {
->  		update_context_time(&cpuctx->ctx);
-> +		update_cgrp_time_from_cpuctx(cpuctx, false);
->  		__pmu_ctx_sched_out(cpu_epc, EVENT_FLEXIBLE);
->  		rotate_ctx(&cpuctx->ctx, cpu_event);
->  		__pmu_ctx_sched_in(cpu_epc, EVENT_FLEXIBLE);
-> 
-> Tested on v7.3-rc7 (results above). Also tested on the Ubuntu 6.8
-> kernel, where the values are correct for a parent cgroup, for two busy
-> cgroups sharing the CPU, and for idle or mostly sleeping cgroups.
-> 
-> I am not a perf core expert. The root cause analysis and the fix were
-> done with the help of an AI assistant. I reproduced the bug, then
-> built and tested the fix on my machines. Corrections or a better fix
-> are welcome, and I am happy to test them. If this is the right fix, I
-> can send it as a proper patch.
+there is a fix taken here:
 
-Yes, I think this is right.
+8cb5c17be3a2 ("i2c: qcom-geni: Restore the source-clock selection policy")
 
-That said; while looking at this, I wonder if we should write this like
-so instead. Although perhaps we should do this on top, your patch is
-trivial, correct and more convenient for backport.
-
-
-
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7846d70be57f..029c11e7358d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2535,8 +2535,10 @@ __ctx_time_update(struct perf_cpu_context *cpuctx, struct perf_event_context *ct
- 			return;
- 
- 		update_context_time(ctx);
--		/* vPMU should not stop time */
--		update_cgrp_time_from_cpuctx(cpuctx, !(event_type & EVENT_GUEST) && final);
-+		if (ctx == &cpuctx->ctx) {
-+			/* vPMU should not stop time */
-+			update_cgrp_time_from_cpuctx(cpuctx, !(event_type & EVENT_GUEST) && final);
-+		}
- 	}
- }
- 
-@@ -4633,12 +4635,12 @@ static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc)
- 	 * and then, if needed CPU flexible.
- 	 */
- 	if (task_event || (task_epc && cpu_event)) {
--		update_context_time(task_epc->ctx);
-+		ctx_time_update(cpuctx, task_epc->ctx);
- 		__pmu_ctx_sched_out(task_epc, EVENT_FLEXIBLE);
- 	}
- 
- 	if (cpu_event) {
--		update_context_time(&cpuctx->ctx);
-+		ctx_time_update(cpuctx, &cpuctx->ctx);
- 		__pmu_ctx_sched_out(cpu_epc, EVENT_FLEXIBLE);
- 		rotate_ctx(&cpuctx->ctx, cpu_event);
- 		__pmu_ctx_sched_in(cpu_epc, EVENT_FLEXIBLE);
+Thanks,
+Andi
