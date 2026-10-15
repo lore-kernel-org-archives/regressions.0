@@ -1,60 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx1.manguebit.org (mx1.manguebit.org [143.255.12.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E27154857A;
-	Thu, 15 Oct 2026 19:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C2F448CF6;
+	Thu, 15 Oct 2026 19:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=143.255.12.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792092984; cv=none; b=CM26fzSdEMPhgLXdSEpycELqCkkuGDEd+8HNOFGuvtvunsVQTFRsPvPl7kecshNWVTrGOpAHyOxpkcQ5TnQ3sq8J66XFKq7C9QKicL68JmQ9ukkDYERXREusdlKNuIynKCFXwR3GgBfz7Q77rh35+oeR5AjNgeQvBBKTMWtmLOw=
+	t=1792094074; cv=none; b=uk2nPmgNy4RDWYxbWApZq+BvevxMtTUZOYJDdF3p/dxkds7R39bZ9OgNhLlGN/0oDVV6P1WzL76AZXqX0CsnehAUR2IdOveZNKLx44TvNZCuCxX5jkYyLj35LIJkeH8jv0fGbMNrJtOL33JvmPcbxMV/QtTD70fDOngdL6rwee8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792092984; c=relaxed/simple;
-	bh=/XmKqd+AeeMarCKLh8geg4KRCS/4fi9ZGtYX1pUaFHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kaRO9WW550UW8z7k0kxKHbdNC490E0X0UaewHYWBivWqa+aXXeCE5loY6OzGM6VXiFynUeltohPS06NbnYnTGZd7RvF6D23LJQ6y51HRId1CS2D30uId0wpDuz/vZFShK4f8Q979SHK8G569wiAiQJ7Yv80ws4elWTKE+jh7ACE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rda84AJj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792094074; c=relaxed/simple;
+	bh=+8ApG/KOPylKq8Xuqz8fDeFvoSprr1JeH+SYdrEUUIk=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=K8GDB1Bs6tECNoV4GHA3xOToQPbMZw4xZuWx0rdJe6+zM0LHLIYYFlL2VYRWgOIpIyU1VicNhtR2Q6DJw71E+o5iMn+8AU3V1SwPurR2oLV2qS/WEDIUQoWSPmnkPlf19QeXcVnIXG2E9nwJYWKeUERKuZwV9/hHYNfHvZJjDV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org; spf=pass smtp.mailfrom=manguebit.org; dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b=z7GiBAcd; arc=none smtp.client-ip=143.255.12.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rda84AJj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCE91F000C5;
-	Thu, 15 Oct 2026 19:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792092983;
-	bh=ldL5OxLWg7bOAW/ntJKKMRxWGCqyVIFbmgTCdkcd7LI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Rda84AJj4UeLH7dXmif0l75MDWDZ/UEPUEEFCnjJqpJGFZLAbA56DC5PTazkyZgWZ
-	 BIHgqwrRIS9pnTDfRZh0GWZtAsttwzFvX4r26UcL0RuzDUIXNMomP+Uh1Vy6KNEmSh
-	 ATun0uVdcNE38+a9F0PQfZhiKr1bDRmRBWWKkA8G2CKnFir4Lg/tYJw2lke/HouDAJ
-	 +1glGFeR2uIAfYNUSO3XFJ8yrqrk0uulmwYvTVtIG5R4v5zqi7LRDDNWg2FFiJBT7/
-	 fdzjMQua9lEuv6uI1VGPCinWDeZa0blr8mMqahtwjJ5vggcJ+bvCn7oxxDG2JOH837
-	 yF3tdC4Utk7Yw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <cel@kernel.org>,
-	linux-nfs@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>,
-	Lubos Rendek <l.rendek@proxmox.com>
-Subject: Re: [PATCH 6.18.y] nfsd: fix all-zero stateid in CB_OFFLOAD for async COPY
-Date: Thu, 15 Oct 2026 15:35:45 -0400
-Message-ID: <2026-10-15-1-daily-reply-0002-nfsd-cb-offload-6-18@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261015005725.550511-1-l.rendek@proxmox.com>
-References: <20261015005725.550511-1-l.rendek@proxmox.com>
+	dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b="z7GiBAcd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=manguebit.org; s=dkim; h=Content-Type:MIME-Version:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Rdy/USckRDiUHpHcTww7JstIS2jFG+fr0IFeLGZ67ig=; b=z7GiBAcdIWvU6PuqZh5+wIVsMk
+	mufEkYK43tc8JjQGhYsBdgq4nKlFJ+Ia2lS5W0o3qXT7f8IkE0mZiuX+LNsIZgu/vqOFQCLSCpfT5
+	E1VOK7VPxQ37IthaFhhWsZhzw2R/PTsyiOca8JBU26E7NyucyR6ZUOGJpWY1JkHxy96lhVFdaUtwX
+	fMYAXv6MR1INzkRKZL0PWMECc0PhaR8YjNrZe3Vn99Tt3Swpvr8bIvKXFKz+YegnhTojTXMjEECc6
+	TgSEPUYSOMcAoerhxKZLMZ6+JLss3CIYsB0W2c1KDSLoQG6SEq6lVQULZE1BAh3bKe9uMrC7A6Qwq
+	BvHSz2lA==;
+Received: from pc by mx1.manguebit.org with local (Exim 4.99.5)
+	id 1xHRX3-00000003jVA-45TR;
+	Thu, 15 Oct 2026 16:54:29 -0300
+Message-ID: <441cd931c56cb539eb099bf6d976cc59@manguebit.org>
+From: Paulo Alcantara <pc@manguebit.org>
+To: Paul Aurich <paul@darkrain42.org>, linux-cifs@vger.kernel.org,
+ stable@vger.kernel.org, Namjae Jeon <linkinjeon@kernel.org>
+Cc: Henrique Carvalho <henrique.carvalho@suse.com>, Sasha Levin
+ <sashal@kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] smb: client: batch SRV_COPYCHUNK entries to cut
+ round trips - 6.12.y EIO above 12 MiB with SMB3 encryption
+In-Reply-To: <atEn9dyqsyI3SNaP@redcloak.home.arpa>
+References: <atEn9dyqsyI3SNaP@redcloak.home.arpa>
+Date: Thu, 15 Oct 2026 16:54:29 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-> [ There is no upstream commit: this fixes the 6.18.y backport of
->   d0beaee498e1. Mainline fixed the problem as part of the async COPY
+Thanks for the report.
 
-Queued for 6.18, thanks.
+Paul Aurich <paul@darkrain42.org> writes:
 
--- 
-Thanks,
-Sasha
+> In stable 6.12.y releases, a copy_file_range request exceeding 12 MiB on an
+> encrypted SMB3 mount fails with EIO and a WARN_ON_ONCE() splat in
+> SMB2_ioctl_init:
+>
+>      # cp /mnt/otters/13mib.bin /mnt/otters/output.bin
+>      cp: error copying '/mnt/otters/13mib.bin' to '/mnt/otters/output.bin':
+>      Input/output error
+>
+> Works in 6.12.110.  Fails in 6.12.111 through 6.12.113 (latest).  Via
+> bisection, introduced by 8d103b285359 ("smb: client: batch SRV_COPYCHUNK
+> entries to cut round trips").
+
+Does it work if you backport the other 3 missing commits?
