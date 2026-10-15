@@ -1,381 +1,107 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5903E2ACA
-	for <regressions@lists.linux.dev>; Thu, 15 Oct 2026 15:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5477B3AB27B;
+	Thu, 15 Oct 2026 16:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792078350; cv=none; b=O2zOONCLQdmk9Xr+1rUCr4a4avC/3hmGL6ITkMC8WdzoB00N0ZYRzrFnsy2mE9aK3Wm/1VbH2uCUd2X5lUAOdWSQ7nwKFwg0uLx8nUOJUvf2LsCagII/qWUDjUDZ/EElSG+OGqQ5WHIsXW+TvV0whM28ISqlme5bVXe7sJqbbF4=
+	t=1792080715; cv=none; b=B3MhDQqiXMq31aarESQBmTxRK9uXzMPcp98TRS9e7fzdJJWI3Ss/FWGUr8K3hR4gj9Q9+6IPd0K3UdEieZMOHm/fGwnzK62b55OD9k0mSPWffV9jdlZ44jd5v2X4PtvvWb/rFRzU9MhBDfni5DVnYha2ZB2C6iAjeRRQstB6+A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792078350; c=relaxed/simple;
-	bh=dRQxOY6M1ZTR87IcuIO6396JUP83HtzoNMA4wDPwxjY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=OovMkfw65UTC08qiwCzvkiZPMa1Finy0tstDNgKk8NyyVnwwQ9CalfMoxb9JLOgZLVZVJqi6A1uWZOEpaYotw+jOd/fA8iBTkhXjON1pkjcDJ0z2RE+b0K3H0n7MZ4KqAbt93sdXw6jEXLg9QIsW7s9SCm52fZsf6xoPxPBaigY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bWFi874X; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792080715; c=relaxed/simple;
+	bh=SAXqArEKNIwn4SpiJD1Tvi8fx9gMwRSxuDcz94KjoiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=YG7hu72UIBDkWgq5P2PBcsoEoXlcIpffFWSx3k35VbdtD65diAj9e4P/kfNLk4HSjaxIQldDIgp7ZjDEO2R0HgNhENLGcTXCcpa6SqsSFBSxSz0WDOH3gt/mQJr3N9rGCczlDRqGfqxSQEgvHNFzQj6XTtMe9vbfedsUVI3iXUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpsT6wAR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWFi874X"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-88b7d853b11so954766b3a.1
-        for <regressions@lists.linux.dev>; Thu, 15 Oct 2026 08:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792078340; x=1792683140; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=crx1YR/SfB41hfDYmI9jxzk8Ryxa8Ve/h/yCnmWkATw=;
-        b=bWFi874X6LI/WtEH2Q+TBmShS+0TrpwnhiK1C8iOg+t4wFvxhu5tSRYm2fXYdXNudG
-         EhFJmwmSBBPPZ1eCL4HvX0T4ZRq+iX6rLN2Aol7Rlakcj8rUXo7QTobv/Q/EVKpk1g6H
-         0oss02WGGgZaJTUc/FDoanw6Zlf1fVa7HWvr6+fer7VjGAb9S7frT1+8oLDddEF+i2Gu
-         eSgtljehhuHKVKEIAFj/KG6zRcsQqBd5IYpvjsGFQgNOhZo4iZCUSHmihWACyYkwSQe2
-         mKcU3vXYqxa5tucjM5ihYPJGqoRUKMYmuYFA9nOlrNlMfggTql47FKLWs3OeH/YcfQJc
-         jplw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792078340; x=1792683140;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=crx1YR/SfB41hfDYmI9jxzk8Ryxa8Ve/h/yCnmWkATw=;
-        b=LpUBLaG4i5zXX1uzvRJ//RKsAvraNrHXdEtzz8/dFPUCnXaKR45h8uEIsB0D+OaaZA
-         NfzJPMjjCayU2LIZ65fm4KqKLLRHz4a/c8nTQtZKkncOPaN47juIBuBciYVX9WKAMkOa
-         1SmxXnZiQ3aNZCSXwRadHqTSnOBGzNQ2hKA9BCdn80rXCjv0FHwvlwGFvJgeQ7cyqLWV
-         DkXPoHO/M5JOBcUNRzMXMe1D1uvTonSLi18L1lZ9CkiV/datSndUPnCdr70x8oLYV4mt
-         9lwO54no7P37wetMY1hOPPsA+zFNB3a4+jze2GjCqr9wEPFwqmJnGaz1Xo4BOavTkeZj
-         eWLQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzKHRbHgMasBwRXcM8QFbdFwItJ3e0XYI+tUIDjoYA+DNrGUDiR/La8sFdZHlO8Fh3LmXsj51nOmcxVxA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKp+QGppY6BKZdnkvUhMMcc7yaRBY7e18oyK0lYGkpBMd2Ze7W5
-	MC6J9MFEomTfhukzwrYFOh1BaRM0YOp1ZV86HzQ32bzDrWprFH6Qs0ns
-X-Gm-Gg: AYBFou1MgPk5jzsdJkFcFgyDFqXuvX2+mWaehYLCTW1K36GOTI1MB9kVItYApv6+5X4
-	sbVsvBrMiF30s8IkzpsjY39wEugvf49XnplniSArzLG5pBiD8YljwXudpYkR583KcQRdm8t+Itj
-	bTl21IAourbneKTFghMlFUXy/4dA/7k88cpPqvL5UIVAwkctfIXlpewQ4DfvNo6x7DTHKINXl/M
-	vKz7tlvyv+Db0e57Ae/hBc0S5eQK2UrpD5seLkFS/smtyvzGxaWPxK2gnalIAduzbugXOZZQqre
-	xeZmNgMoVXM5x/X810ItVxMHT/dQsyTOdb4VFGxK7sRIa/OoqqgbjjW8n5oZgxE6nCzzkQ6j/xB
-	eDJbdzOE0fMKta9kJCzV5pQ6356N4Fpm3NXopkSUiHiIqNfjPWRzPjk5XkRUcp48O4NizGU+Ezb
-	BmNLaB0k50Qctcf8CZsygmAC3w7OpVwrEjw+qtWSAzMceYQs6P4TKqWfBJza/qacrRYmoYtTwd4
-	M1Ui9nvDl7tF3BaJNhHDYewSPyzXL9F10tx
-X-Received: by 2002:a05:6a00:983:b0:89e:8423:6863 with SMTP id d2e1a72fcca58-89e84236d2emr2125283b3a.37.1792078339508;
-        Thu, 15 Oct 2026 08:32:19 -0700 (PDT)
-Received: from smtpclient.apple (v133-18-180-162.vir.kagoya.net. [133.18.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-89e45dcb382sm1273564b3a.15.2026.10.15.08.32.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 15 Oct 2026 08:32:18 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpsT6wAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3F81F000C8;
+	Thu, 15 Oct 2026 16:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792080704;
+	bh=IQdbaoSFRXekS2+4DLUGE6FHzrR2CGuPVAwdUkAu3YQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=UpsT6wARceG13wnq0H7X9ChGl1BOrF8IHp8eLtETtcIBgpsBcnnSz629dxAaDE7DR
+	 h++uWbxieyBAQ+bsTZvr5th92BnUf+g9jlALyrQL8Rg8uzhsVzDFr4gOH87j1Gf2aK
+	 Ltte609X2BGeKajTqPVAjLiRoanSvhcj9qHYps9/UoPSzBPuMipPjeH+xQX96pLwmc
+	 li4uVUkziHXYTAXaV/lq7g77+lRE+tnpkzYM1vi7haoJSytEBwEtJX2BLPvXFUi9GK
+	 ODleAqm8HMfGSUC6nWYbeEMuCr2gvU4vLX17mrilfkLr4bxrViD8nWQzYrpQm8y2OF
+	 Xb1dvh+Yfcz+Q==
+Date: Thu, 15 Oct 2026 11:11:43 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexander Gruhlke <gruhlke@mailbox.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Williamson <alex@shazbot.org>,
+	Hui Wang <hui.wang@canonical.com>, Linux-Fan <info@masysma.net>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3 0/2] PCI: Wait after FLR for devices that don't honor
+ Immediate Readiness
+Message-ID: <20261015161143.GA1772020@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
-Subject: Re: [REGRESSION] 6.12.111: "net: advertise TCP MSS from the
- configured MTU, not the learned PMTU" breaks TCP through relays when the
- peer's network drops ICMP
-From: Echoo Wall <echoowall@gmail.com>
-In-Reply-To: <9776e821-f95e-4ee4-8595-4bbf4b48ad36@leemhuis.info>
-Date: Thu, 15 Oct 2026 23:31:51 +0800
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
- Eric Dumazet <edumazet@google.com>,
- netdev@vger.kernel.org,
- regressions@lists.linux.dev,
- stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <171BADBE-5209-4AA9-A144-50ABBA2D366E@gmail.com>
-References: <4F0FAEB6-A13B-47F3-BFF1-C706686C6F64@gmail.com>
- <9776e821-f95e-4ee4-8595-4bbf4b48ad36@leemhuis.info>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-X-Mailer: Apple Mail (2.3901.100.1.1.12)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261012222331.GA1411603@bhelgaas>
 
-On 10/15/26, Thorsten Leemhuis wrote:
-> Thx for the report. That is a mainline commit, but this might be a
-> stable specific thing due to a broken backport. These cases in the end
-> might be handled by different people, so somebody needs to check which
-> if the two it is. Could you thus check if 7.3-rc7 or later is still
-> affected? If it is, please try to check if reverting the commit fixes
-> things; if it is not, please check a revert with the stable series you =
-use.
+On Mon, Oct 12, 2026 at 05:23:31PM -0500, Bjorn Helgaas wrote:
+> On Sun, Oct 11, 2026 at 09:01:43PM +0200, Alexander Gruhlke wrote:
+> > Since v7.2, VFIO passthrough of a Samsung 990 PRO NVMe [144d:a80c] fails
+> > on the second VM start, and the device is inaccessible until reboot.  The
+> > drive advertises Immediate Readiness but returns ~0 for up to 7 ms after
+> > FLR, so since 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring
+> > BARs") the config restore after FLR is lost.
+> > 
+> > Patch 1 ignores Immediate Readiness on that drive.  Firmware 8B2QJXD7
+> > fixes it, but the Revision ID and Subsystem ID don't change, so the
+> > quirk can't tell firmware versions apart.  A 990 EVO Plus [144d:a80d]
+> > reports the same errors [1], but it isn't confirmed to advertise
+> > Immediate Readiness, so it's not included.
+> > 
+> > Patch 2 is independent and keeps pci_dev_wait() from treating ~0 as
+> > ready with RRS Software Visibility, which also affects the Intel
+> > [8086:0a54] in the open d591f6804e7e regression.  Hui, Linux-Fan: testing
+> > patch 2 on that drive would be appreciated.
+> > 
+> > Tested on v7.2.9 (Ryzen 9 7950X, X670E): with patch 1 and drive firmware
+> > 1B2QJXD7, three VM starts in a row work, and every FLR reports "ready
+> > 0ms after FLR".  With firmware 8B2QJXD7, plain v7.2.9 works.
+> > 
+> > Patch 2 is only tested for regressions, as the drive no longer shows the
+> > problem: below a Root Port with RRS SV, three VM starts work and every
+> > FLR reports "ready 0ms after FLR".  The VF path is untested with the
+> > patch, but on another machine, an X550 VF below a Root Port with RRS SV
+> > reads ~0 from the Vendor ID and valid data from the Command register
+> > 100 ms after FLR.  v1's variant, which read the Command register, was
+> > tested against the old firmware, and the drive's Vendor ID read ~0
+> > while it wasn't ready.  Applies to pci/next.
+> > 
+> > Changes since v2:
+> > - Patch 1: add Lukas's Reviewed-by
+> > - Patch 2: read the Command register on VFs whose Vendor ID reads ~0
+> >   instead of treating them as ready (Lukas, sashiko)
+> > 
+> > v2: https://lore.kernel.org/r/20261011163249.18479-1-gruhlke@mailbox.org
+> > v1: https://lore.kernel.org/r/20261010160529.27974-1-gruhlke@mailbox.org
+> > 
+> > [1] https://bbs.archlinux.org/viewtopic.php?id=314833
+> > 
+> > Alexander Gruhlke (2):
+> >   PCI: Ignore Immediate Readiness on Samsung 990 PRO NVMe
+> >   PCI: Don't treat ~0 as ready in pci_dev_wait() with RRS SV
+> > 
+> >  drivers/pci/pci.c    | 14 ++++++++++----
+> >  drivers/pci/quirks.c | 11 +++++++++++
+> >  2 files changed, 21 insertions(+), 4 deletions(-)
+> 
+> Applied to pci/reset for v7.4, thank you!
 
-7.3-rc7 is affected, and reverting =
-2640e64195948a601430d230c9864f5426574cde
-on top of 7.3-rc7 fixes it. So this is not a broken backport; mainline
-behaves the same as 6.12.111.
+On second thought, I think at least the first should be in v7.3
+because it fixes a v7.2 regression.  The other regression dates to
+v6.12, but it seems worth keeping the fixes together.
 
-To make this reproducible without our production setup, I wrote a small
-reproducer that runs on a single host with network namespaces (script
-below):
-
-  cli --(1500)-- r1 --(1456)-- r2 --(1500)-- srv
-
-srv first learns PMTU 1456 towards cli (r2 sends it ICMP frag-needed),
-then cli connects to srv and uploads 1 MB. r1 drops the ICMP
-frag-needed that would go back to cli, like a firewall in front of the
-client. All kernels run in the same KVM guest (Debian 13 userspace).
-
-Results (3 runs each, identical every time):
-
-  kernel                        srv PMTU   SYN-ACK MSS   1 MB upload
-  6.12.107 (Debian)             1456       1416          OK (0.03s)
-  6.12.111 (Debian)             1456       1460          stalls, 10s =
-timeout
-  7.3-rc7                       1456       1460          stalls, 10s =
-timeout
-  7.3-rc7 + revert of 2640e641  1456       1416          OK (0.03s)
-
-The two 7.3-rc7 kernels were built from the same tree and the same
-.config (Debian's 6.12 config + localmodconfig); the only difference is
-the revert, which applies cleanly (4 files changed, 3 insertions(+),
-65 deletions(-)).
-
-Controls:
-
-- Forcing srv to advertise 1460 (ip route ... advmss 1460) stalls on
-  every kernel, including 6.12.107 and the revert, and r1 counts 8
-  dropped frag-needed per run. So the black hole is real and is
-  triggered exactly by the advertised MSS.
-- Clamping MSS to 1416 on r1 (nft: tcp option maxseg size set 1416)
-  makes 6.12.111 work again (3/3). That is the workaround we have
-  deployed on our relays.
-
-This also confirms the two points I had marked as not yet verified in
-my original report.
-
-Reproducer (run as root; needs iproute2, nft, tcpdump, python3, bc;
-optional argument "force1460" or "clamp" for the controls above):
-
----8<---
-#!/bin/bash
-# cli --(1500)-- r1 --(1456)-- r2 --(1500)-- srv
-set -u
-MODE=3D"${1:-}"
-NS=3D"cli r1 r2 srv"
-cleanup(){ for n in $NS; do ip netns del $n 2>/dev/null; done; }
-cleanup
-for n in $NS; do ip netns add $n; ip -n $n link set lo up; done
-ip link add c0 netns cli type veth peer name r1a netns r1
-ip link add r1b netns r1 type veth peer name r2a netns r2
-ip link add r2b netns r2 type veth peer name s0 netns srv
-ip -n cli addr add 10.0.1.2/24 dev c0;  ip -n r1 addr add 10.0.1.1/24 =
-dev r1a
-ip -n r1 addr add 10.0.2.1/24 dev r1b;  ip -n r2 addr add 10.0.2.2/24 =
-dev r2a
-ip -n r2 addr add 10.0.3.1/24 dev r2b;  ip -n srv addr add 10.0.3.2/24 =
-dev s0
-ip -n r1 link set r1b mtu 1456; ip -n r2 link set r2a mtu 1456
-for d in "cli c0" "r1 r1a" "r1 r1b" "r2 r2a" "r2 r2b" "srv s0"; do set =
--- $d; ip -n $1 link set $2 up; done
-ip -n cli route add default via 10.0.1.1
-ip -n srv route add default via 10.0.3.1
-ip -n r1 route add 10.0.3.0/24 via 10.0.2.2
-ip -n r2 route add 10.0.1.0/24 via 10.0.2.1
-for n in r1 r2; do ip netns exec $n sysctl -qw net.ipv4.ip_forward=3D1; =
-done
-for n in cli srv; do ip netns exec $n sysctl -qw =
-net.ipv4.tcp_mtu_probing=3D0; done
-ip netns exec r1 nft -f - <<NFT
-table inet fw {
-  chain f1 {
-    type filter hook forward priority 0;
-    ip daddr 10.0.1.0/24 icmp type destination-unreachable icmp code =
-frag-needed counter drop
-  }
-  chain o1 {
-    type filter hook output priority 0;
-    ip daddr 10.0.1.0/24 icmp type destination-unreachable icmp code =
-frag-needed counter drop
-  }
-}
-NFT
-[ "$MODE" =3D "force1460" ] && ip -n srv route add 10.0.1.0/24 via =
-10.0.3.1 advmss 1460
-[ "$MODE" =3D "clamp" ] && ip netns exec r1 nft add rule inet fw f1 tcp =
-flags syn tcp option maxseg size gt 1416 tcp option maxseg size set 1416
-ip netns exec srv ping -c 2 -W 1 -M do -s 1472 10.0.1.2 >/dev/null 2>&1
-ip netns exec srv ping -c 1 -W 1 -M do -s 1472 10.0.1.2 >/dev/null 2>&1
-PMTU=3D$(ip netns exec srv ip route get 10.0.1.2 | grep -o 'mtu [0-9]*' =
-|| echo "none")
-ip netns exec srv python3 -c '
-import socket
-s=3Dsocket.socket(); =
-s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1); =
-s.bind(("0.0.0.0",9000)); s.listen()
-c,_=3Ds.accept(); n=3D0
-while True:
-    b=3Dc.recv(65536)
-    if not b: break
-    n+=3Dlen(b)
-c.sendall(str(n).encode()); c.close()' &
-SP=3D$!
-rm -f /tmp/synack.pcap
-ip netns exec srv tcpdump --immediate-mode -nni any -U -w =
-/tmp/synack.pcap 'tcp src port 9000 and tcp[13] & 18 =3D=3D 18' =
-2>/dev/null &
-TP=3D$!
-sleep 3
-START=3D$(date +%s.%N)
-RES=3D$(ip netns exec cli timeout 10 python3 -c '
-import socket
-s=3Dsocket.create_connection(("10.0.3.2",9000),timeout=3D10)
-s.sendall(b"x"*1048576); s.shutdown(socket.SHUT_WR); =
-print(s.recv(100).decode())' 2>&1 | tail -1)
-END=3D$(date +%s.%N)
-sleep 2; kill $TP $SP 2>/dev/null; wait 2>/dev/null
-MSS=3D$(tcpdump -nr /tmp/synack.pcap -v 2>/dev/null | grep -o 'mss =
-[0-9]*' | head -1)
-DROPS=3D$(ip netns exec r1 nft list ruleset | grep -o "packets [0-9]*" | =
-awk "{s+=3D\$2} END{print s}")
-echo "kernel=3D$(uname -r)${MODE:+ [$MODE]} | srv PMTU: ${PMTU} | =
-SYN-ACK: ${MSS:-none} | 1MB upload: $( [ "$RES" =3D "1048576" ] && =
-printf 'OK in %.2fs' $(echo "$END - $START" | bc) || echo "FAILED =
-(${RES:-timeout})") | frag-needed dropped by r1: ${DROPS:-0}"
-cleanup
----8<---
-
-Note that in "clamp" mode the capture on srv still shows 1460, since the
-rewrite happens on r1; the client sees 1416.
-
-Thanks.
-Esko Mobius
-
-
-> 2026=E5=B9=B410=E6=9C=8815=E6=97=A5 17:04=EF=BC=8CThorsten Leemhuis =
-<regressions@leemhuis.info> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On 10/9/26 18:27, Echoo Wall wrote:
->>=20
->> After a routine stable update from 6.12.107 to 6.12.111 (Debian =
-trixie-security,
->> 6.12.111-1), TCP connections to our servers started timing out for a =
-subset of
->> clients. Booting back to 6.12.107 / 6.12.101 fixed it immediately. I =
-believe the
->> cause is:
->>=20
->>  2640e64195948a601430d230c9864f5426574cde
->>  net: advertise TCP MSS from the configured MTU, not the learned PMTU
->>  (in stable 6.12.111 and 6.18.51)
->>=20
->> #regzbot introduced: 2640e64195948a601430d230c9864f5426574cde
->=20
-> Thx for the report. That is a mainline commit, but this might be a
-> stable specific thing due to a broken backport. These cases in the end
-> might be handled by different people, so somebody needs to check which
-> if the two it is. Could you thus check if 7.3-rc7 or later is still
-> affected? If it is, please try to check if reverting the commit fixes
-> things; if it is not, please check a revert with the stable series you =
-use.
->=20
-> Ciao, Thorsten
->> Topology
->> --------
->>=20
->>  client ---(internet)---> relay (Linux, nftables DNAT + masquerade) =
----> server
->>                                                               ^
->>                                                 path MTU 1456 on this =
-hop
->>=20
->> - Servers have a 1500-byte interface MTU, but the path between the =
-relay and the
->>  server has a PMTU of 1456 (encapsulation upstream). The server =
-learns this
->>  correctly: `ip route get <relay>` shows `cache mtu 1456`.
->> - Clients reach the server only through the relay (port-based DNAT, =
-SNAT to the
->>  relay address).
->> - Some client networks (typical corporate firewalls) drop ICMP
->>  "fragmentation needed".
->>=20
->> Behaviour
->> ---------
->>=20
->> Before (<=3D 6.12.110): the server's SYN-ACK advertised MSS 1416, =
-derived from the
->> learned PMTU. Clients never sent segments that were too large. =
-Everything worked,
->> including from networks that filter ICMP.
->>=20
->> After (6.12.111): the SYN-ACK advertises MSS 1460 from the configured =
-MTU. The
->> client sends 1500-byte packets. They are dropped at the 1456 hop, and =
-the ICMP
->> error never reaches the client because its network filters it. The =
-handshake
->> completes, then the connection stalls: a classic PMTU black hole.
->>=20
->> Direct connections to the same servers, without the relay hop, keep =
-working, and
->> so do servers still on <=3D 6.12.110 behind the same relays. That =
-made the problem
->> very hard to attribute: it only appears from certain client networks, =
-only on
->> relayed paths, and only after a kernel update that nothing points to.
->>=20
->> What I verified
->> ---------------
->>=20
->> - Reproducible per host by switching only the kernel. Rebooting =
-without changing
->>  the kernel does not help. Same sysctls on both kernels (309 TCP =
-parameters
->>  compared), same userspace.
->> - On 6.12.107 the server has `cache mtu 1456` towards the relay, so =
-the
->>  SYN-ACK MSS is derived from it (1416). With this commit the =
-advertised
->>  MSS comes from the 1500-byte device MTU (1460) instead. That matches =
-the
->>  symptom exactly, but I have not yet captured a 6.12.111 SYN-ACK on =
-the
->>  affected path.
->> - As a workaround we now clamp MSS on the relay
->>  (`tcp flags syn tcp option maxseg size > 1416 tcp option maxseg size =
-set 1416`
->>  in the forward chain). I have not yet re-tested 6.12.111 behind it.
->>=20
->> Why I think this matters
->> ------------------------
->>=20
->> The commit message argues that on symmetric paths nothing is lost =
-because "the
->> peer usually already knows the real path MTU". That assumption does =
-not hold when:
->>=20
->>  1. the peer sits behind a firewall that drops ICMP =
-fragmentation-needed, which
->>     is common in enterprise networks; and/or
->>  2. the narrow hop is only on the server side (relay, tunnel or =
-overlay egress),
->>     so the peer has no way to learn it other than via ICMP.
->>=20
->> In both cases the receiver-side PMTU knowledge was the only thing =
-that kept the
->> connection working. The old behaviour was effectively a built-in =
-safeguard for
->> these black holes, and it has been in place for a very long time.
->>=20
->> This is now shipping as a security update in LTS/stable kernels and
->> distributions. It silently breaks previously working deployments, and =
-only for
->> some users, so most operators will not connect the symptom to the =
-kernel. The
->> 6.6 / 6.1 / 5.15 backports appear to be still pending, so there may =
-still be
->> time to reconsider before it spreads further.
->>=20
->> Possible ways forward (just suggestions):
->>=20
->>  - revert from stable and keep it in mainline until there is a safer =
-variant;
->>  - make it opt-in (sysctl or per-route flag) for the asymmetric / DSR =
-case it
->>    targets;
->>  - or only ignore the learned PMTU when there is evidence of =
-asymmetry, instead
->>    of unconditionally.
->>=20
->> I am happy to test patches on the affected setup.
->>=20
->> Thanks.
->> Esko Mobius
->=20
-
+I moved them both to pci/for-linus for v7.3.
