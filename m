@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4301F386426;
-	Fri, 16 Oct 2026 14:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA1C4AB1CA;
+	Fri, 16 Oct 2026 17:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792162297; cv=none; b=BFt+5mAuFiNG5orwMon8vjgzYiUGDFqVQnKDwY/HsBwvw/yDa7/um4c12JaA8usZthGoaxPRKTfJONkjcRgxIx17fR5qymOlEXF2lvPk5dF8GSdQSbjOUxdRKhaOplkxysV5xwM7/hFmLxb25wAyXOV/5Cuu0ytXK3+VXnthbBg=
+	t=1792170959; cv=none; b=gz5OUqnznKLIcuAjlD/GMA+g4Pz7gRqKmszwERamOJiyqanMPBB0ypul19QOEtc1zQ4tWyKe+2PNKXgh/9JiLrMIns7yTnY1goPFXCCzcVa1MABqa1OjznvD8/v6b0BexxINLm9bqdDSwtz/LgpuMq/fGF9XtAixDlNR83w2XHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792162297; c=relaxed/simple;
-	bh=Ems59G3BFGK+I1lmNDzZemrTVec3h4lqpC5IkM5QqFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eg3Rf/Rk90EMzRIK8lCmNs7kFRX0Q2RCQEain1kMjoXzKHqYnwv0q40XyliETO59dQHT0ntRgIg/j+7cfiK6d5C484lAvcxJBf2gZ5gL/GDhACPvd3lKyNnqAz1ViMhMv0Pmurd5Bjl25R2prmTkWhTekjJqyG0ehgCjwBINk2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b2zbQLfB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792170959; c=relaxed/simple;
+	bh=BOw5miibhYa6y5iW7K3MQzzhkYfcdzxmYu3wZGKeALU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kluTXF/SOBojNEKH4pCBV4X1cHmkPGw4x5uss8mPKRf/24IVtZXeH5HJFi1l2yRojhPdViOprXeIbSWHesNi4Q6rSO9mIHEKx16p5QzNc8t37fuA61Qsp9tGjtLhFj4z+ITjV0oW/dy31Bc2sSbSU3LPqEgzwFqb4iN3mgAGMr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ic4+wB9I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b2zbQLfB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750321F000C4;
-	Fri, 16 Oct 2026 14:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1792162296;
-	bh=TyPaUzFOJSmNGcKiNKdDNUdNEou4J2E/ZpziikI46rs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=b2zbQLfB9fdLwxkUGC2UcXcS3Wlwaok5SKznedF1O0ipjc22ki4x/L+Yy9ZRqtxzR
-	 PjY4O/fQM92C36FP3WrKfiERPknk2GHeukrUdf9J0MiTcTSB56VuyM3iQ7V5cDhriw
-	 F8Q3FRLSqFlGhDzX8sZ8OWORaM5MGFFkrj408ipQ=
-Date: Fri, 16 Oct 2026 16:51:39 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Paulo Alcantara <pc@manguebit.org>
-Cc: Paul Aurich <paul@darkrain42.org>, linux-cifs@vger.kernel.org,
-	stable@vger.kernel.org, Namjae Jeon <linkinjeon@kernel.org>,
-	Henrique Carvalho <henrique.carvalho@suse.com>,
-	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] smb: client: batch SRV_COPYCHUNK entries to cut
- round trips - 6.12.y EIO above 12 MiB with SMB3 encryption
-Message-ID: <2026101633-evaluate-jurist-020f@gregkh>
-References: <atEn9dyqsyI3SNaP@redcloak.home.arpa>
- <441cd931c56cb539eb099bf6d976cc59@manguebit.org>
- <atFFiAr9gbs9jXZA@redcloak.home.arpa>
- <437553f9978afec2dc14363fdfedab5f@manguebit.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ic4+wB9I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FBA41F000C6;
+	Fri, 16 Oct 2026 17:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792170957;
+	bh=1ygOFDw20tv57eftFx/OywoOkXdBvhlYV4RYTr2N/+o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=Ic4+wB9IWzVX8uH9KV2wLu82B4IwhbxYEnPcaxWIcyQh2pkhBPqZ69OTkqmWkTM9F
+	 0+WzsUDQCg+9jRBuBeedECNK3t8qy5h0uA4pxefvIM9DP6gEqBoIXnirzauo9Dn2n/
+	 3T2/7xCilcDWTEirxGDDauRN2SeM7g/Kin4DvxWczQhAsO44aptfxTlc18naah0tu9
+	 TPTiDN13o/973/Z0HQDNF2qQWdMZ0vkRnPJkkRmDhPcF4MQCmAYuMWu1vWDl3q6aq2
+	 /gvinCcOGjREHZE+AKsGe5aeTrxoSh0MgXCOyxY895GXc5bbpZ4puov2EltTTREkT6
+	 8uB1aVU3WvLZg==
+Date: Fri, 16 Oct 2026 12:15:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexander Gruhlke <gruhlke@mailbox.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	Alex Williamson <alex@shazbot.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] PCI: Ignore Immediate Readiness on Samsung 990 EVO Plus
+ NVMe
+Message-ID: <20261016171556.GA1880496@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,44 +43,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <437553f9978afec2dc14363fdfedab5f@manguebit.org>
+In-Reply-To: <20261016102042.641801-1-gruhlke@mailbox.org>
 
-On Fri, Oct 16, 2026 at 11:08:20AM -0300, Paulo Alcantara wrote:
-> Paul Aurich <paul@darkrain42.org> writes:
+On Fri, Oct 16, 2026 at 12:20:42PM +0200, Alexander Gruhlke wrote:
+> Like the 990 PRO, the Samsung 990 EVO Plus [144d:a80d] advertises
+> Immediate Readiness, and VFIO passthrough of it fails since commit
+> 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring BARs").
+> Using a bus reset instead of FLR works around it, and the latest
+> firmware, 2B2QKXG7, is still affected.
 > 
-> > On 2026-10-15 16:54:29 -0300, Paulo Alcantara wrote:
-> >>Thanks for the report.
-> >>
-> >>Paul Aurich <paul@darkrain42.org> writes:
-> >>
-> >>> In stable 6.12.y releases, a copy_file_range request exceeding 12 MiB on an
-> >>> encrypted SMB3 mount fails with EIO and a WARN_ON_ONCE() splat in
-> >>> SMB2_ioctl_init:
-> >>>
-> >>>      # cp /mnt/otters/13mib.bin /mnt/otters/output.bin
-> >>>      cp: error copying '/mnt/otters/13mib.bin' to '/mnt/otters/output.bin':
-> >>>      Input/output error
-> >>>
-> >>> Works in 6.12.110.  Fails in 6.12.111 through 6.12.113 (latest).  Via
-> >>> bisection, introduced by 8d103b285359 ("smb: client: batch SRV_COPYCHUNK
-> >>> entries to cut round trips").
-> >>
-> >>Does it work if you backport the other 3 missing commits?
-> >
-> > Yes.  With v6.12.113 + bc925c1216f0 + 9f544d26b15b + 90f7c100d2dd, 'cp' and 
-> > the Python reproducer work.  (Tested with both a 13 MiB file and a 250 MiB 
-> > file)
+> Ignore Immediate Readiness on this device, too.
 > 
-> Thanks for testing it!
-> 
-> Greg,
-> 
-> Could you please backport the following to v6.12.y
-> 
-> 	bc925c1216f0 ("smb: client: improve compound padding in encryption")
-> 	9f544d26b15b ("smb: client: get rid of bounds check in SMB2_ioctl_init()")
-> 	90f7c100d2dd ("smb: client: fix compound alignment with encryption")
+> Fixes: 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring BARs")
+> Link: https://bbs.archlinux.org/viewtopic.php?pid=2312085#p2312085
+> Assisted-by: Claude:claude-opus-5-5
+> Signed-off-by: Alexander Gruhlke <gruhlke@mailbox.org>
 
-Now queued up, thanks.
+Squashed in, thanks!
 
-greg k-h
+> ---
+> This adds the 990 EVO Plus to e6111fbf0c ("PCI: Ignore Immediate
+> Readiness on Samsung 990 PRO NVMe") in pci/for-linus, and could also
+> be folded into it.  I couldn't test it on this drive; the reporter
+> confirmed Status 0x0011 and that reset_method=bus fixes it.
+> 
+>  drivers/pci/quirks.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 15f083b6b1..0d8c47a46c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5623,7 +5623,7 @@ static void quirk_no_flr_snet(struct pci_dev *dev)
+>  }
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLIDRUN, 0x1000, quirk_no_flr_snet);
+>  
+> -/* Samsung 990 PRO advertises Immediate Readiness, but isn't ready after FLR */
+> +/* Some Samsung SSDs advertise Immediate Readiness but aren't ready after FLR */
+>  static void quirk_no_imm_ready(struct pci_dev *dev)
+>  {
+>  	if (!dev->imm_ready)
+> @@ -5633,6 +5633,7 @@ static void quirk_no_imm_ready(struct pci_dev *dev)
+>  	dev->imm_ready = 0;
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SAMSUNG, 0xa80c, quirk_no_imm_ready);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SAMSUNG, 0xa80d, quirk_no_imm_ready);
+>  
+>  static void quirk_no_ext_tags(struct pci_dev *pdev)
+>  {
+> -- 
+> 2.56.0
+> 
