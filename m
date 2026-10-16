@@ -1,93 +1,58 @@
-Received: from o-chul.darkrain42.org (o-chul.darkrain42.org [74.207.241.14])
+Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AE54A1E05
-	for <regressions@lists.linux.dev>; Thu, 15 Oct 2026 21:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.207.241.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667473BB665
+	for <regressions@lists.linux.dev>; Fri, 16 Oct 2026 08:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792099723; cv=none; b=FpMNIhiJoAsZ2TyStTVoXwiWzWqqkA33sLV+ZvIdyqF8VMAkvb5ZcDDGMISpHFBfz2hAMpSOKwtFsqsCsZes1uMK6tkA2CZaSV+vTg3zLI/Xa/TheuyQ4fxvv5xkNhB8ehc0AKLSGQUA+vftCtWEp72L0w7DvOhGsqmE8FR3is4=
+	t=1792139876; cv=none; b=aD/Mr43c6cGa9Cga+pqDd5tOfuGUPJTlC2t8gAECJyer2h0Hv9covi6iLE1OAYzz4C0AnMwWVKeCwVotrZsoslMxXA1eMsXE5Yl20be376NI9ucoA0zRtfu4ST+NeaL1F2OyCvXpLyGsJgC/YC1ca0h2aX31iLAwpNPcGJppXYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792099723; c=relaxed/simple;
-	bh=yL0ChYH6MtEznGaMEmznmcr07mfrlaodRx4tIVasE1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=txmQhAwQUBryb7KhukLpODOegDGf8SWiyoidcESIQz7jUIvm6DErFlIXgHUNtkzWUC+jk3B5djKUw69zRjRcni3qCVS0iR3KRhPX8dGs192n+xygH/oc+eUBBMLSYO3J1DbtNDRVggyxdbjVYqLLRhvLUcrU4p3hBGBlXEo0ms0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=darkrain42.org; spf=pass smtp.mailfrom=darkrain42.org; dkim=permerror (0-bit key) header.d=darkrain42.org header.i=@darkrain42.org header.b=C8KKd3AI; dkim=pass (2048-bit key) header.d=darkrain42.org header.i=@darkrain42.org header.b=ppSQRD+3; arc=none smtp.client-ip=74.207.241.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=darkrain42.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkrain42.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=darkrain42.org header.i=@darkrain42.org header.b="C8KKd3AI";
-	dkim=pass (2048-bit key) header.d=darkrain42.org header.i=@darkrain42.org header.b="ppSQRD+3"
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
- d=darkrain42.org; i=@darkrain42.org; q=dns/txt; s=ed25519-2022-03;
- t=1792099721; h=date : from : to : cc : subject : message-id :
- references : mime-version : content-type : in-reply-to : from;
- bh=/hE6TFrqXYpuYok253VvbchQ0KBtQW0k2a+QqfpvjSw=;
- b=C8KKd3AI6d882O1pAuX1oswWhhkIxXxbFFftsXJcPA5/eu3cjnygqy6O3Ct1p+nvDH3mF
- qACCmTKhcRfBK0BBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=darkrain42.org;
- i=@darkrain42.org; q=dns/txt; s=rsa-2022-03; t=1792099721; h=date :
- from : to : cc : subject : message-id : references : mime-version :
- content-type : in-reply-to : from;
- bh=/hE6TFrqXYpuYok253VvbchQ0KBtQW0k2a+QqfpvjSw=;
- b=ppSQRD+3Ukv7H4Uxmq9bnyVXvKcBsAqnGiv5VcfguBUsJSpc8BOOjpfbb7Sj0bkBTVVXm
- 5X1BccJm3foyEQl9wpEFY40S66zrBU6GJ5PAtQzp6y1NY0NQovZYOL9yuBvKSeqi2H87nQF
- 5xaU1g0lS1bueBSbtP+NZK9s5n1ItLxh4se74oBbh9pHxk6EdYXX4j3hfoNqDkN/sGqxik7
- syCdj8GK/HX2w31823Zlz4sBHuRcneCUKuekEIwi+c1noSemIK0QFu6sdROQF8pvAiqPDZn
- gIdI2c+6vlG499JOw5F2SeV0jQpkt4hhiHlNzJTT4GrGYQSdQRqHkC4idd9w==
-Received: by o-chul.darkrain42.org (Postfix) id 45E6B83F6;
-	Thu, 15 Oct 2026 14:28:41 -0700 (PDT)
-Received: by redcloak.home.arpa (Postfix, from userid 1000)
-	id 11DF54804FB; Thu, 15 Oct 2026 14:28:40 -0700 (PDT)
-Date: Thu, 15 Oct 2026 14:28:40 -0700
-From: Paul Aurich <paul@darkrain42.org>
-To: Paulo Alcantara <pc@manguebit.org>
-Cc: linux-cifs@vger.kernel.org, stable@vger.kernel.org,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Henrique Carvalho <henrique.carvalho@suse.com>,
-	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] smb: client: batch SRV_COPYCHUNK entries to cut
- round trips - 6.12.y EIO above 12 MiB with SMB3 encryption
-Message-ID: <atFFiAr9gbs9jXZA@redcloak.home.arpa>
-Mail-Followup-To: Paulo Alcantara <pc@manguebit.org>,
-	linux-cifs@vger.kernel.org, stable@vger.kernel.org,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Henrique Carvalho <henrique.carvalho@suse.com>,
-	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev
-References: <atEn9dyqsyI3SNaP@redcloak.home.arpa>
- <441cd931c56cb539eb099bf6d976cc59@manguebit.org>
+	s=arc-20240116; t=1792139876; c=relaxed/simple;
+	bh=9aj48fI78Ni4q7PUJ+RKsGjXQ9V+S1dT2jVXL9NjBMo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZHOiNMf2wgz9v8LAFCK22HM3lqKV3blzPJ4arIzRTyleuB3GqghM0YEF25K4bfsq43kZDSltI83J+6O0kBjQLce857FskGanWP/o2UlICnQUIij7w83th74JNStHUFJhQYscHzwKWsik/XR467rX7T7o65EyZSOOMkEth+9EZXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; arc=none smtp.client-ip=45.145.95.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toke.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+Authentication-Results: mail.toke.dk; dkim=none
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+To: Mehmet Fide <mehmet.fide@gmail.com>, Jeff Johnson
+ <jeff.johnson@oss.qualcomm.com>, Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev,
+ mehmet.fide@screeningeagle.com, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] wifi: ath9k: reject short WMI command responses
+In-Reply-To: <20261015184044.1321868-1-mehmet.fide@gmail.com>
+References: <20261015184044.1321868-1-mehmet.fide@gmail.com>
+Date: Fri, 16 Oct 2026 10:32:13 +0200
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <87ld7yxcz6.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <441cd931c56cb539eb099bf6d976cc59@manguebit.org>
+Content-Type: text/plain
 
-On 2026-10-15 16:54:29 -0300, Paulo Alcantara wrote:
->Thanks for the report.
+Mehmet Fide <mehmet.fide@gmail.com> writes:
+
+> Hi,
 >
->Paul Aurich <paul@darkrain42.org> writes:
->
->> In stable 6.12.y releases, a copy_file_range request exceeding 12 MiB on an
->> encrypted SMB3 mount fails with EIO and a WARN_ON_ONCE() splat in
->> SMB2_ioctl_init:
->>
->>      # cp /mnt/otters/13mib.bin /mnt/otters/output.bin
->>      cp: error copying '/mnt/otters/13mib.bin' to '/mnt/otters/output.bin':
->>      Input/output error
->>
->> Works in 6.12.110.  Fails in 6.12.111 through 6.12.113 (latest).  Via
->> bisection, introduced by 8d103b285359 ("smb: client: batch SRV_COPYCHUNK
->> entries to cut round trips").
->
->Does it work if you backport the other 3 missing commits?
+> this change breaks ath9k_htc with the AR9271 firmware from linux-firmware
+> (ath9k_htc/htc_9271-1.4.0.fw, "FW Version: 1.4"). The firmware answers
+> most commands with an empty payload, while the driver passes a response
+> buffer for every command: cmd_rsp in WMI_CMD()/WMI_CMD_BUF(), the 4-byte
+> value of WMI_REG_WRITE_CMDID, the 4- or 12-byte buffer of
+> WMI_REG_RMW_CMDID. With the new check all of these calls return
+> -EMSGSIZE, and bringing the interface up fails (hostapd: "Could not set
+> interface wlan0 flags (UP): Message too long").
 
-Yes.  With v6.12.113 + bc925c1216f0 + 9f544d26b15b + 90f7c100d2dd, 'cp' and 
-the Python reproducer work.  (Tested with both a 13 MiB file and a 250 MiB 
-file)
+Thank you for the detailed report! And apologies for the regression;
+seems I need to do better at pushing back on untested slop patches :(
 
--- 
-~Paul
+Given the lateness of the RC, I'll send a revert directly to Linus,
+hopefully he can merge that ahead of the 7.3 release.
 
+-Toke
