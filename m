@@ -1,200 +1,179 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7A313D51E
-	for <regressions@lists.linux.dev>; Sat, 17 Oct 2026 15:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792251345; cv=none; b=KLG+6V1Nb7RQAYsCf0Z7E4OxdAlgRsa0/98iwTG9m4Lkka59Yy0bxcWmsSHSI5GXjiJJrAwUEZG1ujTV06+Fh7BNjNnUx37uvsluOAqYkDOxUZIkNdenJHCO7tkN9meifRPUbdINe5cybxHb0eMaui/PCRp1S+itefpUuOoXfs8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792251345; c=relaxed/simple;
-	bh=k3HCyPTxpXGvpKq4TRkpfHcOBtMlzvsEWWtmUiLQiuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TDSS8A9zYX0j8ZXYVlM/fOr+TyzuH29tdZCyaCfNKNcFfj4Bi+AEOa57R5dCEJZpNGj3imqCJBkw/w8Aa1CLLIgfABtUkkeaFO3u5mWaPr07X6KWyn9yIZp8hjJBxi5sRMmkcGSWjr9pEN3X9RA6K6WTRsGErp22vqn8r+tMsr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmxOu9pV; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85A337C109
+	for <regressions@lists.linux.dev>; Sat, 17 Oct 2026 23:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792278773; cv=pass; b=im3VC0mgFvf0hql2XoHr7dTz4/3hdbKXCW76B8Ic8ubFM2r1FZYdnIJ/M20sx7lp/mnqGyzY6/y+sNtdZcbReIvSIVpHY2YEsyNI20QyS1imanNNp58ikhGjCBVtj0lixotAgWf27nJgr3HoFqmbEWailcBJb0SvX4HlQffO9Ek=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792278773; c=relaxed/simple;
+	bh=Lcn+Qs0uiwtnlOCcugPxjXr2GSZhyyUpSDrObLaCOjo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=V4jSJKyOElTbhOn3DkgIcHN44kq5JvPuKs9Tx2CEQdNwHSh/YrdM5Wu2rEXesMgGcW7mEBPvu1AvJnhtXUrNLgPWaLCBF/PPQ+EVJj78AKsh23ajGB8ZPSJvT4a7oIdjAc6zuhJ27ZwDONxDvecLhC7j/OhlJD0k/Mg6f8Xy2KQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jEhJUfkz; arc=pass smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmxOu9pV"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-cd5e6f0a22bso348292a12.1
-        for <regressions@lists.linux.dev>; Sat, 17 Oct 2026 08:35:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEhJUfkz"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5ba3b1199f6so972373e87.3
+        for <regressions@lists.linux.dev>; Sat, 17 Oct 2026 16:12:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792278770; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jfLRR08WWBQttece08anYKJSzRB/iPdvkLTcxDvVIaYGiu0TOg4fVpQ6qdxI/Wfa2c
+         EcHBO9/EuHAWI3NJ1gVKp9dA6XrSkQ4pbc0WLm3IfmCduTjLhRxetYUBcbyFc4Hv+WkC
+         wXjph5kSLJOu3I2lYQaUEKHXybcniQV6WpX9N1H0QlvlL48BxJmS3xJ+eqGIn+mLAIqc
+         oeifM+Gi4ZBmSEYlVTG85STZjD8HCwPAB24JULjmlzzjSkhNbKc+BYgMnbeMUoMWp8GJ
+         egK3xQ70XiPKWAdNPQr/Pi9levfGM+fkaTZEM9YAiJE14WQzuU43xRupVhulcXNpJIUY
+         tS0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=cLA4jswBq21u3uDgRDpKl04UzBdoBSJ1Zn64aYp/wdo=;
+        fh=z57ZUybT85/5kG0EduVLm2RFp32CYsxyWsTkTbNwek8=;
+        b=CChOApBRsKm82Zci5MGgKXzu9KcVpbjiJwC6yulyjazPASkxgsmMEwn28aafbkwJt0
+         CYMU/P1V14x4D46UQrs2p3VJvguQuHpOp2/a4G7g8CWQV2C2ZT3K+GvAmxfU+57BZWNE
+         O9VsH1uEJ7wvjalgMVvsE9k9qvTup7iU7Gpxba8ahMcOlrg8GsLkR6zW4WOBit8el/yR
+         rFOZh4WiXy57WB7zaLvrtoyde2MOXj53gi/3qDNrNHElzS44WQ4AjnRdEJstpKQL53UQ
+         BzDg1xcMOjRcKHgmO5CPnUX+AqERUcv9tJfsFyYOJCFs88P+OZ6Cc3ulJsK1TzbMPSjD
+         cIUg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792251343; x=1792856143; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=cSCIoQiIuzOVCfYEbcmwZdLYkQEpSik/mWoNdRkPnwc=;
-        b=CmxOu9pVzkpIbitYEysHI0UsI7JlOFjbinZwRVuZClHzsG0tbkb+P1Namp80RuSZXX
-         ZrOei6RyeyWoK7/9tbLKBONZ5Hi3gwD4wGzDrVw8wIVNFzmqU1CCK+kNtskgvcS46pZF
-         omvzKzhlqP0T3x3R/QXwPsFHAMY1IeSWFgq1RaC9MddRXyVLLFbANwrTUi8Dhq7h/lgk
-         pclRNDJQ+WD4r+YXXg4sYGtcF/50WCFtHb7SVwpKJsIB9dqlQJxyuVOlMOepxZGeCvnF
-         uO9WpQkj0mcborOcJyxKKGq1QyeS1ieF0H7TWZDVVZ7bbetJmuVtmfDlmLq7Ec9NxqOU
-         9HWw==
+        d=gmail.com; s=20251104; t=1792278770; x=1792883570; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cLA4jswBq21u3uDgRDpKl04UzBdoBSJ1Zn64aYp/wdo=;
+        b=jEhJUfkzYODxfqppJ12XaeOR9vfS19JULiSZ+hqcMQ32m0F+5J/kZeSUbiL9fVGsLV
+         tnHkPZR/J6vONJpBpHz9toKFyoz4E/bbISRwnuPRzaPJWy5TmBV2RtbQwuyM2DK+twpb
+         Hoklk4g8xTTX98cyCrS6OMkXqOhBCYr05cdWPLfbInR4jnfHIcoyfqs8/ysEEaK9yYKz
+         aBioioyDqSW1fYO9N8zd3RwJrh9NBIqCimEN53Ob1x5vh2H02W60gh3KlsOMw/Wp6Ukl
+         ZZTz2BepbtqcsteOHRKgSSpj3DoEz9U+Di/rsIFnWTKesgYwQ5jvWfmSLP2gJtffCFUU
+         GjIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792251343; x=1792856143;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=cSCIoQiIuzOVCfYEbcmwZdLYkQEpSik/mWoNdRkPnwc=;
-        b=O4O1nkaXHCEdZvDcgvbcny5zd4FPTLpcpmuXW6ctOxJXPNzjW3djM6HKzjCsvkfPAK
-         5OaZgsbLsy9NcgNP2YXMKh7WDY4C2Wnyk6fByMmFqXSziKHjgGmSXSFveJSYfmCbxuLs
-         sX4mxIZtexXvEaTaO5ThPeJldiLYmMAUQEu6CPmhjtQRbF8uI6Xy+/gc38wMe7Le1oy2
-         SIhjJVQlNSIjZlSKPkUcIzI24H6Z8lQqxXX7CHbqjRanTzA0EvQu2vv0uoemRviDoDoU
-         Iz0ciWE8Kp6Bhq+YIH5rLiHF8etr8lB0Yx4W0PQdQ9uVTLh/ZJgdVEieZcE/+E7ODU9l
-         g96A==
-X-Forwarded-Encrypted: i=1; AKwUvBzRDTLbRBqhrqEc53ST10mFANOdDMM5T/zcD5435C/OauRhfEdPshHKGq7BI3CdZPtgt1Fi5fcPntvr6g==@lists.linux.dev
-X-Gm-Message-State: AFq9FYLmW2jL1SQZzTZ6Fh38ZOqZuL0Yc9mjF+m4ePTsIgA1Njw6s8se
-	dzu7yS10reBtXC1ZQx8DcZX8iKa7Q2GjDWSwjrFVWJNnMHwXnI3Cwn4cO7ygulPw
-X-Gm-Gg: AYBFou0Uz3AkBanJ4JWWGpL3IXbyV2r9Fc+T3m0IjvT4ARA2Kjl21MWINq48lFrDWVj
-	Uj3iYzWIME1yDfNRnvcCUEl0Z6WR9HsZo45A6NDQlh9mCxj3zk2RcYQ51Z/gbI1YV+jOesLuv6+
-	gwrADmGCNUXBkIfCf2682iL7dMMbzZag4kfa6XeDKuoI13yWvAxJNcGOannO77DSOrnBsRNfGJ9
-	B+Xm1cfNVP0iIv1+Qig6AS4CPyTXMfTexxowLL2GlKvSSC2bqA5qm2y6VsF4e9aZPpiCp8xmfah
-	YUlC2h6laK6bLRApORUy11Y5jy5eX8gCpIzD8PNmvxc3J2lt/KKyIBYIgGQuCWIQDgPkFboQlrl
-	iSkC8/3fvexUFuBsEtLKFX8WRhmVmf+rmiP4as2MP3WEK8AJCR7hJWDAOnezEAALbxkYr6LosxX
-	7Th4QAtRDFSi3d8z0X5pdSbokC4CQgSn3X8+ooafXrl0jxhSt0rEAnvdvqvo7Vh2djqYBM
-X-Received: by 2002:a17:90b:590c:b0:3ab:1b19:78f0 with SMTP id 98e67ed59e1d1-3acef2b52e6mr3075121a91.41.1792251343394;
-        Sat, 17 Oct 2026 08:35:43 -0700 (PDT)
-Received: from hachimi ([101.5.168.240])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac9474b52fsm15330221a91.9.2026.10.17.08.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Oct 2026 08:35:42 -0700 (PDT)
-From: Lanfeng Wei <xlfylawarthur@gmail.com>
-To: Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-hyperv@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Lanfeng Wei <xlfylawarthur@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/hyperv: add a parameter to disable the vblank timer
-Date: Sat, 17 Oct 2026 23:34:30 +0800
-Message-ID: <20261017153524.8870-1-xlfylawarthur@gmail.com>
-X-Mailer: git-send-email 2.55.0
+        d=1e100.net; s=20260707; t=1792278770; x=1792883570;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=cLA4jswBq21u3uDgRDpKl04UzBdoBSJ1Zn64aYp/wdo=;
+        b=y8IUjrAt1ggvsVw1SrbiNMwS3dDpFpv0+HbnXOAFkkCGimMYW44Q/o/URqocWtDW/H
+         llczBy7EcgkKUofLHrc30qnJjJcJqy+mFBkp8T4mDclwAzdSp5WUZaU/exaK5fm1ML27
+         lVBwEVIV7ZxAjtwg6AWcEajkDU3FbnLuN+7W2l2z9TVUcFc+4l/61LynuvLoH0ZdmmUU
+         w1+70RcV0p4Oh3iqWjjGAGtznKXc+pMcNuP/scmOGVe6wF947fsbHjjZC1sjQ6yK1Htq
+         lcKTJbG27zYwt2rHr/daumQVmZJFTpNOMZVDie0YKK145MCYCSCgoKcBELW+Vu7Sjc3w
+         TZ5g==
+X-Forwarded-Encrypted: i=1; AKwUvBwzja42FuZsljwCGobyPc87Ub+shIDWnyuNwAu/NuhLMFJ5Vrm7lIYlNG4oiBiIeCphQ5wG7kE3J3KajQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIJg6E5FLk94j+3G4T2H3QMEkguozT+Blnn1B1DYya7W7UM9lEX
+	LWLfI5Ls61VqT6N+m4/sjRX+hOpog78zLddSevWnAnYoiHpJHMTZrL/0Y7+5ARZ8m54Nuv8/VR0
+	u1tlRchtjEvaPNKsSW9fg8mZEN3hZb/A=
+X-Gm-Gg: AYBFou2IqjCW+qhIwdrQTcQlTuVqWS2lBl7QiNKABdnOE2m6PUTaP/bZkvZcSUMLkpW
+	vdTFHUdjEgvXfiC4XNAnIkY4woAmkeVDqGoxFjIR1mJnmYKFMqjOrrTSEjfsEmRZH55xrGDExhP
+	1/+xEiSb7UKQe3O6Fxk8v1c7/KgXN+cypCoTwFyMjRtu1tJD3ZFKZPf6N61GgYigchxafMy+2rR
+	XfkIUQ+fSMVURlRyGPLU37hguTLu1dap2LLxm+orQ9mdn67dtjlJhxGfJN8BiUC+3ZEK4K3N27N
+	c0OLXQ3+UdT8iO6B5YtHJ/EOitJvuKqNWyZHrj6iRl01oFxz6XqqoJIKBpUCPGQt/SJM5kk4J9E
+	iyKO7W4lAaOSofw==
+X-Received: by 2002:a05:6512:b8c:b0:5bc:dd4f:c3b with SMTP id
+ 2adb3069b0e04-5be50a72c99mr992481e87.33.1792278769657; Sat, 17 Oct 2026
+ 16:12:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: =?UTF-8?B?TG/Dr2MgS0FTU0VM?= <loic.kassel@gmail.com>
+Date: Sun, 18 Oct 2026 01:12:38 +0200
+X-Gm-Features: AclHuK9-AjNmYzX1iG8JbGL6r55wNosQzwWegrmilVkKGZR91-wQYqsz3EtKGG4
+Message-ID: <CAAzpgGdksHZjx4jc20zqnAG_PQ2e1ggANQjt2eiycUiWc+vPHg@mail.gmail.com>
+Subject: [REGRESSION] mac80211_hwsim: beacons stop after host suspend
+ (beacon_timer is CLOCK_MONOTONIC, expiry computed in boottime)
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Benjamin Berg <benjamin.berg@intel.com>, linux-wireless@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A performance regression has been observed on Hyper-V causing serious
-frame rate drops since commit 52e6b1988334 ("drm/hypervdrm: Use vblank
-timer").
+Hi,
 
-The regression occurs when using Xorg with a software rendered cursor.
-The offending commit uses the DRM vblank hrtimer to pace atomic update
-completion events, making each event wait for the next simulated vblank.
-However, cursor damage invoked by mouse movement is unconstrained by
-screen refresh rate, and therefore consumes most of Xorg's update
-opportunities, starving normal graphical updates, resulting in
-plummeting frame rate.
+Since 7.2, mac80211_hwsim radios in AP mode stop sending beacons
+after the host has been suspended once. A single beacon goes out
+roughly every <time spent in suspend> instead of every beacon
+interval, so stations see massive beacon loss, scans come back empty
+and APs without associated stations become invisible.
 
-Hyper-V virtual display framebuffer is able to accept multiple writes in
-one update window, so the commit broke this expected behavior.
+Environment: Fedora 44, kernel 7.2.11-200.fc44.x86_64, hostapd 2.10
+(Alpine), radios created with "modprobe mac80211_hwsim radios=3DN",
+wmediumd in use. I have not tested a vanilla build, but the code
+below is identical in current mainline and wireless.git.
 
-The regression is also reported by other users:
+Symptoms (station side, after one ~5 min suspend of the host):
 
-Link: https://www.mail-archive.com/ubuntu-bugs@lists.ubuntu.com/msg6302857.html
+  $ iw dev wlan0 station dump
+          beacon loss:    480
+          beacon rx:      1
 
-Add a read-only module parameter hyperv_drm.vblank_timer, which is
-enabled by default. Disabling it prevents the timer's enable callback
-from starting the timer. The vblank framework and the existing atomic
-callbacks remain registered. When disabled, the first
-drm_crtc_vblank_get() fails through the callback, so the existing helper
-sends the atomic event immediately and skips the vblank wait, matching
-the behavior before the timer was introduced.
+The station stays associated (unicast data still flows, the timer is
+only used for beacons), but a second AP on another channel is never
+found by scans, so roaming cannot happen. Nothing is logged in dmesg.
 
-This provides an opt-out for affected virtual display users.
+At that point CLOCK_BOOTTIME - CLOCK_MONOTONIC was ~302 s on the host.
+After a reboot (gap =3D 0) everything works again, including roaming,
+until the next suspend.
 
-Benchmark results:
+Analysis:
 
-Workload: Inject mouse movement at 125 Hz against a flashing
-animation running at 60 Hz, matching the screen refresh rate, for 4
-seconds.
+The beacon hrtimer is still set up on CLOCK_MONOTONIC:
 
-Tested versions: 6.18 (the last major version before the offending
-commit), version 6.19 (the first major version containing that commit),
-version 7.1.8 (on which the patch is based), and its patched version.
+  hrtimer_setup(&data->link_data[i].beacon_timer, mac80211_hwsim_beacon,
+                CLOCK_MONOTONIC, HRTIMER_MODE_ABS_SOFT);
 
-Version  Anim. Hz            Mouse Hz         Max client-request gap
-====================================================================
-6.18     59.66-60.00        122.00-123.33     17.0 ms
-6.19     0-0.162            59.73-59.86       7.53 s
-7.1.8    0.133-0.162        59.83-59.86       6.16 s
-Patched  59.75-60.00        122.75-124.50     14.0 ms
+but since commit 933f5bec98a1 ("wifi: mac80211_hwsim: register beacon
+timer by calculating TBTT") the callback re-arms it with an absolute
+expiry derived from the TSF:
 
-The patch restores both animation and mouse update rates, and reduces
-the maximum client-request gap from seconds to milliseconds.
+  hrtimer_set_expires(&link_data->beacon_timer,
+                      mac80211_hwsim_tsf_to_boottime(data, tbtt));
 
-Fixes: 52e6b1988334 ("drm/hypervdrm: Use vblank timer")
-Cc: stable@vger.kernel.org
-Signed-off-by: Lanfeng Wei <xlfylawarthur@gmail.com>
----
-The parameter defaults to enabled to preserve the current kernel
-behavior. I do not know the full set of users who rely on the vblank
-timer, so changing the default could introduce a different regression.
-Affected users can set hyperv_drm.vblank_timer=0.
+and the simulated TSF is based on boottime since 1926f4e06dce ("wifi:
+mac80211_hwsim: rename and switch simulation time to boottime"). So an
+absolute boottime value is used as a CLOCK_MONOTONIC expiry. Once the
+system has been suspended, boottime is ahead of monotonic by the total
+suspend time, and every re-armed beacon lands that far in the future.
+The first beacon after enabling still works because it is started
+with HRTIMER_MODE_REL_SOFT.
 
-If the maintainers prefer the parameter to default to disabled, or if
-there is a better way to detect the affected configuration
-automatically, I'm happy to send a v2.
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 23 ++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+Before 933f5bec98a1 the callback used hrtimer_forward_now(), which is
+clock-agnostic, so 6.12 and 6.18 are not affected.
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index d48ca6c23..527385748 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/hyperv.h>
-+#include <linux/moduleparam.h>
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_crtc_helper.h>
-@@ -25,6 +26,19 @@
- 
- #include "hyperv_drm.h"
- 
-+static bool vblank_timer = true;
-+module_param(vblank_timer, bool, 0444);
-+MODULE_PARM_DESC(vblank_timer,
-+		 "Enable the Hyper-V DRM vblank timer (default: true)");
-+
-+static int hyperv_crtc_enable_vblank(struct drm_crtc *crtc)
-+{
-+	if (!vblank_timer)
-+		return -EOPNOTSUPP;
-+
-+	return drm_crtc_vblank_helper_enable_vblank_timer(crtc);
-+}
-+
- static int hyperv_blit_to_vram_rect(struct drm_framebuffer *fb,
- 				    const struct iosys_map *vmap,
- 				    struct drm_rect *rect)
-@@ -132,7 +146,14 @@ static const struct drm_crtc_funcs hyperv_crtc_funcs = {
- 	.page_flip = drm_atomic_helper_page_flip,
- 	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
--	DRM_CRTC_VBLANK_TIMER_FUNCS,
-+	/*
-+	 * expanded DRM_CRTC_VBLANK_TIMER_FUNCS to override
-+	 * enable_vblank with hyperv_crtc_enable_vblank
-+	 */
-+	.enable_vblank = hyperv_crtc_enable_vblank,
-+	.disable_vblank = drm_crtc_vblank_helper_disable_vblank_timer,
-+	.get_vblank_timestamp =
-+		drm_crtc_vblank_helper_get_vblank_timestamp_from_timer,
- };
- 
- static int hyperv_plane_atomic_check(struct drm_plane *plane,
--- 
-2.55.0
+Possible fix (untested): set the timer up on CLOCK_BOOTTIME, like the
+NAN timers in the same driver already are:
 
+  -      CLOCK_MONOTONIC, HRTIMER_MODE_ABS_SOFT);
+  +      CLOCK_BOOTTIME, HRTIMER_MODE_ABS_SOFT);
+
+(in mac80211_hwsim_new_radio(), for link_data[i].beacon_timer)
+
+Reproducer (wmediumd not required as far as I can tell, the timer
+path does not depend on it):
+
+  1. modprobe mac80211_hwsim radios=3D2
+  2. start hostapd (any open or WPA2 config) on the first radio,
+     scan from the second one: the AP is found
+  3. suspend the host for a while, e.g. "rtcwake -m mem -s 60"
+  4. scan again from the second radio: the AP is no longer found;
+     "iw dev <sta> station dump" on an associated station shows
+     beacon loss increasing
+
+#regzbot introduced: 933f5bec98a1
+
+I found this while building a containerlab-based Wi-Fi lab (hwsim
+radios moved into container netns, wmediumd on the host).
+
+Full disclosure: I am not a kernel developer and not very technical.
+The symptoms above are real and were observed on my machine, but the
+debugging, the code analysis and this email were done with the help of
+an AI assistant (Claude). The analysis may therefore contain mistakes.
+I am happy to test a patch or run any commands you send me.
+
+Thanks,
+Lo=C3=AFc Kassel
