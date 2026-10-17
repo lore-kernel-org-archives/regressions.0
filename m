@@ -1,96 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA1C4AB1CA;
-	Fri, 16 Oct 2026 17:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78B4175A7F;
+	Sat, 17 Oct 2026 03:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792170959; cv=none; b=gz5OUqnznKLIcuAjlD/GMA+g4Pz7gRqKmszwERamOJiyqanMPBB0ypul19QOEtc1zQ4tWyKe+2PNKXgh/9JiLrMIns7yTnY1goPFXCCzcVa1MABqa1OjznvD8/v6b0BexxINLm9bqdDSwtz/LgpuMq/fGF9XtAixDlNR83w2XHA=
+	t=1792206032; cv=none; b=pBToBVJUm5I1fAyMEZRjpAKnfpiID2Yr5FC+7TgSFY7xZ8XS8AoxlqEN8C05c5u7m8CisTDGTfYFfdmFKkdN0fBc76U1FmZyAFH2UqWT5Ags5YdYnFQMJ/bYpgfYjB4QiQApEvdxZZzHP88PJlbVrfYkXpVGndUM8D5YCQJl6yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792170959; c=relaxed/simple;
-	bh=BOw5miibhYa6y5iW7K3MQzzhkYfcdzxmYu3wZGKeALU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kluTXF/SOBojNEKH4pCBV4X1cHmkPGw4x5uss8mPKRf/24IVtZXeH5HJFi1l2yRojhPdViOprXeIbSWHesNi4Q6rSO9mIHEKx16p5QzNc8t37fuA61Qsp9tGjtLhFj4z+ITjV0oW/dy31Bc2sSbSU3LPqEgzwFqb4iN3mgAGMr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ic4+wB9I; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792206032; c=relaxed/simple;
+	bh=r7yj14XEWxRWae94x+Oy70DIhGwCN6JXo8tx3B4DCX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uAxxs3fmPEFmlmcsYZKgLUD3EmZcxG35KS41i5v1A2IkNOId5ROrKv9nOwEshB8jXdyQYA/ZOKkzFMqpLEsj7NyY4oEg4eVDFqeKsda+5YY2+uZQchGYPAvV2rWc8/g+J01lfk+D/BMCdEuY7n7qetZahqpq9SFMF6sYlFKOBQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgLf/7yE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ic4+wB9I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FBA41F000C6;
-	Fri, 16 Oct 2026 17:15:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgLf/7yE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34EA61F000C7;
+	Sat, 17 Oct 2026 03:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792170957;
-	bh=1ygOFDw20tv57eftFx/OywoOkXdBvhlYV4RYTr2N/+o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=Ic4+wB9IWzVX8uH9KV2wLu82B4IwhbxYEnPcaxWIcyQh2pkhBPqZ69OTkqmWkTM9F
-	 0+WzsUDQCg+9jRBuBeedECNK3t8qy5h0uA4pxefvIM9DP6gEqBoIXnirzauo9Dn2n/
-	 3T2/7xCilcDWTEirxGDDauRN2SeM7g/Kin4DvxWczQhAsO44aptfxTlc18naah0tu9
-	 TPTiDN13o/973/Z0HQDNF2qQWdMZ0vkRnPJkkRmDhPcF4MQCmAYuMWu1vWDl3q6aq2
-	 /gvinCcOGjREHZE+AKsGe5aeTrxoSh0MgXCOyxY895GXc5bbpZ4puov2EltTTREkT6
-	 8uB1aVU3WvLZg==
-Date: Fri, 16 Oct 2026 12:15:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alexander Gruhlke <gruhlke@mailbox.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Alex Williamson <alex@shazbot.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] PCI: Ignore Immediate Readiness on Samsung 990 EVO Plus
- NVMe
-Message-ID: <20261016171556.GA1880496@bhelgaas>
+	s=k20260515; t=1792206028;
+	bh=LG9e3ZC+RcLY7z5/m+r5Hzyr7Sph+6VSFhdGdqOJRAE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=PgLf/7yE86pgHIj3SUvX7PE4VNM+cHjjy5jGFlYexla8EECmj78c/DzJU0MwITrSY
+	 H2F6ztBSthdYJG8erxnZekqZd/Mw2gL0fyfq6Bco7UAHPnZ/ecE0oIbKlPcwrvHll/
+	 +k70A9vI3uKXON7w7Mkmz/grduPFinTgDG21OWqaH4/PhWyGWplb4NSl0wR7GdKB6V
+	 v07pJSUi44KxeQpyziZyEuRc3j4BKxpM6DBSBbX0apKqDKfINteeOMNr7gyEHlf66a
+	 p3onQtHq77Z1wo6CQCycxZIlIfgoHEqHFHyq22vAWj/E5EBO02NMVRC4WPjTBf+hwD
+	 pcv/7/WIUMNLg==
+From: Sasha Levin <sashal@kernel.org>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: Sasha Levin <sashal@kernel.org>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	linux-wireless@vger.kernel.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	mehmet.fide@screeningeagle.com,
+	Mehmet Fide <mehmet.fide@gmail.com>
+Subject: Re: [PATCH v2] wifi: ath9k: reject short WMI command responses
+Date: Fri, 16 Oct 2026 23:00:08 -0400
+Message-ID: <2026-10-16-1-daily-reply-0003-ath9k-wmi-revert-7-2-6-18-6-12@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261015184044.1321868-1-mehmet.fide@gmail.com>
+References: <20261015184044.1321868-1-mehmet.fide@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261016102042.641801-1-gruhlke@mailbox.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 16, 2026 at 12:20:42PM +0200, Alexander Gruhlke wrote:
-> Like the 990 PRO, the Samsung 990 EVO Plus [144d:a80d] advertises
-> Immediate Readiness, and VFIO passthrough of it fails since commit
-> 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring BARs").
-> Using a bus reset instead of FLR works around it, and the latest
-> firmware, 2B2QKXG7, is still affected.
-> 
-> Ignore Immediate Readiness on this device, too.
-> 
-> Fixes: 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring BARs")
-> Link: https://bbs.archlinux.org/viewtopic.php?pid=2312085#p2312085
-> Assisted-by: Claude:claude-opus-5-5
-> Signed-off-by: Alexander Gruhlke <gruhlke@mailbox.org>
+> this change breaks ath9k_htc with the AR9271 firmware from linux-firmware
+> (ath9k_htc/htc_9271-1.4.0.fw, "FW Version: 1.4"). The firmware answers
 
-Squashed in, thanks!
+Queued the revert for 7.2, 6.18 and 6.12. The original patch is dropped from
+the 6.6, 6.1, 5.15 and 5.10 queues.
 
-> ---
-> This adds the 990 EVO Plus to e6111fbf0c ("PCI: Ignore Immediate
-> Readiness on Samsung 990 PRO NVMe") in pci/for-linus, and could also
-> be folded into it.  I couldn't test it on this drive; the reporter
-> confirmed Status 0x0011 and that reset_method=bus fixes it.
-> 
->  drivers/pci/quirks.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 15f083b6b1..0d8c47a46c 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5623,7 +5623,7 @@ static void quirk_no_flr_snet(struct pci_dev *dev)
->  }
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLIDRUN, 0x1000, quirk_no_flr_snet);
->  
-> -/* Samsung 990 PRO advertises Immediate Readiness, but isn't ready after FLR */
-> +/* Some Samsung SSDs advertise Immediate Readiness but aren't ready after FLR */
->  static void quirk_no_imm_ready(struct pci_dev *dev)
->  {
->  	if (!dev->imm_ready)
-> @@ -5633,6 +5633,7 @@ static void quirk_no_imm_ready(struct pci_dev *dev)
->  	dev->imm_ready = 0;
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SAMSUNG, 0xa80c, quirk_no_imm_ready);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SAMSUNG, 0xa80d, quirk_no_imm_ready);
->  
->  static void quirk_no_ext_tags(struct pci_dev *pdev)
->  {
-> -- 
-> 2.56.0
-> 
+-- 
+Thanks,
+Sasha
