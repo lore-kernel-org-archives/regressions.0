@@ -1,118 +1,112 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517EA45D1BA
-	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 22:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792363155; cv=none; b=jcCOPHDoyg+m1UGvOaeSxEDQYPw6RurR5sCgXBDGJ/UGOMN9EAmIqPUfC1jpa5zl9TxvEKLarNn1v3UzHaA841R3hwcBUDMErcohMA1n1lbbFGHJIJ1g/Lia8yJhm/x+3wuUVvnuUgMKaWCnjPLhM4NH+5QVB2Ky+wM8Ha3N948=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792363155; c=relaxed/simple;
-	bh=FiL4xTcXDIPoGTMZXRKEFaT7WuQUy5kID7ebw8CmJ8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uy9wLPuSpqTNAQPmQnEEsZFCMQF/1b5x6Kubq/WA/Bhyed0dRx92FH/v84+vbOHnNzgF7cWHDro5Gdbq0ihM2xkB+E4AaSOmM+WYefRtYOzNms0uiJSkECAoWMTpNhf9JyfFry4EccyjQIQMw+3047KzROrHwFa8pIgEilgJrP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A2A+vMXr; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897CE435507
+	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 22:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792363328; cv=pass; b=t+Hi4Cid1UuTq5qHH5DFIhmrPC2vd2Um1PenSL4lH4m8zjRFbblG3rDI8+NgjcfL6EoJvaeVhiE/I5sR0zQiWSBs9ym1SxFysR9pxXihOqhvIdXFXN1sgo2dd4p1r8u6gRyd8yXemI4hSOyeBIsVTgY1TflC/WSGzqJqdmVhqP4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792363328; c=relaxed/simple;
+	bh=sA78jFowzAjZIyrY72KMyOJ5GxIFW03/6Vjb2E8Yo9I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AGwsTeXeGRgxoGmWtpOdfHYqyVkq5iuPazhYBnpg+3gCe9qnGvKpx/lF/GmDSekXp64qlOz7f9r74gGRYU1Ve6ptqh57q4mvQW6+Zzc/6aESQmYu1s5EKw8VObjiErf5X4UcdlDH6kvGkNHnkzYsfd3BTMGf+oc/YpzN79e9wxU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+43qomS; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2A+vMXr"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a018792ab3so10684425e9.0
-        for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 15:39:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+43qomS"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2dd76b1361dso6975475ad.1
+        for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 15:42:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792363327; cv=none;
+        d=google.com; s=arc-20260327;
+        b=p6zZi0Aa/R/67hLcFE6ikrbtRsVIvqtBvORDx/7ULOQBuEF5mDpuwihfldkd3bHVPb
+         dgpjjWVkac2Lr6JfVtnjmickD+dmPQYga1TUjOGOECFydzSaM4Bs3od5C5Z3khu+lna4
+         25wt3g6G7rCPR0fx/XvY0k1y0QbGWv2EhF8Az5Jww0QVCgqQsHda+vwwGCB7PC6PG1l3
+         X0T5xkUT2563NmSRwucPpFUvJpc6/h9Oo4Nn1nZOpSIZ+EH2puJJSsxeSjhtMWSzppBL
+         300dX3g40KtqztshAwwuIwwrjBB3q8dPqo9KCwZ4NhaTci70uQoPiXN4WSt13lXH9cCG
+         LmJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=5Fa4oC/q6RcCMAQDGgF7fdd/gfP+j/8A7cYqh74vbRU=;
+        fh=5oHC4WiOSM/fqUYKrJukujo3aKAn5Z214snEhsb8580=;
+        b=rxyKBoD+jTjhn/L9wuTooNMTv8ZcTNHzg5/SQZn8rOKJcjzDO+NbRVEk9bvvje5PjJ
+         lLF1guti4WSSqFKVhMIaweJF0dqONHcgGzPQfP1+PaNk8e2vQbt7f9Bu07D5tq442l6F
+         wF0V3Dt8+/WGqEFQj9g7XXzj9r1XasJ2mBgrte2ihqdoz+m2OjeciA4kbzhADSWpwmOS
+         PQArjDU2+2cIYy66N0vZkHanmO10SfWDicHk8qkLa/JZO8mwfLGn0ZwY46TutK3A7kaR
+         3G8iHp2/A3CgIC9o5LoWjvnmymuoUa+ts3tvLMyf7oviY9V3LP3ZSVCSLsKl1uUgQpBR
+         76hA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792363152; x=1792967952; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=CvsLpFGelrgwN9Cl66Kd9LpNf+fNDOOYoQY8p06psOA=;
-        b=A2A+vMXrnJN2BfvNvzXUibpsYMUIiT5N8+j51MGlB5mY1mwVjTD6BozvwsqV2zdA2k
-         2AMfsku23jtpi09Qy01gloQxKm5/iUVnC1ucX+ceCxiumXVO8/EnizhkNvsvv3qmRv9B
-         VqTNrUgSmMMtFttZgfJPV9gAqHICguOdWyPz2ihMNmgA3IYiNQh0YRcodwXn+s4tBASw
-         xxngc6USM8Pj16KqXd55C4woa5cmafXuBkJKA68ZNOuOs+kv4Eu4t4gJruCNJtmG1rOq
-         +ZyxfYXuuTqUuaM3onHuQL/FgZmTh5lgK202ybALA3f6vaPHa3cbwbuKwRvjw9DFwYM+
-         uP7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792363152; x=1792967952;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=gmail.com; s=20251104; t=1792363327; x=1792968127; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CvsLpFGelrgwN9Cl66Kd9LpNf+fNDOOYoQY8p06psOA=;
-        b=RLQNi9w1TGUCd0ldQoEHYD+QsGFU1glRoMrev0hYnJaFcsYvWxiAub0ltOgbaa1ke3
-         VMFPX5n1GrQOyQcRtmxSBYehbkf/rjC9Nsx9UPlt8gwgMSb/mth9GkGihm6LU6M+LQ+r
-         xBWHXtREkfzK3otOUFHWVHSPPdPI1QYMhxPTDgbFi+gwPFw4nVu8er3Y8lbNuco6Ycrc
-         cX69tidw2U4Sxh0kgLNpqtLWR0qicLCtnxO0fGNXLBRMN4suzRxNBV8Ta4OVKjLw96uT
-         fp378OjeeR0gRHfPVshlbN7mM347/5HJQoWHlGFok9Bvqa60uVunW+EQ9Jp/y32RYVuq
-         3LbA==
-X-Forwarded-Encrypted: i=1; AKwUvByBo55KDiIP2n1ACJ9UGsgrld4TRi/Xn5/JRpEvt/4wMj2N2sN5G53tHOSrSMDli09rtkR8zhegrD9eqg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYK+gPW18yjBN5wyGefcOzNt70b89+O+ns708bdzBRpVzhZBcE75
-	CcunZH/tcPZv6oTdSRctI+o0aahL71DLsbh/TkseQvxWViI5L6hfIKPI
-X-Gm-Gg: AYBFou0wWauDRz96buPJRH2WIfU++sYcbasMRkTtTDasmzOkEsBoG/Y5pGZLQVrmOgR
-	I6thVKtj/TWCBVAYh0C5LDVFTfiPqCH2DgQQ0d2RFicYoOYeIFzWSyzQztyuR83pXG6Sj4UwqRK
-	rSloK5trDcsqC9LG6SvAfJAMNzp2N58mkIg3WgQ0DpiQo7yCrXWtMy5IWlaYhqV5yMYiAKhHNsD
-	eQQtVMXgJW/iXQjBsQIvRvcQTt67HNJXV9vxQrFPFXyBFgyhvmIBgqyy2mwPonPy4MY+4WtC4SE
-	vsiobkOUkMmHcY0kL+Nt82wljvkxvoJkTbMcYQyaebX668K0JDyXwDFM/AHJ+ORRAB/CcnW1s2k
-	ZOAstjHYwaqfD/u6BhsZIfHm6oL57wqMO4GqyNsewD6CTqLV3j4DzaZY9yigfn63sy2oN22atn0
-	+HA8lCA3kcOTLrxZAIUFVWoWb9qCb+71Rl1UpBm15hu6NY4yM7rXOX9XOldvjrk8gCnf/+y3abO
-	fTGElT/EXi6I65pI4JEgEDkM8k1EYwWuSmDlb127DsZb+WJc7hiIdCi6PnL/NF3LHoiVhc=
-X-Received: by 2002:a05:600c:8b22:b0:4a0:1c17:4fb2 with SMTP id 5b1f17b1804b1-4a1d760d9fcmr130723785e9.31.1792363152485;
-        Sun, 18 Oct 2026 15:39:12 -0700 (PDT)
-Received: from localhost ([178.214.243.78])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd471a1fsm16359363f8f.3.2026.10.18.15.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 15:39:11 -0700 (PDT)
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <siqueira@igalia.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Fangzhi Zuo <Jerry.Zuo@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	George Zhang <george.zhang@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION 7.3] drm/amd/display: single-frame scanout corruption on DCN32 at 120 Hz since a637a140ab86
-Date: Mon, 19 Oct 2026 03:39:05 +0500
-Message-ID: <20261018223905.32324-1-mikhail.v.gavrilov@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261011201833.853907-1-mikhail.v.gavrilov@gmail.com>
-References: <20261011201833.853907-1-mikhail.v.gavrilov@gmail.com>
+        bh=5Fa4oC/q6RcCMAQDGgF7fdd/gfP+j/8A7cYqh74vbRU=;
+        b=j+43qomSTKaiuSy4lV+UeIxtafL2ATgLgqMBCik0SNGQnesd0CC6GVwsqTWINK4ER6
+         A3rNwC8P19Es0dayOScR6DrXuFNdrm4K4pPkarDKvwiF67unDoeKLV6A1bVkWNpsK0Vh
+         0NQDMDIjpt1fkzioZTe/EIQ9DpOUUqJnSKIgsRKRUiV3pOokFUX7elXs2PCPIuf3mhyN
+         UfoqPFQ3T3x7Gqj+2XYYeh80H3IB6WWjFPmOV3GTIHLzX3wm3tk62FEY52F46RCLQfwW
+         rQC9BQ8fhUHlrE/yP4y1QZWgopLu2lNf1XwCUWcH/wuixmkNl8uHS6k6VHWTNmyp+FoL
+         jKTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792363327; x=1792968127;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=5Fa4oC/q6RcCMAQDGgF7fdd/gfP+j/8A7cYqh74vbRU=;
+        b=2CpmW0/5A7ufKsxKr5pPjmArhdUMXESj4B1RwAAHkvwt4L0gC5DdI8hejqX+WvId7b
+         vXJctQSafpneZA+RhuV62rz50ofmhAZoL71cPNnlZANxICK6bHrvlXyScOogt4jTJQ7C
+         5EszbdVlald66FMMJhw1LECEPsdlLghPcsOfS6Siyob+x8ETFeoDGwtUkxtGnbft4tGC
+         FlMTCHl6Vvb/FFONk3tNGhzPdNd1eIXuvLYh87DFyoO933ISgIZhz3oiPEOctvjIGu+V
+         lOj3FsvKZ4dw8pCs2SkDwUmrmx5fTrn2o9jC5lDQid1p+69iRmHj1AUjP0nbGRoD2mpI
+         +Jow==
+X-Gm-Message-State: AFq9FYJEO2mVuuzzReguEJ4r1BSHRpKR+/AHoSclpZLoPmSUuUnlwhLP
+	TSJAV0IYl9VMoZ/Jnz1jKHoSrOH32MhbrZ5lDTDCrZubM8hVYDlCt+p1hXJo75eQAJ/mm9wJ0eB
+	xlNQDdTnq3Y9XEHIlk/1AjY2Cfi7E1uk=
+X-Gm-Gg: AYBFou3HuOBZ8PXvQ78mkWoUGgi19xHnXyOtdlvtaSLlJWhX2/g9Uk/jcD/mRlLvxvb
+	EMK6E7zzfmBxLoxhfa0giEviIVjGeG2KqMJcRjJjjMHGVsmR6IozzP8T+afHtJetqjFdHk+vY1R
+	L7+a4nJJtEslBAVvr47uW9QDoFr7tfXJwTevNwsW4UXE4zJI6HUBe/kLAjR18Reguo6HpOTELW0
+	AQBs5hx9egEcg2XYLMojKXiyqv0i2i47Evndaicdf50sg6KM2lauEhmeNZbKijwDZhG6pvqBuq2
+	7hVk6zGHdPnQ91HSw6jTG9rUc3FHugr1ToTkhfYVG/qN/45HSdQMw6Sm7wB/AJE=
+X-Received: by 2002:a17:903:22c6:b0:2e2:d39f:182f with SMTP id
+ d9443c01a7336-2e9a6d2646cmr50216835ad.28.1792363326788; Sun, 18 Oct 2026
+ 15:42:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Connor Stevens <ooglie05@gmail.com>
+Date: Sun, 18 Oct 2026 23:41:55 +0100
+X-Gm-Features: AclHuK8uJqAgzHBOxFyLhpYlx7hixdCrDgjKxkdDek7f0OQznROONPQ0FgMwdBk
+Message-ID: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
+Subject: [REGRESSION 7.2.11] ASoC: sdw_utils: cs35l56-ot25 DAI not registered,
+ no sound card
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, rf@opensource.cirrus.com, broonie@kernel.org, 
+	sashal@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The workaround from my previous mail does not survive a suspend.  After
-resume from S3 the band was back (seen, not measured) with the TV still
-in FreeSync mode, because DC had turned SubVP back on.
+Hi,
 
-Snapshots of amdgpu_dm_capabilities, pp_dpm_mclk and the DTN log, all
-at 3840x2160@120 with FreeSync enabled (vrr_range 40-120, the EDID
-byte-identical in every snapshot):
+Since 7.2.11 the sound card is missing on a Dell XPS 14 DA14260 (Panther
+Lake, subsystem 1028:0db9, CS35L57 amps on SoundWire):
 
-  after boot                    sub-viewport disabled, UCLK at 1249 MHz
-  20 s after rtcwake -m mem     sub-viewport enabled, UCLK switching,
-                                watermark set A at the register maximum
-  after toggling Night Light    sub-viewport disabled again
+  sof_sdw sof_sdw: ASoC: CODEC DAI cs35l56-ot25 not registered
 
-dcn32_allow_subvp_high_refresh_rate() keeps SubVP off a single FreeSync
-display by reading stream->allow_freesync, but amdgpu_dm sets that
-field only on the first flip after a commit, so the modeset forced on
-resume is validated without it.  A gamma change makes DC validate the
-state again, this time with the field set.  The patch:
+Fedora 7.2.9-200.fc44 works. 7.2.11-200.fc44 is broken. I did not test
+7.2.10.
 
-  https://lore.kernel.org/all/20261018221726.27259-1-mikhail.v.gavrilov@gmail.com/
+7.2.11 has bf7a3ce1d563 ("ASoC: sdw_utils: Switch CS35L56/57/62/63 to use
+OT25 DAI"), but not the upstream commit before it, 86c8360c97f6
+("ASoC: cs35l56: Add DAI for SDCA OT25 stream"), which adds that DAI.
 
-With it, SubVP stays disabled across rtcwake -m mem.  Until it is
-merged, toggling Night Light after resume restores the workaround.
+I looked into this with help from Claude Opus 5.5 and checked it
+myself. I understand you must get lots of AI generated emails
+nowadays; I hope this is helpful nonetheless.
 
-None of this changes the band itself: in HDMI VRR mode, and at 100 Hz
-in either mode, DC uses SubVP anyway.
+#regzbot introduced: bf7a3ce1d563
 
--- 
 Thanks,
-Mikhail
+Connor
