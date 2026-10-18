@@ -1,139 +1,181 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7C33EAC68
-	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 16:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770A93EFD0E
+	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 16:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792341394; cv=none; b=XjgEyAXuuL0BGqYNtylv4QkzfEDLfVnTGuyHUeXN0IxxyUFMnLzGeTJr6t/i/ybJtUE0LN/eascbIyiTbp5Z9Lv3IY1Q3cm+KI+ilp6P0uPhpiM2qEOz1Hm2HU6iHkZCGX9xbZVWeRux82Y9i4aO9v72EobH4bT9V5mLa55iXhc=
+	t=1792341775; cv=none; b=rNY4IeaN1jNywxXWj3N48njnsgCj92DrortejN5z5qjL/uZrEKprNXDGOnIz/YIzCeZmP3cbZpRiS5wDhhH87mC6izbXe1E4omT2FC/NbwQxVBjJMJE6S6APk2opRZRxCM3LJLafcYF0Vauzf9GeszHQaurYAm6yIQZQMHyEIzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792341394; c=relaxed/simple;
-	bh=1206x6K8a9ICANECB2z1av+VARsTQzPmVYCJuXW4jkQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=k/bAHiGfgiLWQ8cgdBsH+5cG9iVLv1m325cxAHU9b2vkbF8HYt8FlHwcpz7zqh62X4BEPgryFVInqG50XSH/fqGuO0OZ+fKR34THSMWrV6VWfLEdUVaUuAbI9LNwBbruhJ2KQ1MBP4cW+2L3AmnKLwinJ7OyzFO/92XYBarSNjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=willbush.dev; spf=pass smtp.mailfrom=willbush.dev; dkim=pass (2048-bit key) header.d=willbush.dev header.i=@willbush.dev header.b=lYKzUJi3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HbyAxFIo; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=willbush.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=willbush.dev
+	s=arc-20240116; t=1792341775; c=relaxed/simple;
+	bh=IHrvpG2wVPzApJlQiEzQQkeSpUN0h3yuPVCXYWde/rs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qe8Vr0zxSRnJpxKlz2EH5KIFObeHw71ZG4wU9GxSnG6QgGMxUu1SH/71+LFbmgmxuxj6IZcl9DyE5P0aVdcpvl7eH7pHHHbYAhopuuf3y676XBKynKGNvSS01cf62OC0AZLqiAnbDCZBxkcE3RNX8ckgmKHBo08p4tyivg4j+ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=os4D7A73; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ik/JJU9D; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=os4D7A73; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ik/JJU9D; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=willbush.dev header.i=@willbush.dev header.b="lYKzUJi3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HbyAxFIo"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id CAFD71400100
-	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 12:36:24 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Sun, 18 Oct 2026 12:36:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=willbush.dev; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm3; t=1792341384; x=1792427784; bh=3t
-	GoBjVzGZKF3e9XOxGK5DBNmYAUi7baXlpnnVm/Z3E=; b=lYKzUJi3M3GXQPl6Eu
-	OxmLhF00+esvTt2lxajrUvAONrZ1UHMSK/lkQOu4CVi5p8m2vXOEwHrulmhsSR9e
-	UMNw3ZOQZD45T6HObUTTAAgXrYdssOB5VyDZyAi50EmTFF/SgRf+cHa+Rl0UEUJ8
-	xYfTq9sqSH8QwfkVKMsPqB3PmtP5GBCSxK6+b4HdMQxBMCww6DzSsJnwg5J4/xNm
-	eXAdgfk9mhx/IKsCc7uCBYvGGaJPqg4fUpbLHG0K5tXrlbWKEHkKHrSP4O0XQMtA
-	Ne9pCy7F1QEoJKoHZHpmAAJ54vur+E9UfxCaO3ZMWS9kdaEXjBsIauIeg34HIUn3
-	uzvw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1792341384; x=1792427784; bh=3tGoBjVzGZKF3e9XOxGK5DBNmYAU
-	i7baXlpnnVm/Z3E=; b=HbyAxFIo459zrV+gweoJ3VnrGHcnvr7yGM3xCCjd9kfU
-	wct+tX7EYnLzqe10R5S5DjbY7ul51xd8Zrs9wSHkayadXL4EmZqOJQ0jCe5rXTQG
-	U8LknvSfKEZ8Zhrg2WErEDQixgWhGN3sA1ZeEcE2ca0MNCosjyAM/kYMO+okrbpg
-	FTEuJbk2LcrJ4NyTu48dEsvOSQ7nzzW2zSX5yCgVIH7dzSnWPEFF2FdI6hDM3Akl
-	6dJ3t+8+eDNKvlH32mK32d3RnR34eIkB3agPDEk9Xri9jw4w1+xP0UPogQnfRWB1
-	MQniU2gLxt0EhY/QH+ecAnK89SoUl0PmsD737lzhag==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
-	action=sign d=willbush.dev a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1792341384; d=willbush.dev;
-	mf=PHdpbGxAd2lsbGJ1c2guZGV2Pg==;
-	rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
-	s=fm3:rsa-sha256:sSNu62kWmIWns2lSmoSg1SN6oTDmBkUmeIQatxfynE8kwOR
-	YpXfoHm09c+kzk4XgcXv/3nkAWMBwkPXkUGWdCAdeF8vbg5reQ8Idrtuq45mU6U1
-	VNKMuPgPxFKEgdlnpZVwdMFDrIJ+hsf9fEvNosWL/PUeexqgUZXpGfQV/95tFTJk
-	XjtIjHpUtq2M/OGu8TtFbq9tZnMZQu3JkjYEr/5Hj4Sw6GvIE6nP5iptBhfQVTq0
-	SZi0+NdLcI1F3W2FEhTMJcdKvBn1fjsYc0fdil4MoyyEPEsAnsI77scEcTbnPIz7
-	bxTxlmQPJgl0GJ/2nSqfTPnG/1rxKRLrJMEzqKw==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
-	action=mi-m=1; hc=10;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,message-id,mime-version,subject,to;
-Message-Instance: m=1; h=sha256:VyqkAny2DlF94PbEW/U6krYIS9vjRI0OHL+QyT+KFWo=:1206x6K8a9ICANECB2z1av+VARsTQzPmVYCJuXW4jkQ=;
-X-ME-Sender: <xms:iPXUarlCO74UqomhNfK6oJCRMOe_QxmEPyZqaR5Og5Gjck6rqckurw>
-    <xme:iPXUappySAnDJnF208TqYQrD85S4B0w7I9kmkoW7jqzFJWvKc5IhTlSeNT4iy581K
-    8rELZ8Or-qh-1mWFDlpvm9YqqDYcJbPwNTMU5za1Z_23Awx9219PAA>
-X-ME-Proxy-Cause: dmFkZTF60ouSx4v/CB2rZwLkCojmMW49pkgKmDBNRc390uF4YMSwxJ+jNb6I9CBnm7ox1F
-    Z4jKHIAHpdZigf6UdYARBoyG41hXtIuZ+OgLdv7Rp15fxeo2CXIpBFk15nuvl7vX0b0Zf2
-    m5Kb92mDMdj7Vn6dZUHKRagG+inK6bPlrSwibh3IKh8fS1YVfTk2neEkSSAdPU0EW5z6ix
-    kGpfNcz4+4fmzaQ1UP3jCqI3P6HFVDoafmt/07TPsGz3XI73yMrm2SkAivSafxxyl4D0PD
-    up67XGqJIp5de7BHkcloFhcPsUgX7ZRVelaGxZYMlPSQ4xuu1ynuDzBVEmzC3QlbblKqN7
-    mbs/fjX2to2SorxzQMPraQXjoOkyCPz9YqGymZIZ1AP66g8Uo81NfmZn5MWIGlCUZ66bdm
-    9r/+nZUll/KEpBwonSVZ9OWjarzXBQmPe/Lw3ss3El+8CkRYgcyzY4/UmCuy8PCrr0lbxE
-    Lgk8KDLDJvtwSryJY22wgVhfLxFH6lsB4Zy+KTVSfxtkHCTLspdcRuP2h+/oCQ3hawv1UK
-    w5WP4UYShO7X08ERXmMaEYyiTdeQS/PzLn9zZHsahejk/ebpy864nLb82tDYcUrMdAFJIb
-    EODpBl5TIbj6Igbk0HFMQOrY5CmQteO5/rxsDdaQ38EmA8WCJ8HqUIkuYgPA
-X-ME-Proxy: <xmx:iPXUasLr_N5428jlTcBt1LtrKFCVWRrgSiq3IzCc8HDU4HWVDhtLPg>
-    <xmx:iPXUarOowU7nZ8_3sSzfpaPFF8wNIsC2qgJMHAZcW1wuDVkviXjFjQ>
-    <xmx:iPXUai5klthezB1OJ04pNHeDv-VpubRNl09UscnMWONUrsizA17oPQ>
-    <xmx:iPXUal4ZWwmfoNwu53kKvw8KH7ARQKw5CO95jPfioHIZBTq98Y8svw>
-    <xmx:iPXUahKPugSNnyuTaKqpJw_lk8nvb1bORzk65pxFZJKVir8PsS3oatwV>
-Feedback-ID: i0f194965:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 10C71700065; Sun, 18 Oct 2026 12:36:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="os4D7A73";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ik/JJU9D";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="os4D7A73";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ik/JJU9D"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 13FF621C3C;
+	Sun, 18 Oct 2026 16:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792341769; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+R51h5F8SUVAknQAJcEABYH8iVTxPikAQ8Yb5pzDi5s=;
+	b=os4D7A73SvBJNwDLO5tTW+87iU/EEuoecnL2nCIXpJ9jLn9IyVrtlqyyvZZ3EJOEReXLZ8
+	DsIXbOd9a1j2nWx7Qus1Dii0/fzM4FfGgLgTLA+YTHrBCJqFOb9gSsiCnZFP7+mA7a7v9a
+	/JgkV9ZlLbvP6ZhPemQ1X7c5iPFbVng=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792341769;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+R51h5F8SUVAknQAJcEABYH8iVTxPikAQ8Yb5pzDi5s=;
+	b=ik/JJU9DDo76v1xarhAKQWdFCVaX8STlucEPWrmB4yAj7Lh1HuhOHrrd2cDuRhdHpVXm2z
+	kfuu2xbnn4uRgxDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=os4D7A73;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="ik/JJU9D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792341769; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+R51h5F8SUVAknQAJcEABYH8iVTxPikAQ8Yb5pzDi5s=;
+	b=os4D7A73SvBJNwDLO5tTW+87iU/EEuoecnL2nCIXpJ9jLn9IyVrtlqyyvZZ3EJOEReXLZ8
+	DsIXbOd9a1j2nWx7Qus1Dii0/fzM4FfGgLgTLA+YTHrBCJqFOb9gSsiCnZFP7+mA7a7v9a
+	/JgkV9ZlLbvP6ZhPemQ1X7c5iPFbVng=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792341769;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+R51h5F8SUVAknQAJcEABYH8iVTxPikAQ8Yb5pzDi5s=;
+	b=ik/JJU9DDo76v1xarhAKQWdFCVaX8STlucEPWrmB4yAj7Lh1HuhOHrrd2cDuRhdHpVXm2z
+	kfuu2xbnn4uRgxDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8F401132D3;
+	Sun, 18 Oct 2026 16:42:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zL6LGAj31GrKLgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 18 Oct 2026 16:42:48 +0000
+Date: Sun, 18 Oct 2026 18:42:47 +0200
+Message-ID: <87tsmjarjs.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Will Bush" <will@willbush.dev>
+Cc: "Takashi Iwai" <tiwai@suse.com>,	"Jaroslav Kysela" <perex@perex.cz>,
+	linux-sound@vger.kernel.org,	regressions@lists.linux.dev,
+	stable@vger.kernel.org,	"Jan Lentfer" <jan.lentfer@web.de>,	Sebastian
+ =?ISO-8859-1?Q?Dalfu=DF?= <sd@sedf.de>
+Subject: Re: [REGRESSION] usb-audio: Behringer UMC204HD broken in 7.2.10
+In-Reply-To: <45162613-2802-401c-84c9-742f9c8c68e6@app.fastmail.com>
+References: <45162613-2802-401c-84c9-742f9c8c68e6@app.fastmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Sun, 18 Oct 2026 11:34:27 -0500
-From: "Will Bush" <will@willbush.dev>
-To: "Takashi Iwai" <tiwai@suse.com>
-Cc: "Jaroslav Kysela" <perex@perex.cz>, linux-sound@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- "Jan Lentfer" <jan.lentfer@web.de>,
- =?UTF-8?Q?Sebastian_Dalfu=C3=9F?= <sd@sedf.de>
-Message-Id: <45162613-2802-401c-84c9-742f9c8c68e6@app.fastmail.com>
-Subject: [REGRESSION] usb-audio: Behringer UMC204HD broken in 7.2.10
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[web.de];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.com,perex.cz,vger.kernel.org,lists.linux.dev,web.de,sedf.de];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 13FF621C3C
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-Hi Takashi,
+On Sun, 18 Oct 2026 18:34:27 +0200,
+Will Bush wrote:
+> 
+> Hi Takashi,
+> 
+> Thanks for all your work on usb-audio. I was updating my system (NixOS), which
+> took me from 7.2.9 to 7.2.10, and my Behringer UMC204HD device stopped working.
+> 
+> It gets into a loop:
+> 
+>   [  225.148019] blazar kernel: usb 3-4: new high-speed USB device number 19 using xhci_hcd
+>   [  225.340016] blazar kernel: usb 3-4: New USB device found, idVendor=1397, idProduct=0508, bcdDevice= 1.35
+>   [  225.366005] blazar kernel: usb 3-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+>   [  225.366187] blazar kernel: usb 3-4: Product: UMC204HD 192k
+>   [  225.366304] blazar kernel: usb 3-4: Manufacturer: BEHRINGER
+>   [  230.493021] blazar kernel: usb 3-4: failed to read device descriptor: -110
+>   [  230.493313] blazar kernel: snd-usb-audio 3-4:1.0: probe with driver snd-usb-audio failed with error -110
+>   [  235.612029] blazar kernel: usb 3-4: failed to read device descriptor: -110
+>   [  235.612302] blazar kernel: snd-usb-audio 3-4:1.3: probe with driver snd-usb-audio failed with error -110
+>   [  240.732035] blazar kernel: usb 3-4: failed to read device descriptor: -110
+>   [  240.732461] blazar kernel: snd-usb-audio 3-4:1.4: probe with driver snd-usb-audio failed with error -110
+>   [  240.732538] blazar kernel: usb 3-4: USB disconnect, device number 19
+>   [  241.019061] blazar kernel: usb 3-4: new high-speed USB device number 20 using xhci_hcd
+> 
+> Issue seems to be from commit: b5c4823cf3e4 ("ALSA: usb-audio: Apply boot quirk for Behringer models generically")
+> 
+> I was able to patch 7.2.10 to get it working again:
+> 
+> -	if (USB_ID_VENDOR(id) == 0x1397)
+> +	if (id == USB_ID(0x1397, 0x1234))
+> 
+> Not sure if applying the quirk to every Behringer device is too broad or what
+> the fix should be. Ping me if you want me to test a patch.
+> 
+> #regzbot introduced: b5c4823cf3e4
 
-Thanks for all your work on usb-audio. I was updating my system (NixOS), which
-took me from 7.2.9 to 7.2.10, and my Behringer UMC204HD device stopped working.
+Interesting, it's just a descriptor read and this fails on your device
+by some reason.  Could you try to ignore the error like below, and
+verify whether it continues to work?
 
-It gets into a loop:
 
-  [  225.148019] blazar kernel: usb 3-4: new high-speed USB device number 19 using xhci_hcd
-  [  225.340016] blazar kernel: usb 3-4: New USB device found, idVendor=1397, idProduct=0508, bcdDevice= 1.35
-  [  225.366005] blazar kernel: usb 3-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-  [  225.366187] blazar kernel: usb 3-4: Product: UMC204HD 192k
-  [  225.366304] blazar kernel: usb 3-4: Manufacturer: BEHRINGER
-  [  230.493021] blazar kernel: usb 3-4: failed to read device descriptor: -110
-  [  230.493313] blazar kernel: snd-usb-audio 3-4:1.0: probe with driver snd-usb-audio failed with error -110
-  [  235.612029] blazar kernel: usb 3-4: failed to read device descriptor: -110
-  [  235.612302] blazar kernel: snd-usb-audio 3-4:1.3: probe with driver snd-usb-audio failed with error -110
-  [  240.732035] blazar kernel: usb 3-4: failed to read device descriptor: -110
-  [  240.732461] blazar kernel: snd-usb-audio 3-4:1.4: probe with driver snd-usb-audio failed with error -110
-  [  240.732538] blazar kernel: usb 3-4: USB disconnect, device number 19
-  [  241.019061] blazar kernel: usb 3-4: new high-speed USB device number 20 using xhci_hcd
+thanks,
 
-Issue seems to be from commit: b5c4823cf3e4 ("ALSA: usb-audio: Apply boot quirk for Behringer models generically")
+Takashi
 
-I was able to patch 7.2.10 to get it working again:
-
--	if (USB_ID_VENDOR(id) == 0x1397)
-+	if (id == USB_ID(0x1397, 0x1234))
-
-Not sure if applying the quirk to every Behringer device is too broad or what
-the fix should be. Ping me if you want me to test a patch.
-
-#regzbot introduced: b5c4823cf3e4
-
-Thanks,
-Will Bush
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -865,7 +865,7 @@ static int snd_usb_cm1a_boot_quirk(struct usb_device *dev)
+ 	err = usb_get_descriptor(dev, USB_DT_DEVICE, 0, desc, sizeof(*desc));
+ 	if (err < 0) {
+ 		dev_err(&dev->dev, "failed to read device descriptor: %d\n", err);
+-		return err;
++		// return err;
+ 	}
+ 
+ 	return 0;
