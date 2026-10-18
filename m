@@ -1,123 +1,118 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017713CF1ED
-	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 21:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.167
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792357815; cv=pass; b=ImBtMMxwNV8So3GK3Zw+dpMzibVSANDWPoRA6viRLWubEi0mpzF2uB7XLHR+AJhyQ1ZuLKAA9x1iw7B7t4Kj9U62Kq59dh5NZsBqaWvx5EeQpBpKj/EsWt6mRdRsz0j+Z5iB0J4jfEW1breAe1+fTq1G+usiBF+fuivnNiluFGE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792357815; c=relaxed/simple;
-	bh=3h/FBrbM+VFwW0h7C0SNF3vnnNQcYz9uoB0zA6hvT2w=;
-	h=References:Message-ID:From:To:Cc:Subject:Date:Mime-Version:
-	 Content-Type:Content-Disposition; b=BCidtEQpDzzFRVVeCiuCOoGcbL1+AY7+PhgJ5zAnpFeipjaKmAXX5/gXipKw1VMxhZVZ4maz73OIy+IbAGEZASwGpo1ILwRRLTxk5JXOhepu4AGdVjZOQB3lgsZnJB5O7Pg1b3lmXQAOb69CFdA0jBdZb8mCc9Z/lF78uXQqffk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=masysma.net; spf=pass smtp.mailfrom=masysma.net; dkim=pass (2048-bit key) header.d=masysma.net header.i=@masysma.net header.b=kngLy2/H; dkim=permerror (0-bit key) header.d=masysma.net header.i=@masysma.net header.b=YDLtR2vh; arc=pass smtp.client-ip=81.169.146.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=masysma.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=masysma.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517EA45D1BA
+	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 22:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792363155; cv=none; b=jcCOPHDoyg+m1UGvOaeSxEDQYPw6RurR5sCgXBDGJ/UGOMN9EAmIqPUfC1jpa5zl9TxvEKLarNn1v3UzHaA841R3hwcBUDMErcohMA1n1lbbFGHJIJ1g/Lia8yJhm/x+3wuUVvnuUgMKaWCnjPLhM4NH+5QVB2Ky+wM8Ha3N948=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792363155; c=relaxed/simple;
+	bh=FiL4xTcXDIPoGTMZXRKEFaT7WuQUy5kID7ebw8CmJ8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uy9wLPuSpqTNAQPmQnEEsZFCMQF/1b5x6Kubq/WA/Bhyed0dRx92FH/v84+vbOHnNzgF7cWHDro5Gdbq0ihM2xkB+E4AaSOmM+WYefRtYOzNms0uiJSkECAoWMTpNhf9JyfFry4EccyjQIQMw+3047KzROrHwFa8pIgEilgJrP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A2A+vMXr; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=masysma.net header.i=@masysma.net header.b="kngLy2/H";
-	dkim=permerror (0-bit key) header.d=masysma.net header.i=@masysma.net header.b="YDLtR2vh"
-ARC-Seal: i=1; a=rsa-sha256; t=1792357810; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=n0AvXHFGsviuQ+yv5HvyL7MKapVJksixuDmq9FSPm4VFfpPREzvdEznqt+bBKlLv/k
-    gc+0HDG/WuhNfg7Jm8EN7UqwbZfeXj3xUuCDlXwMbi0x8TQtZezrF/AdaLKgXEkMy9Wj
-    PvefcFCedWSqhEiL/6XutNcODwohD/LtgSGxTSOqd06ac457jczcSlmWe8OLyawylTvS
-    yd2j+9N+Z75Ww8XsiLcL9Aj23wfemY6Jw8j6XLrSCL9Mg12rIS2VzjfJj38Ef1nJAewq
-    JUwWzLaDqdbT+xqSt8/054FpUMbi6PKFUf66ynOXINkFd+TYIC2vp5N0JDLvzSU7/x3I
-    jb2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1792357810;
-    s=strato-dkim-0002; d=strato.com;
-    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
-    Sender;
-    bh=4954EnejhVUQZUG7uW0CVBgNR7C0Z2q+7UdrvuCAW2w=;
-    b=XyTb7ZEs7w3w+pAVp3ysDEtrYspGijLQmWHV6v/uNIKZmm1PHNrI98IcbCBmrKii0/
-    i1IpevHka7HwMpp53o1gWCILXpTkxP0Reu0eS2YNm9xv7Ei40c9JjxLTrts7zJ880HQK
-    BXqCZbNhnp37J3djpKOV31rDCAwWsIpJaS72z4Pb9DhT0pv3EBNrNLADJNSGdagByAkr
-    kdlBp5cWARU+pWAuD74K8FbUFymRHMPjDcb57m6PDiSY+Jb/CNabuAABQGyRL+47nONn
-    dHPBK+yu3Yq0MmsYVJvO04i/vr3bme9BFM5GXgimx2+9WsjHQEqQDLMEsLNZIhCmeVPY
-    kKPQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1792357810;
-    s=strato-dkim-0002; d=masysma.net;
-    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
-    Sender;
-    bh=4954EnejhVUQZUG7uW0CVBgNR7C0Z2q+7UdrvuCAW2w=;
-    b=kngLy2/HCUUoQhAVqGL3Q2HCW7OCeWcLGKodVcmXQJHDYVwE32RTrvwXkSgEb2Q3JD
-    s5Wo8KWWrtnpMuYKB8f+U5WAhMHxUurL12LiL9rfYRy1dMdmr6bBEqkSIfNoGmEWlvHt
-    iLAMuVLF3kwd9ndQhMU444FJRcUkHr/dvnODAt/W3Gzdn03SkH6nOTgN3SgciQlUkvbA
-    ZTj1RZEfMIkDOnIe6xmfqV3cvW3YR0JRMg6efx1RTCGq9C0qe13+rFaxJptaS5Xe7imu
-    1lzV70SIUzqIYlgftLHVCIDs0+4OiorrsIqFu+MptMR12dedXeBjykaf/q2xMxZ+a0Q1
-    teUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1792357810;
-    s=strato-dkim-0003; d=masysma.net;
-    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
-    Sender;
-    bh=4954EnejhVUQZUG7uW0CVBgNR7C0Z2q+7UdrvuCAW2w=;
-    b=YDLtR2vhCiMEMqb348g/b56gH9B50BWxM26Fno8M29RBp4PQk+23AL+k4DLKKzttqr
-    lP92M+JnJL6icNRXTFAA==
-X-RZG-AUTH: ":JWICemCleuxmQC700vpzGgDMhu8YP6Ql4e3bvdBvsQ2fC5IJhh3tj/mdIDmcLzDOhHH2a/syK0FsdBnAYoP8O618xjTxmvs="
-Received: from masysma-18
-    by smtp.strato.de (RZmta 55.6.3 AUTH)
-    with ESMTPSA id 9b2d4129ILAAYQD
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 18 Oct 2026 23:10:10 +0200 (CEST)
-References: <20261011163249.18479-1-gruhlke@mailbox.org>
-Message-ID: <cone.1792357809.260300.12734.1000@masysma-18>
-X-Mailer: https://www.courier-mta.org/cone/
-From: Linux-Fan <info@masysma.net>
-To: Alexander Gruhlke <gruhlke@mailbox.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-    Rafael J =?UTF-8?B?Lg==?= Wysocki <rafael@kernel.org>,
-    Alex Williamson <alex@shazbot.org>, Hui Wang <hui.wang@canonical.com>,
-    linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-    regressions@lists.linux.dev
-Subject: Re: [PATCH v2 0/2] PCI: Wait after FLR for devices that don't honor
-         Immediate Readiness
-Date: Sun, 18 Oct 2026 23:10:09 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2A+vMXr"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a018792ab3so10684425e9.0
+        for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 15:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792363152; x=1792967952; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CvsLpFGelrgwN9Cl66Kd9LpNf+fNDOOYoQY8p06psOA=;
+        b=A2A+vMXrnJN2BfvNvzXUibpsYMUIiT5N8+j51MGlB5mY1mwVjTD6BozvwsqV2zdA2k
+         2AMfsku23jtpi09Qy01gloQxKm5/iUVnC1ucX+ceCxiumXVO8/EnizhkNvsvv3qmRv9B
+         VqTNrUgSmMMtFttZgfJPV9gAqHICguOdWyPz2ihMNmgA3IYiNQh0YRcodwXn+s4tBASw
+         xxngc6USM8Pj16KqXd55C4woa5cmafXuBkJKA68ZNOuOs+kv4Eu4t4gJruCNJtmG1rOq
+         +ZyxfYXuuTqUuaM3onHuQL/FgZmTh5lgK202ybALA3f6vaPHa3cbwbuKwRvjw9DFwYM+
+         uP7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792363152; x=1792967952;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=CvsLpFGelrgwN9Cl66Kd9LpNf+fNDOOYoQY8p06psOA=;
+        b=RLQNi9w1TGUCd0ldQoEHYD+QsGFU1glRoMrev0hYnJaFcsYvWxiAub0ltOgbaa1ke3
+         VMFPX5n1GrQOyQcRtmxSBYehbkf/rjC9Nsx9UPlt8gwgMSb/mth9GkGihm6LU6M+LQ+r
+         xBWHXtREkfzK3otOUFHWVHSPPdPI1QYMhxPTDgbFi+gwPFw4nVu8er3Y8lbNuco6Ycrc
+         cX69tidw2U4Sxh0kgLNpqtLWR0qicLCtnxO0fGNXLBRMN4suzRxNBV8Ta4OVKjLw96uT
+         fp378OjeeR0gRHfPVshlbN7mM347/5HJQoWHlGFok9Bvqa60uVunW+EQ9Jp/y32RYVuq
+         3LbA==
+X-Forwarded-Encrypted: i=1; AKwUvByBo55KDiIP2n1ACJ9UGsgrld4TRi/Xn5/JRpEvt/4wMj2N2sN5G53tHOSrSMDli09rtkR8zhegrD9eqg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYK+gPW18yjBN5wyGefcOzNt70b89+O+ns708bdzBRpVzhZBcE75
+	CcunZH/tcPZv6oTdSRctI+o0aahL71DLsbh/TkseQvxWViI5L6hfIKPI
+X-Gm-Gg: AYBFou0wWauDRz96buPJRH2WIfU++sYcbasMRkTtTDasmzOkEsBoG/Y5pGZLQVrmOgR
+	I6thVKtj/TWCBVAYh0C5LDVFTfiPqCH2DgQQ0d2RFicYoOYeIFzWSyzQztyuR83pXG6Sj4UwqRK
+	rSloK5trDcsqC9LG6SvAfJAMNzp2N58mkIg3WgQ0DpiQo7yCrXWtMy5IWlaYhqV5yMYiAKhHNsD
+	eQQtVMXgJW/iXQjBsQIvRvcQTt67HNJXV9vxQrFPFXyBFgyhvmIBgqyy2mwPonPy4MY+4WtC4SE
+	vsiobkOUkMmHcY0kL+Nt82wljvkxvoJkTbMcYQyaebX668K0JDyXwDFM/AHJ+ORRAB/CcnW1s2k
+	ZOAstjHYwaqfD/u6BhsZIfHm6oL57wqMO4GqyNsewD6CTqLV3j4DzaZY9yigfn63sy2oN22atn0
+	+HA8lCA3kcOTLrxZAIUFVWoWb9qCb+71Rl1UpBm15hu6NY4yM7rXOX9XOldvjrk8gCnf/+y3abO
+	fTGElT/EXi6I65pI4JEgEDkM8k1EYwWuSmDlb127DsZb+WJc7hiIdCi6PnL/NF3LHoiVhc=
+X-Received: by 2002:a05:600c:8b22:b0:4a0:1c17:4fb2 with SMTP id 5b1f17b1804b1-4a1d760d9fcmr130723785e9.31.1792363152485;
+        Sun, 18 Oct 2026 15:39:12 -0700 (PDT)
+Received: from localhost ([178.214.243.78])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd471a1fsm16359363f8f.3.2026.10.18.15.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Oct 2026 15:39:11 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <siqueira@igalia.com>,
+	Alex Deucher <alexander.deucher@amd.com>
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Fangzhi Zuo <Jerry.Zuo@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	George Zhang <george.zhang@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION 7.3] drm/amd/display: single-frame scanout corruption on DCN32 at 120 Hz since a637a140ab86
+Date: Mon, 19 Oct 2026 03:39:05 +0500
+Message-ID: <20261018223905.32324-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261011201833.853907-1-mikhail.v.gavrilov@gmail.com>
+References: <20261011201833.853907-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; format=flowed; delsp=yes; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Alexander Gruhlke writes:
+The workaround from my previous mail does not survive a suspend.  After
+resume from S3 the band was back (seen, not measured) with the TV still
+in FreeSync mode, because DC had turned SubVP back on.
 
-> Since v7.2, VFIO passthrough of a Samsung 990 PRO NVMe [144d:a80c] fails
-> on the second VM start, and the device is inaccessible until reboot.  The
-> drive advertises Immediate Readiness but returns ~0 for up to 7 ms after
-> FLR, so since 10baa9b4df40 ("PCI: Drop unnecessary retries when restoring
-> BARs") the config restore after FLR is lost.
->
-> Patch 1 ignores Immediate Readiness on that drive.  A 990 EVO Plus
-> [144d:a80d] reports the same errors [1], but it isn't confirmed to
-> advertise Immediate Readiness, so it's not included.
->
-> Patch 2 is independent and keeps pci_dev_wait() from treating ~0 as
-> ready with RRS Software Visibility, which also affects the Intel
-> [8086:0a54] in the open d591f6804e7e regression.  Hui, Linux-Fan: testing
-> patch 2 on that drive would be appreciated.
+Snapshots of amdgpu_dm_capabilities, pp_dpm_mclk and the DTN log, all
+at 3840x2160@120 with FreeSync enabled (vrr_range 40-120, the EDID
+byte-identical in every snapshot):
 
-Sorry to be late to the party -- I only got access to the machine which  
-showed the issue today.
+  after boot                    sub-viewport disabled, UCLK at 1249 MHz
+  20 s after rtcwake -m mem     sub-viewport enabled, UCLK switching,
+                                watermark set A at the register maximum
+  after toggling Night Light    sub-viewport disabled again
 
-I have applied the following two patches:
+dcn32_allow_subvp_high_refresh_rate() keeps SubVP off a single FreeSync
+display by reading stream->allow_freesync, but amdgpu_dm sets that
+field only on the first flip after a commit, so the modeset forced on
+resume is validated without it.  A gamma change makes DC validate the
+state again, this time with the field set.  The patch:
 
-0f8b5d90d179 ("PCI: Ignore Immediate Readiness on Samsung 990 PRO and 990 EVO Plus NVMe")
-e8df1d194c39 ("PCI: Don't treat ~0 as ready in pci_dev_wait() with RRS SV")
+  https://lore.kernel.org/all/20261018221726.27259-1-mikhail.v.gavrilov@gmail.com/
 
-These resolve the issue for me.
+With it, SubVP stays disabled across rtcwake -m mem.  Until it is
+merged, toggling Night Light after resume restores the workaround.
 
-I an very happy that there is now an upstream solution to this, thank you!
+None of this changes the band itself: in HDMI VRR mode, and at 100 Hz
+in either mode, DC uses SubVP anyway.
 
-Kind regards
-Linux-Fan
-
-[...]
+-- 
+Thanks,
+Mikhail
