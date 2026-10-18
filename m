@@ -1,97 +1,139 @@
-Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253963D3492
-	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 03:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7C33EAC68
+	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 16:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792294963; cv=none; b=Wt+gr8CW5kOrRl3YfuEmRMgnVqr3iY0+PwuQN8LKTyIYVD3vdaLiU68scn55LaM+ycRy7lh7qWRGVkohy3CmRR6eQaTczdKYuuvARsW0oDCjRMtp2YOgv4oGv2QWgercEfwQSInH9uMCj49uWtQyH7zlQQC38M3A7MbS6geuWpc=
+	t=1792341394; cv=none; b=XjgEyAXuuL0BGqYNtylv4QkzfEDLfVnTGuyHUeXN0IxxyUFMnLzGeTJr6t/i/ybJtUE0LN/eascbIyiTbp5Z9Lv3IY1Q3cm+KI+ilp6P0uPhpiM2qEOz1Hm2HU6iHkZCGX9xbZVWeRux82Y9i4aO9v72EobH4bT9V5mLa55iXhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792294963; c=relaxed/simple;
-	bh=OEiXZACQSG+UMfc3g985+eXqc1K6tNvfEVBEPiC+0Js=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=o/Zoz9FOhjI2pfdbzHjxGm1bOwb7lt7Ak3g626pFwYAlPcCDZsqU3JCbklrPuWPVobwlrMSt1x/Vh8hqvd+YyU72+aim7xu95Gn3RhYkHFFOFXZ11iXo4X7i0CRBIo+HCFGOhnNdhbNqyTm1C3nKFZgkKsQ/u0kGqEbPXnmO8EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gymZneaJ; arc=none smtp.client-ip=74.125.82.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792341394; c=relaxed/simple;
+	bh=1206x6K8a9ICANECB2z1av+VARsTQzPmVYCJuXW4jkQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=k/bAHiGfgiLWQ8cgdBsH+5cG9iVLv1m325cxAHU9b2vkbF8HYt8FlHwcpz7zqh62X4BEPgryFVInqG50XSH/fqGuO0OZ+fKR34THSMWrV6VWfLEdUVaUuAbI9LNwBbruhJ2KQ1MBP4cW+2L3AmnKLwinJ7OyzFO/92XYBarSNjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=willbush.dev; spf=pass smtp.mailfrom=willbush.dev; dkim=pass (2048-bit key) header.d=willbush.dev header.i=@willbush.dev header.b=lYKzUJi3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HbyAxFIo; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=willbush.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=willbush.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gymZneaJ"
-Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-35f036b17easo1923791eec.1
-        for <regressions@lists.linux.dev>; Sat, 17 Oct 2026 20:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792294960; x=1792899760; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:content-type:message-id:date
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=OEiXZACQSG+UMfc3g985+eXqc1K6tNvfEVBEPiC+0Js=;
-        b=gymZneaJEZeMPb6NfSaliYuB6FmpV2GsQ7/PF3hIuJmyU5NaHOHa4Qn88P1Q1MANs5
-         lVShmQzBOILLBi9b2WhrN/k5oQntVhwRaEqPwFx5JdWcJFIlZfA6dNWLJRb3TYjRj5Mw
-         kHaoYCmzYc7xZShYPeZMbsCafG6GIaiUMw60GE7vEkLsj42yN5uSfAAVlYXJuZo0IF47
-         FyzPLIS+B1ew1vxllgEDNcUnYqGr/N41+7RbGJyilIitcg+zQEtOMbmawZdCx4ODP57c
-         WCA2p9GmEvZk5t3in8FVtQnmER+cmq+TtrLcKFXkVM9amAtSmuQRFFzmj06o5cIziY2Q
-         qbBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792294960; x=1792899760;
-        h=mime-version:content-transfer-encoding:content-type:message-id:date
-         :references:in-reply-to:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OEiXZACQSG+UMfc3g985+eXqc1K6tNvfEVBEPiC+0Js=;
-        b=QPYnyn523jEpqOsQlDXx14iGFpYhgYMcdGv5sIuKU+VAYNFl+yWiMhLwM7tMMt168S
-         BPDGKWGBpsbEXrfYvw9Nyq3Rk/6DLI2KuWPf5B0FNPquRxrP2gPQrypU42YGd6R1p8m3
-         2IorhRTRky8QsaQVOmOwFq8IvSbOHSZrjIzY4kW6/HySEqwaQrLL9IdfsBq0FWSv0T9w
-         fkJYp4PHTbOzJC7F9q784NdLBdCVza3FnlsG2bpkfU/mWKcH/wGP0ACJSCNDQhSr24yp
-         GePc+9FXJ6ObQd2omU8KByRnEKzcOTSrH3mDlRBcnWkKO6a9wQafUjdCmJcHGS1ubM1+
-         zotg==
-X-Forwarded-Encrypted: i=1; AKwUvBztVOwpLcDcNQMBRLOpUjGlL93cVQdpUlyXTH17vWWeIVHEmN5dd8grR/b3oI/lEulQzFRAcGSWgMq14g==@lists.linux.dev
-X-Gm-Message-State: AFq9FYK2BIE4EusrWOP9ybJfiS7TUMvkDxQrPvatEiUWMRHs19IWG5sc
-	aTaNrDyJV/x9oTWlo8RwVqSeKFi9Q2By7qiXZyEz2o2YvZPRYrhZrlVO
-X-Gm-Gg: AYBFou0zY+tSNb90C0NI+CUDB/Wxdvbgcwx1DQj/HxqN9ee9iJiem+wRsvQjbdPfwOR
-	dIqi54SLAAV0vwjgb1+csgZFUHKPoyGMWdMLFZHR7f9Ug6uInvXR860jTdNWndjWd9xs+774aIN
-	hIeyTbRaaC/XWsvvFb9wSUTlSsy9wezq2+7VfPzCdwueXOBEm0R19zY1OS0u6Wv108yv+4mRylY
-	yLMA6WwVhhB2xN1f1QQtn1zX6Z6r1M1+ZLZFcmBJB32LXkzRTQnpgISjANItGzmhiEBLbRmwN3y
-	qYgUVAeeL/1BPcFZOULbBLffheITmlkuAzUFJR2j3Xm66F3ke18pOU1wiEXPHK6yw4VLIui0yQW
-	TV0yGa55VMLEBgc0vODldVnFnZedJsL/hMdDeovSv4ILp1h7eB6wYHNXqm/HFuwrt5BqKtp7OpN
-	/5uP2DSeSCzrs6b7jST7TYQ+O+WrB+e3xrSzRe93I+GNl2zrLYWETMsWHx0z2vrLmMsg==
-X-Received: by 2002:a05:701b:205b:10b0:184:d593:2897 with SMTP id a92af1059eb24-185138b5855mr6502042c88.29.1792294959920;
-        Sat, 17 Oct 2026 20:42:39 -0700 (PDT)
-Received: from localhost ([183.242.161.82])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831a6f5a13sm21454007c88.12.2026.10.17.20.42.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Oct 2026 20:42:39 -0700 (PDT)
-From: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
-To: Kayra Cizmeci <kayracizmeci@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Peter Zijlstra <peterz@infradead.org>, Martin King <martin3kx@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH] sched/rt: queue a push when a queued RT task is boosted
-In-Reply-To: <atOGI0tcyXnuWuD9@scheduler.schedules>
-References:
- <CAEB5A_91hob8ddOhW=PrO1=O7GrFmSxY3r1-_Ard6x8KHHuJGA@mail.gmail.com>
- <20260814183652.611e7ecf@gandalf.local.home>
- <6db9c47f-a1f8-49dd-9e80-f9014d75f9e8@leemhuis.info>
- <20260903092037.5b739980@gandalf.local.home>
- <20261015061915.126442-1-chaosheng.qu.linux@gmail.com>
- <20261017121423.393837-1-chaosheng.qu.linux@gmail.com>
- <atOGI0tcyXnuWuD9@scheduler.schedules>
-Date: Sun, 18 Oct 2026 11:42:32 +0800
-Message-ID: <179229495240.39966.14792426764563252817@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=willbush.dev header.i=@willbush.dev header.b="lYKzUJi3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HbyAxFIo"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id CAFD71400100
+	for <regressions@lists.linux.dev>; Sun, 18 Oct 2026 12:36:24 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Sun, 18 Oct 2026 12:36:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=willbush.dev; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1792341384; x=1792427784; bh=3t
+	GoBjVzGZKF3e9XOxGK5DBNmYAUi7baXlpnnVm/Z3E=; b=lYKzUJi3M3GXQPl6Eu
+	OxmLhF00+esvTt2lxajrUvAONrZ1UHMSK/lkQOu4CVi5p8m2vXOEwHrulmhsSR9e
+	UMNw3ZOQZD45T6HObUTTAAgXrYdssOB5VyDZyAi50EmTFF/SgRf+cHa+Rl0UEUJ8
+	xYfTq9sqSH8QwfkVKMsPqB3PmtP5GBCSxK6+b4HdMQxBMCww6DzSsJnwg5J4/xNm
+	eXAdgfk9mhx/IKsCc7uCBYvGGaJPqg4fUpbLHG0K5tXrlbWKEHkKHrSP4O0XQMtA
+	Ne9pCy7F1QEoJKoHZHpmAAJ54vur+E9UfxCaO3ZMWS9kdaEXjBsIauIeg34HIUn3
+	uzvw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1792341384; x=1792427784; bh=3tGoBjVzGZKF3e9XOxGK5DBNmYAU
+	i7baXlpnnVm/Z3E=; b=HbyAxFIo459zrV+gweoJ3VnrGHcnvr7yGM3xCCjd9kfU
+	wct+tX7EYnLzqe10R5S5DjbY7ul51xd8Zrs9wSHkayadXL4EmZqOJQ0jCe5rXTQG
+	U8LknvSfKEZ8Zhrg2WErEDQixgWhGN3sA1ZeEcE2ca0MNCosjyAM/kYMO+okrbpg
+	FTEuJbk2LcrJ4NyTu48dEsvOSQ7nzzW2zSX5yCgVIH7dzSnWPEFF2FdI6hDM3Akl
+	6dJ3t+8+eDNKvlH32mK32d3RnR34eIkB3agPDEk9Xri9jw4w1+xP0UPogQnfRWB1
+	MQniU2gLxt0EhY/QH+ecAnK89SoUl0PmsD737lzhag==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=sign d=willbush.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792341384; d=willbush.dev;
+	mf=PHdpbGxAd2lsbGJ1c2guZGV2Pg==;
+	rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
+	s=fm3:rsa-sha256:sSNu62kWmIWns2lSmoSg1SN6oTDmBkUmeIQatxfynE8kwOR
+	YpXfoHm09c+kzk4XgcXv/3nkAWMBwkPXkUGWdCAdeF8vbg5reQ8Idrtuq45mU6U1
+	VNKMuPgPxFKEgdlnpZVwdMFDrIJ+hsf9fEvNosWL/PUeexqgUZXpGfQV/95tFTJk
+	XjtIjHpUtq2M/OGu8TtFbq9tZnMZQu3JkjYEr/5Hj4Sw6GvIE6nP5iptBhfQVTq0
+	SZi0+NdLcI1F3W2FEhTMJcdKvBn1fjsYc0fdil4MoyyEPEsAnsI77scEcTbnPIz7
+	bxTxlmQPJgl0GJ/2nSqfTPnG/1rxKRLrJMEzqKw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=mi-m=1; hc=10;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,message-id,mime-version,subject,to;
+Message-Instance: m=1; h=sha256:VyqkAny2DlF94PbEW/U6krYIS9vjRI0OHL+QyT+KFWo=:1206x6K8a9ICANECB2z1av+VARsTQzPmVYCJuXW4jkQ=;
+X-ME-Sender: <xms:iPXUarlCO74UqomhNfK6oJCRMOe_QxmEPyZqaR5Og5Gjck6rqckurw>
+    <xme:iPXUappySAnDJnF208TqYQrD85S4B0w7I9kmkoW7jqzFJWvKc5IhTlSeNT4iy581K
+    8rELZ8Or-qh-1mWFDlpvm9YqqDYcJbPwNTMU5za1Z_23Awx9219PAA>
+X-ME-Proxy-Cause: dmFkZTF60ouSx4v/CB2rZwLkCojmMW49pkgKmDBNRc390uF4YMSwxJ+jNb6I9CBnm7ox1F
+    Z4jKHIAHpdZigf6UdYARBoyG41hXtIuZ+OgLdv7Rp15fxeo2CXIpBFk15nuvl7vX0b0Zf2
+    m5Kb92mDMdj7Vn6dZUHKRagG+inK6bPlrSwibh3IKh8fS1YVfTk2neEkSSAdPU0EW5z6ix
+    kGpfNcz4+4fmzaQ1UP3jCqI3P6HFVDoafmt/07TPsGz3XI73yMrm2SkAivSafxxyl4D0PD
+    up67XGqJIp5de7BHkcloFhcPsUgX7ZRVelaGxZYMlPSQ4xuu1ynuDzBVEmzC3QlbblKqN7
+    mbs/fjX2to2SorxzQMPraQXjoOkyCPz9YqGymZIZ1AP66g8Uo81NfmZn5MWIGlCUZ66bdm
+    9r/+nZUll/KEpBwonSVZ9OWjarzXBQmPe/Lw3ss3El+8CkRYgcyzY4/UmCuy8PCrr0lbxE
+    Lgk8KDLDJvtwSryJY22wgVhfLxFH6lsB4Zy+KTVSfxtkHCTLspdcRuP2h+/oCQ3hawv1UK
+    w5WP4UYShO7X08ERXmMaEYyiTdeQS/PzLn9zZHsahejk/ebpy864nLb82tDYcUrMdAFJIb
+    EODpBl5TIbj6Igbk0HFMQOrY5CmQteO5/rxsDdaQ38EmA8WCJ8HqUIkuYgPA
+X-ME-Proxy: <xmx:iPXUasLr_N5428jlTcBt1LtrKFCVWRrgSiq3IzCc8HDU4HWVDhtLPg>
+    <xmx:iPXUarOowU7nZ8_3sSzfpaPFF8wNIsC2qgJMHAZcW1wuDVkviXjFjQ>
+    <xmx:iPXUai5klthezB1OJ04pNHeDv-VpubRNl09UscnMWONUrsizA17oPQ>
+    <xmx:iPXUal4ZWwmfoNwu53kKvw8KH7ARQKw5CO95jPfioHIZBTq98Y8svw>
+    <xmx:iPXUahKPugSNnyuTaKqpJw_lk8nvb1bORzk65pxFZJKVir8PsS3oatwV>
+Feedback-ID: i0f194965:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 10C71700065; Sun, 18 Oct 2026 12:36:24 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Date: Sun, 18 Oct 2026 11:34:27 -0500
+From: "Will Bush" <will@willbush.dev>
+To: "Takashi Iwai" <tiwai@suse.com>
+Cc: "Jaroslav Kysela" <perex@perex.cz>, linux-sound@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ "Jan Lentfer" <jan.lentfer@web.de>,
+ =?UTF-8?Q?Sebastian_Dalfu=C3=9F?= <sd@sedf.de>
+Message-Id: <45162613-2802-401c-84c9-742f9c8c68e6@app.fastmail.com>
+Subject: [REGRESSION] usb-audio: Behringer UMC204HD broken in 7.2.10
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Thanks. The long explanation is below the --- in the patch; the prose above
-it is the short changelog. I added the Suggested-by and shortened the
-changelog. The commit is now 04de902d6a4e8a6ce6471b97d73f869c5753dc61 on top
-of 1d08a07fd492.
+Hi Takashi,
 
-The patch is attached.
+Thanks for all your work on usb-audio. I was updating my system (NixOS), which
+took me from 7.2.9 to 7.2.10, and my Behringer UMC204HD device stopped working.
+
+It gets into a loop:
+
+  [  225.148019] blazar kernel: usb 3-4: new high-speed USB device number 19 using xhci_hcd
+  [  225.340016] blazar kernel: usb 3-4: New USB device found, idVendor=1397, idProduct=0508, bcdDevice= 1.35
+  [  225.366005] blazar kernel: usb 3-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+  [  225.366187] blazar kernel: usb 3-4: Product: UMC204HD 192k
+  [  225.366304] blazar kernel: usb 3-4: Manufacturer: BEHRINGER
+  [  230.493021] blazar kernel: usb 3-4: failed to read device descriptor: -110
+  [  230.493313] blazar kernel: snd-usb-audio 3-4:1.0: probe with driver snd-usb-audio failed with error -110
+  [  235.612029] blazar kernel: usb 3-4: failed to read device descriptor: -110
+  [  235.612302] blazar kernel: snd-usb-audio 3-4:1.3: probe with driver snd-usb-audio failed with error -110
+  [  240.732035] blazar kernel: usb 3-4: failed to read device descriptor: -110
+  [  240.732461] blazar kernel: snd-usb-audio 3-4:1.4: probe with driver snd-usb-audio failed with error -110
+  [  240.732538] blazar kernel: usb 3-4: USB disconnect, device number 19
+  [  241.019061] blazar kernel: usb 3-4: new high-speed USB device number 20 using xhci_hcd
+
+Issue seems to be from commit: b5c4823cf3e4 ("ALSA: usb-audio: Apply boot quirk for Behringer models generically")
+
+I was able to patch 7.2.10 to get it working again:
+
+-	if (USB_ID_VENDOR(id) == 0x1397)
++	if (id == USB_ID(0x1397, 0x1234))
+
+Not sure if applying the quirk to every Behringer device is too broad or what
+the fix should be. Ping me if you want me to test a patch.
+
+#regzbot introduced: b5c4823cf3e4
 
 Thanks,
-Chaosheng
+Will Bush
