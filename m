@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E78B3F99E3
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 13:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE1530567F
+	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 13:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792417059; cv=none; b=sez366R+JuQxAoSZhFTXXW/bzR6UbVUiQT1XtIYMg7NR43hkZEdegcRBxdJcHAsxInpMvH37XMA1UCT2D1/pIwxn5ibmI865d59niHC+6xUTF2lcCvtQODihUFPEkUFBfFFF/MmGcl0RkjPtaaaY0CpTUf8ct9q0EyGN6zZViyQ=
+	t=1792417641; cv=none; b=QQ7iLNzBesnc2wo6h+PwsNO2ku6oz5T0ZwU+ztf5VqaClrp7ENf57It3HurEgOAvdFWYr1ZKEFbtfKOSFm3yMKIeN/tpNpZDsCbdW/689GxyQtw5NZ8pi4sxXYl88WETFYchkP7PUPwLlukCtiFUVDQR/vbrSdiOacTbYToqyzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792417059; c=relaxed/simple;
-	bh=tWzjvAOTu/DB++0t8KEKEOlzrG0eYCgN8/SYWXqJPrU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=SMVhQTGFFvwPQxv5wJn7dT7NUWDPe4Kzdhg4NGUA5EpHJsVT0IrVCMQrtUHg0YsszqgEWDbnNda2F2URYmTVjjACyckx7RzQ0AdJ+xXVjpF9gFeuIYHfPZ1CYk/74m7Ubw2AECZsFT3wJrJY0souA3naNaYTuzT/hHHr87m8rdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A7zXmCxv; arc=none smtp.client-ip=188.68.63.162
+	s=arc-20240116; t=1792417641; c=relaxed/simple;
+	bh=YNKMO+U3lthxm+K4hM8ZjNmnNKm0FYUbQBfDIReK6zc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DgiMyYDKMC0sgejsbpSO8mbhioQ+zO83Z8WIFgFh/tgeMyNnEgqfx3/X3okvWh3u50mdD/cka0s+N6zktNfRneP55eGq0I5lMsV1GF5WCDpRJ/cD9lk/HJDTe66MouloW7woxkugpTs1/dj2JXA0E2Qn6r33ecetiGBRzyOYWoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gpr0cQZ9; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A7zXmCxv"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j7c6Z5wQLz4MbS
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:37:26 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gpr0cQZ9"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4j7cG22w3Yz8HnD;
+	Mon, 19 Oct 2026 15:43:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792417046;
-	bh=tWzjvAOTu/DB++0t8KEKEOlzrG0eYCgN8/SYWXqJPrU=;
-	h=Date:From:Subject:To:References:In-Reply-To:From;
-	b=A7zXmCxv4raj6sh69KZfnuYLV9bufoCafdJ3KyqfFStMBnnv0vi4slyBmedS8F0Gr
-	 t+0ymfjmBN8Xd/ENnV5K/MsF8vj2DiobCFhcR0XDWshujZy5+zdpjtExh+yxEOlJ84
-	 vO9QzdG+MlNnP/am7tiohjErjSSyBVplC77HE5+fT+lQTsUf52TgjO17shZQSYfIn8
-	 BB1VkAIt2wSl6jP4405aIFDQNraa3Hl85rQKUItPViIfl+U+e1WMcapVDpuo1c0Tqn
-	 Ru5UjrrHubb87fkbqJMNRJvBQU7x0Y8iywmNq7uesc55oAsixR6BADtk9sX+Ol2nFE
-	 mg5eEAJrCSTHQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j7c6Y0kcgz4MZ1
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:37:25 +0200 (CEST)
+	s=key2; t=1792417434;
+	bh=YNKMO+U3lthxm+K4hM8ZjNmnNKm0FYUbQBfDIReK6zc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gpr0cQZ9ya/AeveVduxB4wIMO6Bjfms+lNCuvXls3aK9QE3YWYXRlakP9dgUS7L7Y
+	 Svz4xaz/G8FvV6xQkAIBJ1B/owU2Xn6bFYzPFkCKiMFjuh7YBIwU7G9+O4QSQUlgBA
+	 Jf/yoyqzLWjGz5Lh0++XIGEATZd90yjKhGOin8yUwsRPyT8hgk75lrK1V9QjNApCQL
+	 aywuu7XeBjqgUttkHiPCGsig7lB7PoUQpUKVTYUcfVJZI8Yppve2YmhWhrOsukj6DH
+	 4x7+ai+DnI7qBV/zt8WTD8ITP6Jhpzu9CoJrrKejP0TEpv//mibOVlJl7oYaco4WIT
+	 Wg03kn1xNggeg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4j7cFY6WDzz4ymd;
+	Mon, 19 Oct 2026 15:43:29 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j7bzX752Gz8vYW
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:31:20 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j7cFW3thqz8tkD;
+	Mon, 19 Oct 2026 15:43:27 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 479325F959
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:31:16 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A1D5C5F8E8;
+	Mon, 19 Oct 2026 15:43:21 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <8c28bac6-247f-45ca-906e-92bc15d09821@leemhuis.info>
-Date: Mon, 19 Oct 2026 15:31:15 +0200
+Message-ID: <c3c4d140-07ec-4402-a18b-389520df188e@leemhuis.info>
+Date: Mon, 19 Oct 2026 15:43:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,34 +57,47 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] drm/msm/a8xx: Enable CLX feature on Adreno X2-85
+To: Oleg Keri <okerixx@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+ Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jesszhan0024@gmail.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <ar_AuRr1eaZzOfw9@baldur>
+ <179096320161.1973.2852858792260211089@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+In-Reply-To: <179096320161.1973.2852858792260211089@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179241667648.599328.1888844527438161687@mxe9fb.netcup.net>
+X-PPP-Message-ID: <179241740268.799053.7614387115975151164@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 479325F959
-X-NC-CID: aPxb/9FdLQoehb0f4/fYZZ9/88mCUO5EQerSAtMV2R1PxD4eXdg=
+X-Rspamd-Queue-Id: A1D5C5F8E8
+X-NC-CID: mZAHi/GmfJ9xo2HkEE4KHVNY31ngGahIZ3EtVrBm6I8qAw8W4Po=
 
+On 10/2/26 19:47, Oleg Keri wrote:
+>> This patch landed in next-20261001 and while it works on my Glymur CRD
+>> (COB), on the Asus Zenbook A14 I see the following failure during boot:
+>
+> Same on a Lenovo Yoga Slim 7x Gen 11 (Glymur) with next-20261001, GMU
+> firmware v5.2.38:
+> 
+> [    1.632277] platform 3d6c000.gmu: [drm:a6xx_hfi_wait_for_msg_interrupt] *ERROR* Message HFI_H2F_MSG_GX_BW_PERF_VOTE id 11 timed out waiting for response
+> [    1.642345] platform 3d6c000.gmu: [drm:a6xx_gmu_set_oob] *ERROR* Timeout waiting for GMU OOB set GPU_SET: 0x4
+> [    1.642360] msm_dpu ae01000.display-controller: [drm:adreno_load_gpu] *ERROR* gpu hw init failed: -110
+> [    8.053367] platform 3d6c000.gmu: [drm:a6xx_gmu_resume] *ERROR* GMU firmware initialization timed out
+> [    8.053584] msm_dpu ae01000.display-controller: [drm:adreno_load_gpu] *ERROR* Couldn't power up the GPU: -110
+> 
+> Compositor fails on the first start and works on the second.
+> 
+> Reverting this patch fixes it here as well.
+What's the status here? Was this fixed meanwhile? Or is this regression
+how heading towards mainline now that the merge window is open?
 
-
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3%3DiVGpxenRbnXxKQ@mail.gmail.com/
-#regzbot fix: ASoC: cs35l56: Add DAI for SDCA OT25 stream
-
-#regzbot report:
-https://lore.kernel.org/all/CADrS85612m-Hh-G4BJmOhy-y6r3Ni3kD8_GM-2QRBeWWEEZWuA@mail.gmail.com/
-#regzbot fix: uhid: convert to hid_safe_input_report()
-
-
+Ciao, Thorsten
