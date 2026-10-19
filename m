@@ -1,123 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=205.220.168.131
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792425226;
-	b=mnwsL/YVoqQEO96FqHq7OF1Z7xIWJBm+qowdBwUDWhdZmj1xijwjFzv0gHeZ9hxeLFyj
-	 l1k1GtcCTWiuTV0JmSEaSou2EpBICmPjQzRVztZsY0RKFY8pWgfChHXi3rZqbKJmVJEuS
-	 YvM/FgLyNqdiUlWSa39xpKq6RJfpVvNsD/alJJ7sU6ycSki0Klg0czsUVRsBkFOV0z+Qz
-	 An/fIRutAfOgCEZWyinnWatAt+xFQU+Wb+xYOYChXkq1b3ZsP10hb+vH3xOdUhEH18q1K
-	 AXFKfaLDi+hIIwY9d3cVlPnoWR8FOzkOYaJ2wZJrHkFA0dOySDNI3l4F8Mz7FgOuidA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792425226;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:MIME-Version:
-	 References:In-Reply-To:Reply-To:From:Date:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:X-Authority-Analysis:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=WkXGpXOWiBs24ppXgXlnDUbNGC4cGBni/AXZNpiz1hc=;
-	b=cF5e/NoBGZQNveSbGN1JcV6DJq+WWbHGPQpw8SQ+FR2ed6qAAM3PJsl/1RuAEdUe30Zz
-	 TL2C69rvzsGA/mOrrveESARmhfOl2BsKgULOuKA0yDk0KrUd8XwFT6+QJpa+Z1VK04QAm
-	 mXNrnQ0zWHKVcffhXgrU1YvIkcr6tLNOeRGGcl1INAnJwtvCT1xvQ97oKLZNLSowT/Sa/
-	 pa0dkJndJtbw8cE3SvsImqQHgDhm4S5R8JbEHT8Q0iYl+/UsuwlUIQvUgT9AobnFq/tUo
-	 85zo4YGqgw4BEGihi22jtYeI5QN5G2nTbNW7BGZa40qwhl05m0NHx2exBiRAKkt17dg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=temperror header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=Rd412vdY;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=cHBRrRWX;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=205.220.168.131
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792425848;
+	b=dMQRFmo4UL5n/W7ObuNAJ9zPdvq66tU1zlN9yP8KdmBJ7iAA0hZKeSXvrIHq0rTASiDr
+	 wBFdOrnbpbPJATaEvRmEorIynJFgTigH+mKFCC/bkB2fIzyMPXUg1wgGnCjVDFaE7uYMo
+	 nzT0zpZJwUqZ6sxhjwDQ9tPiqXdyQ3Kbbdp6gEYXTcwv3jSZcsCkqktfBWmPDALexQvDu
+	 x2D6o5+CNjXExokT9reYiQagtRzqBgeSU/QhwJesCLfWhDHUZ9lGEVpR4rbcsvlNHy7Ct
+	 o+l/W8066s3kyz7b9eJab3PhQ+RGQkrVVcQfV5z6e0mDN0jO7Re5GkzxTsoElByg+pA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792425848;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:Autocrypt:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Rspamd-Action:X-Spam-Level:X-Spamd-Result:
+	 X-Spam-Flag:X-Spam-Score;
+	bh=aLbreY+cSFG22Ltqle1KLEkxhV/BXDyA9LZcfExWCOo=;
+	b=LFgIvaheykrRMaYK9lZ5+K5lEgZtKRu5kFLvatC32PhwO3SVy2ATDLOkcP1P11fa4dL5
+	 +llipVKs/RQCc2CY0mcoyUtfpE0r87Nizf8weCPRf5uhEI2E6lPQa13jLZXyukgqKb11p
+	 7xpxDmXltA9hh/HEwnuES3Y9YxfwpBFhfIhfrbvZ1urqEVKFnx2BhZ0n2GlZujrTmXY2l
+	 WT4TiFBfiy+pKBVyP8je7MWPBtORAhM2T5a2baE2GR5yWdvpf1No617z5A7VrMxot690T
+	 bFQEcBXrZdRoWN1n5G2q90qStFsrrtZ79g7k7SOBkvPFnJu2K6WK7Y5nBbLzb65+0cg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=temperror header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=r8LP8w6O;
+	dkim=temperror header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=uqyW45aQ;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=r8LP8w6O;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=uqyW45aQ;
+	arc=none smtp.remote-ip=195.135.223.130
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2C9606A323
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:53:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0A2C9606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A9C60724AD
+	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 16:03:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C9A9C60724AD
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=Rd412vdY;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=cHBRrRWX
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69JFPGsq2589775
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:53:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=
-	qcppdkim1; bh=WkXGpXOWiBs24ppXgXlnDUbNGC4cGBni/AXZNpiz1hc=; b=Rd
-	412vdYZ6pr+FIF/LqCVeE65wVB2AaKvNCcSUOW3Ygrv2XQ1O8BxNWia0WShOYeFg
-	TH5bNmIi5IQe4w/0dWJoYBxI/cnkulrBv3h/HX+thbMY+N1VEEG5tiZ2FeQF1/Rg
-	6WJ8nvgBbbetfszsB9KU8lqRAw7RBWjt1ASWAsJGENN3xSqwLjTa5bb6buJA8Tgk
-	EmRY2GXxOsaAUjiQp/dFxxBIzcm/IdIxcPh8K7wnAbQCl9kOIXEeT9GA7ckii7i1
-	PFuHmlJi7x1qUOiGInfJQzoy0uRP5ovpfqJEpFor3F3LP8AHWXilAeTSowP0M8FW
-	FIlrgi2j/xaJ7bNJUT7Q==
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hdf3n217d-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 15:53:35 +0000 (GMT)
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-4a72bcd6599so2495556fac.0
-        for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 08:53:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792425214; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BHrKqBvQ2vM455MxvEXauZ19OKuugYPqdCMG46nB+3PNbz0oo96zIu34dOL0hHgph5
-         31Eru0qdn0Lct0PCygR33pKnkO9NLpcBbmLp7XTMnfImrLbb3tKg6UEp60DDqXXkyOR/
-         n6gZe3ZfCqpnxCe1Nv+kgIWDmSHdwq+SXSyypl7BQ2yHnLvd9aWIfilnvIsjnA53l1CG
-         2pFOlRDXQ3WRR0XDIdpXvYWKKphTtf3CiFAfZfd24ZCTIkgRT9QM6dmF2N2NwZ1M2cJ0
-         z39GonVTJJ/s8hJBKcUV1c+XJhnvD2ktdZiNm0USORHl82czjsmb7ItMBYhrWXEcvEIb
-         oHRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:dkim-signature;
-        bh=WkXGpXOWiBs24ppXgXlnDUbNGC4cGBni/AXZNpiz1hc=;
-        fh=QpwRig2ilav8HLO5ORlDQUQdTV6/fZgayGmFPvU62O0=;
-        b=iNM7ED3dQavQyuxBU9cfBaZ4ko5OQt2IBHD09GidcihBok3RLul+h7ZTaLh0cdu7la
-         ri8lQyagJT8qwnoh7AYsb2Pv0tasKWvxJoWhVT60wMXg59qm2Kcw76QlsSRO74+OGlux
-         DAnZ7Kt5D0Re2LIK/+qqEL9lfiG9tOg9OswIGzmQE3tvMB8/Yc7ShEnR+FF3eODswRsu
-         sagGVdG8PMjFEp+UiX3PDNL6bebhlz9d3csrSaFAdgbVWf8m3LxeQY33at2QqP0lq0G0
-         XtlFldt5T36Py6NK8BeEXZyDQlRDUb5x6NNTgdHDeUWHNxIsQ+8qjpSGqPJCZ1olRoJa
-         LMFA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792425214; x=1793030014; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:reply-to:in-reply-to:references:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WkXGpXOWiBs24ppXgXlnDUbNGC4cGBni/AXZNpiz1hc=;
-        b=cHBRrRWXG08VHAsalgwykyFbgQcjuEfVIxFrxW80BLMxk//IVzplC6v69Ivow+pxs3
-         QDX+mBE4LF7DUoRfBZ6uhmH8pk2XRV5n+Z2R/o0EwGNFBoUrXpbcLiHqGgCl/CxH/HXj
-         eS+t0AeJyantZvChdZzRGpjeA104L3DLIsBIYbRmxYr83nnEJ95QqyIK2R9fFdtCH3Lx
-         limJxBq0ofRp67skStfyXg5BMF5DPh0/Wq+YFcN2HezxqXeuNG3viZB6SnmpoTVejkDP
-         pm72frWCTvc1dKv1uknkrcoI7Rd59S2mgjwXC3DWWewV4ozJyNWsW5Ul3nu3ShvCnS+E
-         q/HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792425214; x=1793030014;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:reply-to:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WkXGpXOWiBs24ppXgXlnDUbNGC4cGBni/AXZNpiz1hc=;
-        b=kNuB7c957RGFfpkw2X8/ADDpzNn65k2zKE03tALAnx11l3O+ONa+nh97ip5XXSb/T/
-         Z2N2hea6jyA/GbdBlswK8iytYHz49tjQcaRopmNJlP2KbubtX1vjP7Kl6w66bmDpWiJK
-         ZcKqGiP5SASEme5AbqYmv5vHmB6JOn3UnEZF6XCfv7/rQuRmXgD4/FpHA5JSmtNDWl4V
-         mFd3Z1N2vz8QBn2Q8wjIkHiYYXEnx43V9WwnYARs/NhG4511UwojXRjzGiz9Derif67o
-         DFgvwKiok0lqVDV0EOBHjATl4El7d1jssqm6qruqKR0EIAhIBvq1JAZtjjKiUAbvAIxo
-         ZNvA==
-X-Forwarded-Encrypted: i=1; AKwUvByxcNZgT/WphxQzDk/vZdwPGgA364OJI5VBHMbdPxE6wSL6z2+5StUjIR5T4+VUhzwzdGhFizgSiv/RkQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKsVVelqQU6qb8wFl9z0rSKO0E/i692+P+I8fcJnsM6xr/Bgk25
-	ISw+dQMAC+llmDZQq6d6xiKN95dKjQtEESRJSacK6vSpyBzo+dh3WD82WPk3EmxZeny9ViZBPwX
-	opWYNLszRIZJmpj4yV7ALf02tgdmyHzwmq4wzXQcVsO7//Tz5QeyJj2cjZT3XUZLiO50Z8AcHl4
-	GjSVUI0R8Jj00EWW7efYtthrlUsMTgE3lFm3Rn+fiY
-X-Gm-Gg: AYBFou18itXQPPkL18gTljTyJr2ivssdLpmnZjdmUkaayBE5tepuEV2dxZFyD17D1m9
-	orgS1VzoHJypGzSEhPVWmwfoqJdOxU66UanYam1Fhjd9WBZAKcU5kJr7C1ravZfffm6g1GQ/btE
-	Lt8WxwkpubBn/qUdWG6M+m05DBG53uJtM+qk7dXuwKGB37kkw6JcqbgGd6GA==
-X-Received: by 2002:a05:6871:2ea5:b0:492:d8bd:949d with SMTP id 586e51a60fabf-4a7575b6d76mr5836604fac.2.1792425214145;
-        Mon, 19 Oct 2026 08:53:34 -0700 (PDT)
-X-Received: by 2002:a05:6871:2ea5:b0:492:d8bd:949d with SMTP id
- 586e51a60fabf-4a7575b6d76mr5836575fac.2.1792425213472; Mon, 19 Oct 2026
- 08:53:33 -0700 (PDT)
+	dkim=temperror header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=r8LP8w6O;
+	dkim=temperror header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=uqyW45aQ;
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=r8LP8w6O;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=uqyW45aQ
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CC1E821D11;
+	Mon, 19 Oct 2026 16:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792425836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aLbreY+cSFG22Ltqle1KLEkxhV/BXDyA9LZcfExWCOo=;
+	b=r8LP8w6OkVtOGYrCF1ciEOAovHtI/vbqdd1PevdXjLKUQUXWcUQnm/CBjX4UL7OwIFeI2y
+	vNkRHIowwQ5h7RKiiSuOUyEzEaTyKfn04Pk7g6gQ6U3aIDyXffc1p00JHLVpw0UmqASr4s
+	CyRs8GXfX+f4icUlEjqcWWiB6AmkUts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792425836;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aLbreY+cSFG22Ltqle1KLEkxhV/BXDyA9LZcfExWCOo=;
+	b=uqyW45aQiK7XrSAHqi0N7Tfx+P5pAauu6wRMIXFHJCOtDXkMlhlrJ1BzuGz3VJJ/zB7j2E
+	kKOChI+grN3PGGBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=r8LP8w6O;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uqyW45aQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792425836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aLbreY+cSFG22Ltqle1KLEkxhV/BXDyA9LZcfExWCOo=;
+	b=r8LP8w6OkVtOGYrCF1ciEOAovHtI/vbqdd1PevdXjLKUQUXWcUQnm/CBjX4UL7OwIFeI2y
+	vNkRHIowwQ5h7RKiiSuOUyEzEaTyKfn04Pk7g6gQ6U3aIDyXffc1p00JHLVpw0UmqASr4s
+	CyRs8GXfX+f4icUlEjqcWWiB6AmkUts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792425836;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aLbreY+cSFG22Ltqle1KLEkxhV/BXDyA9LZcfExWCOo=;
+	b=uqyW45aQiK7XrSAHqi0N7Tfx+P5pAauu6wRMIXFHJCOtDXkMlhlrJ1BzuGz3VJJ/zB7j2E
+	kKOChI+grN3PGGBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 56D40136CC;
+	Mon, 19 Oct 2026 16:03:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ndvHCmw/1mp9TwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 19 Oct 2026 16:03:56 +0000
+Message-ID: <8e91baa4-1ca5-43b8-bb04-9b5e3630bc2b@suse.de>
+Date: Mon, 19 Oct 2026 18:03:55 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -127,93 +108,160 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <ar_AuRr1eaZzOfw9@baldur> <179096320161.1973.2852858792260211089@gmail.com>
- <c3c4d140-07ec-4402-a18b-389520df188e@leemhuis.info>
-In-Reply-To: <c3c4d140-07ec-4402-a18b-389520df188e@leemhuis.info>
-Reply-To: rob.clark@oss.qualcomm.com
-From: Rob Clark <rob.clark@oss.qualcomm.com>
-Date: Mon, 19 Oct 2026 08:53:21 -0700
-X-Gm-Features: AclHuK8lwhBc9o-AjMwe7IooeXr_cgpIgGqUVsN4bF6VjxH_2L_fx0Hz7Wqdu8M
-Message-ID: <CACSVV00x091i7BKW+bj0RUnkd4rOrHXbhZ4zF6SuTU1NAqsFTA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] drm/msm/a8xx: Enable CLX feature on Adreno X2-85
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Oleg Keri <okerixx@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
-        Akhil P Oommen <akhilpo@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jesszhan0024@gmail.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE5MDA2MyBTYWx0ZWRfXy279wcgWJ4Q9
- iO0OIxLORh5CWGeI0vSIBvUfhdxVIqt3ZkOKmSXxdp6/X7wchMrL0AsOzUgM6BshGKpAnBdH5A/
- LWzAzDVGfTWwVaNn9W+wZjS4QgfgPPw=
-X-Proofpoint-ORIG-GUID: IdAODqs_gnLQWM37v7-fBw0GQTstFwzh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE5MDA2MyBTYWx0ZWRfX1qQkraedFf/G
- BBB9a2wZoMOjL/QK4sKiIXtuv+D666W42H3PE7Z3Yo7VRYaWRHRyBhnnsQQ141VFOlYW99H4+K0
- kZOsJmEdinf1seV+DZMFIIHPjLlizWJTZgeIeZPt4dfRXtbZVZPl4LPhwY+V71EHKVhrAOrTHj2
- ryN94vzANHtmw3qLZNy1AZ7f4Ywi+wf7KdJQrJeRiRN8J2rMuxrRPbNVCrlp+LFEETKPPn0rIpy
- oqLfh+SNaUx2JyIQKn4aYuhOIPPfmnlTzMDXoqMKaEt9KPhgiTIaqKWI4laOaY/YMEaHV/Bp+Xh
- CHCzd/ML5yoNCYqScsoeETYUOCWaZ5ktO+pCVbXd4hQjWaA1BBzkPXOqmWhydZ54QrYhhZTDR0x
- 2pbeWQCHTR/utO9nZBSR1v4zpi+UuLfQ07iTqPSf4QGTLeUd/EAV/zzEAetd3YK5Tk+XKw5wQrQ
- CV/+KScA7qwMw+es8BQ==
-X-Proofpoint-GUID: IdAODqs_gnLQWM37v7-fBw0GQTstFwzh
-X-Authority-Analysis: v=2.4 cv=Zf2IpcVA c=1 sm=1 tr=0 ts=6ad63cff cx=c_pps
- a=zPxD6eHSjdtQ/OcAcrOFGw==:117 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_K5XuSEh1TEqbUxoQ0s3:22 a=lAgNKBcoAAAA:8 a=7w3WoVYdraEV06504AMA:9
- a=QEXdDO2ut3YA:10 a=y8BKWJGFn5sdPF1Y92-H:22 a=drE6d5tx1tjNRBs8zHOc:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-19_05,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
- phishscore=0 priorityscore=1501 bulkscore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610190063
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/hyperv: add a parameter to disable the vblank timer
+To: Lanfeng Wei <xlfylawarthur@gmail.com>
+Cc: airlied@gmail.com, decui@microsoft.com, dri-devel@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ longli@microsoft.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ regressions@lists.linux.dev, simona@ffwll.ch, ssengar@linux.microsoft.com,
+ stable@vger.kernel.org
+References: <c238f4ff-d5d8-4a9a-8773-793bd9056c9b@suse.de>
+ <20261019154121.6257-1-xlfylawarthur@gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20261019154121.6257-1-xlfylawarthur@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: CC1E821D11
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,microsoft.com,lists.freedesktop.org,vger.kernel.org,linux.intel.com,kernel.org,lists.linux.dev,ffwll.ch,linux.microsoft.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
 
-On Mon, Oct 19, 2026 at 6:47=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
+Hi
+
+Am 19.10.26 um 17:40 schrieb Lanfeng Wei:
+> Hi Thomas,
 >
-> On 10/2/26 19:47, Oleg Keri wrote:
-> >> This patch landed in next-20261001 and while it works on my Glymur CRD
-> >> (COB), on the Asus Zenbook A14 I see the following failure during boot=
-:
-> >
-> > Same on a Lenovo Yoga Slim 7x Gen 11 (Glymur) with next-20261001, GMU
-> > firmware v5.2.38:
-> >
-> > [    1.632277] platform 3d6c000.gmu: [drm:a6xx_hfi_wait_for_msg_interru=
-pt] *ERROR* Message HFI_H2F_MSG_GX_BW_PERF_VOTE id 11 timed out waiting for=
- response
-> > [    1.642345] platform 3d6c000.gmu: [drm:a6xx_gmu_set_oob] *ERROR* Tim=
-eout waiting for GMU OOB set GPU_SET: 0x4
-> > [    1.642360] msm_dpu ae01000.display-controller: [drm:adreno_load_gpu=
-] *ERROR* gpu hw init failed: -110
-> > [    8.053367] platform 3d6c000.gmu: [drm:a6xx_gmu_resume] *ERROR* GMU =
-firmware initialization timed out
-> > [    8.053584] msm_dpu ae01000.display-controller: [drm:adreno_load_gpu=
-] *ERROR* Couldn't power up the GPU: -110
-> >
-> > Compositor fails on the first start and works on the second.
-> >
-> > Reverting this patch fixes it here as well.
-> What's the status here? Was this fixed meanwhile? Or is this regression
-> how heading towards mainline now that the merge window is open?
+>> Yeah, what's the cause of it? Switching off features does not fix any
+>> bugs or improve the status quo.
+> You are right that the module parameter is only a workaround for users
+> affected; it does not fix the underlying scheduling problem.
+>
+> The cause is that the synthetic vblank timer is used to pace completion
+> of atomic updates triggered by dirtyfb, in addition to providing
+> synthetic vblank events. In Xorg's software-cursor path, pointer motion
+> damages the primary framebuffer and the damage is instantly submitted
+> via DRM_IOCTL_MODE_DIRTYFB. The Hyper-V dirtyfb path performs a
+> synchronous atomic commit, and with the vblank timer enabled that commit
+> can wait for the next simulated vblank. Under continuous pointer motion,
+> these commits dominate the update path and delay normal client updates,
+> resulting in sever frame-rate drops.
+>
+> This particular regression results from the combination of the blocking
+> dirtyfb path, synthetic vblank pacing, and the absence of a Linux DRM
+> cursor plane in Hyper-V. While the Hyper-V video protocol does have a
+> hardware-cursor command path, the upstream hyperv_drm driver currently
+> exposes only a primary plane. Cursor plane support was deferred during
+> the initial upstreaming [1]. Without a cursor plane, Xorg has to fall
+> back to software cursor-rendering path and it competes with periodic
+> graphical updates on the primary plane.
+>
+> So the proper long-term fix could be adding cursor plane support in the
+> Hyper-V DRM driver, which may take some time. Providing that the stated
+> purpose of the offending commit is to rate-limit display updates, while
+> its current implementation regresses the existing software-cursor path,
+> I think adding a switch or reverting the commit until the requested
+> features in the driver is ready, is a reasonable short-term fix.
 
-AFAIU this is still open.. but seems to be contained to a non-typical
-config (modules + fw built-in).  It seems to be caused by trying to
-initialize the GPU (and send the CLX tables to the GMU) before
-_something_ else is ready.  Tracking down what that _something_ is is
-still ongoing.
+The problem is that module parameters are impossible to remove in 
+practice. Once in place, someone always depends on it. They also 
+increase the number of states to test.  Avoiding them is usually a good 
+idea. Especially as workarounds for bug or regressions.
 
-OTOH not having CLX could lead to problems exceeding hw current
-limits, which itself is a problem.  And why I did not revert CLX.
 
-BR,
--R
+I'm not familiar with the Hyper-V protocol, so I have a question. Why is 
+it hard to implement cursors? From the link at [1], I assume that cursor 
+support was left out because the simple-kms pipeline did not support 
+cursor planes. This has long been resolved: the simple-kms pipeline is 
+gone and hyperv_drm runs on the regular DRM framework.  Unless there's 
+anything special with the Hyper-V protocol, cursor-plane support should 
+be do-able in a single patch. [^1]
+
+Best regards
+Thomas
+
+[^1] See 
+https://elixir.bootlin.com/linux/v7.2.11/source/drivers/gpu/drm/ast/ast_cursor.c 
+for an example of how this looks. Most of it is hardware-related, but 
+hyperv would likely be similar in concept.
+
+>
+>> We had another fix for a problem with vblank timers:
+>>
+>> https://lore.kernel.org/dri-devel/20260914110004.211027-1-tzimmermann@suse.de/
+>>
+>> Did you validate that this fix is unrelated?
+> Yes I tested that fix and confirmed that it is irrelevant. It solves
+> issues with excessively long frame durations, however this problem is
+> found in normal frame updates (in my case 60Hz / 16.7 ms per frame, way
+> below INT_MAX).
+>
+> Best regards,
+>
+> Lanfeng Wei
+>
+> [1] https://lore.kernel.org/dri-devel/20200622110623.113546-1-drawat.floss@gmail.com/
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
+
+
