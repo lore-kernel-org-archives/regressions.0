@@ -1,81 +1,84 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B54948A2BC
-	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 07:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792395376; cv=none; b=sNB44X5jSlsxSkq9W7wN4W8jA+SZ+JwAw64NE6xW7pmqFz5vaVQgGtQordHSA8TBo72bR5tL9/TkOkuLHFH9J58bnQRSqAAur/Pz6Y7kDQbfyEehqWnw6ANws2fVPb2s6rZgmGrgoIrEUhlG8ikGeBiJW9HNHkPdNAdjmBcwuAQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792395376; c=relaxed/simple;
-	bh=4XfcpeDqELvt1DkF3dbMuEEccglxwIYHWZ58GO1+JxE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF46485508;
+	Mon, 19 Oct 2026 08:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792398971; cv=fail; b=nNH08ipzwO6lgrfQJsonp46ZjJX9Cgx5enNxRVQquw6ERs0pzDHu6/Tnm77J3F21nHVArp+ypfjmPY6a4+xcof/D4jxi16nhyf5LmqnZW8+w5Y7tV0eyQOjLHUwgx+3sPrQ49+M8bPiI7v+FE5s0W4l+vzpQaZgRLP4fBt6g2xE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792398971; c=relaxed/simple;
+	bh=6xjIpB63KuwN8kBvE8Vd37UZT55KRBDLvmFtC07AR68=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FZC27zb83oITmIte2ygOR6Y9bPS7qGtts5CGkupoGi0skfqst1o76b76rJvjiDYj1k1HGyY63Il1lYLLJU7YVAHokP+66QfV3B3ZHUH9rOg8prosDZ4dtQtWS3/uy89l2ShNLqo3sGSdjh2RDyQo9bbRzFZBfOUEslUMxiVohkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k9jY//tn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rkQsG9ms; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k9jY//tn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rkQsG9ms; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=D7BiWFY4hbs0S/EX042/7wkYarNwFTTE24Eu59Bq5CrleztZm9W/3UK3iOcNtuLo8G6eSoAq49SsD8jB4UVAkW2+f1+0TXrtvTZDH6YLptHdNMhsOK9Uz4Hgakg0bs4jt2FEONm9wRYnqxALcJkFuNcZMUBEZiGW1sAQUVl6gjU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=X4WC+g9V; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=KXKulwUL; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k9jY//tn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rkQsG9ms";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k9jY//tn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rkQsG9ms"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 11EC821E2D;
-	Mon, 19 Oct 2026 07:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792395373; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8nQUL6BAT1jXGqmh3FAOn1A9KYuAO9FbrCjrnMbJpDc=;
-	b=k9jY//tnFJOaiF1B2azDwhv244Q9WuB1EseGtNaBO0wKHsjrzHi0ehT6l9Co/c+x6oO2TG
-	1VNPAEq/p8ioYWkfJGEjOCa2BaY8teplu6qLAtfgmsryCbMihFMON7EHxFwdAJ562sg3EF
-	otm1I6F/7X7KaGi76tNVErv0ZTnCidU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792395373;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8nQUL6BAT1jXGqmh3FAOn1A9KYuAO9FbrCjrnMbJpDc=;
-	b=rkQsG9ms9IacDQzBS4ihfUIE5DXdZQE6DKwjAEgyq6W+R8lEJsXsp9jashArTNqqHA70bZ
-	OJoXluJ18bQCTHBg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="k9jY//tn";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=rkQsG9ms
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792395373; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8nQUL6BAT1jXGqmh3FAOn1A9KYuAO9FbrCjrnMbJpDc=;
-	b=k9jY//tnFJOaiF1B2azDwhv244Q9WuB1EseGtNaBO0wKHsjrzHi0ehT6l9Co/c+x6oO2TG
-	1VNPAEq/p8ioYWkfJGEjOCa2BaY8teplu6qLAtfgmsryCbMihFMON7EHxFwdAJ562sg3EF
-	otm1I6F/7X7KaGi76tNVErv0ZTnCidU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792395373;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8nQUL6BAT1jXGqmh3FAOn1A9KYuAO9FbrCjrnMbJpDc=;
-	b=rkQsG9ms9IacDQzBS4ihfUIE5DXdZQE6DKwjAEgyq6W+R8lEJsXsp9jashArTNqqHA70bZ
-	OJoXluJ18bQCTHBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8CEBB134B3;
-	Mon, 19 Oct 2026 07:36:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4tfuGGzI1Wo7KwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 19 Oct 2026 07:36:12 +0000
-Message-ID: <c238f4ff-d5d8-4a9a-8773-793bd9056c9b@suse.de>
-Date: Mon, 19 Oct 2026 09:36:11 +0200
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="X4WC+g9V";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="KXKulwUL"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69J5qW7O3213457;
+	Mon, 19 Oct 2026 03:35:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=acpgoR+mTZ6H3QBgbWx+tqOC15ajJ4XCcj+XiOiZojc=; b=
+	X4WC+g9V81iFG6eXEUExJrHVYzfaj/8UwozPvSq2eSmPucw4bW2vuIEl1kzlOtLa
+	dDkX7ixFGxL4CUBXcL/LhNd9nFbwzawovtnvz7LExNi5OH+w/Y74LEo7mUBsJ+Ta
+	q4GgkIydSqCO/21ZunUssz32YML7/jdsg+e848i667lX2wR30FCfI9mcqxv8KCgo
+	yGUBwhLgjdGSTQLy8iT9jw/qlmywUOyatiVyoU/LuWpSKxnH6PbnXsq9ql2QfASG
+	RA4QsgB9IoDTW6UPskLKLoJZbolDwOODB93tdkYPEs3gQ3xnKDpnWfxv8F3Kmg1/
+	tnSXrmThscOfaHXpTy1zfw==
+Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazon11022142.outbound.protection.outlook.com [40.93.195.142])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4hcpts128t-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 19 Oct 2026 03:35:54 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oz5VAv68RdMO4j2Xn6JW2oPDeqYewmzSISqQLpt4uKWHfFnlAMIVFnWB5an2FokXIr+xim9/ffqhXmi9LfkIPSOktsOMtUOeC+AlozYmL6NsaRl3n3vbIFC5ULEOumC1L6kceAJip6STIxYKO23tS+db3qulop3i5farYH7zyM7J3hzFtu4zo0ffAmQlsFeah+LKcWNMSJztBd/sVIUxnRxz3sJG1fjZz7AczuwCquIeATfCvP/USkcjHoYfumAix3dAjZIqZXt0m+qrSnKjguRw72iLoaIYmYheES+qVGoFjTIBgSOT2LjJNqFDMSuaBWV4sOkg9WhP4VG/8QFLig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=acpgoR+mTZ6H3QBgbWx+tqOC15ajJ4XCcj+XiOiZojc=;
+ b=oLF6XLKeBlusxPGFJGzPmBAsa+M5VFYvrUHNO+yI/hxmiNY53hF7RuE0hHGF2ViQIYK6Lin2uAWJFlVoFgULHgE45GGj2tgX64qQ5NACooSsZiKMUQcTBqP8cFYOUlfDy+doQyOfYZMs1ig9fUJsxcVXAK7GtHIXZlHl/jTiBFPTb1TPwzCtsjLI1IYn2Aee81FYYP0p5OplXchiqXU7m5USlMOYbF+IhO4af1R4K+39l0Gtm3rBcjpdtHr1GXcH7AkFmkZCKc44I5YX4CWioHMuxM60/6XCSBJaX7J7HY1BCVCmDm+ZW7thpBt2pLSj1csv/YIV5fxjVF05K2+ivA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 84.19.233.75) smtp.rcpttodomain=gmail.com
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=acpgoR+mTZ6H3QBgbWx+tqOC15ajJ4XCcj+XiOiZojc=;
+ b=KXKulwULgTla50lfpmTF+f0SNzkq3jCIap1j3oWhfGaakMcfF8ROrnbXG16XnmUNWXFOlKHLGFgUX+3Jg70k3m7gMUz7sfK3J2qupmJeNbrXzxmze7QVcCc/obvsU6yRLmCl0YKZc3g85FbZB8iul6jVxHDfSjLerSBsFeYt17A=
+Received: from SJ0PR05CA0055.namprd05.prod.outlook.com (2603:10b6:a03:33f::30)
+ by DS3PR19MB9222.namprd19.prod.outlook.com (2603:10b6:8:2e2::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.19; Mon, 19 Oct
+ 2026 08:33:48 +0000
+Received: from SJ1PEPF000037AE.namprd03.prod.outlook.com
+ (2603:10b6:a03:33f:cafe::5e) by SJ0PR05CA0055.outlook.office365.com
+ (2603:10b6:a03:33f::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.19 via Frontend Transport; Mon,
+ 19 Oct 2026 08:33:48 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=softfail (sender
+ IP is 84.19.233.75) smtp.mailfrom=opensource.cirrus.com; dkim=none (message
+ not signed) header.d=none;dmarc=fail action=oreject
+ header.from=opensource.cirrus.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ opensource.cirrus.com discourages use of 84.19.233.75 as permitted sender)
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ SJ1PEPF000037AE.mail.protection.outlook.com (10.167.244.183) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.6
+ via Frontend Transport; Mon, 19 Oct 2026 08:33:47 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id AE76B406540;
+	Mon, 19 Oct 2026 08:33:45 +0000 (UTC)
+Received: from [198.90.208.11] (ediswws06.ad.cirrus.com [198.90.208.11])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 91995822556;
+	Mon, 19 Oct 2026 08:33:45 +0000 (UTC)
+Message-ID: <ed897167-5a7e-4d1b-a76b-efc5bbb60e79@opensource.cirrus.com>
+Date: Mon, 19 Oct 2026 09:33:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -83,217 +86,72 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/hyperv: add a parameter to disable the vblank timer
-To: Lanfeng Wei <xlfylawarthur@gmail.com>, Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, linux-hyperv@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-References: <20261017153524.8870-1-xlfylawarthur@gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20261017153524.8870-1-xlfylawarthur@gmail.com>
+Subject: Re: [REGRESSION 7.2.11] ASoC: sdw_utils: cs35l56-ot25 DAI not
+ registered, no sound card
+To: Connor Stevens <ooglie05@gmail.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, broonie@kernel.org, sashal@kernel.org
+References: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Action: no action
-X-Spam-Score: -4.50
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_TO(0.00)[gmail.com,microsoft.com,linux.microsoft.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,vger.kernel.org,lists.freedesktop.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:url,suse.de:dkim]
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 11EC821E2D
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000037AE:EE_|DS3PR19MB9222:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8d9a323-5730-42f2-2c10-08df2dbbb1b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|36860700016|82310400026|376014|61400799027|18002099003|22082099003|16102099003|13003099007|10067099003|11063799006|261009223027099003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	15EVymUh+Zfw5TCA+7Fupta9TwqIXvQMMk6TmuGSqBnEZrVexlm/zAiNCJllBeDqL+SzC8ICNMGnO941eKwPB0wOU0tFSKO/wTL8KyUTqs9sUKeQp1hOmIhfpSqeKqKLEEvn2oUEqAnWD7cW1/d+MGT2H4plL4WdC0z7g+1yUUA7Xp4Cypw4A3bY52bY59CUk7hS4m4OKeX+lvXkdSA9rlkMj7bPD3Y/kaxFFUT+KK5M+kyUQUlPV5VH1V7klE8uAeY5xNA6DZoAGX0LK/u+2wkvvgzTRRWxJ/vtCm4B6qYzl7t1AjZlSfM1hSkDwS36afj7yZlCPTjjUcKNBdmk7dOyDJEa+WHSTDbKCtumzzaBJm0ec9MqfQTtKgUDros74HENNPFKFfgvnY6l/DvMxk0NCg4UvEAJhGuy1ii5Q4/R6BO2iGAzvT8ZG7agFIHw0pY+uJ/ywqE693/Bv5m4vDhPB0DMlfnK4sW1U4NUAqNFONWFoSzHAiTLAeFYWJyaDB+0vFPWkL6sl2k6cpMkEy1Na05X6WpQa/ADbi9jGyw1CIXX0EJ/H4mLCyT02dM8B7WYjJDBMNoCMhiuaqkjRKJuyYvLTEMgspWmo2EtoasiRBFgQnJqhPDMEEQrhj5n+Dqx+b810rylRG1E+Pf0KA==
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(82310400026)(376014)(61400799027)(18002099003)(22082099003)(16102099003)(13003099007)(10067099003)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	AO3nWU0YaxYGppBdPtbsOGLCIq78x37j41QgHQO+zpvH5dLzlgSZDtkUFgYgIsTqvCcmJUlwp30PiKPokOrPNLPcfyZaLMxWakeiCe7aK74EAwvPjTB0QHY8adhqcseRbmN41WRZ1U9A/hfsInwMpW+0NE8o/901HURURPTDqIkTZyoof47Qys1P+cqCxYc7T6xsYDN3aiwI311YeIVllFDmGkmbZXQoH7NGUO76bSe8FoL6JHYsrB1RKvZrISvKtnZD7xEY4XlBqidRJ7KDQTldoXB3112GE+y5dcmGmYMWEFwS0Od+l0cj11auCbbHnvEHsSALrgH15VdQLGyHqM29TiZJEY/MbFLAVyfEhDHCV1Qkm7sWkcU2BQUb/fFkc4Vtp+uc3kOl2LgYwoCb6CrP8BW4ZK+CtTgjY75bwwI19KjoSrx7K/Aawcex928h
+X-Exchange-RoutingPolicyChecked:
+	tGRfFzAxcDGBVc66Skek5dwWZVAkI4IAp2dwdye986Ag/jLcgT5e5QfVxHqhN7zTvJrtzDtSHGttonBQA59P/Fc9UmwY1VJLb3TR+T66/okbmv4E82m250Kzn9uNLUYKxtq52sLGbETZRrFytwxPvQ6viIR05XQ1VTrkqimvVuEscUC9J2GRAHKT+wZZUcE+oIHDWep8zFKVfuoI0w1+Us0YjarGy+jWqlSOtcXYBnFmJpR93PoSqGnWPHfj1O5qfa0hCFKrsjqjq3a7CX2CqgTsVOoMSrzQFe29zR2divL4vPgH6M7xxFRuXWlbhsvpc0+kmx8htyYJ4hbibWhkkw==
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2026 08:33:47.0443
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8d9a323-5730-42f2-2c10-08df2dbbb1b7
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ1PEPF000037AE.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS3PR19MB9222
+X-Authority-Analysis: v=2.4 cv=QM391QLL c=1 sm=1 tr=0 ts=6ad5d66a cx=c_pps
+ a=JRl+IjCvVGCyytsd+wv0WQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=iX4cTi3TZMoOKdANLEfx:22 a=Dj2-6B8FqX4mGL0U3gbX:22
+ a=VwQbUJbxAAAA:8 a=w1d2syhTAAAA:8 a=2UBwMtoTQ2vo7Y6c5O8A:9 a=QEXdDO2ut3YA:10
+ a=zgiPjhLxNE0A:10
+X-Proofpoint-ORIG-GUID: su6Xt669zJELwM0R83Yn3G2pNmC-j_ml
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE5MDAzMyBTYWx0ZWRfX5GLEH+bHS3N5
+ iY8GIWYAuqA0qnrRMHfTlZkctEriY3r+eib2VCRonUEnlnHlCV9MMixrPWYxW14S61xHUN924+g
+ yWTKBNQ5a/TsO3SYHrfdZ+3x+W9Gysg=
+X-Proofpoint-GUID: su6Xt669zJELwM0R83Yn3G2pNmC-j_ml
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE5MDAzMyBTYWx0ZWRfXw8Asl0mfMyHA
+ vE/m59IwoOx7gp2nNyMhJ15lmnE966PFg2ZYvhG2pR41GqStzP1gtGDTpYOXE88uIeXqZRoOgiA
+ JEup97BsP7RK78iLI4Z2fmQuS319B/74pUBEii46mqrLS6VhgY23gXSybdXbP2VO72L3XFbERkA
+ uv1MyeuR8CUnQIwbvubqExuqWXpe8RX4+Sb4hT1u9G6noE40CvQpFHDlQI+DTBBGa9OEBXtWa1y
+ 73BeY6Qy69xMAC0PyJRQwcxniSbaXYEclpGqi4pfRIqxh2l7o8Vc4LgPuYOPHAMwgYKs+4rhDSr
+ 3f5CrVFx+8so1hRysLC+iC+AoQ5PotbthSlLzsEq/y9TQkGF1NJRlKpRAjZgo6yssWEi7gvDGDq
+ kKnlVOa5gCnw/x7UES5e2TcKC8ay2XNDVsMr/kuOD5iPgryD+BQEjPiI03HV1lFg+DaI4TTI8P8
+ XwSu6cKTCS9gNuJPYpA==
+X-Proofpoint-Spam-Reason: safe
 
-Hi
+On 18/10/2026 11:41 pm, Connor Stevens wrote:
+> Hi,
+> 
+> Since 7.2.11 the sound card is missing on a Dell XPS 14 DA14260 (Panther
+> Lake, subsystem 1028:0db9, CS35L57 amps on SoundWire):
+> 
+>    sof_sdw sof_sdw: ASoC: CODEC DAI cs35l56-ot25 not registered
 
-Am 17.10.26 um 17:34 schrieb Lanfeng Wei:
-> A performance regression has been observed on Hyper-V causing serious
-> frame rate drops since commit 52e6b1988334 ("drm/hypervdrm: Use vblank
-> timer").
->
-> The regression occurs when using Xorg with a software rendered cursor.
-> The offending commit uses the DRM vblank hrtimer to pace atomic update
-> completion events, making each event wait for the next simulated vblank.
-> However, cursor damage invoked by mouse movement is unconstrained by
-> screen refresh rate, and therefore consumes most of Xorg's update
-> opportunities, starving normal graphical updates, resulting in
-> plummeting frame rate.
->
-> Hyper-V virtual display framebuffer is able to accept multiple writes in
-> one update window, so the commit broke this expected behavior.
->
-> The regression is also reported by other users:
->
-> Link: https://www.mail-archive.com/ubuntu-bugs@lists.ubuntu.com/msg6302857.html
->
-> Add a read-only module parameter hyperv_drm.vblank_timer, which is
-> enabled by default. Disabling it prevents the timer's enable callback
-> from starting the timer. The vblank framework and the existing atomic
-> callbacks remain registered. When disabled, the first
-> drm_crtc_vblank_get() fails through the callback, so the existing helper
-> sends the atomic event immediately and skips the vblank wait, matching
-> the behavior before the timer was introduced.
-
-Yeah, what's the cause of it? Switching off features does not fix any 
-bugs or improve the status quo.
-
-
-We had another fix for a problem with vblank timers:
-
-https://lore.kernel.org/dri-devel/20260914110004.211027-1-tzimmermann@suse.de/
-
-Did you validate that this fix is unrelated?
-
-Best regards
-Thomas
-
-
->
-> This provides an opt-out for affected virtual display users.
->
-> Benchmark results:
->
-> Workload: Inject mouse movement at 125 Hz against a flashing
-> animation running at 60 Hz, matching the screen refresh rate, for 4
-> seconds.
->
-> Tested versions: 6.18 (the last major version before the offending
-> commit), version 6.19 (the first major version containing that commit),
-> version 7.1.8 (on which the patch is based), and its patched version.
->
-> Version  Anim. Hz            Mouse Hz         Max client-request gap
-> ====================================================================
-> 6.18     59.66-60.00        122.00-123.33     17.0 ms
-> 6.19     0-0.162            59.73-59.86       7.53 s
-> 7.1.8    0.133-0.162        59.83-59.86       6.16 s
-> Patched  59.75-60.00        122.75-124.50     14.0 ms
->
-> The patch restores both animation and mouse update rates, and reduces
-> the maximum client-request gap from seconds to milliseconds.
->
-> Fixes: 52e6b1988334 ("drm/hypervdrm: Use vblank timer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Lanfeng Wei <xlfylawarthur@gmail.com>
-> ---
-> The parameter defaults to enabled to preserve the current kernel
-> behavior. I do not know the full set of users who rely on the vblank
-> timer, so changing the default could introduce a different regression.
-> Affected users can set hyperv_drm.vblank_timer=0.
->
-> If the maintainers prefer the parameter to default to disabled, or if
-> there is a better way to detect the affected configuration
-> automatically, I'm happy to send a v2.
->   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 23 ++++++++++++++++++++-
->   1 file changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> index d48ca6c23..527385748 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> @@ -4,6 +4,7 @@
->    */
->   
->   #include <linux/hyperv.h>
-> +#include <linux/moduleparam.h>
->   
->   #include <drm/drm_atomic.h>
->   #include <drm/drm_crtc_helper.h>
-> @@ -25,6 +26,19 @@
->   
->   #include "hyperv_drm.h"
->   
-> +static bool vblank_timer = true;
-> +module_param(vblank_timer, bool, 0444);
-> +MODULE_PARM_DESC(vblank_timer,
-> +		 "Enable the Hyper-V DRM vblank timer (default: true)");
-> +
-> +static int hyperv_crtc_enable_vblank(struct drm_crtc *crtc)
-> +{
-> +	if (!vblank_timer)
-> +		return -EOPNOTSUPP;
-> +
-> +	return drm_crtc_vblank_helper_enable_vblank_timer(crtc);
-> +}
-> +
->   static int hyperv_blit_to_vram_rect(struct drm_framebuffer *fb,
->   				    const struct iosys_map *vmap,
->   				    struct drm_rect *rect)
-> @@ -132,7 +146,14 @@ static const struct drm_crtc_funcs hyperv_crtc_funcs = {
->   	.page_flip = drm_atomic_helper_page_flip,
->   	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
->   	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
-> -	DRM_CRTC_VBLANK_TIMER_FUNCS,
-> +	/*
-> +	 * expanded DRM_CRTC_VBLANK_TIMER_FUNCS to override
-> +	 * enable_vblank with hyperv_crtc_enable_vblank
-> +	 */
-> +	.enable_vblank = hyperv_crtc_enable_vblank,
-> +	.disable_vblank = drm_crtc_vblank_helper_disable_vblank_timer,
-> +	.get_vblank_timestamp =
-> +		drm_crtc_vblank_helper_get_vblank_timestamp_from_timer,
->   };
->   
->   static int hyperv_plane_atomic_check(struct drm_plane *plane,
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
-
-
+Already 
+reported:https://lore.kernel.org/linux-sound/20261005155235.1386525-1-rf@opensource.cirrus.com/T/#m420ea27d936f1fd9cec79c988120a11caa8d428e
