@@ -1,157 +1,251 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF46485508;
-	Mon, 19 Oct 2026 08:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792398971; cv=fail; b=nNH08ipzwO6lgrfQJsonp46ZjJX9Cgx5enNxRVQquw6ERs0pzDHu6/Tnm77J3F21nHVArp+ypfjmPY6a4+xcof/D4jxi16nhyf5LmqnZW8+w5Y7tV0eyQOjLHUwgx+3sPrQ49+M8bPiI7v+FE5s0W4l+vzpQaZgRLP4fBt6g2xE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792398971; c=relaxed/simple;
-	bh=6xjIpB63KuwN8kBvE8Vd37UZT55KRBDLvmFtC07AR68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D7BiWFY4hbs0S/EX042/7wkYarNwFTTE24Eu59Bq5CrleztZm9W/3UK3iOcNtuLo8G6eSoAq49SsD8jB4UVAkW2+f1+0TXrtvTZDH6YLptHdNMhsOK9Uz4Hgakg0bs4jt2FEONm9wRYnqxALcJkFuNcZMUBEZiGW1sAQUVl6gjU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=X4WC+g9V; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=KXKulwUL; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FF749C4BD
+	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 08:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792399214; cv=none; b=upBT83t+PEKm4RZDsXEJsl9d+Dm3ZmMvqJbjIHQDGaZBNQW7Fy/Jkzjb7a0gxDX8d6SY7NJmKBfON9Wl9BpAepo66bsy0mrlRTBIr2qOHkFeyyEtqF1D5tsF3yAflTMHfCUyRis9h47Fhn1BgaJ1LDUoU8/qVG+GPiwXESDi0uY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792399214; c=relaxed/simple;
+	bh=cy3Ua8MM9A2x9HjTJezL/FV7SFefbt/v8MEXoHPBQwA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=rrSgIg7YsdgpPi1nvQXSEIP4s8j+sIy6uIPRHok9h5r7bYBn38VKmnvV16NDWaMZZ6z8b8FJBYA2x1pzz83i+/UqxZgcmf4hdMnuqa0R3RHbW3x3Pk+4xVeOiQEENne+Ct8FCKxB6i7gBmMpVJf7HkLGFtPrfTCswoQK0ny3EmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=willbush.dev; spf=pass smtp.mailfrom=willbush.dev; dkim=pass (2048-bit key) header.d=willbush.dev header.i=@willbush.dev header.b=SZyFW1jX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jS2xAGn4; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=willbush.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=willbush.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="X4WC+g9V";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="KXKulwUL"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69J5qW7O3213457;
-	Mon, 19 Oct 2026 03:35:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=acpgoR+mTZ6H3QBgbWx+tqOC15ajJ4XCcj+XiOiZojc=; b=
-	X4WC+g9V81iFG6eXEUExJrHVYzfaj/8UwozPvSq2eSmPucw4bW2vuIEl1kzlOtLa
-	dDkX7ixFGxL4CUBXcL/LhNd9nFbwzawovtnvz7LExNi5OH+w/Y74LEo7mUBsJ+Ta
-	q4GgkIydSqCO/21ZunUssz32YML7/jdsg+e848i667lX2wR30FCfI9mcqxv8KCgo
-	yGUBwhLgjdGSTQLy8iT9jw/qlmywUOyatiVyoU/LuWpSKxnH6PbnXsq9ql2QfASG
-	RA4QsgB9IoDTW6UPskLKLoJZbolDwOODB93tdkYPEs3gQ3xnKDpnWfxv8F3Kmg1/
-	tnSXrmThscOfaHXpTy1zfw==
-Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazon11022142.outbound.protection.outlook.com [40.93.195.142])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4hcpts128t-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 19 Oct 2026 03:35:54 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oz5VAv68RdMO4j2Xn6JW2oPDeqYewmzSISqQLpt4uKWHfFnlAMIVFnWB5an2FokXIr+xim9/ffqhXmi9LfkIPSOktsOMtUOeC+AlozYmL6NsaRl3n3vbIFC5ULEOumC1L6kceAJip6STIxYKO23tS+db3qulop3i5farYH7zyM7J3hzFtu4zo0ffAmQlsFeah+LKcWNMSJztBd/sVIUxnRxz3sJG1fjZz7AczuwCquIeATfCvP/USkcjHoYfumAix3dAjZIqZXt0m+qrSnKjguRw72iLoaIYmYheES+qVGoFjTIBgSOT2LjJNqFDMSuaBWV4sOkg9WhP4VG/8QFLig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=acpgoR+mTZ6H3QBgbWx+tqOC15ajJ4XCcj+XiOiZojc=;
- b=oLF6XLKeBlusxPGFJGzPmBAsa+M5VFYvrUHNO+yI/hxmiNY53hF7RuE0hHGF2ViQIYK6Lin2uAWJFlVoFgULHgE45GGj2tgX64qQ5NACooSsZiKMUQcTBqP8cFYOUlfDy+doQyOfYZMs1ig9fUJsxcVXAK7GtHIXZlHl/jTiBFPTb1TPwzCtsjLI1IYn2Aee81FYYP0p5OplXchiqXU7m5USlMOYbF+IhO4af1R4K+39l0Gtm3rBcjpdtHr1GXcH7AkFmkZCKc44I5YX4CWioHMuxM60/6XCSBJaX7J7HY1BCVCmDm+ZW7thpBt2pLSj1csv/YIV5fxjVF05K2+ivA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 84.19.233.75) smtp.rcpttodomain=gmail.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=acpgoR+mTZ6H3QBgbWx+tqOC15ajJ4XCcj+XiOiZojc=;
- b=KXKulwULgTla50lfpmTF+f0SNzkq3jCIap1j3oWhfGaakMcfF8ROrnbXG16XnmUNWXFOlKHLGFgUX+3Jg70k3m7gMUz7sfK3J2qupmJeNbrXzxmze7QVcCc/obvsU6yRLmCl0YKZc3g85FbZB8iul6jVxHDfSjLerSBsFeYt17A=
-Received: from SJ0PR05CA0055.namprd05.prod.outlook.com (2603:10b6:a03:33f::30)
- by DS3PR19MB9222.namprd19.prod.outlook.com (2603:10b6:8:2e2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.19; Mon, 19 Oct
- 2026 08:33:48 +0000
-Received: from SJ1PEPF000037AE.namprd03.prod.outlook.com
- (2603:10b6:a03:33f:cafe::5e) by SJ0PR05CA0055.outlook.office365.com
- (2603:10b6:a03:33f::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.19 via Frontend Transport; Mon,
- 19 Oct 2026 08:33:48 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=softfail (sender
- IP is 84.19.233.75) smtp.mailfrom=opensource.cirrus.com; dkim=none (message
- not signed) header.d=none;dmarc=fail action=oreject
- header.from=opensource.cirrus.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- opensource.cirrus.com discourages use of 84.19.233.75 as permitted sender)
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- SJ1PEPF000037AE.mail.protection.outlook.com (10.167.244.183) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.6
- via Frontend Transport; Mon, 19 Oct 2026 08:33:47 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id AE76B406540;
-	Mon, 19 Oct 2026 08:33:45 +0000 (UTC)
-Received: from [198.90.208.11] (ediswws06.ad.cirrus.com [198.90.208.11])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 91995822556;
-	Mon, 19 Oct 2026 08:33:45 +0000 (UTC)
-Message-ID: <ed897167-5a7e-4d1b-a76b-efc5bbb60e79@opensource.cirrus.com>
-Date: Mon, 19 Oct 2026 09:33:45 +0100
+	dkim=pass (2048-bit key) header.d=willbush.dev header.i=@willbush.dev header.b="SZyFW1jX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jS2xAGn4"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 021D51D000D1
+	for <regressions@lists.linux.dev>; Mon, 19 Oct 2026 04:40:07 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Mon, 19 Oct 2026 04:40:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=willbush.dev; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1792399207;
+	 x=1792485607; bh=L4Ow+hRf7Ev0Ou+3g1fetpg5NPLpYNBVh1UJ3evSwDA=; b=
+	SZyFW1jXH94GZwCB2EsofhQ0fZ6DBXG7o2LDDPzYDN8PnCOKQIMDhpecf2SAK405
+	eAxour2rDYk1xzJhOQx7/vmYf2PWqznvazaJkDpmWYwmdNeswMfQzgeSf1KI4Nzu
+	ZTR+W8HXeAWqLDocAJryIGb4huLclnwhik8gOjMBtM8tXsglArUZMbTIVzSRn4Sq
+	KjtriuSKbYsz3jx2TJBIFS9GOsAUosH7If48wnP1SuZX+0R+BeWklWD6VFWTWQP0
+	pahpeY3rFXnBNrX98Xua0tJHEZG7zdTwbnoveElNcSmnraxzCsrTEsgVh8SyCRB3
+	GhcV9aG3TYG+hJYt2wcyww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792399207; x=
+	1792485607; bh=L4Ow+hRf7Ev0Ou+3g1fetpg5NPLpYNBVh1UJ3evSwDA=; b=j
+	S2xAGn4aKu/PBegt9JRBOoNRY9JNmLXxYswh+FBrXBQKZAAUvbMT62oF+n40NCwZ
+	oT3R3vjIPenzBdw8NU7aC5iN/ECEixIHk44EC3iTTYY+rPAdoRLC86Ww+4PNqx3y
+	XOx8cEBMMR8xQK6b21kq4PoSL3r2xArYmOAScCjMPCXn0MHUPHJMopd1nvbEcr2b
+	ee6ctDzHwlx8JF+csWYyFXxw+l0k0nhaAIAB4/d1YtZ1F26qZC7OofZ31rjCKNo9
+	Fa7xy2lvk+Qh6DS+0vjBtwvKog8QeWx+pCKaw7hkPIGUK8/6jTiJtig3pK23uPyP
+	lbIxOyjS5LJjV+kGt4F8w==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=sign d=willbush.dev a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792399207; d=willbush.dev;
+	mf=PHdpbGxAd2lsbGJ1c2guZGV2Pg==;
+	rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
+	s=fm3:rsa-sha256:KQ3fKgmq2VDivF69NH/6RRV2Uj6WI96nVV8fCZNRFjsLmCw
+	Ur7vaqCNBv9JM0sU2PUX+C3erT1L7ccwcdPG8abizveAD9f6P16JFslXpJtC3FlT
+	kS8B2km516MMPIu5NOB67zQltzXHqgYokS+m9EHWnIiWPJnIlF/vxB1iONj+x2uV
+	GyCo/pmDde3ZQlmBuSxfc6wg7ji9weqizIA162GgE86xcmPL/3vgat1zYJ+ZDRvh
+	WrE+rBWeFGkwogMCjBI924q9zjXcLRz53BDv8dM1sY1UmqliTZATI432QU8i/EsP
+	Lcqrr4Mi8Vo0EIrp9fAUAzP32RaytaysZuzgV9w==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:SDiBOR3f3THWX7zq7K44UIzYpm+TYb6O5W+zn+s1aKE=:cy3Ua8MM9A2x9HjTJezL/FV7SFefbt/v8MEXoHPBQwA=;
+X-ME-Sender: <xms:ZtfVauM8ZcWUVhT0p_ba7R66po2TtLxh_7BCB3D55qGzkwWJs38s1w>
+    <xme:ZtfVanyyodfXXePkLbxAU-DMhuMnKBfLZ-jlp61NR6g0I2xHuzzJE9z1IoJ2pLg9f
+    e0ioDdu3lC0q3oOy9is9nJ8tIB1wtjgf-wER125VDbnlfiaNzRNwY0>
+X-ME-Proxy-Cause: dmFkZTGAcjc+6WgGRvzGO12CmJYSXbnaD9JbOf0mpuC7TDfz6ktu/G51LeRFCO06NGnrqo
+    NSvxNgeTB9XOpv8oeW/N1biwYRb3Mti3CXWY+8iUZq3XS2ln9Kk5QE4TyGaY8L7F2XtWdI
+    rnleojg+zntuxOVUuFQkeRmqFrmG9mpuwm61oYYWyQJmWk8tLxgLtS4w0s1KiNQaDAgnkQ
+    G8Rho1ueS43hPBvDMjvMveR8X1ptDWIpvvlS7v1mCKpP6na2opsJLr7cXcjiWiBaEsxReC
+    uKuGiT7GRupQhJyiaJREi1E3nptlWVKrSliBIQ2cQcTtPK+vngE3BeBnHMxJjecFy5WBQZ
+    45mz8vcMgo7NV4/mjt3q5K6Re2DKm3kimRlD+U7vNRj7r51eZPK9yXE4D2BOcRey2Yxa7F
+    fhe/Fp6RvtnN0XSpycUQWQuAwAPkxdNvTjKXx4YZpzAa2BLj87BgM2u6eglE2bC4E8r3Xd
+    JwCPXbLFjIF/qCgEcBH6ZCq6eBvh9CQukFYRmRxCaFaWtfsEU5wjbcHJsfo0i4TxVl4VD/
+    xSirsgpDremoiLZScx496Q3bpqpJPlARMo9k9oJvb57o71FI/m+FN0mBjXEAM0x0oNJU6L
+    KCuquWf/jJCMyEK/lGPo2qSKVDH6fk9m+Gmd77CF6sES0yaOrPnto8YUD1xA
+X-ME-Proxy: <xmx:ZtfVai_DCLkEUBhywxeBZ_8CefQXlBot-tRahXkYoFKpNvxn5HpzGw>
+    <xmx:ZtfValQ1H4zFnCnCSmziqYjmAp4tGBIBC1EN-Ctnp_KrTur_edQxOA>
+    <xmx:ZtfVaroBwTtDg4jEsx7M_PU80kulOaqC75XaqpPqWtljJz4OIkBsLg>
+    <xmx:ZtfVaqmNv8nir6i7m1TbAxzpgEhi2-kiMaKPDKIR-1xXIJRPRTk8Fw>
+    <xmx:Z9fVanD_zL2w74H5qnovh3SuLOD7SBQggP7RkxteeDXv6iQoBtuqsyCE>
+Feedback-ID: i0f194965:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C0A79700065; Mon, 19 Oct 2026 04:40:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION 7.2.11] ASoC: sdw_utils: cs35l56-ot25 DAI not
- registered, no sound card
-To: Connor Stevens <ooglie05@gmail.com>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, broonie@kernel.org, sashal@kernel.org
-References: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000037AE:EE_|DS3PR19MB9222:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8d9a323-5730-42f2-2c10-08df2dbbb1b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|36860700016|82310400026|376014|61400799027|18002099003|22082099003|16102099003|13003099007|10067099003|11063799006|261009223027099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	15EVymUh+Zfw5TCA+7Fupta9TwqIXvQMMk6TmuGSqBnEZrVexlm/zAiNCJllBeDqL+SzC8ICNMGnO941eKwPB0wOU0tFSKO/wTL8KyUTqs9sUKeQp1hOmIhfpSqeKqKLEEvn2oUEqAnWD7cW1/d+MGT2H4plL4WdC0z7g+1yUUA7Xp4Cypw4A3bY52bY59CUk7hS4m4OKeX+lvXkdSA9rlkMj7bPD3Y/kaxFFUT+KK5M+kyUQUlPV5VH1V7klE8uAeY5xNA6DZoAGX0LK/u+2wkvvgzTRRWxJ/vtCm4B6qYzl7t1AjZlSfM1hSkDwS36afj7yZlCPTjjUcKNBdmk7dOyDJEa+WHSTDbKCtumzzaBJm0ec9MqfQTtKgUDros74HENNPFKFfgvnY6l/DvMxk0NCg4UvEAJhGuy1ii5Q4/R6BO2iGAzvT8ZG7agFIHw0pY+uJ/ywqE693/Bv5m4vDhPB0DMlfnK4sW1U4NUAqNFONWFoSzHAiTLAeFYWJyaDB+0vFPWkL6sl2k6cpMkEy1Na05X6WpQa/ADbi9jGyw1CIXX0EJ/H4mLCyT02dM8B7WYjJDBMNoCMhiuaqkjRKJuyYvLTEMgspWmo2EtoasiRBFgQnJqhPDMEEQrhj5n+Dqx+b810rylRG1E+Pf0KA==
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(82310400026)(376014)(61400799027)(18002099003)(22082099003)(16102099003)(13003099007)(10067099003)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	AO3nWU0YaxYGppBdPtbsOGLCIq78x37j41QgHQO+zpvH5dLzlgSZDtkUFgYgIsTqvCcmJUlwp30PiKPokOrPNLPcfyZaLMxWakeiCe7aK74EAwvPjTB0QHY8adhqcseRbmN41WRZ1U9A/hfsInwMpW+0NE8o/901HURURPTDqIkTZyoof47Qys1P+cqCxYc7T6xsYDN3aiwI311YeIVllFDmGkmbZXQoH7NGUO76bSe8FoL6JHYsrB1RKvZrISvKtnZD7xEY4XlBqidRJ7KDQTldoXB3112GE+y5dcmGmYMWEFwS0Od+l0cj11auCbbHnvEHsSALrgH15VdQLGyHqM29TiZJEY/MbFLAVyfEhDHCV1Qkm7sWkcU2BQUb/fFkc4Vtp+uc3kOl2LgYwoCb6CrP8BW4ZK+CtTgjY75bwwI19KjoSrx7K/Aawcex928h
-X-Exchange-RoutingPolicyChecked:
-	tGRfFzAxcDGBVc66Skek5dwWZVAkI4IAp2dwdye986Ag/jLcgT5e5QfVxHqhN7zTvJrtzDtSHGttonBQA59P/Fc9UmwY1VJLb3TR+T66/okbmv4E82m250Kzn9uNLUYKxtq52sLGbETZRrFytwxPvQ6viIR05XQ1VTrkqimvVuEscUC9J2GRAHKT+wZZUcE+oIHDWep8zFKVfuoI0w1+Us0YjarGy+jWqlSOtcXYBnFmJpR93PoSqGnWPHfj1O5qfa0hCFKrsjqjq3a7CX2CqgTsVOoMSrzQFe29zR2divL4vPgH6M7xxFRuXWlbhsvpc0+kmx8htyYJ4hbibWhkkw==
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2026 08:33:47.0443
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8d9a323-5730-42f2-2c10-08df2dbbb1b7
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ1PEPF000037AE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS3PR19MB9222
-X-Authority-Analysis: v=2.4 cv=QM391QLL c=1 sm=1 tr=0 ts=6ad5d66a cx=c_pps
- a=JRl+IjCvVGCyytsd+wv0WQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=iX4cTi3TZMoOKdANLEfx:22 a=Dj2-6B8FqX4mGL0U3gbX:22
- a=VwQbUJbxAAAA:8 a=w1d2syhTAAAA:8 a=2UBwMtoTQ2vo7Y6c5O8A:9 a=QEXdDO2ut3YA:10
- a=zgiPjhLxNE0A:10
-X-Proofpoint-ORIG-GUID: su6Xt669zJELwM0R83Yn3G2pNmC-j_ml
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE5MDAzMyBTYWx0ZWRfX5GLEH+bHS3N5
- iY8GIWYAuqA0qnrRMHfTlZkctEriY3r+eib2VCRonUEnlnHlCV9MMixrPWYxW14S61xHUN924+g
- yWTKBNQ5a/TsO3SYHrfdZ+3x+W9Gysg=
-X-Proofpoint-GUID: su6Xt669zJELwM0R83Yn3G2pNmC-j_ml
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE5MDAzMyBTYWx0ZWRfXw8Asl0mfMyHA
- vE/m59IwoOx7gp2nNyMhJ15lmnE966PFg2ZYvhG2pR41GqStzP1gtGDTpYOXE88uIeXqZRoOgiA
- JEup97BsP7RK78iLI4Z2fmQuS319B/74pUBEii46mqrLS6VhgY23gXSybdXbP2VO72L3XFbERkA
- uv1MyeuR8CUnQIwbvubqExuqWXpe8RX4+Sb4hT1u9G6noE40CvQpFHDlQI+DTBBGa9OEBXtWa1y
- 73BeY6Qy69xMAC0PyJRQwcxniSbaXYEclpGqi4pfRIqxh2l7o8Vc4LgPuYOPHAMwgYKs+4rhDSr
- 3f5CrVFx+8so1hRysLC+iC+AoQ5PotbthSlLzsEq/y9TQkGF1NJRlKpRAjZgo6yssWEi7gvDGDq
- kKnlVOa5gCnw/x7UES5e2TcKC8ay2XNDVsMr/kuOD5iPgryD+BQEjPiI03HV1lFg+DaI4TTI8P8
- XwSu6cKTCS9gNuJPYpA==
-X-Proofpoint-Spam-Reason: safe
+X-ThreadId: AxIikzjaTJho
+Date: Mon, 19 Oct 2026 03:39:46 -0500
+From: "Will Bush" <will@willbush.dev>
+To: "Takashi Iwai" <tiwai@suse.de>
+Cc: "Takashi Iwai" <tiwai@suse.com>, "Jaroslav Kysela" <perex@perex.cz>,
+ linux-sound@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, "Jan Lentfer" <jan.lentfer@web.de>,
+ =?UTF-8?Q?Sebastian_Dalfu=C3=9F?= <sd@sedf.de>
+Message-Id: <bb9cad8e-48fc-4cc7-a893-1542270f2018@app.fastmail.com>
+In-Reply-To: <87tsmjarjs.wl-tiwai@suse.de>
+References: <45162613-2802-401c-84c9-742f9c8c68e6@app.fastmail.com>
+ <87tsmjarjs.wl-tiwai@suse.de>
+Subject: Re: [REGRESSION] usb-audio: Behringer UMC204HD broken in 7.2.10
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 18/10/2026 11:41 pm, Connor Stevens wrote:
-> Hi,
-> 
-> Since 7.2.11 the sound card is missing on a Dell XPS 14 DA14260 (Panther
-> Lake, subsystem 1028:0db9, CS35L57 amps on SoundWire):
-> 
->    sof_sdw sof_sdw: ASoC: CODEC DAI cs35l56-ot25 not registered
+On Sun, Oct 18, 2026, at 11:42 AM, Takashi Iwai wrote:
+> Interesting, it's just a descriptor read and this fails on your device
+> by some reason.  Could you try to ignore the error like below, and
+> verify whether it continues to work?
 
-Already 
-reported:https://lore.kernel.org/linux-sound/20261005155235.1386525-1-rf@opensource.cirrus.com/T/#m420ea27d936f1fd9cec79c988120a11caa8d428e
+Thanks for the quick reply. I reverted my patch and applied yours. Devic=
+e keeps
+disconnecting and reconnecting (just more slowly). It never ends up work=
+ing.
+
+  =E2=9D=AF journalctl -k -b -0 -o short-monotonic | grep -E 'usb 3-4|sn=
+d-usb-audio 3-4'
+  [    2.264012] blazar kernel: usb 3-4: new high-speed USB device numbe=
+r 3 using xhci_hcd
+  [    2.458009] blazar kernel: usb 3-4: New USB device found, idVendor=3D=
+1397, idProduct=3D0508, bcdDevice=3D 1.35
+  [    2.484013] blazar kernel: usb 3-4: New USB device strings: Mfr=3D1=
+, Product=3D2, SerialNumber=3D0
+  [    2.484035] blazar kernel: usb 3-4: Product: UMC204HD 192k
+  [    2.484050] blazar kernel: usb 3-4: Manufacturer: BEHRINGER
+  [   12.976010] blazar kernel: usb 3-4: USB disconnect, device number 3
+  [   18.012013] blazar kernel: usb 3-4: failed to read device descripto=
+r: -110
+  [   18.012623] blazar kernel: usb 3-4: parse_audio_format_rates_v2v3()=
+: unable to retrieve number of sample rates (clock 41)
+  [   18.012768] blazar kernel: usb 3-4: parse_audio_format_rates_v2v3()=
+: unable to retrieve number of sample rates (clock 41)
+  [   18.012903] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 1 (-19)
+  [   18.013047] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 2 (-19)
+  [   18.013181] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 3 (-19)
+  [   18.013309] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 4 (-19)
+  [   18.013434] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 0 (-19)
+  [   18.013565] blazar kernel: usb 3-4: 10:0: cannot get min/max values=
+ for control 2 (id 10)
+  [   18.013690] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [   18.013822] blazar kernel: usb 3-4: [10] FU [PCM Playback Volume] c=
+h =3D 4, val =3D 0/1/1
+  [   18.013959] blazar kernel: usb 3-4: 10:0: cannot get min/max values=
+ for control 2 (id 10)
+  [   18.014102] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [   18.014239] blazar kernel: usb 3-4: [10] FU [PCM Playback Volume] c=
+h =3D 1, val =3D 0/1/1
+  [   18.014374] blazar kernel: usb 3-4: 11:0: failed to get current val=
+ue for ch 1 (-19)
+  [   18.014508] blazar kernel: usb 3-4: 11:0: failed to get current val=
+ue for ch 2 (-19)
+  [   18.014635] blazar kernel: usb 3-4: 11:0: failed to get current val=
+ue for ch 0 (-19)
+  [   18.014763] blazar kernel: usb 3-4: 11:0: cannot get min/max values=
+ for control 2 (id 11)
+  [   18.014890] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [   18.015021] blazar kernel: usb 3-4: [11] FU [Mic Capture Volume] ch=
+ =3D 2, val =3D 0/1/1
+  [   18.015151] blazar kernel: usb 3-4: 11:0: cannot get min/max values=
+ for control 2 (id 11)
+  [   18.015278] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [   18.015408] blazar kernel: usb 3-4: [11] FU [Mic Capture Volume] ch=
+ =3D 1, val =3D 0/1/1
+  [   18.300040] blazar kernel: usb 3-4: new high-speed USB device numbe=
+r 6 using xhci_hcd
+  [   18.491087] blazar kernel: usb 3-4: New USB device found, idVendor=3D=
+1397, idProduct=3D0508, bcdDevice=3D 1.35
+  [   18.517036] blazar kernel: usb 3-4: New USB device strings: Mfr=3D1=
+, Product=3D2, SerialNumber=3D0
+  [   18.517242] blazar kernel: usb 3-4: Product: UMC204HD 192k
+  [   18.517398] blazar kernel: usb 3-4: Manufacturer: BEHRINGER
+  [   23.644013] blazar kernel: usb 3-4: failed to read device descripto=
+r: -110
+  [   33.884021] blazar kernel: usb 3-4: parse_audio_format_rates_v2v3()=
+: unable to retrieve number of sample rates (clock 41)
+  [   49.244015] blazar kernel: usb 3-4: parse_audio_format_rates_v2v3()=
+: unable to retrieve number of sample rates (clock 41)
+  [   59.484034] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 1 (-110)
+  [   69.725032] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 2 (-110)
+  [   79.965020] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 3 (-110)
+  [   90.204027] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 4 (-110)
+  [  100.444027] blazar kernel: usb 3-4: 10:0: failed to get current val=
+ue for ch 0 (-110)
+  [  110.684056] blazar kernel: usb 3-4: 10:0: cannot get min/max values=
+ for control 2 (id 10)
+  [  110.684281] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [  110.684397] blazar kernel: usb 3-4: [10] FU [PCM Playback Volume] c=
+h =3D 4, val =3D 0/1/1
+  [  115.804025] blazar kernel: usb 3-4: 10:0: cannot get min/max values=
+ for control 2 (id 10)
+  [  115.812386] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [  115.812521] blazar kernel: usb 3-4: [10] FU [PCM Playback Volume] c=
+h =3D 1, val =3D 0/1/1
+  [  131.164026] blazar kernel: usb 3-4: 11:0: failed to get current val=
+ue for ch 1 (-110)
+  [  141.404011] blazar kernel: usb 3-4: 11:0: failed to get current val=
+ue for ch 2 (-110)
+  [  151.644020] blazar kernel: usb 3-4: 11:0: failed to get current val=
+ue for ch 0 (-110)
+  [  161.885033] blazar kernel: usb 3-4: 11:0: cannot get min/max values=
+ for control 2 (id 11)
+  [  161.885326] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [  161.885446] blazar kernel: usb 3-4: [11] FU [Mic Capture Volume] ch=
+ =3D 2, val =3D 0/1/1
+  [  167.004009] blazar kernel: usb 3-4: 11:0: cannot get min/max values=
+ for control 2 (id 11)
+  [  167.004224] blazar kernel: usb 3-4: Warning! Unlikely small volume =
+range (=3D1), linear volume or custom curve?
+  [  167.004341] blazar kernel: usb 3-4: [11] FU [Mic Capture Volume] ch=
+ =3D 1, val =3D 0/1/1
+  [  167.005012] blazar kernel: usb 3-4: Quirk or no altset; falling bac=
+k to MIDI 1.0
+  [  187.486013] blazar kernel: usb 3-4: USB disconnect, device number 6
+  [  187.785034] blazar kernel: usb 3-4: new high-speed USB device numbe=
+r 7 using xhci_hcd
+  ...
+  [ 1035.327013] blazar kernel: usb 3-4: New USB device found, idVendor=3D=
+1397, idProduct=3D0508, bcdDevice=3D 1.35
+  [ 1035.353013] blazar kernel: usb 3-4: New USB device strings: Mfr=3D1=
+, Product=3D2, SerialNumber=3D0
+  [ 1035.353185] blazar kernel: usb 3-4: Product: UMC204HD 192k
+  [ 1035.353301] blazar kernel: usb 3-4: Manufacturer: BEHRINGER
+  [ 1040.476017] blazar kernel: usb 3-4: failed to read device descripto=
+r: -110
+  [ 1050.717019] blazar kernel: usb 3-4: parse_audio_format_rates_v2v3()=
+: unable to retrieve number of sample rates (clock 41)
+  ...
+
+Thanks,
+Will
