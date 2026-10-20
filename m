@@ -1,107 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792516253;
-	b=11Ha84y8aKlLoOfD9Aj+vZ1Yar9g2RSxBxMwbA8eeA6eD1dVktXbcmgN2ZQLJDSYLY9G
-	 HumTzlwrsgP69LXQF/rZeKhFhnc33qH7vgamPlI4p9RQfJvFd+l6oZ4TsxRPvMmf+powE
-	 F2ijRXd0ghe/I8+Ii7wx815DgnbWeSE9OOOEqHiLIH+mgxNHGBOePMG4+iVl0QMEQvdcX
-	 c1IG+DZRX3Pp3fIh3ir15k4N4U3SdWGyntpJjE2TvufjnVsGgECGgGg5jygt8nUWotVM4
-	 Ky929MQkQcKIWnSv6XkhG1UOwr3V1cxvLXkgznXxpK9xox+ejUburilSiXZBCuoisYg==
+	t=1792516324;
+	b=K6/0e6YS6D5mDnUUl46Lim+c6eBz9Rz7KXEmqRKpSScnjgV7gV7aAsXzHOFPuVdbzSmR
+	 q4lxc/abPyiF8SsNIZ5UrB733f3xTJEU47TueEbOr5N7uZe4jeG+F7lmUHRCi4yPOlzpJ
+	 Ealrcq3Kx4LgbmbQV2LHXif6D0DcQSRFlhuSekQkBNM2SeVNohpK4iZn497MtMDBHG/jR
+	 8IKznqtN/DZxp952H57zNrUMItv7YxvtmbDy7gon3K4JMYk4UE/wDzb6KzszG3NF07Mfs
+	 H4Hz/mV4uTJny9H056gy7F4V5DKVdvAoZup83cTUfCzNax2cjNP071hbWbaPMbkYsQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792516253;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
-	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Received:X-Received:Received:From:To:CC:Date:Message-ID:In-Reply-To:
-	 References:User-Agent:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-DetectorID-Processed;
-	bh=VJqkIiPNVDYg99+7WtjqOTUKFy/SQG4E1Zt5xkilM1s=;
-	b=MELQSOzre0X5Sk8ucG3nav0iTXi0+lRrdicivAbfm1IJnjlKx6JV+GOnBJS3jV1CMTob
-	 uiJH6EazGGq+pNXy1Q2p+GNEWipn872PdgPynXJ7/dhvNxnDvcNWNPpb282vGdRIqma7N
-	 SbzLZQBGVYHjM+DzGHLk9BYTBD/VmJkaXLukataTvy7w5nojmsCyuQZAvR4BWyy52BeJl
-	 uQkrnDHpm5bqlNt6Z3yQS2MXqrfA/WvGvCoLv7jsLBYGCPapDwRGGdLZ1qhZVc8HC7TK/
-	 VT4qFq4dx9xh9q+YpVhdlByOeU6XcQheDMHmKGcRonoYusHswvU5nDhWZX4NoeghvVg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792516324;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=4U2q9sr9eOMmxFV1jltMvp6WbNAnPX8wn+lPsh1B2O0=;
+	b=z0zIICFE21NTDYXLQgE8gLjDW/W3UmvcqSCmhE4hvCRrNGTCAJDCeXH3UEQNcXd81ufb
+	 m98sLCS/KEYNniPvD/PZE3nOC2JDiMlsad0DbIWCCupHIE3i9F1HbA2ba6k9ycXxK4MpT
+	 +pJe5uv1DUe7bKnAjWdtY2E7dbZAIXSrclcw7Hijve8mirx4SMBf0euVmgbOyhf+3hxtn
+	 vN+mMa7RKJHbWVTM8T55nwyDna57UBOs+mfwfTy2q4mj4z0wdRu7+kd0YKTPwLcio6pmC
+	 YSiGGUVX6fo3Q4AMnsCBe0b9hKFKXaE0lTIjCvpU0W+iFtxGW7Zl7ZJh8nH9x0tKj6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=broadcom.com;
-	spf=fail smtp.mailfrom=broadcom.com;
-	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=CMX8YgaV;
-	arc=none smtp.remote-ip=209.85.215.226
-Received: from mail-pg1-f226.google.com (mail-pg1-f226.google.com [209.85.215.226])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="DMlX/sKN";
+	arc=none smtp.remote-ip=188.68.63.102
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36719606A31F
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 17:10:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 36719606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B142260A2633
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 17:12:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B142260A2633
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=CMX8YgaV
-Received: by mail-pg1-f226.google.com with SMTP id 41be03b00d2f7-cd5d2dafeccso1209718a12.2
-        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 10:10:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792516252; x=1793121052;
-        h=content-transfer-encoding:content-type:mime-version:subject
-         :user-agent:references:in-reply-to:message-id:date:cc:to:from
-         :dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VJqkIiPNVDYg99+7WtjqOTUKFy/SQG4E1Zt5xkilM1s=;
-        b=ViA2IQJmZK5BIrRY3jDtUZ0duTv/jFUxvISjU8zi1v1b8QbJTLOzczdK/Cnu9o1puX
-         YCsCEFvDQGQ60Eml6gMlaDpcgbnZ03SUouE6lehGoV1n/X2Itw30PnLKJYw2d0VyLyDe
-         gdUkGptlejnhsO65jFNzyrxijx6H431b3kusNyA/cZCyn4FG2989EydVpKKWHxrnqREp
-         J43rGDEU72+9hyvIyKlY8gNb26sO2yuVctNKcNS/xqlCGsp44y1/2ad+GosB7V72d2QJ
-         03FUWNHFtxp61/mwt4cjoEfNIIzAJ4SS0xS1zRYT1dmz+R2WAUzFuyP62lQs+iMfCxoW
-         CxIQ==
-X-Forwarded-Encrypted: i=1; AKwUvBycLIUXj4b5G/XP4WIRJ/HRVWXnXXBrx30j3doTvfouKGjKHldNHU4frMxAU9zglnJX9AOVmygAlLdQfQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIN9ELhOymZ+B3LJbyWAuYJ062M9K9Ry/U7oPJ1T0hYo1FHIrI6
-	2nwGLLTtjXttS/f/Nt1MZb2Zt+MLYvx9DiZVoz7M3XHNKey04Fn1S0gyKOsLkZfUS++jIZtySud
-	m9w6Z/RYvcK5qYg8RWQDcg4fivv5Imm9xnkOlidJZ/CgA3y2jMmZKQ1+r8gxhmQegC0QhdKTZbK
-	9d5CyCG/O2sWowrWjoF8gWxzTvS26Ve3DpMrAqux7j2J4udY/RgOlc6QeTvYMUXmFK1aAvrIyUi
-	fTkOiYs1MigKCQXzJkXfw==
-X-Gm-Gg: AYBFou2dKqBNdFm4ZoOLLuTyYH/abdPwmLShWs/25Ypv6OBmK79waTkNBRHBbhD6VwK
-	wbU8HmMXsTUDG+jvaRBTlXXEOiGEd5qRJfaygVt9Y4YwBehIE+lEaKiYzrIsjDanPgIHIUFtAOw
-	RpY2i6Gp9aZk3+vscuHTSN3OuO0jfO42fBYni5FmXp2YJ9O4CitazPjMT5mIdP6ezrzvGqufp97
-	ZiqQq3nH6F+oxuVQxzvEZNPPRX7RIzVwkywUOdIgfF7whmyUU0umIAqTD5yus+y2xxdSJois8/2
-	BPMryJAB7y1gyDZNox3tdm+//6bGcJIkhV15dXilFZbXo3fu8F1K8SWnAY/9sz/4RmyUn524b0/
-	Ypdm8WKqueaM+xbYgoD4L3IFyfOXEZnZemLqSsKftyJXF2A9WBDVN3orUKNDZtcOX0hZWhuLfCX
-	MjcJVdPuv9qbMa8ui9ijQAJvje3UcHbvMhqNXuJxYwLg==
-X-Received: by 2002:a17:90b:3851:b0:3ac:9e76:aa93 with SMTP id 98e67ed59e1d1-3acee2939b1mr8740813a91.7.1792516252201;
-        Tue, 20 Oct 2026 10:10:52 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-120.dlp.protect.broadcom.com. [144.49.247.120])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3ad82359de0sm96548a91.5.2026.10.20.10.10.51
-        for <regressions@lists.linux.dev>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Oct 2026 10:10:52 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-91b861c0618so57880886d6.0
-        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 10:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1792516251; x=1793121051; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:subject
-         :user-agent:references:in-reply-to:message-id:date:cc:to:from:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VJqkIiPNVDYg99+7WtjqOTUKFy/SQG4E1Zt5xkilM1s=;
-        b=CMX8YgaVyyqQd6oTyvXdlr+DJTmDOzFZT7p2zGJQMqYydBTZj6GwuVsMtW3tRrpDxY
-         3peuDpNZioJIlQf6AKhXj1px0IThuUUpWCDe2I9mk5BfX+0AB38GpB7MB7B98dWF0WM9
-         RV9/FDzlftfD4r3TqCF/YWYSX8vp1PCy0kcrA=
-X-Forwarded-Encrypted: i=1; AKwUvBxpMKBV1n9DiJyczHpmKMCV6n01X7IrTkRSczKxMdIgjZPzRb6pw401xb5iSuTZj0HFcPi2O5m73fFubQ==@lists.linux.dev
-X-Received: by 2002:a05:6214:250d:b0:914:51b1:6161 with SMTP id 6a1803df08f44-91bdf0df624mr198193696d6.30.1792516250819;
-        Tue, 20 Oct 2026 10:10:50 -0700 (PDT)
-X-Received: by 2002:a05:6214:250d:b0:914:51b1:6161 with SMTP id 6a1803df08f44-91bdf0df624mr198193046d6.30.1792516250202;
-        Tue, 20 Oct 2026 10:10:50 -0700 (PDT)
-Received: from [192.168.178.59] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c10c48c49sm2815656d6.41.2026.10.20.10.10.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Oct 2026 10:10:49 -0700 (PDT)
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-To: Jason Perlow <jperlow@gmail.com>, <aditya.garg@linux.dev>, <baolu.lu@linux.intel.com>, <dwmw2@infradead.org>
-CC: <iommu@lists.linux.dev>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>, <regressions@leemhuis.info>
-Date: Tue, 20 Oct 2026 19:10:46 +0200
-Message-ID: <1a15a4b49f0.2873.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <D0E6473C-3234-4367-83E7-B85C022B0F1A@gmail.com>
-References: <D0E6473C-3234-4367-83E7-B85C022B0F1A@gmail.com>
-User-Agent: AquaMail/2.7.0 (build: 200700061)
-Subject: Re: [REGRESSION] intel-iommu/brcmfmac DMAR fault on Broadcom PCIe wifi, v7.3-rc7 -> v7.3 final -- candidate mechanism and proposed fix path
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=DMlX/sKN
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4j8Jqc3wgYz6BYy
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 19:11:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1792516316;
+	bh=4U2q9sr9eOMmxFV1jltMvp6WbNAnPX8wn+lPsh1B2O0=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=DMlX/sKNRamhKCdtOIIrHISbdo9uM/SfPEOFvbyYXAYLgg2fmKBZELVB9+uZwOFyw
+	 agq2LIfsLZqMZXomUuThLBiGSTrYZiw7iRxAFLBRdeLk+IBla5zp9AjU75WTzHlsyS
+	 9tNt+AnCIhTDi14N+rBblCqaxyuCU1EFLGOSE+M9eu3hRtgQgBdz5ThbouXKkEGyvF
+	 1Uc5NLB2ZzB6AnY+w/84YRmCxqfmpyeeIs1pOmjHI4pBU89T4sbQljfsy4yMFUfF5A
+	 oiy3P6Aa21Jf30xgJvMqTh/Ewq/cdk0IxJoy9mrYd6T1e4AjM3WF0FeUK7M8vfqZxz
+	 2oWhOkOUONUtg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4j8Jqc3Bggz4xtp
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 19:11:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j8Jqb70vNz8th7
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 19:11:55 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2BF005FA56
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 19:11:43 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ef58758a-e9f4-4d54-9b35-d9f974cd0f52@leemhuis.info>
+Date: Tue, 20 Oct 2026 19:11:41 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -111,46 +78,46 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179251630337.1742427.3242952166518723470@mxe9fb.netcup.net>
+X-NC-CID: 1LAiTHO8RXwrqk3e4kIgbL7JRkd82TjdnhPGefwFeG/Ks+8tEes=
 
-Op 20 oktober 2026 18:02:30 schreef Jason Perlow <jperlow@gmail.com>:
 
-> NOTE: an earlier report on this bug from us bounced off one of these lists 
-> due to HTML/multipart formatting from the mail client used -- apologies, 
-> switching clients. This mail includes the full original report plus a 
-> follow-up, merged into one self-contained report since the original never 
-> reached anyone.
->
-> === ORIGINAL REPORT ===
->
-> Hardware: Intel CoffeeLake-H platforms, various. The affected device is a 
-> Broadcom BCM4364 802.11ac PCIe wifi adapter (14e4:4464) at 0000:05:00.0 on 
-> an Apple MacBookPro16,1 (T2 Mac). Aditya, including you directly since this 
-> is T2 hardware; copying iommu/pci/wireless because the fault signature and 
-> the fact that it reproduces on only one of five tested machines (at the 
-> time of the original report -- see follow-up below, that has since changed) 
-> looked like it needed eyes on the core IOMMU/PCI path, not the driver.
 
-[...]
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> THE ONE ANOMALY WE CAN'T YET EXPLAIN
->
-> Despite the last two items above being unchanged, the actual generated 
-> .config has CONFIG_INTEL_IOMMU_DEFAULT_ON unset after make olddefconfig 
-> against the rc7 source tree, but =y after the same process against the 
-> final source tree, even though our template explicitly answers "# 
-> CONFIG_INTEL_IOMMU_DEFAULT_ON is not set" in both cases. Our working theory 
-> is that some other symbol started selecting/implying INTEL_IOMMU_DEFAULT_ON 
-> between rc7 and final -- which would override an explicitly-seeded "not 
-> set" answer during olddefconfig resolution -- but we have not identified 
-> which one yet.
+#regzbot dup:
+https://lore.kernel.org/regressions/179243994891.157792.7812879229965993143@kernelci.org/
+#regzbot resolve: fixed, was a mishap in a merge conflict resolution or
+something like that
 
-Simply run make menuconfig and it should be able to tell you how it is 
-selected.
+#regzbot report:
+https://lore.kernel.org/regressions/179243994625.157792.5761151975328981641@kernelci.org/
+#regzbot dup:
+https://lore.kernel.org/regressions/179243994891.157792.7812879229965993143@kernelci.org/
 
-Regards,
-Arend>
+#regzbot report:
+https://lore.kernel.org/all/29f6c901-5209-4681-81cc-ff768cd405f4@maich.gr/
+#regzbot title: lpfc: boot hang due to use-after-free of mboxq in
+lpfc_sli4_driver_resource_setup() backport
+#regzbot fix: scsi: lpfc: Fix use-after-free of mboxq in
+lpfc_sli4_driver_resource_setup()
+
+#regzbot report:
+https://lore.kernel.org/all/k5Jaxe-8dtnRDkZ9ahH_w3C6hqb0IATbibwhxy4gAuOS5rV1HKzb4hzzv9XO9reX24UPoyKP30ZfRI6EVa6Jl0A49Q8Z5o7VKfgFyaq1x7M%3D@proton.me/
+#regzbot fix: ASoC: cs35l56: Add DAI for SDCA OT25 stream
 
 
