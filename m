@@ -1,76 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792488611;
-	b=O5dm4uNyGKzbp0er/w2/sVtl6OfQ/uWkKQfgDJ00Bck9rHCRp8yGBcwdq0oA4Ek056lI
-	 DsQW90tDbqaxrkDbD5FV4jXWj4b4PbXuJIdMg/dDSRWtOQGrxFcchC5IUqbqrBk5lBAs2
-	 Mbmqv3IAZJioyk+lfh603BpB3fB79QfGNxoJpMUi79ruhEkLGkbaVLt5yKX7SP2kw+y3N
-	 MEwkTdIcFgesDP1tFzYDuYOZeYXxMwAffwEIQLDiZAy1m4ojpGp0z/aG1cg9Ab8T3c/kw
-	 /Jifjz8r0y5yiYe4wMF3JQlDlU0uT/tx7xJVD4sjbXnCvntidxCxz+HkiA+5xVzWWCA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792488611;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.218.36.5
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792491902;
+	b=1/ly/WCeVCfuXehktxGmIvR/mc0Rg7CfE5jDbwC10ylnrg0E5MjlRT0svxwW0/Dc00Il
+	 k3M73uEwtcefHwqj/iT3RDoCpyovzYtBQhNE28jSBX83eMnhOpef7qdxRdMtXH6lWeI3Y
+	 Id9sK6AJzODsnFlCL8i+it7McKey2mfCRokvxMdj+/uoIGZut0gG9alwqvnSqJCno8kee
+	 agK5c0t/crE3xl37vKl9q8CZmtpkL2bTnP7GRMC3mzwTy5pdY6leBbr1Pm7SW8FydRCo3
+	 GC2dE+04g5N2LzrZ7vRYa5yhvfjqu1bJFJNqWA+NQuHKXXmfTVe68XxH7ic6YKFeTaA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792491902;
 	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
 	 User-Agent:From:Content-Language:To:Cc:Subject:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=UOKaEW6OC6SsaUM0x34TonYk7TnhblFFxasv/bE3Als=;
-	b=qrW7c9nGlPYehKPqGeYDHm2b0AtD/3ytGWzYHfKJbLgSdIwPUM+jStKcQvwyU3uerWdu
-	 FFRVelhd3isdDmYo21JPFFqhBYU37qzBiTAEUU+QmY9V8d+w3fr2vzkPPRWW0jh//IlkG
-	 MtD1J7X59trr+tUqoBPue1WUOmqtb+9l3ySF78mtqMw62wbPFjAtedwVQPBTMsXmaU3SL
-	 Yjsel4Zy4GlWcvYa5dg6m6jMd8lntvqkugFmZt63v0Yc17ir8nusXR0cqbSZgxEjSxKqd
-	 Sj39ErtOb98Pk3Z/Y/+r946t8o8XP4clRVLc9R1fHHFQA7w92IwAHEwHrCz1UmqEKeg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=pengutronix.de;
-	spf=pass smtp.mailfrom=pengutronix.de;
-	dkim=pass header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=Qb8cbyga;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
-Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
+	 Content-Transfer-Encoding:X-Last-TLS-Session-Version;
+	bh=8g/OFL5UVyVXc0FjEvvApKVC6NGiltcUoF3yC6VVRC8=;
+	b=HTRQUeZgtIXuVDZyNy+S0loOpvWmZbRCMsSHbq2jrY28dU5QKenp12pdqFNdQTO/uFww
+	 3xahwjnKC0LtB+sBJgV1ZIFC4xBbXYvaZI/zkN1gYiFjA+RCgroDvRLnPPROcIkKu4StT
+	 rmGkYURVslWYkYemQnCVkteFIm/574ax3ay22azrJym3mR48/SIqH4z5xXVcovfOZ3iT+
+	 JAUxYJEJ6z6i/qqMM6C2uvEXUatPtSLnJyYQ3AT0I3S7iVTDb8t/2dhF3QxS3Yd9hlEdp
+	 7tLJYt6kuMWc6iDmNNre/z9ikmdfJjGyRAoaceKHh2Ooirp17e+jLQXfL/swEyHf1Cw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=maich.gr;
+	spf=pass smtp.mailfrom=maich.gr;
+	arc=none smtp.remote-ip=193.218.36.5
+Received: from mx.maich.gr (mx.maich.gr [193.218.36.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73E4606A319;
-	Tue, 20 Oct 2026 09:30:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D73E4606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=Qb8cbyga
-Received: from [0.0.0.0] (ptz.office.stw.pengutronix.de [IPv6:2a0a:edc0:0:900:1d::77])
-	(Authenticated sender: afa@pengutronix.de)
-	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id 937912018A0;
-	Tue, 20 Oct 2026 11:30:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
-	s=20260414; t=1792488607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UOKaEW6OC6SsaUM0x34TonYk7TnhblFFxasv/bE3Als=;
-	b=Qb8cbygaItZ+bhQeS49fdZpiJuiVDbXKJMNqvClkoT3zjkYLwXSH983KuxwFr9LHOzYkeT
-	lm++NZMmh6nXO7YTex7I/77YyFiC7A0UC/u3BAyD0AkrscRH2lxrgRXhWn/k9kH40hvtL3
-	PQJAx0R7B0qIzsBrXMsvBgMbvQFetKydzlLCx7kTX6DiAHffqGLoHGHOf++AaUaAB88VQ5
-	HqOVxzgPMN2ufISV+jjWbaJ1fenqI2qcdSbxmxtNfgXmt40tsyM6uuuheH0K2kaGoB8n19
-	duRA6a9BtAuUuefrLWEbeFEVZhJ7e6hrsKezLHrEN91ihL7lyenM8Sc2ivYcgQ==
-ARC-Seal: i=1; s=20260414; d=pengutronix.de; t=1792488607; a=rsa-sha256;
-	cv=none;
-	b=AqY5IcnnAP7TcMb1aCQJJQd+185FKoxVE40dNYcaxAfESuqxCyTmZRdTPBrJZ30SlxZyI9
-	WwFnQckJmGaZZxYQ4bsrHE0ZPqORO3kVkeV9fZ3wA4tuoIyEFyrkLROse71KQHqrNR/TVC
-	L50SQg/qZsrDhwbKCEmVaOEWjONuwisidwBaUQ6h+Bd+k/Gr/FcilaaxuNrh4oMulFoQwa
-	zT5Y3x1HeYxXk6wJKo6kYdDEsjAQB6RXaP2Whvx5zQSEBlxqxqFLqrKp/oYCYcvUkFseyU
-	y3jA/GLQUM7EFJn7+yP/QGVXTd2Zjv1JxkEgocuPA0dPTKUECz2DvdwQvO4Fhw==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=afa@pengutronix.de smtp.mailfrom=a.fatoum@pengutronix.de
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
-	s=20260414; t=1792488607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UOKaEW6OC6SsaUM0x34TonYk7TnhblFFxasv/bE3Als=;
-	b=IfTe0VnZ9bKnUPjdkf1a8PwNN4+FompKoN+kC/HkclR+X5ROBQQPDBSFggU1UbGFuCmXtM
-	GX1+afoQZkJN1J6mWQ8Lbioa+gdz+QuCRnbmfSQWuTEZq+HzkIwY6ak9jqedt3tqZWFezZ
-	IkPl9HLjz/7jgTXmVujXvDxwnsaLLah75v/p8/x2BOHixmvygx20lfiFBWTZpFEw41q1FS
-	cv8VUY1c3jRo5Hm5rNthDnwofkUcAbKochfcphH3s1Y/X/e/llC54KuISnKa2TAtyE8ADi
-	AzwJT1GFkpziVN6JurV+UmFt+hAUQwPHBomSrc8+U+L00ffdlYtGwzApZ4DJyw==
-Message-ID: <171421fb-d0a6-4e3f-b2dc-226e9c548972@pengutronix.de>
-Date: Tue, 20 Oct 2026 11:30:07 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA82606A31A
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 10:24:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BA82606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maich.gr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maich.gr
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3440B7BC1912;
+	Tue, 20 Oct 2026 13:24:44 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maich.gr; s=dkim;
+	t=1792491887; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language;
+	bh=8g/OFL5UVyVXc0FjEvvApKVC6NGiltcUoF3yC6VVRC8=;
+	b=ElrfHpvXBgAotjwZhOKZ40JJGadD7F6scC+Lgoik9Cq6rqwAlSfiia/YPs6TJaBrMao9TF
+	EHW7xn7gZK7uqlR2rxgJxyGJo+h2cL/41b7sn5ekRe8Oy92L0Wg+MSjX3K5qhdVuxoVCrf
+	k1cN6UaV6TKc0gx5qY+015gdYhbQ1+R0XFkUrH9YT8XnAiMdCGRS248+o8TwKXCw/hkbzk
+	uMWtGVihMv2py0VlFZMomR1wosH2Gn1+v9EJuBxQDu0HJNj9v5gNUzsa2QfvHLweXo0mzU
+	empWbNtyL5TxCtplLTERpij0JmQ4I3KCwPr2/UQmnmIYrJ6XyKudz1xi/+SiRA==
+Message-ID: <29f6c901-5209-4681-81cc-ff768cd405f4@maich.gr>
+Date: Tue, 20 Oct 2026 13:23:03 +0300
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -81,53 +53,146 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Content-Language: en-US, de-DE, de-BE
-To: Sherry Sun <sherry.sun@nxp.com>, Frank Li <Frank.Li@nxp.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
- Lucas Stach <l.stach@pengutronix.de>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, regressions@lists.linux.dev
-Subject: [REGRESSION] Potential problems for DT-described PCIe nodes on i.MX
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Alexander Antonakakis <alexis@maich.gr>
+Content-Language: en-US, el-en
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-scsi@vger.kernel.org,
+ gregkh@linuxfoundation.org, sashal@kernel.org
+Subject: [REGRESSION] 6.1.178+: lpfc: boot hang due to use-after-free of mboxq
+ in lpfc_sli4_driver_resource_setup() backport
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi,
 
-Linux commits:
+Hello,
 
-9dc39532172c ("ARM: dts: imx6qdl: Add Root Port node and PERST property")
-37f53f50b36f ("arm64: dts: imx8mm: Add Root Port node and PERST property")
-396fbe9a028d ("arm64: dts: imx8mp: Add Root Port node and PERST property")
+Since 6.1.178, servers with an Emulex SLI-4 Fibre Channel HBA hang
+during boot when the lpfc driver initializes. 6.1.177 works.
+6.1.180, 6.1.187 and 6.1.190 (Debian 12 kernels 6.1.0-52 to -54)
+all hang in the same way.
 
-Both in v7.2-rc1 introduce potential regressions for i.MX boards
-that already described a root port under a different node name, e.g.:
+Hardware:
+ =C2=A0 Emulex LPe31000/LPe32000 Series 16Gb/32Gb Fibre Channel Adapter
+ =C2=A0 Firmware 14.4.322.17, sli-4:2:c
+ =C2=A0 lpfc 14.2.0.7
 
-host@0:   ZII RDU2
-root@0,0: GE Boards
-pcie@0,0: Gateworks boards
-root@0,0: SolidRun Hummingboard
+The cause appears to be the 6.1.y backport of:
 
-All these nodes may become stale now as the SoC DTSI have
-introduced their own pcie@0.
+299f5baa1321 ("scsi: lpfc: Fix memory leak in=20
+lpfc_sli4_driver_resource_setup()")
 
-At least on the ZII board, barebox fixes up a MAC address into
-the DT node, which is no longer used if the kernel decides to
-use the newly added duplicate pcie@0 node instead.
+upstream commit 1bd28625e25be549ee7c47532e7c3ef91c682410
 
-Fix is probably merging the existing properties and child
-nodes to be under the new &pcie_port0/&pcie0_port0 and drop
-the board-level Root Port node.
+In mainline, the new mempool_free(mboxq, ...) is placed after the
+call to lpfc_get_sli4_parameters(phba, mboxq) and its error check.
+In the 6.1.y backport it landed before that call. In
+drivers/scsi/lpfc/lpfc_init.c at v6.1.178:
 
-#regzbot introduced: 9dc39532172c
+8178:=C2=A0 mempool_free(mboxq, phba->mbox_mem_pool);
+8187:=C2=A0 rc =3D lpfc_get_sli4_parameters(phba, mboxq);
+8200:=C2=A0 mempool_free(mboxq, phba->mbox_mem_pool);=C2=A0 /* error path */
+8207:=C2=A0 mempool_free(mboxq, phba->mbox_mem_pool);=C2=A0 /* error path */
 
-Thanks,
-Ahmad
+So mboxq is freed, then used for a mailbox command to the HBA
+(use-after-free), and may be freed again on the error paths
+(double free). This runs on every SLI-4 HBA probe, which matches
+the hang about 2 seconds into boot.
 
--- 
-Pengutronix e.K.                  |                             |
-Steuerwalder Str. 21              | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
+Moving the mempool_free() at line 8178 to after the
+lpfc_get_sli4_parameters() call and its error handling, as in
+mainline, should fix it. Other stable branches that took this
+backport may be worth checking for the same placement.
+
+Downstream report: https://bugs.debian.org/1151377
+
+#regzbot introduced: 299f5baa1321a0951cc3ebbacc72b67433a65391
+
+This is a production server, so I can only test during maintenance
+windows, but I am happy to test a fix.
+
+Regards,
+Alexander Antonakakis
+
+--=20
+Alexander Antonakakis
+Information Systems Department
+Mediterranean Agronomic Institute of Chania (MAICh)
+Alsyllio Agrokepiou, 1 Makedonias str, Chania, Crete, 73100 GREECE
+=CE=A4. +30 28210 35000 ext.718 | =CE=95. antonakakis@maich.gr
+
+--
+=CE=94=CE=B9=CE=B5=CF=85=CE=BA=CF=81=CE=AF=CE=BD=CE=B9=CF=83=CE=B7 =CE=B7=CE=
+=BB=CE=B5=CE=BA=CF=84=CF=81=CE=BF=CE=BD=CE=B9=CE=BA=CE=BF=CF=8D =CF=84=CE=B1=
+=CF=87=CF=85=CE=B4=CF=81=CE=BF=CE=BC=CE=B5=CE=AF=CE=BF=CF=85
+=CE=9F=CE=B9 =CF=80=CE=BB=CE=B7=CF=81=CE=BF=CF=86=CE=BF=CF=81=CE=AF=CE=B5=CF=
+=82 =CF=80=CE=BF=CF=85 =CF=83=CF=85=CE=BC=CF=80=CE=B5=CF=81=CE=B9=CE=BB=CE=B1=
+=CE=BC=CE=B2=CE=AC=CE=BD=CE=BF=CE=BD=CF=84=CE=B1=CE=B9 =CF=83=CE=B5 =CE=B1=CF=
+=85=CF=84=CF=8C =CF=84=CE=BF =CE=BC=CE=AE=CE=BD=CF=85=CE=BC=CE=B1 =CE=B5=CE=AF=
+=CE=BD=CE=B1=CE=B9 =CE=B5=CE=BC=CF=80=CE=B9=CF=83=CF=84=CE=B5=CF=85=CF=84=CE=
+=B9=CE=BA=CE=AD=CF=82 =CE=BA=CE=B1=CE=B9 =CE=B7 =CF=87=CF=81=CE=AE=CF=83=CE=B7 =
+=CF=84=CE=BF=CF=85=CF=82
+=CE=B5=CF=80=CE=B9=CF=84=CF=81=CE=AD=CF=80=CE=B5=CF=84=CE=B1=CE=B9 =CE=BC=CF=
+=8C=CE=BD=CE=BF=CE=BD =CE=B1=CF=80=CF=8C =CF=84=CE=BF=CE=BD =CE=B1=CE=BD=CE=B1=
+=CF=86=CE=B5=CF=81=CF=8C=CE=BC=CE=B5=CE=BD=CE=BF =CF=80=CE=B1=CF=81=CE=B1=CE=
+=BB=CE=AE=CF=80=CF=84=CE=B7. =CE=95=CE=AC=CE=BD =CE=AD=CF=87=CE=B5=CF=84=CE=B5 =
+=CE=BB=CE=AC=CE=B2=CE=B5=CE=B9 =CF=84=CE=BF =CF=80=CE=B1=CF=81=CF=8C=CE=BD =CE=
+=BC=CE=AE=CE=BD=CF=85=CE=BC=CE=B1 =CE=B1=CF=80=CF=8C =CE=BB=CE=AC=CE=B8=CE=BF=
+=CF=82 =CE=BA=CE=B1=CE=B9 =CE=B4=CE=B5=CE=BD
+=CE=B5=CE=AF=CF=83=CF=84=CE=B5 =CE=BF =CF=80=CF=81=CE=BF=CE=BF=CF=81=CE=B9=CE=
+=B6=CF=8C=CE=BC=CE=B5=CE=BD=CE=BF=CF=82 =CF=80=CE=B1=CF=81=CE=B1=CE=BB=CE=AE=
+=CF=80=CF=84=CE=B7=CF=82, =CF=83=CE=B1=CF=82 =CE=B5=CE=BD=CE=B7=CE=BC=CE=B5=CF=
+=81=CF=8E=CE=BD=CE=BF=CF=85=CE=BC=CE=B5 =CF=8C=CF=84=CE=B9 =CE=B1=CF=80=CE=BF=
+=CE=BA=CE=AC=CE=BB=CF=85=CF=88=CE=B7, =CE=B1=CE=BD=CE=B1=CF=80=CE=B1=CF=81=CE=
+=B1=CE=B3=CF=89=CE=B3=CE=AE, =CE=B4=CE=B9=CE=B1=CE=BD=CE=BF=CE=BC=CE=AE =CE=AE =
+=CE=BF=CF=80=CE=BF=CE=B9=CE=B1=CF=83=CE=B4=CE=AE=CF=80=CE=BF=CF=84=CE=B5
+=CE=AC=CE=BB=CE=BB=CE=B7=CF=82 =CE=BC=CE=BF=CF=81=CF=86=CE=AE=CF=82 =CF=87=CF=
+=81=CE=AE=CF=83=CE=B7 =CF=84=CF=89=CE=BD =CF=80=CE=B5=CF=81=CE=B9=CE=B5=CF=87=
+=CE=BF=CE=BC=CE=AD=CE=BD=CF=89=CE=BD =CF=84=CE=BF=CF=85 =CF=80=CE=B1=CF=81=CF=
+=8C=CE=BD=CF=84=CE=BF=CF=82 =CE=BC=CE=B7=CE=BD=CF=8D=CE=BC=CE=B1=CF=84=CE=BF=
+=CF=82 =CE=B1=CF=80=CE=B1=CE=B3=CE=BF=CF=81=CE=B5=CF=8D=CE=B5=CF=84=CE=B1=CE=
+=B9. =CE=95=CF=80=CE=AF=CF=83=CE=B7=CF=82 =CF=80=CE=B1=CF=81=CE=B1=CE=BA=CE=B1=
+=CE=BB=CE=B5=CE=AF=CF=83=CE=B8=CE=B5 =CE=BD=CE=B1
+=CE=B1=CF=80=CE=BF=CF=83=CF=84=CE=B5=CE=AF=CE=BB=CE=B5=CF=84=CE=B5 =CF=84=CE=
+=BF =CE=B1=CF=81=CF=87=CE=B9=CE=BA=CF=8C =CE=BC=CE=AE=CE=BD=CF=85=CE=BC=CE=B1 =
+=CF=83=CF=84=CE=B7=CE=BD =CE=B4=CE=B9=CE=B5=CF=8D=CE=B8=CF=85=CE=BD=CF=83=CE=
+=B7 =CF=84=CE=BF=CF=85 =CE=B1=CF=80=CE=BF=CF=83=CF=84=CE=BF=CE=BB=CE=AD=CE=B1, =
+=CE=BA=CE=B1=CE=B8=CF=8E=CF=82 =CE=BA=CE=B1=CE=B9 =CF=83=CF=84=CE=B7 =CF=83=CF=
+=85=CE=BD=CE=AD=CF=87=CE=B5=CE=B9=CE=B1 =CE=BD=CE=B1 =CE=B4=CE=B9=CE=B1=CE=B3=
+=CF=81=CE=AC=CF=88=CE=B5=CF=84=CE=B5 =CF=84=CE=BF
+=CE=BC=CE=AE=CE=BD=CF=85=CE=BC=CE=B1 =CE=B1=CF=80=CF=8C =CF=84=CE=BF =CF=83=CF=
+=8D=CF=83=CF=84=CE=B7=CE=BC=CE=AC =CF=83=CE=B1=CF=82.
+=CE=97 =CE=B5=CF=80=CE=B9=CE=BA=CE=BF=CE=B9=CE=BD=CF=89=CE=BD=CE=AF=CE=B1 =CE=
+=BC=CE=AD=CF=83=CF=89 Internet =CE=B4=CE=B5=CE=BD =CE=B5=CE=AF=CE=BD=CE=B1=CE=
+=B9 =CE=B1=CF=83=CF=86=CE=B1=CE=BB=CE=AE=CF=82 =CE=BA=CE=B1=CE=B9 =CE=B5=CF=80=
+=CE=BF=CE=BC=CE=AD=CE=BD=CF=89=CF=82 =CF=84=CE=BF =CE=9C=CE=91=CE=99=CE=A7 =CE=
+=B4=CE=B5=CE=BD =CF=86=CE=AD=CF=81=CE=B5=CE=B9 =CE=B5=CF=85=CE=B8=CF=8D=CE=BD=
+=CE=B7 =CE=B3=CE=B9=CE=B1 =CE=BF=CF=80=CE=BF=CE=B9=CE=B1=CE=B4=CE=AE=CF=80=CE=
+=BF=CF=84=CE=B5
+=CE=B8=CE=B5=CF=84=CE=B9=CE=BA=CE=AE =CE=AE =CE=B1=CF=80=CE=BF=CE=B8=CE=B5=CF=
+=84=CE=B9=CE=BA=CE=AE =CE=B6=CE=B7=CE=BC=CE=B9=CE=AC =CF=80=CE=BF=CF=85 =CF=80=
+=CF=81=CE=BF=CE=BA=CE=BB=CE=AE=CE=B8=CE=B7=CE=BA=CE=B5 =CE=B1=CF=80=CF=8C =CF=
+=84=CE=B7=CE=BD =CF=87=CF=81=CE=AE=CF=83=CE=B7 =CF=84=CE=BF=CF=85 =CF=80=CE=B1=
+=CF=81=CF=8C=CE=BD=CF=84=CE=BF=CF=82 =CE=AE =CF=84=CF=89=CE=BD =CF=83=CF=85=CE=
+=BD=CE=B7=CE=BC=CE=BC=CE=AD=CE=BD=CF=89=CE=BD =CF=84=CE=BF=CF=85 =CE=BB=CF=8C=
+=CE=B3=CF=89 =CE=B9=CF=8E=CE=BD =CF=80=CE=BF=CF=85
+=CE=AD=CF=87=CE=BF=CF=85=CE=BD =CF=80=CE=B5=CF=81=CE=AC=CF=83=CE=B5=CE=B9 =CF=
+=83=CE=B5 =CE=B1=CF=85=CF=84=CE=AC.
+
+Email Disclaimer
+The information in this email is confidential and is intended solely for the ad=
+dressee(s). If you have
+received this transmission in error, and you are not an intended recipient, be =
+aware that any
+disclosure, copying, distribution or use of this transmission or its contents i=
+s prohibited.
+Furthermore, you are kindly requested to send us back the original message to t=
+he sender=E2=80=99s address and
+delete the message from your system immediately.
+Internet communications are not secure and therefore MAICh does not accept lega=
+l responsibility for the
+contents of this message and for any damage whatsoever that is caused by viruse=
+s being passed.
+
+
 
