@@ -1,97 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792507963;
-	b=J0QXY8Z5+/qWhWcrYmrizUf+6YJNPNWsuWFYVpTEXTwMk55r3t8wZWtwQLo03vjPKCzD
-	 2uZeTycQKx6O6xwA4MYp54XztMpIHwyAej9zR+0LJofLLVhttanmDE1VT8XkQc9drNYfF
-	 AjmksHxYhnOj3p0iyKGjwzPMCUVKqVPEITufjSU2Fnur0snfUzBav4jnlYalZKtJV2bdk
-	 bZLNNqMxAENjRbvK/vMAkX96orXVvZ4shzMOXbLsnudR2OIQgYfzla1BZHKB8Njy9ipX4
-	 M5CERJNP6W00l+M4zr/zqloccH1WBITtPbZA+rO3thfNPHlcjPT1AtZ59GJ0yxd0nzg==
+	t=1792510224;
+	b=GmB3+GGahKsZlQdE98tTWFjQkHkkPNysQCudzJzfNLQEz/itKueJiAX+Gl/KSdFwCD/q
+	 4pHSLUcTzFcSakeq4yYZfL9DbTqYmL3jc6amvwb+X91wn/LU+w07sJn6xltyl/EhddfGI
+	 nY4Zuod67htnn4YiaKeLaR2J0Xi8/YFMlwJJ0lZcdmsmuonHYE+GZYKfCD7C+1WEaijvE
+	 u3ASuXw8xhygzqbS0qj0UDgbFQSlW13FS2LVJDAlY0elXocRXm19XsUdoiWqCP4Lo1muV
+	 uV9Uiz+JrxcMyPtIcNL7O8UkLbeD9wVPfeqrKJ4zx/Hq1n5lbeGVOV8U9Kf8hkunBIA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792507963;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=gt6Y85M4kAfgeFbvU9seGRhqfBj39ecJG/UgGwQgng8=;
-	b=kn7dUAwdtP6Z7VU2leP2lDOpHSVY17MuOQbsldGARXfGMY7i2+WhvEpohZcqJpUZS/xv
-	 WNYmjeeokXKgc2lRdmuAWq4SoNTTX5nKkWj16km8C1qG+lUaqJ/ZpKbjewwCoE3LDpRxM
-	 j1Mwd0KHks7xgG4q+Kfwcsea7BodeW4g3dat3REZUAciWBYjDFdx3rMmxWzhaPu6FmQuw
-	 SjgJjyTUm59o43Bxd5tuQmaW7JVTH7iKQC7ggNbWQ0F7d3xl68vlCx/AxDM/ivzitnn+D
-	 N+LJfU5WiEHQKHOqLqdUoVN6JBkHHOMt499nzuMoncPcZNOv2x9JPbhr8aZrMYtR9tQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792510224;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=S/U4JzwehEMfHHHvpjoH2FZe7sSxuLvt2HA+3e+lY/o=;
+	b=ojqDtDUYLk8F0HWWrxTn+PiIwjincTGonBO/9KFPbnSroNYriI0Eu6nEIzXtSDLWymqE
+	 DmQAUhvyIp9Jk2j+XJA/FT6nY4+7gnC1L7La7w38Tl04lNG9wGt0KeQwcFd4IdxAh8y/l
+	 H/2jJOHJd+XTTdgGj9F/8zusluweF3WgbIbA/6E0WjZOvnKz2tRX1TXfnYjx0z1VMiVOY
+	 bYe84iSscoNZC2DZaAm3o6fAvXSvSj14xo3PNOh2oE3WnA6JPFxnN3ZBQ26AKW/0x7Drb
+	 7VdncqmVmaR9SMvsg3kVKp9DNdFN2NHz0otT8RZ8awzCqpoAKUzc8WoYd1SA3w2l09w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fxGG8Vjp;
-	arc=none smtp.remote-ip=209.85.128.48
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=F5fiIOM5;
+	arc=none smtp.remote-ip=188.68.63.98
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B063606A320
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 14:52:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2B063606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA5F606A33E;
+	Tue, 20 Oct 2026 15:30:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FA5F606A33E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fxGG8Vjp
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4a1d484b4a9so42522275e9.0
-        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 07:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792507961; x=1793112761; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gt6Y85M4kAfgeFbvU9seGRhqfBj39ecJG/UgGwQgng8=;
-        b=fxGG8VjpZ9vgAm23CRFYwbEqaOS3ROzjbrT2qQAw1Hl7Ov2BIuhs/pYzW1Vb93mEIm
-         BgcCBYhAVRNQGIQN1prJn5IdoASj2vx4eU+IvUwpZikjm6BguQEWzDJ90oLz37kJVFXE
-         as2ec8U9KXCSWOl/ZCLv8nCcZh+BUoyam8m6tgtl89i24Zzr3LWuptZ7xLIqeGyqL3J1
-         qeyH+dH3a1gDc/aGvaCnvmV15ixk0Ki65wf8Be9M7lDqyYFZaQMm46IKXP80SCHCX3I5
-         7aFjURkgIWCJxwUfAqpZXTLSDYpKJ5pBrGnNTN0F0eRUVEcSZfS2aUOJM8yRNud0/B55
-         TDcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792507961; x=1793112761;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gt6Y85M4kAfgeFbvU9seGRhqfBj39ecJG/UgGwQgng8=;
-        b=iBKtluLiz78/ZHFP2y25SiKDuX0dK9AsaCNCKGrgzLTUpzMlShfX0Op5YuwpWpx7bS
-         avlS5QxTOHLBujlAh5GKl7+AxTDgRYXFOs7en9ZwPuO0DjBw6ZubSSIfYs+NVERz695n
-         i3mCpT9z4YDnLRBUK/2FQfyT9OHZhhnt+16cQzc4o8NsRPIJc/8sizf5uV3nBVl0rzl7
-         uz7kyrCYaAQLVOhoSB2jcN4YWAfhn3gsmunnYKlgLJSKIMgYHHFM2m9B5G5jmBbIlOxj
-         s8PHDtWJ1F6pIlyj9G9EiaH2g0xSzCoBH6nvz+FgmO96TUmh5QeaX1GzyFm5DSushP58
-         te8w==
-X-Forwarded-Encrypted: i=1; AKwUvBx2ylrSVkhcb5C7yCaM4jAts8fu8/bs2rlqx4gwTVMTCFPeg27fp7SiLA9nHeGaU0YQ+Fw/f5vNDNdr8A==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJn2j8MpwU55OeJ2hWB/YLP3GGtIGrX9JWJgT/UrsKShReYlKYI
-	Wp5rdvPiFQoKQ+9kpu95kYDtDmvKv8P2uSzrCMUm/sma7fmGL2CJQpY3
-X-Gm-Gg: AYBFou3crB+C9S95LCBPdN0sFVIetJIvGk76sJmgIQA6mpiPH05kUhIezwmjKrwmiAS
-	RVaCIRKd9VqDcxDHX4/gooQJJ6DXCVRKVrpj91S7PU2q7fZ/EqQmm4Vn2MR9Zt0ezDnpA/5Raa5
-	IT2Xo3+RT0EBYW6jYW0RXjCBizuYZy0uzvUBLpTqeE3s17agg5S1GV8RQskbkp/7T9EP6qA6UfE
-	SAgoRgpXFGnpV/K+zxGxmBp33iYWPnCuYnMpWPEVA9sRSwmGWqCM64VdpOvEUHI2vRDPSAVZlZ3
-	5Y2377cY108Nba+65uWGf5gxaEzibn7v7OBe19OhOmBpvEevlcgRiv/OFt7BtVMLMli4Et8aPi1
-	vakY9NVLEA9fWCGZPMsEM5m0dfrmEPSTuXOrC7B3JnwJxQ+qErDhPMkXg33KNqWRmATqxPUjXmQ
-	Ezl5RD/vvej4+4bCxvCuelYD6t2MXNTLOVUSYQ4OUNbHosmtaio8z3TFIcV+uzU4XClnjsfx2yB
-	QSfsXCf/YVtVrmrZKnkIQXBoFu7eWYRHlFi8mx+VqqxwZ0fU7GXjbS3vZJ+5adXGQDiVFJpJhOc
-	MMqwzWDGYu5q6/oboAqHiB7DGdma3qRhQQjHg8LrbnGG1bOiTXX4g0U0CA==
-X-Received: by 2002:a05:600c:83c9:b0:4a1:7ec7:a479 with SMTP id 5b1f17b1804b1-4a1d764145cmr213720455e9.33.1792507961101;
-        Tue, 20 Oct 2026 07:52:41 -0700 (PDT)
-Received: from p15v.lan ([217.169.3.90])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1cdf2f0d1sm211770555e9.2.2026.10.20.07.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 07:52:40 -0700 (PDT)
-From: Peter Morrow <pdmorrow@gmail.com>
-To: tariqt@nvidia.com
-Cc: petr.pavlu@suse.com,
-	yishaih@nvidia.com,
-	leon@kernel.org,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: net/mlx4: no ib device for Ethernet ports without IBoE since v6.6
-Date: Tue, 20 Oct 2026 15:52:39 +0100
-Message-ID: <20261020145239.3798017-1-pdmorrow@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261014133951.3219055-1-pdmorrow@gmail.com>
-References: <20261014133951.3219055-1-pdmorrow@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=F5fiIOM5
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4j8GZH4vMcz6J5H;
+	Tue, 20 Oct 2026 17:30:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1792510215;
+	bh=K3s6UFxK4aWHUkKinYaPkMGw3skwtI6Rt2//TEvbxh4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=F5fiIOM52+qZdN2+S5o1XYroAJiDQsPzxCWk8Udta/L9Cx3mnEpT6wmCZaOZdnA9L
+	 jGZp41rGnWvExMJhBm7wpsBM2lr7OrAZdWoLN3gsYn5UogaqwemH5LlUdPArVS/jaC
+	 V6vUDELKQgCrc0lFExaV42R2BBUEy8E647FWhTcYDVbDmOXj1tjFYHAsDyal0lloe2
+	 sTbhYPEJhLJMvjQUm7tqPiPfWfHn9yGvKCWe7mf6l3FoDsCCmS6iA7e5qKatR1bjid
+	 gxYeAGYoRMzFxHiZ5wYhfgUB/OFscM8DySX9It4UjyNBes/dpaa8pw0kGe/qkIst8I
+	 XhAwY+FqyZHvg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4j8GZH49K5z4xKw;
+	Tue, 20 Oct 2026 17:30:15 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j8GZH0DFzz8trp;
+	Tue, 20 Oct 2026 17:30:13 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 15E425F9C8;
+	Tue, 20 Oct 2026 17:30:09 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ba44dffc-0f1e-4cfc-9c7b-7d41f89bc71d@leemhuis.info>
+Date: Tue, 20 Oct 2026 17:30:07 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -101,9 +79,36 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_next/master=3A_=28build=29/tmp/kci?=
+ =?UTF-8?Q?/linux/kernel/sched/ext/ext=2Ec=3A5690=3A68=3A_error=3A_=E2=80=98?=
+ =?UTF-8?B?c3RydWN0IHNjeF9kLi4u?=
+To: kernelci@lists.linux.dev, kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
+References: <179243994358.157792.10951804910694087418@kernelci.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <179243994358.157792.10951804910694087418@kernelci.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <179251020937.1552927.12618068910420241148@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 15E425F9C8
+X-NC-CID: lB18sksa1V8RC++5hU/os0h4DvRkn/8sgykZqeTC3g77XUVG6a8=
 
-Apologies for all the resends, email client issues are
-now resolved.
+On 10/19/26 21:59, KernelCI bot wrote:
+> New build issue found on next/master:
+> 
+> ---
+> /tmp/kci/linux/kernel/sched/ext/ext.c:5690:68: error: ‘struct scx_dispatch_q’ has no member named ‘pcpu’ in kernel/sched/build_policy.o (kernel/sched/build_policy.c) [logspec:kbuild,kbuild.compiler.error]
 
-#regzbot ^introduced: 7d22b1cb9d84
+This afaics was caused my a mishap in a merge conflict resolution or
+something like that -- and gone today.
+
+#regzbot dup:
+https://lore.kernel.org/regressions/179243994625.157792.5761151975328981641@kernelci.org/
+#regzbot dup:
+https://lore.kernel.org/regressions/179243994757.157792.6578749550685907930@kernelci.org/
+#regzbot dup:
+
