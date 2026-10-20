@@ -1,104 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792496946;
-	b=0+Uh9Yq0QvDmMtVyEwtap0aRcf9CfekYLwDxmLBhd1AJHG+OdTy5O7ljEH2/n/WZCjjH
-	 dvQH+VJWqJ+UawWiVRwextEU2Pvd9sghQzU6uUDT/UTlhkb4pT1uawGcLHCHM5Fx65Aaa
-	 J9H+inaI659Tu7jIDc+n8qx2Of8I+/P3N66Jh27pNgaPHGhI+nKj5rKOLl27dhPvOK26j
-	 QWSEBcfIF/IWd+a64nlBBZ+Ln9gMXunewyfMZ/JPA+iMvrN7uiWscT7in4a6Fzj70r74p
-	 BhM+pTFKnAZeoX0Iw83n0uC0tp7Y9oZowaQY+EqYaBTz0sWm6PpVMmCq8IoStWlhHmQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792496946;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:Autocrypt:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Rspamd-Action:
-	 X-Spam-Score:X-Spam-Flag:X-Spamd-Result:X-Spam-Level:
-	 X-Rspamd-Queue-Id:X-Rspamd-Server;
-	bh=BOrAALLZoUH5TBAvtzXGTVCs0YUIrfQziVPbeH0AYZk=;
-	b=yp9pauP2lX+4HsxGwXW0IBw0bmSitEGzNFJHAbUlBwfVdNMnco/JrlSZbvXThuRBTrv8
-	 ftruWK+xNKktqa3GWnSe4HWk3Cc7G0ugTqicigM0h3sT74Zn5cRA5w7bq+5Hg7QDRIMI9
-	 9Al6XLUr6s5IiZyJTuWI5hh67ywEFMzZUj7l9+AcP+2H2GSMVt3NXc2j+m+KjqSBiP5Yg
-	 SLg+aUg9WVGElh0bcVX/GMvBA6IVoArRZncqpRxY3MM7mb5lfibU4obg5Tqu2Xas1PB6X
-	 X3EQpRbK+bBQlOA6cMoDd6j0NpIGp3GCsxo+iiZ1tSOSgVp8XX/2knatdoispH6T2Dw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=QWbpmRRS;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=NWsxM4Sg;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=QWbpmRRS;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=NWsxM4Sg;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.182
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792496986;
+	b=DhqbTKpJxp9BOKxNlJ9SW0rRaKVCOZd9ZZN2N6iZcL9imffkJ/92Ufpvvy4hImNTJ6la
+	 gucg40GUYGjLOYnc8Rym+Jk2B2qWk/ez3/HC8P8ECeroMSi4GxOvqKYavarRVRXbO1wAc
+	 0uyS114co+dVKFBPyMLfztEjNKsGBpgsYza+xfKK8ql+f4NRbkN9Lg2sZLX7x90FHmJbc
+	 3MJ4KTFZxD/5apWSsABZpJAOvzJ6Cwvrj3cVUTY/GD9NJo5E1OOKnLP3a+8FKVqBBGAXJ
+	 2DaFlP7245GLqHbt02gRM2UyTIpX5ic4T+sVY+qXDy9DmjLG2/Ys179lb+7gq1m7gHQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792496986;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=XLGNYitZ4EdMcotU/GOI9I5PtjbgIsDlPVNeP1wv+jI=;
+	b=XmaNBK9q4b+yDkt5oxgpRnyYGM28mWapbOPEjEjtj/8mW5SCGlGX79GttIRfjIpBGbqK
+	 GXRSAus44kOb4lS0bnJK9M2/7tKG8Zz1eoHAcjnMqTtauhk50AOgXzRXQYsuhMIM4/k+x
+	 jtBPS/OqST2o36uJ8h9O7Tfa2rFknZQObJRR26jB4QaP6xxKXdswLEI/a69iATj7j/PLP
+	 XhwguZGTk1wPEkUyto99R5sOqx3nwDhw5ZIX8Do1e018che9byGBG9g2mXjqNeJ493QKh
+	 HXyJLSVpUlnveU9fbgBajBZK3O3KCwQk8sVNk/f8z7doVaxFPdxin4iGKW8PCshxmCA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=kiddier.org;
+	spf=pass smtp.mailfrom=kiddier.org;
+	dkim=pass header.d=kiddier.org header.i=@kiddier.org header.a=rsa-sha256 header.s=google header.b="P/U5Q2Qu";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.182
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30507606A31B
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 11:49:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30507606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FEF606A31D
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 11:49:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04FEF606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kiddier.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kiddier.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=QWbpmRRS;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=NWsxM4Sg;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=QWbpmRRS;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=NWsxM4Sg
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 41E931F7B4;
-	Tue, 20 Oct 2026 11:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792496939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BOrAALLZoUH5TBAvtzXGTVCs0YUIrfQziVPbeH0AYZk=;
-	b=QWbpmRRS6AZN1XbgMF67CO6zRLIGk3FbX838PcCZJheIReioFfgmBNG/5MkLUMPrXrh2Ms
-	GZl2mnT6WaCXzggpy06xuCg/siK5UYxPgejnZ8d6M3vrmT35H3KJJ6oziBWJUz5AaKxgrO
-	4mAR9HiRp08IAB5bApN3XiW4A/0eNTI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792496939;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BOrAALLZoUH5TBAvtzXGTVCs0YUIrfQziVPbeH0AYZk=;
-	b=NWsxM4SgtbiWEMavfVNSLcG5rXgAfzcsgVlokyXN6tDVPccsyhRnL3H4IuapXZ6RNovIUS
-	6tY+GkdltGbMS0Dw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QWbpmRRS;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=NWsxM4Sg
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792496939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BOrAALLZoUH5TBAvtzXGTVCs0YUIrfQziVPbeH0AYZk=;
-	b=QWbpmRRS6AZN1XbgMF67CO6zRLIGk3FbX838PcCZJheIReioFfgmBNG/5MkLUMPrXrh2Ms
-	GZl2mnT6WaCXzggpy06xuCg/siK5UYxPgejnZ8d6M3vrmT35H3KJJ6oziBWJUz5AaKxgrO
-	4mAR9HiRp08IAB5bApN3XiW4A/0eNTI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792496939;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BOrAALLZoUH5TBAvtzXGTVCs0YUIrfQziVPbeH0AYZk=;
-	b=NWsxM4SgtbiWEMavfVNSLcG5rXgAfzcsgVlokyXN6tDVPccsyhRnL3H4IuapXZ6RNovIUS
-	6tY+GkdltGbMS0Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CDF39136C6;
-	Tue, 20 Oct 2026 11:48:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jLRhKipV12rCFQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 20 Oct 2026 11:48:58 +0000
-Message-ID: <3a4c4a4d-6ab4-42b6-8ae6-7ca0730b8069@suse.de>
-Date: Tue, 20 Oct 2026 13:48:58 +0200
+	dkim=pass (1024-bit key, unprotected) header.d=kiddier.org header.i=@kiddier.org header.a=rsa-sha256 header.s=google header.b=P/U5Q2Qu
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5e941201909so945337e0c.3
+        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 04:49:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792496985; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Yl2etUOwADeM6egwDd05QN3AYpexiXRRma/zCXUcC8j3iS7flTc0Gs8QTA+kPZa361
+         w8E/hht7EjlPiSI6BSDwh6GF5cNO7s0XHfFvhv9efxZXJIADQQ1k/Cca63ObDJqKMfc3
+         Hw2TVRXam8gDkVCqCXeSYeQksGRaSdq+j10kEJKCwC/Z5wKKQg2WkkhQWOGH9zi165XA
+         UrhFF+NARUbIh/1eo2ylvn3tOg7aJMg/W7RkiEBsjTEU8oai4oWyfDvm95ZB/1wZYZGD
+         1D4wfbHmFUjClDJ/t35YqbJ2WWLp9dT1+v1CmzRDCoeS+Fz9uYeSFIZWfNj1q6rOKknm
+         OqQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=XLGNYitZ4EdMcotU/GOI9I5PtjbgIsDlPVNeP1wv+jI=;
+        fh=skWnpgbiqiVXFnBjR7YHUzB3tHnoOijQad/YpVfQVLE=;
+        b=LM18jCww9MyHVdMQWnTi5m1QhlPxYAhX68+miNcH3GPN8u1ev3llf03+/hr9gSAWph
+         OVqfpzvicbv5dKo5GhTcJLkAU29G5IEHrbvirlALnQ/J4//UsUY8FSz7ButeMy+HHpDe
+         FG434DzeyaPbVl8llOZPGGwlIWjmt6S3TKOgWl1LIf6em7iCH0ecufqYULaB+/8AES4p
+         2YmQkvdrelpSBTlG1HzHqkBo9A3v1GTCi6d72snpcCjCYF8T8Hgbdc5uSHpzRWtWEfxe
+         EBe7KV6jEa7uUgieBHz/rZV4sIc1Qgh5DIEGeVMKOs3vrCWo+6Cq9OahfwDVrYea95Co
+         8BmQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kiddier.org; s=google; t=1792496985; x=1793101785; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XLGNYitZ4EdMcotU/GOI9I5PtjbgIsDlPVNeP1wv+jI=;
+        b=P/U5Q2QuVUDd1Un3eSLXVWoANCWilmXwgEvWrdteXJQ4Enf+zVwpFY07RNGUDSi06m
+         jawhPcM4C42kA9OMWqcDmvDXyFz0fwg+F6Of3MGTrUVPUUk2mDfr7lxya5qm2z++Qeim
+         WfVrm1bvVSx21f1MV+3FNvZaNLy8sgnYJRWKw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792496985; x=1793101785;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XLGNYitZ4EdMcotU/GOI9I5PtjbgIsDlPVNeP1wv+jI=;
+        b=ooJqMHUYD+MeZ2Xsi2XFoX+Py2xsTAjTet/TZ0ehZuWna+iz8OJ++EB/TQ7eMqmKbw
+         f6/LmOj7zfekY/kMVMkP4/00deeGIrY9uj5kASDEcCEnTJSSq4G3aCpyOcf3PlKARMQf
+         89N2oyoQCc1iWgja95wZ1FUqY3EnSBcVyzk9kuKUOXcwzxzUrzhExHArOBT2czDVMQkM
+         UaOcRizbeqbvpYu50EdUOXAoYOvaTOCL3BgdAj8ONHNHHW917trbJ7xDQQoqXujT9508
+         RwGBr87clWv8XVXnlsU+caTT/yTCjAVT2TA5uYXL6yJ6weDjQmBKLn/zoC1CdtTm0shD
+         NrjA==
+X-Forwarded-Encrypted: i=1; AKwUvBxgQ9D7Tnn004hbW5JLSGkzGNca/DSz5ihY6Dzs7Anq1C3wiwFWMFMgfCvNxPXNWFIrE6rphOlhp9dbNg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJD9ksV0CWb1HWRuf8T/unFI+u6MQp+HhkvRXWtDgiHE0DWkmYY
+	ZY1tbzJFx8CN+iJBPKRQlivvWQCSWxaspIb5w6kp7vyEyIZW5ilf4xts3teNDUsZgwYuf6zSWyM
+	LXVwcEacXo1LX2IHcLmgiQ0r/mvzMthkB1BB3U8J3gQ==
+X-Gm-Gg: AYBFou3TMI9/Ue6yITYncYYxBpQuRF2uPWOgpjyomo14DfwsaYRnQ5AYlpK6JtO7pp2
+	9pGqUzLzShePxpDuCYXh/ZXoEeW2v2YKOERcGYCmZX3GgIxuhs5Gsg1B61RYa4b9mD5IwlsBxeX
+	lXIxBf3QS4380oaY47FCQa/xfdHK8HQNSEXwcfe8mOByngWBm3AwibMOI7qAYDY3TjwKHKWM79v
+	m5R/Ut9aDeJEUghEKaJQ7YngC6KbKzeTm8Izdz30PL5dQ3OoZMArjbbMFfg4tIwipFz7zIuOzOG
+	z6t0omTAkhKcalosZ/Z7ljxy1AKdzvyefjq7zmM0KxXXLVYhK4a5bnNouA==
+X-Received: by 2002:a05:6122:8c1:b0:5da:9b81:1aa4 with SMTP id
+ 71dfb90a1353d-5eaaa3c174cmr3451932e0c.5.1792496984909; Tue, 20 Oct 2026
+ 04:49:44 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -108,193 +99,118 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/hyperv: add a parameter to disable the vblank timer
-To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-Cc: Lanfeng Wei <xlfylawarthur@gmail.com>, airlied@gmail.com,
- decui@microsoft.com, dri-devel@lists.freedesktop.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- longli@microsoft.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- regressions@lists.linux.dev, simona@ffwll.ch, ssengar@linux.microsoft.com,
- stable@vger.kernel.org
-References: <c238f4ff-d5d8-4a9a-8773-793bd9056c9b@suse.de>
- <20261019154121.6257-1-xlfylawarthur@gmail.com>
- <8e91baa4-1ca5-43b8-bb04-9b5e3630bc2b@suse.de>
- <atZjtSlZAocUWYBS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <atZjtSlZAocUWYBS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Action: no action
-X-Spam-Score: -4.50
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,microsoft.com,lists.freedesktop.org,vger.kernel.org,linux.intel.com,kernel.org,lists.linux.dev,ffwll.ch,linux.microsoft.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.com:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,bootlin.com:url];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 41E931F7B4
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+References: <CA+3E589O46nj=c1Y+Rwk_nPZZKEUjFvMfWaAFmQ2-7De9iUxFw@mail.gmail.com>
+In-Reply-To: <CA+3E589O46nj=c1Y+Rwk_nPZZKEUjFvMfWaAFmQ2-7De9iUxFw@mail.gmail.com>
+From: Peter Kiddier <peter@kiddier.org>
+Date: Tue, 20 Oct 2026 22:49:33 +1100
+X-Gm-Features: AclHuK_KgzridKLRANvtLJkSHaLWJWHnmxsRRdoNj6COaR_e09DKIcJwjLUSHC0
+Message-ID: <CA+3E58-2N-uVNsmwvOGDKZvtnDQ1DF=GzFbTyRLuN8FpAd4qdg@mail.gmail.com>
+Subject: [REGRESSION] BCM4355 Wi-Fi fails with Intel IOMMU on 7.3.0-2-t2-noble
+To: linux-wireless@vger.kernel.org
+Cc: brcm80211@lists.linux.dev, iommu@lists.linux.dev, 
+	arend.vanspriel@broadcom.com, regressions@lists.linux.dev, jgg@nvidia.com, 
+	kevin.tian@intel.com, joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+Adding the IOMMU maintainers and linux-kernel.
 
-Am 19.10.26 um 20:38 schrieb Hamza Mahfooz:
-> On Mon, Oct 19, 2026 at 06:03:55PM +0200, Thomas Zimmermann wrote:
->> Hi
->>
->> Am 19.10.26 um 17:40 schrieb Lanfeng Wei:
->>> Hi Thomas,
->>>
->>>> Yeah, what's the cause of it? Switching off features does not fix any
->>>> bugs or improve the status quo.
->>> You are right that the module parameter is only a workaround for users
->>> affected; it does not fix the underlying scheduling problem.
->>>
->>> The cause is that the synthetic vblank timer is used to pace completion
->>> of atomic updates triggered by dirtyfb, in addition to providing
->>> synthetic vblank events. In Xorg's software-cursor path, pointer motion
->>> damages the primary framebuffer and the damage is instantly submitted
->>> via DRM_IOCTL_MODE_DIRTYFB. The Hyper-V dirtyfb path performs a
->>> synchronous atomic commit, and with the vblank timer enabled that commit
->>> can wait for the next simulated vblank. Under continuous pointer motion,
->>> these commits dominate the update path and delay normal client updates,
->>> resulting in sever frame-rate drops.
->>>
->>> This particular regression results from the combination of the blocking
->>> dirtyfb path, synthetic vblank pacing, and the absence of a Linux DRM
->>> cursor plane in Hyper-V. While the Hyper-V video protocol does have a
->>> hardware-cursor command path, the upstream hyperv_drm driver currently
->>> exposes only a primary plane. Cursor plane support was deferred during
->>> the initial upstreaming [1]. Without a cursor plane, Xorg has to fall
->>> back to software cursor-rendering path and it competes with periodic
->>> graphical updates on the primary plane.
->>>
->>> So the proper long-term fix could be adding cursor plane support in the
->>> Hyper-V DRM driver, which may take some time. Providing that the stated
->>> purpose of the offending commit is to rate-limit display updates, while
->>> its current implementation regresses the existing software-cursor path,
->>> I think adding a switch or reverting the commit until the requested
->>> features in the driver is ready, is a reasonable short-term fix.
->> The problem is that module parameters are impossible to remove in practice.
->> Once in place, someone always depends on it. They also increase the number
->> of states to test.  Avoiding them is usually a good idea. Especially as
->> workarounds for bug or regressions.
->>
->>
->> I'm not familiar with the Hyper-V protocol, so I have a question. Why is it
->> hard to implement cursors? From the link at [1], I assume that cursor
->> support was left out because the simple-kms pipeline did not support cursor
->> planes. This has long been resolved: the simple-kms pipeline is gone and
->> hyperv_drm runs on the regular DRM framework.  Unless there's anything
->> special with the Hyper-V protocol, cursor-plane support should be do-able in
->> a single patch. [^1]
->>
-> I actually have been working on cursor plane support for hyperv-drm.
-> I'll post a patch soon.
+The original report and test results are below for context.
 
-Awesome! Even if it doesn't fix the reported bug, it is still an 
-improvement for everyone.
+I haven't tested a vanilla upstream kernel, and may have limited time
+for further testing, but wanted to share the findings in case they're
+useful.
 
-To fix the bug, you *might* have to implement atomic_async_update. [1]  
-It allows legacy cursor updates to jump ahead of the commits and change 
-the cursor without vblank synchronization. It's a little-used feature 
-and semi-deprecated, but maybe necessary in case.  (Make it a separate 
-patch, I'd say.)  There's existing support in other drivers to see how 
-it works.
+Thank you.
 
-[1] 
-https://elixir.bootlin.com/linux/v7.3/source/include/drm/drm_modeset_helper_vtables.h#L1406
 
-Best regards
-Thomas
-
+On Tue, 20 Oct 2026 at 22:32, Peter Kiddier <peter@kiddier.org> wrote:
 >
-> Hamza
+> Hello,
 >
->> Best regards
->> Thomas
->>
->> [^1] See https://elixir.bootlin.com/linux/v7.2.11/source/drivers/gpu/drm/ast/ast_cursor.c
->> for an example of how this looks. Most of it is hardware-related, but hyperv
->> would likely be similar in concept.
->>
->>>> We had another fix for a problem with vblank timers:
->>>>
->>>> https://lore.kernel.org/dri-devel/20260914110004.211027-1-tzimmermann@suse.de/
->>>>
->>>> Did you validate that this fix is unrelated?
->>> Yes I tested that fix and confirmed that it is irrelevant. It solves
->>> issues with excessively long frame durations, however this problem is
->>> found in normal frame updates (in my case 60Hz / 16.7 ms per frame, way
->>> below INT_MAX).
->>>
->>> Best regards,
->>>
->>> Lanfeng Wei
->>>
->>> [1] https://lore.kernel.org/dri-devel/20200622110623.113546-1-drawat.floss@gmail.com/
->> -- 
->> --
->> Thomas Zimmermann
->> Graphics Driver Developer
->> SUSE Software Solutions Germany GmbH
->> Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
->> GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
->>
->>
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
-
-
+> I am reporting a Wi-Fi regression on a 2018 Apple MacBook Air with a
+> T2 chip, running Linux Mint Zena based on Ubuntu 24.04.
+>
+> The Broadcom BCM4355 Wi-Fi device works with kernel 7.2.11-3-t2-noble
+> but fails with 7.3.0-2-t2-noble. Disabling the Intel IOMMU using
+> intel_iommu=off restores Wi-Fi on 7.3.0-2.
+>
+> Hardware:
+> - Apple MacBook Air 2018 (MacBookAir8,1)
+> - Wi-Fi: Broadcom BCM4355 802.11ac Wireless LAN SoC
+> - PCI ID: 14e4:43dc (subsystem 106b:0843)
+> - Driver: brcmfmac
+> - Interface: wlp2s0
+>
+> Test results:
+>
+> - 7.2.11-3-t2-noble, default kernel command line: Wi-Fi works.
+> - 7.3.0-2-t2-noble, default kernel command line: Wi-Fi fails.
+> - 7.3.0-2-t2-noble with intel_iommu=off: Wi-Fi works.
+> - Reloading brcmfmac on the failing configuration does not restore Wi-Fi.
+>
+> On the failing 7.3.0-2 boot, the driver detects the device, loads its
+> firmware and creates wlp2s0:
+>
+> brcmfmac 0000:02:00.0: enabling device (0000 -> 0002)
+> brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4355c1-pcie for
+> chip BCM4355/12
+> brcmfmac: brcmf_c_process_txcap_blob: TxCap blob found, loading
+> brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4355/12 wl0: Jul  8 2023
+> 17:49:51 version 9.30.503.0.32.5.87 FWID 01-e74b9cb0
+> brcmfmac 0000:02:00.0 wlp2s0: renamed from wlan0
+>
+> However, Wi-Fi subsequently stops responding. The kernel log reports
+> errors including:
+>
+> brcmf_msgbuf_query_dcmd: Timeout on response for query command
+> brcmf_cfg80211_scan: scan error (-5)
+> brcmf_run_escan: error (-5)
+> brcmf_msgbuf_tx_ioctl: Failed to reserve space in commonring
+> brcmf_cfg80211_get_channel: chanspec failed (-5)
+>
+> There is also an error creating the P2P interface:
+>
+> brcmf_cfg80211_add_iface: add iface p2p-dev-wlp2s0 type 10 failed: err=-52
+>
+> I tried reloading the driver using:
+>
+> sudo modprobe -r brcmfmac_wcc
+> sudo modprobe -r brcmfmac
+> sudo modprobe brcmfmac
+>
+> The driver and firmware loaded again, but Wi-Fi remained unusable.
+>
+> The firmware files are present under /lib/firmware/brcm/, and the
+> firmware version reported by the driver is the same on the working and
+> failing kernels.
+>
+> The brcmfmac module metadata differs between the kernels:
+>
+> Working kernel 7.2.11-3-t2-noble:
+> srcversion: 3B6176FDB720DDE8E7C596B
+>
+> Failing kernel 7.3.0-2-t2-noble:
+> srcversion: 3DCA38D52402541701276CF
+>
+> I did not find obvious PCIe AER or fatal errors in the failing boot's
+> kernel log.
+>
+> It has been suggested testing intel_iommu=off after reloading
+> brcmfmac. The driver reload did not help, but booting with
+> intel_iommu=off restored Wi-Fi.
+>
+> This strongly suggests an interaction between Intel IOMMU handling and
+> the BCM4355/brcmfmac driver in the 7.3.0-2-t2-noble kernel.
+>
+> I have not tested a vanilla upstream kernel, so I cannot yet confirm
+> whether this reproduces outside the T2 kernel packages. Unfortunately,
+> I have limited time available for further testing, so I may not be
+> able to investigate additional requests promptly. I wanted to report
+> the reproducible behaviour and the intel_iommu=off workaround in case
+> it helps identify the regression.
+>
+> Could you advise on further diagnostics, or whether this should be
+> investigated as an IOMMU or brcmfmac regression?
+>
+> Thank you.
