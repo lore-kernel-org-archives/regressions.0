@@ -1,100 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.226
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792514590;
-	b=bPagzcEWdNhF+j04peHPNg0t7zqW++eECf6WBS+A+292bt/MQrb5WYs9inrfSr6swkji
-	 he/iAlzu6Af6fU2z9aUlV4Q6A6I0yLRxewlhhcF6e/qjs4IfhCmg7J1oVJbAwZiqTjosf
-	 2RiuhOaS9OkhWGzPsoQrYkDWU5eM6dBXOyOoS/xcJTB28jWPdw0QFNrPheu/I9hDuoC+6
-	 3K/F8soleRI5qlOCjVqTCOpLzeLcfM7lZKE+wBle5I/2vFEFpnrrcsFmoHg/7N8EYdsTa
-	 QHWjWYWS4bBXQfjJwsUirJeG+nHX17qz1vGsqVO2Av8vt0kHNn/gQ0z0nOjfn8imrhg==
+	t=1792516253;
+	b=11Ha84y8aKlLoOfD9Aj+vZ1Yar9g2RSxBxMwbA8eeA6eD1dVktXbcmgN2ZQLJDSYLY9G
+	 HumTzlwrsgP69LXQF/rZeKhFhnc33qH7vgamPlI4p9RQfJvFd+l6oZ4TsxRPvMmf+powE
+	 F2ijRXd0ghe/I8+Ii7wx815DgnbWeSE9OOOEqHiLIH+mgxNHGBOePMG4+iVl0QMEQvdcX
+	 c1IG+DZRX3Pp3fIh3ir15k4N4U3SdWGyntpJjE2TvufjnVsGgECGgGg5jygt8nUWotVM4
+	 Ky929MQkQcKIWnSv6XkhG1UOwr3V1cxvLXkgznXxpK9xox+ejUburilSiXZBCuoisYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792514590;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=CdlYPARhuT5EgLufL/ZQ6dU/20tseBOVd7fjLCxWlSo=;
-	b=UC1KBEu2oQEb/NsK6I5xCh0PFlur1omAOZ1/pQRcmdud7pIMY9fgDsdSsbch4omIYk3X
-	 ygsnKwkYU33OVnL8GQkhylmqVG37eCkdBpRIJFWRiyINyRYeBIN8mWBB1sUePqYKhhsNd
-	 7aQbFJ0GFG97Sfo8NgFL3ojPxv9Ap9Rv0KKpcPx+LsgWDljTxEBCgk07iblKGEcp81yrH
-	 flaqjdUY7Bq1lRos/Ga08YS469V0SnsGL92ih6Lbu8VScXf3ixUszd3TQ5QluFruBLu0i
-	 o/oamUP6QQcvsDUnDkk7QA1v/Z2sYWeCoqEw5p/Ugez35kkJHdpjRefqZUhoOHxFf9w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792516253;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
+	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Received:X-Received:Received:From:To:CC:Date:Message-ID:In-Reply-To:
+	 References:User-Agent:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-DetectorID-Processed;
+	bh=VJqkIiPNVDYg99+7WtjqOTUKFy/SQG4E1Zt5xkilM1s=;
+	b=MELQSOzre0X5Sk8ucG3nav0iTXi0+lRrdicivAbfm1IJnjlKx6JV+GOnBJS3jV1CMTob
+	 uiJH6EazGGq+pNXy1Q2p+GNEWipn872PdgPynXJ7/dhvNxnDvcNWNPpb282vGdRIqma7N
+	 SbzLZQBGVYHjM+DzGHLk9BYTBD/VmJkaXLukataTvy7w5nojmsCyuQZAvR4BWyy52BeJl
+	 uQkrnDHpm5bqlNt6Z3yQS2MXqrfA/WvGvCoLv7jsLBYGCPapDwRGGdLZ1qhZVc8HC7TK/
+	 VT4qFq4dx9xh9q+YpVhdlByOeU6XcQheDMHmKGcRonoYusHswvU5nDhWZX4NoeghvVg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CHuPu3l9;
-	arc=none smtp.remote-ip=209.85.128.50
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	dmarc=pass header.from=broadcom.com;
+	spf=fail smtp.mailfrom=broadcom.com;
+	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=CMX8YgaV;
+	arc=none smtp.remote-ip=209.85.215.226
+Received: from mail-pg1-f226.google.com (mail-pg1-f226.google.com [209.85.215.226])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64789606A328
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 16:43:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64789606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36719606A31F
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 17:10:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 36719606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CHuPu3l9
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a1e34ecb02so18454575e9.2
-        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 09:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792514589; x=1793119389; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CdlYPARhuT5EgLufL/ZQ6dU/20tseBOVd7fjLCxWlSo=;
-        b=CHuPu3l9chQO+r0YDq5l9YNBhAaMWwVXKPQeKzAWmfQqiX0IrxJlRF3tdNIct1Z4h0
-         m4dEKlYOHZzR1E3f+/6Qo7nK1YB5aJAinTwCbFFq0zVcTae5xLIKpJKKMsvRnGByXxtt
-         fCc/B0+Ceh9qkOCjkZHGTTiKnDy9dZRaoKVqZMZOHGMbGeGelBcrOiySuC/l07WHqGJ4
-         /DaDQLG3Ycc41RYfsqKsrGoENhXZutm6uiJlZRAfTVrDXPP/N+6olguuzynH0WPSZ6CH
-         8gc6bkDQMlLF6pW454X0tKUxIPEYemP7nk+o/yIP6zo6UHSF2kvFljhgRyRnVbWKZ7Fc
-         QITA==
+	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=CMX8YgaV
+Received: by mail-pg1-f226.google.com with SMTP id 41be03b00d2f7-cd5d2dafeccso1209718a12.2
+        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 10:10:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792514589; x=1793119389;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1792516252; x=1793121052;
+        h=content-transfer-encoding:content-type:mime-version:subject
+         :user-agent:references:in-reply-to:message-id:date:cc:to:from
+         :dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=CdlYPARhuT5EgLufL/ZQ6dU/20tseBOVd7fjLCxWlSo=;
-        b=UGvdOa5BMQTOc5G71VPhQ0mwG98B/Sytu9DzuKTInQhyt2Vf5c+FkwU0mV3DpRPnee
-         7TOamKYlIuBdQUIkhpsGMLNz6unPiBylKfCzi9y0Q5I42r0l/k/b4PNVnh19NshotQA4
-         RnCkeQXRpqRg9jtwdZHJBl9xUF3sPm90n4IPbOqlpR0Lm6T//ERW4wii1bFm5CU+OMI5
-         TSyYIOMsrpIUONrGlGGzqH1xucCGSHpBtwt/gkoMMicLfwR3GjSc84LbFrXHdelQD7C+
-         ZXnvVA0q/bReK4rcl+45r9xRd3qs+XBsm1lNG4lyFvJlGJeSLhBZuAFOa32I6b48VSQ0
-         ClVA==
-X-Forwarded-Encrypted: i=1; AKwUvBxbNKkZly0Y8LqLTUNO57zy+ph5YLB5BgjG3lswNRBtDjavt8f0ZxJ94K2Wjxt4z72ZqAsWs6v0FvGmiQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJJGUZLXJsqmCVLbA/9hLc1H91ItwVgkduXcNN1hzj3EMhFiuwp
-	74CHgW9NQSMDs9vg2udnr78wBP/X6gkqb0IZIORmCxR05iznQ+HVb5r7
-X-Gm-Gg: AYBFou15TlDeIvijxmDRg+/CaHhwa08fEk6nTaRhqHj1MporFjVPIKzK9QFDuE0ECRn
-	79QrzzvRTE2GmmrspT2CpbVi2Mzw3q2DcMAZ2rttlJu5dPBNS5RKvdphuDB/Y/0HEsgFrgeFu75
-	pZWd3byt6eZRavBqlNp0Q+TuUDdiqsl86m6VNNIEHBAeTH6C25qdaZk8ehO6UWY+VePQwH9x7KW
-	OG98u4zSju6Panv2SviSI7xvc5fK3Xh38nK/Vi9lrj8Mh6nJrhukahYZsIrhUxvy0R6pjcEzGtc
-	cfZ3S68HsuMLqFnrXI+Pa5JCo4VL7dV4FvS5Hb2uOTBXL5Xe1qr4Trux3DjKoiGSvXnw+OpOVQr
-	WMAVvHTn+Sv0guxfL35kMWOHm8m01ObddVoE51VICiTqnTA9unAtSiE5d9SvUF4RRPRapjmd3Ud
-	qOMRaq81NI/IaAKEePiQDMWIV7oOvzCorai/e4VBoGmdSS1/c9CPz0TKu0ahS9WKohzNjiCMw9c
-	FGdqcWrlEH90sJ1tgXeJdalcZyHykX6nrjtNsrBYBD8Z6Uzzfhjdp2CkbgQxAMX+MdKQu9PMY71
-	vx3wDMmCakR+tDkpGM0IEhEXRx3Cm4lMtiU8Y5qec2+wubo4PmxLqhjY8PFTIeaUAIQQ/7uc
-X-Received: by 2002:a05:600c:46cf:b0:4a1:f8cb:7d70 with SMTP id 5b1f17b1804b1-4a1f8cb7ecemr44109325e9.24.1792514588519;
-        Tue, 20 Oct 2026 09:43:08 -0700 (PDT)
-Received: from p15v.lan ([217.169.3.90])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1fb864dacsm8742505e9.12.2026.10.20.09.43.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 09:43:08 -0700 (PDT)
-From: Peter Morrow <pdmorrow@gmail.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Peter Morrow <pdmorrow@gmail.com>
-Subject: [PATCH net] net/mlx4: always create the eth and ib auxiliary devices
-Date: Tue, 20 Oct 2026 17:42:39 +0100
-Message-ID: <20261020164239.3808903-1-pdmorrow@gmail.com>
-X-Mailer: git-send-email 2.47.3
+        bh=VJqkIiPNVDYg99+7WtjqOTUKFy/SQG4E1Zt5xkilM1s=;
+        b=ViA2IQJmZK5BIrRY3jDtUZ0duTv/jFUxvISjU8zi1v1b8QbJTLOzczdK/Cnu9o1puX
+         YCsCEFvDQGQ60Eml6gMlaDpcgbnZ03SUouE6lehGoV1n/X2Itw30PnLKJYw2d0VyLyDe
+         gdUkGptlejnhsO65jFNzyrxijx6H431b3kusNyA/cZCyn4FG2989EydVpKKWHxrnqREp
+         J43rGDEU72+9hyvIyKlY8gNb26sO2yuVctNKcNS/xqlCGsp44y1/2ad+GosB7V72d2QJ
+         03FUWNHFtxp61/mwt4cjoEfNIIzAJ4SS0xS1zRYT1dmz+R2WAUzFuyP62lQs+iMfCxoW
+         CxIQ==
+X-Forwarded-Encrypted: i=1; AKwUvBycLIUXj4b5G/XP4WIRJ/HRVWXnXXBrx30j3doTvfouKGjKHldNHU4frMxAU9zglnJX9AOVmygAlLdQfQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIN9ELhOymZ+B3LJbyWAuYJ062M9K9Ry/U7oPJ1T0hYo1FHIrI6
+	2nwGLLTtjXttS/f/Nt1MZb2Zt+MLYvx9DiZVoz7M3XHNKey04Fn1S0gyKOsLkZfUS++jIZtySud
+	m9w6Z/RYvcK5qYg8RWQDcg4fivv5Imm9xnkOlidJZ/CgA3y2jMmZKQ1+r8gxhmQegC0QhdKTZbK
+	9d5CyCG/O2sWowrWjoF8gWxzTvS26Ve3DpMrAqux7j2J4udY/RgOlc6QeTvYMUXmFK1aAvrIyUi
+	fTkOiYs1MigKCQXzJkXfw==
+X-Gm-Gg: AYBFou2dKqBNdFm4ZoOLLuTyYH/abdPwmLShWs/25Ypv6OBmK79waTkNBRHBbhD6VwK
+	wbU8HmMXsTUDG+jvaRBTlXXEOiGEd5qRJfaygVt9Y4YwBehIE+lEaKiYzrIsjDanPgIHIUFtAOw
+	RpY2i6Gp9aZk3+vscuHTSN3OuO0jfO42fBYni5FmXp2YJ9O4CitazPjMT5mIdP6ezrzvGqufp97
+	ZiqQq3nH6F+oxuVQxzvEZNPPRX7RIzVwkywUOdIgfF7whmyUU0umIAqTD5yus+y2xxdSJois8/2
+	BPMryJAB7y1gyDZNox3tdm+//6bGcJIkhV15dXilFZbXo3fu8F1K8SWnAY/9sz/4RmyUn524b0/
+	Ypdm8WKqueaM+xbYgoD4L3IFyfOXEZnZemLqSsKftyJXF2A9WBDVN3orUKNDZtcOX0hZWhuLfCX
+	MjcJVdPuv9qbMa8ui9ijQAJvje3UcHbvMhqNXuJxYwLg==
+X-Received: by 2002:a17:90b:3851:b0:3ac:9e76:aa93 with SMTP id 98e67ed59e1d1-3acee2939b1mr8740813a91.7.1792516252201;
+        Tue, 20 Oct 2026 10:10:52 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-120.dlp.protect.broadcom.com. [144.49.247.120])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3ad82359de0sm96548a91.5.2026.10.20.10.10.51
+        for <regressions@lists.linux.dev>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Oct 2026 10:10:52 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-91b861c0618so57880886d6.0
+        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 10:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1792516251; x=1793121051; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:subject
+         :user-agent:references:in-reply-to:message-id:date:cc:to:from:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=VJqkIiPNVDYg99+7WtjqOTUKFy/SQG4E1Zt5xkilM1s=;
+        b=CMX8YgaVyyqQd6oTyvXdlr+DJTmDOzFZT7p2zGJQMqYydBTZj6GwuVsMtW3tRrpDxY
+         3peuDpNZioJIlQf6AKhXj1px0IThuUUpWCDe2I9mk5BfX+0AB38GpB7MB7B98dWF0WM9
+         RV9/FDzlftfD4r3TqCF/YWYSX8vp1PCy0kcrA=
+X-Forwarded-Encrypted: i=1; AKwUvBxpMKBV1n9DiJyczHpmKMCV6n01X7IrTkRSczKxMdIgjZPzRb6pw401xb5iSuTZj0HFcPi2O5m73fFubQ==@lists.linux.dev
+X-Received: by 2002:a05:6214:250d:b0:914:51b1:6161 with SMTP id 6a1803df08f44-91bdf0df624mr198193696d6.30.1792516250819;
+        Tue, 20 Oct 2026 10:10:50 -0700 (PDT)
+X-Received: by 2002:a05:6214:250d:b0:914:51b1:6161 with SMTP id 6a1803df08f44-91bdf0df624mr198193046d6.30.1792516250202;
+        Tue, 20 Oct 2026 10:10:50 -0700 (PDT)
+Received: from [192.168.178.59] (f215227.upc-f.chello.nl. [80.56.215.227])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c10c48c49sm2815656d6.41.2026.10.20.10.10.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2026 10:10:49 -0700 (PDT)
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+To: Jason Perlow <jperlow@gmail.com>, <aditya.garg@linux.dev>, <baolu.lu@linux.intel.com>, <dwmw2@infradead.org>
+CC: <iommu@lists.linux.dev>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>, <regressions@leemhuis.info>
+Date: Tue, 20 Oct 2026 19:10:46 +0200
+Message-ID: <1a15a4b49f0.2873.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <D0E6473C-3234-4367-83E7-B85C022B0F1A@gmail.com>
+References: <D0E6473C-3234-4367-83E7-B85C022B0F1A@gmail.com>
+User-Agent: AquaMail/2.7.0 (build: 200700061)
+Subject: Re: [REGRESSION] intel-iommu/brcmfmac DMAR fault on Broadcom PCIe wifi, v7.3-rc7 -> v7.3 final -- candidate mechanism and proposed fix path
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,70 +111,46 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 8bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-Since commit 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the
-auxiliary bus"), mlx4_core creates the "ib" auxiliary device only for
-an IB port or a device that advertises IBoE. Before it, each mlx4
-interface was offered every device and decided in its own add callback.
-mlx4_ib_add() accepted Ethernet ports without IBoE and registered them
-for raw packet QPs only.
+Op 20 oktober 2026 18:02:30 schreef Jason Perlow <jperlow@gmail.com>:
 
-ConnectX-3 VFs on Azure have an Ethernet port and no IBoE, so since
-v6.6 they get no RDMA device. DPDK's mlx4 PMD, which needs only raw
-packet QPs, then cannot open them:
+> NOTE: an earlier report on this bug from us bounced off one of these lists 
+> due to HTML/multipart formatting from the mail client used -- apologies, 
+> switching clients. This mail includes the full original report plus a 
+> follow-up, merged into one self-contained report since the original never 
+> reached anyone.
+>
+> === ORIGINAL REPORT ===
+>
+> Hardware: Intel CoffeeLake-H platforms, various. The affected device is a 
+> Broadcom BCM4364 802.11ac PCIe wifi adapter (14e4:4464) at 0000:05:00.0 on 
+> an Apple MacBookPro16,1 (T2 Mac). Aditya, including you directly since this 
+> is T2 hardware; copying iommu/pci/wireless because the fault signature and 
+> the fact that it reproduces on only one of five tested machines (at the 
+> time of the original report -- see follow-up below, that has since changed) 
+> looked like it needed eyes on the core IOMMU/PCI path, not the driver.
 
-  net_mlx4: cannot access device, is mlx4_ib loaded?
+[...]
 
-Restore the old behaviour by creating both auxiliary devices for every
-device and letting mlx4_en and mlx4_ib decide in probe, as their add
-callbacks did. mlx4_ib_probe() returns -ENODEV when there are no usable
-ports, and mlx4_en_probe() binds a device without Ethernet ports but
-creates no netdevs, as mlx4_en_add() did.
+> THE ONE ANOMALY WE CAN'T YET EXPLAIN
+>
+> Despite the last two items above being unchanged, the actual generated 
+> .config has CONFIG_INTEL_IOMMU_DEFAULT_ON unset after make olddefconfig 
+> against the rc7 source tree, but =y after the same process against the 
+> final source tree, even though our template explicitly answers "# 
+> CONFIG_INTEL_IOMMU_DEFAULT_ON is not set" in both cases. Our working theory 
+> is that some other symbol started selecting/implying INTEL_IOMMU_DEFAULT_ON 
+> between rc7 and final -- which would override an explicitly-seeded "not 
+> set" answer during olddefconfig resolution -- but we have not identified 
+> which one yet.
 
-Tested on 6.12.111 on an Azure VM with two ConnectX-3 VFs: each gets an
-eth and an ib auxiliary device, and DPDK attaches both VFs and passes
-traffic through them.
+Simply run make menuconfig and it should be able to tell you how it is 
+selected.
 
-Fixes: 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the auxiliary bus")
-Closes: https://lore.kernel.org/r/20261014133951.3219055-1-pdmorrow@gmail.com
-Suggested-by: Leon Romanovsky <leon@kernel.org>
-Assisted-by: LLM
-Signed-off-by: Peter Morrow <pdmorrow@gmail.com>
----
- drivers/net/ethernet/mellanox/mlx4/intf.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+Regards,
+Arend>
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/intf.c b/drivers/net/ethernet/mellanox/mlx4/intf.c
-index 82e467c..31860b4 100644
---- a/drivers/net/ethernet/mellanox/mlx4/intf.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/intf.c
-@@ -43,23 +43,12 @@ static DEFINE_IDA(mlx4_adev_ida);
- 
- static bool is_eth_supported(struct mlx4_dev *dev)
- {
--	for (int port = 1; port <= dev->caps.num_ports; port++)
--		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_ETH)
--			return true;
--
--	return false;
-+	return true;
- }
- 
- static bool is_ib_supported(struct mlx4_dev *dev)
- {
--	for (int port = 1; port <= dev->caps.num_ports; port++)
--		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_IB)
--			return true;
--
--	if (dev->caps.flags & MLX4_DEV_CAP_FLAG_IBOE)
--		return true;
--
--	return false;
-+	return true;
- }
- 
- static const struct mlx4_adev_device {
--- 
-2.47.3
 
