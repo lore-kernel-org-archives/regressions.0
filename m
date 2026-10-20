@@ -1,108 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.48.15
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792518313;
-	b=gwA4ovcmR8uYI2pG3lMainr+/NrShh2fvYfyaJVSIse2+jxk5MMT2Lgmm4i2IfAiZw6y
-	 /HFpkwvyL/7qr0ElDjDB28wq9XDFJSkWQYmPlYDRH4wF6pLXpc5xTsD4kAMva/U+/GDXl
-	 3Fbw2TZ7m0P5trMI++lLFViC39QXaRib1qORnRlVgPmY6ThsuYrZ2Rlpy7BxfH05CF/1H
-	 rdWtYKCiUFa5JQ3Nuqg8ORGb3NL1tOAuF1mgeT2AG84/J+AJJGckCFJtgm/x5MHVtg29k
-	 XAi89ud86i5Qu9ieHRhfEQvMq7DjX82MDys1nFRtc+JFEQQ1Iw0dGyB1a4fFT6MAUiw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792518313;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=zIyyElv2m6umGHiKh/H31yhFq3QG1yIED142cg/Cxsk=;
-	b=RrrVfABoZMO42VLPJT3kvruVk51YRi6Wm6WD4q36m34ruFji41vHOMg4TPi/jtP1euaC
-	 f0tSNEqKK17gVh3GTRIFtrN9QpZ+Pnoj3EMmGl4tFaPubG1V4FZs1XGRDt1774UcTu8i7
-	 EeG4j1qdgs9TfryVx2T8rK9sOFVB6V9jVDbYcYLaT6CArjeh+k4dkZUlMG4WVRY3DeXUB
-	 LhspWZkU/Xh59lcajG8HzyrEzwr+fwm9iSOJ9ls+itTKENmLvt9MjiKC1hGsNFGMT7Ug7
-	 TbaaRROOCc3Zlt+HwkJzoaUIkmyFu9fZeWpepAwsB7jgFk9z2AxZ3r0Do8LYTXigYYQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=pUSacKQi;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.48.15
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012015.outbound.protection.outlook.com [52.101.48.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.173
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792518593;
+	b=XpeW/wtGOTyZYoPtvU0jmRLXM9oZsRv3PRUxhD9bncdorY+FWbC5Mm+kuixbwPKTbLMc
+	 hvR4feCmcKr+Ow1f7/moTVIojVg+5U2u1Tqj6ffKKITCQalCuLhBj0j0HK9yeOTsXzbw1
+	 YEIYJT1ilHOUAjJJsLE2dAodoNfhtlZ6N2XQ9MfSDDpeMQ4+IUhr0QifL7jy7MsHxmekZ
+	 YEh3dXyFCWFHswnyeCjxA1MkBgoAQyjUEvxm5P/pRk9mUMU7DF6zy6t+QoEx7Pc8jVarW
+	 +eB8RP92yQCx1/1ZYuS5dsFd1gRrsQTPLr4ofrKjAGZ74jMCO2zw4nUWNiJR2X9YwCg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792518593;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Content-Transfer-Encoding:
+	 From:Mime-Version:Subject:Date:Message-Id:References:Cc:In-Reply-To:
+	 To:X-Mailer;
+	bh=VdO3TkGJkE0/5auvzRmeM+H+7fXA7G0lgo2mz/y/Xz4=;
+	b=F05XaIeaVF1ucSDQ7U3LIxxW8iu2KuH1YagCOhvs5fAOPEkNVrHAlnHzB/UQllqXkOMO
+	 wiIl4ladcIujlNViAKG4/fRNiZ4t1LcHN76t0HeN9M97rIQL9vY8yNWGQlPmthPE8zN7t
+	 0239pnaD0IoJOGBYqOceyvcJtEXGvURYSXBHG90aapsQkgmYUio5J1qo5q1qJ1EnIwg8h
+	 9nCk6/qQNioCgnpJiob92XnNuUvxjskOD/2afNyGoColWLJ75wYRXS8oYYooYSzXaoGiB
+	 0ZasDb+CIJrY0nQP3+e1BNJvKqAuXHRYL36lCmibwOPdq+t8BOlV+Cu72o5qQjOZ5Aw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	arc=none smtp.remote-ip=91.218.175.173
+Received: from mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD52606A31D
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 17:45:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1DD52606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=pUSacKQi
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jUmZ0pFwzF3+0PO65Z7sDjq/EFjW134NiHg7PO+zE3HpliGgwjPBiQHCbZ0AF7fltTGFoqOKZIvnuwYpO/rNEu3CQhf6MXipUuXEqCcMUxW2l1pA8d2nwGMhZzHOnH/bevfLbEklijBz5LenG+oej5x6VmO+Jzw/Zo6V5wOBQRZ+B28xdeLOMQwydYl+5ITTefqZrKVAkTFehhVDu9JhOean0igVRhYuwxz71K5JFQsLt4R8fFJLslAd5rI6Su8HqaLQ2N+3DYkhC6+g+DaHIEBvlQhUqU+OfEFXR+mjIGpBMSzzcAVNxqeZjzPD7Niru3FXkKNOEsjJ/XR2h74r5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zIyyElv2m6umGHiKh/H31yhFq3QG1yIED142cg/Cxsk=;
- b=owCu8kBihfg1zswOL10brtXTp8sgsEE6jjpd8vpZejuvO5I4NjKTyV4mWHPqaXNd6jVkXQQhHuTqX2/iUUcqcpkcCXLA+SX3b1ZpTkPrE1j4M9tT1/HU4NEDziDsIWmgfUfrZhPw1i8IQgZV+AeeYq+OJ4UlzjQjooioP2gJab31wyw5DfwQF0mf6CIp8dgoLzUtPdCSzHakZEGMGKL3fc0vyKSClY6Q9W3dis+8qw4NXjgNOG5Vo7MJ5X4y5VPqr6nRgVFyMwAy8WRadwh/dvfXOt454pPf/con3nR0Gz5Vg2VZKi51a9Ddn9ObJBEsq6LY559OmxTUNckGjKAfZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.dk smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zIyyElv2m6umGHiKh/H31yhFq3QG1yIED142cg/Cxsk=;
- b=pUSacKQicSsVX00B4zwr9b3T0bSEWON2PTQeUi3HPCziYjF2WSsYEk7aIj2A+Bmhwiz1RGRYWOfpmnoUwEM1uVJCKjlcjj7fjE+tRJivZzRcFS88UTJod9zuFsPf7Jc2dLjWvdPmbDKB9UHD18luc7zGfJXcPybmNxZ6VvveKNPxnacd5BsYRtqAOPv2kLfPbHKKzSJvcQLLzKqoX8Fm8mVRggUDdmS6p8JKdhEFsikhCBA5N0ua9yd+IjHabdQ6rjo03AmGQtSca3uk+gzs/1yVezl8MrNZBdZUzFIWYn38zRpsJ3nGg9cC3ReX+dJna2Atj4CSssE1Xnvcf3qD4A==
-Received: from MW4PR04CA0094.namprd04.prod.outlook.com (2603:10b6:303:83::9)
- by DS4PR12MB634945.namprd12.prod.outlook.com (2603:10b6:8:514::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.15; Tue, 20 Oct
- 2026 17:45:08 +0000
-Received: from SJ1PEPF000026C8.namprd04.prod.outlook.com
- (2603:10b6:303:83:cafe::49) by MW4PR04CA0094.outlook.office365.com
- (2603:10b6:303:83::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.20 via Frontend Transport; Tue,
- 20 Oct 2026 17:45:08 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 216.228.117.161) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF000026C8.mail.protection.outlook.com (10.167.244.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.546.15 via Frontend Transport; Tue, 20 Oct 2026 17:45:07 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Tue, 20 Oct
- 2026 10:44:48 -0700
-Received: from 82875d6-lcedt.nvidia.com (10.126.231.37) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.49; Tue, 20 Oct 2026 10:44:47 -0700
-From: Nirmoy Das <nirmoyd@nvidia.com>
-To: <axboe@kernel.dk>
-CC: <lev@zadarastorage.com>, <kbusch@kernel.org>, <tom.leiming@gmail.com>,
-	<yukuai@fygo.io>, <linux-block@vger.kernel.org>,
-	<linux-nvme@lists.infradead.org>, <regressions@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Nirmoy Das <nirmoyd@nvidia.com>,
-	<stable@vger.kernel.org>
-Subject: [PATCH] blk-mq: restore shared-tag flag after hctx reallocation
-Date: Tue, 20 Oct 2026 10:44:35 -0700
-Message-ID: <20261020174435.1527425-1-nirmoyd@nvidia.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D754F606A31E
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 17:49:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D754F606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=VdO3TkGJkE0/5auvzRmeM+H+7fXA7G0lgo2mz/y/Xz4=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792518584; v=1; x=1793123384;
+ b=h4OORfT9rWFowZj64HMyMOZAt72+Zr7NSmcIe6phUUmHr3wiWCfvZSwNw0mNLtUckfgoAFe0
+ KDd5NCY8NwojYnunHfmL1PB89EStXIb5yvBwvnVUJYsH0IJ7iVrjXpDkEMsXKQm1PZcT9PfT+Xq
+ F4WbgEtI/wpTusrAD3LXsZNY=
+X-Envelope-To: regressions@lists.linux.dev
+Received: by mta10.migadu.com with ESMTPS id 27681babf8702918;
+	Tue, 20 Oct 2026 17:49:44 +0000
+X-Mizu-Trace-ID: 27681babf8702918
+X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Aditya Garg <aditya.garg@linux.dev>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -111,81 +55,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C8:EE_|DS4PR12MB634945:EE_
-X-MS-Office365-Filtering-Correlation-Id: d31cb993-3425-4f5e-5f14-08df2ed1e1c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|376014|7416014|36860700016|82310400026|56012099006|11063799006|5023799004|261009223027099003|10067099003|18002099003|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	sjX8fQnp2BP0E5HZO06op/wWSWkSm/1wADnhctop+lBmB2Zk+ceZCc/g1NlTmtQQW4FI/o1iaI+M9WEt2hCeN+FvnW0PChFLOFx3OF5tnWIT5U/yphAx+7x1olYenemFU/1Ww56VDioA20DKXcyC+4I/txOCQxyaVsKvMVPERMLXXnusn/y+ZfZ6eDaynx0m3yhls1C6h52vmPWdzb6VsZAVU+UnJITzPRUdBTIKIbQSPiX/IJvWruySfEccJW0O4OZymcb/SOEnzUQ0rBK3o0oqjdvHaqsmMucnId/emWRpEkhYpxEXLkanL8749BAOr6BVIOhDe53sGxSOkeZ48jq735rUw9ocraU+WPEcY5CJSjzcPBaEL2HgvEU6C0HrQPTYZ3oi4b6e0wdkjuNKHzWVmALev/WNW6bNa00YgdIJhlWdsRslvjyodYYQ9M7nUQ4YT7W0wGkripi8/qLIaB+QBBvMROrQbOkddudPkZkGZSdcCoK0uota5wSbLtVto2z/DNfIUVVcu74N4k8ucjQm+P7iNaHZtmHVTr16tmkGj0DACKujI85hBqrJLYb9w1JYXuyzPkCXqpUifJVNOfp7f95rzlMu8jl9MjSnZ6B39zvlQd6csyWwpPGAuz471CctCyZEIsL6TgAXXRz/w17518d0ichBCpIfnaWgwTkPQlJ1Y/GJuHJnk92vNcv7+CnuTR3I8a5d6WwwtX8xEw==
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(7416014)(36860700016)(82310400026)(56012099006)(11063799006)(5023799004)(261009223027099003)(10067099003)(18002099003)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	dN56mt7Mp3c/1QCro8uxvKzE3BMyNZS7V5YW5MH8GatyKWFh2uqJkTStDrMCVZaLKgtFYeZxUz0cIVxn6ZQVLkR+xi23MoP449Xzn/mVVtHZS0kiIbsmujbg+ew6JKuDMjzs58rWPRJcXI7LzZrlTztcMRa14esswlW6n9GtXBhY7XaNUD37RyCOnkemSgkjAAVB7SZoCaHw1JPYe3OYWNBnJ0Ch8WkULvdIUrZevtBFu13e28TIwP3SCxC0jzIFrjJbYZokAYdAhI3b9GnsfiwZ5toeVue3LWS5GOaIX8UpgCRXr6rSChGbtvIGkcKoNhl45jKHXo0jgbqJo3OfPmiALmZT0IYN4JPQCwThqSMpjMLvOWFXvk0V4Ah7mUPaIQYO9qQcphMfsUUFDw+hWa20KKrGs10qUuKIdUz3pvIDlDphhHsMNZ8eyq9xkAwC
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2026 17:45:07.9243
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d31cb993-3425-4f5e-5f14-08df2ed1e1c2
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000026C8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB634945
+Mime-Version: 1.0 (1.0)
+Subject: Re: [REGRESSION] intel-iommu/brcmfmac DMAR fault on Broadcom PCIe wifi, v7.3-rc7 -> v7.3 final -- candidate mechanism and proposed fix path
+Date: Tue, 20 Oct 2026 23:19:29 +0530
+Message-Id: <BCAFF55F-7FFA-4CB5-8738-F56D0F205086@linux.dev>
+References: <1a15a4b49f0.2873.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+Cc: Jason Perlow <jperlow@gmail.com>, baolu.lu@linux.intel.com,
+ dwmw2@infradead.org, iommu@lists.linux.dev, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ regressions@leemhuis.info
+In-Reply-To: <1a15a4b49f0.2873.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+To: Arend van Spriel <arend.vanspriel@broadcom.com>
+X-Mailer: iPad Mail (24A446)
 
-__blk_mq_update_nr_hw_queues() reallocates the hctxs of queues already
-on set->tag_list, so blk_mq_add_queue_tag_set() never sets
-BLK_MQ_F_TAG_QUEUE_SHARED on them again. A new hctx starts without the
-bit and a reused hctx keeps whatever it had when it was parked. An
-NVMe/TCP controller reset goes through this path.
 
-With the bit clear and an I/O scheduler, blk_mq_mark_tag_wait() sets
-SCHED_RESTART without adding a tag waiter and relies on a completion on
-the same hctx to run the queue again. If other queues on the set hold
-all the driver tags, this hctx has nothing in flight. Once its
-submitters block on scheduler tags, nothing runs it again and I/O
-hangs.
 
-Reapply the tag set's shared state after reallocating the hctxs, while
-the queues are still frozen.
+> On 20 Oct 2026, at 10:40=E2=80=AFPM, Arend van Spriel <arend.vanspriel@bro=
+adcom.com> wrote:
+>=20
+> =EF=BB=BFOp 20 oktober 2026 18:02:30 schreef Jason Perlow <jperlow@gmail.c=
+om>:
+>=20
+>> NOTE: an earlier report on this bug from us bounced off one of these list=
+s due to HTML/multipart formatting from the mail client used -- apologies, s=
+witching clients. This mail includes the full original report plus a follow-=
+up, merged into one self-contained report since the original never reached a=
+nyone.
+>>=20
+>> =3D=3D=3D ORIGINAL REPORT =3D=3D=3D
+>>=20
+>> Hardware: Intel CoffeeLake-H platforms, various. The affected device is a=
+ Broadcom BCM4364 802.11ac PCIe wifi adapter (14e4:4464) at 0000:05:00.0 on a=
+n Apple MacBookPro16,1 (T2 Mac). Aditya, including you directly since this i=
+s T2 hardware; copying iommu/pci/wireless because the fault signature and th=
+e fact that it reproduces on only one of five tested machines (at the time o=
+f the original report -- see follow-up below, that has since changed) looked=
+ like it needed eyes on the core IOMMU/PCI path, not the driver.
+>=20
+> [...]
+>=20
+>> THE ONE ANOMALY WE CAN'T YET EXPLAIN
+>>=20
+>> Despite the last two items above being unchanged, the actual generated .c=
+onfig has CONFIG_INTEL_IOMMU_DEFAULT_ON unset after make olddefconfig agains=
+t the rc7 source tree, but =3Dy after the same process against the final sou=
+rce tree, even though our template explicitly answers "# CONFIG_INTEL_IOMMU_=
+DEFAULT_ON is not set" in both cases. Our working theory is that some other s=
+ymbol started selecting/implying INTEL_IOMMU_DEFAULT_ON between rc7 and fina=
+l -- which would override an explicitly-seeded "not set" answer during oldde=
+fconfig resolution -- but we have not identified which one yet.
 
-Reproduced on v7.3 in an arm64 QEMU/KVM guest with a loopback NVMe/TCP
-target, four namespaces and mq-deadline. After one controller reset all
-four namespaces lost TAG_QUEUE_SHARED and fio stalled. With this change
-the bit survives five resets, and fio completes after a reset.
+intel_iommu=3Doff has the same effect as disabling this in the kernel config=
+. The real question is WiFi was still working before when intel_iommu was on=
+.
 
-Fixes: 868f2f0b7206 ("blk-mq: dynamic h/w context count")
-Reported-by: Lev <lev@zadarastorage.com>
-Closes: https://lore.kernel.org/all/00cb01dd3099$c82b66c0$58823440$@zadarastorage.com/
-Cc: stable@vger.kernel.org
-Assisted-by: LLM Specula
-Signed-off-by: Nirmoy Das <nirmoyd@nvidia.com>
----
- block/blk-mq.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 00b75eb95dd943a..ec3a7e5300d0e31 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -5188,6 +5188,7 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 			set->nr_hw_queues = prev_nr_hw_queues;
- 			goto fallback;
- 		}
-+		queue_set_hctx_shared(q, set->flags & BLK_MQ_F_TAG_QUEUE_SHARED);
- 		blk_mq_map_swqueue(q);
- 	}
- switch_back:
--- 
-2.43.0
-
+I wonder if PCs with Broadcom chips are also getting affected since we have a=
+ confirmed report of a non T2 Mac as well.
