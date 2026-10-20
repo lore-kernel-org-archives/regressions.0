@@ -1,54 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.244.194.184
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792498141;
-	b=0mBN5b6AQPAVoX+uUQz+4LeodQLpqEQhufCxDAIbm68ICSNvYO64MjErZyAuElPr3kbX
-	 AM9IcnYe+HC1Hwsb3JGtq1qZtL7ksMcXmDYtmi2tBM02Oe3YptwlM1lT95XAJLUMKGzHq
-	 O5NVFF9xjLiodv5zFuGB7NSxORBKV4LADDjy/Qp2fJxLMx6FFeWrEeEP0GSb+11SlCkVz
-	 NulKmzlLL8cZ/0+9mB0q4AM6bxDBQTxqGi3HTxli0QZ+6y0B8qqLhvXMotaT8EH7vxwlj
-	 8HJWnHRldSoDFyKZHL7KFn4za2QZjE5B+5yZf3RTvSr5KRMGzJUylrXR+CwPT6AmNzA==
+	t=1792499762;
+	b=I+fMz+fUgJOuwSqtpzm+8FR8NV/1M34CazFH/lySziuGqfV1tEe63BRSGe9Ba+kTLS4C
+	 ycs013KDblVp8kxlMfKkirKKA+11Few3y03z+BLpXhtM/gMUafSmc9ZsHUc7RygfxfC8z
+	 Z870FMgmmTLwbMiFQYhCDRslmA/Oy7fsmUS79Fcn4PPLjDasPeh9YnjOFaq3QU5ci3JLG
+	 +HFs79OawYpmD9so9tXwPRm3SVOUeDHIJoFv/B58GDYHVmEaLYzz/rDJXgWrnV2TmUbca
+	 xu86MIfng/8r9nC/jzxwbSSADJ4coh24URRKk5ghi58Rb/NEdaHg2aIiXCZnIqVKVsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792498141;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=2oAYJPU4rS/B67nm2olDeHtopzXuD57QG29t513sHn8=;
-	b=dWN8p4d+kJ4bZ8tYh9wtqgh3jf7BOvyD/pklxpmX1SXByrkCne4aWICXSob1F6Xa8cLB
-	 nQdD/3bCif0US3BeJNd9nIY0k/I23f+gKmg/SUV2m6lwBNZ7nfFGxyrpu8Qv9fzRRB+Dj
-	 TLaXYc36QenC/rZV1YtHaLC7P64OWt4uuZFXKnkWw8bEGc9di8owABxrwuDk0Teq125yO
-	 z2qdhpJG4N111uzoRcohHOAvdoCeaQCIkn9/AiuGDxl8V0gw/s0frKOsjeMg6HzuWf5dP
-	 q9fJ/CIGdMW4Oh3m/ce28tn8+LsSyPaHY/jRhblIeceW9xxMaGNzYv+XDV3ciaFQmug==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792499762;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=IWEMl3dsuO6wVu7TbcIoYGEJOJIYKGL1k0Igv2gre7I=;
+	b=uTi1F7a1SI33Ivdcw0uJjYIB0YV4HAlFm813UwAUW7WzxucEJy7/b5ALB+m7qAp+ExWu
+	 3yjEzFUt+zasgVlz2GtYiaovmxBDdEKB82BJiiMEr+W8tMccu9Vsx9fSl6AJ0JXi20ruL
+	 ZfFBn2RI5FNgoRfsyyGBRDlqLSiZ9uaan4446MCjEZfbjgwfRi/LOlMjCCZ+7kyteAvTk
+	 INLhPOxJyqzxGkcj2k8RuJPZVpBQghfc7+nebAB2EI0xWFoF0Pg+gpVEesFcnQtyV/yNB
+	 KZWAFwpcRYMU7eIYl+hU3lPFs+YhTQyvpnfJIHOg+dO9Zig5L7E47U4O497IDrPxc0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=M+7uNKlk;
-	arc=none smtp.remote-ip=95.215.58.179
-Received: from mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=MPeJJyTF;
+	arc=none smtp.remote-ip=185.244.194.184
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FED3606A31D
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 12:08:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9FED3606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8802E606A319
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 12:36:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8802E606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=M+7uNKlk
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=NHvbn3ue2nkgb328laFkEqNkxDgGzunCyN1UR3R7YQU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792498137; v=1; x=1793102937;
- b=M+7uNKlkKoX7RObvP2s1ErlPC3SXJKgoI5mhc+dVsQucAfnZ7p0hFStgvI4PQIG0zg3ZaXUJ
- mnf2X2kVupOb9V5zUa0nZC46vyb/7n54WVky3aeQSTtu0UMUQLejzv/ERU35Fl4klH53WoIYL/C
- zkOYUg95KIvHCfrKDWXCYd60=
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id cac925beb0231a6d;
-	Tue, 20 Oct 2026 12:08:57 +0000
-X-Mizu-Trace-ID: cac925beb0231a6d
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <b75feca5-6025-44ff-8b82-b1da48cc5ced@linux.dev>
-Date: Tue, 20 Oct 2026 17:38:44 +0530
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=MPeJJyTF
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j8Bgy5Pwpz9BjQ
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 14:34:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1792499694;
+	bh=IWEMl3dsuO6wVu7TbcIoYGEJOJIYKGL1k0Igv2gre7I=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=MPeJJyTFytiVTCvuitW2eMjB/2AJxh9LGdgIbxR7wdJgl0Z5aV2oYaIICGLdn9Xs8
+	 f4ic2jmsBpCJVxf5gCBY+3OfVYkc6j+cCJHRbM44Sbvngn7wC5DSDOLxGDZyACyda3
+	 imgkHTcLjXMpcX1QmLnkRcew/O8RgUE4w9tRHLageHBS+U72kkPmcaITCrGJ1O5p/t
+	 Dbq3FcYxNHqI1v+S0YlVPreYaensdWdjBRjnO7DVl595ObV/+1NUUCehHQoYSIl8qu
+	 Vluha4flrMo4rIXMj5bSdWdrw2AVvgpK8GrDjhe9Whr9WSBpXr27HBeJErWLgY9UxG
+	 nCNlMS1M1g6fA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4j8Bgy4lHmz7wvJ
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 14:34:54 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j8Bgy3FzZz8svH
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 14:34:54 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 16CBF5FB3F
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 14:34:38 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <bd2727b1-4abb-4c28-8eeb-5a2bf6c34367@leemhuis.info>
+Date: Tue, 20 Oct 2026 14:34:37 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -59,129 +74,37 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] BCM4355 Wi-Fi fails with Intel IOMMU on
- 7.3.0-2-t2-noble
-To: Peter Kiddier <peter@kiddier.org>, linux-wireless@vger.kernel.org
-Cc: brcm80211@lists.linux.dev, iommu@lists.linux.dev,
- arend.vanspriel@broadcom.com, regressions@lists.linux.dev, jgg@nvidia.com,
- kevin.tian@intel.com, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- linux-kernel@vger.kernel.org
-References: <CA+3E589O46nj=c1Y+Rwk_nPZZKEUjFvMfWaAFmQ2-7De9iUxFw@mail.gmail.com>
- <CA+3E58-2N-uVNsmwvOGDKZvtnDQ1DF=GzFbTyRLuN8FpAd4qdg@mail.gmail.com>
-Content-Language: en-US
-From: Aditya Garg <aditya.garg@linux.dev>
-In-Reply-To: <CA+3E58-2N-uVNsmwvOGDKZvtnDQ1DF=GzFbTyRLuN8FpAd4qdg@mail.gmail.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179249967833.69831.11641325466958598534@mxe9fb.netcup.net>
+X-NC-CID: v6q40iS1qISYFWatqgnUEsAqDYYU5g50SVEFRNDZiWhb+ds4A0k=
 
 
 
-On 20/10/26 5:19 pm, Peter Kiddier wrote:
-> Adding the IOMMU maintainers and linux-kernel.
-> 
-> The original report and test results are below for context.
-> 
-> I haven't tested a vanilla upstream kernel, and may have limited time
-> for further testing, but wanted to share the findings in case they're
-> useful.
-> 
-> Thank you.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-https://www.mail-archive.com/ubuntu-bugs@lists.ubuntu.com/info.html
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/6004
+#regzbot introduced: c87e6635d2db
+#regzbot title: drm: amdgpu: gfx1201: brief white-noise strips on all
+displays in mixed-refresh multi-monitor setup
 
-Similar issue is present in older non T2 Macs, so definitely not a T2 patches issue. Also, T2 patches do not touch IOMMU or brcmfmac
+#regzbot report:
+https://lore.kernel.org/stable/45162613-2802-401c-84c9-742f9c8c68e6@app.fastmail.com/
+#regzbot fix: ALSA: usb-audio: Avoid applying boot quirk for Behringer
+UMC204HD
 
-> 
-> 
-> On Tue, 20 Oct 2026 at 22:32, Peter Kiddier <peter@kiddier.org> wrote:
->>
->> Hello,
->>
->> I am reporting a Wi-Fi regression on a 2018 Apple MacBook Air with a
->> T2 chip, running Linux Mint Zena based on Ubuntu 24.04.
->>
->> The Broadcom BCM4355 Wi-Fi device works with kernel 7.2.11-3-t2-noble
->> but fails with 7.3.0-2-t2-noble. Disabling the Intel IOMMU using
->> intel_iommu=off restores Wi-Fi on 7.3.0-2.
->>
->> Hardware:
->> - Apple MacBook Air 2018 (MacBookAir8,1)
->> - Wi-Fi: Broadcom BCM4355 802.11ac Wireless LAN SoC
->> - PCI ID: 14e4:43dc (subsystem 106b:0843)
->> - Driver: brcmfmac
->> - Interface: wlp2s0
->>
->> Test results:
->>
->> - 7.2.11-3-t2-noble, default kernel command line: Wi-Fi works.
->> - 7.3.0-2-t2-noble, default kernel command line: Wi-Fi fails.
->> - 7.3.0-2-t2-noble with intel_iommu=off: Wi-Fi works.
->> - Reloading brcmfmac on the failing configuration does not restore Wi-Fi.
->>
->> On the failing 7.3.0-2 boot, the driver detects the device, loads its
->> firmware and creates wlp2s0:
->>
->> brcmfmac 0000:02:00.0: enabling device (0000 -> 0002)
->> brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4355c1-pcie for
->> chip BCM4355/12
->> brcmfmac: brcmf_c_process_txcap_blob: TxCap blob found, loading
->> brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4355/12 wl0: Jul  8 2023
->> 17:49:51 version 9.30.503.0.32.5.87 FWID 01-e74b9cb0
->> brcmfmac 0000:02:00.0 wlp2s0: renamed from wlan0
->>
->> However, Wi-Fi subsequently stops responding. The kernel log reports
->> errors including:
->>
->> brcmf_msgbuf_query_dcmd: Timeout on response for query command
->> brcmf_cfg80211_scan: scan error (-5)
->> brcmf_run_escan: error (-5)
->> brcmf_msgbuf_tx_ioctl: Failed to reserve space in commonring
->> brcmf_cfg80211_get_channel: chanspec failed (-5)
->>
->> There is also an error creating the P2P interface:
->>
->> brcmf_cfg80211_add_iface: add iface p2p-dev-wlp2s0 type 10 failed: err=-52
->>
->> I tried reloading the driver using:
->>
->> sudo modprobe -r brcmfmac_wcc
->> sudo modprobe -r brcmfmac
->> sudo modprobe brcmfmac
->>
->> The driver and firmware loaded again, but Wi-Fi remained unusable.
->>
->> The firmware files are present under /lib/firmware/brcm/, and the
->> firmware version reported by the driver is the same on the working and
->> failing kernels.
->>
->> The brcmfmac module metadata differs between the kernels:
->>
->> Working kernel 7.2.11-3-t2-noble:
->> srcversion: 3B6176FDB720DDE8E7C596B
->>
->> Failing kernel 7.3.0-2-t2-noble:
->> srcversion: 3DCA38D52402541701276CF
->>
->> I did not find obvious PCIe AER or fatal errors in the failing boot's
->> kernel log.
->>
->> It has been suggested testing intel_iommu=off after reloading
->> brcmfmac. The driver reload did not help, but booting with
->> intel_iommu=off restored Wi-Fi.
->>
->> This strongly suggests an interaction between Intel IOMMU handling and
->> the BCM4355/brcmfmac driver in the 7.3.0-2-t2-noble kernel.
->>
->> I have not tested a vanilla upstream kernel, so I cannot yet confirm
->> whether this reproduces outside the T2 kernel packages. Unfortunately,
->> I have limited time available for further testing, so I may not be
->> able to investigate additional requests promptly. I wanted to report
->> the reproducible behaviour and the intel_iommu=off workaround in case
->> it helps identify the regression.
->>
->> Could you advise on further diagnostics, or whether this should be
->> investigated as an IOMMU or brcmfmac regression?
->>
->> Thank you.
-
+#regzbot report:
+https://lore.kernel.org/all/29f6c901-5209-4681-81cc-ff768cd405f4@maich.gr/
+#regzbot title: scsi: lpfc: Fix use-after-free of mboxq in
+lpfc_sli4_driver_resource_setup()
