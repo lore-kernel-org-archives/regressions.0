@@ -1,120 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=67.231.152.168
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792513018;
-	b=hx2yhpLtqv14gCNsorEQV7ezlvV6bpoVSzwOSsLZEg1b0IyOsOd6X+KovmnPBDGDz/2S
-	 YaUM5mjjtIMEvXhU+z5sdeANJswsr9C2xgGETLa13Jb4jTqZT8+mkOFSgFN6uvmfUVcbb
-	 gaaw8fV18upi5IYS6u63ZzFmlK1XFbDE/1BvFnlWzD5WeGOPabyNCxIqBSHLNnwwEvspQ
-	 IucvkRZ3sbQZRjm/A151x+lSGEzf37mw0Ca2m0VJNdrllVJ/w7tQWGcxyYypvgTOkzthn
-	 xEAXdjQcY5m3z6T687kCk0v74E2kbL6vyHuElaBfkt/PF2G1dAvXwW0cb2BpA2nSgMw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792513018;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:DKIM-Signature:
-	 Received:Received:X-MS-Exchange-Authentication-Results:Received-SPF:
-	 Received:Received:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-OriginatorOrg:X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Info:X-Authority-Analysis:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Spam-Reason;
-	bh=bb7zyXw7XVi9YbzBta7AXPj/CR1b8sx3T6in3c0I6+8=;
-	b=SB1bbGleN1Q8d6raCOpceIQRuVoqcX3jp7dwnonGuJnn2uLzvw8bHCrrJHmDx3iGb7TG
-	 Zp1Mu1cegReRvoTBmRTOlOx7kHvL3WTUTf2gU2OsKrXByxW44/2nYtVPXamEthNN3Gnax
-	 /BjbrN8lDSvBcbkcVZiVPrZ0J0j4nA33nCKbi7l3AnCWm56oCfEvxhB3gLo0+Vd5XM2fY
-	 kOSpvDrALuBUsusLUEUo8HypwqV2yFOKTjUFGC6+Y25yf5bkGg+U2jap8AIjqJv6MygA5
-	 OQ+XQliepUKIkVgDs2NJHxULk2IKaHZ95joxjFxdhJ2RBUsTCrvfhXsR/enu/zSipgQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=opensource.cirrus.com;
-	spf=pass smtp.mailfrom=opensource.cirrus.com;
-	dkim=pass header.d=cirrus.com header.i=@cirrus.com header.a=rsa-sha256 header.s=PODMain02222019 header.b=jsezxNid;
-	dkim=pass header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-cirrus4-onmicrosoft-com header.b=QMJbj0ov;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=67.231.152.168
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.224.46
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792513484;
+	b=q8G2L/O8E79CfLXObLGOdVtt4SMa0lmqqfgTTMzRh+vW0i0l/ZYzXIAyAmLXvFdahix0
+	 RoC0t3pyIrKSccsOSzjQU7eWOKqG9smeu1pmvAK9o4KznM36QYG1Vzqcre8iZQaimF/jt
+	 iMu3+6iLj8De5hGYqn44LcDinKWBQOGhWiNxi+JuQ3VxyRNjBnf6dWO2l10t1v4/2doEk
+	 ZbfaxhXEFjZEZN3Vi9Ll22N1Iubny7VLfvrqp+Fkx+rbfvZ6nDoa3GBGqI2ri/hzhUsyu
+	 22X75392iq5PCY0m7MxGi/w82zzJLMzjnoydLSh3AzMJ/Fr4R2idapwkjLja2OP5dDQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792513484;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:CC:Subject:User-Agent:Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=OigSq64J0rt4TZoDpYc+GBYQyOVQhjW9BeOIpOHcBFA=;
+	b=be1z8w6ujClzhWIg/uLX99ZWccIZkeqy7F+fi/HvQ99KHJMDnubj2zlu1yqetMl43RV6
+	 VjnN6FX4X16uBPkn/ObYiVpYW4yEzV+/mOUY3w7v9IU02tlOuK58ImR3dhcUEbSebOyld
+	 polorhaqPJ9ak2Tgv/nr+c9jaUyqH4UxVoSyQGnKWJ1UgsUHdQHKEIe0MguU6JTU89vh7
+	 hGCEqv4gGV+SwlzQWHWMUQ8g0HUYhBqCW2tl5xcTDYk86NyoJD8DAbNIuPaU+3o7/du2N
+	 s0e+i87ZKzeHzTrfU0tCJ8ePSP8bm4QA/SrONTw4aq7Xeolzkfo/EGQQY/X58WM74aw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=IeYWvaqu;
+	arc=none smtp.remote-ip=74.125.224.46
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A04606A32F
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 16:16:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06A04606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DA960A260D
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 16:24:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2DA960A260D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=cirrus.com header.i=@cirrus.com header.a=rsa-sha256 header.s=PODMain02222019 header.b=jsezxNid;
-	dkim=pass (1024-bit key, unprotected) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-cirrus4-onmicrosoft-com header.b=QMJbj0ov
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69KEuvAV680274;
-	Tue, 20 Oct 2026 11:16:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=bb7zyXw7XVi9YbzBta7AXPj/CR1b8sx3T6in3c0I6+8=; b=
-	jsezxNidpvaf5VDRAMGkdIUsBaOuDkP2EjcbXoJ/Ejr1B21LGKENuDnrDLgtQhUK
-	ksyeDE/YufvQaBfgNjTGOkLDfR1eFbVykfMYT00UTUDXcJyjrIsKufCirCZ0bpUA
-	NqosouM0xxsBsOsguGQgP4Mwa2EEniTEOFC0L//7yCGXD3dckZTWWTMgGlG6+Cmq
-	a63qeHMooYk3sxe7kmfbLyRxmlrz3zJorF+1HdechNHOkRYYoRSeQ1GPu5osmqRy
-	rUrIRIguOdv22IcEcEafrCHTp38ThKAkTXK+yEM5Zs8RoBERhjRkDP7V8T2GGH+U
-	vpdxFhp1r0SoXCMKkPTYtg==
-Received: from ph8pr06cu001.outbound.protection.outlook.com (mail-westus3azon11022139.outbound.protection.outlook.com [40.107.209.139])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 4hdw4vsb03-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 20 Oct 2026 11:16:40 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u9to87Ne2p3AuDNnq4OSh0ug8OgczkEbq+qAN837+v9ghI2ppr32sQGr6Kwee0ZZmwnnZqGSwHEeQbVKuQ4vLgmY9rZLRCN0S3LFKYknLVVMkH5huFhnj33mlivOPtklzgJ/DzURO9brNcAeIkLmUBJxEzTAeGCeC4dISafGhjaLOmbnXI+nA0/ZZo17m6vIDmP8CAKhiCz42xZf3ovqAD/wjvAojUd4fhhNr9RFZluoqI07yxUhaTPerIaD2/o84ea4pdN00+tfDXEx/U/n9ZF6AK43ijG6qIm9K0WYn/zv93X5z2NwYGWKQ8sS6uz+g/BayksgWGen0VfdDaqN2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bb7zyXw7XVi9YbzBta7AXPj/CR1b8sx3T6in3c0I6+8=;
- b=xlapL6cZN1/UsEaQyFbJzVrmhvhV1LNqQI7Ewo/ypGce6rbgbMaaoCM06gSCN9WndN7Ebbg5oE7tilDgnAgtHWBLhcO2wv/fHNiA17l6CaEa3Oi6OdZiugTQO1iSgswW0IOh7LAouy8ucTXFXRs+SFEKMENEm2c5lzqh2985wpxUW4jx0K1NxfHQwCqOleQxB7fucG+0Tc9YvQ2UFOJkhZlMN+T2MG74QWFWnbkIaGBexnwiNL+F8fRmVmqMYmrMLoF4WP/xhRiLtt4Hgrutju8yWBE0ro8jkl+TNBpHJsHjK1WrIUvJQ8gXgm2qD9Dt5y+SKh2h+wo6EHBGhBD0zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 84.19.233.75) smtp.rcpttodomain=kernel.org
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=IeYWvaqu
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-679965fb848so3547181d50.1
+        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 09:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bb7zyXw7XVi9YbzBta7AXPj/CR1b8sx3T6in3c0I6+8=;
- b=QMJbj0ovVQEyizcRm3y4prqOJNsLaMaZSw8F61WHlP4LE2w1CANwBINlb1zD4nqVZ7tCZYLRBrAsk/QzudTy4FE6YnaEGr9oy1Mqye5nPGBLBNDsRTkJ3r0JuNdGf0NgGclCGaRePRdbtOHTrztU99nGz7J/DY332LalLxB1ZKw=
-Received: from SJ0PR13CA0127.namprd13.prod.outlook.com (2603:10b6:a03:2c6::12)
- by DM3PPF73554C556.namprd19.prod.outlook.com (2603:10b6:f:fc00::737) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.19; Tue, 20 Oct
- 2026 16:16:32 +0000
-Received: from MWH0EPF000D894F.namprd05.prod.outlook.com
- (2603:10b6:a03:2c6:cafe::8d) by SJ0PR13CA0127.outlook.office365.com
- (2603:10b6:a03:2c6::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.15 via Frontend Transport; Tue,
- 20 Oct 2026 16:16:32 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=softfail (sender
- IP is 84.19.233.75) smtp.mailfrom=opensource.cirrus.com; dkim=none (message
- not signed) header.d=none;dmarc=fail action=oreject
- header.from=opensource.cirrus.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- opensource.cirrus.com discourages use of 84.19.233.75 as permitted sender)
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- MWH0EPF000D894F.mail.protection.outlook.com (10.167.249.215) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.15
- via Frontend Transport; Tue, 20 Oct 2026 16:16:31 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id C478D406542;
-	Tue, 20 Oct 2026 16:16:29 +0000 (UTC)
-Received: from [198.90.208.11] (ediswws06.ad.cirrus.com [198.90.208.11])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id ACD6A82024C;
-	Tue, 20 Oct 2026 16:16:29 +0000 (UTC)
-Message-ID: <a1e22001-9a2a-458a-a6f9-a24e3c4a7160@opensource.cirrus.com>
-Date: Tue, 20 Oct 2026 17:16:29 +0100
+        d=gmail.com; s=20251104; t=1792513483; x=1793118283; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :user-agent:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=OigSq64J0rt4TZoDpYc+GBYQyOVQhjW9BeOIpOHcBFA=;
+        b=IeYWvaqukesCoPDloy/+BHTRcyvUaerh2uP8ra3QIz+eYK5nR9Z5W3IXTgHrjYQflA
+         Nm/1Zb7cYJhcuBQOcLAFjKDCLZPXNhaUFq6ZsEG/V8qjeDxef5M3JRoqeL44jNRrN0JP
+         0Nqb4/71aCju55iz5xe8ZzCPUjZgSmz8Prq/BLIW3S8bw9m0g8tVZvOrYWzD668Tn1Jk
+         8u1DshEYbeYXY9GWzW+GVyLo7/13Gofw2I6OU40qOS4VkPLEREnwFAj/UbYnI1XeHadQ
+         lnOfBrG4GQd3fKGU3Mj1jkqRrSFMZOz+eR6ojyAvS6ToIVA+QjcPigEVt5t0oJiUPArs
+         FXvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792513483; x=1793118283;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :user-agent:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=OigSq64J0rt4TZoDpYc+GBYQyOVQhjW9BeOIpOHcBFA=;
+        b=UOr4ph2WQjAsEKtITTNhmwp3cV8lZN8ajFgs/Q/2yJ7PtDTO7pWc4UYe9DXelgs41y
+         bYi04DcWVYkInBN4zwit60XJB2WwFPWQggZBQsL0ynNCEfs39bd2E6bdHUkVWTJxbmTF
+         Y9lngZJo8wUJw3fxOYIcgO1kbIY9PAb7ZlWYWmFbRQO8Yg6lYg7GjVxy1YgVgu8HE+IK
+         Uyz/ZZ0XrsdqhLE2zewSp+qEs/SkZ7pS2tcpM40uhOJowvLoh0xCdj6TzP8Jq5Qn61XL
+         J9boTesThtHKKsgOFrRFnJj88Ldapvvs9yRpdenVezL7ogCx+0BlGgt7vIFDcnZ545CN
+         VPZw==
+X-Forwarded-Encrypted: i=1; AKwUvBxrs137GPWdDC18wKsfQKv7iS0LzFjghwyNQkxjj/ppaOJYXYv7MjsjuS1ix9+LCN3jdpgO62axQuH2+Q==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJRKJHZ8+drRY38O07ZcfpsVttFe6X0/b45ag4bc1EbUB4E6ghY
+	e54ALtGNATzsaD48+b8jpuk3R7ZN4YbTH3CK8JaxTH57yInOs7AHyI3r
+X-Gm-Gg: AYBFou15UJrO5cAX6IICqNFu7QTVusNO7W9OXAe4u4cTylhl8to+mZwXYIJ43BjikxY
+	1kbEXHUJFcDNFSDgL9+4Mo5Q5H0zFfqGGJFMX18981BV6gGq5wldQfoU9dEHEiEfAa6PP0BaxHL
+	W4Fm9t7HyYzMfkv/wdgrsptwM4kc1j7fV+wg0UhveNULLpIgEZbl5grn+gkGW3dDfmExHHqH+MQ
+	rJLeLJChsvrpDXviLfLGCbvdFXwZwU5XyNe+wmrXikHfblmCStNItmMQbSkOIWleb+sr2yZ/Rxt
+	vL3HaL6xljzBJSbnR1AwujwS6l8KBIrKT67etRp5vO6xKFWscgg06nnN7DsFjlGFizpOTuTXBjh
+	uBflPCUmblXoC69dotErm3fgV4ZcT/o4RdMQREt5KwNFWXvPD3Yf9zExq9GNXj/iYPjhC2ayU3s
+	EbKOTBkxoYz253M/zr9tjVZ16SdHvP/6aBlFwW/1BIJlM9E8/oYAoXvAdFhmed1NvXsB0iCKZhz
+	DXcE+/NCc6tRngf3dMRE5vS/sgubtZ0mvJW4hQ3F3Kbc9T4rm90pnK8KpkcT2H3eTnXJIeIt1BK
+	tzFdStysBG3LerI6OYKVwXY+8g2ZhAfZArbad8F3a9p9EOgGC3MAswMq2H2dvsahv2codQ6SBDl
+	0yH9Ylg==
+X-Received: by 2002:a05:690e:43c3:b0:679:980d:996d with SMTP id 956f58d0204a3-679ca75c039mr1677629d50.23.1792513482689;
+        Tue, 20 Oct 2026 09:24:42 -0700 (PDT)
+Received: from ehlo.thunderbird.net (212.153.88.200.l.sta.codetel.net.do. [200.88.153.212])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-679b1e095efsm5543486d50.5.2026.10.20.09.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2026 09:24:41 -0700 (PDT)
+Date: Tue, 20 Oct 2026 12:24:40 -0400
+From: Jason Perlow <jperlow@gmail.com>
+To: aditya.garg@linux.dev, baolu.lu@linux.intel.com, dwmw2@infradead.org
+CC: iommu@lists.linux.dev, bhelgaas@google.com, linux-pci@vger.kernel.org,
+ arend.vanspriel@broadcom.com, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Subject: =?US-ASCII?Q?=5BREGRESSION=5D_intel-iommu/brcmfmac?=
+ =?US-ASCII?Q?_DMAR_fault_on_Broadcom_PCIe_wifi=2C?=
+ =?US-ASCII?Q?_v7=2E3-rc7_-=3E_v7=2E3_final_--_candida?=
+ =?US-ASCII?Q?te_mechanism_and_proposed_fix_path?=
+User-Agent: Thunderbird for Android
+Message-ID: <7A444F17-F81B-4A33-A7AF-9E30B3EEFA67@gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -124,78 +101,168 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 7.2.11: no speakers on CS35L57 SoundWire laptop,
- "CODEC DAI cs35l56-ot25 not registered"
-To: verazimmerman1987 <verazimmerman1987@proton.me>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Brown <broonie@kernel.org>,
-        "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>
-References: <k5Jaxe-8dtnRDkZ9ahH_w3C6hqb0IATbibwhxy4gAuOS5rV1HKzb4hzzv9XO9reX24UPoyKP30ZfRI6EVa6Jl0A49Q8Z5o7VKfgFyaq1x7M=@proton.me>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <k5Jaxe-8dtnRDkZ9ahH_w3C6hqb0IATbibwhxy4gAuOS5rV1HKzb4hzzv9XO9reX24UPoyKP30ZfRI6EVa6Jl0A49Q8Z5o7VKfgFyaq1x7M=@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000D894F:EE_|DM3PPF73554C556:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec8e9b02-efe1-4a39-bf51-08df2ec580cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|376014|61400799027|23010399003|10067099003|18002099003|22082099003|16102099003|3023799007|13003099007|11063799006|261009223027099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	ApmrIWz6TJLcmD2hK5BUPRcP0DrmzaPbBFKFrvr9Fn8BGeVf4eQwexICBJq34TR3fX9W/Ac69suS1hKoV3YWKLWGmfQttgJQQo9eFcSbHp9H7eUUjkH5cOwsu/Ss+PhA/5197O0Hj9lCBwEH3lS2nKTZSVJSEbErJbkW5UQPZq/f67dauxlJDeuqM0EwskUxefmMwwhrdyppcDpaeMC6HGafX3gdhqmtgfq0H0WSsydMSzwptwbCoBjqSLB93x/8Pwy5auAFBaKGAzXS9Qb6PcUmfeViMlAl6/n/2xfD5+IY613Uj0cVfEFBIkqxu/mvxlfeYJTuv0gLSvzDMs73u6SCx+W3F84wEwM2zXSHBDXMJtFAqXbe9izfEZfN2XqEL9mkDaC41Ktx3iPCeKAsRr9j9baUtfczlRSUUuOcP0/ugPoyIyO2G9pLwOpEoXBmJmz4LuBjxsr2hTSix00vBNFaC0rwi6TpnkInyFBE3sJLNm7/eI/gLe1LWc0/BfLSZ7A1vNMAauZae65gCTVwEQf75rJI+/el+aNPaERMAOxNopVQ0fh+JDDlLdUPWk7I9zVplShd4l3WljscuD//wL/3O6SmDSSKVkt4E860LKc7LGhc9eq+CFjHa19RbMFuX0Klv9tbWHBJB0FAibl11GFlV8x4CEG6FxVQ4oAwyro=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(376014)(61400799027)(23010399003)(10067099003)(18002099003)(22082099003)(16102099003)(3023799007)(13003099007)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	riAYcWZSn1KuyLC09HMv0KfmgiLyexX19y8H1gpVelJYJJrnZE0rTkMbMuliZSW87Hd6hN5/qrKNlaWvAePab8iL0kwS4JDL1M1DVmrJyHDHBnTgpGyfMcUpT1ICzinXXiVFjuIxxGVedJLwbsfekl0q9GGzSMmVwx80VEQ47w1/e5FZVI3vHfqRGuhYQBmJCjs08TMTsV/tBSiYKa1gP9fKnhLb6Ovp7lkOus0wziYTVeRgZJrEcXDXhvlpwbR/S3o9kKSq6cXg0daPEjQZ2gFXdhJ6PvxJklfJHAPmFGz9CX1a6RxE4p97CKJXdfC3gwOmK06z9WATXP9u8tmfFKBSXLf/1qEfedvj7q17FWEtB/eeJJNytX2AQeCowLpQvofU9Tf5wmU/1IcE8AIXJalkVOCmYmrM9p4JX4ucFKCMX3vH4t2MT+6Bf85tmS0R
-X-Exchange-RoutingPolicyChecked:
-	pNxTYsgwNE5eAW1kR8aArjcNTZKGrdOlAffbJBYskn9QyHfXbV2NPz/u/mc+F8QCP4fIaTyHOkcguq8FnTKHZkiREzTEOgEm3E1uOcmFz3M/X6ng/UvlPCf1uFreAwlsWHsuftuG3Y98Nag6Hl3lfVdtoj8O4FbsGmAwuNYQeBMSEgXbTzoUPwITn82XLQQKpoSjsoGSekTBzeSuAtfVqX/44e3wiY9WZy8mjYnifTabiw+9QwfHqPakiJ8bsbnPhekzLnrXPdg7iqIn9DtNKYOAayL2Z7K+bnR9/718fqTiTPRjRKvrocbZCZPGYsvh0+bf2rYpMWVnLvZRqjVZQw==
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2026 16:16:31.0978
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec8e9b02-efe1-4a39-bf51-08df2ec580cc
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-MWH0EPF000D894F.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF73554C556
-X-Proofpoint-ORIG-GUID: sHTspBRQv8j1MiO5vBDHrfzhJoKgQAPs
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIwMDA2NCBTYWx0ZWRfX1D1ndP/n55py
- v9i0FHgtbsZxvW0PDypw1MFNz2jUrpZHVWG/xXknV4WKtcZx8BmX3jnTg0sPDsq/4J6r802p2lB
- nZ91aitV58hdsascuds3A/S1d22NxWQ=
-X-Authority-Analysis: v=2.4 cv=H7tOUOYi c=1 sm=1 tr=0 ts=6ad793e8 cx=c_pps
- a=A91p8pFdSY8iZOlwlHItIA==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=RWc_ulEos4gA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=iX4cTi3TZMoOKdANLEfx:22 a=KfkQE9S9VqCBgivYGm0O:22
- a=VwQbUJbxAAAA:8 a=w1d2syhTAAAA:8 a=2UBwMtoTQ2vo7Y6c5O8A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
-X-Proofpoint-GUID: sHTspBRQv8j1MiO5vBDHrfzhJoKgQAPs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIwMDA2NCBTYWx0ZWRfXyjs33SGKMm0a
- oJhbpRYN49dUhZ3BgrDm0wwF/QqH1h3J8sgYTOoJVYdtDfYrjv6npxhXiT3oBfO4KWFJK2jrsju
- pkQXmQFsOGXY4b/npsa6GChl/Ukv4OVsQfaOGUV6EMw16PoBFZX5xA474O220ljFtEmMrdxfxgd
- rZA20y9lMAI54OJ4/orOZVGjhk4yf0xaRNZKDYgdm+QojvFB9Dbt/r5HYdAM9xTvirYOcAmjYn4
- /LQVBJPIyuYCea02JPDRLanGSyHAcaz4Fb9ilWaNHI0zdc4qmL5SjuD2eQeZcZZNVB0IM0TRZWE
- IPOPptZH1ZeMvJrjN9G1WaOLnHt8qVO9Zz0mi1VJs5VZSg0Qnj1CVX+LeOyQbMvUROt4AHZPdrY
- eNMEIFlRP9+tNiLq+Xef5JQFGbspX4dg1O5/80wZk4djHgqAiLAV0pQl7h1qC5YVk5EcLvOpsRY
- nEWc7ZAOR1rQuBpjZ3w==
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 20/10/2026 5:12 pm, verazimmerman1987 wrote:
-> Hi,
-> After updating from 7.2.10 to 7.2.11 the internal speakers on my
-> laptop are gone; only "Dummy Output" is available. 7.2.10 works.
-> 
-> The sof_sdw card fails to bind with:
-> 
->    sof_sdw sof_sdw: ASoC: CODEC DAI cs35l56-ot25 not registered
+Resending, stupid Gmail mobile client/HTML/apologies =2E
 
-Yes, this is known and already reported:
-https://lore.kernel.org/linux-sound/20261005155235.1386525-1-rf@opensource.cirrus.com/T/#m420ea27d936f1fd9cec79c988120a11caa8d428e
+=3D=3D=3D ORIGINAL REPORT =3D=3D=3D
 
+Hardware: Intel CoffeeLake-H platforms, various=2E The affected device is =
+a Broadcom BCM4364 802=2E11ac PCIe wifi adapter (14e4:4464) at 0000:05:00=
+=2E0 on an Apple MacBookPro16,1 (T2 Mac)=2E Aditya, including you directly =
+since this is T2 hardware; copying iommu/pci/wireless because the fault sig=
+nature and the fact that it reproduces on only one of five tested machines =
+(at the time of the original report -- see follow-up below, that has since =
+changed) looked like it needed eyes on the core IOMMU/PCI path, not the dri=
+ver=2E
+
+SYMPTOM
+
+Between a locally-built v7=2E3-rc7 kernel and a v7=2E3 final kernel (same =
+=2Econfig template, same patch series beyond one T2-specific AER quirk that=
+ is upstream in final and therefore held out of our patch set), the BCM4364=
+ wifi firmware on the affected unit crash-loops continuously:
+
+   brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4364b3-pcie for ch=
+ip BCM4364/4
+   brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4364/4 wl0: =2E=2E=2E
+   ieee80211 phy0: brcmf_fw_crashed: Firmware has halted or crashed
+
+repeating every ~6s, indefinitely=2E dmesg shows the actual mechanism -- a=
+ real IOMMU DMAR page fault on the wifi device, timed to the same cadence a=
+s the firmware crash:
+
+   DMAR: DRHD: handling fault status reg 3
+   DMAR: [DMA Read NO_PASID] Request device [0000:05:00=2E0] fault addr 0x=
+ffeff000 [fault reason 0x06] PTE Read access is not set
+
+Four such faults logged at uptime 13=2E4s/19=2E4s/25=2E3s/31=2E2s, each im=
+mediately followed by a brcmf_fw_crashed event=2E intel_iommu=3Doff removes=
+ the fault and the crash entirely (8+ minutes stable, single clean firmware=
+ load, stable AP association)=2E The prior v7=2E3-rc7 kernel on the SAME un=
+it has zero DMAR faults and zero firmware crashes with IOMMU on by default,=
+ so this is a regression introduced somewhere in the rc7->final window on t=
+his unit, not a long-standing issue=2E
+
+ORIGINAL 1-of-5-machines SURVEY (since superseded, see follow-up)
+
+We initially ran the identical kernel build across five machines and only =
+one faulted at the time: the affected unit; a second MacBookPro16,1 with th=
+e same BCM4364 chip; three non-Mac x86_64 machines spanning three more wifi=
+ vendors (Intel iwlwifi AX201, Intel iwlwifi Centrino 2230, Realtek rtw89 8=
+852BE), all clean=2E IOMMU was actively translating DMA on every one of the=
+ five machines; only the one unit faulted at that time=2E
+
+WHAT WE RULED OUT BEFORE WRITING IN
+
+ * AER/ANFE quirk on the T2 Secure Enclave device: its PCI ID match is exa=
+ct (Apple SEP, 106b:1802) and does not touch the wifi device (14e4:4464); r=
+eal PCI topology on the affected unit also shows SEP and wifi on separate r=
+oot ports (00:1b=2E0 -> [04] vs 00:1c=2E0 -> [05] off the PCH), so there's =
+no shared-root-port mechanism either=2E
+ * brcmfmac driver source: git diff v7=2E3-rc7=2E=2Ev7=2E3 -- drivers/net/=
+wireless/broadcom/brcm80211/ is empty=2E
+ * Our own config template: byte-identical between the rc7 and final build=
+s=2E
+ * The upstream Kconfig stanza for INTEL_IOMMU_DEFAULT_ON (drivers/iommu/i=
+ntel/Kconfig): byte-identical text between v7=2E3-rc7 and v7=2E3 (default y=
+, no depends on)=2E
+
+THE ONE ANOMALY WE CAN'T YET EXPLAIN
+
+Despite the last two items above being unchanged, the actual generated =2E=
+config has CONFIG_INTEL_IOMMU_DEFAULT_ON unset after make olddefconfig agai=
+nst the rc7 source tree, but =3Dy after the same process against the final =
+source tree, even though our template explicitly answers "# CONFIG_INTEL_IO=
+MMU_DEFAULT_ON is not set" in both cases=2E Our working theory is that some=
+ other symbol started selecting/implying INTEL_IOMMU_DEFAULT_ON between rc7=
+ and final -- which would override an explicitly-seeded "not set" answer du=
+ring olddefconfig resolution -- but we have not identified which one yet=2E
+
+=3D=3D=3D FOLLOW-UP (what changed since the original report) =3D=3D=3D
+
+1=2E The second test unit we called "clean" (CHIMERA, identical MacBookPro=
+16,1 model and BCM4364 chip to the affected unit) was NOT actually immune -=
+- left running longer, it crashed at 41 minutes uptime with the identical s=
+ignature=2E So this is not host-specific or even config-specific within a m=
+odel; it is cumulative/probabilistic with firmware-crash retries, not a sta=
+tic per-unit property=2E We now apply intel_iommu=3Doff to both units=2E
+
+2=2E We tested iommu=2Estrict=3D1 (forcing synchronous TLB invalidation, n=
+o lazy-unmap window) on the affected unit=2E It does NOT fix the problem --=
+ 9 firmware crashes and 18 DMAR faults in the first minute, same as baselin=
+e with lazy invalidation=2E This rules out a stale-mapping-during-lazy-unma=
+p race specifically=2E The IOMMU is failing to produce a valid mapping for =
+the address the device requests, not failing to invalidate an old one in ti=
+me=2E
+
+CANDIDATE MECHANISM
+
+The four DMAR fault addresses we captured are all exactly 4K-page-aligned,=
+ clustered within a ~2MB window, with irregular (non-fixed-stride) deltas b=
+etween them -- consistent with each firmware-crash retry requesting a genui=
+nely fresh page, not a sub-page cacheable-alias bug=2E
+
+Reading drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie=2Ec (v7=2E3)=
+ shows why=2E On firmware crash, the bus =2Ereset op (brcmf_pcie_reset()) r=
+uns this sequence, unconditionally, for every chip revision:
+
+ 1=2E Disable ASPM=2E
+ 2=2E A real hardware watchdog reset of the wifi chip's own silicon: WRITE=
+CC32(devinfo, watchdog, 4) -- a write to the BCMA ChipCommon core's watchdo=
+g register, Broadcom's standard SoC-wide hardware reset mechanism (used her=
+e in place of a PCIe FLR)=2E
+ 3=2E Restore ASPM=2E
+ 4=2E Free the old ring buffers (brcmf_pcie_release_ringbuffers, dma_free_=
+coherent) and allocate fresh ones (brcmf_pcie_init_ringbuffers -> dma_alloc=
+_coherent, confirmed clean, correct DMA-API usage -- no raw pointer math, n=
+o dma_map_single/dma_map_page misuse)=2E
+
+So every firmware-crash recovery cycle contains an actual chip-level hardw=
+are reset of the wifi silicon, sitting inside the normal recovery path, imm=
+ediately before fresh DMA buffers are allocated=2E The IOMMU has no visibil=
+ity into that internal chip reset -- it only tracks dma_alloc_coherent/dma_=
+free_coherent calls=2E If the chip's internal DMA engine state (cached poin=
+ters, in-flight descriptor/prefetch state) is not fully re-synchronized wit=
+h the IOMMU's page tables across that reset window -- plausibly interacting=
+ with whatever changed in pci_dev_wait()'s reset-timing behavior between v7=
+=2E3-rc7 and final, one of the only real PCI-core diffs we could find betwe=
+en those two tags -- a stale or premature DMA read from the chip in that wi=
+ndow would produce exactly "PTE Read access is not set": a page the IOMMU h=
+as no reason to have mapped yet=2E
+
+This reads as plausibly Broadcom-specific rather than a generic any-PCIe-w=
+ifi-vendor bug: in our survey across Intel iwlwifi (two chip generations) a=
+nd Realtek rtw89, all clean on identical kernel/IOMMU config, none of those=
+ drivers perform a full chip-level silicon watchdog reset as part of routin=
+e firmware-crash recovery the way brcmfmac does=2E That is a direct consequ=
+ence of Broadcom's wifi chips having their own embedded ARM co-processor an=
+d firmware, versus a more host-driven firmware model elsewhere=2E
+
+We have not proven this causally yet -- it is a source-grounded mechanism,=
+ not a confirmed root cause=2E
+
+PROPOSED FIX PATH
+
+1=2E Bisect: the real fix, if this mechanism is right, most likely belongs=
+ in one of two places -- (a) brcmfmac's reset sequence, inserting a synchro=
+nization point (barrier, or a readback to force completion) between the poi=
+nt where the fresh DMA mapping is guaranteed IOMMU-visible and the point wh=
+ere the device is signaled ready to resume (brcmf_pcie_hostready / the mail=
+box write that follows), or (b) PCI/IOMMU core, if pci_dev_wait()'s v7=2E3 =
+behavior change doesn't give the IOMMU enough time to fully settle before t=
+he device can issue a post-reset DMA=2E We don't yet know which=2E
+2=2E We are rebuilding with CONFIG_DMA_API_DEBUG=3Dy to reproduce this on =
+the affected unit=2E That should show the exact call site and timing of the=
+ bad mapping, which would tell us definitively whether this is a one-line b=
+rcmfmac timing fix or something deeper in IOMMU/PCI core=2E Will report bac=
+k with results=2E
+3=2E In the meantime, worth testing as a less blunt interim workaround tha=
+n intel_iommu=3Doff: iommu=3Dpt (passthrough -- disables DMA remapping but =
+keeps interrupt remapping)=2E Haven't tried this yet ourselves=2E
+
+Happy to share full dmesg, the DMA_API_DEBUG output once we have it, or te=
+st a proposed patch on real hardware -- we have the affected unit and can r=
+eproduce on demand=2E
