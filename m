@@ -1,82 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792523824;
-	b=UKt2aZ19jxhSdPiLFBS0UZOAasg5XUfPRisSaYlEH3lEaG6Vt/TSKINwDq1kNIGpIgeu
-	 Hr68WAlJwIUEF+tHd4DtIkgOV24S6ghzZ66p95M1Ud6JTDU1ahEiU+ikMvpEzOSvucZZx
-	 NznOB1h3V0FSgwCpjBPXj2z6iheTyiLPVEByw4c0h7i20/gszY+/xTq5295JsoksRc5fW
-	 8fQvroXdKwxrK0J3WxzcxYlOZO9imLd6Cc9I6b1C43siLZkERbeUTjlL5U+alZmpUIpBn
-	 +XdjNBuICcvC9BBTYTc/yJaMxBTtRRMTViJyR3SM7/uWWqoK5diAZqaqc4KDfZHLNsQ==
+	t=1792538505;
+	b=07sjlWmsCjikrXXgc9SCJuSiKtsAmhTna4uX/o1/SL0uRBQiYzqwwjIVUJcouMKXTteB
+	 Wc9ZzXcSpZYTTjnbIm6TCkGt5s+EJPtjcNWn5fIZ6v2sRtQ9NVmapx8TeaU8m1SDLM7fH
+	 3zF1rdcNzY/0SUaQovxJKdJ2RJMWLVUhyU3bU2pW9MS4KFJnItc0mJVGi6aQ2vfQA6mHd
+	 D4boN5ADVI0jctrNKfLqlTLuOHuL6qQum0eSna1N1nUbfXGC6R7ODpFM+HZviKmdi5iEb
+	 4u8omMzOdktVHO5RpSJzFyaq62qgqgBZ/WjA8l8Yoac92YhR+YTpGrRCklaziBsd/PA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792523824;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
-	 Cc:Subject:From:To:X-Mailer:References:In-Reply-To;
-	bh=SWQgkR3Fjde1WyXhbg8hl8+vmi9aICLhiAaiA94/m88=;
-	b=Mn38YyQE/NKgV9Jc1qnMthphQTQbnFYaoH7P/9GhaWCYqosDtBzxR0pXg2wEvHzswVG1
-	 XI3j+SX4rvq1OhpxsKRoYxI61cz7ew5FrT8Thz+GaO4WpBZ2Pfc6heTUqD3sNwqRITW1f
-	 RfjvtlGgoObz4up/J85vrbYM5T9+SLmK63jLuZ75c5vaazZWCXUkVYoRe7gahn8mxq8hh
-	 RPiuALhot86aSAxxV6y62HLQ8IJf7yj/LM+ZckKDM2PznD2B694hAc+HKUmX85KmBqrA5
-	 koGP4j1k4Bxc4rjhPrdTCoolT034cfiqd8MTwrbUban5n883sBYwhZ39V4Z+p/x+lTA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792538505;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
+	bh=wxAh+Ne1jASQiYLIaGgyMvhKyKgjJ2FMW5Pt3awzq1Q=;
+	b=VZH7V0Gm3D/icXl5DJX5HdPQghveUh+g3W8B+N9GdbvQegDDS6af1m3bYIYkREp7peJM
+	 KYG6vL1W3iR/SPek0PKu1I57HZ9SeFdKq/osNvCjlvIqifFVT0Bpa9cX5oDGQBjoyN+62
+	 9o8zBqvahXgvSJi4jg7hjHSX/SzQSf29fmlDbQT3Y59KqmOtp5xdKXwDxDMx05T23NuvP
+	 h4FYYHNujC+wSeIjdcIYZJH6k18Efghup5u6ghP6d5yC/PXytR4eEn/sY5ORhRvpsOesH
+	 aZdnySVzc+/PTCjnVtZIsykvpg8nAP05U0zequC80uFynWG0ymRi0F396rkC/HY+3Yg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="D/sVlb84";
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB75606A31D
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 19:17:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EEB75606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	dmarc=pass header.from=linux.microsoft.com;
+	spf=pass smtp.mailfrom=linux.microsoft.com;
+	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=S7pM44aL;
+	arc=none smtp.remote-ip=13.77.154.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22D3606A31A
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 23:21:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E22D3606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=D/sVlb84
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-35159e0092aso441398eec.2
-        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 12:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792523823; x=1793128623; darn=lists.linux.dev;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=SWQgkR3Fjde1WyXhbg8hl8+vmi9aICLhiAaiA94/m88=;
-        b=D/sVlb84QjWhhyq5gXPb3X9Ha6CPoa1ZjZoAyGhGYqi93VxSNFCtj5HvIpEVHBzWvB
-         dYs1gkLJjhedanHqu6rIw5/CgjoDWp/VBUhvjzXlM/axsUi6vMSRza30X9kAyr4LNipT
-         ObxHEwovWHtTlIP0bw453ul9xv038wsLMEuMoES7My2HTUEP8Nal4pM7OmF5WPP2sHJs
-         JRF3kUDiVq4XCN7SlJfEjhHDJKeKsVSET8wzYe9X63biEma20apBWRZynMsa+qSe4s3B
-         YXSzWev0q9I3XOsjgXQKV3S8fWyvH73i6fW9YE9IObD215nBUc6cB18kNvUUxjApY6UB
-         xZlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792523823; x=1793128623;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=SWQgkR3Fjde1WyXhbg8hl8+vmi9aICLhiAaiA94/m88=;
-        b=EPzymOU08I6Z6YI8dccrOazOjVxQy1P32PXY35ftnKqeWAXLF950eRMZwAnQWSdnFG
-         0ZhkE6931+GPwrxNx8B5xpR90DbdjVRrds2Rd7zv8kwDHKY7lo9zmWXaxmJptCGRaxnj
-         pw8d/a972BpxaUmlQI6xWsxlH11K6xsAIzRkwe+yWGtawLxXKgbqLsFJzB49xWCmCKiP
-         u+UHkPLCTx9lw4n347p4UfJAF0S5kiUXAGNm/pB697qYwLwQN8ZTZTSccql/cWwu/FRS
-         4shmqMsirnbnrx37kT/IsMi9i+dmVJOjwuZafR3PuISEqVviZ0j6mV9aomgbOp6n4Zk0
-         ARoQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzti5uV4nHaXPeLMI0X2zSPfnKfzH+zprMtLtaVPdYpVS57viOcnXE0X4zsZ7KFYfTJHM1x8YBswESJWg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKFUrwExDKkTAvpc0xydXq7kOeSkp9K/zJRBALiXMC2S7LTmPXH
-	u3uMJxbuuivNhCf/IO0eXaVqEOuwKo/7tzFRPP1uFxE3/eGrm5XeSIvC
-X-Gm-Gg: AYBFou1njNf/Cqo6Hh17GRQA0HjHZjtSL82KB8WXR3cpTa4uJ/PmrgYAUwPk7aq0Ncu
-	n/ccIGgL/wPIs1p/FKUF2L/6lepRJYpmoL+c/ufFdSvMqmd6ZBPEcICxgKFM7NIuX9ZX8MY+6EA
-	txe4l+0FFR4b50tQYPRjXmAbEAIfL1o/Y5kcsnEcnDVez9E6/vJHUlgFAS9FZU4QJqiNskToFHT
-	LfpIvX7UPps65g/dIM3oG2r8UPGeE6l23G6n8JZxEEYgiI5eTfqPwryBfbMsjkcIVSMcn7lpCAv
-	igkgNg/KUaWHFo6VZfL3nQ7fR6b+z2+X6Yr3MQ8ljTh+HefYr5ahlU9UzRiBlAmZHmOPtgWFDhK
-	/vaY29pDReQb8bb3S5Ps5a8QfrDlD4lbsQP90lacomvedunvRKgukn4+nDVmhdHnBqczcqS69bq
-	RiXv3gEACuK8JhnWdcow9VqX+RTM6gIBzIpho05w1ScU4IChuBxa+g7CufXOxUz1LSnQ==
-X-Received: by 2002:a05:701b:280f:b0:17f:641e:7f6b with SMTP id a92af1059eb24-1850fa07d82mr20915641c88.1.1792523822861;
-        Tue, 20 Oct 2026 12:17:02 -0700 (PDT)
-Received: from localhost ([200.10.125.114])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-19035926035sm587423c88.1.2026.10.20.12.16.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Oct 2026 12:17:02 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=S7pM44aL
+Received: by linux.microsoft.com (Postfix, from userid 1216)
+	id 3A3C420B7168; Tue, 20 Oct 2026 16:21:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3A3C420B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1792538497;
+	bh=wxAh+Ne1jASQiYLIaGgyMvhKyKgjJ2FMW5Pt3awzq1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S7pM44aLB3gZK2JI34fkHNHluJMXfyOhL4k1popVUMJN10/rYmyemLKkba6xsKjuz
+	 pBDky1QGicbwDIQGKuSA5Wp5k72iQDcIJBnV4TbGA3EfrLgHKjG01Y+JUSSIc88Soc
+	 Mzv3rX0/KWisgbPOceaPU0c5LbFWOJIyz6uGAFfY=
+Date: Tue, 20 Oct 2026 19:21:37 -0400
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Lanfeng Wei <xlfylawarthur@gmail.com>, airlied@gmail.com,
+	decui@microsoft.com, dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	longli@microsoft.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, regressions@lists.linux.dev, simona@ffwll.ch,
+	ssengar@linux.microsoft.com, stable@vger.kernel.org
+Subject: Re: [PATCH] drm/hyperv: add a parameter to disable the vblank timer
+Message-ID: <atf3gfQlW+46PzRG@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <c238f4ff-d5d8-4a9a-8773-793bd9056c9b@suse.de>
+ <20261019154121.6257-1-xlfylawarthur@gmail.com>
+ <8e91baa4-1ca5-43b8-bb04-9b5e3630bc2b@suse.de>
+ <atZjtSlZAocUWYBS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <3a4c4a4d-6ab4-42b6-8ae6-7ca0730b8069@suse.de>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -85,181 +64,130 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 20 Oct 2026 16:16:58 -0300
-Message-Id: <DM9WNTXQM9N8.2G10WSI71TL88@gmail.com>
-Cc: "Florian Fainelli" <florian.fainelli@broadcom.com>, "Broadcom internal
- kernel review list" <bcm-kernel-feedback-list@broadcom.com>, "Jai Luthra"
- <jai.luthra@ideasonboard.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Stefan Wahren" <wahrenst@gmx.net>, "Phil
- Elwell" <phil@raspberrypi.com>, "Laurent Pinchart"
- <laurent.pinchart@ideasonboard.com>, "Umang Jain" <uajain@igalia.com>,
- "Kees Cook" <kees@kernel.org>, <linux-rpi-kernel@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-staging@lists.linux.dev>,
- <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: Re: [PATCH] platform/raspberrypi: vchiq: register bus at
- subsys_initcall
-From: "Gaston Gonzalez" <gascoar@gmail.com>
-To: "Martin Wetterwald" <martin@wetterwald.eu>
-X-Mailer: aerc 0.20.0
-References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com> <20261013131435.1454019-1-martin@wetterwald.eu> <DM5Q9NKRO89O.22R04QM8YBKWM@gmail.com> <CAFERDQ12QwtC6cCVWQGU1b5KCv988kAvahNKwosxG2z8Mzm4sw@mail.gmail.com> <DM8869QP3IID.1I1KT6A7M2UNB@gmail.com> <CAFERDQ3DWBnkSok_SiVZGx+GTmYKP=Q46yFYkNt9YQkKxxQxyw@mail.gmail.com>
-In-Reply-To: <CAFERDQ3DWBnkSok_SiVZGx+GTmYKP=Q46yFYkNt9YQkKxxQxyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a4c4a4d-6ab4-42b6-8ae6-7ca0730b8069@suse.de>
 
-On Mon Oct 19, 2026 at 9:26 AM -03, Martin Wetterwald wrote:
-> On Sun, Oct 18, 2026 at 9:53=E2=80=AFPM Gaston Gonzalez <gascoar@gmail.co=
-m> wrote:
->
->> Running 'speaker-test -t wav -D plughw:1,0 -c 2' crash the system, so
->> thinks seem not to be working with that interface.
->>
->> Im trying to debug what happens in that condition; I will need a couple
->> of days I guess. So far, this is what I could check.
->>
->> Any feedback on the test or debugging would be appreciated.
->
-> Hi Gaston,
-> Thanks for digging into this.
->
+On Tue, Oct 20, 2026 at 01:48:58PM +0200, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 19.10.26 um 20:38 schrieb Hamza Mahfooz:
+> > On Mon, Oct 19, 2026 at 06:03:55PM +0200, Thomas Zimmermann wrote:
+> > > Hi
+> > > 
+> > > Am 19.10.26 um 17:40 schrieb Lanfeng Wei:
+> > > > Hi Thomas,
+> > > > 
+> > > > > Yeah, what's the cause of it? Switching off features does not fix any
+> > > > > bugs or improve the status quo.
+> > > > You are right that the module parameter is only a workaround for users
+> > > > affected; it does not fix the underlying scheduling problem.
+> > > > 
+> > > > The cause is that the synthetic vblank timer is used to pace completion
+> > > > of atomic updates triggered by dirtyfb, in addition to providing
+> > > > synthetic vblank events. In Xorg's software-cursor path, pointer motion
+> > > > damages the primary framebuffer and the damage is instantly submitted
+> > > > via DRM_IOCTL_MODE_DIRTYFB. The Hyper-V dirtyfb path performs a
+> > > > synchronous atomic commit, and with the vblank timer enabled that commit
+> > > > can wait for the next simulated vblank. Under continuous pointer motion,
+> > > > these commits dominate the update path and delay normal client updates,
+> > > > resulting in sever frame-rate drops.
+> > > > 
+> > > > This particular regression results from the combination of the blocking
+> > > > dirtyfb path, synthetic vblank pacing, and the absence of a Linux DRM
+> > > > cursor plane in Hyper-V. While the Hyper-V video protocol does have a
+> > > > hardware-cursor command path, the upstream hyperv_drm driver currently
+> > > > exposes only a primary plane. Cursor plane support was deferred during
+> > > > the initial upstreaming [1]. Without a cursor plane, Xorg has to fall
+> > > > back to software cursor-rendering path and it competes with periodic
+> > > > graphical updates on the primary plane.
+> > > > 
+> > > > So the proper long-term fix could be adding cursor plane support in the
+> > > > Hyper-V DRM driver, which may take some time. Providing that the stated
+> > > > purpose of the offending commit is to rate-limit display updates, while
+> > > > its current implementation regresses the existing software-cursor path,
+> > > > I think adding a switch or reverting the commit until the requested
+> > > > features in the driver is ready, is a reasonable short-term fix.
+> > > The problem is that module parameters are impossible to remove in practice.
+> > > Once in place, someone always depends on it. They also increase the number
+> > > of states to test.  Avoiding them is usually a good idea. Especially as
+> > > workarounds for bug or regressions.
+> > > 
+> > > 
+> > > I'm not familiar with the Hyper-V protocol, so I have a question. Why is it
+> > > hard to implement cursors? From the link at [1], I assume that cursor
+> > > support was left out because the simple-kms pipeline did not support cursor
+> > > planes. This has long been resolved: the simple-kms pipeline is gone and
+> > > hyperv_drm runs on the regular DRM framework.  Unless there's anything
+> > > special with the Hyper-V protocol, cursor-plane support should be do-able in
+> > > a single patch. [^1]
+> > > 
+> > I actually have been working on cursor plane support for hyperv-drm.
+> > I'll post a patch soon.
+> 
+> Awesome! Even if it doesn't fix the reported bug, it is still an improvement
+> for everyone.
+> 
+> To fix the bug, you *might* have to implement atomic_async_update. [1]  It
+> allows legacy cursor updates to jump ahead of the commits and change the
+> cursor without vblank synchronization. It's a little-used feature and
+> semi-deprecated, but maybe necessary in case.  (Make it a separate patch,
+> I'd say.)  There's existing support in other drivers to see how it works.
+> 
+> [1] https://elixir.bootlin.com/linux/v7.3/source/include/drm/drm_modeset_helper_vtables.h#L1406
+> 
 
-Hi Martin,
+From my testing it seems that the cursor plane support on it's own is
+sufficient to deal with the reported issue. So, I'll hold off on this
+for now.
 
+Hamza
 
-> The patch only changes when the VCHIQ bus and driver are registered durin=
-g
-> boot. So it's enough to check these two cases to validate the patch:
-> - without my patch: dmesg shows the "unable to register with bus_type
->   'vchiq-bus'" error, and bcm2835_hdmi is absent from /proc/asound/cards.
-> - with my patch: the error is gone and bcm2835_hdmi is present in
->   /proc/asound/cards.
->
-
-Understood. Of the two cases, the second one is already tested if I'm not
-mistaken. I will check the 'without your patch' case first, and then
-I'll rerun the test with your patch.
-
-> (Since the Pi Zero has no Headphones jack, you need to test both cases wi=
-th
-> snd_bcm2835.enable_hdmi=3D1 in the command line. Otherwise the card never=
- shows
-> up, even when everything works.)
->
-> Could you check these two cases?
->
-
-Yes, will do.
-
->
-> Testing that you can hear the sound going through bcm2835-audio is a full
-> functional test that goes even further than the patch: it does not only t=
-est
-> bus registration but also that the audio driver is working.
->
-> On my side, without vc4-drm, I can successfully hear sound through both b=
-cm2835
-> Headphones and bcm2835 HDMI:
->
->   # aplay -l
->   **** List of PLAYBACK Hardware Devices ****
->   card 0: HDMI [bcm2835 HDMI], device 0: bcm2835 HDMI [bcm2835 HDMI]
->   [...]
->   card 0: HDMI [bcm2835 HDMI], device 1: IEC958 [IEC958]
->   [...]
->   card 1: Headphones [bcm2835 Headphones], device 0: bcm2835
-> Headphones [bcm2835 Headphones]
->   [...]
->
->   # speaker-test -D plughw:0,0 # (HDMI)
->
->   # speaker-test -D plughw:1,0 # (Headphones, not on the Pi Zero)
->
->
-> If you still want to output sound through bcm2835_hdmi (optional):
->
-> There can only be one owner of the HDMI port: either the firmware or the
-> kernel.
-> When the Raspberry Pi boots, the firmware first owns the HDMI and display=
-s a
-> rainbow splash. Then it launches Linux.
->
-> There are 2 ways for the kernel to deal with the video output:
->
-> 1) With vc4-drm (CONFIG_DRM_VC4), the kernel takes over the HDMI controll=
-er
->    from the firmware and handles everything itself (this is your case).
-> 2) With simple-framebuffer (CONFIG_DRM_SIMPLEDRM or CONFIG_FB_SIMPLE), th=
-e
->    kernel leaves the HDMI to the firmware and just writes pixels to a
-> memory area
->    (the framebuffer) set up by the firmware.
->
-> I get a similar problem on my side when sending sound through bcm2835_hdm=
-i with
-> vc4-drm loaded: my screen shuts down (but the kernel is still alive).
-> It most likely comes from the firmware and the kernel both trying to driv=
-e the
-> same HDMI port: with vc4-drm, the kernel owns the HDMI controller, and th=
-e
-> firmware (which bcm2835-audio talks to through VCHIQ) is not supposed to =
-touch
-> it.
->
-
-Ah ok, I did not know that. Thank you for the explanation.
-
-> A simple way to output sound through bcm2835_hdmi is to not use the vc4-d=
-rm
-> driver at all, and use simple-framebuffer if you still want a display.
->
-> To remove vc4-drm:
-> - Do not compile the driver into the kernel (CONFIG_DRM_VC4=3Dn) or black=
-list the
->   module.
-> - Remove any vc4 overlay in config.txt file (e.g. remove dtoverlay=3Dvc4-=
-kms-v3d).
->
-> To enable simple-framebuffer, use one of the two configs:
->
->   CONFIG_DRM=3Dy
->   CONFIG_DRM_SIMPLEDRM=3Dy
->   CONFIG_DRM_FBDEV_EMULATION=3Dy
->   CONFIG_FRAMEBUFFER_CONSOLE=3Dy
->
-> or, the older way:
->
->   CONFIG_FB=3Dy
->   CONFIG_FB_SIMPLE=3Dy
->   CONFIG_FRAMEBUFFER_CONSOLE=3Dy
->
-> (FRAMEBUFFER_CONSOLE=3Dy, and DRM_FBDEV_EMULATION in the DRM case, are on=
-ly
-> needed to see the boot messages on the screen, with console=3Dtty1 on the=
- command
-> line.)
->
-> If you have remote access to your Pi Zero (either through network+SSH or
-> through serial console), you actually don't even need the simple-framebuf=
-fer:
-> you can just remove vc4-drm, and let the firmware display its rainbow spl=
-ash on
-> the HDMI port.
-> Then you can login to your Pi Zero through SSH for example and launch
-> speaker-test.
-> As long as the HDMI video output is active, it's enough for the sound to =
-be
-> able to go through, even if the image was not drawn by Linux.
->
-> But again, this full functional test is optional.
->
-
-Ok, I=E2=80=99ll test the patch first with the current configuration, then
-with simple-framebuffer enabled in a second step.
-
-Regards,
-
-Gaston
-
-> Regards,
-> Martin
-
+> Best regards
+> Thomas
+> 
+> > 
+> > Hamza
+> > 
+> > > Best regards
+> > > Thomas
+> > > 
+> > > [^1] See https://elixir.bootlin.com/linux/v7.2.11/source/drivers/gpu/drm/ast/ast_cursor.c
+> > > for an example of how this looks. Most of it is hardware-related, but hyperv
+> > > would likely be similar in concept.
+> > > 
+> > > > > We had another fix for a problem with vblank timers:
+> > > > > 
+> > > > > https://lore.kernel.org/dri-devel/20260914110004.211027-1-tzimmermann@suse.de/
+> > > > > 
+> > > > > Did you validate that this fix is unrelated?
+> > > > Yes I tested that fix and confirmed that it is irrelevant. It solves
+> > > > issues with excessively long frame durations, however this problem is
+> > > > found in normal frame updates (in my case 60Hz / 16.7 ms per frame, way
+> > > > below INT_MAX).
+> > > > 
+> > > > Best regards,
+> > > > 
+> > > > Lanfeng Wei
+> > > > 
+> > > > [1] https://lore.kernel.org/dri-devel/20200622110623.113546-1-drawat.floss@gmail.com/
+> > > -- 
+> > > --
+> > > Thomas Zimmermann
+> > > Graphics Driver Developer
+> > > SUSE Software Solutions Germany GmbH
+> > > Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+> > > GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
+> > > 
+> > > 
+> 
+> -- 
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+> GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
+> 
