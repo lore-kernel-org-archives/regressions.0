@@ -1,100 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.161.49
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1792493041;
-	b=eUb1r2ES0687/+5aRj4Ao9t8k58t8L5J0gFZ0LxkCK4rOOwALvvsEHdPpsBRefauWdsS
-	 lta6ou+O8W7SJJUXikqV1TFOkcTZn4e2mDlo3xcFMkRzlvrS6LadhWQgNW6vQcOcYBr7l
-	 UJ8NePTvLGKkYZ3qDTmumtnXyOLIouoL+UqrOIvlcmNFTFQaqJD6zDxrkOaF4HmseAw7+
-	 RC+0EZg7DMiLsdGJneuvHT6jQa9boYyUXvtLPyMdq+Tnc/gJlrgg58WnBSEBSrij4x1oj
-	 9Rvj9h92A/QxPO8V9u+QtptICJBH/dmD/EuVGnMJYsYQcxjIojwSA1079VbDyr7BGBw==
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.169
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792495984;
+	b=I7PEyBWOS6wFeEVPVFL3uClqX7r+m7G6/yKQtGKvRXIex0IuMu79h2SAoio7y/HMI39t
+	 yrTKdZ5/wmjcO8i+mcx0/52ME+p2jvbD3dLNcWS4JIGIS+Gi29NXt5N5P9bBfDJYOV28Y
+	 PAcBOJ0Vc/MAp6+uBPKm1lpJSR+yMmzNSYiWvAEJsF9P0oTeffDKdFVi4uj7yz/QoeEoD
+	 vs8ycmoOjYw+aa91qe0/A31eZO0fdj8fwcd7ni0RRx+CT0pF2VA1fK4FS6t1YfboG8omm
+	 1VMba4IMNKofmayAg7lNLt0+VmCyVKT3GE+nfa6znAWpCWrfgZw3BUXwsbkSfFtH6eA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792493041;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792495984;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=kqXlGHZK1pUqa9HpkjKcxAViOyKcyPiOJa87b6dOxE8=;
-	b=1TZlgkXOdk7lW4rSZiizhgi6y8mNxvKZqCLdetaHEl5QwI3qrs0ioLMQxtJTgBTKgFc7
-	 V5E2VhkKzmEBY2eBWuQsVIgHO+GglLpNpxOGpZuMlUHvWpjUS2QiVsxkfJjn6NpMXIczh
-	 zKhzprRTeH28sNzhxWKJ0k2tbA7GksIcPlajbpLp4YentO6vHpt4EJFf6vNZwg0v6vxn0
-	 GTbtWso+KI5esezsWqpaRMS6oeKC6vLw10F36pE5UyAwpT8IOYyshn0OFjAuqRGBjCci1
-	 kXOQ5xJ9U3BcqAJf5PrtxyHo7SE9QKLEa6eGt0X+JrkjiHUHRY7M1BEPLOdesgmN3VQ==
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=6w7JRuFovvwwUBTh/FtHv2xuiuhqO2jha1lfwIcoggA=;
+	b=jB+z+Sq0BHjlMYsxhOaPLbPCDAfWHVdpXp+OS0a+kTP1bP7J+OhUNPdjYKDhLsFIj8Uj
+	 XrjANTE0U7nb1/By2NycY8oWT+rME+XBRYemLfW/7prFNigYggeMLtT9h2YioesH3PPuU
+	 zbbXclGD3LNuVZYbic3YQP1UY9sukGP69QExj8MCTGYxiA6fTirQj6uCDpSoGFCoAfkHc
+	 qVv2kXBNUbXY481FXmZGEdLzuoUMOc4p0KjkedRReO5Y+fsZN5Oyb7pHXuWfHPBIX+nJR
+	 SFOvqMLCi+obFk/LzgDw5PuWEF0ZuEqcRSgPjA7yMlIsLPziC0oR0jURuWBVHTLt5yg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CcXA8F73;
-	arc=fail smtp.remote-ip=209.85.161.49
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	dmarc=none header.from=kiddier.org;
+	spf=pass smtp.mailfrom=kiddier.org;
+	dkim=pass header.d=kiddier.org header.i=@kiddier.org header.a=rsa-sha256 header.s=google header.b=Kg2eU5L1;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.169
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0371606A31B
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 10:44:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E0371606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C45606A31C
+	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 11:33:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20C45606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kiddier.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kiddier.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CcXA8F73
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6b19e291cc6so3047640eaf.2
-        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 03:44:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792493040; cv=none;
+	dkim=pass (1024-bit key, unprotected) header.d=kiddier.org header.i=@kiddier.org header.a=rsa-sha256 header.s=google header.b=Kg2eU5L1
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5ead4026fe6so591850e0c.2
+        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 04:33:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792495983; cv=none;
         d=google.com; s=arc-20260327;
-        b=JMPE6+zE35FUE0lFKAL8APryTn8tRR7D+jUC++9hKBnLQtiSuxKhBNLJMKaSF+xiEg
-         h50U+Z5ut/mhAI1TSJ4zTLgx0hr45xgtXCla2H9kHZDod/S7hfkN7uJgSvAMViJ82UgW
-         C223OsOP2w3Y8p+d1v/VBos2Pxt6lviZ6HslBjAEPBMkHgL/3WyXLblMlpWmSPDsI7DY
-         kLZwe1AUDN/iAgN5tKv71lnKm6YvIuQxSt4tsCoCstQ/ByzxOO8hq04qDx0aliInvODQ
-         2BEs40lYms5xTaEmPEuEguF5Xu6DKmVDtWO3sodSRvi/PNpBpi6ZHEokgrip1fsRbNpO
-         bPUw==
+        b=E3BGgI7xebDbZD5g3FbNhOItegeNUuhQPH2jxf9mdlbqI5izP5LMeZWy1YLP21tnZe
+         qNht+Hi+AKRw7nxWe/9u1l00bNKGVqb654giiW7LumPoHvG0AXFlpOVioI39iFft6OsO
+         TS1dc3UogqeRCymtlr+74OP22YmevGhINFTwBZNFpn4dVhbgGScdt+4u1/V7YDLBV/mY
+         KT/zfFLKIhqDd9IG5DL9BuPfe1bNeKRXgH3i0e4dPEZc9FxYSYCrGo2SPPH/j8MzJeTy
+         JF9BFJHW/dXby+Zk8JwqUJ/eLMmXSTr0FT8XPKsyzRhaL4UiTAcVN1iG+gPjT4D8gBR9
+         mXWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=kqXlGHZK1pUqa9HpkjKcxAViOyKcyPiOJa87b6dOxE8=;
-        fh=3PGEkq28N6gOaItq1qikYQQg0ltQvS+yd5Te+FXMhG4=;
-        b=WX9qcOwM8kQK3aZ7/YXM8XCjNVnf1gWCuahygUu/TAdy6udGgHPgpRR/NPuaSTWaJS
-         wxXP37Ufee1ZBd0K9LPSJK5PZTd81eROTrkc9dQUYtFg3fScQpLyD3HqXLBacP/pS21x
-         Skyv0c11cgh9rmWDbYO0mXKsx3MaDzyx3HiMP1egLkJemSuXMx3HmoE9EPudXbRBKbcy
-         cOmLPl5FVUue2KmzlsRDictXjeFsRvka8Oay6SXBhXNTepncR2fqTYMeSl8jiq9otMw8
-         bG+xES8Gn4tVv4aFgfCg5DloJq4a844to6nBIT1Cgo1QNzckwaPYP1OCSOKRxaHP6IJN
-         tRcw==;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=6w7JRuFovvwwUBTh/FtHv2xuiuhqO2jha1lfwIcoggA=;
+        fh=wyB9wjTh2jd2GkFtfPluFs9ogqMC8jQxzsUwg+xfsqQ=;
+        b=CHLaP7VkyYlux09PNJHIAd9EaKGVyUWOw9dJIsuaXtOxB8sVnkzmlqR4JQ1WdOH8pj
+         huSRX3Y9Ih9RzngPTObaLdPV8YYmEDHvKsdFd2WulmWUYjjbcqj6DQI2VwRUD9mbuW32
+         cXFhLLEg3IoybnM+Xg9GUF7mD+b/QC3QOVSuHj6iwfukxwaa61tSCJFn2/IetrjkrbWY
+         f0uVt6G9QP4FKOuJ06gu5DevEV3zv5esaOJVoQzMxrlZejxXdbbbHW+hDiighBUV9Dip
+         gl1GS1EBWbSvCNijCVWoPpyrp9IXU2uI91rm2yKuId+qQZ4EDyQnlQO5T4vFgLD09Ibb
+         6aUA==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792493040; x=1793097840; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kqXlGHZK1pUqa9HpkjKcxAViOyKcyPiOJa87b6dOxE8=;
-        b=CcXA8F73juT9LP8EqCvnB3oYczVjXEfb3ZjMX755e/1ue/sDgvMuZ5UMEBxhQDGIar
-         Tk399oFaz3X4WoWX14GsxXxlaxKGZrKAx/aFxwexX73kMg1a9QD/LQiM+DgnRq9VlGa3
-         xIU33m4cbnNAyfFMoDGVShXW7GvOOD9bmEXhNndMeliJ04bYC7t5TN5M3kUs7NGfdU07
-         lIdzOlDxUvaVZIj2/8zbzsn/WInZunQCfCGELmrr09APmXX3RIw1PgGWShYvuysjmrQw
-         kfUmUD8v5zGIcQhi5nT1FCuYzhB2URmiObQPNdpeXvK9p8mgqBgANGpK4WFHRGOSIOOQ
-         lA2g==
+        d=kiddier.org; s=google; t=1792495983; x=1793100783; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6w7JRuFovvwwUBTh/FtHv2xuiuhqO2jha1lfwIcoggA=;
+        b=Kg2eU5L1ZH1/rhyBK1HBZXlrJ3dThch+WIhyXGs/eDNfqSCXg4Cpdw861WyMrsHEqQ
+         RGhnrBOp/up7ePk56uyKQPyWbzpmvQ4vQZTWE62gmhZtDm3vu8wn2nObjH1KBy6lOYiq
+         hxrx1yEV5BQthb7uNJHUwRBSEMZT+k4K6mork=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792493040; x=1793097840;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=kqXlGHZK1pUqa9HpkjKcxAViOyKcyPiOJa87b6dOxE8=;
-        b=xsTnsAKyZELKEgq45BoQ5GeGRQFBloJ8z96ICzr5KDk4aJgBg3cxwIAzjt2OsN2Wch
-         /fFDKXk4FiMzjNQO3hHKfYzVWQ2nDT+nTWaIwsib0KCFm1tKcBKzwHcrH4gDSm6zlpAj
-         FE0qYxBBSBGn+edIWUsponF7az9N0dIruICavn/VlXSo4RysSqY/tHpZPMMUDZk3rtXe
-         VRf49TvHhiQYx83Bolfb8R60s28q26a6KXHQVlsD0wB8J0YiJUyxKDgNRUe0fskqOXCQ
-         jiqImPhCXMTPJahtHTPysSi0QFW85Q8ofuqbjFvB4PtbDx8pS0Uz9pu7Kn18ULSGioNa
-         V5qA==
-X-Forwarded-Encrypted: i=1; AKwUvByo42Cc7ROPM4vhI2f0hHWlhAuHJG5kTwVNz25vZKg2dXy94QyTMwSOkWaFNCbJZBeQMc7nDAK2KigTsQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKHqg4rdSl9KVrgxotAwbvtsfHrC1tnfJM7fAhkG8rO9E7GbtTK
-	51q2ZAksI6PucHlPMiiWQHzpX7xRgc2vRolvmQBmbXxV6ba7L3ImbhWGMGMcu7w9jJkvy/BMJDB
-	6XFaQ6tof3ylBpHX0GuklsWbVhAE2MD8=
-X-Gm-Gg: AYBFou1cnynyHMdJWXgiajuYrKeWcI8mL16j3fTwjiP4BkNbSA9Ohto5A3TA47AHzbG
-	1MQSnYxmeabeg3MCcernA1Cyrq47nm7yoMfj7/eEHy+VCo64ndGuFoBMRfIfxUTFZNOrk0MaHeK
-	86rJtYdMJoafwrhztuDp5ap1kjGSHWcKS1TFaqwtf4/iW4ui6CNno4i/ojt69xUw+KC23uBiIgy
-	MREsz5RGf/FQhTM0axIolUcccqZluE+5PsmqA+Xa5QS8/AIMEMS2QBGpienjutN00bfxe4yHfcb
-	JFenkP4H1QqU2G4OF0xRMTLkYchjpI39A1sCLwhwfIu+QbW+UqzQWPdcnK4/tj2tmknftkGJ7tW
-	La8jRUp3KLFLTHwj4+Kxzla1YgH4yrkEtSfR7M3mDKinw0+Zuaz/Y5L812o7j7DEol6QvaUw5te
-	Wuj2anaGtaOhT90/NvSHBSWKreeYcFboB0F60nKa34LNsM0ivkmGgU
-X-Received: by 2002:a05:6820:60b:b0:6c4:50e0:4e0 with SMTP id
- 006d021491bc7-70356492b06mr7440160eaf.32.1792493039924; Tue, 20 Oct 2026
- 03:43:59 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792495983; x=1793100783;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=6w7JRuFovvwwUBTh/FtHv2xuiuhqO2jha1lfwIcoggA=;
+        b=gpKfp8OurvAC4pNjpq2G+sJTq6AZLt7RJHKAR+mlbsnT+MQcWa59iAqvuidcYj7sKL
+         9vmxYnZ8tOolnFak2pi71vX0Ed+9E9mVFSXA8OU0pHuuCn/U0o/QvmYQ0KKlJXI86uek
+         iUC5w7Dn5r7LlTV0SMTLgsVaZClziRhIyfA0RQggCFSJ4hGv0V7F6k1RlEH7zMXRM3T6
+         QF6obFCPH5wuVa85gCp4HR91DRbuoCZM0VPol8umwV1vAdw3NhMnVB9dbBDx9lpzTNrl
+         R9QLvCwtettmQ8UhLQUlxuwQbbYKPxP9lx2IbtCvimcn53KjflIy96vRGOO8K0nRPHae
+         ba1A==
+X-Forwarded-Encrypted: i=1; AKwUvByVTmHwf+N8vwFZOBTnPjhwH90Shq67pLJSuvFNFmtet+UKF6KEld2Dl44nDWOT/YdFlFV+M9SuPDhLxA==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJsqCNBWAvCTD+y1xDmXJr/hlURppYNznpGleE7oYjE3772c9WC
+	oSP9v7N/DL57mCb3pCQEmPGI0rLeKVdD8Jn3ISicBAIpivpVBFld/KwM3UpdIGzaK+r0wSwpzyb
+	9t3vZcckKOZiuk4wEZWXtsg5L915YAB0TNoaeIBDXrQ==
+X-Gm-Gg: AYBFou2HY1wmzJRe2hqrBlgvjD6LYxVOBaw8QJt/ynIOGlOUWZjMWDhqIxBdAm3TEqg
+	1UrhkanzVUWWCsyfF9eQ6CENiblrlrfg79fPqcEAUUY/INT/9OJknKye0WMe4fU1NKH8CtykWor
+	VpYY+ghVZNH9yxAHrs9MymRbNGyJsH5D45watUnw6SaRCcfc7t8/p/aUEkIDiJ5Fb5PMThBCua1
+	/RnTlWJCDQSTZLkIbWXJnX34ajMhZepUH/oJ6/qKw2pJv4EUWsnqLvDEyClDVsKbXoxD6dlPlpy
+	gJ0f3+pnJu3Sf2xY3XK+JvvJSH7eL/V8iGhWy+iolcMa1QXTZWba7c1ueA==
+X-Received: by 2002:a05:6122:4307:b0:5e9:7458:9bb2 with SMTP id
+ 71dfb90a1353d-5eaaa392b1emr2875328e0c.5.1792495982934; Tue, 20 Oct 2026
+ 04:33:02 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,17 +97,101 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CAFcZKTyCu7K=1OOETBvVrKf-9YKHRk7wXNRyZW7m5P0PEPg1zQ@mail.gmail.com>
-In-Reply-To: <CAFcZKTyCu7K=1OOETBvVrKf-9YKHRk7wXNRyZW7m5P0PEPg1zQ@mail.gmail.com>
-From: Peter Morrow <pdmorrow@gmail.com>
-Date: Tue, 20 Oct 2026 11:43:49 +0100
-X-Gm-Features: AclHuK_ZTJZ-MG-SKAI7eH3l_zmO7EZx-WhALvbMgrcFjsGx7J0OsMIcUbiXYiM
-Message-ID: <CAFcZKTzkDzPXpjFqU8c3rpY3R_FpD_tWRu=PPtkar_LCn1AsxQ@mail.gmail.com>
-Subject: Re: mlx4: no ib device for Ethernet ports without IBoE since v6.6
-To: tariqt@nvidia.com
-Cc: petr.pavlu@suse.com, yishaih@nvidia.com, leon@kernel.org, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	regressions@lists.linux.dev
+From: Peter Kiddier <peter@kiddier.org>
+Date: Tue, 20 Oct 2026 22:32:51 +1100
+X-Gm-Features: AclHuK_5AI531dlJobOpneIUNwUkuWTyVSnUQajyWhdToxWSB6hT9Bldv5uGkoQ
+Message-ID: <CA+3E589O46nj=c1Y+Rwk_nPZZKEUjFvMfWaAFmQ2-7De9iUxFw@mail.gmail.com>
+Subject: [REGRESSION] BCM4355 Wi-Fi fails with Intel IOMMU on 7.3.0-2-t2-noble
+To: linux-wireless@vger.kernel.org
+Cc: brcm80211@lists.linux.dev, iommu@lists.linux.dev, 
+	arend.vanspriel@broadcom.com, regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-#regzbot ^introduced: 7d22b1cb9d84
+Hello,
+
+I am reporting a Wi-Fi regression on a 2018 Apple MacBook Air with a
+T2 chip, running Linux Mint Zena based on Ubuntu 24.04.
+
+The Broadcom BCM4355 Wi-Fi device works with kernel 7.2.11-3-t2-noble
+but fails with 7.3.0-2-t2-noble. Disabling the Intel IOMMU using
+intel_iommu=off restores Wi-Fi on 7.3.0-2.
+
+Hardware:
+- Apple MacBook Air 2018 (MacBookAir8,1)
+- Wi-Fi: Broadcom BCM4355 802.11ac Wireless LAN SoC
+- PCI ID: 14e4:43dc (subsystem 106b:0843)
+- Driver: brcmfmac
+- Interface: wlp2s0
+
+Test results:
+
+- 7.2.11-3-t2-noble, default kernel command line: Wi-Fi works.
+- 7.3.0-2-t2-noble, default kernel command line: Wi-Fi fails.
+- 7.3.0-2-t2-noble with intel_iommu=off: Wi-Fi works.
+- Reloading brcmfmac on the failing configuration does not restore Wi-Fi.
+
+On the failing 7.3.0-2 boot, the driver detects the device, loads its
+firmware and creates wlp2s0:
+
+brcmfmac 0000:02:00.0: enabling device (0000 -> 0002)
+brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4355c1-pcie for
+chip BCM4355/12
+brcmfmac: brcmf_c_process_txcap_blob: TxCap blob found, loading
+brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4355/12 wl0: Jul  8 2023
+17:49:51 version 9.30.503.0.32.5.87 FWID 01-e74b9cb0
+brcmfmac 0000:02:00.0 wlp2s0: renamed from wlan0
+
+However, Wi-Fi subsequently stops responding. The kernel log reports
+errors including:
+
+brcmf_msgbuf_query_dcmd: Timeout on response for query command
+brcmf_cfg80211_scan: scan error (-5)
+brcmf_run_escan: error (-5)
+brcmf_msgbuf_tx_ioctl: Failed to reserve space in commonring
+brcmf_cfg80211_get_channel: chanspec failed (-5)
+
+There is also an error creating the P2P interface:
+
+brcmf_cfg80211_add_iface: add iface p2p-dev-wlp2s0 type 10 failed: err=-52
+
+I tried reloading the driver using:
+
+sudo modprobe -r brcmfmac_wcc
+sudo modprobe -r brcmfmac
+sudo modprobe brcmfmac
+
+The driver and firmware loaded again, but Wi-Fi remained unusable.
+
+The firmware files are present under /lib/firmware/brcm/, and the
+firmware version reported by the driver is the same on the working and
+failing kernels.
+
+The brcmfmac module metadata differs between the kernels:
+
+Working kernel 7.2.11-3-t2-noble:
+srcversion: 3B6176FDB720DDE8E7C596B
+
+Failing kernel 7.3.0-2-t2-noble:
+srcversion: 3DCA38D52402541701276CF
+
+I did not find obvious PCIe AER or fatal errors in the failing boot's
+kernel log.
+
+It has been suggested testing intel_iommu=off after reloading
+brcmfmac. The driver reload did not help, but booting with
+intel_iommu=off restored Wi-Fi.
+
+This strongly suggests an interaction between Intel IOMMU handling and
+the BCM4355/brcmfmac driver in the 7.3.0-2-t2-noble kernel.
+
+I have not tested a vanilla upstream kernel, so I cannot yet confirm
+whether this reproduces outside the T2 kernel packages. Unfortunately,
+I have limited time available for further testing, so I may not be
+able to investigate additional requests promptly. I wanted to report
+the reproducible behaviour and the intel_iommu=off workaround in case
+it helps identify the regression.
+
+Could you advise on further diagnostics, or whether this should be
+investigated as an IOMMU or brcmfmac regression?
+
+Thank you.
