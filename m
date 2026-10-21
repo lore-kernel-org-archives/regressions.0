@@ -1,60 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.30
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792601090;
-	b=PdkzBR7fL2Sswt0Wb7vBbMQFeMaRjaKWCd+bTOoHHt97DMq6onnfIf5Rmq7CyIf9PUnn
-	 FEKvf7r+gEB7M1fNuCJ6J7UlIB6LGTD8c4Hl7qHRWRnAL4xKW68P+fHHIux/xdN7Iiv/u
-	 +uJHi1P1rPsCZn/i3WvJJevFih+KsX9Ofx7yvpmIEyQU1GdinR9H51NyOcc9W36vm2XaX
-	 KY3PlvttZGEVn3iPvgf9MkLbKLLLGCT8ujS/2wTDNAY/+WmqLUlNK0c56dhBU5yKE5Esh
-	 vmt6R/gD9qsxsDmJ/AG7P35qT4TQZAm1ITqtkOp08sJQLf1t0A+WU2dN0m1MidFWBAg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792601090;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=sF2WgK8kQja2/TCLOQWF9mZEvN3dP13/o7DoaVwiz+E=;
-	b=rLMqCE24Kw8ED2bwESzOODinuL/mmJcunSljCc37dvjPsKzJQ5MgK0WX4HKxnO7WqQ45
-	 ny4rofMYVpQurFxvN7mi6LPCws9I3Ucj7lGiiqqGz+muHVhFY+00NaLaRYlKTkDo9L11M
-	 aPEIWQZF62jLQIndJaG+5IkKvn9EQ8rEac/2IfhZIsvLwW4oHGHv3jqC4eNWLvqlq9f9F
-	 pBgU7qDbLOVfZ1IDuUkgl3Fiqn87K8dzcAeQCyj0MDbTGzNliGHFbrcUv/SpZS+mK49tc
-	 hmUlvVxPh13vFfehWXqAey45mdwnSDGMWTpROcHAJPrjU5julMsxqmp/PVf6yGicK9g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=eAGI52zg;
-	arc=none smtp.remote-ip=79.135.106.30
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792604037;
+	b=vTT2lAQZ83lZe09IfHZRzdpiQ80Rbf+YWTgztzBjGtZNdtnhdvucXNNZ0/Rjy1Ok5SZ7
+	 8yGIMAL9EX9TAL+I0ZVigl1bWV+fQZ3caLLxMtGd7XnwvqouCu6NyTU5MeDely4mjbgau
+	 MovEEBlDMk507jfegyX2Zd1X5y0rOyZzxYXx+j7LvFz/p1wlBPwKrTjhWzQ6mwFny32CL
+	 KUXoNshGCVevmeBI3VoRmwkOFgs/hbD7qcQdgqLTpoAA4qGKnfx5UO46R635gZ/vHqB1Y
+	 TWBOG1MSFSrWqweifTssB0sdXX6yA4CNCHZIwP/LpT+loJWbUe5NHiq2R78gpWwj7EA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792604037;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
+	b=em/AbRdo0BnDr1XG6C9X6/uQ20obrB4qh3zG6l1IuLgjx9bzgCKTr4Rd/VQoI8CMF6xK
+	 zPHcqfbqFHUGUw0StxwkjhPjo/oIpC3Drfl0FfKw8yPK10XDhZ2ebZz9DtaYvkDog0lLT
+	 ZkT45fVruvk/0D/ynmHcMeuJEqNz30g0usNQ1s7HZp/z5Y2BsO9Hf24IO4jcK+GgJXSGy
+	 0/HWys6CD5aoZNJ7yc06UD2pdQcjMhme8uMzEhdTA7EdfkX5svEZaTo1gX22QsSTKLz9h
+	 syyf4SnSYE9V7RCbAHxNKooDVSGHXAl2JxbqSuJYLsFC7HlW+zV7eKF93ZHh/8C/Pkg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Dx0KtXKd;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D96C606A319
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 16:44:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8D96C606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7F9606A321
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 17:33:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D7F9606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=eAGI52zg
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1792601081; x=1792860281;
-	bh=sF2WgK8kQja2/TCLOQWF9mZEvN3dP13/o7DoaVwiz+E=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=eAGI52zgXiCnFEdHpLNEetEFydnXmAkH3srKqtDjzkdi4u7+QkyLFd3WhcH6rFyzr
-	 hYM194XuN4D5HgldWHzVF8Sc1bXVK+RtcstbS2GaR8nhC9p6/72136AsjqEjVH15Tn
-	 9vkR8a7a5pMOgTkaEEMDDZ8Mr8W6bsPiSzV4f3oiwJ78ehDEo6NagBk6fm8RWJTHQs
-	 Z9cHetvTx2vFniPZy+zX7QUhQcZbiOg5luxOczrbXzQWZcZX14sDx9yRWcJJBvdjPY
-	 f1Cwwo5HeENkSOSx2vFDr5XS/tV7nfsL+KBdvuerLkl8o2wtuP9jBvEVsmqAmfA2Ao
-	 GC9tcqq8bxRAQ==
-Date: Wed, 21 Oct 2026 16:44:35 +0000
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-From: Mikkel Sejdelin <mikkel.sejdelin@proton.me>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "rafael@kernel.org" <rafael@kernel.org>, "sashal@kernel.org" <sashal@kernel.org>
-Subject: Sv: Re: [REGRESSION] 6.18.57: resume from s2idle triggers poweroff and hangs when tiny_power_button is built as a module
-Message-ID: <725HsmAf_bFINWdMxvCiH7SJLNdQs2iY1BiueqlOgIFrbkyv0Anc_2XPYLlkH_l0UVA5IueS_SeZFAe78qbvO-DjcR38vtRixBZTK_jmf1U=@proton.me>
-In-Reply-To: <e8e153c8-2c09-4b86-8991-a8eed56526cb@leemhuis.info>
-References: <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me> <e8e153c8-2c09-4b86-8991-a8eed56526cb@leemhuis.info>
-Feedback-ID: 151291767:user:proton
-X-Pm-Message-ID: dd500dd4ad8dbdc1d41ebb52ee9dbacf3c24a56d
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Dx0KtXKd
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5337fa12431so16451cf.1
+        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 10:33:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792604036; cv=none;
+        d=google.com; s=arc-20260327;
+        b=XP1t5VV+7MV43tuSFBpviJT0qpYqOibe0QsSblvofPU08LhZjVrpz9wFI/Ge97YONC
+         0ANJW7XOX+nX5T9MrcSZSZvlTzsUauKTPx46uSTkSJk+KIdEL7HAJILlayjx38reKuqt
+         icfhoo8BUP5oQGOxWgUloBQQzn9w3UehtxONu/MGiP8ULzhYZ1uTnyq+P21V/PE3iNil
+         Olgikpyu2nu2iMjceaLEmcA/7Gu4JEdVNT1LKdQb3N4EgrC77BNZ1io7WX8zpbLjkk/L
+         KGt7oNOCRK1Hbmgp56I3jnObywQhAcNBaI0R4tOVYZfop3kdXa2RXX71t9j0mTg40Wnt
+         mseQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
+        fh=1970PoXrrsj1LFXHysDWpLYGnyDmHsCv2iLGc7W2hoc=;
+        b=osXBtnNUtG0Z7yy5J/NHIfjWvSc7lMMDEcYSs7QxJF9+IoAZXdIPx8Z/ZGPDXqKULA
+         gj5ZSxKSO3ksC0NQNAO6kQ9xsPEKgIEc60vArftCHfdFXHQwHd0Sq6/cf2CAa5AtjUSH
+         tvMc/y3puQLOHK97Q2VsAPlkuoJAoWSY2sExU7gtOiZhZXW3P0tw6yY6mFf69CmNeOge
+         gPR+Phy1u33zScRMa0EhN+Go1DJs5iHqBOEFcfLDLJrFLV5ocLO7rq1VmvuomWy8jj8o
+         wePXy5d50Tv6qCJWgHXzNzyWuTpJt3ug/elt2JVKEeAc47MqCdiMGoea5g+rm87OrvVE
+         3vLw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792604036; x=1793208836; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
+        b=Dx0KtXKd8/WT17ovUEkwvSoXSFnCUD46zGUaeM7Of5Ufn8FKSY2QyNzfZUjACZqapG
+         O9Z7ylGGbR3+fW/qz2p3i2IYGSSGL73wgat35BzHgE0IifPvqB7igj+BWTVAu21N8mZR
+         HvrSVaqolkjTKePpjMDV9pSkwKHzbUOElC0MQI+7p2gKCphiwdzOxXQ/PKa7PddjHfbP
+         nXrcWfTZOnP0m4FFBOilYNfUMzzMd0aXEMbpxB/oVOxA5/G8i2FyLgoN5dcO5hqqKe1N
+         1b27Uz0wU6UZQNUoETH7TqzvBCxAdLoZom5xwR8dBA96m+RjtMk1aPCR6CNpEtWoUycg
+         /vwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792604036; x=1793208836;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
+        b=rZALtn4Ud3pcQNmK5TEqP/+XLSeIyfPHRmCDCHICg2Cs+U3KZSkRS2oct90YA32guj
+         MwSdzJawKyI1KF6MYh4Sy/IvAJyBhZ99j/Lal592xIfdaBLvYJF0EkmBLsuSnwrl7Bvg
+         clNVfieG2IcTekl/MhOS5M6nwb2MBnsnX8Js+/JMYafMzKqQCkzN/2VpJmCt9J8BmyMU
+         kvEmBo6ciwRg3/svfC9nD+Qgjlffr0fuXFDhuDLgJ6LBvdAeWYG/RxTa3XbxTKnbsCVR
+         mP7EpjQOIJdiKS0WUZOg1dsRShbjYR55adgeL2DmNHg1fAGxmrEBrqMGxYwJAJfIwMcp
+         SfSQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwx4E1kY6JsVzNzEl7CXGIvrywtB98CnZyev8a5Lhflj6HE2QeWICrGA75zsUGmKyTcQsvxS4zPBoAa3Q==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKZt/YDVfBWsf7bZYnvHuSe3NARvgbYzVs5HiyAc0BkUnL3Qb0u
+	q5+FUpf+Uf4tURLJ/DrWkku+yC5PqtXz5mGvsW2BUxwSNv4ImOyh++LefQWpzspgkj+K7mQWYs1
+	YA/mrbc4eZM1heCICcLLJkOlc8hHESQoegQhKMwTW
+X-Gm-Gg: AYBFou2xx1wHjwcT7EHn2JRMM6MoX0q3LgVzGt/X1HoSkkwgkif9YVkY/dpi58puNDZ
+	QikMqNVMSN+vravlHNH3sMA6A72s9zOCoGKTBapc5b01IrpjJ9uNz7frcgmb1Vfle6iuxoFfoJQ
+	aUGwWFLpvuFsHsz36r9h9ew5Lm+AF61cQKXVMKm3hGN2eyDktnHcJzoOvcxPFUgCnDZ7O+LqQhv
+	5kri8felmoegGWhIivMQIQY//8hSJQtMNPGE6nGn/qC8vX9m2KWCBiP2KZMwLl9LDsKyIZSszXy
+	fJMExFlCMBICsqkU2F0QED03W3wf+KYqmObVlCbvNxeuSMTdioS/J8fcXWbYI3pmdTOF4s/qmex
+	98xWruO3lZlvXayl6nxSm6CAO5Zm6Y1C0r2sJzEHVg1VS0RdqqcxesYKvDeNs3TwLVA==
+X-Received: by 2002:a05:622a:a889:b0:52f:8389:29e0 with SMTP id
+ d75a77b69052e-53684a855d1mr49880921cf.0.1792604034206; Wed, 21 Oct 2026
+ 10:33:54 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -64,36 +104,349 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20261021141736.2414170-1-nigro.fra@gmail.com>
+In-Reply-To: <20261021141736.2414170-1-nigro.fra@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 Oct 2026 10:33:42 -0700
+X-Gm-Features: AclHuK_UYGv8nDj4Bju93TcWqWdyNwDgMYSd0AQrKP5LC5Z7qQiDvO_lEJUZrc0
+Message-ID: <CAP-5=fVB1LWLfvXm97TpjjKL6037mHZW0GzuR94wSaOOoGR8_w@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Add test for events re-armed with PERF_EVENT_IOC_REFRESH
+To: Francesco Nigro <nigro.fra@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
+	kan.liang@linux.intel.com, leo.yan@arm.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 10/21/26 15:53, Thorsten Leemhuis wrote:
-> Maybe your request to pick up f4203ec64e1155 ("ACPI: tiny-power-button:
-> Convert the driver to a platform one") is enough to make the stable team
-> pick this up for 6.18.y. Ideally you would try if this really fix this;
-> or have you and I missed this in your mail?
+On Wed, Oct 21, 2026 at 7:17=E2=80=AFAM Francesco Nigro <nigro.fra@gmail.co=
+m> wrote:
+>
+> Open a sampling event with sample_period 1, re-arm it with
+> PERF_EVENT_IOC_REFRESH from its overflow signal handler, as
+> self-profilers such as async-profiler do, and check that each of 1000
+> events delivers a signal. One case uses a software event (page faults),
+> the other the syscalls:sys_enter_getppid tracepoint. The signal is a
+> real-time one, so overflows cannot be coalesced, and the page fault
+> buffer is marked MADV_NOHUGEPAGE so that each touched page faults once.
+>
+> The tracepoint case fails since
+> commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage"):
+> only the first overflow is delivered. The re-arming ioctl succeeds,
+> but the event count stays at 1. It passes on the parent commit. The
+> software case passes on both.
+>
+> The test was written with an AI coding assistant (Claude) from a
+> standalone reproducer; I reviewed it and ran it in QEMU on current
+> mainline, on that commit and on its parent.
+>
+> Link: https://github.com/async-profiler/async-profiler/issues/1813
+> Signed-off-by: Francesco Nigro <nigro.fra@gmail.com>
 
-I had not tested it yet, now I have: f4203ec64e1155 alone on top of
-6.18.57 fixes it. It applies cleanly.
+Thanks Francesco, testing locally I see a failure on  7.1.6:
+```
+$ sudo /tmp/perf/perf test -v IOC_REFRESH
+Not taking turns using the perf mlock budget: nothing can exhaust it
+20: Event re-armed with PERF_EVENT_IOC_REFRESH                        :
+20.1: Software event                                                  : Ok
+---- start ----
+test child forked, pid 187381
+1000 events, count 1, 1 overflows (1 POLL_HUP), re-arm errno 0
+---- end(-1) ----
+20.2: Tracepoint event                                                : FAI=
+LED!
 
-6.18.57 + f4203ec64e1155, tiny_power_button loaded (not blacklisted):
+=3D=3D=3D Test Summary =3D=3D=3D
+Passed main tests : 0
+Passed subtests   : 1
+Skipped tests     : 0
+Failed tests      : 1
+List of failed tests:
+  20.2: Tracepoint event
+```
+I believe this is currently expected until the kernel is fixed, which
+is somewhat unfortunate. The code looks okay and the build isn't
+regressed.
 
-  /sys/bus/platform/devices/PNP0C0C:00/driver -> acpi-button
-  /sys/bus/platform/drivers/acpi-tiny-power-button/ -> (no devices)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-  3/3 suspend/resume cycles OK (lid close, systemctl suspend woken by
-  the power button, systemctl suspend woken by the keyboard). No
-  SIGRTMIN+4, no poweroff, no hang.
+Thanks!
+Ian
 
-With both drivers on the platform bus they compete for PNP0C0C:00 again and=
- only button binds, as it did in 6.18.56.
 
-So please pick up for 6.18.y:
 
-  f4203ec64e11 ("ACPI: tiny-power-button: Convert the driver to a platform =
-one")
-
-6.18.58 is still affected (no ACPI changes in it).
-
-Thanks,
-Mikkel
+> ---
+>
+> Notes:
+>     v2:
+>     - Mark the page fault buffer MADV_NOHUGEPAGE: with transparent_hugepa=
+ge=3Dalways
+>       the software case got 489 of 1000 overflows (reported by Sashiko).
+>     - Use a real-time signal instead of SIGIO, so overflows cannot be coa=
+lesced.
+>     - Print the event count, POLL_HUP signals and the re-arm ioctl's errn=
+o.
+>     - Skip only on EACCES/EPERM, check the setup calls, accept >=3D 1000
+>       overflows, close the event before restoring the signal handler.
+>
+>     v1: https://lore.kernel.org/r/20261021131006.2101248-1-nigro.fra@gmai=
+l.com
+>
+>     To run it on any x86_64 box with virtme-ng:
+>
+>       vng --kconfig && make -j$(nproc)
+>       make -C tools/perf NO_LIBTRACEEVENT=3D1
+>       vng -- tools/perf/perf test -vv REFRESH
+>
+>     Tracepoint case, 2 vCPUs:
+>
+>       b320789d6883 (parent)  Ok:     count 1000, 1000 overflows (1000 POL=
+L_HUP)
+>       18dbcbfabfff           FAILED: count 1, 1 overflows (1 POLL_HUP), r=
+e-arm errno 0
+>       a804c5742bff (master)  FAILED: count 1, 1 overflows (1 POLL_HUP), r=
+e-arm errno 0
+>
+>     The software case passes on all three, and on master with
+>     transparent_hugepage=3Dalways.
+>
+>     Leo Yan's series "perf: Revert direct PMU stop for refresh limit"
+>     reverts 18dbcbfabfff for a different reason; I haven't tested it
+>     against this:
+>     https://lore.kernel.org/r/20260512-arm_cs_clean_perf_handle-v1-0-75ff=
+373ecd22@arm.com
+>
+>     #regzbot introduced: 18dbcbfabfff
+>
+>  tools/perf/tests/Build           |   1 +
+>  tools/perf/tests/builtin-test.c  |   1 +
+>  tools/perf/tests/event_refresh.c | 162 +++++++++++++++++++++++++++++++
+>  tools/perf/tests/tests.h         |   1 +
+>  4 files changed, 165 insertions(+)
+>  create mode 100644 tools/perf/tests/event_refresh.c
+>
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 66944a4f4..199e10c8c 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -23,6 +23,7 @@ perf-test-y +=3D hists_output.o
+>  perf-test-y +=3D hists_cumulate.o
+>  perf-test-y +=3D bp_signal.o
+>  perf-test-y +=3D bp_signal_overflow.o
+> +perf-test-y +=3D event_refresh.o
+>  perf-test-y +=3D bp_account.o
+>  perf-test-y +=3D wp.o
+>  perf-test-y +=3D task-exit.o
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 4d0784b16..2b10f4d7f 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -98,6 +98,7 @@ static struct test_suite *generic_tests[] =3D {
+>         &suite__hists_link,
+>         &suite__bp_signal,
+>         &suite__bp_signal_overflow,
+> +       &suite__event_refresh,
+>         &suite__bp_accounting,
+>         &suite__wp,
+>         &suite__task_exit,
+> diff --git a/tools/perf/tests/event_refresh.c b/tools/perf/tests/event_re=
+fresh.c
+> new file mode 100644
+> index 000000000..726e5de4c
+> --- /dev/null
+> +++ b/tools/perf/tests/event_refresh.c
+> @@ -0,0 +1,162 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Re-arm a sampling event from its overflow signal handler with
+> + * PERF_EVENT_IOC_REFRESH and check that every overflow is delivered.
+> + */
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <inttypes.h>
+> +#include <signal.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +#include <sys/ioctl.h>
+> +#include <sys/mman.h>
+> +#include <sys/syscall.h>
+> +#include <linux/perf_event.h>
+> +
+> +#include "cloexec.h"
+> +#include "debug.h"
+> +#include "tests.h"
+> +#include "tp_pmu.h"
+> +#include <internal/lib.h> // page_size
+> +#include "../perf-sys.h"
+> +
+> +#define NR_EVENTS 1000
+> +/* A real-time signal is queued, so no overflow can be coalesced away. *=
+/
+> +#define REFRESH_SIGNAL (SIGRTMIN + 1)
+> +
+> +static volatile sig_atomic_t overflows, hups, refresh_errno;
+> +
+> +static void sig_handler(int signum __maybe_unused, siginfo_t *info,
+> +                       void *uc __maybe_unused)
+> +{
+> +       int saved_errno =3D errno;
+> +
+> +       overflows++;
+> +       if (info->si_code =3D=3D POLL_HUP)
+> +               hups++;
+> +       if (ioctl(info->si_fd, PERF_EVENT_IOC_REFRESH, 1) < 0)
+> +               refresh_errno =3D errno;
+> +       errno =3D saved_errno;
+> +}
+> +
+> +/* Count overflow signals for NR_EVENTS calls of trigger(), period 1. */
+> +static int count_overflows(struct perf_event_attr *attr, void (*trigger)=
+(int i))
+> +{
+> +       struct sigaction sa, old_sa;
+> +       uint64_t count =3D 0;
+> +       int fd, i, err =3D TEST_FAIL;
+> +
+> +       attr->size =3D sizeof(*attr);
+> +       attr->sample_period =3D 1;
+> +       attr->disabled =3D 1;
+> +
+> +       fd =3D sys_perf_event_open(attr, 0, -1, -1, perf_event_open_cloex=
+ec_flag());
+> +       if (fd < 0) {
+> +               int open_errno =3D errno;
+> +
+> +               pr_debug("failed opening event: %s\n", strerror(open_errn=
+o));
+> +               return open_errno =3D=3D EACCES || open_errno =3D=3D EPER=
+M ? TEST_SKIP : TEST_FAIL;
+> +       }
+> +
+> +       memset(&sa, 0, sizeof(sa));
+> +       sa.sa_sigaction =3D sig_handler;
+> +       sa.sa_flags =3D SA_SIGINFO;
+> +       if (sigaction(REFRESH_SIGNAL, &sa, &old_sa) < 0) {
+> +               pr_debug("failed setting up signal handler\n");
+> +               close(fd);
+> +               return TEST_FAIL;
+> +       }
+> +
+> +       if (fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC) < 0 ||
+> +           fcntl(fd, F_SETSIG, REFRESH_SIGNAL) < 0 ||
+> +           fcntl(fd, F_SETOWN, getpid()) < 0) {
+> +               pr_debug("failed setting up signal delivery: %s\n", strer=
+ror(errno));
+> +               goto out;
+> +       }
+> +
+> +       overflows =3D 0;
+> +       hups =3D 0;
+> +       refresh_errno =3D 0;
+> +       if (ioctl(fd, PERF_EVENT_IOC_REFRESH, 1) < 0) {
+> +               pr_debug("PERF_EVENT_IOC_REFRESH failed: %s\n", strerror(=
+errno));
+> +               goto out;
+> +       }
+> +       for (i =3D 0; i < NR_EVENTS; i++)
+> +               trigger(i);
+> +       ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
+> +
+> +       if (read(fd, &count, sizeof(count)) !=3D sizeof(count))
+> +               pr_debug("failed to read the event count\n");
+> +       pr_debug("%d events, count %" PRIu64 ", %d overflows (%d POLL_HUP=
+), re-arm errno %d\n",
+> +                NR_EVENTS, count, overflows, hups, refresh_errno);
+> +       /* Unrelated page faults can only add overflows, never hide one. =
+*/
+> +       if (overflows >=3D NR_EVENTS)
+> +               err =3D TEST_OK;
+> +out:
+> +       /* Close first: a late signal must still find our handler. */
+> +       close(fd);
+> +       sigaction(REFRESH_SIGNAL, &old_sa, NULL);
+> +       return err;
+> +}
+> +
+> +static char *pages;
+> +
+> +static void touch_page(int i)
+> +{
+> +       pages[(long)i * page_size] =3D 1;
+> +}
+> +
+> +static int test__event_refresh_sw(struct test_suite *test __maybe_unused=
+,
+> +                                 int subtest __maybe_unused)
+> +{
+> +       struct perf_event_attr attr =3D {
+> +               .type =3D PERF_TYPE_SOFTWARE,
+> +               .config =3D PERF_COUNT_SW_PAGE_FAULTS,
+> +       };
+> +       int err;
+> +
+> +       pages =3D mmap(NULL, (long)NR_EVENTS * page_size, PROT_READ | PRO=
+T_WRITE,
+> +                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> +       if (pages =3D=3D MAP_FAILED)
+> +               return TEST_FAIL;
+> +       /* One fault per touched page: a huge page would cover many of th=
+em. */
+> +       madvise(pages, (long)NR_EVENTS * page_size, MADV_NOHUGEPAGE);
+> +
+> +       err =3D count_overflows(&attr, touch_page);
+> +       munmap(pages, (long)NR_EVENTS * page_size);
+> +       return err;
+> +}
+> +
+> +static void call_getppid(int i __maybe_unused)
+> +{
+> +       syscall(SYS_getppid);
+> +}
+> +
+> +static int test__event_refresh_tp(struct test_suite *test __maybe_unused=
+,
+> +                                 int subtest __maybe_unused)
+> +{
+> +       struct perf_event_attr attr =3D {
+> +               .type =3D PERF_TYPE_TRACEPOINT,
+> +       };
+> +       int id =3D tp_pmu__id("syscalls", "sys_enter_getppid");
+> +
+> +       if (id < 0) {
+> +               pr_debug("no syscalls:sys_enter_getppid tracepoint\n");
+> +               return TEST_SKIP;
+> +       }
+> +       attr.config =3D id;
+> +
+> +       return count_overflows(&attr, call_getppid);
+> +}
+> +
+> +static struct test_case tests__event_refresh[] =3D {
+> +       TEST_CASE_REASON("Software event", event_refresh_sw, "permissions=
+"),
+> +       TEST_CASE_REASON("Tracepoint event", event_refresh_tp, "permissio=
+ns"),
+> +       {       .name =3D NULL, }
+> +};
+> +
+> +struct test_suite suite__event_refresh =3D {
+> +       .desc =3D "Event re-armed with PERF_EVENT_IOC_REFRESH",
+> +       .test_cases =3D tests__event_refresh,
+> +};
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index cee9e6b62..ecc25b5a3 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -124,6 +124,7 @@ DECLARE_SUITE(parse_events);
+>  DECLARE_SUITE(hists_link);
+>  DECLARE_SUITE(bp_signal);
+>  DECLARE_SUITE(bp_signal_overflow);
+> +DECLARE_SUITE(event_refresh);
+>  DECLARE_SUITE(bp_accounting);
+>  DECLARE_SUITE(wp);
+>  DECLARE_SUITE(task_exit);
+> --
+> 2.55.0
+>
