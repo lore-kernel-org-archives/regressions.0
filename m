@@ -1,100 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792604037;
-	b=vTT2lAQZ83lZe09IfHZRzdpiQ80Rbf+YWTgztzBjGtZNdtnhdvucXNNZ0/Rjy1Ok5SZ7
-	 8yGIMAL9EX9TAL+I0ZVigl1bWV+fQZ3caLLxMtGd7XnwvqouCu6NyTU5MeDely4mjbgau
-	 MovEEBlDMk507jfegyX2Zd1X5y0rOyZzxYXx+j7LvFz/p1wlBPwKrTjhWzQ6mwFny32CL
-	 KUXoNshGCVevmeBI3VoRmwkOFgs/hbD7qcQdgqLTpoAA4qGKnfx5UO46R635gZ/vHqB1Y
-	 TWBOG1MSFSrWqweifTssB0sdXX6yA4CNCHZIwP/LpT+loJWbUe5NHiq2R78gpWwj7EA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792604037;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.217.54
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792609511;
+	b=aHqRvmCFqCCHOVijVOgfWjrk9uA9iIAtHSWpqp/zb+KBVnHFxf5xq2sHHOuq4SdzRmXU
+	 YMCO8F0zMxw1hab2bLzt/XbvumT1+Kc+o6RzdOv2wxC+qAKdxHfbSMwuQ5MwDmoeAb51h
+	 jPxwGAOUpfns+T0HmlLQ8rTmDaxEW90n5civMxelTldOStm3XacPU0kWX68h4h4Ctk1d/
+	 ctXUNTfQviDSKo4dewrfffgqABpJW/QVxNzlx3t+hsfutuJBGcwJ/UmQcBi9pwYCal6zn
+	 kUmKoxSTMMqewct9YjYkT2nBC0dKOEqrsTa/Mhy6wE4Au3f4xGULuwlY7G68j8UvBLA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792609511;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
-	b=em/AbRdo0BnDr1XG6C9X6/uQ20obrB4qh3zG6l1IuLgjx9bzgCKTr4Rd/VQoI8CMF6xK
-	 zPHcqfbqFHUGUw0StxwkjhPjo/oIpC3Drfl0FfKw8yPK10XDhZ2ebZz9DtaYvkDog0lLT
-	 ZkT45fVruvk/0D/ynmHcMeuJEqNz30g0usNQ1s7HZp/z5Y2BsO9Hf24IO4jcK+GgJXSGy
-	 0/HWys6CD5aoZNJ7yc06UD2pdQcjMhme8uMzEhdTA7EdfkX5svEZaTo1gX22QsSTKLz9h
-	 syyf4SnSYE9V7RCbAHxNKooDVSGHXAl2JxbqSuJYLsFC7HlW+zV7eKF93ZHh/8C/Pkg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Dx0KtXKd;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
+	 From:To:Cc:Subject:X-Mailer:References:In-Reply-To;
+	bh=yaJdLtbHiyXcMFgqBwOm4F2HMHkjIk9pI39u14xSXTs=;
+	b=OB+/7YPMe/47zokqSF+ey0lpnE2JGIWHd2UC+DqTzkGYqO9PWW6zDokZ2GLO2JimHRcH
+	 3+PwjMql9NTvXdGTbrRexhPsb+hekmic20fzGugchEah3SZG1M6/mFIdG2dWaVSU94Xx0
+	 35iPHF2hMDs1FOVGxFs1wQyOIyuCA+p6ocKMfN0Unaqu7j7bwoAeqpnKZX3fS4wyJt1k4
+	 BzLMXiacIJuByh+6OS7T/qURdavHuJoBh1ZbkGYQ+Ug1YJobYUkvAV+QzFIWOWFDw/w+t
+	 9j7N9yvYw8hIAxI8lU8wQkemMPq2WYXMMRRhiPSiU20jyei/gPbX2I4qAfVJjPCLtoA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Bzo0us2z;
+	arc=none smtp.remote-ip=209.85.217.54
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7F9606A321
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 17:33:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D7F9606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0349606A31A
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 19:05:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D0349606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Dx0KtXKd
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5337fa12431so16451cf.1
-        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 10:33:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792604036; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XP1t5VV+7MV43tuSFBpviJT0qpYqOibe0QsSblvofPU08LhZjVrpz9wFI/Ge97YONC
-         0ANJW7XOX+nX5T9MrcSZSZvlTzsUauKTPx46uSTkSJk+KIdEL7HAJILlayjx38reKuqt
-         icfhoo8BUP5oQGOxWgUloBQQzn9w3UehtxONu/MGiP8ULzhYZ1uTnyq+P21V/PE3iNil
-         Olgikpyu2nu2iMjceaLEmcA/7Gu4JEdVNT1LKdQb3N4EgrC77BNZ1io7WX8zpbLjkk/L
-         KGt7oNOCRK1Hbmgp56I3jnObywQhAcNBaI0R4tOVYZfop3kdXa2RXX71t9j0mTg40Wnt
-         mseQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
-        fh=1970PoXrrsj1LFXHysDWpLYGnyDmHsCv2iLGc7W2hoc=;
-        b=osXBtnNUtG0Z7yy5J/NHIfjWvSc7lMMDEcYSs7QxJF9+IoAZXdIPx8Z/ZGPDXqKULA
-         gj5ZSxKSO3ksC0NQNAO6kQ9xsPEKgIEc60vArftCHfdFXHQwHd0Sq6/cf2CAa5AtjUSH
-         tvMc/y3puQLOHK97Q2VsAPlkuoJAoWSY2sExU7gtOiZhZXW3P0tw6yY6mFf69CmNeOge
-         gPR+Phy1u33zScRMa0EhN+Go1DJs5iHqBOEFcfLDLJrFLV5ocLO7rq1VmvuomWy8jj8o
-         wePXy5d50Tv6qCJWgHXzNzyWuTpJt3ug/elt2JVKEeAc47MqCdiMGoea5g+rm87OrvVE
-         3vLw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Bzo0us2z
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-7bfb767d7b6so19715137.0
+        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 12:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792604036; x=1793208836; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
-        b=Dx0KtXKd8/WT17ovUEkwvSoXSFnCUD46zGUaeM7Of5Ufn8FKSY2QyNzfZUjACZqapG
-         O9Z7ylGGbR3+fW/qz2p3i2IYGSSGL73wgat35BzHgE0IifPvqB7igj+BWTVAu21N8mZR
-         HvrSVaqolkjTKePpjMDV9pSkwKHzbUOElC0MQI+7p2gKCphiwdzOxXQ/PKa7PddjHfbP
-         nXrcWfTZOnP0m4FFBOilYNfUMzzMd0aXEMbpxB/oVOxA5/G8i2FyLgoN5dcO5hqqKe1N
-         1b27Uz0wU6UZQNUoETH7TqzvBCxAdLoZom5xwR8dBA96m+RjtMk1aPCR6CNpEtWoUycg
-         /vwg==
+        d=gmail.com; s=20251104; t=1792609510; x=1793214310; darn=lists.linux.dev;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=yaJdLtbHiyXcMFgqBwOm4F2HMHkjIk9pI39u14xSXTs=;
+        b=Bzo0us2z2Xu+EhcPrskPoOfVFz1MD9dIXgEeIa07Q76S4nTSk6XCr4KJPZcM3aGozn
+         +XvL6unGMlGcoMLatAiS85JFCY+QLd4CLQGSN2NIJmn/ToVIys3n3L/cp1iLTk/nHRSF
+         UrkKNeVs7YH78eQFApUKA5XELlQ+36JtCxz8BESHey3FfrY4NhAMq9UJPDExAEBGRtnN
+         a8G3zEo2XAbA3C0NN3jNw+uQgpGta/Jo8GizmcBWz2ljpU2201DKBASICtO5nZf0hu4l
+         NdRLYxn0k60B/LuASiAJx2aRpnH3wX/nITorwZTnKphMQedDSPWJ6kSMYPy5XYFcFuVR
+         oCXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792604036; x=1793208836;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1792609510; x=1793214310;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fYzql6JtcBCdC5nAto7ifDKMheFmAsIcDGbLFyc5YJI=;
-        b=rZALtn4Ud3pcQNmK5TEqP/+XLSeIyfPHRmCDCHICg2Cs+U3KZSkRS2oct90YA32guj
-         MwSdzJawKyI1KF6MYh4Sy/IvAJyBhZ99j/Lal592xIfdaBLvYJF0EkmBLsuSnwrl7Bvg
-         clNVfieG2IcTekl/MhOS5M6nwb2MBnsnX8Js+/JMYafMzKqQCkzN/2VpJmCt9J8BmyMU
-         kvEmBo6ciwRg3/svfC9nD+Qgjlffr0fuXFDhuDLgJ6LBvdAeWYG/RxTa3XbxTKnbsCVR
-         mP7EpjQOIJdiKS0WUZOg1dsRShbjYR55adgeL2DmNHg1fAGxmrEBrqMGxYwJAJfIwMcp
-         SfSQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwx4E1kY6JsVzNzEl7CXGIvrywtB98CnZyev8a5Lhflj6HE2QeWICrGA75zsUGmKyTcQsvxS4zPBoAa3Q==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKZt/YDVfBWsf7bZYnvHuSe3NARvgbYzVs5HiyAc0BkUnL3Qb0u
-	q5+FUpf+Uf4tURLJ/DrWkku+yC5PqtXz5mGvsW2BUxwSNv4ImOyh++LefQWpzspgkj+K7mQWYs1
-	YA/mrbc4eZM1heCICcLLJkOlc8hHESQoegQhKMwTW
-X-Gm-Gg: AYBFou2xx1wHjwcT7EHn2JRMM6MoX0q3LgVzGt/X1HoSkkwgkif9YVkY/dpi58puNDZ
-	QikMqNVMSN+vravlHNH3sMA6A72s9zOCoGKTBapc5b01IrpjJ9uNz7frcgmb1Vfle6iuxoFfoJQ
-	aUGwWFLpvuFsHsz36r9h9ew5Lm+AF61cQKXVMKm3hGN2eyDktnHcJzoOvcxPFUgCnDZ7O+LqQhv
-	5kri8felmoegGWhIivMQIQY//8hSJQtMNPGE6nGn/qC8vX9m2KWCBiP2KZMwLl9LDsKyIZSszXy
-	fJMExFlCMBICsqkU2F0QED03W3wf+KYqmObVlCbvNxeuSMTdioS/J8fcXWbYI3pmdTOF4s/qmex
-	98xWruO3lZlvXayl6nxSm6CAO5Zm6Y1C0r2sJzEHVg1VS0RdqqcxesYKvDeNs3TwLVA==
-X-Received: by 2002:a05:622a:a889:b0:52f:8389:29e0 with SMTP id
- d75a77b69052e-53684a855d1mr49880921cf.0.1792604034206; Wed, 21 Oct 2026
- 10:33:54 -0700 (PDT)
+        bh=yaJdLtbHiyXcMFgqBwOm4F2HMHkjIk9pI39u14xSXTs=;
+        b=s/Z2fuE/R1ayHp6Q8RFLpRpQ+TAArv7UmsRNgp+uUtWXvdDxkVYmFQDdAOZFMdmxpi
+         nlqC8TMy7NZB3EG6gDHanZFFN9Itwh25hfpUCNchD7FUrG5rztlnZD97YtGuD6T9HqjJ
+         3cQ0Uu7uiHIcSYs6Nshd8WybJAkFhT2p2ZPH2nnMH9mQg2ouxl2SztnbPU2+KrQyid5D
+         Y4yL4lyo719kviYDeQeq+5i0+uhnDQjHCD9LpFcIneCEzW3nbotOxp4AVBlEW+D92RpX
+         ScB5VpeAyunGLBWvhTmR+QTlfnP2EoWWmjqtI00FBKQOZl10lMZPsP2x7KrDqcSmH18g
+         S5Hw==
+X-Forwarded-Encrypted: i=1; AKwUvBwfjblW/8GYz3/Vcg8YjJ1vG1N8YW9kuoDVt7MxXlCJ/6Vd11+lHnoTI+h8sG98XcWcNhqpl9lZGuJk6Q==@lists.linux.dev
+X-Gm-Message-State: AFq9FYLd6+VeXj2PYsL5SzM17COGHh4UJ/YslSozMWqUeKRCS12+tpuR
+	xsIM6Lweb9H7Cqviw9B3vrnAZgsdo2Rp8huoMQFvWQpofqqqOE82LHYv
+X-Gm-Gg: AYBFou3bqwlox+H2bTvgL+gbP6EpryFkLcfRRGV8AwZmFfgzNuSt5kLK2oaBgDsV+kL
+	iywPZoysOa8HVxcqQ4PB25RwPIRJJ/ij4g2/iEiZTVRyvThlTO5a3wiH1MaoTd5+9sDH+id/QwY
+	SyOLN6oY4o9MqCSGrUxBNjGU3xOvF7SrMU66M6dOP3IUFIv0FL4wZZqCUygdwKbCAvT5nvWGlZH
+	ADM4NSCR9N7gHGTKqikpCURF3QAz7RIBb+fKTZuHm+fRuf2TjMSJdjj4p4+IqJEQvJawUdRlmbn
+	JMxn6JQ2X8pcuOaon9ABIt5C1tNCwWFqLJu7yqcX73byq3zN7KU/P/XqTthp5oGGuWZ7VzWuxLG
+	LwbGfjGVlztX3HP8fjxMFxzQ4cNwc5oa2T5Qy6QSbG8nsaxYFiiU5KXH/kGtO5AHUWGxczt8Eq0
+	GO+8FjiFt5h7WAtoXdcQNQV5JC1m9Awhr/9ngJ6DI/j1Tl9svEtJYk0m8lgM124TMWJXlNaFlGL
+	ppEoSH1SBQtjSJZORMPTKwIC70K+zLHM2qnq44H+ynsSRuYzvk=
+X-Received: by 2002:a05:6102:3e92:b0:7c3:83a9:edc9 with SMTP id ada2fe7eead31-7cc92461809mr1156246137.1.1792609509675;
+        Wed, 21 Oct 2026 12:05:09 -0700 (PDT)
+Received: from localhost ([2802:8012:39:ac00:85dd:f0f7:d2d2:5158])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7cc921b6094sm3818360137.1.2026.10.21.12.05.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Oct 2026 12:05:09 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -103,350 +86,182 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-References: <20261021141736.2414170-1-nigro.fra@gmail.com>
-In-Reply-To: <20261021141736.2414170-1-nigro.fra@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 Oct 2026 10:33:42 -0700
-X-Gm-Features: AclHuK_UYGv8nDj4Bju93TcWqWdyNwDgMYSd0AQrKP5LC5Z7qQiDvO_lEJUZrc0
-Message-ID: <CAP-5=fVB1LWLfvXm97TpjjKL6037mHZW0GzuR94wSaOOoGR8_w@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Add test for events re-armed with PERF_EVENT_IOC_REFRESH
-To: Francesco Nigro <nigro.fra@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	kan.liang@linux.intel.com, leo.yan@arm.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 21 Oct 2026 16:05:03 -0300
+Message-Id: <DMAR194TTSQN.1VUF47V1A3YUX@gmail.com>
+From: "Gaston Gonzalez" <gascoar@gmail.com>
+To: "Martin Wetterwald" <martin@wetterwald.eu>
+Cc: "Florian Fainelli" <florian.fainelli@broadcom.com>, "Broadcom internal
+ kernel review list" <bcm-kernel-feedback-list@broadcom.com>, "Jai Luthra"
+ <jai.luthra@ideasonboard.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Stefan Wahren" <wahrenst@gmx.net>, "Phil
+ Elwell" <phil@raspberrypi.com>, "Laurent Pinchart"
+ <laurent.pinchart@ideasonboard.com>, "Umang Jain" <uajain@igalia.com>,
+ "Kees Cook" <kees@kernel.org>, <linux-rpi-kernel@lists.infradead.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-staging@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: Re: [PATCH] platform/raspberrypi: vchiq: register bus at
+ subsys_initcall
+X-Mailer: aerc 0.20.0
+References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com> <20261013131435.1454019-1-martin@wetterwald.eu> <DM5Q9NKRO89O.22R04QM8YBKWM@gmail.com> <CAFERDQ12QwtC6cCVWQGU1b5KCv988kAvahNKwosxG2z8Mzm4sw@mail.gmail.com> <DM8869QP3IID.1I1KT6A7M2UNB@gmail.com> <CAFERDQ3DWBnkSok_SiVZGx+GTmYKP=Q46yFYkNt9YQkKxxQxyw@mail.gmail.com>
+In-Reply-To: <CAFERDQ3DWBnkSok_SiVZGx+GTmYKP=Q46yFYkNt9YQkKxxQxyw@mail.gmail.com>
 
-On Wed, Oct 21, 2026 at 7:17=E2=80=AFAM Francesco Nigro <nigro.fra@gmail.co=
+On Mon Oct 19, 2026 at 9:26 AM -03, Martin Wetterwald wrote:
+> On Sun, Oct 18, 2026 at 9:53=E2=80=AFPM Gaston Gonzalez <gascoar@gmail.co=
 m> wrote:
 >
-> Open a sampling event with sample_period 1, re-arm it with
-> PERF_EVENT_IOC_REFRESH from its overflow signal handler, as
-> self-profilers such as async-profiler do, and check that each of 1000
-> events delivers a signal. One case uses a software event (page faults),
-> the other the syscalls:sys_enter_getppid tracepoint. The signal is a
-> real-time one, so overflows cannot be coalesced, and the page fault
-> buffer is marked MADV_NOHUGEPAGE so that each touched page faults once.
+>> Running 'speaker-test -t wav -D plughw:1,0 -c 2' crash the system, so
+>> thinks seem not to be working with that interface.
+>>
+>> Im trying to debug what happens in that condition; I will need a couple
+>> of days I guess. So far, this is what I could check.
+>>
+>> Any feedback on the test or debugging would be appreciated.
 >
-> The tracepoint case fails since
-> commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage"):
-> only the first overflow is delivered. The re-arming ioctl succeeds,
-> but the event count stays at 1. It passes on the parent commit. The
-> software case passes on both.
+> Hi Gaston,
+> Thanks for digging into this.
 >
-> The test was written with an AI coding assistant (Claude) from a
-> standalone reproducer; I reviewed it and ran it in QEMU on current
-> mainline, on that commit and on its parent.
+> The patch only changes when the VCHIQ bus and driver are registered durin=
+g
+> boot. So it's enough to check these two cases to validate the patch:
+> - without my patch: dmesg shows the "unable to register with bus_type
+>   'vchiq-bus'" error, and bcm2835_hdmi is absent from /proc/asound/cards.
+> - with my patch: the error is gone and bcm2835_hdmi is present in
+>   /proc/asound/cards.
 >
-> Link: https://github.com/async-profiler/async-profiler/issues/1813
-> Signed-off-by: Francesco Nigro <nigro.fra@gmail.com>
+> (Since the Pi Zero has no Headphones jack, you need to test both cases wi=
+th
+> snd_bcm2835.enable_hdmi=3D1 in the command line. Otherwise the card never=
+ shows
+> up, even when everything works.)
+>
+> Could you check these two cases?
+>
 
-Thanks Francesco, testing locally I see a failure on  7.1.6:
-```
-$ sudo /tmp/perf/perf test -v IOC_REFRESH
-Not taking turns using the perf mlock budget: nothing can exhaust it
-20: Event re-armed with PERF_EVENT_IOC_REFRESH                        :
-20.1: Software event                                                  : Ok
----- start ----
-test child forked, pid 187381
-1000 events, count 1, 1 overflows (1 POLL_HUP), re-arm errno 0
----- end(-1) ----
-20.2: Tracepoint event                                                : FAI=
-LED!
+Hi Martin,
 
-=3D=3D=3D Test Summary =3D=3D=3D
-Passed main tests : 0
-Passed subtests   : 1
-Skipped tests     : 0
-Failed tests      : 1
-List of failed tests:
-  20.2: Tracepoint event
-```
-I believe this is currently expected until the kernel is fixed, which
-is somewhat unfortunate. The code looks okay and the build isn't
-regressed.
+Results on the two cases:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Case 1:=20
+    - dmesg shows 'Driver bcm2835-audio was unable to register with bus
+      type 'vchiq-bus' because the bus was not initialized'.
+    - cat /proc/asound/cards shows only: vc4hdmi.
 
-Thanks!
-Ian
+Case 2:
+    - dmesg does not show 'Driver bcm2835-audio was unable to
+      register..'
+    - cat /proc/asound/cards now shows:
+        0 [vc4hdmi  ]: vc4-hdmi - vc4-hdmi
+                       vc4-hdmi
+        1 [HDMI     ]: bcm2835_hdmi - bcm2835 HDMI
+                       bcm2835 HDMI
 
+So your patch works on the Raspberry Pi Zero v1.3.
 
+Regards,
 
-> ---
+Gaston
 >
-> Notes:
->     v2:
->     - Mark the page fault buffer MADV_NOHUGEPAGE: with transparent_hugepa=
-ge=3Dalways
->       the software case got 489 of 1000 overflows (reported by Sashiko).
->     - Use a real-time signal instead of SIGIO, so overflows cannot be coa=
-lesced.
->     - Print the event count, POLL_HUP signals and the re-arm ioctl's errn=
-o.
->     - Skip only on EACCES/EPERM, check the setup calls, accept >=3D 1000
->       overflows, close the event before restoring the signal handler.
+> Testing that you can hear the sound going through bcm2835-audio is a full
+> functional test that goes even further than the patch: it does not only t=
+est
+> bus registration but also that the audio driver is working.
 >
->     v1: https://lore.kernel.org/r/20261021131006.2101248-1-nigro.fra@gmai=
-l.com
+> On my side, without vc4-drm, I can successfully hear sound through both b=
+cm2835
+> Headphones and bcm2835 HDMI:
 >
->     To run it on any x86_64 box with virtme-ng:
+>   # aplay -l
+>   **** List of PLAYBACK Hardware Devices ****
+>   card 0: HDMI [bcm2835 HDMI], device 0: bcm2835 HDMI [bcm2835 HDMI]
+>   [...]
+>   card 0: HDMI [bcm2835 HDMI], device 1: IEC958 [IEC958]
+>   [...]
+>   card 1: Headphones [bcm2835 Headphones], device 0: bcm2835
+> Headphones [bcm2835 Headphones]
+>   [...]
 >
->       vng --kconfig && make -j$(nproc)
->       make -C tools/perf NO_LIBTRACEEVENT=3D1
->       vng -- tools/perf/perf test -vv REFRESH
+>   # speaker-test -D plughw:0,0 # (HDMI)
 >
->     Tracepoint case, 2 vCPUs:
+>   # speaker-test -D plughw:1,0 # (Headphones, not on the Pi Zero)
 >
->       b320789d6883 (parent)  Ok:     count 1000, 1000 overflows (1000 POL=
-L_HUP)
->       18dbcbfabfff           FAILED: count 1, 1 overflows (1 POLL_HUP), r=
-e-arm errno 0
->       a804c5742bff (master)  FAILED: count 1, 1 overflows (1 POLL_HUP), r=
-e-arm errno 0
 >
->     The software case passes on all three, and on master with
->     transparent_hugepage=3Dalways.
+> If you still want to output sound through bcm2835_hdmi (optional):
 >
->     Leo Yan's series "perf: Revert direct PMU stop for refresh limit"
->     reverts 18dbcbfabfff for a different reason; I haven't tested it
->     against this:
->     https://lore.kernel.org/r/20260512-arm_cs_clean_perf_handle-v1-0-75ff=
-373ecd22@arm.com
+> There can only be one owner of the HDMI port: either the firmware or the
+> kernel.
+> When the Raspberry Pi boots, the firmware first owns the HDMI and display=
+s a
+> rainbow splash. Then it launches Linux.
 >
->     #regzbot introduced: 18dbcbfabfff
+> There are 2 ways for the kernel to deal with the video output:
 >
->  tools/perf/tests/Build           |   1 +
->  tools/perf/tests/builtin-test.c  |   1 +
->  tools/perf/tests/event_refresh.c | 162 +++++++++++++++++++++++++++++++
->  tools/perf/tests/tests.h         |   1 +
->  4 files changed, 165 insertions(+)
->  create mode 100644 tools/perf/tests/event_refresh.c
+> 1) With vc4-drm (CONFIG_DRM_VC4), the kernel takes over the HDMI controll=
+er
+>    from the firmware and handles everything itself (this is your case).
+> 2) With simple-framebuffer (CONFIG_DRM_SIMPLEDRM or CONFIG_FB_SIMPLE), th=
+e
+>    kernel leaves the HDMI to the firmware and just writes pixels to a
+> memory area
+>    (the framebuffer) set up by the firmware.
 >
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 66944a4f4..199e10c8c 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -23,6 +23,7 @@ perf-test-y +=3D hists_output.o
->  perf-test-y +=3D hists_cumulate.o
->  perf-test-y +=3D bp_signal.o
->  perf-test-y +=3D bp_signal_overflow.o
-> +perf-test-y +=3D event_refresh.o
->  perf-test-y +=3D bp_account.o
->  perf-test-y +=3D wp.o
->  perf-test-y +=3D task-exit.o
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index 4d0784b16..2b10f4d7f 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -98,6 +98,7 @@ static struct test_suite *generic_tests[] =3D {
->         &suite__hists_link,
->         &suite__bp_signal,
->         &suite__bp_signal_overflow,
-> +       &suite__event_refresh,
->         &suite__bp_accounting,
->         &suite__wp,
->         &suite__task_exit,
-> diff --git a/tools/perf/tests/event_refresh.c b/tools/perf/tests/event_re=
-fresh.c
-> new file mode 100644
-> index 000000000..726e5de4c
-> --- /dev/null
-> +++ b/tools/perf/tests/event_refresh.c
-> @@ -0,0 +1,162 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Re-arm a sampling event from its overflow signal handler with
-> + * PERF_EVENT_IOC_REFRESH and check that every overflow is delivered.
-> + */
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <inttypes.h>
-> +#include <signal.h>
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +#include <sys/syscall.h>
-> +#include <linux/perf_event.h>
-> +
-> +#include "cloexec.h"
-> +#include "debug.h"
-> +#include "tests.h"
-> +#include "tp_pmu.h"
-> +#include <internal/lib.h> // page_size
-> +#include "../perf-sys.h"
-> +
-> +#define NR_EVENTS 1000
-> +/* A real-time signal is queued, so no overflow can be coalesced away. *=
-/
-> +#define REFRESH_SIGNAL (SIGRTMIN + 1)
-> +
-> +static volatile sig_atomic_t overflows, hups, refresh_errno;
-> +
-> +static void sig_handler(int signum __maybe_unused, siginfo_t *info,
-> +                       void *uc __maybe_unused)
-> +{
-> +       int saved_errno =3D errno;
-> +
-> +       overflows++;
-> +       if (info->si_code =3D=3D POLL_HUP)
-> +               hups++;
-> +       if (ioctl(info->si_fd, PERF_EVENT_IOC_REFRESH, 1) < 0)
-> +               refresh_errno =3D errno;
-> +       errno =3D saved_errno;
-> +}
-> +
-> +/* Count overflow signals for NR_EVENTS calls of trigger(), period 1. */
-> +static int count_overflows(struct perf_event_attr *attr, void (*trigger)=
-(int i))
-> +{
-> +       struct sigaction sa, old_sa;
-> +       uint64_t count =3D 0;
-> +       int fd, i, err =3D TEST_FAIL;
-> +
-> +       attr->size =3D sizeof(*attr);
-> +       attr->sample_period =3D 1;
-> +       attr->disabled =3D 1;
-> +
-> +       fd =3D sys_perf_event_open(attr, 0, -1, -1, perf_event_open_cloex=
-ec_flag());
-> +       if (fd < 0) {
-> +               int open_errno =3D errno;
-> +
-> +               pr_debug("failed opening event: %s\n", strerror(open_errn=
-o));
-> +               return open_errno =3D=3D EACCES || open_errno =3D=3D EPER=
-M ? TEST_SKIP : TEST_FAIL;
-> +       }
-> +
-> +       memset(&sa, 0, sizeof(sa));
-> +       sa.sa_sigaction =3D sig_handler;
-> +       sa.sa_flags =3D SA_SIGINFO;
-> +       if (sigaction(REFRESH_SIGNAL, &sa, &old_sa) < 0) {
-> +               pr_debug("failed setting up signal handler\n");
-> +               close(fd);
-> +               return TEST_FAIL;
-> +       }
-> +
-> +       if (fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC) < 0 ||
-> +           fcntl(fd, F_SETSIG, REFRESH_SIGNAL) < 0 ||
-> +           fcntl(fd, F_SETOWN, getpid()) < 0) {
-> +               pr_debug("failed setting up signal delivery: %s\n", strer=
-ror(errno));
-> +               goto out;
-> +       }
-> +
-> +       overflows =3D 0;
-> +       hups =3D 0;
-> +       refresh_errno =3D 0;
-> +       if (ioctl(fd, PERF_EVENT_IOC_REFRESH, 1) < 0) {
-> +               pr_debug("PERF_EVENT_IOC_REFRESH failed: %s\n", strerror(=
-errno));
-> +               goto out;
-> +       }
-> +       for (i =3D 0; i < NR_EVENTS; i++)
-> +               trigger(i);
-> +       ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
-> +
-> +       if (read(fd, &count, sizeof(count)) !=3D sizeof(count))
-> +               pr_debug("failed to read the event count\n");
-> +       pr_debug("%d events, count %" PRIu64 ", %d overflows (%d POLL_HUP=
-), re-arm errno %d\n",
-> +                NR_EVENTS, count, overflows, hups, refresh_errno);
-> +       /* Unrelated page faults can only add overflows, never hide one. =
-*/
-> +       if (overflows >=3D NR_EVENTS)
-> +               err =3D TEST_OK;
-> +out:
-> +       /* Close first: a late signal must still find our handler. */
-> +       close(fd);
-> +       sigaction(REFRESH_SIGNAL, &old_sa, NULL);
-> +       return err;
-> +}
-> +
-> +static char *pages;
-> +
-> +static void touch_page(int i)
-> +{
-> +       pages[(long)i * page_size] =3D 1;
-> +}
-> +
-> +static int test__event_refresh_sw(struct test_suite *test __maybe_unused=
-,
-> +                                 int subtest __maybe_unused)
-> +{
-> +       struct perf_event_attr attr =3D {
-> +               .type =3D PERF_TYPE_SOFTWARE,
-> +               .config =3D PERF_COUNT_SW_PAGE_FAULTS,
-> +       };
-> +       int err;
-> +
-> +       pages =3D mmap(NULL, (long)NR_EVENTS * page_size, PROT_READ | PRO=
-T_WRITE,
-> +                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-> +       if (pages =3D=3D MAP_FAILED)
-> +               return TEST_FAIL;
-> +       /* One fault per touched page: a huge page would cover many of th=
-em. */
-> +       madvise(pages, (long)NR_EVENTS * page_size, MADV_NOHUGEPAGE);
-> +
-> +       err =3D count_overflows(&attr, touch_page);
-> +       munmap(pages, (long)NR_EVENTS * page_size);
-> +       return err;
-> +}
-> +
-> +static void call_getppid(int i __maybe_unused)
-> +{
-> +       syscall(SYS_getppid);
-> +}
-> +
-> +static int test__event_refresh_tp(struct test_suite *test __maybe_unused=
-,
-> +                                 int subtest __maybe_unused)
-> +{
-> +       struct perf_event_attr attr =3D {
-> +               .type =3D PERF_TYPE_TRACEPOINT,
-> +       };
-> +       int id =3D tp_pmu__id("syscalls", "sys_enter_getppid");
-> +
-> +       if (id < 0) {
-> +               pr_debug("no syscalls:sys_enter_getppid tracepoint\n");
-> +               return TEST_SKIP;
-> +       }
-> +       attr.config =3D id;
-> +
-> +       return count_overflows(&attr, call_getppid);
-> +}
-> +
-> +static struct test_case tests__event_refresh[] =3D {
-> +       TEST_CASE_REASON("Software event", event_refresh_sw, "permissions=
-"),
-> +       TEST_CASE_REASON("Tracepoint event", event_refresh_tp, "permissio=
-ns"),
-> +       {       .name =3D NULL, }
-> +};
-> +
-> +struct test_suite suite__event_refresh =3D {
-> +       .desc =3D "Event re-armed with PERF_EVENT_IOC_REFRESH",
-> +       .test_cases =3D tests__event_refresh,
-> +};
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index cee9e6b62..ecc25b5a3 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -124,6 +124,7 @@ DECLARE_SUITE(parse_events);
->  DECLARE_SUITE(hists_link);
->  DECLARE_SUITE(bp_signal);
->  DECLARE_SUITE(bp_signal_overflow);
-> +DECLARE_SUITE(event_refresh);
->  DECLARE_SUITE(bp_accounting);
->  DECLARE_SUITE(wp);
->  DECLARE_SUITE(task_exit);
-> --
-> 2.55.0
+> I get a similar problem on my side when sending sound through bcm2835_hdm=
+i with
+> vc4-drm loaded: my screen shuts down (but the kernel is still alive).
+> It most likely comes from the firmware and the kernel both trying to driv=
+e the
+> same HDMI port: with vc4-drm, the kernel owns the HDMI controller, and th=
+e
+> firmware (which bcm2835-audio talks to through VCHIQ) is not supposed to =
+touch
+> it.
 >
+> A simple way to output sound through bcm2835_hdmi is to not use the vc4-d=
+rm
+> driver at all, and use simple-framebuffer if you still want a display.
+>
+> To remove vc4-drm:
+> - Do not compile the driver into the kernel (CONFIG_DRM_VC4=3Dn) or black=
+list the
+>   module.
+> - Remove any vc4 overlay in config.txt file (e.g. remove dtoverlay=3Dvc4-=
+kms-v3d).
+>
+> To enable simple-framebuffer, use one of the two configs:
+>
+>   CONFIG_DRM=3Dy
+>   CONFIG_DRM_SIMPLEDRM=3Dy
+>   CONFIG_DRM_FBDEV_EMULATION=3Dy
+>   CONFIG_FRAMEBUFFER_CONSOLE=3Dy
+>
+> or, the older way:
+>
+>   CONFIG_FB=3Dy
+>   CONFIG_FB_SIMPLE=3Dy
+>   CONFIG_FRAMEBUFFER_CONSOLE=3Dy
+>
+> (FRAMEBUFFER_CONSOLE=3Dy, and DRM_FBDEV_EMULATION in the DRM case, are on=
+ly
+> needed to see the boot messages on the screen, with console=3Dtty1 on the=
+ command
+> line.)
+>
+> If you have remote access to your Pi Zero (either through network+SSH or
+> through serial console), you actually don't even need the simple-framebuf=
+fer:
+> you can just remove vc4-drm, and let the firmware display its rainbow spl=
+ash on
+> the HDMI port.
+> Then you can login to your Pi Zero through SSH for example and launch
+> speaker-test.
+> As long as the HDMI video output is active, it's enough for the sound to =
+be
+> able to go through, even if the image was not drawn by Linux.
+>
+> But again, this full functional test is optional.
+>
+> Regards,
+> Martin
+
