@@ -1,70 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792571145;
-	b=5iHAcUay2upkIdsXqg7s8l6SLWLwaJA8V/rfzcjU47UouF1y4tBmE64vHslin2Z2Lvio
-	 IyJQ+S3urtdKr2hKXNN5dpmeWpBnMoIFD2wsK1l+64JxT7pVhrhWhxyF6rapLxk79cB4W
-	 fO05uf0uDH6AItDx09nKgr4KoT/k91YbNn3jOfnOS/XSU9w8VvhYSoQ7njQxiYvgUpTJ6
-	 gJ1aflaZtWQK6efjuX9Fb+rcTvGjZT0/cuZ4wTaSTk/+cj9uduskOzUqe3QIdTC/DFQ84
-	 mql1LnpiY6RQVHCf5F+J+ukL/yUdItmHprs23QSWFSmjZfIlPx5eoB03+4OV3tmGUdg==
+	t=1792571756;
+	b=KyRVr55Yzfw1naykYRJdUuWgb6GbUPPS/51qLuo16TaugmCA4Y/F9gfJW8zi7/OB2DWJ
+	 yYlWNLtzG2MJcM54Rl38SEl2ZWJh5tnmHkbrIgvbwNKFC7f01nmkIvN30MdL25N9aGN9H
+	 vx1fL3H6zN0HsKNK5A6clTd74+P4qsUnO43LRZOUr7VP4on4tXAVJIn/ttI+JznO/Ic5X
+	 LTwrQfv/0oG2u9o9rzgjA0n9+ljwCEn4SjeY/s36z49Np1V/HETHxfjEKRFHEWZJruCYd
+	 0tB0R5+OiTd20g6vCCSWMu/dx4ceO20PnWoOWEjZA41IAv6mtVIVK4Ec02gptsPabPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792571145;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=M/xplg/VP58uzH9i1JrHcCGX5VNsT3nAYojevaWRHQM=;
-	b=cGgN+XBxRLgN3loOFtv1aLKaG/raKKE8boha14AvAvWvNJFu/hUrFm9t1LlMZAviKzfE
-	 o47FFUoN89oQr92wyzW4dYD1ehhtphNE5twPtgdQJA2/7mWzQXspvkIH61OvmIbLzf8bE
-	 ROCYDeHJU/QMEbVc+LXTX3tZoRxTbCvvxzDdT6DPC4Padn9RHswJcYjOk/Qm/uE7XBMOV
-	 6jvmLG74FEeJvd8mD7qUFYAsyOlaIHdygEteSdu4n5OLR5KfY1ZTMyDsNu2I4MubW+ZJv
-	 UiC0Am1RSteK1s5pnETm3BgM9+ExRHYImg9ctrqLYM092nSfQuSX3N8vu16cHNzbJ4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792571756;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=KbJGV4k1la3/kWX07RtAQM/FAs2mIBBziR5mEoX6Iw8=;
+	b=2z/+XtEyNYbQG94ve7UOXkatxAuj26P7gsbCPlKvcLCfS7xRcAhGf5qDvOIV+ktxQ1mc
+	 c3a/mRy9PAwTjAEjNNTuiNQCAKs8aCWIsrBJWMqdVvxZI4crWUvmaXhBDU7ZbkwUb8isZ
+	 eMYYcZdpXvpRFPa4+iJ6DCBd5JdVQWrBm04FSV21b0iP09qYOCwxYyGqfgOPJquvMzJwk
+	 2uc+yd49IPuTVML1OBEvBpU/BmlJlDDRsMfkTnFV2dbMlfKGxmjLZbbbMhNa11duB0jlP
+	 kEaOMczEHiK8Io0ryWpGq8hTmp9eWsxfHcbmJgTn2cKCSMA8AvWRqKroo5veP0Th67w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=V57cmfdJ;
-	arc=none smtp.remote-ip=188.68.63.162
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=DOZo10LZ;
+	arc=none smtp.remote-ip=185.70.43.16
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8197B606A319
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 08:25:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8197B606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51216606A322
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 08:35:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51216606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=V57cmfdJ
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j8j4p1RcWz42Rk;
-	Wed, 21 Oct 2026 10:24:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792571082;
-	bh=TfzNxE4S0ZoHGBEXo2HLZkSpVrLGT3MBJHtmb8xMtdQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V57cmfdJ5uUGcYMt6ktmrHuLDZldF/X9vvUE3p/1sXpQGZPxC9rXJFKryqC+HZVX0
-	 dcmFTfXmSkVfCaj87JQ8F2x30IlJoHVM1XE/ixIkbcg5I/weWvcDhoWI78tLYWP+d2
-	 DMf3PoFLsoZcnVt3rRzzJ2HK/F7qVrM78DbibS53TlQnN1k/HUHPHOW05J2/bBYjeM
-	 dN67TAKIUBY6gjwxeOg2Rvhdy9CL4xKaLfMVOIcq4CT767A89dZtf8GcZUe/hfhbKC
-	 ceyiKMdOfCc48ZZ5WGW7vQPoUzLPQXUn0eupB/yQ3+f99papeXzgsl+XEIM/89Fn8S
-	 R8ly/OJKMHiTQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j8j4F6pmbz45SC;
-	Wed, 21 Oct 2026 10:24:13 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j8j4F1kfgz8svZ;
-	Wed, 21 Oct 2026 10:24:13 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 355B75F8E6;
-	Wed, 21 Oct 2026 10:24:05 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <f9ab8a2d-966f-4e96-b905-116919c5ac7b@leemhuis.info>
-Date: Wed, 21 Oct 2026 10:24:03 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=DOZo10LZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1792571752; x=1792830952;
+	bh=KbJGV4k1la3/kWX07RtAQM/FAs2mIBBziR5mEoX6Iw8=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=DOZo10LZ3lcaNwh/8+Iy7PE9Gxk5Vxfl3eJirctRgpX7StmMVs3Gg1o5qHCIBGLO0
+	 KOT9hq+lbML1THVsvFPXrH3kXxyIaFfHtd4z7h1zrF2cYsfyQCgG1EXWjbP58Y8RnT
+	 POnTewqZXHlq0VoTl25i0FFNxyZNhVEFU6HEZ3tNpAG6q4fnT4BvaWr9HNy5l9skid
+	 7X0CAY610F76QH/jRSrF8Os3wFB+qAcv+4gjLtYvtExgRI9BBI7bfncwiKJJg4zndg
+	 +7i7AqQqkp+rormrrZMim/6zXHjN4pTO797fVdDZ6Sgho6In12WM7VDRxsh3dVK8yx
+	 S3PExlE5G3vvg==
+Date: Wed, 21 Oct 2026 08:35:49 +0000
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
+From: Mikkel Sejdelin <mikkel.sejdelin@proton.me>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "rafael@kernel.org" <rafael@kernel.org>, "sashal@kernel.org" <sashal@kernel.org>
+Subject: [REGRESSION] 6.18.57: resume from s2idle triggers poweroff and hangs when tiny_power_button is built as a module
+Message-ID: <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me>
+Feedback-ID: 151291767:user:proton
+X-Pm-Message-ID: a7ec0184fdfbb41669f23160cf20756961af0e72
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,55 +61,92 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-To: Edward Malik <edwardmalik95@icloud.com>, Andreas Wild <andiwild@gmail.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
- Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, M M <restafvalendergelijke@outlook.com>,
- blaat windows <blaaaat@hotmail.com>
-References: <20260801201244.4421-1-andiwild@gmail.com>
- <20260917233355.GA1115024@bhelgaas>
- <b4ed1637-ac6a-4af5-ab47-e07309af200b@leemhuis.info>
- <alpine.DEB.2.21.2609181131520.57799@angie.orcam.me.uk>
- <1b2cceea-8da4-4239-a955-e0c6b475a227@leemhuis.info>
- <87c93553-d74d-4588-bd54-0ccb2728f327@leemhuis.info>
- <20260929080109.53944-1-andiwild@gmail.com>
- <c5ee9a34c6b7d3ca96538c9cc2914b603b0dce7e.camel@icloud.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <c5ee9a34c6b7d3ca96538c9cc2914b603b0dce7e.camel@icloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <179257104571.3473704.14459507000492669160@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 355B75F8E6
-X-NC-CID: bwRAHJzw8nqyB+8VIDlWwRjIm9/sppZb+tvgy0PHfjJB402hrCo=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 10/21/26 04:23, Edward Malik wrote:
-> I noticed another reported incident on the CachyOS Discord server:
-> [1.278083] pci 0000:00:1c.0: retraining failed
-> System information: https://paste.cachyos.org/p/35d9bd0.log
-> I'm sharing this in case it helps with investigating the PCIe
-> retraining regression maybe there is a common denominator among the
-> hardware 
-> 
-> Probably will see more now that ubuntu has moved to the new kernel i
-> think
+Resending as plain text; the previous copy was rejected by the lists for co=
+ntaining HTML.
 
-I don't known about the others, but if you ask me this thread always was
-confusing, as we ended up discussing two different problems; over time
-it became even more confusing.  And one of the issues was fixed for 7.3
-iirc.
 
-So if you ask me I think it's overdue someone tests if *vanilla* 7.3
-(not a vendor kernel) is still affected and reports any remaining
-problems separately anew (e.g. in a new thread) in a way that can be
-read without reading this thread -- while still briefly dropping a link
-to this thread for completeness. Afterwards reply here with a link to
-the new thread.
 
-Ciao, Thorsten
+Hi,
+
+Since 6.18.57, my laptop never comes back from suspend-to-idle: on resume
+init receives SIGRTMIN+4 and starts a poweroff, the display stays off, and
+the machine hangs until it is forced off. 6.18.56 works fine.
+
+Hardware: Lenovo IdeaPad Pro 5 16AKP10 (83JN), BIOS R1CN59WW, AMD, s2idle o=
+nly
+Distro: =C2=A0 NixOS 26.05 (distro kernel, CONFIG_ACPI_BUTTON=3Dm,
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 CONFIG_ACPI_TINY_POWER_BUTTON=3Dm, CONFI=
+G_ACPI_TINY_POWER_BUTTON_SIGNAL=3D38)
+
+On every resume, the journal on 6.18.57 shows:
+
+=C2=A0 kernel: PM: suspend entry (s2idle)
+=C2=A0 systemd[1]: Received SIGRTMIN+4.
+=C2=A0 systemd-sleep: System returned from sleep operation 'suspend'.
+=C2=A0 kernel: PM: suspend exit
+=C2=A0 systemd-sleep: Failed to thaw unit 'user.slice': Unit has a pending =
+job
+
+followed by:
+
+=C2=A0 systemd[1]: Activating special unit System Power Off...
+=C2=A0 systemd[1]: Cannot stop frozen unit Session 3 of User mikke.
+=C2=A0 ...
+=C2=A0 systemd-shutdown[1]: Sending SIGTERM to remaining processes...
+
+after which the journal stops and the machine hangs with the display off
+(SIGRTMIN+4 =3D poweroff.target in systemd). A bpftrace probe on signal
+delivery to PID 1 shows the signal comes from a kernel worker, i.e. the
+ACPI notify path, not from userspace:
+
+=C2=A0 sig=3D38 code=3D128 from pid=3D296 comm=3Dkworker/6:2
+
+Cause:
+
+6.18.57 contains 38c79dacc806 ("ACPI: button: Convert the driver to a
+platform one", upstream 52d864019636), backported as a Stable-dep-of
+fe80251152fe ("ACPI: button: Fix ACPI GPE handler leak during removal").
+The matching upstream conversion of tiny-power-button, f4203ec64e11
+("ACPI: tiny-power-button: Convert the driver to a platform one"), was
+not backported.
+
+Before the backport, both drivers were acpi_drivers matching PNP0C0C,
+so only one could bind; button wins on this machine and tiny-power-button
+stays unbound. After it, button binds to the platform device and
+tiny-power-button binds to the ACPI companion of the same device, so both
+install notify handlers on PWRB. tiny-power-button calls
+kill_cad_pid(SIGRTMIN+4) for any notify, including the wake notification
+on s2idle resume, which button itself filters out.
+
+Verification on the same machine:
+
+=C2=A0 6.18.56 (no blacklist):
+=C2=A0 =C2=A0 /sys/bus/acpi/drivers/button/ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0-> PNP0C0C:00, PNP0C0D:00
+=C2=A0 =C2=A0 /sys/bus/acpi/drivers/tiny-power-button/ -> (no devices)
+=C2=A0 =C2=A0 3/3 suspend/resume cycles OK (systemctl suspend; woken by pow=
+er
+=C2=A0 =C2=A0 button and by keyboard). No SIGRTMIN+4.
+
+=C2=A0 6.18.57 (no blacklist):
+=C2=A0 =C2=A0 button bound to platform device PNP0C0C:00, tiny-power-button
+=C2=A0 =C2=A0 loaded; 2/2 resumes ended in SIGRTMIN+4, an attempted powerof=
+f
+=C2=A0 =C2=A0 and a hang.
+
+=C2=A0 6.18.57 with tiny_power_button blacklisted:
+=C2=A0 =C2=A0 suspend/resume works.
+
+Suggested fix: backport f4203ec64e11 together with 52d864019636, or
+revert 38c79dacc806 (and its dependents) from 6.18.y. Note that the same
+backport also appears to lose fixed-event power buttons (LNXPWRBN)
+without ab06eb920401 ("ACPI: scan: Register platform devices for fixed
+event buttons"), reported at
+https://github.com/siderolabs/talos/issues/14657
+
+#regzbot introduced: 38c79dacc806
+
+Thanks,Mikkel
