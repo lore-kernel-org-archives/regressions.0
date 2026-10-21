@@ -1,74 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.78.189
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792583012;
-	b=rURRsllLCojuEL9O7z8Y3Ij4UyVbHYqvw43ojOvCILoJBFp/iqFQODoxtCL8Ssfssvc1
-	 R4PZM2AzodEj5wVkaburZUQp5/g78REvjaF9aE00L8tFWkMg+DB/XKE01dBz6T289W9zZ
-	 jyh2UGUk38vnAI/CwB09TPuuZ1VIxWZnrZSOoFr6OAT1ko8zxiV5G1lsG8mhUXaKRyYLP
-	 9V6BJgDUJaSmlvMJ+4XJrUSA6A5Sk870oX1Hayy/OOTW+MR2lFKK2Ap73YHRQ0LFIQElo
-	 sRSFKkS8I0GZm/hOyCz7oZuSykUHTfdzkt3lSuNZYwxO8k9t5EmdX1hpSy+tbLMWm+w==
+	t=1792583646;
+	b=ezP5zWBxbIj1lOLDgAuDwKWJ8pHWTow0WbdHpFWrzpYgvm71Y3mqffvCcq7/85kyCpKd
+	 lGkK08gIoVXV6USKdNZAHJ7UDkLq17nXLuHpgddi9uR2/S/fpPXOekgpZsD2fOR8muYs/
+	 3J53ADOpndJlRzSCkyc7KMTXmLNI070hUZaF11RnrIfKMFJAur6IDM4eolBaQZMduNqQn
+	 GgfN/6eSxW6eUwWEldGMXyepqieWvGibzoDsWaXCvCj4OaNcV1ic2jGirkeTRI6YgvEjZ
+	 IgJq/qYi6lWHW4Hadfh+Ottbc7S/IM2GiZZJ+YJqgDeN5oi3Fn4Tb7xICv9xB6wrwwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792583012;
-	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
-	 Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Content-Transfer-Encoding:User-Agent:MIME-Version:
-	 X-Proofpoint-ORIG-GUID:X-Authority-Info-Out:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:X-JNJ;
-	bh=Sw5Eir+xy65c9AYKBeuz0upxYVB/n3ogNv/58XRlDuU=;
-	b=s1GsP1yVcG5Tdk0OmDzg4EEaUIk71TsWrUEcf1R8T9un8TMKr6DeXppu/1sNXA1ZPn2o
-	 bKo7FHV/EKkD15ZjJfeF7gugzjgvpZun9EeQ8OjsVqN0FnsuzJvfMW9+G19ynixRCNh5q
-	 gxJSQzLJGH14gOuqmgqggaVxatu977cu5NznnDWKkkU/dqyhdF58EMzxI/33A0WFr5UlX
-	 sVX4LrD2czfKcG8fCV06e1IZIlEC0OxxWv7WvCN+GjLm3eN2ALVezv50GDIqrkEGkd5uW
-	 YOx8GDoXKTFSnWfCrG/h13QnJkTvk5TG1iBN6darMSzRPOvVkaC/Q6CTcVZoNlWQk5A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792583646;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=khbtvnCt8sXvEtX9fI1U36fFGjo7tER69Bnnl50Wz8Y=;
+	b=CK0Brq9u3NUXC77rqnf7EEILdfEdQjoROVq9Tqe6rUluDanFlwFoK9rKGpiuvLdL1vgR
+	 wNe33axrkNnTnQxN0EnjANXG67t6CKVX3Ph2CvvbL0tiHYO3uvM3lUnV1VFfwXk+WGsSu
+	 H702HSDmrAHj32Lc7oQrhw92VyLYe5NqZq/9cY6nb6emXOcQt4Prt03MMNx+jPw4nt8RE
+	 LhhLpOFzZpGu9PHY0mX9o3zi9CVrXt1rZ8Jcymdutr5094o951kcGsNDxDWpyst6SStoS
+	 jsjBwnskgH7JNjBoRGz/Ufuhow3mzD0xSE1sChR6RoJzpxUUYkGQWldGZXlTEH9VC7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=icloud.com;
-	spf=pass smtp.mailfrom=icloud.com;
-	dkim=pass header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=aV3Q2gGB;
-	arc=none smtp.remote-ip=57.103.78.189
-Received: from outbound.st.icloud.com (st-2004l-snip4-8.eps.apple.com [57.103.78.189])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mVWXwXXE;
+	arc=none smtp.remote-ip=209.85.218.42
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7B606A31F
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 11:43:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4A7B606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA49C606A33B
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 11:54:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA49C606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=aV3Q2gGB
-Received: from outbound.st.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-1a-60-percent-10 (Postfix) with ESMTPS id E4CB51800112;
-	Wed, 21 Oct 2026 11:43:28 +0000 (UTC)
-X-ICL-RepId: 01a15e46-0268-78d5-8cd7-027a83f8e2e5
-X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQFIHV8EWxxCDFYCVARLVxQEHVcaVhlWHVgUWgYOXnIZWhRcGFNFUR9UWFUJCgJRHFYNV0NUBF9QSxsOXAdLWhVVFw4CQh9QH0wWV0NEHxwZWhRcGFNFUR9UWEMZRVZpQQtPHV0ZWxxCZFhXCQoCURxWDVdDVARfUFQRV1ALXQVCX0gFDAUIVkBbGgBVBw1TFlwZUA4CDQNHCklWXFFfAkMJHgBfDkVREVQdXy1eCF4fTBwdDlgGDFBNAUMICgJRHFYNVw==
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1792583010; x=1824119010; bh=Sw5Eir+xy65c9AYKBeuz0upxYVB/n3ogNv/58XRlDuU=; h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version:x-icloud-hme; b=aV3Q2gGBkAbE+s+j4VBqtqB5tMNqTRzXYwQVyyGpbfV222wg6MAUsQCBykjxjR2Lifd9uSl6J92EcYvtYRQtf914Eya/AXz/W4sXAAce42jz9F5zhMEbTG2vU3SU0Z6NdFfZ5TyCW7HhrOd88Rkh1ampUTVK5Ydzabjkv2siU27tvZLLSxV5/d8Jq/LjaOxG9YElNN6OQiteZnX5zVNfBjcfIUofh/X4y6MSHcUawKyqXnp1j549miBCYhfKgCcF8UZxEDCxhPQBFulO2QtwQL2LP1p74t4QxzbGaOvmwNElLmLA3H4q20CEyw706hpELEE6V6lDRQXJ2T+ia9xxyA==
-Received: from archlinux.lan (unknown [17.156.216.30])
-	by p00-icloudmta-asmtp-us-east-1a-60-percent-10 (Postfix) with ESMTPSA id A0B6B180061B;
-	Wed, 21 Oct 2026 11:43:26 +0000 (UTC)
-Message-ID: <672f06a2cd0bb380fafeacc5f1731e1f4030f329.camel@icloud.com>
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with
- no link
-From: Edward Malik <edwardmalik95@icloud.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Andreas Wild
-	 <andiwild@gmail.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Bjorn Helgaas
- <helgaas@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev, M M <restafvalendergelijke@outlook.com>, blaat
- windows <blaaaat@hotmail.com>
-Date: Wed, 21 Oct 2026 14:43:22 +0300
-In-Reply-To: <f9ab8a2d-966f-4e96-b905-116919c5ac7b@leemhuis.info>
-References: <20260801201244.4421-1-andiwild@gmail.com>
-		 <20260917233355.GA1115024@bhelgaas>
-		 <b4ed1637-ac6a-4af5-ab47-e07309af200b@leemhuis.info>
-		 <alpine.DEB.2.21.2609181131520.57799@angie.orcam.me.uk>
-		 <1b2cceea-8da4-4239-a955-e0c6b475a227@leemhuis.info>
-		 <87c93553-d74d-4588-bd54-0ccb2728f327@leemhuis.info>
-		 <20260929080109.53944-1-andiwild@gmail.com>
-		 <c5ee9a34c6b7d3ca96538c9cc2914b603b0dce7e.camel@icloud.com>
-		 <f9ab8a2d-966f-4e96-b905-116919c5ac7b@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.62.1 (by Flathub.org) 
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mVWXwXXE
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c38ac26cc5dso83436166b.2
+        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 04:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792583644; x=1793188444; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=khbtvnCt8sXvEtX9fI1U36fFGjo7tER69Bnnl50Wz8Y=;
+        b=mVWXwXXE5DT/XAVUepxr5yjGKBXqR3czEMvuzYQLwlf9FJbWxV7Y6ArGmXkqmAfsWq
+         3MqdxfQShofiDapYqTntBvIwm1KCNqohzrpcq4m5T4RoCukH2Fu9winZCzoPsgQDXVfa
+         cM+GZeuz0RboWj+e/x7xuYoBboEh1whaOdDnccs4FurstGiMgnjvw85NDeEWFCXD2FzN
+         IZ4fuqX8F9qit90f/dSjjb6rMbZLOSVKyezk1zStvOZoVhS6hA7V/Yji2+NbEhqH6WFG
+         u4C1fDOFUfvLWdcC8g9hiECGjVyUh5w+7oyJvHd/paxN73QYsJ3RVB86fbMlBxjVVzwd
+         eqew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792583644; x=1793188444;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=khbtvnCt8sXvEtX9fI1U36fFGjo7tER69Bnnl50Wz8Y=;
+        b=aY/RojDue3CATeO9UNUWo7Hc23oyDvKmBfn4Lx1HabYR0Sl3/7rCqpjvhtPzbqwh8c
+         MapyZn0GJ+oeT3hMYtRvoQiSBmUmkrxs3KqgoGvZR5GxKnXxy0AFKhbw0LwTykARFQkK
+         Z8jNHEED8RtLzir0I1isaN4BsA2hn0NnX4Z0JxU+RuLFvq/wAU17jzNSV37BTfypY1RH
+         GGLWtii6u1f6UWNAex43iFEizMjJJydr6uQvCrXVKbfSMdVeYc3aGXRec3Fj5bVrPqrb
+         V8de5fBPBuh24dEbGe6IyfMb23m24AH6CUsNCwxIFjoeK4bP7JxtZOw5bZwoK/Yapcwo
+         I2NQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx1eirkNDcBgIFLfoklH1iSa13WmWMbFOUmTZnJG1bY1ZvzHx/LaugJxJRU2um3l5c3lRQbxlcJsCK/OA==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKw1z1kezIC5zQy18pK1/N8hWVxnjc/9FtHn6dM6JdBnQswXfXC
+	hdloKgYGuK4fkAguV89wpC11GLDVlauKHJ4P9TP9OUhttRpv98SjhEbw
+X-Gm-Gg: AYBFou0I4qlfdYtFII7eE2yD8Sdn+1wfbHJR4Q2sa6czGLBAO77gM7mpE9SvVZUAuEk
+	OgWQvbaApOzCe1LrOxEGPMoGCfCIF4d4ZIqqinZFj6STqjE89jJlN2YNCfotjSFfagCQRfD+sLH
+	GDVyokZgTVR8pCXRL/EM9WFK3VG7lSmqZL9LOKB+/Uyfzal1BapLjk8WYK7UftatZxqWgAB7Izr
+	xFc60bJGtA7rHFLYBi5Vdk6E0kHbnThPSRTSy/GwoBrICHZRmF3XIqeklG/Xvir22WcOl4vWPg9
+	DenyWcye75Ewpph7ukrqHWcJQ3Fg9PDLSmjHa8wqvaMqqi9R00Lcb2AVN4uULVT+2ADt1Pv6cSn
+	odMJuRKNBrnERFcmrTjbxJjcz5LOjvwOm7bVx02YrtdG6IjLD8jzY+OtYeog6YtU+1cJU/IRnXX
+	rQOlFml4H77ebu6SSKA2XQaEMvE90dgwKRmvLVNEhDlFGNh1u2fxmGdcqXPNu35LHOh35ruY5NJ
+	rdJOPaApaJRYUJq/II3xLznDxKpKtW4hyIiZRFNHqmpg/OXcrtGn9mKgKC7WDbxcJpYDBSaABZ1
+	DEPcUXnHfi1SOAgJ9UabEtKZax95wV99Tm/KMJrrMomYN+pSBQG1VTJbPJWl004iXVvO
+X-Received: by 2002:a17:907:868c:b0:c29:f5d8:9c73 with SMTP id a640c23a62f3a-c467979bbffmr167724266b.34.1792583643843;
+        Wed, 21 Oct 2026 04:54:03 -0700 (PDT)
+Received: from wlan-199066.nbw.tue.nl (wlan-199066.nbw.tue.nl. [131.155.199.66])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c4678f77ac4sm69316066b.28.2026.10.21.04.54.03
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 21 Oct 2026 04:54:03 -0700 (PDT)
+From: Michail Andreas Michalopoulos <mike.michalo@gmail.com>
+To: Namjae Jeon <linkinjeon@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>,
+	ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
+	linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Michail Andreas Michalopoulos <mike.michalo@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] ksmbd: restore Kerberos logins with released ksmbd-tools
+Date: Wed, 21 Oct 2026 13:54:00 +0200
+Message-ID: <20261021115400.30885-1-mike.michalo@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,57 +100,97 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-Proofpoint-ORIG-GUID: jfvug_hKU7GqZHd4w8hhxoltUhobAMOP
-X-Authority-Info-Out: v=2.4 cv=Kf/fcAYD c=1 sm=1 tr=0 ts=6ad8a561
- cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
- a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
- a=x7bEGLp0ZPQA:10 a=U1xsJXor1XMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=mehdgkVfAAAA:8 a=EYuV28GwPtMp2H73JGAA:9 a=QEXdDO2ut3YA:10
- a=J1pP9gvGZaT0y92QayzM:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIxMDA0NiBTYWx0ZWRfX/QDSnfPWwh3f
- EMf/j+r7ReIulNjkJWcQ9z2EOuZPJ9Z8B3z7HXu/sLGC+BlM6HfWXIh+Ndpi2d5u4QGiBSOYKe9
- OOpWZq3IycFehpOFDx24Z5oEWqz8dfFFa8kchqNxMYVBL+BdX9nrg0YJnTDG1uZ/0JoESS1g+3B
- Pahw0nzVOEistB+xe/MvHPdf4p4W14pKzx+xgYVPhcinyz9fSGvX6XQLpi4BMhMSkq+quoXVRTI
- tvwq1JuXDcEuHvoykW3byfdtUL9yFHx/JbtfDlUNz0hnUDt2UROn1GD4jPkI01MC3NjFqTGz1J9
- FWRyx619b9jxmJuP+92C4LAePMilO1J5RZ+EPzRbUOq/lfyKsG1kBw9P08zTlE=
-X-Proofpoint-GUID: jfvug_hKU7GqZHd4w8hhxoltUhobAMOP
-X-JNJ: AAAAAAABAd/xUgKloXi36jrVhjDyGBkGJf4zI4bjApuQCd7QYEZ2/UXt9UYj+94eu2We7wFCs4QcGUUAf85mhDavELQT2cD+qZGfquZw8jLB6DYUWoNbI5Fa7ERoYDUAEYEx914B7hhQThVS8sHsRt+8C3ILXo7fdXTd+zgmsYBV5Co15KaHrEQhp90rImk7ti1GKgqy1edKtuPfJimXmZltUA8Iq8Z5zqzG/K6BramBeH2WGO+N61cluBYe3pF7GPSq/2rRftRBsSdAV/aUP5cqMBnCrej4M6JwKNH5H8pFfJVp8hygC82wdO9OeVq24LwVvyAFdE2cpWvyhvlhvsUxjwVHRJkbUb83zPusxEHhMi6vvrIq2CBz6RUewgtDO5u3J4NsqOF7/3dO0dKSKHRzbaBms0mIgBg/v3UM3vRtXhrsb2iRQcUp7wSDbcnAS8//Wpwxt4/2G1t+3rQds/T23SQ6HFkRynvuLS/sgDN0q5Wxpb4uGU+5IJmfljn6td6laboptso0wF243Ip86H+7Qt8DP0Ax3cj0+vFpZtnTthW40kJWNOQiDENtvn75QGlW4PciO59N9+NhOEeqscmKE1srBJOcPwdwa1M39JrFtWpVFdywFGp8RfoZmH/XxsggH3y8ehCOCqD5BOPgR8yyHXLntV7Q4/CJAYIyFPYX/qEeE9DcYpB6LwKKe2PCsvSapiWO4w5c4ctYd4yhJbTls+cmK6MJ3jnvjOLoyPsE4QiIeg9qVUjR15TGducroQZRWPPySl9dAjR1an+xr2gG+epF9I91sW5hFrfGvXhyhBC7A8CoOfsmwAqXv4+gx2wca3Lh1rx5Wh+Z0HhPx6Rqqp/vCFRq3nTTx/gIEoNf3PLt9gSV6+vQ39lx6HadqX+KsHmwGPZB1soZbjjqvk1QQukl7802NWc+bbPp8lGjtOZAm90uabgN6fLYbhrvlOBCnxBZLGIBx/Rkw3alCbf4+H2oXHJ
- yGiYlCSuIMUGEOdI2oielJ+ORLnf/fhWZKbrA4M9sloOWdT2MX60e18RY1YZZkrtN0w9Gtp0U9fTn/1W0AYghNaqwMqa6q+jtOUQv0eNBi3tAZ4QWsojn1ZJ/XsfXAo7B36tvYmpukW6zEdvMsgdRmvrcvnj3zDVcgoPUWtxPZh/e2566MyEUTKmmYkPXuwgtFVYEN4Io5/gh9uHHG3xJAW7rK8GJH1v5K8FKpSl+n9yW+R78dJx3/LuweyWFkVFJNORRTTeQmq45WG0KgTAYkX2K8uTjsLGJr1Mv0Fo7yuwRxtFCHh2eAVAFLwxC77EmoRlflrXaEYcj4XNL/UZ9RUJeDL0HpaQe6WyKeve2vtwOyweeQs9Q9LkxgV7T/EdcTGXqSxFjykVpE5PUbRXu1OOPTQ==
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-10-21 at 10:24 +0200, Thorsten Leemhuis wrote:
-> On 10/21/26 04:23, Edward Malik wrote:
-> > I noticed another reported incident on the CachyOS Discord server:
-> > [1.278083] pci 0000:00:1c.0: retraining failed
-> > System information:=E2=80=A8https://paste.cachyos.org/p/35d9bd0.log
-> > I'm sharing this in case it helps with investigating the PCIe
-> > retraining regression maybe there is a common denominator among the
-> > hardware=20
-> >=20
-> > Probably will see more now that ubuntu has moved to the new kernel
-> > i
-> > think
->=20
-> I don't known about the others, but if you ask me this thread always
-> was
-> confusing, as we ended up discussing two different problems; over
-> time
-> it became even more confusing.=C2=A0 And one of the issues was fixed for
-> 7.3
-> iirc.
->=20
-> So if you ask me I think it's overdue someone tests if *vanilla* 7.3
-> (not a vendor kernel) is still affected and reports any remaining
-> problems separately anew (e.g. in a new thread) in a way that can be
-> read without reading this thread -- while still briefly dropping a
-> link
-> to this thread for completeness. Afterwards reply here with a link to
-> the new thread.
->=20
-> Ciao, Thorsten
-i think i understand you want to seperate the threads between the patch
-itself and the original quirk which was introduced by commit
-72780f7964684939d7d2f69c348876213b184484 correct ? just to clear it up
-the patch still works for me it's worth noting i don't think i
-mentioned in my original report but the retrain failure happens to me
-on my empty pcie slots it detects as me having 6 slots the 3 taken ones
-it reports them as gpu, nvme, and ethernet controller=20
+Commit a47634cd729b ("ksmbd: expire SMB sessions when Kerberos tickets
+expire") added a __u64 session_expiry field to struct
+ksmbd_spnego_authen_response, growing it from 156 to 168 bytes.
+ipc_validate_msg() requires the response to have exactly that size, so
+the 156-byte response of every released ksmbd-tools, up to 3.5.7, is
+dropped and Kerberos session setup fails with STATUS_LOGON_FAILURE.
+The other way round, kernels without that commit, including the stable
+trees, drop the 168-byte response of current ksmbd-tools master, and
+ksmbd-tools has no way to tell which layout a kernel expects.
+
+Pass the expiry in the reserved area of the embedded struct
+ksmbd_login_response instead. ksmbd-tools releases with that area
+(3.4.4 and later) allocate the response zeroed and never write to it,
+so they send an expiry of 0, which ksmbd already treats as no expiry.
+The response is 156 bytes again, so it works with those releases, and
+every kernel also accepts a response that sets the expiry. Use two
+__u32 halves, as the reserved area is only 4-byte aligned.
+
+Fixes: a47634cd729b ("ksmbd: expire SMB sessions when Kerberos tickets expire")
+Cc: stable@vger.kernel.org
+Closes: https://lore.kernel.org/all/CAO+rqLhpPvY0NLrAnZjFXz0gOXnA6zsXxK8xCgtA42XUkSsAeg@mail.gmail.com/
+Assisted-by: LLM
+Signed-off-by: Michail Andreas Michalopoulos <mike.michalo@gmail.com>
+---
+The matching ksmbd-tools change (struct layout and mountd/worker.c)
+will follow as a pull request.
+
+Tested with a local MIT KDC and smbclient --use-kerberos=required:
+
+                    3.5.7      master     master + tools change
+  7.2               login OK   fails      login OK
+  7.3               fails      login OK   fails
+  7.3 + this patch  login OK   fails      login OK
+
+With this patch and the tools change, smbtorture smb2.session over
+Kerberos (including expire1n/1s/1e, expire2s/2e and expire_disconnect)
+and the 190 smbtorture tests run by the ksmbd CI over NTLM give the same
+results as 7.3 with ksmbd-tools master, with no kernel warnings. NTLM
+logins also work with 3.5.7. A test-only mountd that overrides the
+expiry (including values above 2^32), the response size and the length
+fields found no wrong session expiry and no kernel warnings in 313
+logins.
+
+Current ksmbd-tools master needs the tools change to work with this
+patch. If you'd rather the kernel also kept accepting the 168-byte
+layout, I can add that in a v2. Only tested with smbclient and
+smbtorture on x86_64.
+
+ fs/smb/server/auth.c          | 3 ++-
+ fs/smb/server/ksmbd_netlink.h | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/fs/smb/server/auth.c b/fs/smb/server/auth.c
+index 1b24eb3f3998..8e5a1b10db6a 100644
+--- a/fs/smb/server/auth.c
++++ b/fs/smb/server/auth.c
+@@ -464,7 +464,8 @@ int ksmbd_krb5_authenticate(struct ksmbd_session *sess, char *in_blob,
+ 	memcpy(out_blob, resp->payload + resp->session_key_len,
+ 	       resp->spnego_blob_len);
+ 	*out_len = resp->spnego_blob_len;
+-	sess->kerberos_expiry = resp->session_expiry;
++	sess->kerberos_expiry = (u64)resp->login_response.session_expiry_hi << 32 |
++				resp->login_response.session_expiry_lo;
+ 	retval = 0;
+ out:
+ 	kvfree_sensitive(resp, sizeof(*resp) + resp->session_key_len +
+diff --git a/fs/smb/server/ksmbd_netlink.h b/fs/smb/server/ksmbd_netlink.h
+index 2673522c76bc..fc6af757e45e 100644
+--- a/fs/smb/server/ksmbd_netlink.h
++++ b/fs/smb/server/ksmbd_netlink.h
+@@ -148,7 +148,9 @@ struct ksmbd_login_response {
+ 	__u16	status;
+ 	__u16	hash_sz;			/* hash size */
+ 	__s8	hash[KSMBD_REQ_MAX_HASH_SZ];	/* password hash */
+-	__u32	reserved[16];			/* Reserved room */
++	__u32	session_expiry_lo;	/* Kerberos ticket expiry, SPNEGO only */
++	__u32	session_expiry_hi;
++	__u32	reserved[14];			/* Reserved room */
+ };
+ 
+ /*
+@@ -286,7 +288,6 @@ struct ksmbd_spnego_authen_response {
+ 				  * stored in SecurityBuffer of SMB2 SESSION
+ 				  * SETUP response
+ 				  */
+-	__u64	session_expiry;	/* Kerberos ticket expiry time */
+ 	__u8	payload[]; /* session key + AP_REP */
+ };
+ 
+-- 
+2.56.0
+
