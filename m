@@ -1,83 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.78.189
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792580347;
-	b=4s/4c5wk9XsIVhjXslcJAI0UkSCptEEDGW6wgIHnUOG2Pe7q6eU9edWuIUX1jrQnMJ9G
-	 geLjt3U4SZzRMeex4+zEkyBobgdpciRBKQw0uHaoUsI17yat9w1POtYNJBGT0+pxhR9EO
-	 4FVJEifBlsl9bQ4+EejPC9l1MkDi9XOtgAqN+QHt3KNl4+qjaEZjNqr15DToGy97UywAl
-	 yDl5DFCA+XKPQHidmvRKjshJS+qV2vYlSvUv8+xya7/gPZtw/D8BBrKNoxXdOeYTG4ciK
-	 RNSnf1x9tvhbmo3jybPy/pVLel0kWErOCH41gWxdidicykAD7FrWgoTZ7/W2iv3LDGg==
+	t=1792583012;
+	b=rURRsllLCojuEL9O7z8Y3Ij4UyVbHYqvw43ojOvCILoJBFp/iqFQODoxtCL8Ssfssvc1
+	 R4PZM2AzodEj5wVkaburZUQp5/g78REvjaF9aE00L8tFWkMg+DB/XKE01dBz6T289W9zZ
+	 jyh2UGUk38vnAI/CwB09TPuuZ1VIxWZnrZSOoFr6OAT1ko8zxiV5G1lsG8mhUXaKRyYLP
+	 9V6BJgDUJaSmlvMJ+4XJrUSA6A5Sk870oX1Hayy/OOTW+MR2lFKK2Ap73YHRQ0LFIQElo
+	 sRSFKkS8I0GZm/hOyCz7oZuSykUHTfdzkt3lSuNZYwxO8k9t5EmdX1hpSy+tbLMWm+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792580347;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Content-Type:
-	 MIME-Version:Content-Transfer-Encoding:Subject:From:To:Cc:Reply-To:
-	 Date:Message-ID;
-	bh=+6DqmLcffIJ4zXqo73wDStwtJ+XJU97CzviAZxX2Wys=;
-	b=kOF9PX1HFV21FwIO7Y2s03Wv6VnhyXCyOMjU6eDt21bZAjEG27utbIPMzP9KpQ/7nPbL
-	 O8Lbj4ZMXRPnfl/raCWW3nb7etJ1+z+I9eKWIE9F5IchTYDeXhEMHFdMsZc/PwLbDBvug
-	 cqgnrMDgBE4HC8BR6HS3BRAFTmvBOd37BmIQnScXjHt04kOQ9x7DVka4YpjUaWRkk16fj
-	 24rI9IR+0t3gG1OTM355ohvuz5glj6wWYxccqXRQ+MHJnxeb9yyGaIitRMm4pxPLDdZQp
-	 RySww4ey9hox6BoIXwpVWlrVKajoqowcgliNEGXLSYeygme88eIUn+0snaDnDZX3z4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792583012;
+	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
+	 Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Content-Transfer-Encoding:User-Agent:MIME-Version:
+	 X-Proofpoint-ORIG-GUID:X-Authority-Info-Out:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:X-JNJ;
+	bh=Sw5Eir+xy65c9AYKBeuz0upxYVB/n3ogNv/58XRlDuU=;
+	b=s1GsP1yVcG5Tdk0OmDzg4EEaUIk71TsWrUEcf1R8T9un8TMKr6DeXppu/1sNXA1ZPn2o
+	 bKo7FHV/EKkD15ZjJfeF7gugzjgvpZun9EeQ8OjsVqN0FnsuzJvfMW9+G19ynixRCNh5q
+	 gxJSQzLJGH14gOuqmgqggaVxatu977cu5NznnDWKkkU/dqyhdF58EMzxI/33A0WFr5UlX
+	 sVX4LrD2czfKcG8fCV06e1IZIlEC0OxxWv7WvCN+GjLm3eN2ALVezv50GDIqrkEGkd5uW
+	 YOx8GDoXKTFSnWfCrG/h13QnJkTvk5TG1iBN6darMSzRPOvVkaC/Q6CTcVZoNlWQk5A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=kernelci.org;
-	spf=pass smtp.mailfrom=kernelci.org;
-	dkim=pass header.d=kernelci.org header.i=@kernelci.org header.a=rsa-sha256 header.s=google header.b=QMHW7XMC;
-	arc=none smtp.remote-ip=74.125.82.176
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=icloud.com;
+	spf=pass smtp.mailfrom=icloud.com;
+	dkim=pass header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=aV3Q2gGB;
+	arc=none smtp.remote-ip=57.103.78.189
+Received: from outbound.st.icloud.com (st-2004l-snip4-8.eps.apple.com [57.103.78.189])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B06606A31A
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 10:59:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1B06606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7B606A31F
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 11:43:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4A7B606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernelci.org header.i=@kernelci.org header.a=rsa-sha256 header.s=google header.b=QMHW7XMC
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-35943f55c06so891582eec.0
-        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 03:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1792580346; x=1793185146; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=+6DqmLcffIJ4zXqo73wDStwtJ+XJU97CzviAZxX2Wys=;
-        b=QMHW7XMC0V2fsd/m1qP3JNGXfydNIDZeD/rdUkE115Z/N4uUJ/ovPNpDrZWo30TMUH
-         hxm1KhWqsg/eHqfpMcVh95Fbaj1rS5pwDozImP2hfKx7eZQK7OqONrYJlkm0/iq8EaO7
-         XEfCKlTCEeKada0mmo+gd1W64EryNlxG/hwNwtzjkZlCC+pea8mQi+6CT5joKZA/ZZko
-         m0TUGneDfdj5+jqFzMrMppO12su8jMuf2vW1jouJcUUlOd3AhUvnmCS9BIpJ9zRwBZAn
-         BWWfY3qYuCfG5GyY9kaEoksEPk5tm8cs7lT3pDTxGvwXK1tfs/65xfDTt0DZSgQD6nwm
-         4tcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792580346; x=1793185146;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+6DqmLcffIJ4zXqo73wDStwtJ+XJU97CzviAZxX2Wys=;
-        b=Okp7vfu1sCEn9hNZIp9R7DVDIx1syYHIiCJX1Mp/LbeC0B8XPFMDUJHSzdGevINumh
-         xP6gVlc7amiI0SQ2g+y6ATdBGBcRjvRc4d8nLePR1HpDXoGJvMcqNPQYlyBk3vrwPddu
-         oXoNdMMXOUT4TThuiqNAp7/SeXvCn3swpSt3BAJyyZebb11pyk6qXmlgRzggaYJo3ISt
-         iWL9Dg1tOfXN5A38Ac0Ht7XtVOuVhcYqgorMUKf6C8aJ3S5lKY61+a4NZ91Lb2zL4shw
-         hRqSab3LhJg9aQxPDZbWCMcDL9hR0DX3slpy1tMKy3YX0ld5mEbU57PduJgt3Wlt20/7
-         MrEA==
-X-Gm-Message-State: AFq9FYIt3oRGeG/jNlEAZAo1DfWdcDksFmxWge4DGCzivzejbVUogcnM
-	1TOhzlTHBSxXP4J66F2cZMTiLIrYpij+BQ0DPzB6AYOIAzwM7ssA9WCnXmEgpK+xC14=
-X-Gm-Gg: AYBFou0KGvuE+I3h2LGhwPHdg2zIDqe8mRuCKjypoys814AluxqPPaJdzI9pjtZ7A6I
-	ZddpiJYD42jOyf6W1DxAgF/EJoJE0tzyDdqc6EmikZNQOw17Act1xyoOpnqxI15B2zGKnBdSd8W
-	R3TRTx0GCwJiXhTkqKduXNgq+3Xdhxx4ouc2q4L3cAEoftrejLrpvuK/tjVaBPENVP9sMC1dKlP
-	RhxfEwtckuTaJSkCB8rel/C1kA6dKpSY9wE1x5UzpzqYgUd2lSGCQJueNNQK5p1pBpm4cGAbnQ2
-	S8fW0PbsoAl1RVT7SAQaQ3pINbWS8fCTRzaOMRrveQLPG6QKGvqh9bJGEG9iJdthVKPkS1rMPE8
-	xxXIWA7pTVj7AgzCK8FR4jxYO7qViqJV15EHjEhdvfbb9yqzyb+AjCIoLgqRUcmUC2WNGnxvJT9
-	oNsXvEqtJavU8TXk+3migeNRhvSG8WlqmwPLvnuPo71eREATtZR5pHrU6z6jNqiPG9pw0sVN2Ec
-	MNTCwrNZQJNtKF8yACVbxlu8E1/GppNT/Idd0xYgwJUa1Sr
-X-Received: by 2002:a05:7300:e825:b0:366:42ad:7074 with SMTP id 5a478bee46e88-36642ad7654mr8064603eec.22.1792580345630;
-        Wed, 21 Oct 2026 03:59:05 -0700 (PDT)
-Received: from 6e52bff8000c ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3674198fb21sm6387219eec.23.2026.10.21.03.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 03:59:05 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key, unprotected) header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=aV3Q2gGB
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-60-percent-10 (Postfix) with ESMTPS id E4CB51800112;
+	Wed, 21 Oct 2026 11:43:28 +0000 (UTC)
+X-ICL-RepId: 01a15e46-0268-78d5-8cd7-027a83f8e2e5
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQFIHV8EWxxCDFYCVARLVxQEHVcaVhlWHVgUWgYOXnIZWhRcGFNFUR9UWFUJCgJRHFYNV0NUBF9QSxsOXAdLWhVVFw4CQh9QH0wWV0NEHxwZWhRcGFNFUR9UWEMZRVZpQQtPHV0ZWxxCZFhXCQoCURxWDVdDVARfUFQRV1ALXQVCX0gFDAUIVkBbGgBVBw1TFlwZUA4CDQNHCklWXFFfAkMJHgBfDkVREVQdXy1eCF4fTBwdDlgGDFBNAUMICgJRHFYNVw==
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1792583010; x=1824119010; bh=Sw5Eir+xy65c9AYKBeuz0upxYVB/n3ogNv/58XRlDuU=; h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version:x-icloud-hme; b=aV3Q2gGBkAbE+s+j4VBqtqB5tMNqTRzXYwQVyyGpbfV222wg6MAUsQCBykjxjR2Lifd9uSl6J92EcYvtYRQtf914Eya/AXz/W4sXAAce42jz9F5zhMEbTG2vU3SU0Z6NdFfZ5TyCW7HhrOd88Rkh1ampUTVK5Ydzabjkv2siU27tvZLLSxV5/d8Jq/LjaOxG9YElNN6OQiteZnX5zVNfBjcfIUofh/X4y6MSHcUawKyqXnp1j549miBCYhfKgCcF8UZxEDCxhPQBFulO2QtwQL2LP1p74t4QxzbGaOvmwNElLmLA3H4q20CEyw706hpELEE6V6lDRQXJ2T+ia9xxyA==
+Received: from archlinux.lan (unknown [17.156.216.30])
+	by p00-icloudmta-asmtp-us-east-1a-60-percent-10 (Postfix) with ESMTPSA id A0B6B180061B;
+	Wed, 21 Oct 2026 11:43:26 +0000 (UTC)
+Message-ID: <672f06a2cd0bb380fafeacc5f1731e1f4030f329.camel@icloud.com>
+Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with
+ no link
+From: Edward Malik <edwardmalik95@icloud.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Andreas Wild
+	 <andiwild@gmail.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Bjorn Helgaas
+ <helgaas@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, M M <restafvalendergelijke@outlook.com>, blaat
+ windows <blaaaat@hotmail.com>
+Date: Wed, 21 Oct 2026 14:43:22 +0300
+In-Reply-To: <f9ab8a2d-966f-4e96-b905-116919c5ac7b@leemhuis.info>
+References: <20260801201244.4421-1-andiwild@gmail.com>
+		 <20260917233355.GA1115024@bhelgaas>
+		 <b4ed1637-ac6a-4af5-ab47-e07309af200b@leemhuis.info>
+		 <alpine.DEB.2.21.2609181131520.57799@angie.orcam.me.uk>
+		 <1b2cceea-8da4-4239-a955-e0c6b475a227@leemhuis.info>
+		 <87c93553-d74d-4588-bd54-0ccb2728f327@leemhuis.info>
+		 <20260929080109.53944-1-andiwild@gmail.com>
+		 <c5ee9a34c6b7d3ca96538c9cc2914b603b0dce7e.camel@icloud.com>
+		 <f9ab8a2d-966f-4e96-b905-116919c5ac7b@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.62.1 (by Flathub.org) 
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -87,60 +78,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: 
- =?utf-8?q?=5BREGRESSION=5D_stable/linux-6=2E12=2Ey=3A_=28build=29request_for?=
- =?utf-8?q?_member_=E2=80=98f=E2=80=99_in_something_not_a_structure_or_union?=
- =?utf-8?q?_in_arc=2E=2E=2E?=
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Wed, 21 Oct 2026 10:59:04 -0000
-Message-ID: <179258034449.241924.15241097267562754477@kernelci.org>
+X-Proofpoint-ORIG-GUID: jfvug_hKU7GqZHd4w8hhxoltUhobAMOP
+X-Authority-Info-Out: v=2.4 cv=Kf/fcAYD c=1 sm=1 tr=0 ts=6ad8a561
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
+ a=x7bEGLp0ZPQA:10 a=U1xsJXor1XMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=mehdgkVfAAAA:8 a=EYuV28GwPtMp2H73JGAA:9 a=QEXdDO2ut3YA:10
+ a=J1pP9gvGZaT0y92QayzM:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIxMDA0NiBTYWx0ZWRfX/QDSnfPWwh3f
+ EMf/j+r7ReIulNjkJWcQ9z2EOuZPJ9Z8B3z7HXu/sLGC+BlM6HfWXIh+Ndpi2d5u4QGiBSOYKe9
+ OOpWZq3IycFehpOFDx24Z5oEWqz8dfFFa8kchqNxMYVBL+BdX9nrg0YJnTDG1uZ/0JoESS1g+3B
+ Pahw0nzVOEistB+xe/MvHPdf4p4W14pKzx+xgYVPhcinyz9fSGvX6XQLpi4BMhMSkq+quoXVRTI
+ tvwq1JuXDcEuHvoykW3byfdtUL9yFHx/JbtfDlUNz0hnUDt2UROn1GD4jPkI01MC3NjFqTGz1J9
+ FWRyx619b9jxmJuP+92C4LAePMilO1J5RZ+EPzRbUOq/lfyKsG1kBw9P08zTlE=
+X-Proofpoint-GUID: jfvug_hKU7GqZHd4w8hhxoltUhobAMOP
+X-JNJ: AAAAAAABAd/xUgKloXi36jrVhjDyGBkGJf4zI4bjApuQCd7QYEZ2/UXt9UYj+94eu2We7wFCs4QcGUUAf85mhDavELQT2cD+qZGfquZw8jLB6DYUWoNbI5Fa7ERoYDUAEYEx914B7hhQThVS8sHsRt+8C3ILXo7fdXTd+zgmsYBV5Co15KaHrEQhp90rImk7ti1GKgqy1edKtuPfJimXmZltUA8Iq8Z5zqzG/K6BramBeH2WGO+N61cluBYe3pF7GPSq/2rRftRBsSdAV/aUP5cqMBnCrej4M6JwKNH5H8pFfJVp8hygC82wdO9OeVq24LwVvyAFdE2cpWvyhvlhvsUxjwVHRJkbUb83zPusxEHhMi6vvrIq2CBz6RUewgtDO5u3J4NsqOF7/3dO0dKSKHRzbaBms0mIgBg/v3UM3vRtXhrsb2iRQcUp7wSDbcnAS8//Wpwxt4/2G1t+3rQds/T23SQ6HFkRynvuLS/sgDN0q5Wxpb4uGU+5IJmfljn6td6laboptso0wF243Ip86H+7Qt8DP0Ax3cj0+vFpZtnTthW40kJWNOQiDENtvn75QGlW4PciO59N9+NhOEeqscmKE1srBJOcPwdwa1M39JrFtWpVFdywFGp8RfoZmH/XxsggH3y8ehCOCqD5BOPgR8yyHXLntV7Q4/CJAYIyFPYX/qEeE9DcYpB6LwKKe2PCsvSapiWO4w5c4ctYd4yhJbTls+cmK6MJ3jnvjOLoyPsE4QiIeg9qVUjR15TGducroQZRWPPySl9dAjR1an+xr2gG+epF9I91sW5hFrfGvXhyhBC7A8CoOfsmwAqXv4+gx2wca3Lh1rx5Wh+Z0HhPx6Rqqp/vCFRq3nTTx/gIEoNf3PLt9gSV6+vQ39lx6HadqX+KsHmwGPZB1soZbjjqvk1QQukl7802NWc+bbPp8lGjtOZAm90uabgN6fLYbhrvlOBCnxBZLGIBx/Rkw3alCbf4+H2oXHJ
+ yGiYlCSuIMUGEOdI2oielJ+ORLnf/fhWZKbrA4M9sloOWdT2MX60e18RY1YZZkrtN0w9Gtp0U9fTn/1W0AYghNaqwMqa6q+jtOUQv0eNBi3tAZ4QWsojn1ZJ/XsfXAo7B36tvYmpukW6zEdvMsgdRmvrcvnj3zDVcgoPUWtxPZh/e2566MyEUTKmmYkPXuwgtFVYEN4Io5/gh9uHHG3xJAW7rK8GJH1v5K8FKpSl+n9yW+R78dJx3/LuweyWFkVFJNORRTTeQmq45WG0KgTAYkX2K8uTjsLGJr1Mv0Fo7yuwRxtFCHh2eAVAFLwxC77EmoRlflrXaEYcj4XNL/UZ9RUJeDL0HpaQe6WyKeve2vtwOyweeQs9Q9LkxgV7T/EdcTGXqSxFjykVpE5PUbRXu1OOPTQ==
 
-New build issue found on stable/linux-6.12.y:
-
----
-request for member ‘f’ in something not a structure or union in arch/s390/mm/fault.o (arch/s390/mm/fault.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-Log excerpt:
-=====================================================
-/tmp/kci/linux/arch/s390/mm/fault.c:448:59: error: request for member ‘f’ in something not a structure or union
-  448 |                         clear_bit(PG_arch_1, &folio->flags.f);
-      |                                                           ^
-
-=====================================================
-
-When fixing this issue, please attribute this report according to the
-patch submission rules:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Link: https://lore.kernel.org/all/179258034449.241924.15241097267562754477@kernelci.org/
-
-For complete logs and details about the environment used, see the issue
-on the KernelCI dashboard:
-
-- dashboard: https://d.kernelci.org/i/maestro:07763fcc4cc009398ef2249ab57bfbb01900bd79
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-- commit HEAD:  85d82e0d7c2dfd3e75d34f35b7ebbf41f45c9c4e
-- tags: v6.12.114
-
-# Builds where the incident occurred:
-
-## defconfig on (s390):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6ad8885055fda5076059d734
-
-#regzbot introduced: 7fdb7c1824a1f9979d648d7ae28ac446bcee9c6e..85d82e0d7c2dfd3e75d34f35b7ebbf41f45c9c4e
-#regzbot link: https://d.kernelci.org/i/maestro:07763fcc4cc009398ef2249ab57bfbb01900bd79
-
-#kernelci issue maestro:07763fcc4cc009398ef2249ab57bfbb01900bd79
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+On Wed, 2026-10-21 at 10:24 +0200, Thorsten Leemhuis wrote:
+> On 10/21/26 04:23, Edward Malik wrote:
+> > I noticed another reported incident on the CachyOS Discord server:
+> > [1.278083] pci 0000:00:1c.0: retraining failed
+> > System information:=E2=80=A8https://paste.cachyos.org/p/35d9bd0.log
+> > I'm sharing this in case it helps with investigating the PCIe
+> > retraining regression maybe there is a common denominator among the
+> > hardware=20
+> >=20
+> > Probably will see more now that ubuntu has moved to the new kernel
+> > i
+> > think
+>=20
+> I don't known about the others, but if you ask me this thread always
+> was
+> confusing, as we ended up discussing two different problems; over
+> time
+> it became even more confusing.=C2=A0 And one of the issues was fixed for
+> 7.3
+> iirc.
+>=20
+> So if you ask me I think it's overdue someone tests if *vanilla* 7.3
+> (not a vendor kernel) is still affected and reports any remaining
+> problems separately anew (e.g. in a new thread) in a way that can be
+> read without reading this thread -- while still briefly dropping a
+> link
+> to this thread for completeness. Afterwards reply here with a link to
+> the new thread.
+>=20
+> Ciao, Thorsten
+i think i understand you want to seperate the threads between the patch
+itself and the original quirk which was introduced by commit
+72780f7964684939d7d2f69c348876213b184484 correct ? just to clear it up
+the patch still works for me it's worth noting i don't think i
+mentioned in my original report but the retrain failure happens to me
+on my empty pcie slots it detects as me having 6 slots the 3 taken ones
+it reports them as gpu, nvme, and ethernet controller=20
