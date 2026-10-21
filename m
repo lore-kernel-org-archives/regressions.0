@@ -1,96 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792583646;
-	b=ezP5zWBxbIj1lOLDgAuDwKWJ8pHWTow0WbdHpFWrzpYgvm71Y3mqffvCcq7/85kyCpKd
-	 lGkK08gIoVXV6USKdNZAHJ7UDkLq17nXLuHpgddi9uR2/S/fpPXOekgpZsD2fOR8muYs/
-	 3J53ADOpndJlRzSCkyc7KMTXmLNI070hUZaF11RnrIfKMFJAur6IDM4eolBaQZMduNqQn
-	 GgfN/6eSxW6eUwWEldGMXyepqieWvGibzoDsWaXCvCj4OaNcV1ic2jGirkeTRI6YgvEjZ
-	 IgJq/qYi6lWHW4Hadfh+Ottbc7S/IM2GiZZJ+YJqgDeN5oi3Fn4Tb7xICv9xB6wrwwg==
+	t=1792584068;
+	b=WcHMPbANrwi3b9v2AZraVdsVIqYSSLCivHEPSeQh2mW62styi1VHkPIrPFcxjzBF51eQ
+	 uQG6UbISKVoVsrI5kthW45YHBnaX063E2WpXrOAUMMfKs/mbiNkUPWxDcpXqG6RtIYfnv
+	 zlFqvOHOq2HvUJOSEtYTaxtt/s6Hk0OlDUrepemJUosWLYWLp0F3xdWs3IUWSWnPeonKi
+	 r22LUMQC1+LoohtN/N3AtywMEgXMtnXTFZmWouPR7/PY8B/bl0xavMGSfDZoCaHX1OBMI
+	 s4s1BJTXG0kK1n9xlh21gMz56aAPIL58wRwYK2h4wF4HBi8jUdf8B8lVPmoLMrm9QiQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792583646;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=khbtvnCt8sXvEtX9fI1U36fFGjo7tER69Bnnl50Wz8Y=;
-	b=CK0Brq9u3NUXC77rqnf7EEILdfEdQjoROVq9Tqe6rUluDanFlwFoK9rKGpiuvLdL1vgR
-	 wNe33axrkNnTnQxN0EnjANXG67t6CKVX3Ph2CvvbL0tiHYO3uvM3lUnV1VFfwXk+WGsSu
-	 H702HSDmrAHj32Lc7oQrhw92VyLYe5NqZq/9cY6nb6emXOcQt4Prt03MMNx+jPw4nt8RE
-	 LhhLpOFzZpGu9PHY0mX9o3zi9CVrXt1rZ8Jcymdutr5094o951kcGsNDxDWpyst6SStoS
-	 jsjBwnskgH7JNjBoRGz/Ufuhow3mzD0xSE1sChR6RoJzpxUUYkGQWldGZXlTEH9VC7A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792584068;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=lEKtq91QrqvW3Y2km0i9GPLG+sCH8OJnOIVvLe8oxAo=;
+	b=1NNzSE9S07mqTogL9hl9tNqo2piJDwFORUQJifjedhurlWUjryPttHuRR8daDNNNXo7v
+	 mS13oPws4LEYwMYvPwWfwLgJcYyjnS6amPgNeQRwfxuyapBHjdxmF9bkXTSkD2z4Iqiw+
+	 UuVAKVGcPBRM54KxkQmqwO6Sgnh3YJWPB23bqdLC080ivGqPZogdMXrcnmpa59ts3dPTQ
+	 BnHwALIXWzpkrPPKR90bGn5sD8cS8/c88RnDdLQ6q3WBNbEMWMaKoLdv+IZhN701Jw38N
+	 PgbS3rdmDw+OuQ8WSGod5yAicWP5mjOlcPQSk98qQwqE1n1qVU8r+4mJ3/YuSnZqvlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mVWXwXXE;
-	arc=none smtp.remote-ip=209.85.218.42
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=JuNK4Alj;
+	arc=none smtp.remote-ip=188.68.63.162
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA49C606A33B
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 11:54:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA49C606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55589606A319
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 12:01:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 55589606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mVWXwXXE
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c38ac26cc5dso83436166b.2
-        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 04:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792583644; x=1793188444; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=khbtvnCt8sXvEtX9fI1U36fFGjo7tER69Bnnl50Wz8Y=;
-        b=mVWXwXXE5DT/XAVUepxr5yjGKBXqR3czEMvuzYQLwlf9FJbWxV7Y6ArGmXkqmAfsWq
-         3MqdxfQShofiDapYqTntBvIwm1KCNqohzrpcq4m5T4RoCukH2Fu9winZCzoPsgQDXVfa
-         cM+GZeuz0RboWj+e/x7xuYoBboEh1whaOdDnccs4FurstGiMgnjvw85NDeEWFCXD2FzN
-         IZ4fuqX8F9qit90f/dSjjb6rMbZLOSVKyezk1zStvOZoVhS6hA7V/Yji2+NbEhqH6WFG
-         u4C1fDOFUfvLWdcC8g9hiECGjVyUh5w+7oyJvHd/paxN73QYsJ3RVB86fbMlBxjVVzwd
-         eqew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792583644; x=1793188444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=khbtvnCt8sXvEtX9fI1U36fFGjo7tER69Bnnl50Wz8Y=;
-        b=aY/RojDue3CATeO9UNUWo7Hc23oyDvKmBfn4Lx1HabYR0Sl3/7rCqpjvhtPzbqwh8c
-         MapyZn0GJ+oeT3hMYtRvoQiSBmUmkrxs3KqgoGvZR5GxKnXxy0AFKhbw0LwTykARFQkK
-         Z8jNHEED8RtLzir0I1isaN4BsA2hn0NnX4Z0JxU+RuLFvq/wAU17jzNSV37BTfypY1RH
-         GGLWtii6u1f6UWNAex43iFEizMjJJydr6uQvCrXVKbfSMdVeYc3aGXRec3Fj5bVrPqrb
-         V8de5fBPBuh24dEbGe6IyfMb23m24AH6CUsNCwxIFjoeK4bP7JxtZOw5bZwoK/Yapcwo
-         I2NQ==
-X-Forwarded-Encrypted: i=1; AKwUvBx1eirkNDcBgIFLfoklH1iSa13WmWMbFOUmTZnJG1bY1ZvzHx/LaugJxJRU2um3l5c3lRQbxlcJsCK/OA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKw1z1kezIC5zQy18pK1/N8hWVxnjc/9FtHn6dM6JdBnQswXfXC
-	hdloKgYGuK4fkAguV89wpC11GLDVlauKHJ4P9TP9OUhttRpv98SjhEbw
-X-Gm-Gg: AYBFou0I4qlfdYtFII7eE2yD8Sdn+1wfbHJR4Q2sa6czGLBAO77gM7mpE9SvVZUAuEk
-	OgWQvbaApOzCe1LrOxEGPMoGCfCIF4d4ZIqqinZFj6STqjE89jJlN2YNCfotjSFfagCQRfD+sLH
-	GDVyokZgTVR8pCXRL/EM9WFK3VG7lSmqZL9LOKB+/Uyfzal1BapLjk8WYK7UftatZxqWgAB7Izr
-	xFc60bJGtA7rHFLYBi5Vdk6E0kHbnThPSRTSy/GwoBrICHZRmF3XIqeklG/Xvir22WcOl4vWPg9
-	DenyWcye75Ewpph7ukrqHWcJQ3Fg9PDLSmjHa8wqvaMqqi9R00Lcb2AVN4uULVT+2ADt1Pv6cSn
-	odMJuRKNBrnERFcmrTjbxJjcz5LOjvwOm7bVx02YrtdG6IjLD8jzY+OtYeog6YtU+1cJU/IRnXX
-	rQOlFml4H77ebu6SSKA2XQaEMvE90dgwKRmvLVNEhDlFGNh1u2fxmGdcqXPNu35LHOh35ruY5NJ
-	rdJOPaApaJRYUJq/II3xLznDxKpKtW4hyIiZRFNHqmpg/OXcrtGn9mKgKC7WDbxcJpYDBSaABZ1
-	DEPcUXnHfi1SOAgJ9UabEtKZax95wV99Tm/KMJrrMomYN+pSBQG1VTJbPJWl004iXVvO
-X-Received: by 2002:a17:907:868c:b0:c29:f5d8:9c73 with SMTP id a640c23a62f3a-c467979bbffmr167724266b.34.1792583643843;
-        Wed, 21 Oct 2026 04:54:03 -0700 (PDT)
-Received: from wlan-199066.nbw.tue.nl (wlan-199066.nbw.tue.nl. [131.155.199.66])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c4678f77ac4sm69316066b.28.2026.10.21.04.54.03
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 21 Oct 2026 04:54:03 -0700 (PDT)
-From: Michail Andreas Michalopoulos <mike.michalo@gmail.com>
-To: Namjae Jeon <linkinjeon@kernel.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tom Talpey <tom@talpey.com>,
-	ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
-	linux-cifs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Michail Andreas Michalopoulos <mike.michalo@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] ksmbd: restore Kerberos logins with released ksmbd-tools
-Date: Wed, 21 Oct 2026 13:54:00 +0200
-Message-ID: <20261021115400.30885-1-mike.michalo@gmail.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=JuNK4Alj
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j8nrp2T1Yz46Dx;
+	Wed, 21 Oct 2026 13:59:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1792583978;
+	bh=H0hq2a/UVp8Z892AiKOsOR/W8WmDxGDNugcwl0/Ckvg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JuNK4Alj6qETyCJVmxBrSYv3GK3aInz/r4M+5LCoJa7gtbld3iW9vx7ghBIvuJ9Gg
+	 COO3AXu4Vgkj/vTD3NwXjTh9WqyM0iKp+LhLNwLtNs+g0CC1KSBmF1kI2bcX/lW+Mu
+	 eyWncwScxd+/NKmTbagxJvjr+kMpd3do7cFeDCPqI7fjtk/XjYgpKsd02BCkX1oh+U
+	 0YMoyFNujC/Azh10P+yXm+1QdCrqbXBKz9MxK7V43XLjU12vByypJMQbyhon3J+D6E
+	 AlkJBh35QY5Une6wGwIX9PDRkUQcILzD3A4nLw1N5V2KMiajnmOy8fkjIiag7Yy+I0
+	 5pyrNV5ZEgVdg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j8nrp1k7Pz46DN;
+	Wed, 21 Oct 2026 13:59:38 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j8nrn3s5zz8sgW;
+	Wed, 21 Oct 2026 13:59:37 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A49885F9B7;
+	Wed, 21 Oct 2026 13:59:32 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <144f19b5-7adf-4168-be8c-e82fedfe13a9@leemhuis.info>
+Date: Wed, 21 Oct 2026 13:59:31 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -100,97 +74,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
+ link
+To: Edward Malik <edwardmalik95@icloud.com>, Andreas Wild <andiwild@gmail.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, M M <restafvalendergelijke@outlook.com>,
+ blaat windows <blaaaat@hotmail.com>
+References: <20260801201244.4421-1-andiwild@gmail.com>
+ <20260917233355.GA1115024@bhelgaas>
+ <b4ed1637-ac6a-4af5-ab47-e07309af200b@leemhuis.info>
+ <alpine.DEB.2.21.2609181131520.57799@angie.orcam.me.uk>
+ <1b2cceea-8da4-4239-a955-e0c6b475a227@leemhuis.info>
+ <87c93553-d74d-4588-bd54-0ccb2728f327@leemhuis.info>
+ <20260929080109.53944-1-andiwild@gmail.com>
+ <c5ee9a34c6b7d3ca96538c9cc2914b603b0dce7e.camel@icloud.com>
+ <f9ab8a2d-966f-4e96-b905-116919c5ac7b@leemhuis.info>
+ <672f06a2cd0bb380fafeacc5f1731e1f4030f329.camel@icloud.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <672f06a2cd0bb380fafeacc5f1731e1f4030f329.camel@icloud.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <179258397315.3889052.6744945320187028587@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: A49885F9B7
+X-NC-CID: EvU9xDEa6hIMWP/5UnQ8mRqDxHOhTZJB0sJFcZ8+hexNBEIVqbU=
 
-Commit a47634cd729b ("ksmbd: expire SMB sessions when Kerberos tickets
-expire") added a __u64 session_expiry field to struct
-ksmbd_spnego_authen_response, growing it from 156 to 168 bytes.
-ipc_validate_msg() requires the response to have exactly that size, so
-the 156-byte response of every released ksmbd-tools, up to 3.5.7, is
-dropped and Kerberos session setup fails with STATUS_LOGON_FAILURE.
-The other way round, kernels without that commit, including the stable
-trees, drop the 168-byte response of current ksmbd-tools master, and
-ksmbd-tools has no way to tell which layout a kernel expects.
+On 10/21/26 13:43, Edward Malik wrote:
+> On Wed, 2026-10-21 at 10:24 +0200, Thorsten Leemhuis wrote:
+>> On 10/21/26 04:23, Edward Malik wrote:
+>>> I noticed another reported incident on the CachyOS Discord server:
+>>> [1.278083] pci 0000:00:1c.0: retraining failed
+>>> System information: https://paste.cachyos.org/p/35d9bd0.log
+>>> I'm sharing this in case it helps with investigating the PCIe
+>>> retraining regression maybe there is a common denominator among the
+>>> hardware 
+>>>
+>>> Probably will see more now that ubuntu has moved to the new kernel
+>>> i
+>>> think
+>>
+>> I don't known about the others, but if you ask me this thread always
+>> was
+>> confusing, as we ended up discussing two different problems; over
+>> time
+>> it became even more confusing.  And one of the issues was fixed for
+>> 7.3
+>> iirc.
 
-Pass the expiry in the reserved area of the embedded struct
-ksmbd_login_response instead. ksmbd-tools releases with that area
-(3.4.4 and later) allocate the response zeroed and never write to it,
-so they send an expiry of 0, which ksmbd already treats as no expiry.
-The response is 156 bytes again, so it works with those releases, and
-every kernel also accepts a response that sets the expiry. Use two
-__u32 halves, as the reserved area is only 4-byte aligned.
+I was wrong here, sorry -- the fix for one of the issues discussed in
+this thread is still just in next as ff8a969f7dc8e7 ("PCI: Skip Target
+Speed quirk on clamped ports with no link").
 
-Fixes: a47634cd729b ("ksmbd: expire SMB sessions when Kerberos tickets expire")
-Cc: stable@vger.kernel.org
-Closes: https://lore.kernel.org/all/CAO+rqLhpPvY0NLrAnZjFXz0gOXnA6zsXxK8xCgtA42XUkSsAeg@mail.gmail.com/
-Assisted-by: LLM
-Signed-off-by: Michail Andreas Michalopoulos <mike.michalo@gmail.com>
----
-The matching ksmbd-tools change (struct layout and mountd/worker.c)
-will follow as a pull request.
+>> So if you ask me I think it's overdue someone tests if *vanilla* 7.3
+>> (not a vendor kernel) is still affected and reports any remaining
+>> problems separately anew (e.g. in a new thread) in a way that can be
+>> read without reading this thread -- while still briefly dropping a
+>> link
+>> to this thread for completeness. Afterwards reply here with a link to
+>> the new thread.
+>
+> i think i understand you want to seperate the threads 
 
-Tested with a local MIT KDC and smbclient --use-kerberos=required:
+I think it's time we get new mailing list threads for any problems that
+still remain with ff8a969f7dc8e7, because when you wrote "I noticed
+another report" earlioer at least I have no idea which of the two
+problems discussed in this thread you mean; but maybe it's better to
+start new threads only once 7.4-rc1 is out with testing based on that,
+as that will contain the aforementioned and other fixes and likely is a
+good new starting point for further discussions.
 
-                    3.5.7      master     master + tools change
-  7.2               login OK   fails      login OK
-  7.3               fails      login OK   fails
-  7.3 + this patch  login OK   fails      login OK
-
-With this patch and the tools change, smbtorture smb2.session over
-Kerberos (including expire1n/1s/1e, expire2s/2e and expire_disconnect)
-and the 190 smbtorture tests run by the ksmbd CI over NTLM give the same
-results as 7.3 with ksmbd-tools master, with no kernel warnings. NTLM
-logins also work with 3.5.7. A test-only mountd that overrides the
-expiry (including values above 2^32), the response size and the length
-fields found no wrong session expiry and no kernel warnings in 313
-logins.
-
-Current ksmbd-tools master needs the tools change to work with this
-patch. If you'd rather the kernel also kept accepting the 168-byte
-layout, I can add that in a v2. Only tested with smbclient and
-smbtorture on x86_64.
-
- fs/smb/server/auth.c          | 3 ++-
- fs/smb/server/ksmbd_netlink.h | 5 +++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/fs/smb/server/auth.c b/fs/smb/server/auth.c
-index 1b24eb3f3998..8e5a1b10db6a 100644
---- a/fs/smb/server/auth.c
-+++ b/fs/smb/server/auth.c
-@@ -464,7 +464,8 @@ int ksmbd_krb5_authenticate(struct ksmbd_session *sess, char *in_blob,
- 	memcpy(out_blob, resp->payload + resp->session_key_len,
- 	       resp->spnego_blob_len);
- 	*out_len = resp->spnego_blob_len;
--	sess->kerberos_expiry = resp->session_expiry;
-+	sess->kerberos_expiry = (u64)resp->login_response.session_expiry_hi << 32 |
-+				resp->login_response.session_expiry_lo;
- 	retval = 0;
- out:
- 	kvfree_sensitive(resp, sizeof(*resp) + resp->session_key_len +
-diff --git a/fs/smb/server/ksmbd_netlink.h b/fs/smb/server/ksmbd_netlink.h
-index 2673522c76bc..fc6af757e45e 100644
---- a/fs/smb/server/ksmbd_netlink.h
-+++ b/fs/smb/server/ksmbd_netlink.h
-@@ -148,7 +148,9 @@ struct ksmbd_login_response {
- 	__u16	status;
- 	__u16	hash_sz;			/* hash size */
- 	__s8	hash[KSMBD_REQ_MAX_HASH_SZ];	/* password hash */
--	__u32	reserved[16];			/* Reserved room */
-+	__u32	session_expiry_lo;	/* Kerberos ticket expiry, SPNEGO only */
-+	__u32	session_expiry_hi;
-+	__u32	reserved[14];			/* Reserved room */
- };
- 
- /*
-@@ -286,7 +288,6 @@ struct ksmbd_spnego_authen_response {
- 				  * stored in SecurityBuffer of SMB2 SESSION
- 				  * SETUP response
- 				  */
--	__u64	session_expiry;	/* Kerberos ticket expiry time */
- 	__u8	payload[]; /* session key + AP_REP */
- };
- 
--- 
-2.56.0
-
+Ciao, Thorsten
