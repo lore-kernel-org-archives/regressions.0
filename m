@@ -1,74 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792590855;
-	b=0inI3UUjGcPpQpYc58m722p5hUqnaJnaWxoluEQsHtpK+MFkvvuytQM30M77MRoVaRwH
-	 hJAmr8/SMyw2oLGqJpAhF/j/NZYTo8Kx3w+l1zsfuKhjQXDtmhX2dJA0vrk8C58BomzmJ
-	 5RWlo1bQFoLYyfkIniiGQoeg/Oje2wbPRi8Nf7hxGyHUkk0I9HTpZvYYuV8mjI126DMf2
-	 VJ3meHWDz1kXK351GYBF7iAr7yZsPNeNhF4FtnrSWasgcsLpsq04SGh8unI3icbXE1XhL
-	 kPXdH8Zj8RDtz3QKiioVAAi5nJ7FO+mjt1/EiE9TpUX5vKe7EhSJGuU5J2xzwURgs9A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792590855;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=1W9snRxGb2Dueqfe+SJB0GolyjLQkquHng3Qp2HEBx4=;
-	b=3UQN4y6xdaEzwJuVQ1Ha7ctsTkckVZpCIqL22WfLUfnJuVfyVGshNdyrSSPQRWTGQ4jp
-	 G9NeSSenXmAKHmaOKlbGbN5+g2l49nE7OGjLM74ytf8E2Axm9hoADLQiBbnWArM7uJaly
-	 u1ZJsp/47epLdQ2w7VI3KlhXjikOryfkqWOWfS7QHi8h5fErghlkrp/AWAiajhyJZH2+f
-	 ozkWEaZBAR+Kner+jHwzvV3ZrtWZg9ghXHpQl6tzzfUGfDYsDiImUAkhziyk57qU3OJqW
-	 9QpwD/6vuxRNCkng6SXVlZdsi+Mnl39GWvmftHgYAzjcR4CLQ4TkDAa4RFgc3e9FaSw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=eltxvrdB;
-	arc=none smtp.remote-ip=188.68.63.162
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.44
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792592045;
+	b=1IBDQAt99L6+QsUF1wM2uZi5IleraDnhH4J73o0nqKjyeZgIFAFUOVZ5fHSrGxbfvkfW
+	 IEaTlOQTmfRh4u6xFovMyfw2PBUqhU9tdcD+Q3JsHbhXdInh+tT2Q1sZryB6KoCWOLZvC
+	 m7ITvly22GPD8dYI+0PzMv5k+X3t+0dNtca2RnIuIIsTiO6pbxbeAVyCcWY5EY3Zw51EO
+	 wJt2F2qfq7bj1F3cB7501aFdVDNWnmn5fZ9qPX0UXqKEklxMQPVELpI+d+AVR2sGUc0n2
+	 gVdbCCn5Q0fJT0TfSj9XNqvmyG8ONvlkOxDf6mPFlSmnlgsOtI+Mgm4WVN826SI3zKg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792592045;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=UJ/A60pshTDV64EOc8/U0dsozGI6wHG2kt68wdBZvGk=;
+	b=xVZadRW1cwhkF/4h78yCX5Ffs3fx3KItqLPN/5ThjnVOaTIhGPlRft6AZgXPkvirqKKv
+	 9/zzAhfhuYv67D1x12eCSsiyiDjviJZUkuC5rCqvJHvbJ+LPqeCt/ecDUYY9s5A+LZIEO
+	 1q0htTUxXYnCop1JPIQEmXr2vQ/u0JETjLlZhEQC1ETWXVr1Cu1ViC9vbHC9+Mj8fXq8b
+	 S8AHsKWXSlc+K2QjROdUB65Y6aDsAnZomPgCZeY/KmvIGUOClw6nGAo+AcfXCSG2SXahr
+	 UDUkjy2UUuxSf80DUpCqYW1X0kBf/pJwpMaMErmD3+kOCzt/Ua5HpAe+icCZwVEjSOg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fDqQJgG9;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.44
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6B6606A31A
-	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 13:54:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4D6B6606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F7A606A31B
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 14:14:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81F7A606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=eltxvrdB
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j8rP01kHDz3yQ3;
-	Wed, 21 Oct 2026 15:54:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792590852;
-	bh=1W9snRxGb2Dueqfe+SJB0GolyjLQkquHng3Qp2HEBx4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eltxvrdBrGuvr+VeMJVD6WW+GvPmmxOnTnRHy4bro6KHPNesZB074SuvgYsqrMR9q
-	 CYMkSYbBu1WFbSeqSWay0fIyD9sisB0MSpvXoAEY5Ch6uvHkBIZfAPOUBI/palMBOb
-	 buinrYcUFXcc7zYk7TgB3vUaa6KiuZJMl7mLHUHD66w26DfH+qSDilrpkN80sWlDiF
-	 tKmnqBF9GryA14xP660blxP7Hj10RW46r2FD0UMNgDzG9e84uJX3ZBxbTdmXByqpzw
-	 EmnaAFDAP72McFKKZLfOAOVb/MsEP8q9u4n5Uq2W3JtPKtev1pN11PQ5gt6p+5JGmW
-	 w6EXgWTla7fSg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4j8rNh4Rw4z3yw5;
-	Wed, 21 Oct 2026 15:53:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4j8rNg6gzZz8tjr;
-	Wed, 21 Oct 2026 15:53:55 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D492D5F8D5;
-	Wed, 21 Oct 2026 15:53:46 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <e8e153c8-2c09-4b86-8991-a8eed56526cb@leemhuis.info>
-Date: Wed, 21 Oct 2026 15:53:44 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fDqQJgG9
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-9906034086cso260194241.1
+        for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 07:14:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792592044; cv=none;
+        d=google.com; s=arc-20260327;
+        b=CoksdcelVFAwMr4jutBVBlJQ6Y6bxEGyRl9LT9dVflqQMMeJoYPT9r8eJnt1501B2n
+         YVP567k+K2Yz3xdPo9ePHyykNuIUmiP3vYLUo8BpOYolPilnbpasRdXVQIGqKD2Wcuit
+         BRzT2NbGZHDnVW442rM0MSP6Czccg7MPNj+N+FKYjy4KNpFOb3Rxsd+rUDWezSy+eBi7
+         qhNoU2+6h/5PbnUax5YtqD4Rd9QWbnZ7r/w7XvaYVHL5mei923BgiD/gqzfiYzFbxtBQ
+         jNhUTDofJXW/9MEVTCHzXZuyDDJ1d6D8EpM2DCWo4lsldZwl3fEMl/MRZltv3TZM3jWz
+         K8Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=UJ/A60pshTDV64EOc8/U0dsozGI6wHG2kt68wdBZvGk=;
+        fh=hrCMA7nF/St9ZDZe2451l18YpWSupUIQmYbFfhrxGe0=;
+        b=JCTaerCMrGloeLv8MbHjjoiXGHmyi9AZ+XzCyRGQmh4yJVrdZB1MABLCsKUoDbKrdQ
+         jYqEBmrRdm9GuVOAt+olJFBo2yuaPqeP5SrmWytxbzQs8Hrt+HCpJ73mWmK2bUW8u08L
+         TrOd7+1JDLcg0t+Q5rWhAGC4PcesDYEghXXTV5D3X2mO+Bbydw84RW+geQHqXMWuoTGo
+         hiVLREtw4eLZxDqRDoVMoS8kqUBLVvd7P+XJ78S1rChd8JgjoYPCOo4J+5w9s/l+/7G0
+         YpNkaOk2lElXfH3iMLJaPeoNfp2+NdszMYRR5udY6WjoC4XLaLcT3dQsO/MXR+FgAese
+         jfjw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792592044; x=1793196844; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=UJ/A60pshTDV64EOc8/U0dsozGI6wHG2kt68wdBZvGk=;
+        b=fDqQJgG9+bJEE6+Zy8U08Q1LqNm9OZOT6kDjUrhNiCxzj+Ns6OgnpV9ZT0i3rY7iuj
+         jKvpbliJhH2AjnC2rmQ0FMRc+MO13kzrdC6NuDb/Zomc4ynoPJKwMB8vbXNh/z4t8O5n
+         34PAkVZ4FKbsgcULiP1Uke9Pcs/J9tEuVnO6w/sF277vxzxvCSyGg2XoMmw43z+vDPNO
+         Ci/3w2Q4pd9lAbo6mINGnkhtS2YYnRp5Zo3jR3yA4FCrgl7QxwIOfXxzgsYaiJjcPEOF
+         3UjI/SNrl5afox2tLLTpf5ckQxzwveDVowszvB4B4KW7JPXE2oTcaIFOrgAdFfK9koMK
+         r05g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792592044; x=1793196844;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=UJ/A60pshTDV64EOc8/U0dsozGI6wHG2kt68wdBZvGk=;
+        b=0t+5LP8MgYAl5xUTRFiO2FG7vjSKPiIGJLl4BHxyT2X4P/ATY/Jm5OmTwnRVxyul17
+         cp03G9wt2tz5/RjnD/w5kZoJStzCTHEiKhdvpG4SuT7NymNL/dG0vH4d55ZMDLzuvU+Q
+         I6L4gbTNvV8ezstZ04Shd/4WBvC7sgqp7Wn/XOu8+AdwebT1ymfZkS25xRtUQU+Vlng2
+         bQZDkoPlIwPohI/nTaI03KXmUw5hDjuuFsc30y+u48cq24gLZH1WrGGhVqFFkv6GQWuo
+         54bUDjsTcR3aAaw/L4Ijuvt+WxqIe812VaBV0frESfzr75yvYJlqt2UaucERbqtf7ZES
+         zjxw==
+X-Forwarded-Encrypted: i=1; AKwUvBzm2rEEmtcdZcwDLXkSCKPe+IWw69LxlB9ixG60XX9vKeQbP/fpQVzk7VtzMJjjUOjipUgTlRHjTw1pVw==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIOQ0Isd81ZgdCKmSi4aQFCHhDpk+G8j5GXfz2t/3UECK7TNsF2
+	XHJ7xZjl2NEqIcjHUakdUYrf13MXzzjV1kYxNPMlE4ArtLx5BokqYqXrLXaBIhNuKCo+l1y4W+v
+	47xSfL5TyFJRZJTtsH4x+Ib2PlcAw6y4=
+X-Gm-Gg: AYBFou3i5oA17sIYYIdYtmqGrkwQUJmsUfRHPM4kCq8HoIwSvHs9Gvf+MVHKhmVmyBh
+	SaWztDJUaX0ZFCpHzqB4Dl1htDR7fll2x8NnnaFeH7FrfZDuzcD0JKXXFF4nbjfW97dqojDRTKl
+	KV18Qrp3XTmLABH+0LTs3oua2RmzwzhIS5sqhoNk2d6szLw+5ExA8QTUwS1Y8+KLgKkcHUyM5e8
+	vXMzMyMnFgvWvyaL67svKQS1LJ6iY2NKneMi8XjTA1R39DgwvAuCjCaQalM2J/oNYysOaXfZ3gK
+	wH6AOF8Jtf4iuCiqoJLVSsT7RV+l7So3XSm+Yz+gFmA82g4A8X7HOQL4BqfCENzPnUqhrQohukJ
+	eJPehew0EfPyujyh9xHgZATHXWdRKdl4Pd8xqWhJBx1Ia+t8cnPDIsGVK2Erz47cN8nVvmg==
+X-Received: by 2002:a05:6102:3588:b0:7a1:f980:e93b with SMTP id
+ ada2fe7eead31-7cc926b0bc6mr656524137.23.1792592044313; Wed, 21 Oct 2026
+ 07:14:04 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,43 +104,125 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.18.57: resume from s2idle triggers poweroff and
- hangs when tiny_power_button is built as a module
-To: Mikkel Sejdelin <mikkel.sejdelin@proton.me>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "rafael@kernel.org" <rafael@kernel.org>,
- "sashal@kernel.org" <sashal@kernel.org>
-References: 
- <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179259082737.842613.2678257844613427806@mxe9fb.netcup.net>
-X-NC-CID: UIlnd6wQu6n3PzuMLOc3ZGkfGlQ7p1Ecdf/WpZQ4wEEOwVJaiEE=
+References: <20261021115400.30885-1-mike.michalo@gmail.com>
+In-Reply-To: <20261021115400.30885-1-mike.michalo@gmail.com>
+From: mixalhs <mike.michalo@gmail.com>
+Date: Wed, 21 Oct 2026 16:13:49 +0200
+X-Gm-Features: AclHuK-nUd4UmTxE9F3RBMXljFNNhLJJZePwWHLxIeXwrSoZlz9LU3TXba0QmGI
+Message-ID: <CAO+rqLj5rF8MGMTRSav1n43NqLbazwyuPsPKgiQT2qtP+EDxeQ@mail.gmail.com>
+Subject: Re: [PATCH] ksmbd: restore Kerberos logins with released ksmbd-tools
+To: Namjae Jeon <linkinjeon@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Tom Talpey <tom@talpey.com>, 
+	ChenXiaoSong <chenxiaosong@chenxiaosong.com>, linux-cifs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/21/26 10:35, Mikkel Sejdelin wrote:
+The ksmbd-tools side is up as
+https://github.com/cifsd-team/ksmbd-tools/pull/347
 
-> Since 6.18.57, my laptop never comes back from suspend-to-idle: on resume
-> init receives SIGRTMIN+4 and starts a poweroff, the display stays off, and
-> the machine hangs until it is forced off. 6.18.56 works fine.
-> [...]
-> Suggested fix: backport f4203ec64e11 together with 52d864019636, or
-> revert 38c79dacc806 (and its dependents) from 6.18.y. Note that the same
-> backport also appears to lose fixed-event power buttons (LNXPWRBN)
-> without ab06eb920401 ("ACPI: scan: Register platform devices for fixed
-> event buttons"), reported at
-> https://github.com/siderolabs/talos/issues/14657
+Michalis
 
-FWIW, ab06eb9204010c ("ACPI: scan: Register platform devices for fixed
-event buttons") is already queued for the next 6.18.y release.
-
-Maybe your request to pick up f4203ec64e1155 ("ACPI: tiny-power-button:
-Convert the driver to a platform one") is enough to make the stable team
-pick this up for 6.18.y. Ideally you would try if this really fix this;
-or have you and I missed this in your mail? Ciao, Thorsten
+On Wed, Oct 21, 2026 at 1:54=E2=80=AFPM Michail Andreas Michalopoulos
+<mike.michalo@gmail.com> wrote:
+>
+> Commit a47634cd729b ("ksmbd: expire SMB sessions when Kerberos tickets
+> expire") added a __u64 session_expiry field to struct
+> ksmbd_spnego_authen_response, growing it from 156 to 168 bytes.
+> ipc_validate_msg() requires the response to have exactly that size, so
+> the 156-byte response of every released ksmbd-tools, up to 3.5.7, is
+> dropped and Kerberos session setup fails with STATUS_LOGON_FAILURE.
+> The other way round, kernels without that commit, including the stable
+> trees, drop the 168-byte response of current ksmbd-tools master, and
+> ksmbd-tools has no way to tell which layout a kernel expects.
+>
+> Pass the expiry in the reserved area of the embedded struct
+> ksmbd_login_response instead. ksmbd-tools releases with that area
+> (3.4.4 and later) allocate the response zeroed and never write to it,
+> so they send an expiry of 0, which ksmbd already treats as no expiry.
+> The response is 156 bytes again, so it works with those releases, and
+> every kernel also accepts a response that sets the expiry. Use two
+> __u32 halves, as the reserved area is only 4-byte aligned.
+>
+> Fixes: a47634cd729b ("ksmbd: expire SMB sessions when Kerberos tickets ex=
+pire")
+> Cc: stable@vger.kernel.org
+> Closes: https://lore.kernel.org/all/CAO+rqLhpPvY0NLrAnZjFXz0gOXnA6zsXxK8x=
+CgtA42XUkSsAeg@mail.gmail.com/
+> Assisted-by: LLM
+> Signed-off-by: Michail Andreas Michalopoulos <mike.michalo@gmail.com>
+> ---
+> The matching ksmbd-tools change (struct layout and mountd/worker.c)
+> will follow as a pull request.
+>
+> Tested with a local MIT KDC and smbclient --use-kerberos=3Drequired:
+>
+>                     3.5.7      master     master + tools change
+>   7.2               login OK   fails      login OK
+>   7.3               fails      login OK   fails
+>   7.3 + this patch  login OK   fails      login OK
+>
+> With this patch and the tools change, smbtorture smb2.session over
+> Kerberos (including expire1n/1s/1e, expire2s/2e and expire_disconnect)
+> and the 190 smbtorture tests run by the ksmbd CI over NTLM give the same
+> results as 7.3 with ksmbd-tools master, with no kernel warnings. NTLM
+> logins also work with 3.5.7. A test-only mountd that overrides the
+> expiry (including values above 2^32), the response size and the length
+> fields found no wrong session expiry and no kernel warnings in 313
+> logins.
+>
+> Current ksmbd-tools master needs the tools change to work with this
+> patch. If you'd rather the kernel also kept accepting the 168-byte
+> layout, I can add that in a v2. Only tested with smbclient and
+> smbtorture on x86_64.
+>
+>  fs/smb/server/auth.c          | 3 ++-
+>  fs/smb/server/ksmbd_netlink.h | 5 +++--
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/smb/server/auth.c b/fs/smb/server/auth.c
+> index 1b24eb3f3998..8e5a1b10db6a 100644
+> --- a/fs/smb/server/auth.c
+> +++ b/fs/smb/server/auth.c
+> @@ -464,7 +464,8 @@ int ksmbd_krb5_authenticate(struct ksmbd_session *ses=
+s, char *in_blob,
+>         memcpy(out_blob, resp->payload + resp->session_key_len,
+>                resp->spnego_blob_len);
+>         *out_len =3D resp->spnego_blob_len;
+> -       sess->kerberos_expiry =3D resp->session_expiry;
+> +       sess->kerberos_expiry =3D (u64)resp->login_response.session_expir=
+y_hi << 32 |
+> +                               resp->login_response.session_expiry_lo;
+>         retval =3D 0;
+>  out:
+>         kvfree_sensitive(resp, sizeof(*resp) + resp->session_key_len +
+> diff --git a/fs/smb/server/ksmbd_netlink.h b/fs/smb/server/ksmbd_netlink.=
+h
+> index 2673522c76bc..fc6af757e45e 100644
+> --- a/fs/smb/server/ksmbd_netlink.h
+> +++ b/fs/smb/server/ksmbd_netlink.h
+> @@ -148,7 +148,9 @@ struct ksmbd_login_response {
+>         __u16   status;
+>         __u16   hash_sz;                        /* hash size */
+>         __s8    hash[KSMBD_REQ_MAX_HASH_SZ];    /* password hash */
+> -       __u32   reserved[16];                   /* Reserved room */
+> +       __u32   session_expiry_lo;      /* Kerberos ticket expiry, SPNEGO=
+ only */
+> +       __u32   session_expiry_hi;
+> +       __u32   reserved[14];                   /* Reserved room */
+>  };
+>
+>  /*
+> @@ -286,7 +288,6 @@ struct ksmbd_spnego_authen_response {
+>                                   * stored in SecurityBuffer of SMB2 SESS=
+ION
+>                                   * SETUP response
+>                                   */
+> -       __u64   session_expiry; /* Kerberos ticket expiry time */
+>         __u8    payload[]; /* session key + AP_REP */
+>  };
+>
+> --
+> 2.56.0
+>
