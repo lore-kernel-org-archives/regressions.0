@@ -1,61 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792538505;
-	b=07sjlWmsCjikrXXgc9SCJuSiKtsAmhTna4uX/o1/SL0uRBQiYzqwwjIVUJcouMKXTteB
-	 Wc9ZzXcSpZYTTjnbIm6TCkGt5s+EJPtjcNWn5fIZ6v2sRtQ9NVmapx8TeaU8m1SDLM7fH
-	 3zF1rdcNzY/0SUaQovxJKdJ2RJMWLVUhyU3bU2pW9MS4KFJnItc0mJVGi6aQ2vfQA6mHd
-	 D4boN5ADVI0jctrNKfLqlTLuOHuL6qQum0eSna1N1nUbfXGC6R7ODpFM+HZviKmdi5iEb
-	 4u8omMzOdktVHO5RpSJzFyaq62qgqgBZ/WjA8l8Yoac92YhR+YTpGrRCklaziBsd/PA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792538505;
-	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
-	bh=wxAh+Ne1jASQiYLIaGgyMvhKyKgjJ2FMW5Pt3awzq1Q=;
-	b=VZH7V0Gm3D/icXl5DJX5HdPQghveUh+g3W8B+N9GdbvQegDDS6af1m3bYIYkREp7peJM
-	 KYG6vL1W3iR/SPek0PKu1I57HZ9SeFdKq/osNvCjlvIqifFVT0Bpa9cX5oDGQBjoyN+62
-	 9o8zBqvahXgvSJi4jg7hjHSX/SzQSf29fmlDbQT3Y59KqmOtp5xdKXwDxDMx05T23NuvP
-	 h4FYYHNujC+wSeIjdcIYZJH6k18Efghup5u6ghP6d5yC/PXytR4eEn/sY5ORhRvpsOesH
-	 aZdnySVzc+/PTCjnVtZIsykvpg8nAP05U0zequC80uFynWG0ymRi0F396rkC/HY+3Yg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.microsoft.com;
-	spf=pass smtp.mailfrom=linux.microsoft.com;
-	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=S7pM44aL;
-	arc=none smtp.remote-ip=13.77.154.182
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22D3606A31A
-	for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 23:21:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E22D3606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.174
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792543194;
+	b=MZGNhciub2xA7HbGzcWAjmPaDDhdbyVE7oDa05pHrUnN0q2nOyb/plnpCQADbAFntzTR
+	 S9rz7+zDMVvoiQ/RKux/Vtw2QALIkJZZQiKYcq6ds9IDn2ULSYAkodzqVVQJ6iJfCm8zs
+	 fAv0KjGF5gul0Krq+JPz1pwFvIwmgzvQOYYeQ9wQevgZ67ET0n+mXUYmpfnGi/ErlNHIk
+	 6PKznRosdzKBpPzW6+/TvBh7SwLram4fL3rwG/OgXQNd0bX0WbyBPlDoL7yWSZiTyXiLT
+	 10F+pSGKyuAQXnqXJ1K0xDlqaMprRVP7DtkuiRPYI4HHAf40CDIpV4sx/Tnz/M3S4eA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792543194;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=yRIGCmBCLZXrskue80uJ2gMa4RxJkt2FFdVYi0NxvFw=;
+	b=bRlzvbqxxbOxK7bMdQzWik7/zJYZu1Mx1Xt5ASMOb9bfQC2WOJF09v8RKLBa0f7++GcE
+	 4WdIzzgz9TBo9MaVfEWeE3gzXOz612ChT6cIh/erDW42SIFb8vjkmodUl8VvB4Oh0fvEv
+	 Y9AMXOZH88oU5itcLLwn04M9PofJ5HA9eyhTmL8oENe+H0qJCEEx/xka5do2maurxO8Sn
+	 5c2QMVUdpheEHB1r02MHT4P09gOEbwFqHWDlDLIFLtv8dM8ufIsrT1cPI3D5g+wuEpOh0
+	 H5GPTJ86gajRAUxTSnrmUcVf0D/1m7P0M3Pq3g4/9dzWebSFOGkHo3H7RL5A10zPEJQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="Y2BKsS/o";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.174
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F95606A31D
+	for <regressions@lists.linux.dev>; Wed, 21 Oct 2026 00:39:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 11F95606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=S7pM44aL
-Received: by linux.microsoft.com (Postfix, from userid 1216)
-	id 3A3C420B7168; Tue, 20 Oct 2026 16:21:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3A3C420B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1792538497;
-	bh=wxAh+Ne1jASQiYLIaGgyMvhKyKgjJ2FMW5Pt3awzq1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S7pM44aLB3gZK2JI34fkHNHluJMXfyOhL4k1popVUMJN10/rYmyemLKkba6xsKjuz
-	 pBDky1QGicbwDIQGKuSA5Wp5k72iQDcIJBnV4TbGA3EfrLgHKjG01Y+JUSSIc88Soc
-	 Mzv3rX0/KWisgbPOceaPU0c5LbFWOJIyz6uGAFfY=
-Date: Tue, 20 Oct 2026 19:21:37 -0400
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Lanfeng Wei <xlfylawarthur@gmail.com>, airlied@gmail.com,
-	decui@microsoft.com, dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	longli@microsoft.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, regressions@lists.linux.dev, simona@ffwll.ch,
-	ssengar@linux.microsoft.com, stable@vger.kernel.org
-Subject: Re: [PATCH] drm/hyperv: add a parameter to disable the vblank timer
-Message-ID: <atf3gfQlW+46PzRG@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <c238f4ff-d5d8-4a9a-8773-793bd9056c9b@suse.de>
- <20261019154121.6257-1-xlfylawarthur@gmail.com>
- <8e91baa4-1ca5-43b8-bb04-9b5e3630bc2b@suse.de>
- <atZjtSlZAocUWYBS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <3a4c4a4d-6ab4-42b6-8ae6-7ca0730b8069@suse.de>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y2BKsS/o
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5e948e56af3so43845e0c.2
+        for <regressions@lists.linux.dev>; Tue, 20 Oct 2026 17:39:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792543193; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mTch5V/z7MQxdcmuZg8BHBq0zxBtwjxOUCpWVtYG4h0UaJVuY1ESV+QpA5M+pFgm0s
+         LUC237Vb/mxi3tEvAce3rz42Sq0C74IEM2TZ2ZOsjqod1N2x3vY0F4ddR3mrusl6gly2
+         Wc5uoxmgAvKGLhYqHZeCu48Z5MTEJUAhwnM+s0xfpieG8hQtxBfsBIhn8kSvCvNhWIH0
+         WFobrsATwPiXEzN4MNNFXNu+KXmedTQfez6qTB9YVOKDVd6Uw0dI4R9/EK4YotRc6wor
+         KebxwHaIXlhHU5CISjN+vHM9Do6LOf6tYcgQIUBce8gBFnmwoWg8u/HSDdhlyIryWoTI
+         AtAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=yRIGCmBCLZXrskue80uJ2gMa4RxJkt2FFdVYi0NxvFw=;
+        fh=LA71vZ9GIgEPALIdbetHot/PlUQj8Efbmt/r4GGZl1k=;
+        b=o4yMpjZAHPp6aIqJbi0FxM2APiMKJDbXQWoqGtZpM70bDO4EPzuZC+3Z7y2hgoE+f+
+         nyKNt2gI6+clnYiB5yrKr/HduC4OizhN/33nipI7oWka/dJfRgu0Pm5L82sp8sIGVXbj
+         rpw5eX6o3vcw7V6SNs5r7YbvgraGM4Qa0MyrQlrawusvoAfuMD6lRMlnONrwKqoL1726
+         Sp2CkOIfAhO69qFxW1RxG+bLgk3AT26aJ11g2EIHyflMP+Efwjm39tab1pS/19RMvO1F
+         IgTvya/9zyUHBnuvwT6EFtew8bP2hK/M3e1jiACT/LdtHAu82eSMfJ1AKFVS3wFqHu9N
+         f+Dw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792543193; x=1793147993; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=yRIGCmBCLZXrskue80uJ2gMa4RxJkt2FFdVYi0NxvFw=;
+        b=Y2BKsS/oqoF/j6XXKv6dN2oV4cDgp0XMAKfUkHvKl/e3yjGeNn8SiADAx8hc7chNWy
+         f2iQP19jt7iaynHeW+N4OAjiw0nV2IAJ5N28uBa7SY39Wb2HIT8QkFbVmzJKDtVd/HzX
+         2BjZFZQY2wtlQ8c6F5M5E/UP5HjtePmHXrZJwLIMFs6OGHRuMj16TcPsoDH871MALPTB
+         WdvJB5LtDrHDdJoXrbP0o0f/wOAuFJm5su9tTplU232zbRThzGXpZaFN4RveLVs8u5nI
+         hVQz5ir8HkId52N0t1op7eaweHQ84HGMbzR7GpiDxtEl5g/YhiNq6znAVPAWNDdx6V9s
+         2d2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792543193; x=1793147993;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=yRIGCmBCLZXrskue80uJ2gMa4RxJkt2FFdVYi0NxvFw=;
+        b=Cx16G+Nl1WaefQAGqfbD9JEFcfXlkYyDxFY1PUSHF9byEeQHkRUYENdqgJ3ykF2qKY
+         fwiSKEWsyB/nzDHpxNOW3rl0Wt3gnQJRj3AC6KTMR1zJrJSukPD7jS3ZoD5rWL2xL7Im
+         b2xe2fmR5IdaEcd1Yxkm68D+ngn1bDkMfb+H0VeIoxLiq7gOSdXXwxlY7ZL3Bspr4qqJ
+         yPUFj6yFO5rIkbiSbf0gdPyeG3XVh1C9K4kfiRHjCb2dRFCnNAwDhgz2lp3aMltRq2Yx
+         DUr6F2FCciGjd5LEW6wrWPVVQMoJKOhLvPkW64Dp/t9mnLGPb6jAYeyOKi+o2OSovmrX
+         +Y2Q==
+X-Forwarded-Encrypted: i=1; AKwUvBxxIzroPE1zWxPL+RvlSz/rKjkYJHrLnc4LZF3KE83xL8oenghkxc2jD+b5K3HNculBqGIeiIIihvQBzQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIZYL+qK+lkG6tBTV/33kvR2mww1A91exQ7NH4NdV34IrHYhHWi
+	6+5OB7ApjVY53zXEjE0CZXV+HQXSxGySYsDvhtZfBh2Vp7BJUaZtsMeX6KjcDLNOBOU4xiZEOz8
+	IsMH6uqUZWi1uW3Umkl6jlkJ8ml8V9a4=
+X-Gm-Gg: AYBFou3oyK+MdJiFCx2H4nJc2EI/SEdnEjd+trAAN+aMgLLHY8uFFut4tVSq+Pm+QZ+
+	5eqFoxKrmr/oFES236NEilEenlqbjx6psHEoDO8wfF7t9HAeHdjmsRjANpZc6PoJ9xzM7ghmQbT
+	yktgPIOH0rROzPOoMgHD05u04Uiny0taGnP4uZs4rpSfSN8XnXDvVFwYimVRSaQgwmqbJO0Mzxs
+	MzasWDASzxvM2VTAXAaXm4AS9daRQw5rKkqA6XP+0tHbHy/ZDxNBMuIbQLyvwLYsDiQoQ7eAVO2
+	I4Jx2FMk77G8O82vjtcS41mlCyE0RX8TSdgq9DwcMiYAPFH8DQ6630epHVfiWAix4YnhvPZHbHG
+	6PNIl0GvX5w==
+X-Received: by 2002:a05:6122:5316:b0:5ea:b9b5:8c43 with SMTP id
+ 71dfb90a1353d-5eaebe0552dmr193146e0c.18.1792543193001; Tue, 20 Oct 2026
+ 17:39:53 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -65,129 +101,46 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a4c4a4d-6ab4-42b6-8ae6-7ca0730b8069@suse.de>
+From: mixalhs <mike.michalo@gmail.com>
+Date: Wed, 21 Oct 2026 02:39:39 +0200
+X-Gm-Features: AclHuK-p-6jHmmFtAn8ZlfPP0jgzDBc8fS7hal7SGHDBcgq1FOZA-oWjl887KHk
+Message-ID: <CAO+rqLhpPvY0NLrAnZjFXz0gOXnA6zsXxK8xCgtA42XUkSsAeg@mail.gmail.com>
+Subject: ksmbd: Kerberos login fails on 7.3 with released ksmbd-tools
+To: Namjae Jeon <linkinjeon@kernel.org>
+Cc: linux-cifs@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Oct 20, 2026 at 01:48:58PM +0200, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 19.10.26 um 20:38 schrieb Hamza Mahfooz:
-> > On Mon, Oct 19, 2026 at 06:03:55PM +0200, Thomas Zimmermann wrote:
-> > > Hi
-> > > 
-> > > Am 19.10.26 um 17:40 schrieb Lanfeng Wei:
-> > > > Hi Thomas,
-> > > > 
-> > > > > Yeah, what's the cause of it? Switching off features does not fix any
-> > > > > bugs or improve the status quo.
-> > > > You are right that the module parameter is only a workaround for users
-> > > > affected; it does not fix the underlying scheduling problem.
-> > > > 
-> > > > The cause is that the synthetic vblank timer is used to pace completion
-> > > > of atomic updates triggered by dirtyfb, in addition to providing
-> > > > synthetic vblank events. In Xorg's software-cursor path, pointer motion
-> > > > damages the primary framebuffer and the damage is instantly submitted
-> > > > via DRM_IOCTL_MODE_DIRTYFB. The Hyper-V dirtyfb path performs a
-> > > > synchronous atomic commit, and with the vblank timer enabled that commit
-> > > > can wait for the next simulated vblank. Under continuous pointer motion,
-> > > > these commits dominate the update path and delay normal client updates,
-> > > > resulting in sever frame-rate drops.
-> > > > 
-> > > > This particular regression results from the combination of the blocking
-> > > > dirtyfb path, synthetic vblank pacing, and the absence of a Linux DRM
-> > > > cursor plane in Hyper-V. While the Hyper-V video protocol does have a
-> > > > hardware-cursor command path, the upstream hyperv_drm driver currently
-> > > > exposes only a primary plane. Cursor plane support was deferred during
-> > > > the initial upstreaming [1]. Without a cursor plane, Xorg has to fall
-> > > > back to software cursor-rendering path and it competes with periodic
-> > > > graphical updates on the primary plane.
-> > > > 
-> > > > So the proper long-term fix could be adding cursor plane support in the
-> > > > Hyper-V DRM driver, which may take some time. Providing that the stated
-> > > > purpose of the offending commit is to rate-limit display updates, while
-> > > > its current implementation regresses the existing software-cursor path,
-> > > > I think adding a switch or reverting the commit until the requested
-> > > > features in the driver is ready, is a reasonable short-term fix.
-> > > The problem is that module parameters are impossible to remove in practice.
-> > > Once in place, someone always depends on it. They also increase the number
-> > > of states to test.  Avoiding them is usually a good idea. Especially as
-> > > workarounds for bug or regressions.
-> > > 
-> > > 
-> > > I'm not familiar with the Hyper-V protocol, so I have a question. Why is it
-> > > hard to implement cursors? From the link at [1], I assume that cursor
-> > > support was left out because the simple-kms pipeline did not support cursor
-> > > planes. This has long been resolved: the simple-kms pipeline is gone and
-> > > hyperv_drm runs on the regular DRM framework.  Unless there's anything
-> > > special with the Hyper-V protocol, cursor-plane support should be do-able in
-> > > a single patch. [^1]
-> > > 
-> > I actually have been working on cursor plane support for hyperv-drm.
-> > I'll post a patch soon.
-> 
-> Awesome! Even if it doesn't fix the reported bug, it is still an improvement
-> for everyone.
-> 
-> To fix the bug, you *might* have to implement atomic_async_update. [1]  It
-> allows legacy cursor updates to jump ahead of the commits and change the
-> cursor without vblank synchronization. It's a little-used feature and
-> semi-deprecated, but maybe necessary in case.  (Make it a separate patch,
-> I'd say.)  There's existing support in other drivers to see how it works.
-> 
-> [1] https://elixir.bootlin.com/linux/v7.3/source/include/drm/drm_modeset_helper_vtables.h#L1406
-> 
+Hi Namjae,
 
-From my testing it seems that the cursor plane support on it's own is
-sufficient to deal with the reported issue. So, I'll hold off on this
-for now.
+Kerberos session setup fails on 7.3 with the latest released
+ksmbd-tools (3.5.7), and ksmbd-tools master fails the same way on 7.2.
 
-Hamza
+struct ksmbd_spnego_authen_response gained a __u64 session_expiry field
+before payload[] in 7.3 (commit a47634cd729b, not in 7.2), making it
+168 bytes; in ksmbd-tools 3.5.7 it is still 156 bytes.  ksmbd-tools
+only gained the field on master on Oct 18 (4c0ca83), after 3.5.7, and
+always sends the new layout.  ipc_validate_msg() requires
+msg_sz == sizeof(*resp) + session_key_len + spnego_blob_len, so any
+mismatch is dropped.
 
-> Best regards
-> Thomas
-> 
-> > 
-> > Hamza
-> > 
-> > > Best regards
-> > > Thomas
-> > > 
-> > > [^1] See https://elixir.bootlin.com/linux/v7.2.11/source/drivers/gpu/drm/ast/ast_cursor.c
-> > > for an example of how this looks. Most of it is hardware-related, but hyperv
-> > > would likely be similar in concept.
-> > > 
-> > > > > We had another fix for a problem with vblank timers:
-> > > > > 
-> > > > > https://lore.kernel.org/dri-devel/20260914110004.211027-1-tzimmermann@suse.de/
-> > > > > 
-> > > > > Did you validate that this fix is unrelated?
-> > > > Yes I tested that fix and confirmed that it is irrelevant. It solves
-> > > > issues with excessively long frame durations, however this problem is
-> > > > found in normal frame updates (in my case 60Hz / 16.7 ms per frame, way
-> > > > below INT_MAX).
-> > > > 
-> > > > Best regards,
-> > > > 
-> > > > Lanfeng Wei
-> > > > 
-> > > > [1] https://lore.kernel.org/dri-devel/20200622110623.113546-1-drawat.floss@gmail.com/
-> > > -- 
-> > > --
-> > > Thomas Zimmermann
-> > > Graphics Driver Developer
-> > > SUSE Software Solutions Germany GmbH
-> > > Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-> > > GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
-> > > 
-> > > 
-> 
-> -- 
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-> GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
-> 
+Tested with a local MIT KDC and smbclient --use-kerberos=required, same
+realm and user throughout:
+
+                    ksmbd-tools 3.5.7    ksmbd-tools master
+  7.2 (mainline)    login OK             NT_STATUS_INVALID_PARAMETER
+  7.3 (ksmbd-next)  NT_STATUS_LOGON_FAILURE   login OK
+
+In both failing cases ksmbd.mountd logs "Authenticated user `testuser'"
+and the kernel logs "SPNEGO_AUTHEN_REQUEST failure".  NTLM logins are
+not affected.
+
+From the code, 6.6.y, 6.12.y and 6.18.y also require the old 156-byte
+size, so a ksmbd-tools release built from master would break Kerberos
+there as well (only 7.2 tested).
+
+Would you like the kernel to accept the old response size again, with
+ksmbd-tools sending the new layout only to kernels that support it?
+I'd be more tan happy to write and test the kernel side. :)
+
+Thanks,
+Michalis
