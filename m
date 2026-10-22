@@ -1,57 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792686424;
-	b=0D55ATYUOfggHt4e41EDlabWnOZmYj4na4Xqwn30rbTwiw+BDeYmC4yK+PsMzWSdJhSJ
-	 J3gLZHR0U74b1nJ4EhhOTnRGhoV3mzS6F/bofzQKi+GUGSauNNHnRXEcpfpKw9qaxiWJ9
-	 UVYCOwhI4pXNyrYqHQzI+XSybwtyT4+/3GMUEXq2ToFU7B9ESf+vSiPzvI4uCaTt1+SZ1
-	 rQ1UR/7p3h1cUNAJxbFi0HMFbtqZhmiAhbGMOlhLvEBtYqbwh0Uj0dAn0vGIq5BtCC8FH
-	 na1IkPAWKW62AUwZNyiigtiEhiJy2iLtCWfYePJjHM8K2C5PCjflA0cFhHoNfMSMSQg==
+	t=1792686683;
+	b=PGLGUH2QN+1hAuIe10A+xv6zKu1YFlhmLkFH+EnaG9ky9jGTOk7DCAGWXLuQzrUG55Za
+	 QbWWprqdIzoL0Q2U9tgCHn5Q3KqQrdQGFlldeekI3276EjJkdD95cFY2MH/8/CQ9vJgp5
+	 zRW4V3AyL8dAv3X0FE5OLmzcFnxUvVcfb/9EF4SFMZVhrOZzK5KscgJ/bWVlaaIToV2XF
+	 gZFQ6uKOW+FSfgtrEUdSRcVEFhvzTk8M7f/CML4KoEUrSXzp0M5n34AJoTEnlbfGM6pXk
+	 E7FRCiLdeqt0TSgcSgOencz8zHbN6plwoKmEdwyMWUNE3Nu9gQMu/A1KkAo+Bf2Ud1A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792686424;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1792686683;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=54LAz2yiMw1ZfC35z33LposRAamRb5F8Xp2rr4ddzGw=;
-	b=CjH+83V4QXJTwByxw8IS1BF/+ptshAMoeUvDVeZFvhptSwQQsztSeXKJUpA+SJul+VMV
-	 ydvcZadxoqi/WxpafahVfreRjwsw/Nus6yxt2BokcAarE/f2V82EyFaVqOq4KFhA3cEab
-	 laNwwCq0ikWf7jMWRKRU9DJkBgVuNQc5RagqSVzTsY1EoJolIF45G3IRPNyp6CLbrbQe/
-	 PF0WjIjTnPN/YuKuc2Tg/OiYOfaRCNz61ouwhi8XeAYSaPOkmNDzwgnFQsOJEih5y2j5H
-	 eTVky4LUlRjb/uKOOBYqOlic6EK/uun8Xc9xbYT0Qjh4GaMj6ykaB2uxqh9ON9/yUyw==
+	bh=aleyTKbyUPwkKdibUq3IwvSz2dQSx+D+0Ibacr1mokc=;
+	b=ton49UuAnUp/LWT8FQgMB+QZCK4zLfMx/CRm0sA/4q3wigu0yP93djNTHijKFHK9g1n1
+	 0os6R9aGirF4q+4RhzatjoOQO3cOZeuzGuuxiKv7d+Koe5SanxfDkCDk5MzJjHtGo/iwO
+	 MLxogWcc4h97ZeaUcMl+pfp/od+2Pocil+7M5/FAVyHcM1RQO9fvTzHbfP+s2/i0/bY0f
+	 sa7kZkMR05g95oovxdkC02cvp6Q7T+TibJ+iOygEjLDbqizu0cOiTFPxVPIG5BjQZTF0l
+	 u97HoQeTXvZt4S+HCHEXE/vkfVjLPsDK2aHiAxlxxiyi8TiHuwQKGlk0htoxLSOqfQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=protonmail.com;
-	spf=pass smtp.mailfrom=protonmail.com;
-	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=SbaSGjfj;
-	arc=none smtp.remote-ip=185.70.43.22
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ohZ4Hf6x;
+	arc=none smtp.remote-ip=74.125.82.176
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41888606A31F
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 16:27:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41888606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D681606A31E
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 16:31:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8D681606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=SbaSGjfj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1792686421; x=1792945621;
-	bh=54LAz2yiMw1ZfC35z33LposRAamRb5F8Xp2rr4ddzGw=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=SbaSGjfjdiUNo5BWiQKZEx2VunsfJzLFoSWPl8LUClqPiwiOENOXmIvmLIVftfqum
-	 VMuneIS1poXWE4MiITDzEIAZ0aIKz9+/njp7b1k2SlkgIyyPIBHO1pHDJYjUEvb9uY
-	 4zodON2m9AfjQqhjQPB09RlX0mYOoAHjiSFjTODZTkJkGa73aLhToarXM/d2HA72Hk
-	 mMjSufKpzMG9R7A5I3DJ3irM9lg/d/6YgoVkmnCT+4Br3gfjcmZvTEe99/6PvEW5LQ
-	 KtO+LPgn0Vt3GC1PtlfPTEQyIgmaTGmIrHwYAvvNOi46wrvp/1TBM0un79XpoUExsA
-	 G3AANRJh2w6sg==
-Date: Thu, 22 Oct 2026 16:26:57 +0000
-To: stable@vger.kernel.org
-From: Frederic MARIE-JOSEPH <fredericmariejoseph@protonmail.com>
-Cc: linux-acpi@vger.kernel.org, regressions@lists.linux.dev, "Rafael J . Wysocki" <rafael@kernel.org>, Sasha Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [REGRESSION] 6.18.57: ACPI fixed power button no longer bound, ACPI power-off ignored
-Message-ID: <20261022162655.231431-1-fredericmariejoseph@protonmail.com>
-Feedback-ID: 23950738:user:proton
-X-Pm-Message-ID: 68cd0915601fe67b695201b30ee4d8b7804178c8
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ohZ4Hf6x
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-3514b90bb89so5174242eec.1
+        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 09:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792686682; x=1793291482; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=aleyTKbyUPwkKdibUq3IwvSz2dQSx+D+0Ibacr1mokc=;
+        b=ohZ4Hf6xnIj7H7jD0GdaDZmwUEPz08LAZb/ZQcKTVkkNRnoWm0S/r5fb6gD6Ri1woa
+         Bwcwi/I3yyHiWnlnEH8Nw52MfBzpYU/FVE97h3iNEy4Pl5KTPWJSnvwKamZeh1+Mkq/l
+         wwL4GpSb9eKjiyPjBPpvIf2SzX/lmJXfFy8l/QIobH/jEidtb6FtRZhCLY3KHSJXXr6a
+         aiYdJh3DQFRsXMkdvSnGdTnFlXO9nN3vhZv4+VCmGs0Tx0jzWA5l81uOQy3OGM2B5F64
+         hfaW4YSyfNUqWTCuhGKUXgR9fQe/vZnHOX5yTDwC4tkTqEfqZiZl9DuXgjn9BRShFIn/
+         Kc+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792686682; x=1793291482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=aleyTKbyUPwkKdibUq3IwvSz2dQSx+D+0Ibacr1mokc=;
+        b=tiS+2Jg7cclVrHsATvYbUzNfbaWfJjLFPpmPbO5yae12lZh6rvJRQj4XVVqaKPyLN3
+         YQlqwdcqfuh3EqkINg4pjo1X0PPnycEptC/6csDS4T8Lc9cMbqWFznO/1ewbUwRC4D71
+         DXjf5DkNwIQKo978g3Ta/abAcx7hUfJMMGkl/JzPu4VIp+H3Jq15LU+zDUvJqYn9jIP5
+         yafAQ9Km6fbqxrr2DUSkAsk5k2LoDZ2D2KSAFiBiCDNwyQhx8mkHCQXvm4hUv8v0g4LG
+         lxNQNdTqSZnckgcXd4W9J/VbMvvUNHimGZ2VC7E+dzisPRTDa6W3BvurIRxgCl4zx6vv
+         3kQA==
+X-Forwarded-Encrypted: i=1; AKwUvBz2+Sg8lwa2DrNVrXppn25ussv5/9OF/0oxH1cRT+SlJMMHf4HSvOe+pNRSF2NGx7JomerWtu+PdxSu3w==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIFHFhFWDSjXVJde80Scab9h3flC1cgqdr+iB5zual+j5mqSTzz
+	4q802VtfRZ7Wv1drHlpjAd+1Q4dDDVD0Ua8SCcOFnAW+om8gAXD0Zz/i
+X-Gm-Gg: AYBFou1b1sP8Qt5YcpX9vDE0+E2+WqNHQH6c1ooF4sZKAhG9R/icbIMt9v+VfjQPDBC
+	2GQmYUmgFARb/AdLGfDr/h3pSt/uYPCwrsb8PgQWVtNv7Vfj2PWA7VV6UsFNExL4NxKHBrzZGxh
+	82huspd4IKwkJhmyR3JXR6UqXcuSJSkCHWuM2oHD9UEAIgn4QiDNBGC7JIirryeSjhMDoiM5Tz/
+	ruJsz6NJ8PiQsDP5bdcXv/j5V7nuWCrhFUcNBi0UOLWPthIOTFmBtxyaaFlnCFI5QeoRbRPuLGe
+	gESPI7w31xldCCRos0M/qzmt7w2kcJ9csRJ87k396rzdrIwjM3W0z6QRuYlU9pFyi9L9QZoXHH9
+	xaoOBaFoi+8CBKkgZloc94sAVuw7n+XUue5lwwyRGwBDNdLEP+sWeTFJoN3dULAbelY7tZUtcnS
+	9nu3Vb2wNADfNYBnUUzRkIZf6Ry2c1uLfu/qD+uPs6nhr9z5o5qDKY+pUIxGgM6cSoAHYbacf5a
+	e5W6ELU5vdzYCwKzLJ1s7M7gvk/eMeWtSGZhKALcuokL5ed5knPT3EUm3dBTH5oK9lZLoY=
+X-Received: by 2002:a05:701b:260d:b0:14a:8df8:56c5 with SMTP id a92af1059eb24-190a599a5admr5852299c88.26.1792686680599;
+        Thu, 22 Oct 2026 09:31:20 -0700 (PDT)
+Received: from DESKTOP-NM9EKIA ([125.134.240.130])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1903d87ab1bsm17079981c88.21.2026.10.22.09.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 09:31:20 -0700 (PDT)
+From: Joonhoe Kim <26rote@gmail.com>
+To: mani@kernel.org,
+	davem@davemloft.net,
+	edumazet@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: horms@kernel.org,
+	christopher.lew@oss.qualcomm.com,
+	deepak.singh@oss.qualcomm.com,
+	pranav.phansalkar@oss.qualcomm.com,
+	andersson@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH net v2] net: qrtr: announce local services again once our HELLO is sent
+Date: Fri, 23 Oct 2026 01:31:16 +0900
+Message-ID: <20261022163116.1042-1-26rote@gmail.com>
+X-Mailer: git-send-email 2.55.0.windows.5
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -61,148 +105,109 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Since commit 544d85de4dc2 ("net: qrtr: Send HELLO message on endpoint
+register"), qrtr_node_enqueue() drops every packet but HELLO with
+-EAGAIN until our HELLO has gone out to the node. When the remote's
+HELLO arrives first, the NEW_SERVER replies from the name service are
+dropped, and so are the broadcasts for services registered before our
+HELLO goes out. Nothing announces these services again, so the remote
+never learns about them.
 
-Since 6.18.57, a machine whose FADT describes a fixed-hardware power
-button (QEMU's q35 machine, so Incus and other QEMU virtual machines)
-ignores an ACPI power-off request.
+On Kaanapali the modem sends its HELLO before it accepts ours. With
+rmtfs started first, the modem never learns about rmtfs and its
+watchdog resets the SoC about 40 s later.
 
-On 6.18.57 (x86_64, CONFIG_ACPI_BUTTON=3Dy, CONFIG_INPUT_EVDEV=3Dy), in an
-Incus 7.5.1 virtual machine:
+Remember that the remote has sent a HELLO. Once our HELLO has been
+sent to such a node, pass a HELLO from it to the local name service
+again, so that it announces the services it has at that point.
 
-- /proc/bus/input/devices lists no "Power Button";
-- /sys/bus/acpi/devices/LNXPWRBN:00 exists, with no driver and no
-  physical node;
-- /sys/bus/platform/drivers/acpi-button exists and is bound to nothing;
-- no platform device exists for LNXPWRBN;
-- QEMU's system_powerdown ("incus stop") has no effect in the guest.
+The flag is not cleared when qrtr_endpoint_hello() restarts the
+handshake on resume, so a HELLO that the remote sent before then is
+not lost. The cost is that the remote gets the same NEW_SERVER
+announcements twice when its HELLO arrives before ours goes out but
+the name service handles it after, and on every resume.
 
-6.18.57 took "ACPI: button: Convert the driver to a platform one"
-(stable commit 38c79dacc8063ff8a0d75ce2a900fbaff82ad94c, upstream
-52d86401963666423cb9a56d117136c846093db0) as a Stable-dep-of
-fe80251152fe ("ACPI: button: Fix ACPI GPE handler leak during removal").
-The platform driver needs the fixed button objects to be platform
-devices, but 6.18.57's acpi_bus_scan_fixed() in drivers/acpi/scan.c
-still attaches them on the ACPI bus with device_attach(), where no button
-driver is left; and acpi_create_platform_device() would fail on them
-anyway, because acpi_dev_get_resources() returns -EINVAL for an object
-without a namespace handle.
+Fixes: 544d85de4dc2 ("net: qrtr: Send HELLO message on endpoint register")
+Cc: stable@vger.kernel.org
+Signed-off-by: Joonhoe Kim <26rote@gmail.com>
+---
+Changes in v2:
+- Replay the remote's HELLO to the name service from the core once our
+  HELLO is out, instead of retrying in announce_servers(). Replaying
+  the announcements once hello_sent is set was suggested in the Sashiko
+  review of v1. This is also not the delayed work in the name service
+  that I mentioned to Mani: that would still miss the broadcasts
+  dropped before our HELLO. Nothing sleeps in the name service worker
+  and there is no time limit.
+- v1: https://lore.kernel.org/all/20261016124600.31-1-26rote@gmail.com/
 
-Mainline handles this (as of 7.1.8): acpi_bus_scan_fixed() calls
-acpi_bus_add_fixed_device_object(), which uses acpi_default_enumeration(),
-and acpi_create_platform_device() looks up resources only for
-ACPI_BUS_TYPE_DEVICE objects. Those two changes, backported to 6.18.57 as
-below, restore the Power Button input device, and an ACPI power-off then
-shuts the guest down cleanly ("reboot: Power down" within a second of the
-request). 6.18.58's ChangeLog has no fix.
+Tested on a Lenovo Legion Tab Y700 Gen 5 (out-of-tree board support)
+with rmtfs started before the modem: the modem's HELLO is still handled
+before ours is out ("failed to announce new service"), the replayed
+HELLO follows right after, rmtfs gets the modem_fs1/2 opens, and the
+modem stays up.
 
-I could not identify the mainline commit(s) that introduced
-acpi_bus_add_fixed_device_object() and the ACPI_BUS_TYPE_DEVICE check;
-picking them for 6.18.y, or reverting 52d864019636 and its dependants
-there, would fix it. The diff below is offered for testing and as a
-pointer, not for applying as is.
+ net/qrtr/af_qrtr.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-The analysis and the backport were prepared with an AI assistant
-(Claude, Anthropic) and checked on the hardware above.
-
-#regzbot introduced: 38c79dacc8063ff8a0d75ce2a900fbaff82ad94c
-
-Thanks,
-Frederic MARIE-JOSEPH
-
---- a/drivers/acpi/acpi_platform.c
-+++ b/drivers/acpi/acpi_platform.c
-@@ -137,22 +137,26 @@
- =09=09}
- =09}
-=20
--=09INIT_LIST_HEAD(&resource_list);
--=09count =3D acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
--=09if (count < 0)
--=09=09return NULL;
--=09if (count > 0) {
--=09=09resources =3D kcalloc(count, sizeof(*resources), GFP_KERNEL);
--=09=09if (!resources) {
-+=09count =3D 0;
-+=09/* A fixed event button has no namespace object, so no resources. */
-+=09if (adev->device_type =3D=3D ACPI_BUS_TYPE_DEVICE) {
-+=09=09INIT_LIST_HEAD(&resource_list);
-+=09=09count =3D acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-+=09=09if (count < 0)
-+=09=09=09return NULL;
-+=09=09if (count > 0) {
-+=09=09=09resources =3D kcalloc(count, sizeof(*resources), GFP_KERNEL);
-+=09=09=09if (!resources) {
-+=09=09=09=09acpi_dev_free_resource_list(&resource_list);
-+=09=09=09=09return ERR_PTR(-ENOMEM);
-+=09=09=09}
-+=09=09=09count =3D 0;
-+=09=09=09list_for_each_entry(rentry, &resource_list, node)
-+=09=09=09=09acpi_platform_fill_resource(adev, rentry->res,
-+=09=09=09=09=09=09=09    &resources[count++]);
+diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
+index e7b364742..508a2dd2d 100644
+--- a/net/qrtr/af_qrtr.c
++++ b/net/qrtr/af_qrtr.c
+@@ -122,6 +122,7 @@ static DEFINE_XARRAY_ALLOC(qrtr_ports);
+  * @qrtr_tx_flow: xarray of qrtr_tx_flow, keyed by node << 32 | port
+  * @qrtr_tx_lock: lock for qrtr_tx_flow inserts
+  * @hello_sent: hello packet send successful
++ * @hello_rcvd: remote has sent a hello packet
+  * @rx_queue: receive queue
+  * @item: list item for broadcast list
+  * @say_hello: delayed work for sending hello packet
+@@ -136,6 +137,7 @@ struct qrtr_node {
+ 	struct mutex qrtr_tx_lock; /* for qrtr_tx_flow */
+ 
+ 	bool hello_sent;
++	bool hello_rcvd;
+ 
+ 	struct sk_buff_head rx_queue;
+ 	struct list_head item;
+@@ -541,6 +543,11 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
+ 		qrtr_node_assign(node, le32_to_cpu(pkt->server.node));
+ 	}
+ 
++	if (cb->type == QRTR_TYPE_HELLO) {
++		/* Pairs with smp_load_acquire() in qrtr_hello_work() */
++		smp_store_release(&node->hello_rcvd, true);
++	}
 +
- =09=09=09acpi_dev_free_resource_list(&resource_list);
--=09=09=09return ERR_PTR(-ENOMEM);
- =09=09}
--=09=09count =3D 0;
--=09=09list_for_each_entry(rentry, &resource_list, node)
--=09=09=09acpi_platform_fill_resource(adev, rentry->res,
--=09=09=09=09=09=09    &resources[count++]);
--
--=09=09acpi_dev_free_resource_list(&resource_list);
- =09}
-=20
- =09memset(&pdevinfo, 0, sizeof(pdevinfo));
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -2631,33 +2631,22 @@
+ 	if (cb->type == QRTR_TYPE_RESUME_TX) {
+ 		qrtr_tx_resume(node, skb);
+ 	} else {
+@@ -619,7 +626,20 @@ static void qrtr_hello_work(struct work_struct *work)
+ 	pkt->cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+ 	from.sq_node = qrtr_local_nid;
+ 	to.sq_node = node->nid;
+-	qrtr_node_enqueue(node, skb, QRTR_TYPE_HELLO, &from, &to);
++	if (qrtr_node_enqueue(node, skb, QRTR_TYPE_HELLO, &from, &to))
++		goto out;
++
++	/* Pairs with smp_store_release() in qrtr_endpoint_post() */
++	if (!smp_load_acquire(&node->hello_rcvd))
++		goto out;
++
++	skb = qrtr_alloc_ctrl_packet(&pkt, GFP_KERNEL);
++	if (skb) {
++		pkt->cmd = cpu_to_le32(QRTR_TYPE_HELLO);
++		to.sq_node = READ_ONCE(node->nid);
++		qrtr_local_enqueue(NULL, skb, QRTR_TYPE_HELLO, &to, &from);
++	}
++out:
+ 	qrtr_port_put(ctrl);
  }
- EXPORT_SYMBOL_GPL(acpi_bus_register_early_device);
-=20
--static void acpi_bus_scan_fixed(void)
-+static void acpi_bus_add_fixed_device_object(enum acpi_bus_device_type typ=
-e)
- {
--=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_POWER_BUTTON)) {
--=09=09struct acpi_device *adev =3D NULL;
-+=09struct acpi_device *adev =3D NULL;
-=20
--=09=09acpi_add_single_object(&adev, NULL, ACPI_BUS_TYPE_POWER_BUTTON,
--=09=09=09=09       false);
--=09=09if (adev) {
--=09=09=09adev->flags.match_driver =3D true;
--=09=09=09if (device_attach(&adev->dev) >=3D 0)
--=09=09=09=09device_init_wakeup(&adev->dev, true);
--=09=09=09else
--=09=09=09=09dev_dbg(&adev->dev, "No driver\n");
--=09=09}
--=09}
-+=09acpi_add_single_object(&adev, NULL, type, false);
-+=09if (adev)
-+=09=09acpi_default_enumeration(adev);
-+}
-=20
--=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_SLEEP_BUTTON)) {
--=09=09struct acpi_device *adev =3D NULL;
-+static void acpi_bus_scan_fixed(void)
-+{
-+=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_POWER_BUTTON))
-+=09=09acpi_bus_add_fixed_device_object(ACPI_BUS_TYPE_POWER_BUTTON);
-=20
--=09=09acpi_add_single_object(&adev, NULL, ACPI_BUS_TYPE_SLEEP_BUTTON,
--=09=09=09=09       false);
--=09=09if (adev) {
--=09=09=09adev->flags.match_driver =3D true;
--=09=09=09if (device_attach(&adev->dev) < 0)
--=09=09=09=09dev_dbg(&adev->dev, "No driver\n");
--=09=09}
--=09}
-+=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_SLEEP_BUTTON))
-+=09=09acpi_bus_add_fixed_device_object(ACPI_BUS_TYPE_SLEEP_BUTTON);
- }
-=20
- static void __init acpi_get_spcr_uart_addr(void)
+ 
+
+base-commit: abeacca61eea4f6803df4a595b656ea45c2d3249
+-- 
+2.43.0
 
