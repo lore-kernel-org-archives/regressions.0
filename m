@@ -1,96 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792679383;
-	b=wQTRaMCT3nbOl/yKnZocpi48uGYL/fHNHj4wm5G6BqU2U3qRvQ7SvVijB5cCs3VJo0/d
-	 JIniN3elHIS+/DrLMfhSdiso7kuISMxU5RAgrTiDMqUkOwfATlp5EQDZLXDNyLlf2Zd2T
-	 x9juK5xDC6j33JrC8zHAI/1zwfSMVCXbn2+jQGGNV0UhF61h0rLACSOJTcQz5cXFW59kJ
-	 DByOaInHAVWUzg74zJ5G0ywPANoPQ2tiURB+EzQjwLfo/e0Mz5nW49xgftWZyTJgulCww
-	 MrKppLN3M5PEFHeKDL3d76Om6hCeIU8vSL80XfB4KCCE9YQQmqqCcCMRzh/v6aRd5aQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792679383;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
-	bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
-	b=3Qbxt3mM7MIbc8aOVbI/tdc2Ebu4pL0qJoMnW7bWWPgfvDue867zKejkSHXFYlaB/mkL
-	 8MDx0TtjtGhC+2yQDHCDUf4KBf+blCCaQfzTcHl/NZejWgLB2qIYr8YV4YDr4UGx8RWZ4
-	 i+CABkEDQhnq3W4Wwjqz0Wx+yQTX6QY8GCg9PihtGkS2tl35Zw+l2plVpz2S64JYmklVM
-	 XgKvyAbJGaC7JPm8Qafi9Sk7yv9/VTA/AZafE/eoLnOXJokoeg1yMR770vnSiUdRSolU6
-	 S96Z+N0pkk+IN/xZoByLxHE6+dnqWw8PxfeupWsb3uFg89EToL2Lx4TqLuTu0qt+n/Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=r5N36CwM;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.22
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792686424;
+	b=0D55ATYUOfggHt4e41EDlabWnOZmYj4na4Xqwn30rbTwiw+BDeYmC4yK+PsMzWSdJhSJ
+	 J3gLZHR0U74b1nJ4EhhOTnRGhoV3mzS6F/bofzQKi+GUGSauNNHnRXEcpfpKw9qaxiWJ9
+	 UVYCOwhI4pXNyrYqHQzI+XSybwtyT4+/3GMUEXq2ToFU7B9ESf+vSiPzvI4uCaTt1+SZ1
+	 rQ1UR/7p3h1cUNAJxbFi0HMFbtqZhmiAhbGMOlhLvEBtYqbwh0Uj0dAn0vGIq5BtCC8FH
+	 na1IkPAWKW62AUwZNyiigtiEhiJy2iLtCWfYePJjHM8K2C5PCjflA0cFhHoNfMSMSQg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792686424;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=54LAz2yiMw1ZfC35z33LposRAamRb5F8Xp2rr4ddzGw=;
+	b=CjH+83V4QXJTwByxw8IS1BF/+ptshAMoeUvDVeZFvhptSwQQsztSeXKJUpA+SJul+VMV
+	 ydvcZadxoqi/WxpafahVfreRjwsw/Nus6yxt2BokcAarE/f2V82EyFaVqOq4KFhA3cEab
+	 laNwwCq0ikWf7jMWRKRU9DJkBgVuNQc5RagqSVzTsY1EoJolIF45G3IRPNyp6CLbrbQe/
+	 PF0WjIjTnPN/YuKuc2Tg/OiYOfaRCNz61ouwhi8XeAYSaPOkmNDzwgnFQsOJEih5y2j5H
+	 eTVky4LUlRjb/uKOOBYqOlic6EK/uun8Xc9xbYT0Qjh4GaMj6ykaB2uxqh9ON9/yUyw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=protonmail.com;
+	spf=pass smtp.mailfrom=protonmail.com;
+	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=SbaSGjfj;
+	arc=none smtp.remote-ip=185.70.43.22
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A61606A319
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 14:29:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C3A61606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41888606A31F
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 16:27:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41888606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=r5N36CwM
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-676858d42f8so1672426d50.2
-        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 07:29:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792679382; cv=none;
-        d=google.com; s=arc-20260327;
-        b=OfBluXJqCwv9XKQPyWJbXVu8hTBb12mEgXDjY3c8cDNg4QO8TMugOu2R6W5XPFy47n
-         CFvamVAhtBelyzkeUW9D9RQOLlFKtsbN6rKqhB7Xsz876uxQQPbF2u/B0Izofax/yB2/
-         t7vJf5a6VIZ3q3dSfvoiMs8hfOUFUQ58562c6y1M7++J99zXVKjnL+IWPbxDv6AeBabk
-         gv80k4VeO17MMGWxGvfe7nB0sHXzUjXbehymXQCbn2BlL6ZxHhb8YBYyTE27MLebkQ9C
-         Ibb7t6ft8t+GdZ1NMq6H/2qonKWqKCD0DICjTQeEjIwRsn8xGU9yrR6zuxCmPo1wkAVl
-         cTBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
-        fh=2IuiD+OJ4IXgqxDt5WgYhkkwGtM1Tti6w8lCUv1+TUY=;
-        b=mhVsTN+4NQ1ipA3zmH/OlIvk7vKK70Nj6oU9LPTBeCiCKFQK12byuNs+3x9gzvpkph
-         h0imyIySVgiJrwbX9dgNmQrAYvV+B4XcXqzy/jPSiz3m8R53xOYElXl2hqOH8ABWfqUT
-         abdDmDfT+fMLoqSxtdT87an0nNDt7DWz1XAd5kUWf4Ve2gsdC36UHTd4998MMP7oQTQl
-         kRwK/BQ9rLPXainbF9BUsl5+P+LO4DtYIeugkajyipYBrf5VCFsc45ATfbaf1ctuEZkB
-         A7Gu4K/o2qDNsBucJ/2y51B6OfJlfVIlBSLSMaqzXc89JkaG+fFrGitoFNrb+WS/tjXj
-         Dywg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792679382; x=1793284182; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
-        b=r5N36CwMQIkZYZqCtxUbLD6DEIXMzkhlsPx3Z2gvNq2yZFBM4YVD52K+90jzbJdhkr
-         cLc77YJYdStEDxyxubN8ImZqM0sXYPX45SIy2WWEDVbaZCTVoBjJYudfMsKoiV7onj69
-         bVYhXL96T4euXRSyWlXfrWmIqjznt3+GXelxFDKU5T4YtgxDlkZonSNgyBy7+Y334Nno
-         Linasr2QI/6EFzwp3lBqmVRA7B1Y4/9//zjrRoMy9zTXTd+YdjVJXegsxcmIyoCXkDPN
-         1eFoKFpnhUaPE2hLA7a62qv7GnOjl56N6hh3PSwDXq/B+CNgsuZutzhu/1ZZCyQNQwk/
-         fQsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792679382; x=1793284182;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
-        b=qTHnMIxUirLUxopP085mCDK73jbyyDMIMzXNUAoZnJrg6ughq4OD05X0YAkW/0mJ3O
-         o5SlIeWm5nkbueuezwwRTh6qHKhJX3uR+Rd6ZTLRmnZfBLQ0H1FwDb7nQfem1rd+Bd63
-         o1uS2biO6AA7WRtFc5/2U97sCoIpIHbHK/fJYSvcyIOweambEkHU20qENDdTHjKnr3eU
-         kW3K37PQaqspv+2RuJFRMlrz52aR5ayl5TIDGC/+mR645Y70TvNTC/MZo7x3PFp05k3V
-         csiUwkZEydvqGECmpRiTTnDJGa0OwP9DuPtdihmMjFJSxuRr0s6EYCkD6JjJBPQNbes8
-         M9BA==
-X-Gm-Message-State: AFq9FYIbX/GwUHd/JR7nyUcynFnrY3vZ6gx158p0IPOWanMw5BkZcJND
-	XiyOWjjgzuGU5+BYwGgN788X+KNf1joC2uhR4O1WChYJrGNpHBBcj5NP9z6SFtkY8NeU36BLvaY
-	1191RmcXOPY0IhNKCu7FqEhqwJ2A8Jkg=
-X-Gm-Gg: AYBFou0NmQf7ifHgFxk3XzO44soaF0FSm0/yCyg22UXiLmrY8g8Rj4V4L7jcJ/2dFG2
-	zBBNKqzu99QdayF47LWtSmMw0Y+keec0LYAUTJFaEDg7+0/KSes4Wk0Wq81dO3nobSR29PmiVko
-	kEFyrbuPNASqm2hUyk3n8AIJ1Cwnn1yd3SvTCL7+Ewe4ZtkgEMyaYNtojlNCLSznsm8rMgWbCZD
-	+48eFb6FDZKSRGg1eo/rXR/SarDqjKzwC0S6AmeELh/JzVqf8DV1X65kfziEy6/Rac1S3IhB0xV
-	U7v1WTssOUGejAiRoAsvVHaumcNSm2hTre/LWsG28iNs3Z40fhuDqiqqQJRobQiX79JXYHyNgWT
-	WsGOXQbC3O7MIIFTO/1hQvVagxGVxrsbiaOWv5Rtj/fq/F1cjStQq/wVWhWYxhS+z5ZjTSNrijX
-	gqEVuU
-X-Received: by 2002:a05:690e:80a:20b0:676:858d:35d0 with SMTP id
- 956f58d0204a3-67a0e4ceba4mr1401129d50.59.1792679381266; Thu, 22 Oct 2026
- 07:29:41 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=SbaSGjfj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1792686421; x=1792945621;
+	bh=54LAz2yiMw1ZfC35z33LposRAamRb5F8Xp2rr4ddzGw=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=SbaSGjfjdiUNo5BWiQKZEx2VunsfJzLFoSWPl8LUClqPiwiOENOXmIvmLIVftfqum
+	 VMuneIS1poXWE4MiITDzEIAZ0aIKz9+/njp7b1k2SlkgIyyPIBHO1pHDJYjUEvb9uY
+	 4zodON2m9AfjQqhjQPB09RlX0mYOoAHjiSFjTODZTkJkGa73aLhToarXM/d2HA72Hk
+	 mMjSufKpzMG9R7A5I3DJ3irM9lg/d/6YgoVkmnCT+4Br3gfjcmZvTEe99/6PvEW5LQ
+	 KtO+LPgn0Vt3GC1PtlfPTEQyIgmaTGmIrHwYAvvNOi46wrvp/1TBM0un79XpoUExsA
+	 G3AANRJh2w6sg==
+Date: Thu, 22 Oct 2026 16:26:57 +0000
+To: stable@vger.kernel.org
+From: Frederic MARIE-JOSEPH <fredericmariejoseph@protonmail.com>
+Cc: linux-acpi@vger.kernel.org, regressions@lists.linux.dev, "Rafael J . Wysocki" <rafael@kernel.org>, Sasha Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [REGRESSION] 6.18.57: ACPI fixed power button no longer bound, ACPI power-off ignored
+Message-ID: <20261022162655.231431-1-fredericmariejoseph@protonmail.com>
+Feedback-ID: 23950738:user:proton
+X-Pm-Message-ID: 68cd0915601fe67b695201b30ee4d8b7804178c8
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -100,29 +61,148 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: Julien <julien82453@gmail.com>
-Date: Thu, 22 Oct 2026 16:29:29 +0200
-X-Gm-Features: AclHuK8kn-teVkT41gTygozI5r5_APcWEEF49YpV8Zuy9c-TKU2SyO_VGzaCmjU
-Message-ID: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
-Subject: [REGRESSION] hp_bioscfg causes boot failure on model HP Laptop 15-bs1xx
-To: platform-driver-x86@vger.kernel.org
-Cc: regressions@lists.linux.dev, jorge.lopez2@hp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Since commit 467d4afc6caa ("platform/x86: hp-bioscfg: Fix automatic
-module loading"), the hp_bioscfg module is automatically loaded on HP
-Laptop 15-bs1xx.
+Hello,
 
-This module causes the system to hang during boot. Blacklisting
-hp_bioscfg allows the laptop to boot successfully.
+Since 6.18.57, a machine whose FADT describes a fixed-hardware power
+button (QEMU's q35 machine, so Incus and other QEMU virtual machines)
+ignores an ACPI power-off request.
 
-Sometimes the screen will go black but there is no kernel panic
-screen. When I get to see logs, there are no messages related to
-hp-bioscfg. I suspect the system crashes before it can display them
-because on a normal boot the next message I would see is "Module
-hp_bioscfg is blacklisted".
+On 6.18.57 (x86_64, CONFIG_ACPI_BUTTON=3Dy, CONFIG_INPUT_EVDEV=3Dy), in an
+Incus 7.5.1 virtual machine:
 
-I think the hp_bioscfg module should be disable on this hp model until
-a fix can be found.
+- /proc/bus/input/devices lists no "Power Button";
+- /sys/bus/acpi/devices/LNXPWRBN:00 exists, with no driver and no
+  physical node;
+- /sys/bus/platform/drivers/acpi-button exists and is bound to nothing;
+- no platform device exists for LNXPWRBN;
+- QEMU's system_powerdown ("incus stop") has no effect in the guest.
 
-#regzbot introduced: 467d4afc6caa
+6.18.57 took "ACPI: button: Convert the driver to a platform one"
+(stable commit 38c79dacc8063ff8a0d75ce2a900fbaff82ad94c, upstream
+52d86401963666423cb9a56d117136c846093db0) as a Stable-dep-of
+fe80251152fe ("ACPI: button: Fix ACPI GPE handler leak during removal").
+The platform driver needs the fixed button objects to be platform
+devices, but 6.18.57's acpi_bus_scan_fixed() in drivers/acpi/scan.c
+still attaches them on the ACPI bus with device_attach(), where no button
+driver is left; and acpi_create_platform_device() would fail on them
+anyway, because acpi_dev_get_resources() returns -EINVAL for an object
+without a namespace handle.
+
+Mainline handles this (as of 7.1.8): acpi_bus_scan_fixed() calls
+acpi_bus_add_fixed_device_object(), which uses acpi_default_enumeration(),
+and acpi_create_platform_device() looks up resources only for
+ACPI_BUS_TYPE_DEVICE objects. Those two changes, backported to 6.18.57 as
+below, restore the Power Button input device, and an ACPI power-off then
+shuts the guest down cleanly ("reboot: Power down" within a second of the
+request). 6.18.58's ChangeLog has no fix.
+
+I could not identify the mainline commit(s) that introduced
+acpi_bus_add_fixed_device_object() and the ACPI_BUS_TYPE_DEVICE check;
+picking them for 6.18.y, or reverting 52d864019636 and its dependants
+there, would fix it. The diff below is offered for testing and as a
+pointer, not for applying as is.
+
+The analysis and the backport were prepared with an AI assistant
+(Claude, Anthropic) and checked on the hardware above.
+
+#regzbot introduced: 38c79dacc8063ff8a0d75ce2a900fbaff82ad94c
+
+Thanks,
+Frederic MARIE-JOSEPH
+
+--- a/drivers/acpi/acpi_platform.c
++++ b/drivers/acpi/acpi_platform.c
+@@ -137,22 +137,26 @@
+ =09=09}
+ =09}
+=20
+-=09INIT_LIST_HEAD(&resource_list);
+-=09count =3D acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+-=09if (count < 0)
+-=09=09return NULL;
+-=09if (count > 0) {
+-=09=09resources =3D kcalloc(count, sizeof(*resources), GFP_KERNEL);
+-=09=09if (!resources) {
++=09count =3D 0;
++=09/* A fixed event button has no namespace object, so no resources. */
++=09if (adev->device_type =3D=3D ACPI_BUS_TYPE_DEVICE) {
++=09=09INIT_LIST_HEAD(&resource_list);
++=09=09count =3D acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
++=09=09if (count < 0)
++=09=09=09return NULL;
++=09=09if (count > 0) {
++=09=09=09resources =3D kcalloc(count, sizeof(*resources), GFP_KERNEL);
++=09=09=09if (!resources) {
++=09=09=09=09acpi_dev_free_resource_list(&resource_list);
++=09=09=09=09return ERR_PTR(-ENOMEM);
++=09=09=09}
++=09=09=09count =3D 0;
++=09=09=09list_for_each_entry(rentry, &resource_list, node)
++=09=09=09=09acpi_platform_fill_resource(adev, rentry->res,
++=09=09=09=09=09=09=09    &resources[count++]);
++
+ =09=09=09acpi_dev_free_resource_list(&resource_list);
+-=09=09=09return ERR_PTR(-ENOMEM);
+ =09=09}
+-=09=09count =3D 0;
+-=09=09list_for_each_entry(rentry, &resource_list, node)
+-=09=09=09acpi_platform_fill_resource(adev, rentry->res,
+-=09=09=09=09=09=09    &resources[count++]);
+-
+-=09=09acpi_dev_free_resource_list(&resource_list);
+ =09}
+=20
+ =09memset(&pdevinfo, 0, sizeof(pdevinfo));
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -2631,33 +2631,22 @@
+ }
+ EXPORT_SYMBOL_GPL(acpi_bus_register_early_device);
+=20
+-static void acpi_bus_scan_fixed(void)
++static void acpi_bus_add_fixed_device_object(enum acpi_bus_device_type typ=
+e)
+ {
+-=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_POWER_BUTTON)) {
+-=09=09struct acpi_device *adev =3D NULL;
++=09struct acpi_device *adev =3D NULL;
+=20
+-=09=09acpi_add_single_object(&adev, NULL, ACPI_BUS_TYPE_POWER_BUTTON,
+-=09=09=09=09       false);
+-=09=09if (adev) {
+-=09=09=09adev->flags.match_driver =3D true;
+-=09=09=09if (device_attach(&adev->dev) >=3D 0)
+-=09=09=09=09device_init_wakeup(&adev->dev, true);
+-=09=09=09else
+-=09=09=09=09dev_dbg(&adev->dev, "No driver\n");
+-=09=09}
+-=09}
++=09acpi_add_single_object(&adev, NULL, type, false);
++=09if (adev)
++=09=09acpi_default_enumeration(adev);
++}
+=20
+-=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_SLEEP_BUTTON)) {
+-=09=09struct acpi_device *adev =3D NULL;
++static void acpi_bus_scan_fixed(void)
++{
++=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_POWER_BUTTON))
++=09=09acpi_bus_add_fixed_device_object(ACPI_BUS_TYPE_POWER_BUTTON);
+=20
+-=09=09acpi_add_single_object(&adev, NULL, ACPI_BUS_TYPE_SLEEP_BUTTON,
+-=09=09=09=09       false);
+-=09=09if (adev) {
+-=09=09=09adev->flags.match_driver =3D true;
+-=09=09=09if (device_attach(&adev->dev) < 0)
+-=09=09=09=09dev_dbg(&adev->dev, "No driver\n");
+-=09=09}
+-=09}
++=09if (!(acpi_gbl_FADT.flags & ACPI_FADT_SLEEP_BUTTON))
++=09=09acpi_bus_add_fixed_device_object(ACPI_BUS_TYPE_SLEEP_BUTTON);
+ }
+=20
+ static void __init acpi_get_spcr_uart_addr(void)
+
