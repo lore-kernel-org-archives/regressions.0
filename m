@@ -1,49 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=66.228.49.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792633025;
-	b=5jgHCVwBaFDT12QBTH31GUe/S9aibOOX0LbNcOeCG6ufZ2iR+ktZd/9OTJ4THyHnIxyH
-	 aMjwDohrJDv59g6jP5V5rndeAR7scqa3+GUaPompZSepqp/yvs2P0LHQbS1gpt290q5oF
-	 iYuxK2NMu2she/56kAjrb5br6QEhkXG7wzA0hHiC+KyDbdw4+xrISkcCqd1CkPpY8ngFl
-	 H0snAL4NuCpRGzwmMauKqqh60VhZXhJrfkGvAc6ITteC7aydAWIemp02sMzW/WtW+4FBw
-	 myBPWHGTiLvErCwoIIm6QOPmcS2uxUHZvitjk7PyfKVx/WPRFP4APaT633cU03Y3DSg==
+	t=1792634660;
+	b=nhAO3PttQTimS29ircHMfeyj527iAjrJI1ub3fqG+g4oQy5a6mA+iZZOlmo2RqMzVzJB
+	 H7QTf6KZU8V0ijg6cq64NGoa/7h8YVlJF+bMXrYAK7HjKqzHorUrHZ0R6hjq8PwG32bL5
+	 dqHcPgvSC2Xr47xxWqWpKCpErtOEIdmb7K+l6xvAAhiSLYfhCrr54r/Gjb688yc5N0rsO
+	 ZH/A3GRkTrUPS5RikeGvq7P/9deRxK1tmoa5alL+SF6OD2STIXLtdWmGhWA/nP5vxNI/+
+	 WwG/pUAE9kt//8GUpSIg8bxyhlGuQaEtCpxXnUFOwTzn2mbNj5QXtY2xCj38SmvFECQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792633025;
-	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:From:To:Cc:References:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=nnW4VcwHbkk2DHavEEkUKXNZPZrDj8F0/wl71Ri5e/E=;
-	b=OR3l3R/fuZQzd1udT0vtdOrICZgvVoR56iW2M/7fiBPmH9MpAYHtt9lFyc0iN0fsNwlv
-	 8CWMrCnHBEi44G9uWq2FCKx+glJ2UKZJjiytG08Ij3tYeauFao4BclQTLuVAk/UKLmnkD
-	 /Yy9j2tJEU3Ly/dL8G+rTLJ77o7eDDp2eA2kmz2Bhnrp9j+S7rUohRvTx4LaaN48l4yP3
-	 2p+NHNUD9pwZ31jGzxQ799BiNGZbT0c7K1K6ny+dBSqCqeVJQ30PUSZpMPhlav8A4F+mQ
-	 D+woLEVNr41YvulLwA8mpnJ9iY8sOmqACIrnWEtUM5vRwEqnBUlRqDvhUdLpUT/WOdg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792634660;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=Pvb1W6New77Qu7AZhZxWG2Le7gUUjpAgzIQyd5xgYrE=;
+	b=rx2jdsKm+GoGXdNBWNtDNXJDd5ApoVRlm6LSvUwPu4dgR+LWPvk/6ebNUDWUzeFVgl48
+	 1eM4YhjNpOF/npjjUOB7tQKexKjFJIZXYM0/XWXyzcOtXbvQ0vKwQhIr9X5VWPQiUID1c
+	 mNIK34OKsy+obNnBahCRvi29fch2gVFH0O2U/TR0JcF06MCg4CWwiZYL1WzYY+iiJIshO
+	 yGPo9+yfSA8mMK/TvzyL2dCzMKC47VLX0TaNHOkVjyyq5YPXDfvMZGW6kx4SXsqvbJzmk
+	 qjWhO1bqg1BTLIQ6qvLN/Fkf3bID+Q2t6mrLdqxn6qfTSkoDMe5nDZwD57p1/nM5lJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=6bit.com;
-	spf=pass smtp.mailfrom=6bit.com;
-	dkim=pass header.d=6bit.com header.i=@6bit.com header.a=rsa-sha256 header.s=dkim header.b=qInkceLN;
-	arc=none smtp.remote-ip=66.228.49.9
-Received: from mail.6bit.com (www.6bit.com [66.228.49.9])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OfdODx0M;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1436B606A31B
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 01:37:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1436B606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6bit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6bit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B064606A319;
+	Thu, 22 Oct 2026 02:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=6bit.com header.i=@6bit.com header.a=rsa-sha256 header.s=dkim header.b=qInkceLN
-Received: from [10.0.2.245] (unknown [143.105.105.29])
-	by mail.6bit.com (Postfix) with ESMTPSA id DDC12945CF;
-	Wed, 21 Oct 2026 19:36:56 -0600 (MDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=6bit.com; s=dkim;
-	t=1792633017; bh=RdgdE9wO/hgi3O1MxEmLdNMt5z4BOtTeJVms7OjvJGM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=qInkceLN5nIN09rB36JK7hx7zloayLzTBJxvJRwM1gejsIs9xzW9lVpFA5cMyOE9r
-	 YkmYiNl+MBkmb1FEXt/g4NC4ruUBZ5FT4G+oNngDw3WgnukcrsN7dbWyBzcDLgYfSh
-	 ONfw/LH+lwL9WSMQ0oxNFD750wEsYkBIZAX0u8pY=
-Message-ID: <b859285b-e43e-43f2-a4f7-af82705d3513@6bit.com>
-Date: Wed, 21 Oct 2026 19:36:55 -0600
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OfdODx0M
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150521F000C2;
+	Thu, 22 Oct 2026 02:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792634659;
+	bh=Pvb1W6New77Qu7AZhZxWG2Le7gUUjpAgzIQyd5xgYrE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=OfdODx0MnouRb3RR2BGad1GjxqSs7yU83n87GraCP9GlqRh59P2aRMwZuEPgQahq+
+	 53PJiCQ5mPlqPp/NJP1MYZJztP+p5BBTpVAXAHz6OSDha7bpRIaKene6KVOiJ5HBa2
+	 Bt+wTP+N1WvB2mjHW8lrpKgKugewMLYosbENFto8ZWOWSwCSuYvysyHA1yNA/Nc+CB
+	 62OH4OmtuXuOqnhY4ucp1vLSwugaucr+b/1sO2Trs2aWdnlbAZtYwiP2RVKZRO4Eu2
+	 jQ4/82YhBppGzMom3HptWDoBSN+cHDToJcA2ZILSOQxdVbHNCUuFOqjh9dxYAybsL8
+	 lsAoNIPxRszhA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	rafael@kernel.org,
+	Mikkel Sejdelin <mikkel.sejdelin@proton.me>
+Subject: Re: [REGRESSION] 6.18.57: resume from s2idle triggers poweroff and hangs when tiny_power_button is built as a module
+Date: Wed, 21 Oct 2026 22:03:44 -0400
+Message-ID: <2026-10-21-1-daily-reply-0019-tiny-power-button-6-18@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me>
+References: <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -53,98 +61,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION_6=2E16=5D_r8169_RTL8168h/8111h_fails_?=
- =?UTF-8?Q?to_probe_=E2=80=94_=22Unable_to_change_power_state_from_D3cold_to?=
- =?UTF-8?Q?_D0=22_=E2=80=94_bisected_to_4d4c10f763d7?=
-From: Josh Perry <josh@6bit.com>
-To: mario.limonciello@amd.com, bhelgaas@google.com
-Cc: hkallweit1@gmail.com, nic_swsd@realtek.com, rafael@kernel.org,
- linux-pci@vger.kernel.org, netdev@vger.kernel.org,
- regressions@lists.linux.dev
-References: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
-Content-Language: en-US
-In-Reply-To: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/11/26 19:07, Josh Perry wrote:
-> #regzbot introduced: 4d4c10f763d7
-> 
-> Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fails 
-> to probe on boot; the device drops to D3cold and the driver can't bring 
-> it back:
-> 
->    r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID 541, 
-> IRQ 137
->    r8169 0000:04:00.0: Unable to change power state from D3cold to D0, 
-> device inaccessible
->    r8169 0000:04:00.0: Mem-Wr-Inval unavailable
->    r8169 0000:04:00.0: error -EIO: PCI read failed
->    r8169 0000:04:00.0: probe with driver r8169 failed with error -5
-> 
-> The board has two identical RTL8168h NICs (both XID 541): 0000:02:00.0 
-> and 0000:04:00.0. Only 04:00.0 fails — its sibling 02:00.0, on a 
-> different root port, probes and works normally on the very same kernel 
-> and boot. The failing NIC then does not appear (no enp4s0), taking the 
-> machine's WAN offline. This strongly suggests the problem is port/ 
-> topology-specific rather than device- or driver-specific: the upstream 
-> port behind 04:00.0 is placed in D3cold and the endpoint cannot be 
-> resumed to D0.
-> 
-> Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
-> Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A 
-> (2026-03-25, latest available). Firmware is current, so this is not a 
-> platform-firmware issue.
-> 
-> Bisection: v6.15 good, v6.16 bad (verified by booting both). I then 
-> reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when 
-> initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: Set up 
-> runtime PM even for devices without PCI PM") on top of 6.16.7: the NIC 
-> probes and links at 1Gbps/Full normally, with no workaround:
-> 
->    r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID 541, 
-> IRQ 138
->    r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow control rx/tx
-> 
-> Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=off 
-> also restores the NIC, which is consistent with the upstream port being 
-> placed in D3cold and the device failing to resume to D0 after the 
-> explicit-D0 init change.
-> 
-> The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 is 
-> still affected (retested today on current firmware).
-> 
-> Happy to test patches or provide full dmesg / lspci.
+> Suggested fix: backport f4203ec64e11 together with 52d864019636, or
+> revert 38c79dacc806 (and its dependents) from 6.18.y. Note that the same
+> backport also appears to lose fixed-event power buttons (LNXPWRBN)
+> without ab06eb920401 ("ACPI: scan: Register platform devices for fixed
+> event buttons"), reported at
 
+Queued the tiny-power-button conversion for 6.18, thanks for the report.
+The fixed event buttons commit you mention is already queued for 6.18 as
+well.
 
-Hey guys,
-
-Thanks, and apologies for the slow follow-up. Multiple of you asked me 
-to test on the latest mainline.
-
-I had a chance to do just that today with the latest mainline v7.3. 
-Verdict is that it's still broken, same messages as in the original 
-report. pcie_port_pm=off on the same build still works around it.
-
-dmesg, "sudo lspci -vvv" and the sysfs PM state for both boots (same 
-v7.3 build, only the command line differs) are attached here:
-
-   https://bugzilla.kernel.org/show_bug.cgi?id=222179
-
-New detail from the failing boot: the root port above the dead NIC 
-(00:1d.3) is in D0 but its link shows DLActive-, and the endpoint's 
-config space reads all-ones ("Unknown header type 7f"). With 
-pcie_port_pm=off the port shows DLActive+ and the NIC is in D0 at 
-2.5GT/s x1. So the port seems to come back but the link to 04:00.0 
-doesn't retrain.
-
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=222179
-
-Thanks again!
-
-Josh
-
-P.S. I'm relying on claude for formalisms like the bot tags and digging 
-up the CC list, but I'm pretty noob so please let me know if I'm doing 
-things wrong.
+-- 
+Thanks,
+Sasha
