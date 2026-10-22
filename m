@@ -1,70 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792663840;
-	b=au8VRo95S1NeCY/JrBS8IkOiTXc29Xf6q6UqOgE/WOgyS3EhGqoFdqxq19Q7Y/ETKvby
-	 /m2sjXpkCrm0bNcd0e46IuEvTRZlO/+IshPZUJZQ2I+fXPzNcZKbUY/nyVf1jLdw0ykKc
-	 Fz4b+253x8p7PtWRluTZMatkayfRqFsvHV+pPb/PqJR72OF9ckeyfZNPqKV89USTuz20v
-	 hCfpBl01OG+9i0OyIh0aIp0QobZZ+Ca5rk97lr393TRZdUwLzD5bsfvMiZxiKbFwF2XGR
-	 qj3iDFk74KWNKFCvACN7L0TdT3yGoATi8C7tASN34oxDw2vGJhjRhykhbeengPkabGA==
+	t=1792664361;
+	b=mJKr0gLqwVhZ3PtcU+KRmwByg1OaSgpg+zgJTHMp01fc16EfF2RFciBvynLUKLWQbA0J
+	 ZJ7tYjsoxJfr2Z0Xe9vegs8jLPY9oDRN/BdY323pOX6Z2eJjWTU8Vq9cLYL2KpumIzxgU
+	 zlpt5ivbzCfCbw5wTaJ9ums6Dz3EAhpcibsaP+YdfSOZcibj8MxbCE2DfZQ2guQVdGaHm
+	 bcSj65fdRKLrOJ+9++liSfVIDgHfpPSbjguct5XUoEqHW6uhbN2QI/qes4t3GqsnB/CRy
+	 myhOrbBCC7SLXJ4HlV94VEIgBjnkomtui78rMRgWqlJvgq0IZ9Inuko4Q+ELODCR5Ag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792663840;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=QXeDJlSqM0UyN95YP/A95qiJbpkRr+QNhjBNCFlWXg4=;
-	b=SVJ4V1jRXuaY9lpU/SXDWdC6kiClgeeOlCbMw7dnKR+h57ZVN186Hkk1reKu3M0a0Zhp
-	 uxI6YsNFcGa4Go0ZB4LmZ97KscvMSaAc8RZev3IB1mkmWZ7bfx2/zUerGwBWj9InVzcV/
-	 uXNguhYHzAOmWDfG8w8RhSSeaUFHksEYytkAfc9+3Kw1qkkYVrmeM9M/TUr3e88WXD/kG
-	 2VQTpiLy4Jc8hrvhbw53eavN+GQgxoUU5zZzXfxyqrojPPCmAFBYrPJAOFVDOmwFnzJ82
-	 9olku7m5Hy4kos5Oo36rlhr+XWS7PdxKnSlnjVXZ2iVIPLOSQGcZlkIx6Ve/2/4RFNg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792664361;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=+RfBOdb+jBzd/ieyymYqVh+qhtFAqnJNDc6I2YUHE+U=;
+	b=dQ3bViBM4rdP3nyYtYKm5pbwb6aJ2zkItaW+wzY1K30lfgoWyklJ0dU4y17DAivAogDe
+	 wPwZPMC45wJ0JCVbkCjrkVkHNNmEbBpxO2a/QkKEf4uEe5n4lrM20C5HaWnXPX8LPfozy
+	 FvdyBB0vIcG9TOmS1EfUkXDQ3Z+xQMAfqsaOWt22IiX7niWzgPjYmlvfHL7raJyQU9fKn
+	 X3QK2KutCbngVEnR/OFZMDjYiNz77ljtnbzlhJNb9Uhj/Xi6MzE9PlT68SjIDXsVOwxEA
+	 eMZl02Y4wv0m2mWFNh4LYQ/GlEYddQE9wDIWlLOhBAzHVnv4605VB/OjvPuXGg4gT0g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="Y/3j1UOu";
-	arc=none smtp.remote-ip=188.68.61.103
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LHTKymez;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76408606A319;
-	Thu, 22 Oct 2026 10:10:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 76408606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D425E606A319;
+	Thu, 22 Oct 2026 10:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Y/3j1UOu
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j9MNW5K46z8NmD;
-	Thu, 22 Oct 2026 12:10:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792663835;
-	bh=AbfJofVssTdC2rgXIEXox2SF5Nw9EZB/yTtiu6aFgmc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y/3j1UOuk2jGF4pZI4BrAWWLeMthBCMMxGfo9mkGNvQI5+Lv5efmMnXT9e6KoENpz
-	 MOH1jZns/BBRsHXI5SIqVWp4ofKvDacZXp8qwX6P5UnvJOqp2r1C2TQanhOYjusmbI
-	 z3VLDiEl53xEteXf/Ij0J7MaWT6bZ4y2NJlHpuS4YmGRLEQ2gxY8H3np+qUkOhT5pC
-	 /YtD6qcqHJORwx+Dw0W6DbwzhAtXJbsvjyjIyEXDGPqmCR9dn5GMiH0TdDnFM0jp23
-	 CxIrFLYes0CSWV8dAQyDC9en1y1NrPsjBtNqwX25ykJBqwqwnNzZP03DELYwKTnRha
-	 ikK5032nW5iig==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j9MNW4YRKz8KD6;
-	Thu, 22 Oct 2026 12:10:35 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j9MNW1C1hz8svT;
-	Thu, 22 Oct 2026 12:10:35 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 368995F8BD;
-	Thu, 22 Oct 2026 12:10:30 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <bded6548-dfcc-4119-9d11-a2ca55835440@leemhuis.info>
-Date: Thu, 22 Oct 2026 12:10:28 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LHTKymez
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290B71F000C1;
+	Thu, 22 Oct 2026 10:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792664360;
+	bh=+RfBOdb+jBzd/ieyymYqVh+qhtFAqnJNDc6I2YUHE+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LHTKymezZyGY17PnqmuH/Lzxr0GlKLRF4EphWEOhZUAOtKND+9H5qiXY5i+zjodcK
+	 ZAPMV0zGIodTbcMyrZ6guSE9D6Yv7XncwQGRQaQElvKiZJgpQWp/SuHLL/tOVqOxMs
+	 qIeivexw25wL3qurO5BRfeigpp02p3AF7JHKzAfdAO95sUtewv44wUOsP5iSF1EHev
+	 dmwr5OD2v7WHtNsTkZ8INbU6flEFHj74q9/NgZeRqqFg52wHLW4gPeaIZx2YT7ziwb
+	 wwXnWrjzAgwjoqHuA7zEyI/CJf7sIq/f4EuRM4FCp8EQn/lGh27ZyWpAlH2ACVFABo
+	 xjqByno+03Utw==
+Date: Thu, 22 Oct 2026 11:19:15 +0100
+From: Simon Horman <horms@kernel.org>
+To: Peter Morrow <pdmorrow@gmail.com>
+Cc: Tariq Toukan <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>, Yishai Hadas <yishaih@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH net] net/mlx4: always create the eth and ib auxiliary
+ devices
+Message-ID: <20261022101915.GD708417@horms.kernel.org>
+References: <20261020164239.3808903-1-pdmorrow@gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,31 +62,159 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_mainline/master=3A_=28build=29init?=
- =?UTF-8?Q?ialization_of_=E2=80=98int_=28*=29=28const_struct_mnt=5Fidmap_*?=
- =?UTF-8?Q?=2C_struct_dentry_=2E=2E=2E?=
-To: kernelci@lists.linux.dev, kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, broonie@kernel.org
-References: <179255514786.226988.5626082709051138535@kernelci.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <179255514786.226988.5626082709051138535@kernelci.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <179266383071.1277068.16611023102016682247@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 368995F8BD
-X-NC-CID: XoTdLx2auf7WrHeXUFvsh8J0xty63oazg21stSBYSaY2zjn/R0M=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261020164239.3808903-1-pdmorrow@gmail.com>
 
-On 10/21/26 05:59, KernelCI bot wrote:
-> New build issue found on mainline/master:
+On Tue, Oct 20, 2026 at 05:42:39PM +0100, Peter Morrow wrote:
+> Since commit 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the
+> auxiliary bus"), mlx4_core creates the "ib" auxiliary device only for
+> an IB port or a device that advertises IBoE. Before it, each mlx4
+> interface was offered every device and decided in its own add callback.
+> mlx4_ib_add() accepted Ethernet ports without IBoE and registered them
+> for raw packet QPs only.
 > 
-> ---
-> initialization of ‘int (*)(const struct mnt_idmap *, struct dentry *, struct file_kattr *)’ from incompatible pointer type ‘int (*)(struct mnt_idmap *, struct dentry *, struct file_kattr *)’ [-Wincompatible-pointer-types] in fs/smb/client/cifsfs.o (fs/smb/client/cifsfs.c) [logspec:kbuild,kbuild.compiler.error]
-Should be resolved from what I see. Ciao, Thorsten
+> ConnectX-3 VFs on Azure have an Ethernet port and no IBoE, so since
+> v6.6 they get no RDMA device. DPDK's mlx4 PMD, which needs only raw
+> packet QPs, then cannot open them:
+> 
+>   net_mlx4: cannot access device, is mlx4_ib loaded?
+> 
+> Restore the old behaviour by creating both auxiliary devices for every
+> device and letting mlx4_en and mlx4_ib decide in probe, as their add
+> callbacks did. mlx4_ib_probe() returns -ENODEV when there are no usable
+> ports, and mlx4_en_probe() binds a device without Ethernet ports but
+> creates no netdevs, as mlx4_en_add() did.
+> 
+> Tested on 6.12.111 on an Azure VM with two ConnectX-3 VFs: each gets an
+> eth and an ib auxiliary device, and DPDK attaches both VFs and passes
+> traffic through them.
+> 
+> Fixes: 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the auxiliary bus")
+> Closes: https://lore.kernel.org/r/20261014133951.3219055-1-pdmorrow@gmail.com
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Assisted-by: LLM
+> Signed-off-by: Peter Morrow <pdmorrow@gmail.com>
 
-#regzbot dup:
-https://lore.kernel.org/all/179255874376.229129.7672817283004985497@kernelci.org/
-#regzbot fix: 2c455ddca7827ad8fa3a64fdbf5a60efb928b46a
+Thanks, this looks good to me.
+And I think the minimal approach taken here is appropriate for net.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+I do, however, wonder if a follow-up is warranted.
+It seems to me that the is_supported callback could
+be removed entirely. Leaving either:
+1. struct mlx4_adev_device with a single member, .suffix
+2. mlx4_adev_devices as an array of of strings
+
+To explore this idea a little further I tried coding-up approach 2.
+Which lead to the following (compile tested only):
+
+diff --git a/drivers/net/ethernet/mellanox/mlx4/intf.c b/drivers/net/ethernet/mellanox/mlx4/intf.c
+index 82e467c45d23..f2f35306aeb3 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/intf.c
++++ b/drivers/net/ethernet/mellanox/mlx4/intf.c
+@@ -41,34 +41,7 @@
+ static DEFINE_MUTEX(intf_mutex);
+ static DEFINE_IDA(mlx4_adev_ida);
+ 
+-static bool is_eth_supported(struct mlx4_dev *dev)
+-{
+-	for (int port = 1; port <= dev->caps.num_ports; port++)
+-		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_ETH)
+-			return true;
+-
+-	return false;
+-}
+-
+-static bool is_ib_supported(struct mlx4_dev *dev)
+-{
+-	for (int port = 1; port <= dev->caps.num_ports; port++)
+-		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_IB)
+-			return true;
+-
+-	if (dev->caps.flags & MLX4_DEV_CAP_FLAG_IBOE)
+-		return true;
+-
+-	return false;
+-}
+-
+-static const struct mlx4_adev_device {
+-	const char *suffix;
+-	bool (*is_supported)(struct mlx4_dev *dev);
+-} mlx4_adev_devices[] = {
+-	{ "eth", is_eth_supported },
+-	{ "ib", is_ib_supported },
+-};
++static const char * const mlx4_adev_devices[] = { "eth", "ib" };
+ 
+ int mlx4_adev_init(struct mlx4_dev *dev)
+ {
+@@ -109,8 +82,8 @@ static void adev_release(struct device *dev)
+ 
+ static struct mlx4_adev *add_adev(struct mlx4_dev *dev, int idx)
+ {
++	const char *suffix = mlx4_adev_devices[idx];
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+-	const char *suffix = mlx4_adev_devices[idx].suffix;
+ 	struct auxiliary_device *adev;
+ 	struct mlx4_adev *madev;
+ 	int ret;
+@@ -222,7 +195,7 @@ int mlx4_do_bond(struct mlx4_dev *dev, bool enable)
+ 		priv->adev[i] = add_adev(dev, i);
+ 		if (IS_ERR(priv->adev[i])) {
+ 			mlx4_warn(dev, "Device[%d] (%s) failed to load\n", i,
+-				  mlx4_adev_devices[i].suffix);
++				  mlx4_adev_devices[i]);
+ 			priv->adev[i] = NULL;
+ 			continue;
+ 		}
+@@ -269,21 +242,13 @@ static int add_drivers(struct mlx4_dev *dev)
+ 	int i, ret = 0;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(mlx4_adev_devices); i++) {
+-		bool is_supported = false;
+-
+ 		if (priv->adev[i])
+ 			continue;
+ 
+-		if (mlx4_adev_devices[i].is_supported)
+-			is_supported = mlx4_adev_devices[i].is_supported(dev);
+-
+-		if (!is_supported)
+-			continue;
+-
+ 		priv->adev[i] = add_adev(dev, i);
+ 		if (IS_ERR(priv->adev[i])) {
+ 			mlx4_warn(dev, "Device[%d] (%s) failed to load\n", i,
+-				  mlx4_adev_devices[i].suffix);
++				  mlx4_adev_devices[i]);
+ 			/* We continue to rescan drivers and leave to the caller
+ 			 * to make decision if to release everything or
+ 			 * continue. */
+@@ -297,23 +262,15 @@ static int add_drivers(struct mlx4_dev *dev)
+ static void delete_drivers(struct mlx4_dev *dev)
+ {
+ 	struct mlx4_priv *priv = mlx4_priv(dev);
+-	bool delete_all;
+ 	int i;
+ 
+-	delete_all = !(dev->persist->interface_state & MLX4_INTERFACE_STATE_UP);
++	if (dev->persist->interface_state & MLX4_INTERFACE_STATE_UP)
++		return;
+ 
+ 	for (i = ARRAY_SIZE(mlx4_adev_devices) - 1; i >= 0; i--) {
+-		bool is_supported = false;
+-
+ 		if (!priv->adev[i])
+ 			continue;
+ 
+-		if (mlx4_adev_devices[i].is_supported && !delete_all)
+-			is_supported = mlx4_adev_devices[i].is_supported(dev);
+-
+-		if (is_supported)
+-			continue;
+-
+ 		del_adev(&priv->adev[i]->adev);
+ 		priv->adev[i] = NULL;
+ 	}
