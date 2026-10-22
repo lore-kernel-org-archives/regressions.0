@@ -1,83 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.46
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792677548;
-	b=MleMKr+wuK69fbuptkx6NxPcAA6VLaMv6/hGQLUPIqNqu8LQef3PFoOQ/1bRo8Rx+Xyh
-	 vrIPMjvgGoEk/aVl9QScpaEgc2wOKJxaYvpkT5+S//n4j9C1QgXXMd5OUH/rvAgSUOjL8
-	 Rs9Oc3pHeh75ldK/RmYMFeTWO2iljdVnO4YnfgcvNn3lHyQF973Og6wQsdQ4osJX3J/H/
-	 e+va3pKxppSgs6cCqW6dM12T+Ef8zqr8OVBNqAxA0eBO6K50DPmA3xR1p8KO+U2of/NbG
-	 wPyVMsncMOdIg3uMwBeYy1Rslh+ROBGcQ58KDSE2K/k+zUx4/YS1OoufdgI59ZmYdPg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792677548;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792679383;
+	b=wQTRaMCT3nbOl/yKnZocpi48uGYL/fHNHj4wm5G6BqU2U3qRvQ7SvVijB5cCs3VJo0/d
+	 JIniN3elHIS+/DrLMfhSdiso7kuISMxU5RAgrTiDMqUkOwfATlp5EQDZLXDNyLlf2Zd2T
+	 x9juK5xDC6j33JrC8zHAI/1zwfSMVCXbn2+jQGGNV0UhF61h0rLACSOJTcQz5cXFW59kJ
+	 DByOaInHAVWUzg74zJ5G0ywPANoPQ2tiURB+EzQjwLfo/e0Mz5nW49xgftWZyTJgulCww
+	 MrKppLN3M5PEFHeKDL3d76Om6hCeIU8vSL80XfB4KCCE9YQQmqqCcCMRzh/v6aRd5aQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792679383;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Content-Type:
-	 MIME-Version:Content-Transfer-Encoding:Subject:From:To:Cc:Reply-To:
-	 Date:Message-ID;
-	bh=yapslLW8DJgafvTO1QZsoaeneeL8j2kAUWpgSuLBw/0=;
-	b=091vSChbjZDH448zbeicEJXSTWCmbnAENuI4LzoBDPqlQKkNeb4+86LIryRmskDTux21
-	 xJ7UvWp7Au+YBibsx2gMuDVoMKa57Hsek7QWaFnRPllhfjPrUHMkhgKK7ClhzPKhNPx6F
-	 eQ84SNRxehhtPWocFyW0ufLXDuFeNbI3DnPOUhDj4zgpIS9ZUSjSbHkm5A8YhDYncdCEv
-	 97O+hOqZicrPE8frCQVOaFc81Vzy2VADQWC0YDK5rZpMSQIgiATmzcQgxjCfTU+qlGbLl
-	 aZXnSEt5Yc7QBRq6Ld2BFY93cDE6e44+hnt6JLwAXpKDKjun7RpJPZwB4WLWjRl9K7g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=kernelci.org;
-	spf=pass smtp.mailfrom=kernelci.org;
-	dkim=pass header.d=kernelci.org header.i=@kernelci.org header.a=rsa-sha256 header.s=google header.b=Y4kbUuEa;
-	arc=none smtp.remote-ip=74.125.82.46
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
+	bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
+	b=3Qbxt3mM7MIbc8aOVbI/tdc2Ebu4pL0qJoMnW7bWWPgfvDue867zKejkSHXFYlaB/mkL
+	 8MDx0TtjtGhC+2yQDHCDUf4KBf+blCCaQfzTcHl/NZejWgLB2qIYr8YV4YDr4UGx8RWZ4
+	 i+CABkEDQhnq3W4Wwjqz0Wx+yQTX6QY8GCg9PihtGkS2tl35Zw+l2plVpz2S64JYmklVM
+	 XgKvyAbJGaC7JPm8Qafi9Sk7yv9/VTA/AZafE/eoLnOXJokoeg1yMR770vnSiUdRSolU6
+	 S96Z+N0pkk+IN/xZoByLxHE6+dnqWw8PxfeupWsb3uFg89EToL2Lx4TqLuTu0qt+n/Q==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=r5N36CwM;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
+Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AE8606A31B
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 13:59:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89AE8606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A61606A319
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 14:29:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C3A61606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernelci.org header.i=@kernelci.org header.a=rsa-sha256 header.s=google header.b=Y4kbUuEa
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1438d9363fbso769660c88.0
-        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 06:59:07 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=r5N36CwM
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-676858d42f8so1672426d50.2
+        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 07:29:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792679382; cv=none;
+        d=google.com; s=arc-20260327;
+        b=OfBluXJqCwv9XKQPyWJbXVu8hTBb12mEgXDjY3c8cDNg4QO8TMugOu2R6W5XPFy47n
+         CFvamVAhtBelyzkeUW9D9RQOLlFKtsbN6rKqhB7Xsz876uxQQPbF2u/B0Izofax/yB2/
+         t7vJf5a6VIZ3q3dSfvoiMs8hfOUFUQ58562c6y1M7++J99zXVKjnL+IWPbxDv6AeBabk
+         gv80k4VeO17MMGWxGvfe7nB0sHXzUjXbehymXQCbn2BlL6ZxHhb8YBYyTE27MLebkQ9C
+         Ibb7t6ft8t+GdZ1NMq6H/2qonKWqKCD0DICjTQeEjIwRsn8xGU9yrR6zuxCmPo1wkAVl
+         cTBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
+        fh=2IuiD+OJ4IXgqxDt5WgYhkkwGtM1Tti6w8lCUv1+TUY=;
+        b=mhVsTN+4NQ1ipA3zmH/OlIvk7vKK70Nj6oU9LPTBeCiCKFQK12byuNs+3x9gzvpkph
+         h0imyIySVgiJrwbX9dgNmQrAYvV+B4XcXqzy/jPSiz3m8R53xOYElXl2hqOH8ABWfqUT
+         abdDmDfT+fMLoqSxtdT87an0nNDt7DWz1XAd5kUWf4Ve2gsdC36UHTd4998MMP7oQTQl
+         kRwK/BQ9rLPXainbF9BUsl5+P+LO4DtYIeugkajyipYBrf5VCFsc45ATfbaf1ctuEZkB
+         A7Gu4K/o2qDNsBucJ/2y51B6OfJlfVIlBSLSMaqzXc89JkaG+fFrGitoFNrb+WS/tjXj
+         Dywg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1792677547; x=1793282347; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=yapslLW8DJgafvTO1QZsoaeneeL8j2kAUWpgSuLBw/0=;
-        b=Y4kbUuEa+xDixuW7i9dMzwX2UqsyHxwS6SjOVcdEqKQjXpXqp0AydHKZGj4vVu1dYs
-         SEYTkCcLGdDzpb6wK7sCb9wzZdvVLVFJd/Vwt/DrqYxyQ5KZK2BVI3Ajd5xYywz/rQTg
-         AzCO9AC7yi1+j2mNreBmzEJW9BK7hqCR60gIDzwP2wJhvSQYk4Ptr3iIcrPV9y08maNj
-         SmRfKDNUuB2I2wdxBE0AdV6hBI3WKY96edXPI37/w1vEKYirMgEC5rtB55XxLW90u7tL
-         gWfrg2wMpNWfF9OhMmzIMhc9eWTTPiuYPyN2oBAcuY+cS3ihyw6uBT96S6kD1NwsERD2
-         lXKQ==
+        d=gmail.com; s=20251104; t=1792679382; x=1793284182; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
+        b=r5N36CwMQIkZYZqCtxUbLD6DEIXMzkhlsPx3Z2gvNq2yZFBM4YVD52K+90jzbJdhkr
+         cLc77YJYdStEDxyxubN8ImZqM0sXYPX45SIy2WWEDVbaZCTVoBjJYudfMsKoiV7onj69
+         bVYhXL96T4euXRSyWlXfrWmIqjznt3+GXelxFDKU5T4YtgxDlkZonSNgyBy7+Y334Nno
+         Linasr2QI/6EFzwp3lBqmVRA7B1Y4/9//zjrRoMy9zTXTd+YdjVJXegsxcmIyoCXkDPN
+         1eFoKFpnhUaPE2hLA7a62qv7GnOjl56N6hh3PSwDXq/B+CNgsuZutzhu/1ZZCyQNQwk/
+         fQsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792677547; x=1793282347;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yapslLW8DJgafvTO1QZsoaeneeL8j2kAUWpgSuLBw/0=;
-        b=oAKjN+EPa0npSoOWim3wZ2U52F1uXu923lFDdqH5dKwHqy+rjVOVtoORPnjLER4o1N
-         PuXsOCQse/EWHMwpK+ppLXM2hGJCBUB3iao5bXUPiUW80/4gKnea4qhYkoJzDLsUatPd
-         m/aGrqNttXGXXu8MoMXirZttz0TNAAfSvvzPmaQFIsfSLKsmXcxn+C4/FX3slLlzeL5I
-         6XDky6EZizBJ2+iNlangFwPrvkgqyKpqpDc2/NTJcLtZPSOZhL2geZnwVsoIlxb/ubf/
-         kvo1vk1ojHDxG5xyxuesHx8uclAZ+WFw6IhfJHI7B/8KKuxcrFBeCcU5CpSu8ehQB4me
-         0gdQ==
-X-Gm-Message-State: AFq9FYJOj00IFgkb7O84IWN7S9ccngiKsRsUhEOA+WJ32+NiWSG7IASi
-	baW6uDHeySpxjHSzY+5ZJ3cQMYddqhUejw3G9RetxUIjuGvJQ/GyEAn0M14F40BhJ5s=
-X-Gm-Gg: AYBFou2U+fk/BrtO418nJNq1LPl+ioAWRrhVe2waSF/psBYvVDMEcs5rrqwQpMGR9Zl
-	qs3RL9CXvuxDwIOaulsDQ69lAaXel7+yYZiSsd0XJ4ELEaxUOW19lL4HdNSvV4xtzKzHnPktJW4
-	0MnHFUB/RZ5LMDJfEwRusUTi5Z+EXGAK+BCsBjTFxXA16O0S7lsEN0ORKQ5ZNhF3tXksU8srz0Z
-	8+/gPBJNzRkKbdu7f8xBS7BRoApWYokYAuUSrSkdDQqDzyOytITA1I27HYG+GIJIWxzpa+l7Eur
-	dMXehMU+TMnerNGCyglTuNAAqxTXCNk21Q6GGL7/Xg+9HXyDLN8DK6x/ytHNrRW+vaOR8TIdzdA
-	12DL20j2/PuKmCUFDG0qTy6NuKASW7KZSJ6uEgZxJjPlHuKRLsL4EurZ4dEVsXOL8tZqMPWkf2v
-	3c/L1dTrFsh2yNd4RhQfE0L8p2dfoeViH6jqbrSr0X3SKty+MZZ/xjpeOJ3GQQ536rIosKBv0rN
-	/E7mDuOrUVtlLrfs50hd/djQixnMJG4tzSczDXDc3+FvezDtA==
-X-Received: by 2002:a05:701b:2086:20b0:155:734:9cc9 with SMTP id a92af1059eb24-192f442b6d4mr3254838c88.16.1792677546254;
-        Thu, 22 Oct 2026 06:59:06 -0700 (PDT)
-Received: from 6e52bff8000c ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1903bb7f098sm23639534c88.12.2026.10.22.06.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 06:59:05 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        d=1e100.net; s=20260707; t=1792679382; x=1793284182;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=X57xiEbRfkeTM2gmq8dH6rxDoQcpfAmIPrvm3xA9pe0=;
+        b=qTHnMIxUirLUxopP085mCDK73jbyyDMIMzXNUAoZnJrg6ughq4OD05X0YAkW/0mJ3O
+         o5SlIeWm5nkbueuezwwRTh6qHKhJX3uR+Rd6ZTLRmnZfBLQ0H1FwDb7nQfem1rd+Bd63
+         o1uS2biO6AA7WRtFc5/2U97sCoIpIHbHK/fJYSvcyIOweambEkHU20qENDdTHjKnr3eU
+         kW3K37PQaqspv+2RuJFRMlrz52aR5ayl5TIDGC/+mR645Y70TvNTC/MZo7x3PFp05k3V
+         csiUwkZEydvqGECmpRiTTnDJGa0OwP9DuPtdihmMjFJSxuRr0s6EYCkD6JjJBPQNbes8
+         M9BA==
+X-Gm-Message-State: AFq9FYIbX/GwUHd/JR7nyUcynFnrY3vZ6gx158p0IPOWanMw5BkZcJND
+	XiyOWjjgzuGU5+BYwGgN788X+KNf1joC2uhR4O1WChYJrGNpHBBcj5NP9z6SFtkY8NeU36BLvaY
+	1191RmcXOPY0IhNKCu7FqEhqwJ2A8Jkg=
+X-Gm-Gg: AYBFou0NmQf7ifHgFxk3XzO44soaF0FSm0/yCyg22UXiLmrY8g8Rj4V4L7jcJ/2dFG2
+	zBBNKqzu99QdayF47LWtSmMw0Y+keec0LYAUTJFaEDg7+0/KSes4Wk0Wq81dO3nobSR29PmiVko
+	kEFyrbuPNASqm2hUyk3n8AIJ1Cwnn1yd3SvTCL7+Ewe4ZtkgEMyaYNtojlNCLSznsm8rMgWbCZD
+	+48eFb6FDZKSRGg1eo/rXR/SarDqjKzwC0S6AmeELh/JzVqf8DV1X65kfziEy6/Rac1S3IhB0xV
+	U7v1WTssOUGejAiRoAsvVHaumcNSm2hTre/LWsG28iNs3Z40fhuDqiqqQJRobQiX79JXYHyNgWT
+	WsGOXQbC3O7MIIFTO/1hQvVagxGVxrsbiaOWv5Rtj/fq/F1cjStQq/wVWhWYxhS+z5ZjTSNrijX
+	gqEVuU
+X-Received: by 2002:a05:690e:80a:20b0:676:858d:35d0 with SMTP id
+ 956f58d0204a3-67a0e4ceba4mr1401129d50.59.1792679381266; Thu, 22 Oct 2026
+ 07:29:41 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -87,56 +100,29 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build)arch/riscv/kvm/kvm.ko: symbol
- 'kvm_arch_pre_fault_allowed' undefine...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Thu, 22 Oct 2026 13:59:05 -0000
-Message-ID: <179267754360.302120.2153520610797426540@kernelci.org>
+From: Julien <julien82453@gmail.com>
+Date: Thu, 22 Oct 2026 16:29:29 +0200
+X-Gm-Features: AclHuK8kn-teVkT41gTygozI5r5_APcWEEF49YpV8Zuy9c-TKU2SyO_VGzaCmjU
+Message-ID: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
+Subject: [REGRESSION] hp_bioscfg causes boot failure on model HP Laptop 15-bs1xx
+To: platform-driver-x86@vger.kernel.org
+Cc: regressions@lists.linux.dev, jorge.lopez2@hp.com
+Content-Type: text/plain; charset="UTF-8"
 
-New build issue found on next/master:
+Since commit 467d4afc6caa ("platform/x86: hp-bioscfg: Fix automatic
+module loading"), the hp_bioscfg module is automatically loaded on HP
+Laptop 15-bs1xx.
 
----
-arch/riscv/kvm/kvm.ko: symbol 'kvm_arch_pre_fault_allowed' undefined! in Module.symvers (/tmp/kci/linux/scripts/Makefile.modpost:147) [logspec:kbuild,kbuild.modpost]
----
+This module causes the system to hang during boot. Blacklisting
+hp_bioscfg allows the laptop to boot successfully.
 
-Log excerpt:
-=====================================================
-ERROR: modpost: arch/riscv/kvm/kvm.ko: symbol 'kvm_arch_pre_fault_allowed' undefined!
+Sometimes the screen will go black but there is no kernel panic
+screen. When I get to see logs, there are no messages related to
+hp-bioscfg. I suspect the system crashes before it can display them
+because on a normal boot the next message I would see is "Module
+hp_bioscfg is blacklisted".
 
-=====================================================
+I think the hp_bioscfg module should be disable on this hp model until
+a fix can be found.
 
-When fixing this issue, please attribute this report according to the
-patch submission rules:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Link: https://lore.kernel.org/all/179267754360.302120.2153520610797426540@kernelci.org/
-
-For complete logs and details about the environment used, see the issue
-on the KernelCI dashboard:
-
-- dashboard: https://d.kernelci.org/i/maestro:9c12526508454935ec55c5be5b9699f5296ee63b
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  bd1ecbb61afefc6a8b876ccbc31e9228b44e9eab
-- tags: next-20261022
-
-# Builds where the incident occurred:
-
-## defconfig on (riscv):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6ada0faa55fda507606868e9
-
-#regzbot introduced: 9a482184d910775cf648863148944945b74e2815..bd1ecbb61afefc6a8b876ccbc31e9228b44e9eab
-#regzbot link: https://d.kernelci.org/i/maestro:9c12526508454935ec55c5be5b9699f5296ee63b
-
-#kernelci issue maestro:9c12526508454935ec55c5be5b9699f5296ee63b
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+#regzbot introduced: 467d4afc6caa
