@@ -1,60 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=66.228.49.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792619943;
-	b=GZig3j/SYmwKv3wYLeqinzs98ePeGKuB6BsUBUt0/mYZSqXBzn2xBWG9iNNinNK9+bDa
-	 gSX4Jk7LfMN8wg70n3RXwTLeeSC2Z10FmGfbhjW4YOOtE+P8TQtqZz3VVNwYdkpRjbdyr
-	 mnelp2xuD0YgfcztmdWVySNt2FVuHNAPv6dMAFBZuEqOMaVxR9XTl77OGBB/9IZQbCZkc
-	 aJpfzCWtVwYjn3ZEheGafWRYOw4mZCcZ+cK0HXWMKHxltSPcmf6uUdWL7PQbYhVDL6ieJ
-	 WauFziyy9yYZ5ewJD522RiWdF+Kw7Ud5RyZm3hytBlrRC373drA5CaqtaxJAK29pFyQ==
+	t=1792633025;
+	b=5jgHCVwBaFDT12QBTH31GUe/S9aibOOX0LbNcOeCG6ufZ2iR+ktZd/9OTJ4THyHnIxyH
+	 aMjwDohrJDv59g6jP5V5rndeAR7scqa3+GUaPompZSepqp/yvs2P0LHQbS1gpt290q5oF
+	 iYuxK2NMu2she/56kAjrb5br6QEhkXG7wzA0hHiC+KyDbdw4+xrISkcCqd1CkPpY8ngFl
+	 H0snAL4NuCpRGzwmMauKqqh60VhZXhJrfkGvAc6ITteC7aydAWIemp02sMzW/WtW+4FBw
+	 myBPWHGTiLvErCwoIIm6QOPmcS2uxUHZvitjk7PyfKVx/WPRFP4APaT633cU03Y3DSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792619943;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=hnt5rpQ+dEQf/CxMlso7zrx05MX8Ig8of5Z8Xwbs3AE=;
-	b=CxU87G5esUXLUd/f+0c+fRk21QNq2U3qT5V59VJlAB5apIEP/6wgxmqVtQNgAsVHht/o
-	 ZL7o2WuknyAz+Gj5/MH1+oqX/Xa1W5+hF3wNcaLwLFNYGdP7xBGjFTXt3/wPSDuRzYVun
-	 gZhwtK6HRD28bCOmi+z27l9eeZy+aRY9bVrte0nwOiZ2QQobA3c/NgbYGYNtkOj87w3zT
-	 pbsIK8yzpZGXPRCA21Vj2DfuF+xjatxbPmFI5vpcoqEvhz+yTNB2zjBXt20CXfuYOixVE
-	 2RdFGFdYYhreq3qdA/cE8Sr6dYlCZt8xUzm7RichAaeeI5+Hy76ml/KvFLOAwv2sg5Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792633025;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:From:To:Cc:References:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=nnW4VcwHbkk2DHavEEkUKXNZPZrDj8F0/wl71Ri5e/E=;
+	b=OR3l3R/fuZQzd1udT0vtdOrICZgvVoR56iW2M/7fiBPmH9MpAYHtt9lFyc0iN0fsNwlv
+	 8CWMrCnHBEi44G9uWq2FCKx+glJ2UKZJjiytG08Ij3tYeauFao4BclQTLuVAk/UKLmnkD
+	 /Yy9j2tJEU3Ly/dL8G+rTLJ77o7eDDp2eA2kmz2Bhnrp9j+S7rUohRvTx4LaaN48l4yP3
+	 2p+NHNUD9pwZ31jGzxQ799BiNGZbT0c7K1K6ny+dBSqCqeVJQ30PUSZpMPhlav8A4F+mQ
+	 D+woLEVNr41YvulLwA8mpnJ9iY8sOmqACIrnWEtUM5vRwEqnBUlRqDvhUdLpUT/WOdg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="RWBl+/Wv";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=6bit.com;
+	spf=pass smtp.mailfrom=6bit.com;
+	dkim=pass header.d=6bit.com header.i=@6bit.com header.a=rsa-sha256 header.s=dkim header.b=qInkceLN;
+	arc=none smtp.remote-ip=66.228.49.9
+Received: from mail.6bit.com (www.6bit.com [66.228.49.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD32A606A319;
-	Wed, 21 Oct 2026 21:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1436B606A31B
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 01:37:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1436B606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6bit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6bit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RWBl+/Wv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB7591F000C1;
-	Wed, 21 Oct 2026 21:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792619942;
-	bh=hnt5rpQ+dEQf/CxMlso7zrx05MX8Ig8of5Z8Xwbs3AE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RWBl+/WvDfXCk5/Md7UygAbHzxp4nETQVmSQH2tjd7bc6sMRiqMiDCH/uSA7+q0pU
-	 Dk6oTmj8RpahtznEO4otKBDpW/V0eTATreBje0oxRbM0NoWX7IYjFCQ5hZyYM1HSm9
-	 yb+hBGBpSI8X26H61aHdXbnMgGX0QeEvSB0fOgiaX0xUBsS8sNtst0zHljp+JpP5sp
-	 0hx9MBmokW6rxWV4JNXYhffHKWoOwqPsirycFE4PdGrSH4RNcS4opLHljIgDtL2a88
-	 X2bAoQHO91Z/ET9CpVyItTXVx/pv29yVjXcZ1CATzoE2ZE5Fekq8l01X7jGb95PTBs
-	 Ps7EXIeEn7Gxw==
-Date: Wed, 21 Oct 2026 18:58:59 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Francesco Nigro <nigro.fra@gmail.com>, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, james.clark@linaro.org,
-	kan.liang@linux.intel.com, leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v2] perf test: Add test for events re-armed with
- PERF_EVENT_IOC_REFRESH
-Message-ID: <atk1o-g0alZNiKf_@x2>
-References: <20261021141736.2414170-1-nigro.fra@gmail.com>
- <CAP-5=fVB1LWLfvXm97TpjjKL6037mHZW0GzuR94wSaOOoGR8_w@mail.gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=6bit.com header.i=@6bit.com header.a=rsa-sha256 header.s=dkim header.b=qInkceLN
+Received: from [10.0.2.245] (unknown [143.105.105.29])
+	by mail.6bit.com (Postfix) with ESMTPSA id DDC12945CF;
+	Wed, 21 Oct 2026 19:36:56 -0600 (MDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=6bit.com; s=dkim;
+	t=1792633017; bh=RdgdE9wO/hgi3O1MxEmLdNMt5z4BOtTeJVms7OjvJGM=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=qInkceLN5nIN09rB36JK7hx7zloayLzTBJxvJRwM1gejsIs9xzW9lVpFA5cMyOE9r
+	 YkmYiNl+MBkmb1FEXt/g4NC4ruUBZ5FT4G+oNngDw3WgnukcrsN7dbWyBzcDLgYfSh
+	 ONfw/LH+lwL9WSMQ0oxNFD750wEsYkBIZAX0u8pY=
+Message-ID: <b859285b-e43e-43f2-a4f7-af82705d3513@6bit.com>
+Date: Wed, 21 Oct 2026 19:36:55 -0600
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -64,63 +53,98 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION_6=2E16=5D_r8169_RTL8168h/8111h_fails_?=
+ =?UTF-8?Q?to_probe_=E2=80=94_=22Unable_to_change_power_state_from_D3cold_to?=
+ =?UTF-8?Q?_D0=22_=E2=80=94_bisected_to_4d4c10f763d7?=
+From: Josh Perry <josh@6bit.com>
+To: mario.limonciello@amd.com, bhelgaas@google.com
+Cc: hkallweit1@gmail.com, nic_swsd@realtek.com, rafael@kernel.org,
+ linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
+Content-Language: en-US
+In-Reply-To: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVB1LWLfvXm97TpjjKL6037mHZW0GzuR94wSaOOoGR8_w@mail.gmail.com>
 
-On Wed, Oct 21, 2026 at 10:33:42AM -0700, Ian Rogers wrote:
-> On Wed, Oct 21, 2026 at 7:17 AM Francesco Nigro <nigro.fra@gmail.com> wrote:
-> >
-> > Open a sampling event with sample_period 1, re-arm it with
-> > PERF_EVENT_IOC_REFRESH from its overflow signal handler, as
-> > self-profilers such as async-profiler do, and check that each of 1000
-> > events delivers a signal. One case uses a software event (page faults),
-> > the other the syscalls:sys_enter_getppid tracepoint. The signal is a
-> > real-time one, so overflows cannot be coalesced, and the page fault
-> > buffer is marked MADV_NOHUGEPAGE so that each touched page faults once.
-> >
-> > The tracepoint case fails since
-> > commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage"):
-> > only the first overflow is delivered. The re-arming ioctl succeeds,
-> > but the event count stays at 1. It passes on the parent commit. The
-> > software case passes on both.
-> >
-> > The test was written with an AI coding assistant (Claude) from a
-> > standalone reproducer; I reviewed it and ran it in QEMU on current
-> > mainline, on that commit and on its parent.
-> >
-> > Link: https://github.com/async-profiler/async-profiler/issues/1813
-> > Signed-off-by: Francesco Nigro <nigro.fra@gmail.com>
+On 6/11/26 19:07, Josh Perry wrote:
+> #regzbot introduced: 4d4c10f763d7
 > 
-> Thanks Francesco, testing locally I see a failure on  7.1.6:
-> ```
-> $ sudo /tmp/perf/perf test -v IOC_REFRESH
-> Not taking turns using the perf mlock budget: nothing can exhaust it
-> 20: Event re-armed with PERF_EVENT_IOC_REFRESH                        :
-> 20.1: Software event                                                  : Ok
-> ---- start ----
-> test child forked, pid 187381
-> 1000 events, count 1, 1 overflows (1 POLL_HUP), re-arm errno 0
-> ---- end(-1) ----
-> 20.2: Tracepoint event                                                : FAILED!
+> Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fails 
+> to probe on boot; the device drops to D3cold and the driver can't bring 
+> it back:
 > 
-> === Test Summary ===
-> Passed main tests : 0
-> Passed subtests   : 1
-> Skipped tests     : 0
-> Failed tests      : 1
-> List of failed tests:
->   20.2: Tracepoint event
-> ```
-> I believe this is currently expected until the kernel is fixed, which
-> is somewhat unfortunate. The code looks okay and the build isn't
-> regressed.
+>    r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID 541, 
+> IRQ 137
+>    r8169 0000:04:00.0: Unable to change power state from D3cold to D0, 
+> device inaccessible
+>    r8169 0000:04:00.0: Mem-Wr-Inval unavailable
+>    r8169 0000:04:00.0: error -EIO: PCI read failed
+>    r8169 0000:04:00.0: probe with driver r8169 failed with error -5
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> The board has two identical RTL8168h NICs (both XID 541): 0000:02:00.0 
+> and 0000:04:00.0. Only 04:00.0 fails — its sibling 02:00.0, on a 
+> different root port, probes and works normally on the very same kernel 
+> and boot. The failing NIC then does not appear (no enp4s0), taking the 
+> machine's WAN offline. This strongly suggests the problem is port/ 
+> topology-specific rather than device- or driver-specific: the upstream 
+> port behind 04:00.0 is placed in D3cold and the endpoint cannot be 
+> resumed to D0.
+> 
+> Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
+> Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A 
+> (2026-03-25, latest available). Firmware is current, so this is not a 
+> platform-firmware issue.
+> 
+> Bisection: v6.15 good, v6.16 bad (verified by booting both). I then 
+> reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when 
+> initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: Set up 
+> runtime PM even for devices without PCI PM") on top of 6.16.7: the NIC 
+> probes and links at 1Gbps/Full normally, with no workaround:
+> 
+>    r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID 541, 
+> IRQ 138
+>    r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow control rx/tx
+> 
+> Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=off 
+> also restores the NIC, which is consistent with the upstream port being 
+> placed in D3cold and the device failing to resume to D0 after the 
+> explicit-D0 init change.
+> 
+> The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 is 
+> still affected (retested today on current firmware).
+> 
+> Happy to test patches or provide full dmesg / lspci.
 
-Thanks Francesco for writing the test!
 
-Applied to perf-tools-next, for v7.4.
+Hey guys,
 
-- Arnaldo
+Thanks, and apologies for the slow follow-up. Multiple of you asked me 
+to test on the latest mainline.
+
+I had a chance to do just that today with the latest mainline v7.3. 
+Verdict is that it's still broken, same messages as in the original 
+report. pcie_port_pm=off on the same build still works around it.
+
+dmesg, "sudo lspci -vvv" and the sysfs PM state for both boots (same 
+v7.3 build, only the command line differs) are attached here:
+
+   https://bugzilla.kernel.org/show_bug.cgi?id=222179
+
+New detail from the failing boot: the root port above the dead NIC 
+(00:1d.3) is in D0 but its link shows DLActive-, and the endpoint's 
+config space reads all-ones ("Unknown header type 7f"). With 
+pcie_port_pm=off the port shows DLActive+ and the NIC is in D0 at 
+2.5GT/s x1. So the port seems to come back but the link to 04:00.0 
+doesn't retrain.
+
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=222179
+
+Thanks again!
+
+Josh
+
+P.S. I'm relying on claude for formalisms like the bot tags and digging 
+up the CC list, but I'm pretty noob so please let me know if I'm doing 
+things wrong.
