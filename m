@@ -1,70 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.103
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792647864;
-	b=2p0qwS6aAsVhxt3xLKK81SJTLirytKjgxXafxxQoRKFszC+2bdaCeoRjJfMyhPEsxWSM
-	 Nc+Bm/G5URb5/Y3D1GLf/CQi64ghfqPfE+3FocSEV3mpM2J3alxUI2SGssleFVoKN+6Kn
-	 hN48TTwybhuOHdvT1UP0IWvyENffWlfWFSXkG4BLDmYj/eX5ERc02mbw1rfsj1NrgV6xP
-	 o6d3BVhIB/fkYKO0c6YgGExLJ4NORSZJjuV1sx3/YSfeWiEggGCs3I1oBI0guB27D5IKb
-	 LwWVJg98PiNTsqCETNa46lxcYuqUnJojh5FULgxyOpvANPqWyGsP3CztbiaAT5VDutg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792647864;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=wXEpnQj+44A3Ir6DLH8K1Ec3z7dL/OqlHU/c2v9xjoI=;
-	b=zE5XdeHO2hn/6l7YdY5m0aUHZOrkCIiCNj4MpT7CSW4sFmvryOge/w4wYai5wOcIoAFr
-	 n6IvLqWfLevDSMTl3n+JSdwnZKUhKJpznCUMGUGfYnQYjW6iWn9mtxBgau+kWjd1ujUhy
-	 LX9SOmTyAdD6bdQJTSHJuUjJvEEE2ujhk+2AYu99PkVbqHi728CQVsxpkQtF2uR9gQI4n
-	 r9Q5KftcFcYLdXiGtL+fnelXZ7R2BoL/3h7VXKr9jEL1Eqk5nDutnnFGjkYewjZVKniOB
-	 1p72sjRfJZHVZn53QTleEwaQbGUsIDsbQwonD1nWznyCVqtiaD9ovea/5udOSDr9f4g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=cd0JgHop;
-	arc=none smtp.remote-ip=188.68.61.103
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.174
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792656556;
+	b=e1lrm/fvpZDtE+k/NBmTQDde4OnSDDge0lNlmK2y51QWvYtHr0E++qmz23MWIqYBxeJl
+	 b9KD5ZdZOvZ1KxafpDkpkqEWXZ0zQ0DwbwHct5ZW//VGjqyIta+2X5D0g6qlngvZdikDz
+	 DPO3VFIIoiHDPxVIiyuSofFpXngDZ3sTbnwiam2z70FF3e41LjJ65epG3kCeDs9JgeVla
+	 V9vY5PgQ/Ya6dZLlFFovgGJYFQh7AKjJG3SBEbm2OCiP3QkzsO9km1R4BjEf0Qq/WZLp+
+	 QS37BCJz/M8TPojXi7NdwnwMsuSwJ0AyygW3Z+/7Js8y7lcR372ykLH/i1U9zVL/fHQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792656556;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
+	b=lQC4Pjwm93tdNxAwRvfjvvAmB54uEmS+qFAYadQu+rj/p19bNcTsVPvK9CQ91iL3jCRA
+	 pSQZD88y2dkKlaMzeOUMn8QAWK/GFCBsOnngnklR2bdEySv6Yd5krMdBRzgwEyzK3fdya
+	 5T1i5RHoe9OQOLvbnfT2Aub2JSMGTpc/TuJWbXyzJBx/AcNcMVTT3VjWQ7iNEMQsMffY3
+	 K3NCoQp13ANHMMw5RCmwtwFwWBuJJwYjSybtzVYq9/xhuks6RmOHf0+VUkXmD/mzC3tdP
+	 75+EY1ANAa/lI7HgON6nHP3DpT1Xwk6yHqr7XbQh0hSoC9ux+pizntvwjaru0zCaepQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dAj4o3tY;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.174
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06105606A319
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 05:44:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06105606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388EE606A322
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 08:09:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 388EE606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=cd0JgHop
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j9FSQ1H73z8WX9;
-	Thu, 22 Oct 2026 07:43:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792647814;
-	bh=+Z9FVGptZarGaP7UlMILhNdXZpHtZZ5mSOY3Hk/ywts=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cd0JgHop1pmlC0jozdAjvoCIIclJaVPC6HpPLXEJkFdxUR6FFf87TWiGYELuvj8nX
-	 NAuVaoelFmg4fOvkHD/2bt9P7q/2Q30qOIlBybKkUgO6t/zRBMsNfEk6MTK5BrkwOJ
-	 M7+VBByiCzY/TmIIjOwM/2bdg/Wb3xs9wpcUc7MzgPLfNZ6Z5nkw/jp0JT5EEE2aB2
-	 iTS5YDX0PunCLmIAd15TC5moC2Wl0bqmhKcoxCdqTZ/QSX2C5uuFhgjJl6fSodacZU
-	 Q7cx85lJzTaaVVDFOo/5UxkuVtAqK/YpAVqJSOwcpZJoyWiXmQEiHHIaQmQzAD5AVq
-	 3P3CSU1+bCh3g==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j9FSQ0Y2Wz8W8t;
-	Thu, 22 Oct 2026 07:43:34 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j9FSP42qvz8svG;
-	Thu, 22 Oct 2026 07:43:33 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9BBDB5F8BD;
-	Thu, 22 Oct 2026 07:43:26 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <16d56f7b-6295-4ac8-b0c9-8b490dd0d582@leemhuis.info>
-Date: Thu, 22 Oct 2026 07:43:26 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dAj4o3tY
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-8aea7b7ca0cso13648677b3.2
+        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 01:09:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792656550; cv=none;
+        d=google.com; s=arc-20260327;
+        b=iagNiRtslavzTf113ki73xgQusZMiU8W0opE+YkT++7N3iLg2nziLkOedfVKazN2cV
+         hBlnhef7crNpY7J176HlsrVKVlUpMnaraRgvU6upgT4GZ37MjSoAo774u30QIvZfUnaQ
+         tSdrLYEV/BOJJpLJVE/NnJPVm4wS2JE+MCk8oGMYlAIkDxa+UfZ5ZcjirM2IUqkUfYV2
+         fu3MuirCnrtUk8QmlbBbrzt/KJpIl0cJ4OAePxRDVEI5rxKlSMGtCiQWjH5Qx+uB+KQ6
+         ZeuGgvDoPi3IWSSSS0ve+I8aiC8Ch80CUKsAICMmTdBgXTiiUQTwUYqhWl5lqYuy60IR
+         DCSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
+        fh=1gnIdXqNRDuKsYbYfylyti8pikf+YWDWpq7G+xBdVuE=;
+        b=OxW9sAFqOYFqkI7ARf6lxPtJlfs0gUy4E5RjprKSDqMGkCbB0ttmhv2YVKk+VGuOGQ
+         8Yq9DHsjOR20GCK80IFQUtPXDOgD75dZnbspgC80vy42YQDUGuOQc7G2Bmetrh4JZ0bz
+         yRASEiSv30WtsND4xR98RQJ3D8jTuQ7+XxC192HqvgjiCpRFjZZHXEn0E7V9kgipTqHR
+         6+H5SaXRcTRqJ0DjLCAPr+l8O5IinG1KGsF9WDg/cRXgKoWoX8Fm7hcgRh28YKxezPsh
+         DQ6sRVQYHiMpL6Sk2akVxx1uBWm4AP8fEpv7r1MHmCuPVblvxd7q2LNkhstsGZ6vxVyn
+         QKWg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792656550; x=1793261350; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
+        b=dAj4o3tYuel/z43Zw/Ey6DN5dKoSGVn8lFI9g3UDof5JGDk1Dho3dgjtQlE3E8F2i2
+         dPhgn57+kz2pPlQOjcfce+BpYymAPgQO4fBF1fSOXq3JpxOdGs9CkNBP8xz4FEkneIjN
+         TCXCJB4nNFxawajGCMe4WWkVkUrZDw5+wmTifNbLkKE7D+Sst0cQ3YLwsO6bhE3y2Wer
+         dmnf0KMXtdffH4jCLJ5Ty5veCfxWrQg2/IN9clmkMm/rajLIkPI1xO28axns22+OU7oK
+         QcqMBWrLWDVVrDDS5bvPgw5Hk1NDu7xZNs25OCv10BgZPUTOt+SM4N4sjDlr1T/cVTmX
+         h8Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792656550; x=1793261350;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
+        b=OC/9hBvCW+DtP2P06wX9vdHcsYuh/QfbvTt1UXI1igygpucE4ESR55A2izZJtwBCD0
+         UhYqTegERjiktpcDKvn1caq0gsiRL7yVOiLzX/6I4nAPFWifXWaSoZQyu5r/oO0Q7tOz
+         zWtCI1z96GThUPJ7BUWpe/3DMvGYWy7Wt/JCvGbkPN2XO0/FFl7Jg2SNAQuKRk47P7o/
+         cUbV2OEGFxMq7VMj2vhvGuFfL4cstMh5vefhvIHps/NsdrdKEHG1Lb1O8u1nU5x3sFfF
+         jdAv7F5sQ1kDnLV3ABTqDT/nrslSM11tcy5wZ6ATnyPCa+yl97swtqxJZz1fRY1/TnYI
+         nm0w==
+X-Forwarded-Encrypted: i=1; AKwUvBw+qA3nSGtfzCCBt1bf+tKTblGT0+MiClQzNaKolaOoBpJxRaREiHx9cpETzznwhbPEZgWECUasjlB1Rg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIrOULCzd1C+a/TgX13bjtbXQOJyLRsj5dDbYsEuxjon3xLtYQK
+	58qcf1xlzmCYWBytBg+yksgA866pSeu5DK8ThJ7uBDM7br9Uc6+OhkFgsaHnF2clcTWhXppO8fH
+	CK9ikBw2Ulz+40U/DpaQHuqoBf3sKiYs=
+X-Gm-Gg: AYBFou33x0IYrsxo+r2mdRZAeC4TAb7iPoiPCeUA5eR8ioKWrLJtHDZ2U6/T/mhNA9u
+	eR9r4zJInqXe/M4DYXyECh55y7+gXGsbNDDa4meJ4rPU8lyU49qBkiwq6Z70aEPE7hxNtICeYrx
+	/mG91FYFbygVWalUCeWA9qySUkbF1Ff5O2/ftumleMew5ZH7r67aLMxsy/jgR2N39PGLvso0tgY
+	1+n4xr5IRkRNsucrspDZgVYHjtwsQzzNX2rHDXJTI6A7STvhhzDcpP78Optmrtc+9dyZmtmSDl0
+	3HgZCkEoAwuiCZ1e7CBaSgxSH7kFh8Crx/0nb1Io0SgwlHJDUKSkguAQeK3Y5uFrDIsiy3Qhy8I
+	XrVLLr+ec1WIC2RMUx3mj0kZeZ2vW5XmK8VpDhg==
+X-Received: by 2002:a05:690c:ec4:b0:8ac:d426:105a with SMTP id
+ 00721157ae682-8b1340353e8mr29410497b3.39.1792656550133; Thu, 22 Oct 2026
+ 01:09:10 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,108 +104,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] i2c: qcom-geni: HID keyboard fails reset on x1e80100
- (Yoga Slim 7x) since 7.2.9
-To: Saurav <thatsme.saurav@gmail.com>,
- Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
- Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
- Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- Praveen Talari <praveen.talari@oss.qualcomm.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Sasha Levin <sashal@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20261022033638.32460-1-thatsme.saurav@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20261022033638.32460-1-thatsme.saurav@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179264780717.786991.6323162390966845119@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 9BBDB5F8BD
-X-NC-CID: USTv7n+OdDl6gBTYPyB5VZOiEv3wbKuxZ6dqVFBM8Apw6FYPRFc=
+References: <CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com>
+ <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
+In-Reply-To: <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
+From: Serhiy Shliapuhin <shlyapugin@gmail.com>
+Date: Thu, 22 Oct 2026 11:08:54 +0300
+X-Gm-Features: AclHuK8idyuC9LagaU6kDmr1ij-CZ-3aFF9JVXtlpeAml0OsDKGnSO5Eh8miFRg
+Message-ID: <CADGd8gF9DxnDVZxbsARCNkXXp7_aWfWOkyAN_Y8v65TtKW3zNg@mail.gmail.com>
+Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
+ cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "qby140326@gmail.com" <qby140326@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/22/26 05:36, Saurav wrote:
-> Since 7.2.9, the internal keyboard on the Lenovo Yoga Slim 7x
-> (x1e80100) no longer works. 7.2.8 is fine. 7.2.11 still ships the
-> same i2c-qcom-geni.c as 7.2.9, so I expect it is affected too.
-> 
-> The keyboard is a HID-over-I2C device on i2c0 (i2c@b80000, 400 kHz),
-> address 0x3a, VID:PID 048D:8987, IRQ tlmm 67. On 7.2.9 it fails with:
-> 
->   i2c_hid_of 1-003a: device did not ack reset within 1000 ms
+> Can you avoid it by blacklisting bitland-mifs-wmi?
 
-Searching for this error msg on lore found a change that fixes such an
-error on Lenovo Yoga Slim 7x Gen 11: 39e8e085710a2d ("HID: i2c-hid: add
-reset quirk for Lenovo Yoga Slim 7x Gen 11 keyboard")
+Yes. With bitland-mifs-wmi blacklisted no platform_profile handler is
+registered, and power-profiles-daemon switches all three profiles via
+intel_pstate EPP again, same as before the driver was added.
 
-Could you try if it helps? The stable team plans to pick this up for
-6.18 already, so your feedback might speed things up (and get this into
-7.2 before it's EOL, too):
+The same can be achieved by running power-profiles-daemon
+with --block-driver=3Dplatform_profile, which is what I use now.
 
-https://lore.kernel.org/all/20261019135441.1420968-216-sashal@kernel.org/
+> And does it still happen with vanilla 7.3? 7.0 is long EOL upstream
+> (and 7.2 soon, too).
 
-Ciao, Thorsten
-> The touchpad on the same bus (0x2c, hid-descr-addr 0x20) keeps
-> working. A USB keyboard works as normal.
-> 
-> If I build 7.2.9 with drivers/i2c/busses/i2c-qcom-geni.c taken from
-> 7.2.8 and change nothing else, the keyboard works again. So the
-> regression is in that file.
-> 
-> Five commits touched that file between v7.2.8 and v7.2.9:
-> 
->   82339215fc00 i2c: qcom-geni: release DMA channels on probe error
->                (upstream 268aacb2e2a5)
->   139efdb3ee6e i2c: qcom-geni: Fix hardcoded clock index in SE_GENI_CLK_SEL
->                (upstream cb97bf3d4f91)
->   6c3420d6ba34 i2c: qcom-geni: Store of_device_id data in driver private struct
->                (upstream 692e0c84db5f, Stable-dep-of cb97bf3d4f91)
->   4edab037132b i2c: qcom-geni: Move resource initialization to separate function
->                (upstream ed4b34033db2, Stable-dep-of cb97bf3d4f91)
->   fb54df3645d8 i2c: qcom-geni: Isolate serial engine setup
->                (upstream d8d3bb127ad1, Stable-dep-of cb97bf3d4f91)
-> 
-> I have not bisected within this series. My main suspect is
-> cb97bf3d4f91.
-> 
-> #regzbot introduced: cb97bf3d4f91
-> 
-> 7.2.8 always wrote 0 to SE_GENI_CLK_SEL in qcom_geni_i2c_conf().
-> With cb97bf3d4f91, geni_i2c_clk_map_idx() uses
-> geni_se_clk_freq_match() to find the index for 32 MHz or 19.2 MHz,
-> stores it in clk_idx, and qcom_geni_i2c_conf() writes that index to
-> SE_GENI_CLK_SEL.
-> 
-> On x1e80100 the QUP SE clocks are registered as DFS RCGs
-> (gcc_dfs_clocks[] in gcc-x1e80100.c). geni_se_clk_tbl_get() builds
-> its table from clk_round_rate(), so the table comes out in ascending
-> rate order. I suspect that index does not always match the hardware
-> DFS perf level that firmware set up on this machine, where index 0
-> happened to be correct. If so, the engine runs from a different
-> source clock than the SCL counters were computed for. I have not
-> confirmed this yet. So far I have only shown that the 7.2.8 file
-> fixes it.
-> 
-> I have not tested mainline yet.
-> 
-> System:
->   Machine:  Lenovo Yoga Slim 7 14Q8X9 (83ED)
->   SoC:      Snapdragon X Elite, x1e80100
->   BIOS:     NHCN62WW
->   DT:       x1e80100-lenovo-yoga-slim7x.dtb (in-tree)
->   Kernel:   gentoo-sources 7.2.9 (genpatches do not touch this driver)
->   Good:     7.2.8
->   Bad:      7.2.9
-> 
-> I can test patches or run more debugging if useful.
-> 
-> Thanks,
-> Saurav
-> 
-> --
-> Drafted by Claude.
+Yes, it is reproducible with vanilla 7.3-rc3 (Ubuntu mainline build,
+no distro patches; newer mainline builds are not available yet -
+bitland-mifs-wmi.c has not changed since 2026-07-03 anyway).
 
+  $ uname -r
+  7.3.0-070300rc3-generic
+  $ cat /sys/class/platform-profile/platform-profile-0/name
+  bitland-mifs-wmi
+
+  low-power             -> accepted, reads back "balanced"
+  balanced-performance  -> -EOPNOTSUPP, stays "balanced"
+  performance           -> -EOPNOTSUPP, stays "balanced"
+
+Understood regarding 7.0; I only mentioned it as the last kernel
+where profile switching worked on this machine, before
+bitland-mifs-wmi was added.
+
+Thanks,
+Serhiy Shliapuhin
+
+On Wed, Oct 21, 2026 at 5:56=E2=80=AFPM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> On 10/20/26 07:12, Serhiy Shliapuhin wrote:
+> >
+> > On my RedmiBook Pro 15 (2021) none of the platform profiles exposed
+> > by bitland-mifs-wmi can actually be selected. "performance" and
+> > "balanced-performance" are always rejected with -EOPNOTSUPP, even
+> > while the laptop is charging, and "low-power" is accepted but has no
+> > effect. As a result power-profiles-daemon can only stay in Balanced.
+> >
+> > This is a regression. With Ubuntu kernel 7.0.0-38-generic [...]
+>
+> Can you avoid it by blacklisting bitland-mifs-wmi? And does it still
+> happen with vanilla 7.3? 7.0 is long EOL upstream (and 7.2 soon, too).
+>
+> Ciao, Thorsten
+>
+>
