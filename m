@@ -1,69 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792659310;
-	b=AUtoDdF0P6b3XfFkEhlxXt/QvEIe9dbSd+brz5V1QkzBhHtyRmt5UvK+dPUxA3VgLliv
-	 nQYSKR+xIbn2S4FV/soat6pVoojpqPjEtK70f/kpjBQbMONS0Z9FInRMIs4c2xg6rMWUn
-	 5kaIhCqbY7cljl2g6iV3NuYaMEUNATcB8PG0DVOLyM7KKVWjfBDVpHwFmpikN/GdweRVF
-	 gq1Nm/mGTeALjvmqd5sxKxxJGyLShFmgShGv2OUb7AQNd6xQbdEsa5w7Smwh01xbHfACV
-	 XfMC/BWcexa6DAytmed2cP22ZHTT2F/Zhj+8j9MYPd/qNlQGKwOG6ol116xcOSgLvnQ==
+	t=1792660424;
+	b=5jRliz3T/HyiXfwnqoMzic1hqjLZMukM95xbyWV+ulUl2/2ohetT0f1eb69cd32uzq0x
+	 GdbrtvlRjAQQX1PS0zT1dpIuL9xXnAr7agZgcxrXCOupJqCbOg6YQkat4bYxl3Wk+Lwql
+	 pwGzu+NB79zSw7Y2z8+6I58KAKNekuoDnAZYrYEEHdIz1KBHJgMC0CknjXCS5xxq2Pw4g
+	 AMht4ijTBvX5x8wm9raVyNvrnvKax///VBFSrgCL3Hk+qfmOXA6BQfRDBippABGBfwU79
+	 QxMfsY3bg1xvQjPdM67HC6Ry5A2kOBUkkY73HvTV3TLAqWxh9sCdLqEDJ536LWyaGGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792659310;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=mmGV33C+P57lZgYTGfHJXA3N3LtBNY3r1VXyfM3lXuU=;
-	b=UyI4BXwKSnK4FKwuHEsAhWvybOzpo/h/5UYTj+YWzwfMt2ApJnd4xqjrLC+Li2gcD01B
-	 jVzVprT/oC00yoa4mwm42K+MiM9cQja3d7Dw7u/yyAYMu1bwDqoUcfBxaykC1LfQq2rJW
-	 0BgQe4nKTrofQrFSmOT0FC0a+Im3Ogx+Q4OgYlvhI6GxNCJwKoybA7PhW2mRgLHneN5r0
-	 k1fW2QwCyKGyDxMZoXBdjvue4Ex0yIfrEEq6odpQRGByFIQAkmXOw64ARw9d1mOxs7H3l
-	 6zt86cx/kFKpLnXXqcmClRjGlAJL6FB2ywSuyTGigKrheukmP1+q3FoXg+83N+hV9IA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792660424;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=FINTa2MpCSNE/TWHxw/1m7qkME3F6UZuCUBBZ7mFXGI=;
+	b=1UnFCYWHoJFplM+2LbJVLdBgdkQV+zkbcERzvbWpW12FISPI+OmMtvGNWQe8bvVIBuIz
+	 mU1IT/erW2jOd+KrrrMQ/4jv8RZV9U7upAuVzcF8MsgkI/l0VTV8VRhZWilT9GLUZkuDB
+	 IvYTaozxLqANT0tpOR91j+2DVJ+p/jHY9N//AnUkAjl52XmrKubTIyzRBWLQnqAoumo+M
+	 pVry/oBJ6Xr1fVwRQfWBUeQykxayOXhHmigePXXAQzIgJQwkKBUlcJPCsLPuR/zg5nPd2
+	 60H611h1k+mY9B4ASymoXtvWiE3iOMdH7dr4ASnUYB+4vWT0wI59MAy+IfgUJvGU9eA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=cOhd8dDz;
-	arc=none smtp.remote-ip=188.68.61.103
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=NNXF6Pal;
+	arc=none smtp.remote-ip=209.85.210.175
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72760606A31A
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 08:55:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72760606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3CF606A31D
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 09:13:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F3CF606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=cOhd8dDz
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j9KjP5RJ4z8Y2t
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 10:55:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792659305;
-	bh=mmGV33C+P57lZgYTGfHJXA3N3LtBNY3r1VXyfM3lXuU=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=cOhd8dDzRWGztY/MHeLU2/qSNz9NQLckjnE6EZYbgALMUlk6iDsSvLIzazK2rbviu
-	 MMNtZrLpu/MV0e8MpqrBHLzUK7vsJpw2F/Xnzvi/fXIbfSFgXBUjuhAR338DxxWwEy
-	 ujD4i3WJBRWmHImN0sY4GnW6/hW52HfyqOzdpoJwhM0KzviwtfPpqhPH9JtAUwRevJ
-	 P4xyuZ23Y9Cg0Ra3BEQGX49LVj9tXhbe2hz0TAnxXtTRiN/4FYL+4cQ1M5VxRxXozo
-	 VxhJJl0HlosB4gAcvqBONJWbrxC2A+OYBlDPlMVoLWPWd4Mq36Ezdz5tnR8Q0mblXi
-	 k6YKDgifwYONw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4j9KjP4kw6z8Y2g
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 10:55:05 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j9KjP3G42z8sgT
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 10:55:05 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BE2115F898
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 10:54:56 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <594a2a29-6519-4f21-9b8f-948bbe6ba15a@leemhuis.info>
-Date: Thu, 22 Oct 2026 10:54:56 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=NNXF6Pal
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-8a06e79e152so751376b3a.0
+        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 02:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792660423; x=1793265223; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FINTa2MpCSNE/TWHxw/1m7qkME3F6UZuCUBBZ7mFXGI=;
+        b=NNXF6PalfL5CxCDcLctSc8kKBpPVidfqZ7Nqu58SRKoKvZ+rpxREIFBBAaZJR4PcgG
+         XlQTSz2fZrICYKMkvPyy2AZBlMsvJolcjmA2iWOUa+EW7DTlQM6uIOxboGehSYo9Pxnl
+         gkKVWc3stWdrvjyno5xXSv08CMx9rwET8ybM0mmukdX5G4gLM9860RCmOMMKv4L9nfJA
+         1pFHdq5X7SVYBYGy8OLeHIoIE3mxyg+aqNnGE15XvwZqNZZP4q1OZStYjuZup3iysSRZ
+         6clfh7SbzzEZUsIqW/3+LLgJSQfZQQ3T6WqGk1vh6zVOyz3SE2kWzzSZUTN9BXH8JlUY
+         vhow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792660423; x=1793265223;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=FINTa2MpCSNE/TWHxw/1m7qkME3F6UZuCUBBZ7mFXGI=;
+        b=EBjUjWAJATU/xfwYW76XMrjgYaSTArLrYlflsYAXIP7aA2OVXDGavRQKjNI625v9fg
+         XFiwOG7KP4aQuKfWfbFAz5hweBbMJPwpoXP8lEKynVMuRcl5m7LQBmwzvgWuQ+k+B9zT
+         g9ED/tMHhtp/XcoPOX6Vlu2T3/FPy8uZB8Ae7+Mk/Y7Ii8qIPUdx3x80qUcc73u3hUca
+         wlvvNeS/eNN/7euxFKOXArou9n9UT8eIPe9h4imJAMXFFnB4N7AZ4kCY7F/eFR9ysWJV
+         IHgCVlUGwCJ3ITrowdpUetLTBK+jRGLRJnL7g7fJDPybzpiNZ5rsaL+LR/G4ZcRZ1Tr+
+         R70A==
+X-Forwarded-Encrypted: i=1; AKwUvBwcXjSzfiR7KP6+O+3UBVLx6F7ldzzr+f0qKpAjyss9RMBU7k8zLy/er3N1mjWxN76JWkbMsvISuTUw1w==@lists.linux.dev
+X-Gm-Message-State: AFq9FYIiRhLRX4hf3r5m8pln3VqbROy1p8kVpYA+o4c/UUWPJOSbR4DJ
+	ReVSbzyrxBGfXDtEKa8gVhrIG5VwofqZnrHDYyuQHtEbEuSCZ8lg7OAH
+X-Gm-Gg: AYBFou3b6THCINCCP0zCMpxj1nH3iWnK258miBj2CnxWBbiBh+aOItws8Kdq36b7uLP
+	jv3JF+Hn4eNyDoy7B/63bWo4c3CEc7tO+GNa4RYEGiwQCLNvsWg7JsWoZzdXMElAairQjadzhJg
+	kab7FAo5NxwJWpEKg5Ei7NMaiPSblu4l6IMzD8BzU44zguFPH0xLpk2kn2DsYWXAj4RDnllztrb
+	+VvV98NZ3C1L49ZNOLSEnCdzVFv7DaE72hKJzR8xyHPLVyaaQlXTMTvHnlaZHwTIf+Bhmq/k8rJ
+	sX/ymzAUNEVlFfoPU8Utwxobgn53GWJMKYjD4jQetMAOW3TEpWkVat71fKmp5BkfmCfizBlmr4Z
+	HUYQBXfYfFMPTK1GV7rNgkP2FMsKx19lJgFuuNjUUTFAgZU6ciCY6IK+xNr/ex6gshLK5HPGJu2
+	Y0Y9KgvBfW8V3wI83Raz8f4nFYZobGanHi7sRbHUtwInZ4EUqO2IwvqGHNMOCZwR+60dnNZp3yv
+	76lKMRziqJXgKPbolyTcB3oVZfd40LluGJmz+QMfy0lafUGlOZe9D92ZDXPMvYTvg3YkzOSVEi/
+	FZFwsHM2GAK59b7zB5I=
+X-Received: by 2002:a05:6a21:9d8a:b0:3e1:bb35:476c with SMTP id adf61e73a8af0-3e287f30989mr3468912637.72.1792660423266;
+        Thu, 22 Oct 2026 02:13:43 -0700 (PDT)
+Received: from ?IPV6:2408:8210:2436:950:7b5d:9435:af71:375d? ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0895c060asm1855223b3a.22.2026.10.22.02.13.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Oct 2026 02:13:42 -0700 (PDT)
+Message-ID: <271a9f64-e1d8-4b21-968f-9cb95b980ec1@gmail.com>
+Date: Thu, 22 Oct 2026 17:13:38 +0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,67 +93,68 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179265929694.1117401.17470492230351287738@mxe9fb.netcup.net>
-X-NC-CID: xJ/glqVb0g5pr8PRePy0iwpnz4RtW/iTdSx3r/fsTcZfSbq9cO4=
+Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
+ cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
+To: Serhiy Shliapuhin <shlyapugin@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ regressions@lists.linux.dev
+References: <CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com>
+ <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
+ <CADGd8gF9DxnDVZxbsARCNkXXp7_aWfWOkyAN_Y8v65TtKW3zNg@mail.gmail.com>
+Content-Language: en-US
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <CADGd8gF9DxnDVZxbsARCNkXXp7_aWfWOkyAN_Y8v65TtKW3zNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 10/22/26 16:08, Serhiy Shliapuhin wrote:
+>> Can you avoid it by blacklisting bitland-mifs-wmi?
+> Yes. With bitland-mifs-wmi blacklisted no platform_profile handler is
+> registered, and power-profiles-daemon switches all three profiles via
+> intel_pstate EPP again, same as before the driver was added.
+>
+> The same can be achieved by running power-profiles-daemon
+> with --block-driver=platform_profile, which is what I use now.
+>
+>> And does it still happen with vanilla 7.3? 7.0 is long EOL upstream
+>> (and 7.2 soon, too).
+> Yes, it is reproducible with vanilla 7.3-rc3 (Ubuntu mainline build,
+> no distro patches; newer mainline builds are not available yet -
+> bitland-mifs-wmi.c has not changed since 2026-07-03 anyway).
+>
+>    $ uname -r
+>    7.3.0-070300rc3-generic
+>    $ cat /sys/class/platform-profile/platform-profile-0/name
+>    bitland-mifs-wmi
+>
+>    low-power             -> accepted, reads back "balanced"
+>    balanced-performance  -> -EOPNOTSUPP, stays "balanced"
+>    performance           -> -EOPNOTSUPP, stays "balanced"
+>
+> Understood regarding 7.0; I only mentioned it as the last kernel
+> where profile switching worked on this machine, before
+> bitland-mifs-wmi was added.
+>
+> Thanks,
+> Serhiy Shliapuhin
+>
+> On Wed, Oct 21, 2026 at 5:56 PM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>> On 10/20/26 07:12, Serhiy Shliapuhin wrote:
+>>> On my RedmiBook Pro 15 (2021) none of the platform profiles exposed
+>>> by bitland-mifs-wmi can actually be selected. "performance" and
+>>> "balanced-performance" are always rejected with -EOPNOTSUPP, even
+>>> while the laptop is charging, and "low-power" is accepted but has no
+>>> effect. As a result power-profiles-daemon can only stay in Balanced.
+>>>
+>>> This is a regression. With Ubuntu kernel 7.0.0-38-generic [...]
+>> Can you avoid it by blacklisting bitland-mifs-wmi? And does it still
+>> happen with vanilla 7.3? 7.0 is long EOL upstream (and 7.2 soon, too).
+>>
+>> Ciao, Thorsten
+>>
+Hi, We're tracking this issue in the recent patch series.
 
-
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/00cb01dd3099$c82b66c0$58823440$@zadarastorage.com/
-#regzbot introduced: 868f2f0b7206
-#regzbot title: blk-mq: hctx loses BLK_MQ_F_TAG_QUEUE_SHARED across
-blk_mq_update_nr_hw_queues()
-#regzbot fix: blk-mq: restore shared-tag flag after hctx reallocation
-#regzbot monitor:
-https://lore.kernel.org/all/00cb01dd3099$c82b66c0$58823440$@zadarastorage.com/
-
-#regzbot report:
-https://lore.kernel.org/all/20261021131006.2101248-1-nigro.fra@gmail.com/
-#regzbot introduced: 18dbcbfabfff
-#regzbot title: perf test: tracepoint case fails since only the first
-overflow is delivered
-#regzbot dup: https://github.com/async-profiler/async-profiler/issues/1813
-#regzbot monitor:
-https://lore.kernel.org/all/20261021141736.2414170-1-nigro.fra@gmail.com/
-
-#regzbot report:
-https://lore.kernel.org/all/1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw%3D@proton.me/
-#regzbot fix: ACPI: tiny-power-button: Convert the driver to a platform one
-
-#regzbot report:
-https://lore.kernel.org/netdev/20261015092200.GZ219304@unreal/
-#regzbot from: Peter Morrow <pdmorrow@gmail.com>
-
-#regzbot report:
-https://lore.kernel.org/netdev/20261014133951.3219055-1-pdmorrow@gmail.com/
-#regzbot dup: https://lore.kernel.org/netdev/20261015092200.GZ219304@unreal/
-
-
-#regzbot report:
-https://lore.kernel.org/all/179258034449.241924.15241097267562754477@kernelci.org/
-#regzbot introduced: 74ccc099f1ba
-#regzbot fix: Revert "s390/mm: Add missing secure storage access fixups
-for donated memory"
-
-#regzbot report:
-https://lore.kernel.org/all/d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com/
-#regzbot unlink: https://bugzilla.kernel.org/show_bug.cgi?id=222179
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=222179
-
+https://lore.kernel.org/platform-driver-x86/20261021123414.25516-1-qby140326@gmail.com/T/#t
 
