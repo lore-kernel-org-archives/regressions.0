@@ -1,100 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.174
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792656556;
-	b=e1lrm/fvpZDtE+k/NBmTQDde4OnSDDge0lNlmK2y51QWvYtHr0E++qmz23MWIqYBxeJl
-	 b9KD5ZdZOvZ1KxafpDkpkqEWXZ0zQ0DwbwHct5ZW//VGjqyIta+2X5D0g6qlngvZdikDz
-	 DPO3VFIIoiHDPxVIiyuSofFpXngDZ3sTbnwiam2z70FF3e41LjJ65epG3kCeDs9JgeVla
-	 V9vY5PgQ/Ya6dZLlFFovgGJYFQh7AKjJG3SBEbm2OCiP3QkzsO9km1R4BjEf0Qq/WZLp+
-	 QS37BCJz/M8TPojXi7NdwnwMsuSwJ0AyygW3Z+/7Js8y7lcR372ykLH/i1U9zVL/fHQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792656556;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792657813;
+	b=F14Cw2sH70ipYEFziKqFCoHWDXPVFULHVRgMlOVx2wO+zCIyVYyxUdAZ7XCon0IYzZVZ
+	 wb4u+lYv1b6vPvV94Y3S+pLwaAWLz+dlIPAl5KyxBj6CjfAaqq/uQz62CU2JrOaF+Smv7
+	 CB7D5R1dkR+fQd2Hgyom8AABYf7kmRqT/DL5bdYLjhScxTTQWuwSC39nuXFDEjwmhZVBi
+	 BcMAbbJIhr2fPNQi2TvLo4tIA5IdlzZgANXK3kMVk3fcDL7c/rY9+EWtLLy4EqAjoSsaz
+	 4/+aNp/2pxEHFUBCzrlTUTrDO3RrMlF4FcUfhZlv4A2JRb2MHx1btsMA7GUw9LJxUZQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792657813;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
-	b=lQC4Pjwm93tdNxAwRvfjvvAmB54uEmS+qFAYadQu+rj/p19bNcTsVPvK9CQ91iL3jCRA
-	 pSQZD88y2dkKlaMzeOUMn8QAWK/GFCBsOnngnklR2bdEySv6Yd5krMdBRzgwEyzK3fdya
-	 5T1i5RHoe9OQOLvbnfT2Aub2JSMGTpc/TuJWbXyzJBx/AcNcMVTT3VjWQ7iNEMQsMffY3
-	 K3NCoQp13ANHMMw5RCmwtwFwWBuJJwYjSybtzVYq9/xhuks6RmOHf0+VUkXmD/mzC3tdP
-	 75+EY1ANAa/lI7HgON6nHP3DpT1Xwk6yHqr7XbQh0hSoC9ux+pizntvwjaru0zCaepQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dAj4o3tY;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.174
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=ov64R61JC1VLupte76D4hmlAMcowcOFiftvcocoORZM=;
+	b=PAuNUhRoIZf7cijN7Z2tMHp4o10nG/DDUEVMqfymqsLDka5r3Ytot8TevufbCwBDiRDJ
+	 rqy6ZoPnLxYK8dTrzeb4y8bzLS7MLf1esnQklwqx2o6RlZaZz+Jo4zVzmqzVno5g0wi3J
+	 eBO4YWZZpnUkkuYnpiIoKi2D1ejer+CGWy4cNkFZozYMiDw9TR1EF2rG0b+r8fTGNHiOv
+	 5sEws1p3h73rreuKC+Xtp74XRBv3orYDsnQrovLXRqhJN6gP0ggzCRAm9CRKgzfVKw5KE
+	 +2ljFuv3nV2pxgqZLFG2wmjvRH24kd2n+yqOqI/TdnVqsUJLZa7yGMR+qaPE+M7dZOQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=wetterwald.eu;
+	spf=pass smtp.mailfrom=wetterwald.eu;
+	dkim=pass header.d=wetterwald.eu header.i=@wetterwald.eu header.a=rsa-sha256 header.s=wetter header.b=RlBiK06+;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388EE606A322
-	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 08:09:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 388EE606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5004C606A320
+	for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 08:30:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5004C606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wetterwald.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wetterwald.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dAj4o3tY
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-8aea7b7ca0cso13648677b3.2
-        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 01:09:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792656550; cv=none;
-        d=google.com; s=arc-20260327;
-        b=iagNiRtslavzTf113ki73xgQusZMiU8W0opE+YkT++7N3iLg2nziLkOedfVKazN2cV
-         hBlnhef7crNpY7J176HlsrVKVlUpMnaraRgvU6upgT4GZ37MjSoAo774u30QIvZfUnaQ
-         tSdrLYEV/BOJJpLJVE/NnJPVm4wS2JE+MCk8oGMYlAIkDxa+UfZ5ZcjirM2IUqkUfYV2
-         fu3MuirCnrtUk8QmlbBbrzt/KJpIl0cJ4OAePxRDVEI5rxKlSMGtCiQWjH5Qx+uB+KQ6
-         ZeuGgvDoPi3IWSSSS0ve+I8aiC8Ch80CUKsAICMmTdBgXTiiUQTwUYqhWl5lqYuy60IR
-         DCSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
-        fh=1gnIdXqNRDuKsYbYfylyti8pikf+YWDWpq7G+xBdVuE=;
-        b=OxW9sAFqOYFqkI7ARf6lxPtJlfs0gUy4E5RjprKSDqMGkCbB0ttmhv2YVKk+VGuOGQ
-         8Yq9DHsjOR20GCK80IFQUtPXDOgD75dZnbspgC80vy42YQDUGuOQc7G2Bmetrh4JZ0bz
-         yRASEiSv30WtsND4xR98RQJ3D8jTuQ7+XxC192HqvgjiCpRFjZZHXEn0E7V9kgipTqHR
-         6+H5SaXRcTRqJ0DjLCAPr+l8O5IinG1KGsF9WDg/cRXgKoWoX8Fm7hcgRh28YKxezPsh
-         DQ6sRVQYHiMpL6Sk2akVxx1uBWm4AP8fEpv7r1MHmCuPVblvxd7q2LNkhstsGZ6vxVyn
-         QKWg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=wetterwald.eu header.i=@wetterwald.eu header.a=rsa-sha256 header.s=wetter header.b=RlBiK06+
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a20a37703bso2103875e9.1
+        for <regressions@lists.linux.dev>; Thu, 22 Oct 2026 01:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792656550; x=1793261350; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
-        b=dAj4o3tYuel/z43Zw/Ey6DN5dKoSGVn8lFI9g3UDof5JGDk1Dho3dgjtQlE3E8F2i2
-         dPhgn57+kz2pPlQOjcfce+BpYymAPgQO4fBF1fSOXq3JpxOdGs9CkNBP8xz4FEkneIjN
-         TCXCJB4nNFxawajGCMe4WWkVkUrZDw5+wmTifNbLkKE7D+Sst0cQ3YLwsO6bhE3y2Wer
-         dmnf0KMXtdffH4jCLJ5Ty5veCfxWrQg2/IN9clmkMm/rajLIkPI1xO28axns22+OU7oK
-         QcqMBWrLWDVVrDDS5bvPgw5Hk1NDu7xZNs25OCv10BgZPUTOt+SM4N4sjDlr1T/cVTmX
-         h8Gg==
+        d=wetterwald.eu; s=wetter; t=1792657805; x=1793262605; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ov64R61JC1VLupte76D4hmlAMcowcOFiftvcocoORZM=;
+        b=RlBiK06+CK7VkcdLvh9FEjDoZOFr2qrAGsuPBrD1rQOPPl19X7XJ8+vUW5lVAVlGdz
+         yZsCRFfEHwChpLdQcG53M3hdo2gwrAD+lyPdUtjkFUa3oDaaYtG83xRBHHr3KQ8fyUGe
+         kSgMeA9nBgIGOmgQtMdCzcnKr8EtCL1miWOC32xrkx1nzuK/E/iraNXwNpyv92NciBI8
+         5oa/zXwRQZKWrUZHDu9PJ/W3WCeGGxbFil79BWESfJmW4sDymtj+Hw/Fx4vpnKtLYy/L
+         lidCOjcoc69bQmansydOeSSxFQiIZQAave+llpqnSaos3YZYO+6qr76SSJmcJEsWsjcc
+         05OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792656550; x=1793261350;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xQKsyW+wOzCAT9wP2NPBkWImj5fvxFpGVwFKrnGegPo=;
-        b=OC/9hBvCW+DtP2P06wX9vdHcsYuh/QfbvTt1UXI1igygpucE4ESR55A2izZJtwBCD0
-         UhYqTegERjiktpcDKvn1caq0gsiRL7yVOiLzX/6I4nAPFWifXWaSoZQyu5r/oO0Q7tOz
-         zWtCI1z96GThUPJ7BUWpe/3DMvGYWy7Wt/JCvGbkPN2XO0/FFl7Jg2SNAQuKRk47P7o/
-         cUbV2OEGFxMq7VMj2vhvGuFfL4cstMh5vefhvIHps/NsdrdKEHG1Lb1O8u1nU5x3sFfF
-         jdAv7F5sQ1kDnLV3ABTqDT/nrslSM11tcy5wZ6ATnyPCa+yl97swtqxJZz1fRY1/TnYI
-         nm0w==
-X-Forwarded-Encrypted: i=1; AKwUvBw+qA3nSGtfzCCBt1bf+tKTblGT0+MiClQzNaKolaOoBpJxRaREiHx9cpETzznwhbPEZgWECUasjlB1Rg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIrOULCzd1C+a/TgX13bjtbXQOJyLRsj5dDbYsEuxjon3xLtYQK
-	58qcf1xlzmCYWBytBg+yksgA866pSeu5DK8ThJ7uBDM7br9Uc6+OhkFgsaHnF2clcTWhXppO8fH
-	CK9ikBw2Ulz+40U/DpaQHuqoBf3sKiYs=
-X-Gm-Gg: AYBFou33x0IYrsxo+r2mdRZAeC4TAb7iPoiPCeUA5eR8ioKWrLJtHDZ2U6/T/mhNA9u
-	eR9r4zJInqXe/M4DYXyECh55y7+gXGsbNDDa4meJ4rPU8lyU49qBkiwq6Z70aEPE7hxNtICeYrx
-	/mG91FYFbygVWalUCeWA9qySUkbF1Ff5O2/ftumleMew5ZH7r67aLMxsy/jgR2N39PGLvso0tgY
-	1+n4xr5IRkRNsucrspDZgVYHjtwsQzzNX2rHDXJTI6A7STvhhzDcpP78Optmrtc+9dyZmtmSDl0
-	3HgZCkEoAwuiCZ1e7CBaSgxSH7kFh8Crx/0nb1Io0SgwlHJDUKSkguAQeK3Y5uFrDIsiy3Qhy8I
-	XrVLLr+ec1WIC2RMUx3mj0kZeZ2vW5XmK8VpDhg==
-X-Received: by 2002:a05:690c:ec4:b0:8ac:d426:105a with SMTP id
- 00721157ae682-8b1340353e8mr29410497b3.39.1792656550133; Thu, 22 Oct 2026
- 01:09:10 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792657805; x=1793262605;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ov64R61JC1VLupte76D4hmlAMcowcOFiftvcocoORZM=;
+        b=zT5VXWgpGKP1EBS9LkirDgeKEs5+BgZR3RbMtaVF1V4AmdY7VsCO1mVfq4CJYSrdLg
+         QvRBfwIgVCSAGUm7MuOT0GJAMDjX0fw8h9oTOYy2V482cDcrqaxmxtdWFFqA6o+DZ6ZC
+         4eDuldfn2+Bxs/vsIRtHVemCrJavpc3HwW7TF/rGvuFSCvZBy+c7Y5A28Xth1FB2JvrZ
+         kSPbSZmPPWwj0b6Cw1TUXszQ5Flmq0M9indsyhI093Cf8il1L4tUuaZAbRtDSZQwqPY+
+         SUzlXP5AgqGSFmj6Lnh6Jdr3UDsqAAVESmIjkexnTow1fLS4XJOeCykxq35Dw2qfjHsV
+         zv0g==
+X-Forwarded-Encrypted: i=1; AKwUvBxgd7KJSAfxWLyowZo70M81xCM10G4ey9/y8VEbSyGPsbGK/X6BHgMiZjlx5TvmIWWYs/g2qCq+WRYb1A==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKP1xya+AUYiTS9fRE3xgO21L3+t1z0wy9w0FoK0V3zVPhc/7of
+	tmq+6d91OfWrDIV3fSvVZ7Wb7+GrHiRYqE3g63YMcN/z2rmpXczU9I0TdCgB7Zacrag=
+X-Gm-Gg: AYBFou2t9fswJcnyV4XmTqoOvfowmtGLEjDuU9w//YaUrgjk+rmRki0sFB5GLUKqWi3
+	DHyTNVk7RDtuvig1PzIw9Bu466jvqbkgrIfhzEiUWH72Mpt0KGzUq7iV7rJf6x/Ws5CAsoBx0dj
+	ax4HKc//qaPjPMh4dFKouAT/8JDmwdHURr2ZK+Vkc7oUAaTBlyrNnSg3SR9KMLejHxIXtKQDHkf
+	OZHO/mUi4p2/EJBoQOw7feKzHYgwfUbVxlgyLr+mp8cG/iiJufE9OzVjg+PqtUwm8MC5yMiCv1h
+	EN4HOhH6UPMdknlCX9RstgMrSBPJbExz9HCU9ZnT0QonKMDwgsSYMiE6vHbLZehZpXG7Z9TALtz
+	T2XbMMaa8Ycs1IjbIS19hXcb5q+kkXwFpquRB9e6vB86R7RKA45yRaN7oSwtc9xL3u20ha2baOa
+	TbtqWhdfFJLjcsllQne5CRtxHQ17jfo7jGPQGMvjztnOgEzxk/1QaUWwfrECA95s2OdpIMQOT0f
+	lU8UDQEstOozvn0nwVo0M4dMMMwVb4pQ8sljAxztHEIJvzLLSqQao2kDY90FEeVzFFm5ghWzUPi
+	+wsTv1tlbUVhjPvPJKonwEXswYkCBOk+bREUZVftWFxjZ0Cnkkd0t8Ax6Nw=
+X-Received: by 2002:a05:600c:190f:b0:4a2:1a:a11d with SMTP id 5b1f17b1804b1-4a2001aa316mr79122885e9.0.1792657805302;
+        Thu, 22 Oct 2026 01:30:05 -0700 (PDT)
+Received: from localhost.localdomain (2a02-8429-85a0-b901-3ef0-11ff-fe45-70e0.rev.sfr.net. [2a02:8429:85a0:b901:3ef0:11ff:fe45:70e0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a203a62aaasm53713635e9.15.2026.10.22.01.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 01:30:04 -0700 (PDT)
+From: Martin Wetterwald <martin@wetterwald.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>
+Cc: Martin Wetterwald <martin@wetterwald.eu>,
+	Gaston Gonzalez <gascoar@gmail.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Umang Jain <uajain@igalia.com>,
+	Kees Cook <kees@kernel.org>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH v2] platform/raspberrypi: vchiq: register bus at subsys_initcall
+Date: Thu, 22 Oct 2026 10:29:24 +0200
+Message-ID: <20261022082927.59030-1-martin@wetterwald.eu>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com>
+References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,69 +110,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com>
- <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
-In-Reply-To: <bacdb44f-a4ab-4d55-a312-5648515f41ac@leemhuis.info>
-From: Serhiy Shliapuhin <shlyapugin@gmail.com>
-Date: Thu, 22 Oct 2026 11:08:54 +0300
-X-Gm-Features: AclHuK8idyuC9LagaU6kDmr1ij-CZ-3aFF9JVXtlpeAml0OsDKGnSO5Eh8miFRg
-Message-ID: <CADGd8gF9DxnDVZxbsARCNkXXp7_aWfWOkyAN_Y8v65TtKW3zNg@mail.gmail.com>
-Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
- cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "qby140326@gmail.com" <qby140326@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	ilpo.jarvinen@linux.intel.com, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-> Can you avoid it by blacklisting bitland-mifs-wmi?
+Since 6.19-rc1, with CONFIG_BCM2835_VCHIQ=y and CONFIG_SND_BCM2835=y
+(both builtin), the sound cards bcm2835_headphones and bcm2835_hdmi are
+not detected anymore (vc4-hdmi is not affected).
 
-Yes. With bitland-mifs-wmi blacklisted no platform_profile handler is
-registered, and power-profiles-daemon switches all three profiles via
-intel_pstate EPP again, same as before the driver was added.
+dmesg shows:
 
-The same can be achieved by running power-profiles-daemon
-with --block-driver=3Dplatform_profile, which is what I use now.
+  Driver 'bcm2835-audio' was unable to register with bus_type
+  'vchiq-bus' because the bus was not initialized.
 
-> And does it still happen with vanilla 7.3? 7.0 is long EOL upstream
-> (and 7.2 soon, too).
+Since the VCHIQ interface was moved out of staging, its bus is no longer
+guaranteed to be registered before its client drivers. bcm2835-audio,
+still in drivers/staging, registers at device_initcall level and now
+runs first.
 
-Yes, it is reproducible with vanilla 7.3-rc3 (Ubuntu mainline build,
-no distro patches; newer mainline builds are not available yet -
-bitland-mifs-wmi.c has not changed since 2026-07-03 anyway).
+Register the bus and the platform driver at subsys_initcall so the bus
+exists before any client driver, independently of link order. The
+platform driver probe already returns -EPROBE_DEFER while the firmware
+is not ready, so probing earlier is safe. When built as modules, this is
+equivalent to module_init() and nothing changes.
 
-  $ uname -r
-  7.3.0-070300rc3-generic
-  $ cat /sys/class/platform-profile/platform-profile-0/name
-  bitland-mifs-wmi
+Tested on Raspberry Pi 1B rev2, 1B+, 2B, 3B and 4B with VCHIQ and
+bcm2835-audio both builtin and both as modules.
 
-  low-power             -> accepted, reads back "balanced"
-  balanced-performance  -> -EOPNOTSUPP, stays "balanced"
-  performance           -> -EOPNOTSUPP, stays "balanced"
+Cc: stable@vger.kernel.org
+Fixes: aa125180c673 ("platform/raspberrypi: Destage VCHIQ interface")
+Reported-by: Martin Wetterwald <martin@wetterwald.eu>
+Closes: https://lore.kernel.org/r/CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com/
+Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
+Tested-by: Gaston Gonzalez <gascoar@gmail.com> # Raspberry Pi Zero
+Signed-off-by: Martin Wetterwald <martin@wetterwald.eu>
+---
+Hi Greg,
+this is a regression introduced by aa125180c673 (via your tree) in
+6.19-rc1 and present in 6.19.y through 7.3.y. If the staging pull for
+7.4-rc1 has not been sent yet, could you take it there? Otherwise,
+staging-linus would be great. Thanks!
 
-Understood regarding 7.0; I only mentioned it as the last kernel
-where profile switching worked on this machine, before
-bitland-mifs-wmi was added.
+v2:
+- Reword commit message with more precise description
+- Add Cc: stable@vger.kernel.org
+- Remove redundant Link: pointing to same report as Closes:
+- Collect Tested-by and Reviewed-by tags from v1
+- Link to v1: https://lore.kernel.org/all/20261013131435.1454019-1-martin@wetterwald.eu/
+---
+ drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Serhiy Shliapuhin
+diff --git a/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c b/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c
+index e78641703252..d35f5ac5c2e2 100644
+--- a/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c
++++ b/drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c
+@@ -1462,7 +1462,7 @@ static int __init vchiq_driver_init(void)
+ 
+ 	return ret;
+ }
+-module_init(vchiq_driver_init);
++subsys_initcall(vchiq_driver_init);
+ 
+ static void __exit vchiq_driver_exit(void)
+ {
+-- 
+2.56.0
 
-On Wed, Oct 21, 2026 at 5:56=E2=80=AFPM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 10/20/26 07:12, Serhiy Shliapuhin wrote:
-> >
-> > On my RedmiBook Pro 15 (2021) none of the platform profiles exposed
-> > by bitland-mifs-wmi can actually be selected. "performance" and
-> > "balanced-performance" are always rejected with -EOPNOTSUPP, even
-> > while the laptop is charging, and "low-power" is accepted but has no
-> > effect. As a result power-profiles-daemon can only stay in Balanced.
-> >
-> > This is a regression. With Ubuntu kernel 7.0.0-38-generic [...]
->
-> Can you avoid it by blacklisting bitland-mifs-wmi? And does it still
-> happen with vanilla 7.3? 7.0 is long EOL upstream (and 7.2 soon, too).
->
-> Ciao, Thorsten
->
->
