@@ -1,57 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.76.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.38.247.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792762017;
-	b=CnQhPhKJNX84BEcd8fio8qptB4d9fHsjtfbhouVkMhW8VUGz38fLzF5AfWZlvO7Z8Ume
-	 cbO45JVGLA0UxyaJXixa8PGuLcFAKGYIkQ0hShuBNxRKTV+RMYp7IEKTOdcx/wccLbykz
-	 NNUvk4omtMfmBf5tmlIjosUm4xiOV+I4f3/M4soegrWWLM+anG+nx3dkHyWhA03NPEAeU
-	 bdctr3jmr5N8936mSUkcvhqJFl9vmMxo2oTtf/SrmlLjxIb7EQSTHreJ1m32qPN67+Tey
-	 QKUCvaA51o8QoZ/SXh7ad3BNM7K53fuhPdNYKKGk4+bV+r4MXPonpdJdLYMEO5stoPA==
+	t=1792763044;
+	b=FSbq2oCRg5idn4j0IA9C1TpizkNKs5rnvxf2gY2qxJrX/c6j3x0CUflqWADnGpw+0Xdm
+	 JHvKOpPQMcCvQN8OqKxTtZdaTcGCs5POpmswoThf4MsK1PqQ57RPfKn7v4Q9QZxXHageh
+	 Z8hwOExHbbb5BPpwmShqGNq3M7Oz9/8duYQe9xxQmYzliMZEqA1oC7QkYaOyo5vy/JK1c
+	 87kFubXuQ6m/ErFE7GNYU+IW4GWXil87987fYeKMHXfonCMLxHDJh3vflwQJ8fpg5NCJ9
+	 pJvoW4A3L5XNUPyQ7Zua1PUiLzlWz8rgoHAcZ2ij9E8FrCV1HV5ao5SDRPyeSf8cE9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792762017;
-	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
-	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:X-Proofpoint-ORIG-GUID:X-Authority-Info-Out:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:X-JNJ;
-	bh=jbGU65KtEQnPTHCxzVb8IuWPNj7frVnrhFtt5vRA5jw=;
-	b=vZgZtawZGWwhmwslyu0NNY8zwszMupdpzdn0o3DjJ5HKRhNtbVqp3dH6ujPwG72EcjDS
-	 UYDZ3cwhZQ4eMMV3Tzv53Zm+fDgsXBRbgIGxB8I4DUUtafPEkLDEQOhAhZGD0BnuNMfgl
-	 UDUYVUr/ay9l3N1C4jE1+l2ifAFQosQkYnEU8KvuDxSOeJD1IpWvfVPi+ZurU8kGxPOS+
-	 0E3ZloH7jttzCydXnxOcz+TYKEhPSyrurH/g+yYOeU8B3gZs/dekUPVJQjFnhDpXgVdaL
-	 8GhhizESHUXgj85lb0PEoon0OteVGliVbRfHPd7J0De/pslpNR+6rVganw14k8J0QPA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792763044;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 Cc:References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=omIBejW03o1DNuS224xHckdfC4Tdy12qkWWdcAx+ZRA=;
+	b=3M263Fm7nKGPpGideMQpy8lGLQ0+mH6it5W0H4eGcrTsiNgFCZdp31+amjcMLMFdONhq
+	 4rBYBzhXizEGJ2m7SqtTWb1o3W4ShxaWKDieudxl4sq3P21nkO3dOIVapXoq8vRCZ1+Re
+	 1c1y59qGmbWPPK0itsIvN6nohU5uIc3pER9KX47w/3cpJ2j4RPD5p1f4GZeCnepu9M4be
+	 YMwALUqG/oChaBatBtu79EDaazls/JOtLZvERRPLPVHMx88mapQH5ei7afjVfMAvhgYu3
+	 VhwnTn18kaPvfcMRlOWUQiooGaepO2V0k5ySJ1kwej2/rGISObYOQB6APSdY9w8cbjw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=me.com;
-	spf=pass smtp.mailfrom=me.com;
-	dkim=pass header.d=me.com header.i=@me.com header.a=rsa-sha256 header.s=1a1hai header.b="Ru8/f8uc";
-	arc=none smtp.remote-ip=57.103.76.173
-Received: from outbound.st.icloud.com (st-2006a-snip4-2.eps.apple.com [57.103.76.173])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=e9E8bhqJ;
+	arc=none smtp.remote-ip=46.38.247.119
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1E8606A31B
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 13:26:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA1E8606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=me.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91311606A31B
+	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 13:44:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 91311606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=me.com header.i=@me.com header.a=rsa-sha256 header.s=1a1hai header.b=Ru8/f8uc
-Received: from outbound.st.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-1a-60-percent-6 (Postfix) with ESMTPS id 7F6291800BE0;
-	Fri, 23 Oct 2026 13:26:54 +0000 (UTC)
-X-ICL-RepId: 01a168f1-6aba-7193-9df2-46283e5b3fe5
-X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhBAkMFXgdeDkAdXABYEhVdRVcEWAxdE1EZRQhEK18VFxtcABcNVk1UHR0OWAYSAlpFB01fDl4fBBdGGVUERx5dVkAZGQJRHFYNV0NUBF9QSQxBUGxaAEcXSB1dGVlvUF0cDgBSRVEfVFheBFNWDkIJSgVcB1kBQQpKBVwBRQFDAEAAXhpaHxRQF1QCVANTBlwLcwBSRVEfVEYTGU4bV01QG18CQg8=
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai; t=1792762015; x=1824298015; bh=jbGU65KtEQnPTHCxzVb8IuWPNj7frVnrhFtt5vRA5jw=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=Ru8/f8uc/8aToQmecgLejRjp1cqoD22TqVbxKz6j4UNG1Yy/BaCCJaNgFG0ZK0y63uzGX7omhAzQrMMRPFcS/vF3UAF/YWu/IbQYqHcL7NyrkTy49zqUFnQ22RPRo4tVPI0HJlkjPNx/zsVQhvPXllXh16ha9p6hzd0HVseF2+LYOZSGa/lgYJ/nAzyxi+4IaFVR6g4XM8k4YpR4wcg9CF07vkQTjBBVzh4Y2Jcc97lTTtSk169q65FaB6AunATjTrF+hdVpV8AkLq4id0T1m4KekTxPV4c6+Smf9sdgn+Oxf3Lzha0BWkOOtIWdMXRzkJxtFSHvcSJdfAKx5gUpFw==
-Received: from PROART.taile9cf10.ts.net (unknown [17.156.216.30])
-	by p00-icloudmta-asmtp-us-east-1a-60-percent-6 (Postfix) with ESMTPSA id 061A21800286;
-	Fri, 23 Oct 2026 13:26:52 +0000 (UTC)
-From: Diogo Chaves <diogochaves@me.com>
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [REGRESSION] xhci: 3x descriptor timeout behind a vanished hub since 7.3
-Date: Fri, 23 Oct 2026 10:26:16 -0300
-Message-ID: <20261023132616.339833-1-diogochaves@me.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=e9E8bhqJ
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jB44C1mkmz8XSR;
+	Fri, 23 Oct 2026 15:43:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1792763035;
+	bh=aJnx2yywdJOJQF24mLcAVe2DM4zti1C12vQFMGaGn9I=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=e9E8bhqJu1VuJYY5NYn0RzJHYqHRfF79sCrlU2GeG1WXt0BTNWFKwZNtdn7Skj3aW
+	 Jqd3z0I465OGaWDYNfYarCjIkxD9pO9WMzZWD3oP0/uEl6tOkrPtMJLOgt2ZGab8Vz
+	 C7x1RRV9hXnOj+ceRk/9Fg8bhwOnl6WwvqWAA9ghgrbqBjRyyTsM8BBpCc9aQEx6AQ
+	 Y4+XpeD9wjQ/f/dOSHf1VNWnTdQCuPZk2Gv4cs1dSPUmT61yFQIf+bylZ5KElHlqvx
+	 GklPFb3Ktb09mPuteL06IngXnTlcwkOJD9h2S3Yl96x8y0NywAC3IRXen/9VLY51NR
+	 EWPspOWHTqjxA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jB44C14HMz50KZ;
+	Fri, 23 Oct 2026 15:43:55 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jB44B3wR3z8sb7;
+	Fri, 23 Oct 2026 15:43:54 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 749E45F9FA;
+	Fri, 23 Oct 2026 15:43:49 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <8aa88f3e-2dd7-4bfe-a0f3-e5ecbbade84f@leemhuis.info>
+Date: Fri, 23 Oct 2026 15:43:43 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -61,141 +74,120 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: sWS-it6ooGrl2UI7_VKBXC3G-ODLDRC9
-X-Authority-Info-Out: v=2.4 cv=boJBxUai c=1 sm=1 tr=0 ts=6adb609e
- cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
- a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=660iZSQnnn4A:10 a=x7bEGLp0ZPQA:10
- a=HlUpRvj5PA4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=M7o-fo05QJF8rEXw7VAA:9
-X-Proofpoint-GUID: sWS-it6ooGrl2UI7_VKBXC3G-ODLDRC9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIzMDA1MiBTYWx0ZWRfX35mlbFkxJ2/k
- n4g3AstNYlbUf57PTUABCHh/oCjTiSVz/eQD/GOAfznyiMMoS9Q7pDJxs2xB+OhJ4vFSS1t2Hoo
- HfKZER8UA536xAFaAJ3uCL/vae/GzYspXXlKYs1uO8t2smaDEwxx3LsqHdQpkmjetxCjJNDdcdB
- 8wh4vqrp/KRUmLOvjvOFIjUdi6L65Q99PTZ2X1srmswp4r9590kxKFv+1GYZqYwSj3PCbYRMBub
- Vo1bIx5mnd73AciHt5fCQMUbn7+a3kNW3IiFHWemr0vJqDkRRuAo6r8RS5ESsbG+4w0/nldRQek
- kGEH+jV0AWR/klFhHC7x2R059wQ5sZBW+MiH5DO+/dWTe0qeQkNSYlQ1VGzZGI=
-X-JNJ: AAAAAAABUHz77Rm/uOfHzucdiWijDG4jB/5rzDjBt47z4GYlfYoB9vlAHIZsq9zLdnJxBJGtScxoTBnvmTCfYJd5fL4SPCnR1LpDo+hQhprriyBOrncFoGCvbhz0RhGx9yZqHBmY+twT3Xi8j6HXX7XZpa0Il1fX6rCv8BsNWuyq59WNN/nHd5Y9RQ+uYQSRl4j+gvyF+/JWJgMIJKI5IwZK2HNyPe18XK5hTENbyzGVr2UBRQUcNXjaKy1CLSPZ6F1gDAbi6eLmMoTKzjoo4OUJtQ5L6pDehMSMjBlGG/LErTxWQJWxRy/+Aj0uTuCgIIltdsWFSjwBzT437Z0kSIz/rworOQLpWC5zGPAPiQhJ4hk74VN6hHmNn1Kp4/pGdrNeisCP+RflvgiYKQYcj0DnPyukPGjYP7awJ/iWlL56yuR1pjQIDjoA9zvEeEsbeRdsS3CRxdEK3OSPigk2PBtCufq8A8tsRV9M4uGZnKefHRrwe/1XZneauDteM3oAw48Z1YsaQjEUoquQhTDyIAWRY1mFfbhzrvCtyAvrqBh/ipAb68twKTsk/ws9HDHFHaCulA075sJ2gFLlnq1FeHaG190ciR0BnTjBg24RI8LRm0Qb0OZs8xrH+oTPKIZLEZAedN4NbXO7WOp0XI/hsA6Md523cXbhoazRPntLC4rZXxDUPE5AfcEj8BjAKJ9v4B/jIY12oilc1hu1Q+wU+dJmHKUMz+JTRPBrnq+qi5HWfhZVZMzaFFlkUnbJxVKnnov7X4r+lxTnFgmBBLiHngGwHWeAZRBsLLRnRI6YQz0PvAuwWmSOOE79jNODEI7FXaYd3kwb25RsqHWl4gCKs5uHI/OVHaWn5M99dYTFHgyWz06sDhXaSAiD+LkLuX5CAzgf7Sfo3uhMiC06kq3QwZIjmibdAXKguTulDlXVrJ+6RFxCxkHFFjqtRIt8efNM+jLn78tdwIw8Nmfiofp9gw0YzZtNNiP
- ZkoVPia8FDpLbUxP/2PlDi37b47MFywIZx3P7kAFbUhp6VYQL+Hh3fbfGDoztGkKYVQ7s4bl8b8ifFbxtqv2sRZPfLpgXfoKd+MVbj8dL0oSUfAKkbdlcTcyR4PRImkP9r8JqFx1W/p4L3j1KK74kq5PZewZbkucQFLGRhN5+bUynIMYnuLlHqECAsoR7iEYcD+p6zDHENQUq2HUKD8mii/MeuBuCpnH1Qp1EHzmH72hwMWYTrJbPD6JkYN8LIwi9Vvor3fyswwGZais1HSFWT1GiRiO4gsHpOR0Nu+nA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth:
+ btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore working
+ on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests firmware)
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Sasha Levin <sashal@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Salvatore Bonaccorso <carnil@debian.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Erik Brangs <erik.brangs@gmx.de>, benh@debian.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev, linux-bluetooth@vger.kernel.org,
+ 1149377@bugs.debian.org, Christoph Zwerschke <cito@online.de>
+References: <179104011040.2214689.5921682013387867802@eldamar.lan>
+ <2026-10-04-1-daily-reply-0007-bt540-asus-firmware@kernel.org>
+ <24ce058a-28b5-4499-9ded-eec9544b80ec@leemhuis.info>
+ <as0YtvgukA-Gp-D-@eldamar.lan>
+ <3c931ea6-b325-4338-acdb-4f6eec9d204f@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <3c931ea6-b325-4338-acdb-4f6eec9d204f@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179276303008.2712656.16619764390688834313@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 749E45F9FA
+X-NC-CID: 807/fAhNKsBLJFRDt5Gz/wNt7qUMN9gCV3mu59yfQs7RpfFoo9Q=
 
-Hi Mathias,
+On 10/13/26 11:03, Thorsten Leemhuis wrote:
+> On 10/12/26 19:28, Salvatore Bonaccorso wrote:
+>> On Mon, Oct 12, 2026 at 02:00:18PM +0200, Thorsten Leemhuis wrote:
+>>> On 10/4/26 18:29, Sasha Levin wrote:
+>>>>> In Debian Erik Brangs reported that after the update from 6.12.107 to
+>>>>> 6.12.111, specifically with the backport of 980084de4d9b ("Bluetooth:
+>>>>> btusb: Add ASUS USB-BT540 for Realtek 8761CU") Bluetooth is not
+>>>>> anymore working, the full report is found at
+>>>>> https://bugs.debian.org/1149377 .
+>>>>> | [   38.138881] Bluetooth: hci0: RTL: firmware file rtl_bt/rtl8761cu_fw not found
 
-This is my first report to linux-usb, so please tell me if something
-is missing or belongs somewhere else.
+This is still unresolved. Salvatore, Erik, and/or Christoph, could you
+confirm my analyses below -- and if it is ask the stable team for the
+reverts?
 
-Since 7.3, every time my monitor wakes up, my keyboard and mouse take
-about 15 s longer to come back. The cause is a stall in usbcore's
-enumeration of a device behind the monitor's USB hub, when that hub
-drops while its child is being set up. Reverting
+>>>> The stable code matches mainline. The failure is a missing firmware file:
+>>>> rtl_bt/rtl8761cu_fw.bin has been in linux-firmware only since 20251111,
+>>>> and Debian trixie's firmware-realtek 20250410-2 does not have it.
+>>>>
+>>>> Marcel, Luiz: could you, or Christoph Zwerschke as the author of the ID
+>>>> commit, send an upstream revert, or a fallback to ROM firmware when
+>>>> rtl8761cu_fw.bin is missing? Stable will take it for 7.2, 6.18 and 6.12
+>>>> through the normal Cc: stable route once it is in mainline.
+>>>
+>>> Hmmm, that was a week (granted: with the LPC) ago and nothing happened.
+>>> Anyone working on this?
+>>>
+>>> If not: Should we revert 980084de4d9b and its backports? Or only the
+>>> backports to older stable series?
+>>>
+>>> Strictly speaking it should be the former due to our policies wrt to
+>>> firmware -- but I guess most users of a more recent kernels also have a
+>>> newer firmware, so I wonder if reverting the change might do more harm
+>>> then good now.
+>>
+>> If my understanding is correct from a earlier fixed regression in the
+>> ariea, aka
+>> https://lore.kernel.org/regressions/0fd8c1c9-7f56-4bcb-a727-e4386d8ef094@online.de/
 
-  7e0ef4332ed9 ("xhci: avoid xHC endpoint changes after disconnect or link error.")
-  042aad8d0db6 ("xhci: prevent endpoint recovery after roothub disconnect")
+There Christoph asked "please revert them from every tree below 6.19" --
+but they afaics were only reverted for 6.6 and earlier.
 
-on top of v7.3 makes the stall go away (A/B below).
+"Them" meant the backports of these:
 
-Setup
------
-- xHC: ASMedia ASM4242 USB 3.2 xHCI [1b21:2426] (the board's USB4
-  controller), bus 1.
-- On its USB-C port: a monitor with a Genesys Logic USB 2.1 hub
-  [05e3:0610] (1-1). Behind it, two Logitech receivers: [046d:c548]
-  on 1-1.1 and [046d:c547] on 1-1.2.
-- On every wake, the monitor's firmware drops and re-adds that hub three
-  times in about 6 s. This has always happened. The last drop often
-  arrives just as hub_wq starts enumerating 1-1.1.
+* 980084de4d9b25 ("Bluetooth: btusb: Add ASUS USB-BT540 for Realtek
+8761CU") [v7.3-rc1]
+* 6f0624b4427e38 ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek
+8761CU") [v7.3-rc1]
 
-What happens
-------------
-In this race, 7.3 logs `usb 1-1.1: new full-speed USB device`, then
-nothing, until `usb 1-1-port1: attempt power cycle` 3 x
-initial_descriptor_timeout later (15 s with the default 5000 ms).
-Before the series, the power cycle came within milliseconds.
+Maybe because 4a23ce935f74d1 ("Bluetooth: btrtl: Add the support for
+RTL8761CUV") was included in v6.18.53, v6.12.111. Which lead to the
+current situation with "firmware file rtl_bt/rtl8761cu_fw not found" in
+Debian.
 
-A/B test, same machine, same config (the distro config trimmed with
-localmodconfig), usbcore.initial_descriptor_timeout=1000 to shorten
-the runs, monitor woken three times per boot plus the wake at boot.
-Time from `usb 1-1.1: new full-speed` to `usb 1-1-port1: attempt power
-cycle`:
+>> should then not only 980084de4d9b ("Bluetooth: btusb: Add ASUS
+>> USB-BT540 for Realtek 8761CU") be reverted, but as well along
+>> 6f0624b4427e ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek
+>> 8761CU") and as well 4a23ce935f74 ("Bluetooth: btrtl: Add the support
+>> for RTL8761CUV")?
+>
+> Maybe, I didn't look closer,
 
-  v7.3                                         0.1*, 3.1, 3.1, 3.1 s
-  v7.3 + revert 7e0ef4332ed9 + 042aad8d0db6     0.03, 0.03, 0.03, 0.03 s
+I did meanwhile and agree, the backports of these should be reverted
+from 6.18.y and 6.12.y:
 
-  * at boot, on v7.3, the hub was gone before the descriptor read went
-    out (`cannot reset (err = -71)`).
+* 980084de4d9b25 ("Bluetooth: btusb: Add ASUS USB-BT540 for Realtek
+8761CU") [v7.3-rc1]
+* 6f0624b4427e38 ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek
+8761CU") [v7.3-rc1]
+* 4a23ce935f74d1 ("Bluetooth: btrtl: Add the support for RTL8761CUV")
+[v6.19-rc1]
 
-Time from the first drop to both receivers working again: 11.2-11.3 s
-on v7.3, 5.9-8.2 s with the revert. The rest of that time is the
-monitor's own three resets.
+At least if the problem wasn't resolved meanwhile, but that wasn't the
+case afaics -- or did I miss it? Salvatore, Erik, or Christoph? Or was
+it meanwhile agree on to fix this differently, for example by including
+that file in a linux-firmware update maybe?
+Ciao, Thorsten
 
-On v7.3, one boot also hit the same thing one step later. The hub went
-away after 1-1.2 had its address, and the full device descriptor read
-then waited out USB_CTRL_GET_TIMEOUT:
 
-  08:56:10.097376 usb 1-1.2: new full-speed USB device number 12 using xhci_hcd
-  08:56:10.282395 usb 1-1: USB disconnect, device number 10
-  08:56:15.720384 usb 1-1.2: device descriptor read/all, error -110
-  08:56:15.723375 usb 1-1-port2: attempt power cycle
+ but that's why reverting in mainline likely
+> really is a bad idea: it might cause a regression for users that depend
+> on those changes (one of which is from 6.19).
+> 
+> So I guess reverting some or all of those backports in "older stable
+> series", as Sasha suggested, might be the best -- but I guess it would
+> be good if someone with more knowledge in this area could provide an
+> opinion.
 
-Trace
------
-The trace below was taken with xhci-hcd trace events and hub.c dynamic
-debug, on a distro 7.2.8 kernel that carries this series as a backport
-(I saw the same stall there first; plain v7.3 behaves the same, as
-above). initial_descriptor_timeout=1000. Slot 104 is 1-1.1, behind
-slot 103, the hub. Excerpt, CLOCK_MONOTONIC:
 
-  754.760938 xhci_handle_port_status: port 1-1: 0x000202a0 Speed=0 Link=RxDetect PP CSC
-               (the hub is gone)
-  754.807016 Address Device Command (BSR), slot 104
-  754.833730 xhci_urb_enqueue: 1-1.1 ep0 GET_DESCRIPTOR(DEVICE, 64), slot 104
-  754.833732 xhci_ring_ep_doorbell: slot 104 ep0in
-               (1st try, rung)
-  754.833755 xhci_handle_transfer: CTRL Setup Stage, error event
-               (fails at once; no giveback)
-  755.861009 xhci_urb_dequeue, Cancel URB, giveback
-               (usbcore's timeout, 1.03 s later)
-  755.861037 xhci_urb_enqueue, 3 TRBs queued, no doorbell
-               (2nd try, never sent)
-  756.886018 dequeue / giveback (timeout)
-  756.886054 xhci_urb_enqueue, 3 TRBs queued, no doorbell
-               (3rd try, never sent)
-  757.910008 dequeue / giveback (timeout), Disable Slot 104
-               (then hub.c: "attempt power cycle")
-
-A possible explanation, from reading v7.3's xhci-ring.c with the
-assistant mentioned at the end (I can't vouch for this part myself, so
-please take it as a lead, not a diagnosis): the Setup stage error reaches
-finish_td(), which calls xhci_handle_halted_endpoint() and returns,
-expecting that function to have put the TD on the cancelled list
-("xhci_handle_halted_endpoint marked td cancelled"). But
-xhci_handle_halted_endpoint() now returns early with -ENODEV when
-!rhub_port->connected, after setting EP_DROP_PENDING. The TD is neither
-cancelled nor given back, so the URB sits until usbcore's own timeout
-cancels it. Then usbcore retries. xhci_urb_enqueue() accepts the new
-URBs, but xhci_ring_ep_doorbell() skips EP_DROP_PENDING, so each retry
-also waits out the full timeout. Before the series, a disconnect went
-through the endpoint reset path and the URB came back with an error at
-once.
-
-That is harmless for a device that is really leaving, but here it hits
-every control transfer in flight, or queued, while the parent hub
-drops. During enumeration, that is up to three tries of the initial
-descriptor read, or one 5 s read/all.
-
-Perhaps the early-return path should give the TD back with an error,
-and URBs submitted to an EP_DROP_PENDING endpoint should fail at once.
-I haven't tried either. I also haven't bisected between the two
-commits; I only tested reverting both. I'm glad to test patches on this
-machine; it reproduces on every monitor wake.
-
-#regzbot introduced: 042aad8d0db6
-
-Tools: I used an AI coding assistant (Claude Code) to capture and read
-the trace, build the test kernels, read the xHCI code, and draft this
-report. I checked the A/B measurements and the log lines against my
-own journal; the code reading above is the assistant's, and I don't
-know the xHCI code well enough to confirm it. I'm happy to run more
-tests or take a trace with whatever you'd like enabled.
-
-Thanks for looking at this, and for your work on xHCI.
-
-Diogo Chaves
