@@ -1,70 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792757501;
-	b=TR5YLJbceQ9fJLTdD9B1/yI53d+/l0JmJAOJjLubfG/C7R8tY+9L2Ng/IjXxX+mSSLgI
-	 f8nsHIeyUIcl2dTdxtjdrk5PmotwD031vojLvjnh9InaVp9FYerMMmsfOZKIuCm4D9OTp
-	 lVI5lpOXxt4QJA2UfJB7hpcfI+s7XCE9h4/2S0GZgg8gafq6Ng2hTv7xsFKwym/lYuqJb
-	 WGTq/Lq67OFHVPUOrIGOgfOTrctnWF020YEKfXqXhvSKq4G+IauMBL6j4mgsJZS+fI3RJ
-	 iAO1VUAvPohTruV4tm/c/AEUWiv9n9VuYSs0D47xwsXgeEFpBT+6dM7kSLhThDkDbzg==
+	t=1792757611;
+	b=X4FgL2z431Hw031mAT3Vo6zuHldb7b2Ua1pbzvpMZZeHRZ26zgRskd4otf3tNYMwRk1v
+	 /WTt/RQDLCs2daA3m1DhpF+fNWFIRs2jPVI6yMbDlkrjXV16Kg9AVmK0pDXAquha1uHxL
+	 9YXd8vawxYQUBe2mDEsfXBzei42q7Ny9WSGZAo959OqPv1JFEzdOyygXSElKeqyQ4N0SH
+	 D3FENd/FtFpYvhRtxF6KVRjUmCaAqWnJO/eML/s980ULtQqyY2+Xt6qzSjgL0bWCIAnqN
+	 uJPUl0r3EO8TnLp322X0zrHbYgmwk7GOcFSe8XlgEeYTig9j/lKY00bBsy14mqN+nfw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792757501;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=9elb2dSD8k97xKv4YYI89SaMC5p4InlOO7ZErDILLjM=;
-	b=i3X2fRDHekJxqVUvcP//CIDsx5k8jNYP1i9Sx2sfTcIB/NLv0Ef6Ak1hL/vTH+078CUF
-	 aOB3U/lM1/xBAh8grgtIfrTsH2luAAvfn8P3RNY1hXL7XQwHi5lCPh1CVQ3+iQSPpRgFp
-	 lTD90gjEmqC7O5iyTOPTjuw0FJheycbkKFtEN4csO72cB2tF1ZIzP/q9fbzFSkVn4MiWd
-	 dcRXHq2ZOKQSqD3rX7z0MXeHGA9n/OfSBUb787kNSXtR2Ea0WBc+NkG0Gnw6AcvdDIalp
-	 OuBHWhyJgREoDtpMC/p72qirLQmFKee+PXHOfmB6vvumnmzfZ36LIlL1C92XeZXb5dw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792757611;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=wnqBY0Dj8JK3jWiYu+1DNG27SSaalJKsMIrKfhj2/yc=;
+	b=dTaPzjA2gYQZSqa/9pt1Bu5gwRoESc6VMjCzRtyC5k1EZDQ/K+qRYKp1MUBgESIP13XQ
+	 V640kGdqIh/190jhCMYhffdwb4PP7SZppfI8OPYm98UCDN6tWZk0NCujNI/2W7WOK6Pse
+	 nJsxOuQzHm+PdyPeOnfHqr+pHpc3nG+tOWeX2B+iIfEKtHuE9JFlx0xCL2PErUA/J8z8A
+	 +pOb+A9MqxPmjLUgXnWkLEMD9bahbK1blDVu2bTkifPEWJvTmPJiUFpYes+JQlUMeP0Ja
+	 eYMNV00cu9eu8xFCauM/r4svvHXsPapbsQi3iess1oTcjCOD1RaFhTruEaRe2yqPkWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Rzq4YAaU;
-	arc=none smtp.remote-ip=188.68.63.102
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=G8WoAGMY;
+	arc=none smtp.remote-ip=209.85.208.41
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD025606A31B
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 12:11:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD025606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D831D606A32E
+	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 12:13:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D831D606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Rzq4YAaU
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jB21j3KSFz64G0
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 14:11:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792757497;
-	bh=9elb2dSD8k97xKv4YYI89SaMC5p4InlOO7ZErDILLjM=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=Rzq4YAaU/J9yJP0FrF48kf6Kl4u+QnYeFgsUrKSLSRTfBJcXkpws/Pit63T0Zh7lv
-	 lonogbaf+2WTkBtlXgDTrY1/JuVCX+78V2qyWDfFKzy8kdjafbiVrXPkQeqgOJypkR
-	 IsQxA/Qp16ZA6oHRNOQO/wb2yxX2xXUuTmHUN+RCisdn4feMFp5BTmDHmmQ5ZlC82f
-	 ymzHz6evH+725nuNIb13xL6oYLXze1pETm6tiRQseaWg5Gd+5yOeoY2wfh3mtQuCGT
-	 VjVUwblRbbIPVb0YLSgpjBgV4i39UnUsj19cQ+J9moBRaLbJVU4JOVPnCRnG0ZSqNR
-	 5kCmKZRieV5Ig==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jB21j2bl4z506m
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 14:11:37 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jB21j0vXkz8svf
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 14:11:37 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 686E15F983
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 14:11:32 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <d352043d-b2b8-45e8-96e0-95bb70b5673e@leemhuis.info>
-Date: Fri, 23 Oct 2026 14:11:30 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=G8WoAGMY
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6a642495d81so1132792a12.2
+        for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 05:13:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792757609; x=1793362409; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wnqBY0Dj8JK3jWiYu+1DNG27SSaalJKsMIrKfhj2/yc=;
+        b=G8WoAGMYGKz28V97lh3mQgh/t2YxFX9asK8R/d0EHs3Otvm0iR+NL3nA+r6jITbzSQ
+         2CNDaOKEFz6d8lUwnlJcsI9EKoc3lE3WCk3vuu+FrcMO0m1QbmxE8W2AtXM4p9IYktSL
+         MrOUf8+/8xcLRK1h6RMtcozFUSOlovv5/WlWPblbG2OmuBjhaFKlV9Hm/N+hJ+131KSn
+         vyKUg9cYxcCb38PJe5SIiRhZ0KpUKfz5F0OEWinrArIo/jyBB6WyT2jmR2KWNVlyz1zR
+         Qh3tGdaXspPy4LGrjEASoW7KNgYNSygYg5Yrg6XTl5RNrZvRYUIAI9DlimuSQaajKqzy
+         xudQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792757609; x=1793362409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=wnqBY0Dj8JK3jWiYu+1DNG27SSaalJKsMIrKfhj2/yc=;
+        b=ZJUepJZhm3Q+tvcBY1uVpM28+PSW4kUnFVV/RtEgTMCc8aA3PDNn1KWlaZjxOwpchh
+         lRYL3QOBy0adp1ScksHyhtAk73zq7hC6E6vTEV9ztoIPAZiRY2Ao3jcy+cJl11b44BdN
+         jPfPigHJtguLpkRkME98qzrj3Jp4lIOojpoCZQvcokQ3Z10MHpt6dTr3GyzZoOb88yX+
+         iLE+azG1A53jDKelAVeBH3x6mWD9dc0p9rQbp4uMKX6tfqJeKKNiZCx2n2HjA9Wp5Vec
+         jo7tHUrDJ9jC8zqnmTez27Kcflu7aTIgI4wiwFb+9u90hz0SD5/LyaPulYcJ8KoqD6pz
+         m1Mw==
+X-Forwarded-Encrypted: i=1; AKwUvBwUxqa20lnIJLEMMM/Im+AAmj1SPD4rC5WsMQOb2yanhMqJVdxOFns0kCjQ9A6dg8QGEEx5WctBGYV+9Q==@lists.linux.dev
+X-Gm-Message-State: AFq9FYK7UekxQ/ebBTYGiNMcjYAnmSj+Cbaej2hUn4xXu+XtfQ4RQ4vR
+	zGLGkLjxqXWO/N/4II9kTZyqFG7HBZvr0P179eshQoewZyrWUsLpFpfT
+X-Gm-Gg: AYBFou3VTtBXRrNW99wRxteKqRoi1ileL2SuHB8oa5rDvSYC0w7Yf3PzVrq0+kqAoGa
+	anNkT5KcH06KQ/qgKtgFSRH4ruyjYLuWdoDjSj2yYWFw6LQWgOgEAte9oxD416AMkw3F4b8l0Iv
+	V8ftCP8LN0J9kUZSNm8Z96Ea7uZcw1xuMnFBMoqTDk4Re2ENoZR83w2FzbOqK+WbBI3m6jCh23b
+	LrjpaooxDqS3EtjGk1Ns4xv36s2XuBNY3sM1FsT7P7ZYeo6mDlddiW49roMnZjWWn+5/H1U+jfv
+	/0UV6E/Dr17TP+kDOaRDeZUoQVBtXnYKmuCHpb1JhxzP5xsuNtxr16s9k6eRvzB746wXvYsQRc/
+	py5Ph74w/cau96IX4jkGkG9e1pS76f48xFXS4QUp7HaSGI8GYIxgbBpNaICONrmWhqg4zC0bpTG
+	2Iy/j63KtAzPG/fTuAzBQsWLjfLgPcu36FGli/uClf2KS5Vzd2RVgEOEx3asMXo7EwsK2gdqFEQ
+	EXnL/Xe8sDEIzmZpBcJNBLPdQrJe4Q0gyc+aQ7sMdnAjSyJoWjfJVU97pxIEf8+OxjUJNY=
+X-Received: by 2002:a17:906:f598:b0:c31:8441:35ff with SMTP id a640c23a62f3a-c46a90fa068mr313874366b.48.1792757608969;
+        Fri, 23 Oct 2026 05:13:28 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:47::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46a5ceb7efsm94688866b.73.2026.10.23.05.13.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 05:13:28 -0700 (PDT)
+From: Vlad Poenaru <vlad.wing@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Michael Chan <michael.chan@broadcom.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Jinqian Yang <yangjinqian1@huawei.com>,
+	Andrew Preece <apreece@meta.com>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] bnxt_en: Don't keep MSI-X vectors added before FW reserves them
+Date: Fri, 23 Oct 2026 05:13:21 -0700
+Message-ID: <20261023121321.2127263-1-vlad.wing@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,48 +106,89 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179275749259.1645333.2366422802768186632@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 686E15F983
-X-NC-CID: VQkDLik3vcMjwkla1+fghywx3MKpRv/iYZ+8IfSH/x1Q2scQxEQ=
+Content-Transfer-Encoding: 8bit
 
+When dynamic MSI-X is supported, bnxt_check_rings() grows the MSI-X
+vectors with bnxt_change_msix() once FW says the new rings would fit,
+and keeps them.  FW only reserves the extra IRQs later, in
+__bnxt_reserve_rings() on the following open.  The MSI-X table entries
+beyond the function's reserved IRQs are not backed until then: the
+MSI message written when the new vectors are activated is lost, and
+the entries read back as zero.  After FW reserves them they are live
+but still zero, so the NQ rings bound to them signal address 0 and
+every completion on those rings is lost.  The next ring change (for
+example ethtool -G) then times out freeing each of those rings and
+the TX watchdog fires:
 
+  bnxt_en 0002:01:00.0 eth0: Resp cmpl intr err msg: 0x51
+  bnxt_en 0002:01:00.0 eth0: hwrm_ring_free type 1 failed. rc:fffffff0 err:0
+  ...
+  bnxt_en 0002:01:00.0 eth0: NETDEV WATCHDOG: CPU: 17: transmit queue 18 timed out 5716 ms
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+On x86 this is hidden: GENERIC_IRQ_RESERVATION_MODE makes the PCI MSI
+domains MSI_FLAG_MUST_REACTIVATE, so the message is composed and
+written again when the IRQ is requested, after FW has reserved the
+vector.  Since commit 0d6a7c417983 ("irqchip/gic-v3-its: Enable
+dynamic MSI-X allocation"), arm64 GICv3 systems take the dynamic path
+as well, but write the message only once, at allocation.  On an
+NVIDIA Grace system with a BCM57508, raising the channel count from
+18 to 32 left MSI-X entries 18-31 all zero, and the 14 rings using
+them lost their interrupts.
 
-#regzbot report:
-https://lore.kernel.org/all/CADGd8gGYm5QmnDrjBzfWsWcKg9_ULAAV7o8RzDxi1p9doN5gCw@mail.gmail.com/#t
-#regzbot resolve: WIP; workaround available (blacklisting) and strictly
-speaking a borderline regression, as it's caused by a new feature people
-have to enable
+Keep the allocation in bnxt_check_rings() as a check that enough
+vectors are available, but free the new vectors again right away when
+FW manages IRQ reservations (BNXT_NEW_RM).  bnxt_reserve_rings() then
+allocates them on the following open, after __bnxt_reserve_rings() has
+reserved them.  Without BNXT_NEW_RM there is no IRQ reservation and
+bnxt_reserve_rings() does not grow the vectors, so keep the current
+behaviour there.
 
-#regzbot report:
-https://lore.kernel.org/lkml/20261002175651.811343-1-ameer.hamza@truenas.com/
-#regzbot fix: 78436f3882fb8d
+Fixes: 2d51eb0bd81c ("bnxt_en: Add MSIX check in bnxt_check_rings()")
+Reported-by: Andrew Preece <apreece@meta.com>
+Closes: https://lore.kernel.org/all/20261022193620.2152038-1-vlad.wing@gmail.com/
+Signed-off-by: Vlad Poenaru <vlad.wing@gmail.com>
+---
+Tested on an NVIDIA Grace system (GICv3 ITS, ACPI) with a BCM57508,
+FW 230.0.165.3: the boot-time channel change (18 -> 32) followed by a
+ring resize no longer loses completions.  With instrumentation, MSI-X
+entries 18-31 read back as all zero after bnxt_check_rings() allocated
+them, and read back correctly once bnxt_reserve_rings() allocated them
+after the FW reservation.
 
-#regzbot report:
-https://lore.kernel.org/all/20261022033638.32460-1-thatsme.saurav@gmail.com/
-#regzbot fix: i2c: qcom-geni: Restore the source-clock selection policy
+This conflicts trivially with "bnxt_en: Clear bp->total_irqs when
+disabling IRQs" from the "bnxt_en: Ring accounting fixes" series on
+net-next, which adds a bp->irq_tbl check to the same condition.
 
-#regzbot report:
-https://lore.kernel.org/stable/20261022162655.231431-1-fredericmariejoseph@protonmail.com/
-#regzbot fix: ACPI: tiny-power-button: Convert the driver to a platform one
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-#regzbot report:
-https://lore.kernel.org/stable/179104011040.2214689.5921682013387867802@eldamar.lan/
-#regzbot introduced: f05baf6e0680d8
-
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 0682060b048ce..2d14d991a3ead 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -15093,6 +15093,7 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
+ 			hwr.cp = min_t(int, hwr.cp, bnxt_get_max_func_irqs(bp));
+ 		}
+ 		if (hwr.cp > bp->total_irqs) {
++			int old_total = bp->total_irqs;
+ 			int total_msix = bnxt_change_msix(bp, hwr.cp);
+ 
+ 			if (total_msix < hwr.cp) {
+@@ -15100,6 +15101,17 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
+ 					    hwr.cp, total_msix);
+ 				rc = -ENOSPC;
+ 			}
++			/* FW has not reserved the new vectors yet, and writes to
++			 * MSI-X table entries beyond the reserved IRQs don't
++			 * stick (seen on BCM57508).  Free them again;
++			 * bnxt_reserve_rings() allocates them after
++			 * __bnxt_reserve_rings().  Without the new resource
++			 * manager there is no IRQ reservation and
++			 * bnxt_reserve_rings() does not grow the vectors, so
++			 * keep them.
++			 */
++			if (BNXT_NEW_RM(bp))
++				bnxt_change_msix(bp, old_total);
+ 		}
+ 	}
+ 	return rc;
