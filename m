@@ -1,118 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.76.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792759840;
-	b=XV2swwZjMU52u1jm3QiPVJESvHnpWlwRs5HdhCMtFnk4oi0Pgk3JBUsrKo4wsSy0i7d9
-	 qxJcpYW3njnrXsJsHe79ZCD5pp8NnsCnBjRTrA9/sBDO+zyOSs2+9r+jcG93nycdPk045
-	 bI1VtBEN4u0Ka+zoY/dDP4EcGMe9u9Q6Eb/J5IIcDp+tG5l1lwnMOdCuyXTCr5SqrI1Zs
-	 Yt2kR/ZwUyrAi/yf1KgTIh68XFEfpByIbuUXsMKXl/QIYeF8777NB7q7LIfgJe+We4FX3
-	 EdZFY+rtdMLAMR+sEwgWitjr1Tvum9C3aYm74n0NBcDY6piowB4NdPDigx5xMz7HjVg==
+	t=1792762017;
+	b=CnQhPhKJNX84BEcd8fio8qptB4d9fHsjtfbhouVkMhW8VUGz38fLzF5AfWZlvO7Z8Ume
+	 cbO45JVGLA0UxyaJXixa8PGuLcFAKGYIkQ0hShuBNxRKTV+RMYp7IEKTOdcx/wccLbykz
+	 NNUvk4omtMfmBf5tmlIjosUm4xiOV+I4f3/M4soegrWWLM+anG+nx3dkHyWhA03NPEAeU
+	 bdctr3jmr5N8936mSUkcvhqJFl9vmMxo2oTtf/SrmlLjxIb7EQSTHreJ1m32qPN67+Tey
+	 QKUCvaA51o8QoZ/SXh7ad3BNM7K53fuhPdNYKKGk4+bV+r4MXPonpdJdLYMEO5stoPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792759840;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=Mg+WfWQxC3P6qmiOqOVEseCpuAHnl8nyDeZIWySuY74=;
-	b=Jhi2N3T+Hj57QktMA0NIIy7b4C0+KPHgsrGgxVgS7csJRe7ssAevoICCaaxOrBhShBgc
-	 0QknV9WadUImZhi7a/w2HnlAXVpWH0DVAvDLT9iGC2YCWpENY58IwHBi+NgTx3ZvQyNZR
-	 F13fNooPsMSyYBTFsKnUxxKAiYTblucpsBQmyrRVorfbQ0OuAb2pzGa3clrtjlJ2mrCR6
-	 1uI8OrwdSNeRqGYzcxTjCqYaW/bKZvvzetXgNhW+qzfh1aOgAY2sp5YQSAH14vUamwdqV
-	 WH6wgQh29eMMGj7jGz05ETrbsLD1ahEP7AK/itvqlpt+pjOg9bsmjjFklPumdl/MUXA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792762017;
+	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:X-Proofpoint-ORIG-GUID:X-Authority-Info-Out:
+	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:X-JNJ;
+	bh=jbGU65KtEQnPTHCxzVb8IuWPNj7frVnrhFtt5vRA5jw=;
+	b=vZgZtawZGWwhmwslyu0NNY8zwszMupdpzdn0o3DjJ5HKRhNtbVqp3dH6ujPwG72EcjDS
+	 UYDZ3cwhZQ4eMMV3Tzv53Zm+fDgsXBRbgIGxB8I4DUUtafPEkLDEQOhAhZGD0BnuNMfgl
+	 UDUYVUr/ay9l3N1C4jE1+l2ifAFQosQkYnEU8KvuDxSOeJD1IpWvfVPi+ZurU8kGxPOS+
+	 0E3ZloH7jttzCydXnxOcz+TYKEhPSyrurH/g+yYOeU8B3gZs/dekUPVJQjFnhDpXgVdaL
+	 8GhhizESHUXgj85lb0PEoon0OteVGliVbRfHPd7J0De/pslpNR+6rVganw14k8J0QPA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=kroah.com;
-	spf=pass smtp.mailfrom=kroah.com;
-	dkim=pass header.d=kroah.com header.i=@kroah.com header.a=rsa-sha256 header.s=fm2 header.b=dkjDrj5n;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=wFBoZAla;
-	arc=none smtp.remote-ip=202.12.124.151
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+	dmarc=pass header.from=me.com;
+	spf=pass smtp.mailfrom=me.com;
+	dkim=pass header.d=me.com header.i=@me.com header.a=rsa-sha256 header.s=1a1hai header.b="Ru8/f8uc";
+	arc=none smtp.remote-ip=57.103.76.173
+Received: from outbound.st.icloud.com (st-2006a-snip4-2.eps.apple.com [57.103.76.173])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6B8606A322
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 12:50:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA6B8606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1E8606A31B
+	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 13:26:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA1E8606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=me.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kroah.com header.i=@kroah.com header.a=rsa-sha256 header.s=fm2 header.b=dkjDrj5n;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=wFBoZAla
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 487571D0014F
-	for <regressions@lists.linux.dev>; Fri, 23 Oct 2026 08:50:39 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 23 Oct 2026 08:50:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1792759838; x=1792846238; bh=Mg+WfWQxC3
-	P6qmiOqOVEseCpuAHnl8nyDeZIWySuY74=; b=dkjDrj5nqXFh6E7pw9/ora8fSh
-	DqhN5eF9qveCyBa0hNsU/5TS73cD50Jnokpe0RLjKNtrxQZFDuii0bWKhxQ2RZwu
-	r9pU/SLT/r9FITfVJ/le3D6KtAwvoHgo4nh0CYxJkNBCbBbqNmjTIzC4OGdRkKDL
-	zYYqu+GSzXDS1zuboIVSSpyYYNzvpfxJfYqkIBaoBueVXNZ9C+KkAoeaNMQvGz0M
-	Gj1zhiw7B3V0Q3j1NRUdK+qy7FLLMRpFqyRsW/SNKdMBWPC/Tp8C1OvEYBCs/7FP
-	4TioXwWQc7YIS9S0RvROy8rdzvRXoLs0E4gefCIej4rOhIoCtYnIkxnHe6VA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1792759838; x=1792846238; bh=Mg+WfWQxC3P6qmiOqOVEseCpuAHnl8nyDeZ
-	IWySuY74=; b=wFBoZAlaaToNk+twrlvepttujUKeNPxOyqsoAYvFImdY6HPLySz
-	hjEGhKeIMyAFlbI6AtmbDe6htH2seCS4ASu9d+7OJ56PrkPNtO9EJz3YJEgab8cB
-	18wd6Vw02TX0pINc4FQQXCNAb17pJMotzSdIyo/DzbHiRQ7gZTpR9CLRGtX3BqXh
-	ognpCXe+HOSG8SFc5EloOdzTBarvQKDlhX93LI2d4ojr4DhwnkKwywbngU4R+cHr
-	ML9CcAI+wfrJG7BuyeZrT4FEEkj52/bdXHboA5SWgqFZ6UVqf4DoKrncDwEYu40T
-	d9mmwInK1vbhjcuMGn1k9HE4pXIOx0gVN/Q==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
-	repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
-	action=sign d=kroah.com a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1792759838; d=kroah.com;
-	mf=PGdyZWdAa3JvYWguY29tPg==;
-	rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
-	s=fm2:rsa-sha256:gccDDsQbOaIGmpLvCpGtweKpAyxirFLX1Kq5xMSoDlqCEdA
-	n9dAWPu+2iny1uUb6RP1UxUDj8duHPultG7ih92dihi4DilDKKSt3sLbzgFdUUxt
-	Z8Xu6zYfyiWJuIKbmny7DTurU78M8vCzThlTTmmCt1HcLjuXESSmxxZ+XDdnv0Ns
-	AGgN9KBi0LDuCtQy4TMxAajd5UaZzxutfLh+2sxOqq/HMEZRRdUsldJaA9XkRJHt
-	6w+kBSuxQ+iFMI3hjbU0nHE8O0vX8d7kOPBYq+Hh8/o9wn5h8DkXhR/gtlbp3/PF
-	7krI70sIu7QGgkPt0tpA4QdkZZOl3aD8YsuUSJw==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
-	repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-disposition,content-type,date,feedback-id,from,
-	in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:N3Nk+7FQd+lBJg++i1EpNdmiDJRJy4qcTwjxDPN1J+A=:ipwzzHjBT5M/myEZnD8qNFj0WOxSydDev/u6sVP8buc=;
-X-ME-Sender: <xms:Hljbapo4fYkAxbi7o1zF2IMtIcMTS7RjHdTiNQH0E2OG_KIYiv5OgA>
-    <xme:HljbaoXBzdLX_UbUvPScJX_uBd8e0faQVIziXX3HHjYv6A3Dh1cIi4fNQwC4HoIH7
-    9XUo765Wp5CChmuaVo63vB4VfvOf8Pwrh_CfCT2YqseMXkaPhw>
-X-ME-Received: <xmr:HljbaqHGAtQlovp7FyqeFve5cfGMZQV5DVhlkwz2mzwAQMkCSfguIhA1pAaugQ>
-X-ME-Proxy-Cause: dmFkZTGHCgoe/65dzJcn9v7kUqHotx0TXzvWX3NyhFo3t9TokUCxgTUa/4pyfSWI8vGfzn
-    f4RWdTUE5ZjmRO4fisu5GDFroie350rJJDuGZtQKgqcTZpRl6ZtMgfXaEwa/KMwVeYnOGQ
-    L45m0uVzbPvHXKoC48T5pdS8RGQ/oh7ru28XXYDJud76DV438EY2pEU4EaMyA8dim5Jyih
-    5ac9LEI+fTuVIY8OIjO4m5KtiP3Cc1Pyd4Lmy+ozNnzyo5rfrBJb+jGwcW/I4xo6hFMe3l
-    iLM/gTRr/u3MYPKp1W4BLiuY3RK3EhaEeXFK6Kvd6amTXJ1tN6h0QrXnbWGDWJIy16E8rl
-    XTf/ck40bKdPD7FDNSAqsd9xcxGKM+l3i4nZdcQhissAMnAn75WfdP8iXGrV21WIe8Y4kI
-    NTtyNrCG+KEWPLKVJE1t13rxicYmcxjSXV2VkCRajv5r7WzvQ4G8ZImoTU4CoTVd272NDL
-    iVHAWICiFZFO6K5FIV00PancdeUizeVdhvwMgr6PVhXbydfHw3zNkxT05w2GpvSolqvIwF
-    pTKyBTUklKmRHuU6Hb+8dwHau7JnoYD5kGmQw4gxgvjCZBr47G3xydosf4h0lIxCHLvnGo
-    frs3MsDj10JzVMxuXXFfkxi6Snac81v+L7/Y5qOus5BJJKg4BbBeuB1lRsnA
-X-ME-Proxy: <xmx:HljbavAr1Rs84CBNU9gtpakz4ggO3hrlvasMMz_pvKR2d6eK4zMDWQ>
-    <xmx:Hljbasyi9Mf3bqX3Kc3jHirqra0V9SmNPBnm7LdZVilxFWc2-28u1g>
-    <xmx:Hljbalfg_BndeT6Fz68mdszrx8nM_F08vSstIyHJ-mdSSlt4aRU-YA>
-    <xmx:Hljbahs32KObaG3KU-5F3tOY7JsuaYF3bulZgWQfTKjLXsXyxPen6Q>
-    <xmx:HljbaiZwdLTSvapq5O2wmNUKYBsKeSrLAFG9R5JUi63fMne4f2AFiwbT>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 23 Oct 2026 08:50:37 -0400 (EDT)
-Date: Fri, 23 Oct 2026 14:49:51 +0200
-From: Greg KH <greg@kroah.com>
-To: Connor Stevens <ooglie05@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	rf@opensource.cirrus.com, broonie@kernel.org, sashal@kernel.org
-Subject: Re: [REGRESSION 7.2.11] ASoC: sdw_utils: cs35l56-ot25 DAI not
- registered, no sound card
-Message-ID: <2026102339-control-obsolete-df82@gregkh>
-References: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=me.com header.i=@me.com header.a=rsa-sha256 header.s=1a1hai header.b=Ru8/f8uc
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-60-percent-6 (Postfix) with ESMTPS id 7F6291800BE0;
+	Fri, 23 Oct 2026 13:26:54 +0000 (UTC)
+X-ICL-RepId: 01a168f1-6aba-7193-9df2-46283e5b3fe5
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhBAkMFXgdeDkAdXABYEhVdRVcEWAxdE1EZRQhEK18VFxtcABcNVk1UHR0OWAYSAlpFB01fDl4fBBdGGVUERx5dVkAZGQJRHFYNV0NUBF9QSQxBUGxaAEcXSB1dGVlvUF0cDgBSRVEfVFheBFNWDkIJSgVcB1kBQQpKBVwBRQFDAEAAXhpaHxRQF1QCVANTBlwLcwBSRVEfVEYTGU4bV01QG18CQg8=
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai; t=1792762015; x=1824298015; bh=jbGU65KtEQnPTHCxzVb8IuWPNj7frVnrhFtt5vRA5jw=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=Ru8/f8uc/8aToQmecgLejRjp1cqoD22TqVbxKz6j4UNG1Yy/BaCCJaNgFG0ZK0y63uzGX7omhAzQrMMRPFcS/vF3UAF/YWu/IbQYqHcL7NyrkTy49zqUFnQ22RPRo4tVPI0HJlkjPNx/zsVQhvPXllXh16ha9p6hzd0HVseF2+LYOZSGa/lgYJ/nAzyxi+4IaFVR6g4XM8k4YpR4wcg9CF07vkQTjBBVzh4Y2Jcc97lTTtSk169q65FaB6AunATjTrF+hdVpV8AkLq4id0T1m4KekTxPV4c6+Smf9sdgn+Oxf3Lzha0BWkOOtIWdMXRzkJxtFSHvcSJdfAKx5gUpFw==
+Received: from PROART.taile9cf10.ts.net (unknown [17.156.216.30])
+	by p00-icloudmta-asmtp-us-east-1a-60-percent-6 (Postfix) with ESMTPSA id 061A21800286;
+	Fri, 23 Oct 2026 13:26:52 +0000 (UTC)
+From: Diogo Chaves <diogochaves@me.com>
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] xhci: 3x descriptor timeout behind a vanished hub since 7.3
+Date: Fri, 23 Oct 2026 10:26:16 -0300
+Message-ID: <20261023132616.339833-1-diogochaves@me.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -122,27 +61,141 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF50T1myMs2LSPUsTAPKyJutxzqQihyxbY3=iVGpxenRbnXxKQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: sWS-it6ooGrl2UI7_VKBXC3G-ODLDRC9
+X-Authority-Info-Out: v=2.4 cv=boJBxUai c=1 sm=1 tr=0 ts=6adb609e
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=660iZSQnnn4A:10 a=x7bEGLp0ZPQA:10
+ a=HlUpRvj5PA4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=M7o-fo05QJF8rEXw7VAA:9
+X-Proofpoint-GUID: sWS-it6ooGrl2UI7_VKBXC3G-ODLDRC9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIzMDA1MiBTYWx0ZWRfX35mlbFkxJ2/k
+ n4g3AstNYlbUf57PTUABCHh/oCjTiSVz/eQD/GOAfznyiMMoS9Q7pDJxs2xB+OhJ4vFSS1t2Hoo
+ HfKZER8UA536xAFaAJ3uCL/vae/GzYspXXlKYs1uO8t2smaDEwxx3LsqHdQpkmjetxCjJNDdcdB
+ 8wh4vqrp/KRUmLOvjvOFIjUdi6L65Q99PTZ2X1srmswp4r9590kxKFv+1GYZqYwSj3PCbYRMBub
+ Vo1bIx5mnd73AciHt5fCQMUbn7+a3kNW3IiFHWemr0vJqDkRRuAo6r8RS5ESsbG+4w0/nldRQek
+ kGEH+jV0AWR/klFhHC7x2R059wQ5sZBW+MiH5DO+/dWTe0qeQkNSYlQ1VGzZGI=
+X-JNJ: AAAAAAABUHz77Rm/uOfHzucdiWijDG4jB/5rzDjBt47z4GYlfYoB9vlAHIZsq9zLdnJxBJGtScxoTBnvmTCfYJd5fL4SPCnR1LpDo+hQhprriyBOrncFoGCvbhz0RhGx9yZqHBmY+twT3Xi8j6HXX7XZpa0Il1fX6rCv8BsNWuyq59WNN/nHd5Y9RQ+uYQSRl4j+gvyF+/JWJgMIJKI5IwZK2HNyPe18XK5hTENbyzGVr2UBRQUcNXjaKy1CLSPZ6F1gDAbi6eLmMoTKzjoo4OUJtQ5L6pDehMSMjBlGG/LErTxWQJWxRy/+Aj0uTuCgIIltdsWFSjwBzT437Z0kSIz/rworOQLpWC5zGPAPiQhJ4hk74VN6hHmNn1Kp4/pGdrNeisCP+RflvgiYKQYcj0DnPyukPGjYP7awJ/iWlL56yuR1pjQIDjoA9zvEeEsbeRdsS3CRxdEK3OSPigk2PBtCufq8A8tsRV9M4uGZnKefHRrwe/1XZneauDteM3oAw48Z1YsaQjEUoquQhTDyIAWRY1mFfbhzrvCtyAvrqBh/ipAb68twKTsk/ws9HDHFHaCulA075sJ2gFLlnq1FeHaG190ciR0BnTjBg24RI8LRm0Qb0OZs8xrH+oTPKIZLEZAedN4NbXO7WOp0XI/hsA6Md523cXbhoazRPntLC4rZXxDUPE5AfcEj8BjAKJ9v4B/jIY12oilc1hu1Q+wU+dJmHKUMz+JTRPBrnq+qi5HWfhZVZMzaFFlkUnbJxVKnnov7X4r+lxTnFgmBBLiHngGwHWeAZRBsLLRnRI6YQz0PvAuwWmSOOE79jNODEI7FXaYd3kwb25RsqHWl4gCKs5uHI/OVHaWn5M99dYTFHgyWz06sDhXaSAiD+LkLuX5CAzgf7Sfo3uhMiC06kq3QwZIjmibdAXKguTulDlXVrJ+6RFxCxkHFFjqtRIt8efNM+jLn78tdwIw8Nmfiofp9gw0YzZtNNiP
+ ZkoVPia8FDpLbUxP/2PlDi37b47MFywIZx3P7kAFbUhp6VYQL+Hh3fbfGDoztGkKYVQ7s4bl8b8ifFbxtqv2sRZPfLpgXfoKd+MVbj8dL0oSUfAKkbdlcTcyR4PRImkP9r8JqFx1W/p4L3j1KK74kq5PZewZbkucQFLGRhN5+bUynIMYnuLlHqECAsoR7iEYcD+p6zDHENQUq2HUKD8mii/MeuBuCpnH1Qp1EHzmH72hwMWYTrJbPD6JkYN8LIwi9Vvor3fyswwGZais1HSFWT1GiRiO4gsHpOR0Nu+nA
 
-On Sun, Oct 18, 2026 at 11:41:55PM +0100, Connor Stevens wrote:
-> Hi,
-> 
-> Since 7.2.11 the sound card is missing on a Dell XPS 14 DA14260 (Panther
-> Lake, subsystem 1028:0db9, CS35L57 amps on SoundWire):
-> 
->   sof_sdw sof_sdw: ASoC: CODEC DAI cs35l56-ot25 not registered
-> 
-> Fedora 7.2.9-200.fc44 works. 7.2.11-200.fc44 is broken. I did not test
-> 7.2.10.
-> 
-> 7.2.11 has bf7a3ce1d563 ("ASoC: sdw_utils: Switch CS35L56/57/62/63 to use
-> OT25 DAI"), but not the upstream commit before it, 86c8360c97f6
-> ("ASoC: cs35l56: Add DAI for SDCA OT25 stream"), which adds that DAI.
+Hi Mathias,
 
-Should now be fixed in 7.2.12, right?
+This is my first report to linux-usb, so please tell me if something
+is missing or belongs somewhere else.
 
-thanks,
+Since 7.3, every time my monitor wakes up, my keyboard and mouse take
+about 15 s longer to come back. The cause is a stall in usbcore's
+enumeration of a device behind the monitor's USB hub, when that hub
+drops while its child is being set up. Reverting
 
-greg k-h
+  7e0ef4332ed9 ("xhci: avoid xHC endpoint changes after disconnect or link error.")
+  042aad8d0db6 ("xhci: prevent endpoint recovery after roothub disconnect")
+
+on top of v7.3 makes the stall go away (A/B below).
+
+Setup
+-----
+- xHC: ASMedia ASM4242 USB 3.2 xHCI [1b21:2426] (the board's USB4
+  controller), bus 1.
+- On its USB-C port: a monitor with a Genesys Logic USB 2.1 hub
+  [05e3:0610] (1-1). Behind it, two Logitech receivers: [046d:c548]
+  on 1-1.1 and [046d:c547] on 1-1.2.
+- On every wake, the monitor's firmware drops and re-adds that hub three
+  times in about 6 s. This has always happened. The last drop often
+  arrives just as hub_wq starts enumerating 1-1.1.
+
+What happens
+------------
+In this race, 7.3 logs `usb 1-1.1: new full-speed USB device`, then
+nothing, until `usb 1-1-port1: attempt power cycle` 3 x
+initial_descriptor_timeout later (15 s with the default 5000 ms).
+Before the series, the power cycle came within milliseconds.
+
+A/B test, same machine, same config (the distro config trimmed with
+localmodconfig), usbcore.initial_descriptor_timeout=1000 to shorten
+the runs, monitor woken three times per boot plus the wake at boot.
+Time from `usb 1-1.1: new full-speed` to `usb 1-1-port1: attempt power
+cycle`:
+
+  v7.3                                         0.1*, 3.1, 3.1, 3.1 s
+  v7.3 + revert 7e0ef4332ed9 + 042aad8d0db6     0.03, 0.03, 0.03, 0.03 s
+
+  * at boot, on v7.3, the hub was gone before the descriptor read went
+    out (`cannot reset (err = -71)`).
+
+Time from the first drop to both receivers working again: 11.2-11.3 s
+on v7.3, 5.9-8.2 s with the revert. The rest of that time is the
+monitor's own three resets.
+
+On v7.3, one boot also hit the same thing one step later. The hub went
+away after 1-1.2 had its address, and the full device descriptor read
+then waited out USB_CTRL_GET_TIMEOUT:
+
+  08:56:10.097376 usb 1-1.2: new full-speed USB device number 12 using xhci_hcd
+  08:56:10.282395 usb 1-1: USB disconnect, device number 10
+  08:56:15.720384 usb 1-1.2: device descriptor read/all, error -110
+  08:56:15.723375 usb 1-1-port2: attempt power cycle
+
+Trace
+-----
+The trace below was taken with xhci-hcd trace events and hub.c dynamic
+debug, on a distro 7.2.8 kernel that carries this series as a backport
+(I saw the same stall there first; plain v7.3 behaves the same, as
+above). initial_descriptor_timeout=1000. Slot 104 is 1-1.1, behind
+slot 103, the hub. Excerpt, CLOCK_MONOTONIC:
+
+  754.760938 xhci_handle_port_status: port 1-1: 0x000202a0 Speed=0 Link=RxDetect PP CSC
+               (the hub is gone)
+  754.807016 Address Device Command (BSR), slot 104
+  754.833730 xhci_urb_enqueue: 1-1.1 ep0 GET_DESCRIPTOR(DEVICE, 64), slot 104
+  754.833732 xhci_ring_ep_doorbell: slot 104 ep0in
+               (1st try, rung)
+  754.833755 xhci_handle_transfer: CTRL Setup Stage, error event
+               (fails at once; no giveback)
+  755.861009 xhci_urb_dequeue, Cancel URB, giveback
+               (usbcore's timeout, 1.03 s later)
+  755.861037 xhci_urb_enqueue, 3 TRBs queued, no doorbell
+               (2nd try, never sent)
+  756.886018 dequeue / giveback (timeout)
+  756.886054 xhci_urb_enqueue, 3 TRBs queued, no doorbell
+               (3rd try, never sent)
+  757.910008 dequeue / giveback (timeout), Disable Slot 104
+               (then hub.c: "attempt power cycle")
+
+A possible explanation, from reading v7.3's xhci-ring.c with the
+assistant mentioned at the end (I can't vouch for this part myself, so
+please take it as a lead, not a diagnosis): the Setup stage error reaches
+finish_td(), which calls xhci_handle_halted_endpoint() and returns,
+expecting that function to have put the TD on the cancelled list
+("xhci_handle_halted_endpoint marked td cancelled"). But
+xhci_handle_halted_endpoint() now returns early with -ENODEV when
+!rhub_port->connected, after setting EP_DROP_PENDING. The TD is neither
+cancelled nor given back, so the URB sits until usbcore's own timeout
+cancels it. Then usbcore retries. xhci_urb_enqueue() accepts the new
+URBs, but xhci_ring_ep_doorbell() skips EP_DROP_PENDING, so each retry
+also waits out the full timeout. Before the series, a disconnect went
+through the endpoint reset path and the URB came back with an error at
+once.
+
+That is harmless for a device that is really leaving, but here it hits
+every control transfer in flight, or queued, while the parent hub
+drops. During enumeration, that is up to three tries of the initial
+descriptor read, or one 5 s read/all.
+
+Perhaps the early-return path should give the TD back with an error,
+and URBs submitted to an EP_DROP_PENDING endpoint should fail at once.
+I haven't tried either. I also haven't bisected between the two
+commits; I only tested reverting both. I'm glad to test patches on this
+machine; it reproduces on every monitor wake.
+
+#regzbot introduced: 042aad8d0db6
+
+Tools: I used an AI coding assistant (Claude Code) to capture and read
+the trace, build the test kernels, read the xHCI code, and draft this
+report. I checked the A/B measurements and the log lines against my
+own journal; the code reading above is the assistant's, and I don't
+know the xHCI code well enough to confirm it. I'm happy to run more
+tests or take a trace with whatever you'd like enabled.
+
+Thanks for looking at this, and for your work on xHCI.
+
+Diogo Chaves
