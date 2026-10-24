@@ -1,65 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792790942;
-	b=RxD0xfqRipDZ9tv6hTwCxgCbYkSMHe6npERgHFjCkLSKogGkx8NzT8tFKdlzjgxTSeyz
-	 VXNyuHtAVcc04kq5wOk//6DIEdWNM/QXbRO+sKfUG3uIsZ046d1gVr01DsdgtWBzPcMtP
-	 8uLlLgoAmpqfoXBWn5U4AGCmRqz+ud1Z5ohhOEbamdUKGNQ9PLmLhQfRvwjv/BGPnT+ZI
-	 GuSTcplT8Fk+W1JvHsG2dsjOKJV9E/amahgJutkyzkjwryH6Lg7mp0Ec3PMHwejBF8EE9
-	 ppjjrKdZ9vTY+vRvB7HSrTuFGOytlEg/v8HImv8gciW+cM2PHoDO7F9HVtXOASIhIDw==
+	t=1792814508;
+	b=rZyo3yHKSLf0MQ/Qr5cmyg/Hc4MsxUQv+qJyXKnVazy/tDj2z7JYarm4ZcsswkCHUQvQ
+	 itWaF0LcOh6zwj0pjDNvu54sNVkAd71eZB5dn4e8zxplcjqX7och6dOBA/d49sxAfoJ6h
+	 fVsuZT2gd6x/EkY8oGzK89HlLrMW1oTirnlp1i5eWELBLulRV/a/HbLcOCpG8qWVJjZxd
+	 eLYXiiqYHCrEsiOWUjpn6QMC7wXn0SKxjRQ2qg9qZIojX5SJDMdshIZCQOzURd/NbJbjX
+	 DzHukoTvpcwsOW3tjfLdbDmleZ9nMysd7QmGfcB31WMBfkSqBc8ADqoBXWK+/fj+XEg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792790942;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=SPo5JT16y1DaEMxqlX2cvPgpbj/FzZJAHhXrqtgHuJA=;
-	b=PisjVic8YS8iEIisWSmqUjEbp9gikH3RzcuiL/BtRndytX4UKFAfsCw+kBJz613ognN7
-	 0JC9NLf7hNdcOYyKcQK7JpIMHd23ynFagz8VRk7BNeetp3lW3Ls1HcXlp19QhzPL6sXNd
-	 aDOSwk4nGeAbdOHhOR/REzmTcxcccceb2nAARRLd2XajIZuzNRtUmZMJVHh0npSdhpkIH
-	 F4Rbd+48AkKdwWZjhvhyjYUCyVEdzMpelm9Zb7DHVtDpqxAh/fA2tSwDmZ4453lU49vms
-	 EA8AH2KVFKDIwvoC9ZiP9BEdRLLa7Df0ntP/+TparkHOUq7Zlx+7TIOnTL3uPEC9VqQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792814508;
+	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
+	bh=mp0eHvDYUCUbR4qMDj39s0a9SOwwSqfcFq4VcI5fipY=;
+	b=mJJHFN6lYJ08xsk0AXLcY/o38F4KbVblpIZLWCjrbfmACCeziihM45XakAQXmK2teDkk
+	 TuxZnbaRF0sJlS9IKyU7SULKsSS02HaZ6dEV4nno4xgM8TLT5cDViRjnNCEtuvft/JuPL
+	 ppkWzfMiOCePgzRcq0Jo4Je+7FHWHBqdmqtC2HUG4Zpo1+p8pqQmmtZCSHjs60aGMxDnL
+	 y6PKzMEp3tNAL5d7M+HQmWZM9lHphkoVSqdWU+Le84O+TvghTdwRsIB0+NrDatavJ+C17
+	 IcBb+QgUxQU4+PjE/co+NqFrTdyUsgxadnEVrrqnk0HHrsgXTmNoKQn7abHro6gMWQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HrDUDY5a;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=gmx.de;
+	spf=pass smtp.mailfrom=gmx.de;
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=br5C7TPv;
+	arc=none smtp.remote-ip=212.227.15.19
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D950606A31B;
-	Fri, 23 Oct 2026 21:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7923606A31A
+	for <regressions@lists.linux.dev>; Sat, 24 Oct 2026 04:01:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B7923606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HrDUDY5a
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B5F1F01825;
-	Fri, 23 Oct 2026 21:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792790942;
-	bh=SPo5JT16y1DaEMxqlX2cvPgpbj/FzZJAHhXrqtgHuJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HrDUDY5aj9SM0a/3NOaJ9YsHk3+5IGEa3m+Rkvwx2rIa4v+OTTJKCbh7fH6yIMBED
-	 0toEaHtWlwbgnUf3NXP7gfEHFC4DaM11EBB0NiwfGeoCl15YWcN0Au1w/b0vy27AQl
-	 85J8EtK5nCXBZvuBeZrkB2HwTmmr7qPGHjBpaTRIN/O/SFQsitCMzU++05bW0wOO+7
-	 ZecSyPBhN8g/Diq+Q1UFTK4zTZYJY/7XODqI0GFs/qAleIp9oQNC/KCs7OBZIs/KGS
-	 1IZu6EfJog8RdMlQsyRBFe3zT93NISPFqkC4n4hYvjeUscEDQp4vd3nk+d5zRqH2Gm
-	 v3HiBSuV757xw==
-Date: Fri, 23 Oct 2026 18:28:59 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Antoine HURET <antoine.huret@bull.com>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] perf: Rewrite core context handling breaks
- multiplexed cgroup events
-Message-ID: <atvRmz_uGKpiYfMv@phoenix2>
-References: <PR3PR07MB69223331EED5BEBE150375B7849C2@PR3PR07MB6922.eurprd07.prod.outlook.com>
- <20261015111316.GJ4121339@noisy.programming.kicks-ass.net>
- <PR3PR07MB692235BC98DAB96E30E4AB8D849C2@PR3PR07MB6922.eurprd07.prod.outlook.com>
- <20261015132135.GK4121339@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key, unprotected) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=br5C7TPv
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1792814500; x=1793419300; i=w_armin@gmx.de;
+	bh=mp0eHvDYUCUbR4qMDj39s0a9SOwwSqfcFq4VcI5fipY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=br5C7TPvhQ/zTePq07LoSPPvxpax/EvEVLOYru+FC2fk8R4QYmmoKvfzLIwIhuoZ
+	 5OwaA8STxU+ekO6qD4GduZHt89N7pITqv/Ione/l6aE7rF1YEtBpX+KtUfIIpD4S7
+	 +/b6b2bH9SpowW78BNwRReThbpYdx9mZQiSkXkuG2MXaB0ZHPer9vjLd251iKr9G7
+	 JmudtlHvbrmVNsNWUDL73mAN5wOZk+DvD1hgLMH0C4jCEMKNDzSIeLosn5RLkrrOr
+	 YZ2C9Z9yBVsIcREfgK21eUHXT0BOtT8ym/Pr7NFK7RjGyXH/zdLomZkJ+yYdd9qIm
+	 RX00uE4quJc264Itlg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1Hdw-1xIoG62uXy-00CepP; Sat, 24
+ Oct 2026 06:01:40 +0200
+Message-ID: <e46ea453-5a56-4009-8b33-900166345905@gmx.de>
+Date: Sat, 24 Oct 2026 06:01:39 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -69,81 +63,144 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261015132135.GK4121339@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] hp_bioscfg causes boot failure on model HP Laptop
+ 15-bs1xx
+To: Julien <julien82453@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: regressions@lists.linux.dev, jorge.lopez2@hp.com
+References: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VPfBtPskUbhTecWqI+6dDY+KYA6B4d4Nr8ADZ4bQ2+o0o++fGY9
+ ggdI2qkkeIgN1ra3REKAIxx1ZDqFP9zbtaSmsiT4Z8dXZEqR6NmVTBfQIr2G1YfKmwMJc+d
+ 0M/bWwcfZpDb2hJ7Y7N+QRAoeJ+f/ntFp6ThLyrnTLzSjk8SoHzldrDNzrFIdT6wgWjUdrM
+ PEce5UG/6xxjKXtnXsFbg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WjbpYBv7YL8=;Q5D9KU3iApOnJyR4Pv8q6X/E9Vn
+ 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
 
-On Thu, Oct 15, 2026 at 03:21:35PM +0200, Peter Zijlstra wrote:
-> On Thu, Oct 15, 2026 at 12:30:55PM +0000, Antoine HURET wrote:
-> > On Thu, Oct 15, 2026 at 11:13 UTC, Peter Zijlstra wrote:
-> > > /me mutters something about having to go install and learn docker and
-> > > what's wrong with simple shells scripts that poke about in /cgroup
-> > > filesystems :-)
+Am 22.10.26 um 16:29 schrieb Julien:
+> Since commit 467d4afc6caa ("platform/x86: hp-bioscfg: Fix automatic
+> module loading"), the hp_bioscfg module is automatically loaded on HP
+> Laptop 15-bs1xx.
+>=20
+> This module causes the system to hang during boot. Blacklisting
+> hp_bioscfg allows the laptop to boot successfully.
+>=20
+> Sometimes the screen will go black but there is no kernel panic
+> screen. When I get to see logs, there are no messages related to
+> hp-bioscfg. I suspect the system crashes before it can display them
+> because on a normal boot the next message I would see is "Module
+> hp_bioscfg is blacklisted".
+>=20
+> I think the hp_bioscfg module should be disable on this hp model until
+> a fix can be found.
+>=20
+> #regzbot introduced: 467d4afc6caa
+>=20
 
-> > Fair enough, sorry about that! Next time I'll do plain cgroupfs,
-> > promised :-)
- 
-> FWIW, it might be useful to extend perf-test with a bunch of cgroup
-> tests - this one included. AFAICT we have nothing there atm.
+What happens when you load the module manually after booting the system?
+Does dmesg contains any interesting messages in this case?
 
-The more the merrier, so far:
-
-acme@phoenix2:~/git/perf-tools-next$ grep -rw cgroup tools/perf/tests/
-tools/perf/tests/expand-cgroup.c:#include "cgroup.h"
-tools/perf/tests/expand-cgroup.c:			pr_debug("cgroup name doesn't match:\n");
-tools/perf/tests/shell/lib/perf_json_output_lint.py:      'cgroup': lambda x: True,
-tools/perf/tests/shell/lock_contention.sh:	echo "Testing perf lock contention --lock-cgroup"
-tools/perf/tests/shell/lock_contention.sh:	perf lock con -a -b --lock-cgroup -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
-tools/perf/tests/shell/lock_contention.sh:	echo "Testing perf lock contention --cgroup-filter"
-tools/perf/tests/shell/lock_contention.sh:	perf lock con -a -b --lock-cgroup -E 1 -F wait_total -q \
-tools/perf/tests/shell/lock_contention.sh:		echo "[Fail] BPF result should have a cgroup result:" "$(cat "${result}")"
-tools/perf/tests/shell/lock_contention.sh:	cgroup=$(cat "${result}" | awk '{ print $3 }')
-tools/perf/tests/shell/lock_contention.sh:	perf lock con -a -b --lock-cgroup -E 1 -G "${cgroup}" -q \
-tools/perf/tests/shell/lock_contention.sh:		echo "[Fail] BPF result should have a result with cgroup filter:" "$(cat "${cgroup}")"
-tools/perf/tests/shell/record_bpf_filter.sh:  if ! perf record -e task-clock --filter 'cgroup == /' \
-tools/perf/tests/shell/record_bpf_filter.sh:       -a --all-cgroups --synth=cgroup -o "${perfdata}" true 2> /dev/null
-tools/perf/tests/shell/record_bpf_filter.sh:    echo "Cgroup bpf-filter test [Skipped cgroup not supported]"
-tools/perf/tests/shell/record_bpf_filter.sh:  # 'cgroup' requires PERF_SAMPLE_CGROUP flag
-tools/perf/tests/shell/record_bpf_filter.sh:  if ! perf record -e task-clock --filter 'cgroup == /' \
-tools/perf/tests/shell/record_bpf_filter.sh:  if ! perf report -i "${perfdata}" -s cgroup -q | grep -q -F '100.00%'
-tools/perf/tests/shell/record_bpf_filter.sh:    echo "Cgroup bpf-filter test [Failed root cgroup does not have 100%]"
-tools/perf/tests/shell/record.sh:  perf script -i "${perfdata}" -F cgroup 2>/dev/null | grep -q -v "unknown"
-tools/perf/tests/shell/record.sh:    -aB --synth=cgroup --all-cgroups || ret=$?
-tools/perf/tests/shell/trace_summary.sh:# summary only for system wide - cgroup summary mode with BPF
-tools/perf/tests/shell/trace_summary.sh:test_perf_trace "-as --summary-mode=cgroup --bpf-summary"
-tools/perf/tests/shell/trace_summary.sh:# summary with normal output for system wide - cgroup summary mode with BPF
-tools/perf/tests/shell/trace_summary.sh:test_perf_trace "-aS --summary-mode=cgroup --bpf-summary"
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:# perf stat --bpf-counters --for-each-cgroup test (no_mlock)
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:# skip if --bpf-counters --for-each-cgroup is not supported
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:	if ! perf stat -a --bpf-counters --for-each-cgroup / true > /dev/null 2>&1; then
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:			echo "Skipping: --bpf-counters --for-each-cgroup not supported"
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:			perf --no-pager stat -a --bpf-counters --for-each-cgroup / true || true
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:	if [ -d /sys/fs/cgroup/system.slice ] && [ -d /sys/fs/cgroup/user.slice ]; then
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:	find_cgroups_self_cgrp=$(grep perf_event /proc/self/cgroup | cut -d: -f3)
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:		# cgroup v2 doesn't specify perf_event
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:		find_cgroups_self_cgrp=$(grep ^0: /proc/self/cgroup | cut -d: -f3)
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:# As cgroup events are cpu-wide, we cannot simply compare the result.
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:	check_system_wide_counted_output=$(perf stat -a --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, sleep 1  2>&1)
-tools/perf/tests/shell/stat_bpf_counters_cgrp.sh:	expand_output=$(perf stat -a -x, --bpf-counters --for-each-cgroup / true 2>&1 | wc -l)
-tools/perf/tests/shell/stat_metrics_cgrp.sh:# perf stat metrics --for-each-cgroup test (no_mlock)
-tools/perf/tests/shell/stat_metrics_cgrp.sh:	if [ -d /sys/fs/cgroup/system.slice ] && [ -d /sys/fs/cgroup/user.slice ]
-tools/perf/tests/shell/stat_metrics_cgrp.sh:	find_cgroups_self_cgrp=$(grep perf_event /proc/self/cgroup | cut -d: -f3)
-tools/perf/tests/shell/stat_metrics_cgrp.sh:		# cgroup v2 doesn't specify perf_event
-tools/perf/tests/shell/stat_metrics_cgrp.sh:		find_cgroups_self_cgrp=$(grep ^0: /proc/self/cgroup | cut -d: -f3)
-tools/perf/tests/shell/stat_metrics_cgrp.sh:# Check if metric is reported for each cgroup
-tools/perf/tests/shell/stat_metrics_cgrp.sh:			--for-each-cgroup "${test_cgroups}" \
-tools/perf/tests/shell/stat_metrics_cgrp.sh:		# Find metric lines for this cgroup
-tools/perf/tests/shell/stat_metrics_cgrp.sh:			/)  # The root cgroup, leave unchanged.
-tools/perf/tests/shell/stat_metrics_cgrp.sh:		# We use exact cgroup match with surrounding commas
-tools/perf/tests/shell/stat_metrics_cgrp.sh:			echo "FAIL: No metric lines found for cgroup '${cgrp}'"
-tools/perf/tests/shell/stat_metrics_cgrp.sh:				log_verbose "Enforcing metric check for cgroup '${cgrp}' \
-tools/perf/tests/shell/stat_metrics_cgrp.sh:for cgroup '${cgrp}'"
-tools/perf/tests/shell/stat_metrics_cgrp.sh:					echo "FAIL: Empty metric value for cgroup '${cgrp}'"
-tools/perf/tests/shell/stat_metrics_cgrp.sh:				log_verbose "Skipping metric check for cgroup '${cgrp}' \
-tools/perf/tests/shell/stat_metrics_cgrp.sh:if perf stat -a --bpf-counters --for-each-cgroup / true > /dev/null 2>&1
-tools/perf/tests/sample-parsing.c:		COMP(cgroup);
-tools/perf/tests/sample-parsing.c:		.cgroup		= 114,
-tools/perf/tests/Build:perf-test-y += expand-cgroup.o
-acme@phoenix2:~/git/perf-tools-next$
-
-- Arnaldo
+Thanks,
+Armin Wolf
