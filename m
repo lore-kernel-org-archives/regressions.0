@@ -1,97 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.51
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792882063;
-	b=D5ZcCskYSOF8zXoAe4eU9h+ZL9LtUIZFO27VnChf5gpahpuMYen7qnmTUGdDc8e9LsGn
-	 XemTmxmZOEzGvQtlz5MgIYdHCRkXXc3ORz6wCBrAmOlI1aanL/YP9EXpN9hSqSCXinqBY
-	 JMYqydMP2tWJGaASXZJ6rsPuTFQeYse/Ibs5iw5aUy/PGTUqJbBbszWA7wn21tdwh4M3t
-	 JJV1dH/sOOTkh0p3aURGNLuYWTKfOYKVDNe96E93vVTgT6dg0I2YD2fDFTgTlerA6v8wl
-	 XGMVCd05q8bKuST7Y0b2MWDPzfu2z3q0q6D8yqlbYdHHXHRdiquENyYq94bW+LPnfWQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792882063;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=NZCf9o2Rj196Ew4/tcSd/wzVTA4Lk6Bgp5J5f2wGqdU=;
-	b=F5LJDZcGJnI0EXf+N0kv0QJ0LU7bNVkS79+eWJNpyudOHxeDvTVbKeB+TQKPHJ4lBxFH
-	 yEC5fWwSqVG7B5RZ4oklPvbcu5wAw5sCc0bXowp4vlKM/aueIGrYe/w+izWNLNkOyzUGn
-	 vUs7RJXovYFbbQNwGs3rXHxwvEwgV1kvfqzENvlu+vMdzLUOtD3XLmuJHlFMuFOljuMfu
-	 etNDqeSbuKojlY4FyPXeypq0jcxqHFRhvmb8SCi6XFZBfQCLWqWuE+zTD/NiiYbPGRvAh
-	 mURJ2/qdc2mUMzxUOqjaipL4pCkG3zq1yMh86Xx6r9M28Hz6FoMBvM3V0JvLkXkff9A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZX+LLFB+;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.51
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.161
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792883433;
+	b=YP2T6QeQuogywZMQ0on9SmZTaLuDg6uAOH83Wm5sTZfGOCDMn0XFRle1AO+fglNfeXZ+
+	 u/X6FGJUai+g7KpA8N28wtkjVt6iib8JfX7AKjM9WDqcdzgYwhRFFb4AiUf2XnCcc8gQy
+	 kUgpJ8u6asp/ecEO6c3Rn7byh3dzhqnoRjhUCyJiFceSAsfYAFf4RlAtan8dgWpGTur/c
+	 004WjF9U30UHW8+3gqpdqWIoYO8IHyUlXH06jfwKW436T9ehGO7YIr1i1hhbazzJc0il4
+	 oggSFpsH2iTL+/DeqQoNzBdNGqeRZO67o9EaXpL/TJob9kDA1hcHDCv4tEmv79lrCTA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792883433;
+	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:Content-Type:
+	 X-Rspamd-Queue-Id;
+	bh=vOvuYY50XCc0yOsd2x6FdB/8ydxTQ9YpGZLisusN76A=;
+	b=b5U8Yt2HTyo6zTEBHacOuYlpkSSAQbnS7Gkk5DMr7A4hLuWQ6+CEo2GKNGbryoxHSSgY
+	 HtzzSXqmUAqnuFBFHxDuW13UfOkGweM+RIBsBLiQJ87aGVvX8Mq2IwGLnqXhErq+IIc3l
+	 3mmogx74HdBgqnPX6Xusl1OmTSVSsBZtEreyHpZWfgVa70DpWvIzF8ywJnoiU1MdfRoIb
+	 MlgMCnUzjGCGxQDEAqk6FmuLO5/YGIfhXRbbzmp9C/FqtJNdfk/KG4AGh3Ba4MYPOC+VK
+	 wQlqXPRGnGKuwSEF7u+KxMXhpi5B5M/DDh59RlWr64ekI32zgBPQwgJeFLc6Ri0HJKg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=dsine.de;
+	spf=none smtp.mailfrom=dsine.de;
+	arc=none smtp.remote-ip=80.241.56.161
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BF8606A31D
-	for <regressions@lists.linux.dev>; Sat, 24 Oct 2026 22:47:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A3BF8606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZX+LLFB+
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6acb9c018ffso2701673a12.1
-        for <regressions@lists.linux.dev>; Sat, 24 Oct 2026 15:47:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792882061; cv=none;
-        d=google.com; s=arc-20260327;
-        b=GuGhWbtOUq61JBa00prs/MBnB7q+TfADzNhCFxfDO+1mzbSjs4Qip3KEh9xxuKaJql
-         iutMImW0XHedV7e3ZFCi7/L77Oq/7Alg3CcdkYT4w2F3gi4giy30m6Pe6K9+QjPR1ji3
-         M20bYkTsI8Ruz4UHhgYOo3IRE68JUmlfFTeIQ249f7bMDoCpxJ4eVUi4FogOWCUd5GMY
-         g5LUaalmWujWC7vFaxFzNmnDnb6wYhdEDjwZtH93e96XaVxZkVEEszVtWOV/klXXhsAC
-         K2TE8fC9cYuHcF+ipua5YTxItgahKD4/a4G1WjGKUHU4t+fZqgelNZxf4U07YaNc5bRh
-         R5VA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=NZCf9o2Rj196Ew4/tcSd/wzVTA4Lk6Bgp5J5f2wGqdU=;
-        fh=9oDb4orRLRQtn5U+EBJNyV4x/94P6Xf4ruOABv9SMxk=;
-        b=pIOYEiiCrTi4zYo2lYCJD78S0qYKOF4NP7I71+7+Al0bIgIUeAlQd64fY3xOYAgyTx
-         2WitEzielofexCaQieUEaM+UjMsCtVVmjk3JnoInvdShqlA46QNEPZDq0GGfpld4sGv3
-         7pC5/K8eapx39EUUxk7/fPGm56Np2RFY18c/eM3IkdpTXwbG6pGoFigIvdPkEI/ikNAB
-         nuebVRINvJqCA92EyQ7DHbMyENztlmapC3b/CR2zFJ7dbOGhWk/GlDzSiLyGVYiuq/XY
-         HQJCOs8xE3wVvtWMCkn7vlg+A7WksXf19eYlsq80AWVpf1oPeruN2wUYpE7O4FYPo/uu
-         vTjw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792882061; x=1793486861; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NZCf9o2Rj196Ew4/tcSd/wzVTA4Lk6Bgp5J5f2wGqdU=;
-        b=ZX+LLFB+gagZqcuv7PcHwMFMIaR2XxEcQQbnyySYAd3wOT+iUXl3X00IRJAn7mj9Cp
-         4c7vwhXEkhKXuWlY2sRBwvtezw0YnUvnrVXWPNaA0JkD6kYXsDY23NKyoQtdbr+c6Kg7
-         gehKvYUg3PCLHYxOc3u3ZhH5L17IupUYe8BxOlJxPe6HFRfwJF+qEGvRAxHjMMZJ5nx/
-         /btL2pYEqle0q9OrpfF34saAlOOmxW4wWlGt7X9cxb59GU7kr+2QkmwgfAf32tnoeUkw
-         YmJiGIViVj+Qgx9jiKvDb/45wSv+GiRctC/RJk9oTguJUTS3Q1ztzpKOAZj1u4qApO3m
-         4+mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792882061; x=1793486861;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=NZCf9o2Rj196Ew4/tcSd/wzVTA4Lk6Bgp5J5f2wGqdU=;
-        b=ZOaGNryXIEkp970oUwYKjMapwKkR/LvCGZ3hrGrG2ZrY86Dl2d5nGrcByjMzrXHhy7
-         6/257ZuEiZy0cPth3npvWcgLlmB9DHYbc+i1tyq4RMd+2B5DP4tmE5tJvdpFDz/YTiPh
-         MgNMK+1MOtHnpqvYa/oHoSg4PSYDLAxym9AsQ6jZDyxdtS4uinR7/UBx1osPMNqJxyAB
-         ext+nYHQi7vRCK2UM1Eo//RKfFLTi/5Hr4tmnSH00417ZG/veQnD4Z69GSyZCQXSPX6f
-         hB385SM8LXnVUfN18veNfGKcl1jigq+UnmckAPyW3N9YIFI1dYdQGIffqmnLo0dRvze8
-         G7xA==
-X-Forwarded-Encrypted: i=1; AKwUvBzlTNcn2fLgXvEvZo3chDCgC4sZTz3LXsO07UK7DrgZyqWyangjsqFJ6TTvx5pvvY07eYgyeO66LBLAMQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKlzvmMENuYTUkjEw1Ab/sRpDzY9bHqGWKmDy9gSFBzri0wnT3m
-	1oqOAcO1C640LcTJjKn2/oDBMRI9anDaTkgb5X6WhL3phOeB+yn0br9o9y941N4gknHZtqX5lSW
-	EKuxrSYWhEG+/PTvSRhv/06UtBCJZUCU=
-X-Gm-Gg: AYBFou2pzmvKPvqgu98exYfn+eGtXs0IXVGqrzX8yuSN8nND88uTTlRy8QipWg8dVK6
-	Ze00pd+xFC/HcdsXcJSTLoKz+5KWaq2ZKDKaQbh3xJLt7CD7YPcCuLBm8g80v7pbBbAmWSr7Dms
-	5hU+HXRac1G7Xu2AWa8fCI4TRjYfLZu0UzHV7VK0iWmG0yt/KT+Ydbdg3Mnq/m7ebE7Ca7YV5uc
-	5PjV5/CyHkzRFnCW6zvbPrf3Z8gOIINYPo8Jp0sjp36v76fM8UmcJsj3OYg2jyb+nRM1jj3g4dg
-	293CW/9xWgwOumXftBl/hR/Coq73pxfDf3BdtiLhEzuoe1vbFGEKa2w0eVwjI2xo/r62BbUkP6B
-	+ZwQe4ePHR5rGUlRGzHC2lu2yAdtFfMr5F9h8Zw==
-X-Received: by 2002:a05:6402:e08:b0:6b4:1eed:b9f2 with SMTP id
- 4fb4d7f45d1cf-6b443a2fee7mr3591780a12.10.1792882060790; Sat, 24 Oct 2026
- 15:47:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADC3606A31B
+	for <regressions@lists.linux.dev>; Sat, 24 Oct 2026 23:10:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DADC3606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dsine.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dsine.de
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4jBwbT3zxMzKnQb;
+	Sun, 25 Oct 2026 01:10:29 +0200 (CEST)
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=none (outgoing_mbo_mout: domain of dennis@dsine.de has no SPF policy when checking 2001:67c:2050:b231:465::2) smtp.mailfrom=dennis@dsine.de
+From: Dennis Wissel <dennis@dsine.de>
+To: Yiyu Zhou <yiyu@yiyuzhou.io>
+Cc: Yiyu Zhou <yiyu@yiyuzhou.io>, linux-usb@vger.kernel.org,
+ mathias.nyman@linux.intel.com, regressions@lists.linux.dev
+Subject:
+ Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
+ (3434:d068) at boot since v7.3
+Date: Sun, 25 Oct 2026 01:10:27 +0200
+Message-ID: <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
+In-Reply-To: <20261024203558.3181711-1-yiyu@yiyuzhou.io>
+References:
+ <4MjB9K-2SoiA85WbI9iEig@dsine.de> <20261024203558.3181711-1-yiyu@yiyuzhou.io>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -101,52 +60,71 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: Domenico Suppa <domenicosuppa@gmail.com>
-Date: Sun, 25 Oct 2026 00:43:52 +0200
-X-Gm-Features: AclHuK84iwYwcADuMVCUOUYb8Pad-bbbUjeJBTQvX6wwjDeQ-jqJnqjt6Unj6PU
-Message-ID: <CADP5X9J16EYxO94eH6cGJT70k1s_QguPPPGEzH=s8hfQ7dknQQ@mail.gmail.com>
-Subject: Re: [PATCH 6.18.y 0/3] ACPI: scan: fix the fixed event power button
- since 6.18.57
-To: Ting-Han Hou <ue081723@gmail.com>
-Cc: Domenico Suppa <domenicosuppa@gmail.com>, fredericmariejoseph@protonmail.com, 
-	Greg KH <gregkh@linuxfoundation.org>, kernel@ametros.net, linux-acpi@vger.kernel.org, 
-	linux@stwm.de, "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, regressions@leemhuis.info, 
-	regressions@lists.linux.dev, sashal@kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-Rspamd-Queue-Id: 4jBwbT3zxMzKnQb
 
-Tested-by: Domenico Suppa <domenicosuppa@gmail.com>
+On Sat, 24 Oct 2026 13:34:07 -0700, Yiyu Zhou wrote:
+> The fix is queued in Mathias's for-usb-linus branch as 1f36cc9fa949
+> ("xhci: give back all TDs when skipping endpoint reset after
+> disconnect") and applies cleanly to v7.3:
+[...]
+> Could you test it?  If it fixes your case, please reply here so that
+> Mathias can add your Tested-by.  If it does not, reverting 042aad8d0db6
+> and 7e0ef4332ed9 on v7.3 would show whether these commits are involved.
 
-Hi Ting-Han,
+Thanks, I tested both on top of 7.3.0-4-cachyos, booting with the mouse
+plugged in each time.
 
-I applied the three patches on a clean v6.18.58 tree and built a test
-kernel (6.18.58-acpifix). The patches applied without fuzz. The power
-button now works correctly on my machine.
+1) With 1f36cc9fa949: much better, but not completely fixed.
 
-Here is what I checked after booting the test kernel:
+No reset loop anymore. After one disconnect and re-enumeration all four
+interfaces bind, and both the mouse and the NuPhy keyboard work.
+Before, the boot took about 3 minutes and both were dead.
 
-    uname -r
-    6.18.58-acpifix
+But hub_wq still stalls for about 11 s after the first reset of the
+mouse. Other devices on the same controller (1-9.2, 1-14) are only
+enumerated after that. Just before the disconnect is handled, xhci
+prints three "not part of TD" messages for ep 0:
 
-    dmesg | grep -i "power button" shows both lines:
-    input: Power Button as /devices/platform/LNXPWRBN:00/input/input2
-    ACPI: button: Power Button [PWRF]
+[    3.509460] usb 1-1: new full-speed USB device number 2 using xhci_hcd
+[    3.510626] hid-generic 0003:3434:D068.0001: input,hidraw0: USB HID v1.11 Mouse [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input0
+[    3.510772] hid-generic 0003:3434:D068.0002: input,hidraw1: USB HID v1.11 Keyboard [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input1
+[    4.973074] usb 1-1: reset full-speed USB device number 2 using xhci_hcd
+(nothing on the bus for 11 s)
+[   15.970122] xhci_hcd 0000:00:14.0: Event dma 0x0000000104205260 for ep 0 status 1 not part of TD at 00000001042052d0 - 00000001042052f0
+[   15.970767] xhci_hcd 0000:00:14.0: Event dma 0x0000000104205280 for ep 0 status 13 not part of TD at 00000001042052d0 - 00000001042052f0
+[   15.971131] xhci_hcd 0000:00:14.0: Event dma 0x0000000104205290 for ep 0 status 1 not part of TD at 00000001042052d0 - 00000001042052f0
+[   16.157121] usb 1-9.2: new high-speed USB device number 7 using xhci_hcd
+[   16.354120] usb 1-14: new full-speed USB device number 8 using xhci_hcd
+[   16.481086] usb 1-1: USB disconnect, device number 2
+[   16.894150] usb 1-1: new full-speed USB device number 11 using xhci_hcd
+[   17.026214] hid-generic 0003:3434:D068.000B: input,hidraw1: USB HID v1.11 Mouse [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input0
+[   17.099110] hid-generic 0003:3434:D068.000C: input,hidraw9: USB HID v1.11 Keyboard [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input1
+[   17.101019] hid-generic 0003:3434:D068.000D: hiddev100,hidraw10: USB HID v1.11 Device [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input2
+[   17.103029] hid-generic 0003:3434:D068.000E: hiddev101,hidraw11: USB HID v1.11 Device [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input3
 
-    readlink -f /sys/bus/acpi/devices/LNXPWRBN:00/physical_node
-    /sys/devices/platform/LNXPWRBN:00
+2) With 042aad8d0db6 and 7e0ef4332ed9 reverted (and without
+1f36cc9fa949): exactly like 7.2.11. Interfaces 2 and 3 fail right away
+with -71, the device is reset once, no stall, no reset loop, and the
+mouse and keyboard work:
 
-    cat /sys/firmware/acpi/interrupts/ff_pwr_btn
-    enabled (was invalid before)
+[    3.498259] usb 1-1: new full-speed USB device number 2 using xhci_hcd
+[    3.525104] usbhid 1-1:1.2: can't add hid device: -71
+[    3.525732] usbhid 1-1:1.3: can't add hid device: -71
+[    4.981085] usb 1-1: reset full-speed USB device number 2 using xhci_hcd
+[    5.167055] usb 1-9.2: new high-speed USB device number 7 using xhci_hcd
+[    5.352064] usb 1-14: new full-speed USB device number 8 using xhci_hcd
 
-    /proc/bus/input/devices shows the handler for LNXPWRBN/button as event2
+So these two commits are the whole cause here, and with 1f36cc9fa949
+about 11 s of the regression remain. I'm happy to boot again with xhci
+dynamic debug or tracing enabled, or to test further patches.
 
-I could not run the evtest check because systemd-inhibit is not
-available on my system, but the ACPI state and the input device
-registration are correct, and the button behaves as expected.
+For 1f36cc9fa949, since it fixes the hang and the dead input devices
+for me, if that's useful:
+Tested-by: Dennis Wissel <dennis@dsine.de>
 
-My board is: ASRock H310CM-HDV (Slackware64 15.0 Linux x86_64, Intel i7-9700).
+Regards,
+Dennis
 
-Thanks for the patches.
 
-Best regards,
-
-Domenico
