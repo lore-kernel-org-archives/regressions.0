@@ -1,74 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.161
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792923560;
-	b=pe9YAKurjsv5k5Wc46E5XR2dZzuxCOrmkVlPYw29bekJqRG+HiqZuXCtawfCtsjX+0D0
-	 MSVyiyg+vlFKSz33y0687sjLDDW4ltXYnRGPiURtKXZYNnjOIGKuAn6tkQG75aByPUhUi
-	 q0HLqeT82xqbULssndmC7xMl+4brGo9zVlbg/fCgwWDCeKYr5Xo1dBcUcz7eRATcDgS4b
-	 AQsKHdEE2v21Gg0Qbskr6fpAoexu664xjFuYxEkhew0NyvVEsXs5KbYmQK8Yn1bx+f6mI
-	 pW+MCEtwwjKZxwTpZ8rzgUYi51R3sAjleCFW0AAtQNYOiDgp4CNcCaApIs/+7mLpqfg==
+	t=1792926943;
+	b=0Tb0v1L4a9ywOoCkL8MGkyjeeBKB8h/Q/61hSCHEBf4rBaA58xuvynZfdy+ws5lbaGdw
+	 qX3HYJXF8Y0BVtG1EwqKNGZt6hnzFc06Fwpy1GBvTGBVrbK1bhxqG8sQaoQwmX5fWxEjk
+	 EeK7YxXFDcpao5BJR71TiInNJIUJqee1L5cPu9m4WKKCxCtx6fWe/fX/EaIeJY+C7p+LV
+	 0uo68ANBd9JxZhIx585FENZ2qWqRv5KhVeMF7c3+LS4wEThG9Ppd0I5rUR8QDWmT/XgRj
+	 rQAd1K8+z0fkhwjoRdAvTGidx+KfMguVqx62qLRYBMFA6tX5rjybuHUEzV0mYHPs/0w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792923560;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=Zy6lRXab7/gW3AZkjutUIXe1syDbgFfds86xNeMWFEg=;
-	b=vos6FPtXJUnFTMA+4fcfo+YIWwdtsyfHDYAFDngYTpRaYCKuFlj+jEwnEbTWqXV18H1b
-	 WGL1ihU36aFsLgtRh3H1/t0i1xAuHZcl3cFrXB8hzxOMJxj5P2x6gx7v8TyO6MMtC2juG
-	 BCML8EStXhPWlVKLuY/7qwVC+t1sVnt5jmXCvmMkV8OGryQfUpJtkjDucaq7F9EghzkJw
-	 MU6tgT7YGdkUKVYBJDms3q6DaPOy0wNXll91DOpTy84LYZ7SQZD7MWRVgA4yZOrEQC3TG
-	 3WviIMs8io2mU/YbJpJmuTDRqXLMKhPW4toCqulisCHnV+QleJHDh2rAd1I5iNDl1vA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792926943;
+	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:Content-Type:
+	 X-Rspamd-Queue-Id;
+	bh=X4+gdRwqeDx2N4uoyJeCOYNCXQpYWhAbljW4FxODZcI=;
+	b=zW2AbrzLf8qqeZEKtuRroqcJJtCTHr3qemMonjWf0My4ZMlbtE/7D+PM8sB1jF4FwXB1
+	 qUx11OGFZqjMjxMg1EE2SwFELRjqj4wcUtirgqie+Lt1b0nph3IxlLMphLOEySoVViFme
+	 MY+vgeyq4zap/uSLYKRKBxLuVoAnvsjr8fsfwmn+XbuekPb8ELp98ESQfH3djTeMGUeV0
+	 EdXVwWxuDzIZGzIEQldJMuPKPI3uO+5vmc+nsDfb+FIPIvyuQOHy8I1XhzNJT6bjySbJ6
+	 OauBMrkTlDKAGNwNjkdmbf44PCNH4FYHPZ4buB1v/jd3hVKC87WkOvUSSO6QO9S6NZg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=aO9B3rxq;
-	arc=none smtp.remote-ip=188.68.63.98
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	dmarc=none header.from=dsine.de;
+	spf=none smtp.mailfrom=dsine.de;
+	arc=none smtp.remote-ip=80.241.56.161
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E09606A31A
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 10:19:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53E09606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=aO9B3rxq
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jCCP80V0zz68L4
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 11:17:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792923452;
-	bh=Zy6lRXab7/gW3AZkjutUIXe1syDbgFfds86xNeMWFEg=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=aO9B3rxqoBqzhQ2ScCUfK0B2N/Ho/gWRH7bkpzO85isIilREwXPOpfVvESgY9/JVl
-	 NdWxwE/k/X0f8yyGAg7Eo3Egb/R237bb7D2GT8wf0JT0h/mW6+n0icACIqbZvBdmqz
-	 DyMQ7Jn9gq0TwYwjQ0Fsdpo3/lWbXsBtWceGlkrA8n5BS3dd6j3ma4O6DN3+58bj4b
-	 gvSHQm1t2kK5XX07icsE8I6dxmVOzU9nLbPOUvmWVd3cpotD+VH9V4bC5ao3reJCIC
-	 xccMooTgowE50ovBNKzFNww035H+JsvphZyl+cA9loF/Xz9YPPK2JsDOWZsLPmQ1Qv
-	 vWAnP0gQCSnCw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jCCP76sXqz4xQX
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 11:17:31 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D67606A31B
+	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 11:15:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75D67606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dsine.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dsine.de
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jCCP73yRJz8tkn
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 11:17:31 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EC4FB5FD40
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 11:17:22 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <9169c22b-db49-4e46-aa53-ca57f0ccc038@leemhuis.info>
-Date: Sun, 25 Oct 2026 11:17:22 +0100
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4jCDhB6MC5zKnBV;
+	Sun, 25 Oct 2026 12:15:38 +0100 (CET)
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=none (outgoing_mbo_mout: domain of dennis@dsine.de has no SPF policy when checking 2001:67c:2050:b231:465::202) smtp.mailfrom=dennis@dsine.de
+From: Dennis Wissel <dennis@dsine.de>
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Yiyu Zhou <yiyu@yiyuzhou.io>, linux-usb@vger.kernel.org,
+ mathias.nyman@linux.intel.com, regressions@lists.linux.dev
+Subject:
+ Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
+ (3434:d068) at boot since v7.3
+Date: Sun, 25 Oct 2026 12:11:21 +0100
+Message-ID: <ZxkLPfjZS8ibGyR_gfGYKg@dsine.de>
+In-Reply-To: <20261025111410.2c14fcef.michal.pecio@gmail.com>
+References:
+ <4MjB9K-2SoiA85WbI9iEig@dsine.de> <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
+ <20261025111410.2c14fcef.michal.pecio@gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,35 +61,86 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179292344312.1436752.11774661732024653414@mxe9fb.netcup.net>
-X-NC-CID: Gcr3WIwZnMqjo6wVBL3K89fBAFmuCRNW1nPdlTgDdslGiRgQ1gY=
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-Rspamd-Queue-Id: 4jCDhB6MC5zKnBV
 
+On Sun, 25 Oct 2026 11:14:10 +0100, Michal Pecio wrote:
+> This could result in DMAR faults, but it didn't. Was IOMMU enabled?
 
+No. The kernel command line has no intel_iommu=on,
+CONFIG_INTEL_IOMMU_DEFAULT_ON is not set, and /sys/class/iommu is
+empty. DMAR is only used for interrupt remapping. I won't boot
+7.3+1f36cc9fa949 again. The box now runs 7.3 with 042aad8d0db6 and
+7e0ef4332ed9 reverted.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> But can you post what happens on 7.2 with xhci_hcd and usbcore
+> dynamic debug enabled?
 
-#regzbot report:
-https://lore.kernel.org/lkml/20261010064407.11030-1-yiyu@yiyuzhou.io/
-#regzbot dup:
-https://lore.kernel.org/linux-usb/20261023132616.339833-1-diogochaves@me.com/
+7.2.11-1-cachyos booted with "xhci_hcd.dyndbg=+p usbcore.dyndbg=+p
+log_buf_len=16M", mouse plugged in at boot. Below are the lines for
+port 1-1 / slot 1. The full log is 270 KB, so I can send it off-list or
+post it somewhere if needed.
 
-#regzbot report:
-https://lore.kernel.org/stable/20261022162655.231431-1-fredericmariejoseph@protonmail.com/
-#regzbot fix: ACPI: scan: Register platform devices for fixed event buttons
+This time all four interfaces failed with -71, not only 2 and 3 as
+in my earlier 7.2.11 boots, and there was no "usb 1-1: reset", only
+the disconnect/re-enumeration. The device seems to drop off the bus
+right after Set Configuration, at the first control transfer of the
+usbhid probe:
+
+[    3.537963] xhci_hcd 0000:00:14.0: set port reset, actual port 1-1 status  = 0x791
+[    3.538304] usb 1-1: new full-speed USB device number 2 using xhci_hcd
+[    3.538344] xhci_hcd 0000:00:14.0: Slot ID 1: HW portnum 0, hcd portnum 0
+[    3.540254] usb 1-1: ep0 maxpacket = 8
+[    3.540543] usb 1-1: New USB device found, idVendor=3434, idProduct=d068, bcdDevice= 1.00
+[    3.541469] usb 1-1: configuration #1 chosen from 1 choice
+[    3.541509] xhci_hcd 0000:00:14.0: add ep 0x82, slot id 1, new drop flags = 0x0, new add flags = 0x21
+[    3.541673] xhci_hcd 0000:00:14.0: add ep 0x83, slot id 1, new drop flags = 0x0, new add flags = 0x6a9
+[    3.542427] usb 1-1: adding 1-1:1.0 (config #1, interface 0)
+[    3.542477] usbhid 1-1:1.0: usb_probe_interface
+[    3.542526] usbhid 1-1:1.0: usb_probe_interface - got id
+[    3.542566] xhci_hcd 0000:00:14.0: Transfer error for slot 1 ep 0 on endpoint
+[    3.542606] xhci_hcd 0000:00:14.0: TRB error 4, halted endpoint index = 0
+[    3.542646] xhci_hcd 0000:00:14.0: Hard-reset ep 0, slot 1
+[    3.542725] xhci_hcd 0000:00:14.0: Ignoring reset ep completion code of 1
+[    3.542923] xhci_hcd 0000:00:14.0: Port change event, 1-1, id 1, portsc: 0x202a0
+[    3.543163] xhci_hcd 0000:00:14.0: Transfer error for slot 1 ep 0 on endpoint
+[    3.543203] xhci_hcd 0000:00:14.0: TRB error 4, halted endpoint index = 0
+[    3.543244] xhci_hcd 0000:00:14.0: Hard-reset ep 0, slot 1
+[    3.543326] xhci_hcd 0000:00:14.0: Ignoring reset ep completion code of 1
+  [... the same 4 lines for each further control transfer, about
+       every 0.5 ms ...]
+[    3.544720] usbhid 1-1:1.0: can't add hid device: -71
+[    3.544804] usb 1-1: adding 1-1:1.1 (config #1, interface 1)
+[    3.547532] usbhid 1-1:1.1: can't add hid device: -71
+[    3.547617] usb 1-1: adding 1-1:1.2 (config #1, interface 2)
+[    3.550329] usbhid 1-1:1.2: can't add hid device: -71
+[    3.550413] usb 1-1: adding 1-1:1.3 (config #1, interface 3)
+[    3.553190] usbhid 1-1:1.3: can't add hid device: -71
+  [... hub_wq enumerates the other ports, nothing for 1-1 ...]
+[    5.065514] hub 1-0:1.0: state 7 ports 16 chg 0000 evt 0002
+[    5.065577] xhci_hcd 0000:00:14.0: Get port status 1-1 read: 0x206e1, return 0x10101
+[    5.065637] xhci_hcd 0000:00:14.0: clear port1 connect change, portsc: 0x6e1
+[    5.065692] usb usb1-port1: status 0101, change 0001, 12 Mb/s
+[    5.065697] usb 1-1: USB disconnect, device number 2
+[    5.065750] usb 1-1: usb_disable_device nuking all URBs
+[    5.065810] xhci_hcd 0000:00:14.0: drop ep 0x81, slot id 1, new drop flags = 0x8, new add flags = 0x0
+[    5.066201] xhci_hcd 0000:00:14.0: drop ep 0x5, slot id 1, new drop flags = 0x6a8, new add flags = 0x0
+[    5.170113] usb usb1-port1: debounce total 100ms stable 100ms status 0x101
+[    5.354755] xhci_hcd 0000:00:14.0: set port reset, actual port 1-1 status  = 0x791
+[    5.466345] usb 1-1: new full-speed USB device number 11 using xhci_hcd
+[    5.597007] hid-generic 0003:3434:D068.0009: input,hidraw8: USB HID v1.11 Mouse [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input0
+[    5.684004] hid-generic 0003:3434:D068.000A: input,hidraw9: USB HID v1.11 Keyboard [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input1
+[    5.685139] hid-generic 0003:3434:D068.000B: hiddev100,hidraw10: USB HID v1.11 Device [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input2
+[    5.686139] hid-generic 0003:3434:D068.000C: hiddev101,hidraw11: USB HID v1.11 Device [Keychron Keychron M5 ] on usb-0000:00:14.0-1/input3
+
+So on 7.2 the disconnect (portsc 0x202a0, CCS=0) is reported at
+3.542923, and the device is connected again (0x206e1) by the time
+hub_wq looks at port 1 at 5.065. There is no other port change event
+for 1-1 in between. All ep0 transfers to the gone device fail within
+about 0.5 ms with a transaction error, so the probes are done after
+11 ms.
+
+Regards, Dennis
 
 
