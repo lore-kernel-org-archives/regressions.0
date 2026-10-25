@@ -1,97 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.176
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792931928;
-	b=fhD1lV5Ousz5frTW6g/1Jljwp/U4ZzpNhZYmu3iYXJqsqtq8HYn7dkfmDmHme7XWx6Rs
-	 QTuJbm+mPVXxHLgqdqycVZMqg/084VaCcw49RxdaP/Tfsx9NfK7enD+EloV9gYNRzM6En
-	 73paLfmmHerfdSPSP4JoAl8zaK2D0bBQTM9IiGW2icW1QqlsHTXeEbe7ZB0O+haWdqgR+
-	 UK/LZHXpsj0SXhqrsB5L8lQX+VSzqC2TMAryVPHpqOXOYLGzIyczHY8bEOls6/lTFxQsZ
-	 hjmJzoQ4p8kzdVD2BQqUkUCi3Puy9sxRt2V/RLLh+zpxgYhxUhatZSN0kkZdXiULW4A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792931928;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=ifIa5BWnf8laepgAGnQECywu1F41hu5JMjyB1fMNjtc=;
-	b=Puh7ja3Bmo+vPQBvoqBf45M6DDA+4aFfCQIVbJlTnfbDh4VgX0w0CYiZ7CcqQXwrtuy2
-	 Ufl2oDLGEynlaYRTYdm0rSRO+pj3uMVfWgVOmDl9WqGHYpT2UXig0z8xWX53IpwfA1g7o
-	 aWZCO9bjAV+W0uJLGF5v9S2bH75gUKAzN+8U619Yjm1wC2bLkBXA4BI9V1WWqq2elBQSt
-	 h2Gjy/tqgCHXerhsr65znqsD58BFDrgQVzvvlxQ5OjiVT8ueeU3omdbczA5yorrbxSIcx
-	 4zlwr2gTmOVTrqkjDKsnTNzVvfppgwL3AnSwDlTBDlY5HaaXUSb+B0TL+q6hwDTrE2w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=svWO3vDz;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.176
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.123
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792936322;
+	b=JiBAZFfkYOLTQV1hvPtGi0n/Ol+OCvYVm0GsCOp3biZdvOCakH0dWu7twlv3LVbOn1ey
+	 zdBXMYis/nfsmDObovlg4RxnGwXtS4rB2RxMiUIfgeil74MPIvyJWN0LAQn5SGASGqKeq
+	 8ZD1wwpDEbBoyfXkZL9CflFuEaEDLVXWd/68XvzjZwEoubBlK9fvHtsQuGNc+CMKeQEDs
+	 R+l041sZa/XfQrN6FJvQB5p2DTsDS6imQ45ib9fSS+xKl6/jZicXT+UyvMWq5o9/lMIpt
+	 lhmz+MPywVW62VTHhlJCq7hPDaPgYqS0WQyb5yCnJzr+FEaypd0qK2q4d9Xf1xjpf4w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792936322;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=LV+gXF/xXhZ1UNrTU4g9ywrHyOMfy4hD/Fc6wa02E2M=;
+	b=WbNmwgb1gixydJyy7+AURfRT34uRLELgdG+90zH+DB3FkOo4lYAc0mOiilnKkpR0KDkG
+	 FFAAte71fUxQndFo8FAK7GspcE/O/zd3xP/qhj9P6JNo8hTqoDUmTmAKv1gO4ZxEaZ7uG
+	 MTBUfFIqIhlx6/m4JrKUBlFalRhva5NuSF9dlReQ1vq1MaxGS3fk5he11nfRlRgQ+XLim
+	 rft9Q+jSbzIzRgqhB+NnsvcaOT6/XZCfIgQl4Rbv/RKiWmRVndoc06S+CuXPV5zUfvWv0
+	 PwNAAC+jBtIfiQf3q5hnRctUPuilb8TTi60Y5HijLVJcjxvlf0aWgaVfDR8lN/2ujow==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=pm.me;
+	spf=pass smtp.mailfrom=pm.me;
+	dkim=pass header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=HTQu6K2L;
+	arc=none smtp.remote-ip=109.224.244.123
+Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3364C606A31E
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 12:38:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3364C606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92659606A31A
+	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 13:52:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92659606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=svWO3vDz
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2e812e2b31bso12572785ad.3
-        for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 05:38:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792931927; cv=none;
-        d=google.com; s=arc-20260327;
-        b=kJRdey5SjhGsD3iMFqZzvtNA3XAoOHNFJAOz50ixyNiMjvusG4IZ7fArmonbLfnPs9
-         fQXOimbTzsmYvgPr03huBIZ06XXneutmtQG5c/G59dtbNaFTR9ao96GLjzF40nuWXWX5
-         lZjsyjolIGGGDW2Jsh+iZxpxl/rw2eNOKn1ZoGconCR+T/bFo/O16zkbMfCZoJNKCswY
-         iiZxaoOs3atCLT49FZ65JoQL8f/EoyicWCT+5JnCDf/hVYvCDquRiduvQS0teRxFNucw
-         DUkJWkuRG/tdy/40gL5c+KlN/fSWIaYx2aNA4x8FX02ZCgsTnfHYJSSY1EbCln62jkq6
-         jCyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=ifIa5BWnf8laepgAGnQECywu1F41hu5JMjyB1fMNjtc=;
-        fh=BimCxU4R/HNhHImyHpc35zFSjrwIDqaoklDGi2/o0MU=;
-        b=b4bo5ev+AfiW71NonWnqu7GyLpWixGb8aAPBb6l98XliTS8Adwd5cMn/TKdOdBrzoa
-         l/Z9pLCZc4Zk5P4ojngWoTMrVE3jKGDddvA6ExscyA06VoQzQgQSl3POyjLtU2V6TJRZ
-         hA14Hg2G6RmY8b9MM0XIoAhWZiGr4Vpqrr5mKAcpXx4QUU+SItyhxK0iP1tFXJILPfRB
-         3npB7L4JfhGliONVLLixKNG1HT4LoA13D8pCjJJDOtvn9GhEOVmxBTqh+8w0LyEoNz15
-         WegidCdkvp+UGYwD+saXv/ssqKkb7R5+l1RuzXuSg/XYv0bmx0tXTOU0cDIu3mQ9DPh7
-         MXog==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792931927; x=1793536727; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ifIa5BWnf8laepgAGnQECywu1F41hu5JMjyB1fMNjtc=;
-        b=svWO3vDzPGvygahDm1qFiVCxoY/bJxx+nUH559bIfIv1V0XNlesX6JnYdZ3h57WdXp
-         TUIyoOUh6wiHcggucfhE5QF814IUTw70o5IYxx24RYCbdGfUIV9YwRURiG58m1vBd5/v
-         esaYTbUdXHYosxIVK0q+bsSB/nxOjkaWrWJkjw7bc9pCEDGXQBj9J65t0pKnEm9yN3g2
-         IlrFxq94xOf2ICrgLXnksQXhJAyan2Xq5PRSxe9ODvxQKqD3bZU3LsGJeoQ6Uk0zbFqv
-         FAIo5e/4fsKJ1zK5Sr6e2cDfHX15djAHrpjJ8fm+sCTHDgjBZwdfIqcmDnpakjPowaVy
-         tFkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792931927; x=1793536727;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=ifIa5BWnf8laepgAGnQECywu1F41hu5JMjyB1fMNjtc=;
-        b=YbXUr4+z5GDCDL8rvHlVEDpNnPGXswAwzB8WfV6e1l+/z2lXcGofigTFWbYfqVAgNK
-         Xjwxm7Iaq+MLwP0URsrODNVAqmC+ZIujxYb2oBCwq16m6HPNyDIy3I7qqnS4mMK5IVvP
-         VnQ9XfBXVJ+HAXHGx1Tpe9Tq4slaSYoXDBIv7GFSq5FkYFvs8tTRh+TL0zBpZfryW69B
-         8sHLJBYLsxMvwNmNxGxNJ3sPu2kQCMxEJjqh6+wfpy+1lfUw01weCK2S/ag+TqzoGEg1
-         6oqJpIBrjdVVMDrcXuu7HephJUbkWwcQh//HkDOAVpn2TdB/rBc6bpRlxmvB/Xz2IJCA
-         rPzw==
-X-Forwarded-Encrypted: i=1; AKwUvBxf9iaiuXwLsHFnJZuDyRR+Wjw2xEtvDOMb57SC9uILZW3D9mkLuwWkodW7T4VVSQkBGhE8hcAh+u45BA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIV/47ouhnvDED+9Z87ASlhV2HyvESlyJlq9WqOiORZNYUhTYCV
-	ImmmHyhW7wP2CZ66jTQXy6TwLjv6Not5J+LqPabQd23B0oT6j/3yic43Vn+rvemtgfZE8mvyMAn
-	52cYMhH+Ql7h9BAwCYh+ZnGr3PjK4spg=
-X-Gm-Gg: AYBFou1rSGRz12tfdXHH+lIN/HIyw4lmLQQIU1rXYMuh1RKuPyZpYTkQkK8qQXZ+/DW
-	xXEKlWFiU85DYftjpmzMDv1SqjErUageMbrgDJ6qHjiFuiNoRH1K0DKySpeRhAGB4aZtwu5R/X9
-	mjVfkvm2BwW1moCAzpw9KoANXaS/RYM0pXaU+lpvoaazH583X9a5YcpYZxw4F4qxohHDhry/CaI
-	JUZbvKY3bBIK2RWHFED7JXIHU7k520mAJioliUXZk3VZCen+2HrbcW/A7CaErzbcRMhMhVX2Jz2
-	+8i8LMEy7GK5SERze3DimZXjsVeFpVcjlvpJfoWSrG24I6WSE8AlozaTsYGvD3HjJUMxDi7rtlI
-	dndmF+FCQHCYdraJOoox0/crI9IH5YPzayHhkk8I=
-X-Received: by 2002:a17:903:1103:b0:2e8:3e5d:b2b7 with SMTP id
- d9443c01a7336-2ea9c8754e2mr34279705ad.40.1792931927515; Sun, 25 Oct 2026
- 05:38:47 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=HTQu6K2L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1792936319; x=1793195519;
+	bh=LV+gXF/xXhZ1UNrTU4g9ywrHyOMfy4hD/Fc6wa02E2M=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=HTQu6K2L9yuODmflgM597mUXpZj8QuqjN8h8C9DikcVyamcVMKMqyB81pI9Gnq0nI
+	 nFztp6qoja7n36XXJI85h8Nzjyps/JMTN3WcQUB7m6Rx7XE4J+hbeW8k/O56Y76nNj
+	 /OnAZhqkhQ58p1VQD8LwrxRGf52VOAXg1Vc01JXPukm5HCmMVVOwxnkPHjunKJnWLZ
+	 bH6Hrk7dABgnarDUnszJ6Q52jJPrevMHxeNYSWkViYlCqunrsodnkiaOc8OimHu+KC
+	 c38/Cq3QS34f2WiYEk8ESADBIIzkUeGKGQ7hwd1cfDk/KhN7FVuF7Z4zAuolSoHh3V
+	 vMlGlbWNL/rdQ==
+Date: Sun, 25 Oct 2026 13:51:53 +0000
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From: matt.protacio@pm.me
+Cc: Bjorn Helgaas <bhelgaas@google.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: [REGRESSION] PCI: sibling bridge windows undersized after rescan since f909e3ee3ed1 ("Remove old_size limit from bridge window sizing")
+Message-ID: <aw593qmbGeozzzeSm1vyhxbK4gXyV-yVyDA8-ZHeKwFbW_VS40s9LwMVMr9NWgJl2uPqVpMegCZPGub7MkswOWo3SfngaHNDj8ayjgHR14o=@pm.me>
+Feedback-ID: 135619238:user:proton
+X-Pm-Message-ID: 4304c96634f9d9cb5de56797038f9640c5a896a0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -101,117 +61,178 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: Konstantin Nikiforov <helllamer@gmail.com>
-Date: Sun, 25 Oct 2026 15:38:36 +0300
-X-Gm-Features: AclHuK-zJVIt5pMq4aEG8YbVUe1pdfb3ZT8Uy3v4AWHcgp8mQbjuBakU33gJh-A
-Message-ID: <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
-Subject: [REGRESSION] md/raid5: discards on an array of non-TRIM HDDs now fail
- with BLK_STS_NOTSUPP; bcache counts them as backing-device errors and stops
- the device
-To: linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org
-Cc: "wale.zhang.ftd@gmail.com" <wale.zhang.ftd@gmail.com>, kent.overstreet@linux.dev, colyli@fygo.io, 
-	"song@kernel.org" <song@kernel.org>, yukuai@fygo.io, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-
-#regzbot introduced: 90573092673c
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-since upgrading from 7.1.8 to 7.2.11 a machine with root on
-LVM -> bcache -> md raid5 (three SATA HDDs without TRIM) loses its root
-device a few minutes after boot. The same stack ran on 7.1.x without
-any bcache backing-device errors.
+Since v7.0, a remove + rescan of a PCIe switch with four sibling
+downstream ports, each holding a device with a 32G and a 32M 64-bit
+prefetchable BAR, no longer assigns resources to three of the four
+devices. v6.19 and earlier assign all four. I bisected it to:
 
-Storage stack
--------------
-  3x ST1000DM010-2EP102 (no TRIM; discard_max_hw_bytes = 0)
-   -> md126: raid5, 3 devices, 512K chunk, metadata 1.2
-   -> bcache0: md126 as backing device, cache set detached
-      (also reproduced while an NVMe cache was attached)
-   -> LVM vgpcrd5
-   -> btrfs (/usr, /var, /opt; mounted without any discard option)
-      + ext4 (/, /home)
+=C2=A0 f909e3ee3ed1 ("PCI: Remove old_size limit from bridge window sizing"=
+)
 
-Kernel: 7.2.11-arch1-1 (Arch Linux), mdadm 4.6, bcache-tools 1.1
+#regzbot introduced: f909e3ee3ed1
 
-Symptoms
+Hardware
 --------
-Every boot, starting ~3 minutes after mount, dmesg fills with:
+- Intel i9-13900K, ASUS PRIME Z790-P WIFI (BIOS 1840)
+- Broadcom PEX88096 switch card (1000:c010) under root port 00:01.1
+- 4x NVIDIA Tesla V100-SXM2-32GB (10de:1db5), one per switch
+=C2=A0 downstream port. Each has BAR0 16M (32-bit non-prefetchable),
+=C2=A0 BAR1 32G (64-bit prefetchable) and BAR3 32M (64-bit prefetchable).
+=C2=A0 No Resizable BAR capability.
 
-  bcache: bch_count_backing_io_errors() md126: IO error on backing
-device, unrecoverable
+Topology after rescan:
 
-in bursts of up to ~35 lines 2 ms apart. Per boot I counted 11, 17, 22
-and 63 of them. bcache's io_error_limit is 64, so once a boot crosses it
-bch_cached_dev_error() stops bcache0 and root, /usr, /var and /home
-disappear. No I/O errors are logged by libata, sd or md; all three
-members are healthy (SMART clean, array [UUU], no rebuild).
+=C2=A0 00:01.1 root port
+=C2=A0 =C2=A002:00.0 PEX upstream
+=C2=A0 =C2=A0 03:00.0 (pair A) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A003:04.0 (pair B)
+=C2=A0 =C2=A0 =C2=A004:00.0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 08:00.0
+=C2=A0 =C2=A0 =C2=A0 05:10.0 -> 06:00.0 V100 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 09:00.0 -> 0a:00.0 V100
+=C2=A0 =C2=A0 =C2=A0 05:18.0 -> 07:00.0 V100 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 09:08.0 -> 0b:00.0 V100
 
-Analysis
---------
-Since 90573092673c ("md/raid5: validate discard support at request
-time", v7.2-rc1) raid5_set_limits() unconditionally sets
+The board firmware hangs at POST if the GPUs are powered at boot, so
+they are powered after boot and hot-added with:
 
-  lim.max_hw_discard_sectors = UINT_MAX;
+=C2=A0 echo 1 > /sys/bus/pci/devices/0000:00:01.1/remove
+=C2=A0 echo 1 > /sys/bus/pci/rescan
 
-and records member support in conf->raid5_discard_unsupported. On this
-array sysfs now shows:
+Command line: pci=3Drealloc intel_iommu=3Don iommu=3Dpt. The firmware's
+64-bit root window is too small and fragmented for this, so the host
+uses an ACPI table override (initrd DSDT upgrade + SSDT) adding a
+second root window, 0x8000000000-0xffffffffff. The problem also
+reproduces in a VM without that override (see "VM reproduction").
 
-  /sys/block/md126/queue/discard_max_hw_bytes: 2199023255040
-  /sys/block/md126/queue/discard_max_bytes:    2199023255040
-  /sys/block/md126/queue/discard_granularity:  0
-  /sys/block/sd[abc]/queue/discard_max_hw_bytes: 0
-  (md127, a raid1 on the same disks, still shows 0 for all of these)
+Result on the host
+------------------
+Prefetchable windows after rescan:
 
-Two upper layers react to the advertised discard support:
+=C2=A0 bridge =C2=A0 =C2=A0 v6.17 (good) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0v7.0.14 (bad)
+=C2=A0 00:01.1 =C2=A0 =C2=A06400000000-93ffffffff 192G =C2=A06800000000-880=
+7ffffff 128G+128M
+=C2=A0 03:00.0 =C2=A0 =C2=A06400000000-7bffffffff =C2=A096G =C2=A0680000000=
+0-7803ffffff =C2=A064G+64M
+=C2=A0 03:04.0 =C2=A0 =C2=A07c00000000-93ffffffff =C2=A096G =C2=A0not assig=
+ned
+=C2=A0 05:10.0 =C2=A0 =C2=A06400000000-6fffffffff =C2=A048G =C2=A0680000000=
+0-7001ffffff =C2=A032G+32M
+=C2=A0 05:18.0 =C2=A0 =C2=A07000000000-7bffffffff =C2=A048G =C2=A0not assig=
+ned
+=C2=A0 09:00.0 =C2=A0 =C2=A07c00000000-87ffffffff =C2=A048G =C2=A0not assig=
+ned
+=C2=A0 09:08.0 =C2=A0 =C2=A08800000000-93ffffffff =C2=A048G =C2=A0not assig=
+ned
 
-1. btrfs enables discard=async by default because the device advertises
-   discard (mount shows "ssd,discard=async" although nothing in fstab
-   asks for it).
+On v7.0 only 06:00.0 gets BAR1. The other three log:
 
-2. bcache forwards discards to the backing device whenever
-   bdev_max_discard_sectors(dc->bdev) is non-zero (cached_dev_write()
-   and detached_dev_do_request()). Before 7.2 that was 0 for this array
-   and bcache completed the discards itself.
+=C2=A0 pci 0000:0a:00.0: BAR 1 [mem size 0x800000000 64bit pref]: can't ass=
+ign; no space
 
-raid5_discard_limits() then completes every such bio with
-BLK_STS_NOTSUPP. bcache's backing_request_endio() treats any non-zero
-bi_status as a media error and calls bch_count_backing_io_errors(), so
-each discard brings the backing device one step closer to being stopped.
-With 64 small deletions on the btrfs volume a root filesystem on
-raid5+bcache is gone.
+and the parent ports log:
 
-The granularity is also inconsistent: discard_granularity is 0 while
-discard_max_hw_bytes is non-zero, so writing any non-zero value to
-discard_max_bytes fails with EINVAL (only 0 is accepted).
+=C2=A0 pci 0000:09:00.0: bridge window [mem size 0x802000000 64bit pref]: c=
+an't assign; no space
 
-Related changes I found:
-- efdffeb6d491 ("md: skip discard on unsupported member devices", 7.3)
-  fixes the same bcache symptom for raid0/raid10 via
-  md_submit_discard_bio(), but raid5 does not use that helper and still
-  returns BLK_STS_NOTSUPP in current mainline (raid5_discard_limits()).
-- 85764f475f3b ("md/raid5: complete discard bios while reshape is
-  active") addresses a different fallout of the same commit (hang during
-  reshape).
+There is plenty of free root window space when this happens. The
+failure is inside the switch: pair A's window is the plain sum of its
+two children (2 x (32G + 32M)), but after the first child's BAR1 at
+0x6800000000 and its BAR3 at 0x7000000000, the second child's 32G
+BAR1 needs the next 32G-aligned address, 0x7800000000, which runs
+past the end of the pair window at 0x7803ffffff. Two such siblings
+need about 96G of parent window, not 64G + 64M.
 
-I have not found a report for this raid5 + bcache case on lore.
+VM reproduction
+---------------
+To bisect without rebooting the host, I reproduced it in a QEMU/KVM
+guest (q35, OVMF) with the same shape of topology built from emulated
+switches, and the four V100s passed through with vfio-pci behind it:
 
-Possible fixes (either side would do):
-- md/raid5: when conf->raid5_discard_unsupported is set, complete the
-  bio successfully (discard is advisory) instead of BLK_STS_NOTSUPP, or
-  do not advertise max_hw_discard_sectors in that case, as before 7.2.
-- bcache: do not count BLK_STS_NOTSUPP (or failed REQ_OP_DISCARD) in
-  bch_count_backing_io_errors(), the same way REQ_RAHEAD failures are
-  already ignored.
+=C2=A0 pcie-root-port -> x3130-upstream -> 2x xio3130-downstream
+=C2=A0 =C2=A0 -> each: x3130-upstream -> 2x xio3130-downstream -> V100
 
-Workaround in use
------------------
-A udev rule writing 0 to /sys/block/md126/queue/discard_max_bytes and
-/sys/block/bcache0/queue/discard_max_bytes (also inside the initramfs),
-plus "nodiscard" on the btrfs mounts. With that, io_errors stays at 0.
+with the guest's 64-bit hole set to 512G (pci-hole64-size). Inside the
+guest, a remove of the root port + rescan gives exactly the host's
+numbers: 48G port windows and 4/4 BAR1 on good kernels; 32G+32M port
+windows, 64G+64M pair windows and 1/4 BAR1 on bad kernels. I can share
+the exact QEMU arguments if that would be a useful test case.
 
-I can test patches on this machine.
+Release results (Ubuntu mainline builds, plus v7.3 built from stable):
 
-Regards,
-Konstantin Nikiforov
-Claude Fable 5.1
+=C2=A0 v6.17.12 =C2=A0good
+=C2=A0 v6.18 =C2=A0 =C2=A0 good
+=C2=A0 v6.19 =C2=A0 =C2=A0 good
+=C2=A0 v7.0 =C2=A0 =C2=A0 =C2=A0bad
+=C2=A0 v7.0.14 =C2=A0 bad
+=C2=A0 v7.1 =C2=A0 =C2=A0 =C2=A0bad
+=C2=A0 v7.2 =C2=A0 =C2=A0 =C2=A0bad
+=C2=A0 v7.3-rc3 =C2=A0bad
+=C2=A0 v7.3 =C2=A0 =C2=A0 =C2=A0bad
+
+Bisect
+------
+Between v6.19 and v7.0, limited to drivers/pci, kernel/resource.c,
+include/linux/pci.h and include/linux/ioport.h.=20
+The parent of f909e3ee3ed1, 4326ab1806a5, is good; f909e3ee3ed1 is bad.
+
+# bad: [028ef9c96e96197026887c0f092424679298aae8] Linux 7.0
+# good: [05f7e89ab9731565d8a62e3b5d1ec206485eeb0b] Linux 6.19
+        git bisect start 'v7.0' 'v6.19' '--' 'drivers/pci' 'kernel/resource=
+.c' 'include/linux/pci.h' 'include/linux/ioport.h'
+# bad: [cb3ca564682a0a02a9f95b7b22ad434a7389daaf] Merge branch 'pci/control=
+ler/cadence-j721e'
+        git bisect bad cb3ca564682a0a02a9f95b7b22ad434a7389daaf
+# good: [bf37448d9b7793544904ccf21e5844b6ff4af3c0] Merge branch 'pci/pwrctr=
+l'
+        git bisect good bf37448d9b7793544904ccf21e5844b6ff4af3c0
+# bad: [73b4779864b1e6adad015d14047ae63b88ef9c4c] Merge branch 'pci/resourc=
+e'
+        git bisect bad 73b4779864b1e6adad015d14047ae63b88ef9c4c
+# bad: [9629f71722bb994f4b95088bc37a14f9aeaa5f90] PCI: Log reset and restor=
+e of resources
+        git bisect bad 9629f71722bb994f4b95088bc37a14f9aeaa5f90
+# bad: [f909e3ee3ed1a44202f09ac7e637a0f9ec372225] PCI: Remove old_size limi=
+t from bridge window sizing
+        git bisect bad f909e3ee3ed1a44202f09ac7e637a0f9ec372225
+# good: [bc75c8e5071120e919beb39e69f0979cccfdf219] PCI: Rewrite bridge wind=
+ow head alignment function
+        git bisect good bc75c8e5071120e919beb39e69f0979cccfdf219
+# good: [4326ab1806a52888d1cd076b9020677703e25545] resource: Increase MAX_I=
+ORES_LEVEL to 8
+        git bisect good 4326ab1806a52888d1cd076b9020677703e25545
+# first bad commit: [f909e3ee3ed1a44202f09ac7e637a0f9ec372225] PCI: Remove =
+old_size limit from bridge window sizing
+
+
+Notes
+-----
+From the patch discussion, f909e3ee3ed1 fixed Simon Richter's xe BAR
+resize failure (the aligned old size used as a lower bound after
+3baeae36039a), so I assume a plain revert would bring that back. I
+haven't tested a revert of v7.0 either: it conflicts with later
+changes in setup-bus.c and I didn't want to hand-port it.
+
+My reading of setup-bus.c, offered as a guess rather than a diagnosis:
+pbus_size_mem() sizes a window as the plain sum of max(r_size, align)
+over its children, while placement in __assign_resources_sorted()
+goes in descending alignment order. When a child window's size is not
+a multiple of its alignment (here 32G + 32M at 32G alignment), the
+next sibling's start has to skip to the next 32G boundary, and the
+plain sum leaves no room for that gap. Before f909e3ee3ed1 the old
+size lower bound seems to have covered it in my case. I couldn't work
+out exactly where the 48G per-port windows on v6.19 come from, so I
+may be missing something.
+
+I'm happy to test patches, a revert, or debug output on both the host
+and the VM. The VM setup makes it quick to try kernels.
+
+Thanks,
+
+Matt
