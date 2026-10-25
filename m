@@ -1,66 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.231.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792952217;
-	b=HG6Cx5E/FKwV6eV4NqEZ6ar7mERw4Z5FVcKwkXaPUyVqG/DqSoXwuDNMHip1f/5kOC1P
-	 yeHo58ebx5bGGfru/a9Mu1Awv5793b0FsNEQDMPZJeruhaLKwiMlaBy9KQZNCHJR0faeO
-	 bMdujJuEFWVcP0fjkmH5qdZmmIQTglqbnYBQtvCicJF+LiFyekOpdJycoKneDShZ5cixD
-	 zqdoXZeHHLVMKbQaFm5ehhEmYDveeOIGecad5059iU/iVztCGRiQX7q54KagJ45f0VzRC
-	 1lCA1MjDo6orbRe1W21sFMPxTGLA2qN6uQ2QHIZTzsFBaX/gizSz34K4ZR/vFvLCrUg==
+	t=1792964871;
+	b=nsvUbt4iJbxxPa1CrywvheFlxSy+HG/tdganZlPMPiQ8ITZ+KoxOJ0fQQxKUolq1VZue
+	 l2JCca/8mV73ssvMSL7zfFEjqTMbrVPwq0wHGwIODyb76iXNjQX8e+EDZ4hZMcDb4lmWS
+	 q6HsKJ7Sy/fxcfkpiu1hIVTyc4dpIZ1a+8+AA7gi/HA/v7TFD/aUaELGciTiAovorTl2B
+	 s2COidBtwtEIjEvvi0dx8kiFWXvfz3xew6M8Z23N1YPH7K/n7hSndKzxe4jdiqfMtUCfl
+	 LnU6qrTgAnd1hfLiSGaQuIyEeG+7D7lRrMhD9dOfA5PI1ADacA4n6TpyXTXE46uLcaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792952217;
-	h=DMARC-Filter:DKIM-Signature:From:Subject:Date:X-Original-From:
-	 Content-Type:X-Lms-Return-Path:Reply-To:To:Cc:Message-Id:
-	 Content-Transfer-Encoding:References:User-Agent:Mime-Version:Received:
-	 In-Reply-To;
-	bh=/5lwkv3QUM5YvGs1kBijpp/6wHjZlSgrb379+9vBQcE=;
-	b=XplMukTeQfKPpNaT7srPDOJ0cyZPBXSXV1gwyGX2vedPw3N5zUmIHe63yvQOcL1qrOGe
-	 yzoSSFO3N8be2gfJGiELezBKZYfWLBbl2E1LmGKQbPRmtpK3nJS9lYqAMY5dDfUgRiceY
-	 onq4kYybL3RE6b8WrwwUTARIyJ2WX8JQBWb0+l7ADsAGCvsqc7qbl72J677Fgp6V2lFcf
-	 Qsly1m+xbdUy9N4Cb9jPjW9R/M1AVa6Ri6CYNwfm7BtVzqfcnDEGbj4K3zMSRS3nGGASs
-	 RwoEL665013EPt4MLnTZVWhxt2xjy1/PxSYs2L8DtpY7hY8Ym3SO0v+qZy5bsgnikrQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792964871;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
+	 Date:Message-ID:MIME-Version:Content-Type;
+	bh=lK7VOsx+Vp8IVSGkK2SMNsDU/gs393bwgE4b+y6VKL8=;
+	b=wVqocHmPeUR5ym7cWAeMKrb/yeSr/m69ma1RWn5pC2Kxxci4JaeKBqQ0iKAuE3kC5DNu
+	 nT67hJR7RkirBKmm6YT96VLA84LyZEYe+hYe0to5OGuzbQRuYKeuf+kV2h6q45UmdozOG
+	 Jd7Q5vy9ybPDwPZvLtzTOo06vW2agI8A3MKvAL3Votv4XiXAZJPfRpD0bq95dH2rMCzjI
+	 UDmTiZCUfeinxFnVx6ZO/GGtwK+FgYCTGIDQBhAXJ0rke5oVHWDadJvyB7pNcTud8wl4Z
+	 gLHJagNhFX6o1HBu/laABvv+UrycRkEvUO1qx/ZOqySce5fOzVihrlBo90sphKaj67Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fygo.io;
-	spf=pass smtp.mailfrom=fygo.io;
-	dkim=pass header.d=fygo-io.20200929.dkim.larksuite.com header.i=@fygo-io.20200929.dkim.larksuite.com header.a=rsa-sha256 header.s=s1 header.b=QuBD33Uo;
-	arc=none smtp.remote-ip=209.127.231.56
-Received: from va-2-56.ptr.blmpb.com (va-2-56.ptr.blmpb.com [209.127.231.56])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GaUI7D5o;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7792606A31B
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 18:16:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7792606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fygo.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fygo.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F98D606A325;
+	Sun, 25 Oct 2026 21:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fygo-io.20200929.dkim.larksuite.com header.i=@fygo-io.20200929.dkim.larksuite.com header.a=rsa-sha256 header.s=s1 header.b=QuBD33Uo
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fygo-io.20200929.dkim.larksuite.com; t=1792952204;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=/5lwkv3QUM5YvGs1kBijpp/6wHjZlSgrb379+9vBQcE=;
- b=QuBD33UoJ0XNrNXlulx7JRtaPsQ4qoqOqO8xJleODGAQi7PudADFCXzp3QV1GvRqWJZXf4
- pxOcuxVcAZoEqvS1aKDUfAVE86SFcvCiSgUpuUOyqAsEBtlCoRdRvRhqdnBIdqiydKXIyn
- 5pT4JKYpfOjFId8YEuQqrQ3IkOOSdxRdFp9dSu7vJ2ARzG5LiPAxor+eID8RdsDUlVTNvm
- VxCCjMymqju3+OIX0xPBCl+UZW7C9RoL9wNqpneUkbqiZRpKfPqAYUNrAApqdBPxgm3S11
- pa/P4F00FcJhINf1B0xV0woy8m4g/TJNM6DCY3Ez7yQILu/DeCXaHo6qi3Iy4Q==
-From: "yu kuai" <yukuai@fygo.io>
-Subject: Re: [REGRESSION] md/raid5: discards on an array of non-TRIM HDDs now fail with BLK_STS_NOTSUPP; bcache counts them as backing-device errors and stops the device
-Date: Mon, 26 Oct 2026 02:16:39 +0800
-X-Original-From: yu kuai <yukuai@fygo.io>
-Content-Type: text/plain; charset=UTF-8
-X-Lms-Return-Path: <lba+26ade478b+398bca+lists.linux.dev+yukuai@fygo.io>
-Reply-To: yukuai@fygo.io
-To: "Konstantin Nikiforov" <helllamer@gmail.com>, 
-	<linux-bcache@vger.kernel.org>, <linux-raid@vger.kernel.org>, 
-	"yu kuai" <yukuai@fygo.io>
-Cc: "wale.zhang.ftd@gmail.com" <wale.zhang.ftd@gmail.com>, 
-	<kent.overstreet@linux.dev>, <colyli@fygo.io>, 
-	"song@kernel.org" <song@kernel.org>, <regressions@lists.linux.dev>
-Message-Id: <b6685fc8-0580-4118-ba65-a7d319c08bcf@fygo.io>
-Content-Transfer-Encoding: quoted-printable
-References: <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GaUI7D5o
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05B131F01829;
+	Sun, 25 Oct 2026 21:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792964870;
+	bh=lK7VOsx+Vp8IVSGkK2SMNsDU/gs393bwgE4b+y6VKL8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=GaUI7D5od9Sh/neziuU8fXdR+AJMSaT2EzfrOOD9kRIUAqJEBiADi28/hT3jS/Te/
+	 6ZJJds4G/jWJT8UYezV0GuV3HSI86RufleHJZx4C8IyAMxHQbmWwrdNwsdDvAqVe11
+	 BnbkzIkUi1s5AwuyB2c52yupVEeWtWEph6Fp9VT/sV1iNETpiMgBpcEdOWqWxvik+s
+	 s29aXDCQ3z2ofacA/Wks52V9VI8UtJ3Mu5U26XC5H+MRqcmJuaqrWuZYNw0nUKTc+F
+	 uRldwSEXkwmKf04ZsDhd7wwXc85IpW9HRpUABfcJz01r+jM5/72Jc4KwP7/KNpWVFM
+	 Lvt34rmUQ97AA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Karl Mehltretter <kmehltretter@gmail.com>
+Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Miroslav Lichvar <mlichvar@redhat.com>, Jiri Wiesner <jwiesner@suse.de>,
+ Daniel J Blueman <daniel@quora.org>, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] clocksource: delayed watchdog can mark TSC unstable
+In-Reply-To: <atmhdRzqx5t8PYrc@gmail.com>
+References: <20261010065509.72916-1-kmehltretter@gmail.com>
+ <87a4oeerwm.ffs@fw13> <atmhdRzqx5t8PYrc@gmail.com>
+Date: Sun, 25 Oct 2026 22:47:47 +0100
+Message-ID: <874ie9zc3g.ffs@fw13>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -69,121 +59,44 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-Received: from [192.168.1.104] ([39.182.0.25]) by smtp.larksuite.com with ESMTPS; Sun, 25 Oct 2026 18:16:43 +0000
-In-Reply-To: <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Hi,
+On Thu, Oct 22 2026 at 07:43, Karl Mehltretter wrote:
+> On Thu, Oct 15, 2026 at 08:32:25PM +0100, Thomas Gleixner wrote:
+>> I did not think about that scenario obvioulsy. The code is resilient
+>> against long intervals between two measurements, so the easy and
+>> straight forward fix is indeed what you (or the LLM) suggested.
+>> 
+>> Thanks,
+>> 
+>>         tglx
+>> ---
+>> --- a/kernel/time/clocksource.c
+>> +++ b/kernel/time/clocksource.c
+>> @@ -673,7 +673,7 @@ static void clocksource_watchdog(struct
+>>  
+>>  	/* Could have been rearmed by a stop/start cycle */
+>>  	if (!timer_pending(&watchdog_timer)) {
+>> -		watchdog_timer.expires += WATCHDOG_INTERVAL;
+>> +		watchdog_timer.expires = jiffies + WATCHDOG_INTERVAL;
+>>  		add_timer_local(&watchdog_timer);
+>>  	}
+>>  }
+>
+> Yes, I tested this change on v7.3-rc5 (72d3fcf802c4)
+>
+>                               baseline   patched
+> TSC marked unstable           2/3 boots  0/3 boots
+> watchdog gaps below 250 ms    3/3 boots  0/3 boots
+> minimum traced gap            0.231 ms   505.484 ms
+>
+> Each boot had four QEMU TCG vCPUs. I used PTRACE_ATTACH to
+> stop only the vCPU 0 TCG thread for 800 ms.
 
-=E5=9C=A8 2026/10/25 20:38, Konstantin Nikiforov =E5=86=99=E9=81=93:
-> #regzbot introduced: 90573092673c
->
-> Hi,
->
-> since upgrading from 7.1.8 to 7.2.11 a machine with root on
-> LVM -> bcache -> md raid5 (three SATA HDDs without TRIM) loses its root
-> device a few minutes after boot. The same stack ran on 7.1.x without
-> any bcache backing-device errors.
->
-> Storage stack
-> -------------
->    3x ST1000DM010-2EP102 (no TRIM; discard_max_hw_bytes =3D 0)
->     -> md126: raid5, 3 devices, 512K chunk, metadata 1.2
->     -> bcache0: md126 as backing device, cache set detached
->        (also reproduced while an NVMe cache was attached)
->     -> LVM vgpcrd5
->     -> btrfs (/usr, /var, /opt; mounted without any discard option)
->        + ext4 (/, /home)
->
-> Kernel: 7.2.11-arch1-1 (Arch Linux), mdadm 4.6, bcache-tools 1.1
->
-> Symptoms
-> --------
-> Every boot, starting ~3 minutes after mount, dmesg fills with:
->
->    bcache: bch_count_backing_io_errors() md126: IO error on backing
-> device, unrecoverable
->
-> in bursts of up to ~35 lines 2 ms apart. Per boot I counted 11, 17, 22
-> and 63 of them. bcache's io_error_limit is 64, so once a boot crosses it
-> bch_cached_dev_error() stops bcache0 and root, /usr, /var and /home
-> disappear. No I/O errors are logged by libata, sd or md; all three
-> members are healthy (SMART clean, array [UUU], no rebuild).
->
-> Analysis
-> --------
-> Since 90573092673c ("md/raid5: validate discard support at request
-> time", v7.2-rc1) raid5_set_limits() unconditionally sets
->
->    lim.max_hw_discard_sectors =3D UINT_MAX;
->
-> and records member support in conf->raid5_discard_unsupported. On this
-> array sysfs now shows:
->
->    /sys/block/md126/queue/discard_max_hw_bytes: 2199023255040
->    /sys/block/md126/queue/discard_max_bytes:    2199023255040
->    /sys/block/md126/queue/discard_granularity:  0
->    /sys/block/sd[abc]/queue/discard_max_hw_bytes: 0
->    (md127, a raid1 on the same disks, still shows 0 for all of these)
->
-> Two upper layers react to the advertised discard support:
->
-> 1. btrfs enables discard=3Dasync by default because the device advertises
->     discard (mount shows "ssd,discard=3Dasync" although nothing in fstab
->     asks for it).
->
-> 2. bcache forwards discards to the backing device whenever
->     bdev_max_discard_sectors(dc->bdev) is non-zero (cached_dev_write()
->     and detached_dev_do_request()). Before 7.2 that was 0 for this array
->     and bcache completed the discards itself.
->
-> raid5_discard_limits() then completes every such bio with
-> BLK_STS_NOTSUPP. bcache's backing_request_endio() treats any non-zero
-> bi_status as a media error and calls bch_count_backing_io_errors(), so
-> each discard brings the backing device one step closer to being stopped.
-> With 64 small deletions on the btrfs volume a root filesystem on
-> raid5+bcache is gone.
->
-> The granularity is also inconsistent: discard_granularity is 0 while
-> discard_max_hw_bytes is non-zero, so writing any non-zero value to
-> discard_max_bytes fails with EINVAL (only 0 is accepted).
->
-> Related changes I found:
-> - efdffeb6d491 ("md: skip discard on unsupported member devices", 7.3)
->    fixes the same bcache symptom for raid0/raid10 via
->    md_submit_discard_bio(), but raid5 does not use that helper and still
->    returns BLK_STS_NOTSUPP in current mainline (raid5_discard_limits()).
-> - 85764f475f3b ("md/raid5: complete discard bios while reshape is
->    active") addresses a different fallout of the same commit (hang during
->    reshape).
->
-> I have not found a report for this raid5 + bcache case on lore.
->
-> Possible fixes (either side would do):
-> - md/raid5: when conf->raid5_discard_unsupported is set, complete the
->    bio successfully (discard is advisory) instead of BLK_STS_NOTSUPP, or
->    do not advertise max_hw_discard_sectors in that case, as before 7.2.
+Care to send a formal patch? After all you decoded the problem and
+suggested the fix. So you should get the credit for it not me.
 
-I think it's fine to complete the bio successfully in this case, the same
-as the old code did. I can cook a patch, however, if you like, feel free to
-test and send a patch by yourself :)
-
-> - bcache: do not count BLK_STS_NOTSUPP (or failed REQ_OP_DISCARD) in
->    bch_count_backing_io_errors(), the same way REQ_RAHEAD failures are
->    already ignored.
->
-> Workaround in use
-> -----------------
-> A udev rule writing 0 to /sys/block/md126/queue/discard_max_bytes and
-> /sys/block/bcache0/queue/discard_max_bytes (also inside the initramfs),
-> plus "nodiscard" on the btrfs mounts. With that, io_errors stays at 0.
->
-> I can test patches on this machine.
->
-> Regards,
-> Konstantin Nikiforov
-> Claude Fable 5.1
-
---=20
 Thanks,
-Kuai
+
+        tglx
