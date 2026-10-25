@@ -1,57 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.123
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.231.56
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792936322;
-	b=JiBAZFfkYOLTQV1hvPtGi0n/Ol+OCvYVm0GsCOp3biZdvOCakH0dWu7twlv3LVbOn1ey
-	 zdBXMYis/nfsmDObovlg4RxnGwXtS4rB2RxMiUIfgeil74MPIvyJWN0LAQn5SGASGqKeq
-	 8ZD1wwpDEbBoyfXkZL9CflFuEaEDLVXWd/68XvzjZwEoubBlK9fvHtsQuGNc+CMKeQEDs
-	 R+l041sZa/XfQrN6FJvQB5p2DTsDS6imQ45ib9fSS+xKl6/jZicXT+UyvMWq5o9/lMIpt
-	 lhmz+MPywVW62VTHhlJCq7hPDaPgYqS0WQyb5yCnJzr+FEaypd0qK2q4d9Xf1xjpf4w==
+	t=1792952217;
+	b=HG6Cx5E/FKwV6eV4NqEZ6ar7mERw4Z5FVcKwkXaPUyVqG/DqSoXwuDNMHip1f/5kOC1P
+	 yeHo58ebx5bGGfru/a9Mu1Awv5793b0FsNEQDMPZJeruhaLKwiMlaBy9KQZNCHJR0faeO
+	 bMdujJuEFWVcP0fjkmH5qdZmmIQTglqbnYBQtvCicJF+LiFyekOpdJycoKneDShZ5cixD
+	 zqdoXZeHHLVMKbQaFm5ehhEmYDveeOIGecad5059iU/iVztCGRiQX7q54KagJ45f0VzRC
+	 1lCA1MjDo6orbRe1W21sFMPxTGLA2qN6uQ2QHIZTzsFBaX/gizSz34K4ZR/vFvLCrUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792936322;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=LV+gXF/xXhZ1UNrTU4g9ywrHyOMfy4hD/Fc6wa02E2M=;
-	b=WbNmwgb1gixydJyy7+AURfRT34uRLELgdG+90zH+DB3FkOo4lYAc0mOiilnKkpR0KDkG
-	 FFAAte71fUxQndFo8FAK7GspcE/O/zd3xP/qhj9P6JNo8hTqoDUmTmAKv1gO4ZxEaZ7uG
-	 MTBUfFIqIhlx6/m4JrKUBlFalRhva5NuSF9dlReQ1vq1MaxGS3fk5he11nfRlRgQ+XLim
-	 rft9Q+jSbzIzRgqhB+NnsvcaOT6/XZCfIgQl4Rbv/RKiWmRVndoc06S+CuXPV5zUfvWv0
-	 PwNAAC+jBtIfiQf3q5hnRctUPuilb8TTi60Y5HijLVJcjxvlf0aWgaVfDR8lN/2ujow==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792952217;
+	h=DMARC-Filter:DKIM-Signature:From:Subject:Date:X-Original-From:
+	 Content-Type:X-Lms-Return-Path:Reply-To:To:Cc:Message-Id:
+	 Content-Transfer-Encoding:References:User-Agent:Mime-Version:Received:
+	 In-Reply-To;
+	bh=/5lwkv3QUM5YvGs1kBijpp/6wHjZlSgrb379+9vBQcE=;
+	b=XplMukTeQfKPpNaT7srPDOJ0cyZPBXSXV1gwyGX2vedPw3N5zUmIHe63yvQOcL1qrOGe
+	 yzoSSFO3N8be2gfJGiELezBKZYfWLBbl2E1LmGKQbPRmtpK3nJS9lYqAMY5dDfUgRiceY
+	 onq4kYybL3RE6b8WrwwUTARIyJ2WX8JQBWb0+l7ADsAGCvsqc7qbl72J677Fgp6V2lFcf
+	 Qsly1m+xbdUy9N4Cb9jPjW9R/M1AVa6Ri6CYNwfm7BtVzqfcnDEGbj4K3zMSRS3nGGASs
+	 RwoEL665013EPt4MLnTZVWhxt2xjy1/PxSYs2L8DtpY7hY8Ym3SO0v+qZy5bsgnikrQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=pm.me;
-	spf=pass smtp.mailfrom=pm.me;
-	dkim=pass header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=HTQu6K2L;
-	arc=none smtp.remote-ip=109.224.244.123
-Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=fygo.io;
+	spf=pass smtp.mailfrom=fygo.io;
+	dkim=pass header.d=fygo-io.20200929.dkim.larksuite.com header.i=@fygo-io.20200929.dkim.larksuite.com header.a=rsa-sha256 header.s=s1 header.b=QuBD33Uo;
+	arc=none smtp.remote-ip=209.127.231.56
+Received: from va-2-56.ptr.blmpb.com (va-2-56.ptr.blmpb.com [209.127.231.56])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92659606A31A
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 13:52:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92659606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7792606A31B
+	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 18:16:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7792606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fygo.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fygo.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=HTQu6K2L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1792936319; x=1793195519;
-	bh=LV+gXF/xXhZ1UNrTU4g9ywrHyOMfy4hD/Fc6wa02E2M=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=HTQu6K2L9yuODmflgM597mUXpZj8QuqjN8h8C9DikcVyamcVMKMqyB81pI9Gnq0nI
-	 nFztp6qoja7n36XXJI85h8Nzjyps/JMTN3WcQUB7m6Rx7XE4J+hbeW8k/O56Y76nNj
-	 /OnAZhqkhQ58p1VQD8LwrxRGf52VOAXg1Vc01JXPukm5HCmMVVOwxnkPHjunKJnWLZ
-	 bH6Hrk7dABgnarDUnszJ6Q52jJPrevMHxeNYSWkViYlCqunrsodnkiaOc8OimHu+KC
-	 c38/Cq3QS34f2WiYEk8ESADBIIzkUeGKGQ7hwd1cfDk/KhN7FVuF7Z4zAuolSoHh3V
-	 vMlGlbWNL/rdQ==
-Date: Sun, 25 Oct 2026 13:51:53 +0000
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From: matt.protacio@pm.me
-Cc: Bjorn Helgaas <bhelgaas@google.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: [REGRESSION] PCI: sibling bridge windows undersized after rescan since f909e3ee3ed1 ("Remove old_size limit from bridge window sizing")
-Message-ID: <aw593qmbGeozzzeSm1vyhxbK4gXyV-yVyDA8-ZHeKwFbW_VS40s9LwMVMr9NWgJl2uPqVpMegCZPGub7MkswOWo3SfngaHNDj8ayjgHR14o=@pm.me>
-Feedback-ID: 135619238:user:proton
-X-Pm-Message-ID: 4304c96634f9d9cb5de56797038f9640c5a896a0
+	dkim=pass (2048-bit key, unprotected) header.d=fygo-io.20200929.dkim.larksuite.com header.i=@fygo-io.20200929.dkim.larksuite.com header.a=rsa-sha256 header.s=s1 header.b=QuBD33Uo
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fygo-io.20200929.dkim.larksuite.com; t=1792952204;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=/5lwkv3QUM5YvGs1kBijpp/6wHjZlSgrb379+9vBQcE=;
+ b=QuBD33UoJ0XNrNXlulx7JRtaPsQ4qoqOqO8xJleODGAQi7PudADFCXzp3QV1GvRqWJZXf4
+ pxOcuxVcAZoEqvS1aKDUfAVE86SFcvCiSgUpuUOyqAsEBtlCoRdRvRhqdnBIdqiydKXIyn
+ 5pT4JKYpfOjFId8YEuQqrQ3IkOOSdxRdFp9dSu7vJ2ARzG5LiPAxor+eID8RdsDUlVTNvm
+ VxCCjMymqju3+OIX0xPBCl+UZW7C9RoL9wNqpneUkbqiZRpKfPqAYUNrAApqdBPxgm3S11
+ pa/P4F00FcJhINf1B0xV0woy8m4g/TJNM6DCY3Ez7yQILu/DeCXaHo6qi3Iy4Q==
+From: "yu kuai" <yukuai@fygo.io>
+Subject: Re: [REGRESSION] md/raid5: discards on an array of non-TRIM HDDs now fail with BLK_STS_NOTSUPP; bcache counts them as backing-device errors and stops the device
+Date: Mon, 26 Oct 2026 02:16:39 +0800
+X-Original-From: yu kuai <yukuai@fygo.io>
+Content-Type: text/plain; charset=UTF-8
+X-Lms-Return-Path: <lba+26ade478b+398bca+lists.linux.dev+yukuai@fygo.io>
+Reply-To: yukuai@fygo.io
+To: "Konstantin Nikiforov" <helllamer@gmail.com>, 
+	<linux-bcache@vger.kernel.org>, <linux-raid@vger.kernel.org>, 
+	"yu kuai" <yukuai@fygo.io>
+Cc: "wale.zhang.ftd@gmail.com" <wale.zhang.ftd@gmail.com>, 
+	<kent.overstreet@linux.dev>, <colyli@fygo.io>, 
+	"song@kernel.org" <song@kernel.org>, <regressions@lists.linux.dev>
+Message-Id: <b6685fc8-0580-4118-ba65-a7d319c08bcf@fygo.io>
+Content-Transfer-Encoding: quoted-printable
+References: <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -60,179 +69,121 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Received: from [192.168.1.104] ([39.182.0.25]) by smtp.larksuite.com with ESMTPS; Sun, 25 Oct 2026 18:16:43 +0000
+In-Reply-To: <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
 
 Hi,
 
-Since v7.0, a remove + rescan of a PCIe switch with four sibling
-downstream ports, each holding a device with a 32G and a 32M 64-bit
-prefetchable BAR, no longer assigns resources to three of the four
-devices. v6.19 and earlier assign all four. I bisected it to:
+=E5=9C=A8 2026/10/25 20:38, Konstantin Nikiforov =E5=86=99=E9=81=93:
+> #regzbot introduced: 90573092673c
+>
+> Hi,
+>
+> since upgrading from 7.1.8 to 7.2.11 a machine with root on
+> LVM -> bcache -> md raid5 (three SATA HDDs without TRIM) loses its root
+> device a few minutes after boot. The same stack ran on 7.1.x without
+> any bcache backing-device errors.
+>
+> Storage stack
+> -------------
+>    3x ST1000DM010-2EP102 (no TRIM; discard_max_hw_bytes =3D 0)
+>     -> md126: raid5, 3 devices, 512K chunk, metadata 1.2
+>     -> bcache0: md126 as backing device, cache set detached
+>        (also reproduced while an NVMe cache was attached)
+>     -> LVM vgpcrd5
+>     -> btrfs (/usr, /var, /opt; mounted without any discard option)
+>        + ext4 (/, /home)
+>
+> Kernel: 7.2.11-arch1-1 (Arch Linux), mdadm 4.6, bcache-tools 1.1
+>
+> Symptoms
+> --------
+> Every boot, starting ~3 minutes after mount, dmesg fills with:
+>
+>    bcache: bch_count_backing_io_errors() md126: IO error on backing
+> device, unrecoverable
+>
+> in bursts of up to ~35 lines 2 ms apart. Per boot I counted 11, 17, 22
+> and 63 of them. bcache's io_error_limit is 64, so once a boot crosses it
+> bch_cached_dev_error() stops bcache0 and root, /usr, /var and /home
+> disappear. No I/O errors are logged by libata, sd or md; all three
+> members are healthy (SMART clean, array [UUU], no rebuild).
+>
+> Analysis
+> --------
+> Since 90573092673c ("md/raid5: validate discard support at request
+> time", v7.2-rc1) raid5_set_limits() unconditionally sets
+>
+>    lim.max_hw_discard_sectors =3D UINT_MAX;
+>
+> and records member support in conf->raid5_discard_unsupported. On this
+> array sysfs now shows:
+>
+>    /sys/block/md126/queue/discard_max_hw_bytes: 2199023255040
+>    /sys/block/md126/queue/discard_max_bytes:    2199023255040
+>    /sys/block/md126/queue/discard_granularity:  0
+>    /sys/block/sd[abc]/queue/discard_max_hw_bytes: 0
+>    (md127, a raid1 on the same disks, still shows 0 for all of these)
+>
+> Two upper layers react to the advertised discard support:
+>
+> 1. btrfs enables discard=3Dasync by default because the device advertises
+>     discard (mount shows "ssd,discard=3Dasync" although nothing in fstab
+>     asks for it).
+>
+> 2. bcache forwards discards to the backing device whenever
+>     bdev_max_discard_sectors(dc->bdev) is non-zero (cached_dev_write()
+>     and detached_dev_do_request()). Before 7.2 that was 0 for this array
+>     and bcache completed the discards itself.
+>
+> raid5_discard_limits() then completes every such bio with
+> BLK_STS_NOTSUPP. bcache's backing_request_endio() treats any non-zero
+> bi_status as a media error and calls bch_count_backing_io_errors(), so
+> each discard brings the backing device one step closer to being stopped.
+> With 64 small deletions on the btrfs volume a root filesystem on
+> raid5+bcache is gone.
+>
+> The granularity is also inconsistent: discard_granularity is 0 while
+> discard_max_hw_bytes is non-zero, so writing any non-zero value to
+> discard_max_bytes fails with EINVAL (only 0 is accepted).
+>
+> Related changes I found:
+> - efdffeb6d491 ("md: skip discard on unsupported member devices", 7.3)
+>    fixes the same bcache symptom for raid0/raid10 via
+>    md_submit_discard_bio(), but raid5 does not use that helper and still
+>    returns BLK_STS_NOTSUPP in current mainline (raid5_discard_limits()).
+> - 85764f475f3b ("md/raid5: complete discard bios while reshape is
+>    active") addresses a different fallout of the same commit (hang during
+>    reshape).
+>
+> I have not found a report for this raid5 + bcache case on lore.
+>
+> Possible fixes (either side would do):
+> - md/raid5: when conf->raid5_discard_unsupported is set, complete the
+>    bio successfully (discard is advisory) instead of BLK_STS_NOTSUPP, or
+>    do not advertise max_hw_discard_sectors in that case, as before 7.2.
 
-=C2=A0 f909e3ee3ed1 ("PCI: Remove old_size limit from bridge window sizing"=
-)
+I think it's fine to complete the bio successfully in this case, the same
+as the old code did. I can cook a patch, however, if you like, feel free to
+test and send a patch by yourself :)
 
-#regzbot introduced: f909e3ee3ed1
+> - bcache: do not count BLK_STS_NOTSUPP (or failed REQ_OP_DISCARD) in
+>    bch_count_backing_io_errors(), the same way REQ_RAHEAD failures are
+>    already ignored.
+>
+> Workaround in use
+> -----------------
+> A udev rule writing 0 to /sys/block/md126/queue/discard_max_bytes and
+> /sys/block/bcache0/queue/discard_max_bytes (also inside the initramfs),
+> plus "nodiscard" on the btrfs mounts. With that, io_errors stays at 0.
+>
+> I can test patches on this machine.
+>
+> Regards,
+> Konstantin Nikiforov
+> Claude Fable 5.1
 
-Hardware
---------
-- Intel i9-13900K, ASUS PRIME Z790-P WIFI (BIOS 1840)
-- Broadcom PEX88096 switch card (1000:c010) under root port 00:01.1
-- 4x NVIDIA Tesla V100-SXM2-32GB (10de:1db5), one per switch
-=C2=A0 downstream port. Each has BAR0 16M (32-bit non-prefetchable),
-=C2=A0 BAR1 32G (64-bit prefetchable) and BAR3 32M (64-bit prefetchable).
-=C2=A0 No Resizable BAR capability.
-
-Topology after rescan:
-
-=C2=A0 00:01.1 root port
-=C2=A0 =C2=A002:00.0 PEX upstream
-=C2=A0 =C2=A0 03:00.0 (pair A) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A003:04.0 (pair B)
-=C2=A0 =C2=A0 =C2=A004:00.0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 08:00.0
-=C2=A0 =C2=A0 =C2=A0 05:10.0 -> 06:00.0 V100 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 09:00.0 -> 0a:00.0 V100
-=C2=A0 =C2=A0 =C2=A0 05:18.0 -> 07:00.0 V100 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 09:08.0 -> 0b:00.0 V100
-
-The board firmware hangs at POST if the GPUs are powered at boot, so
-they are powered after boot and hot-added with:
-
-=C2=A0 echo 1 > /sys/bus/pci/devices/0000:00:01.1/remove
-=C2=A0 echo 1 > /sys/bus/pci/rescan
-
-Command line: pci=3Drealloc intel_iommu=3Don iommu=3Dpt. The firmware's
-64-bit root window is too small and fragmented for this, so the host
-uses an ACPI table override (initrd DSDT upgrade + SSDT) adding a
-second root window, 0x8000000000-0xffffffffff. The problem also
-reproduces in a VM without that override (see "VM reproduction").
-
-Result on the host
-------------------
-Prefetchable windows after rescan:
-
-=C2=A0 bridge =C2=A0 =C2=A0 v6.17 (good) =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0v7.0.14 (bad)
-=C2=A0 00:01.1 =C2=A0 =C2=A06400000000-93ffffffff 192G =C2=A06800000000-880=
-7ffffff 128G+128M
-=C2=A0 03:00.0 =C2=A0 =C2=A06400000000-7bffffffff =C2=A096G =C2=A0680000000=
-0-7803ffffff =C2=A064G+64M
-=C2=A0 03:04.0 =C2=A0 =C2=A07c00000000-93ffffffff =C2=A096G =C2=A0not assig=
-ned
-=C2=A0 05:10.0 =C2=A0 =C2=A06400000000-6fffffffff =C2=A048G =C2=A0680000000=
-0-7001ffffff =C2=A032G+32M
-=C2=A0 05:18.0 =C2=A0 =C2=A07000000000-7bffffffff =C2=A048G =C2=A0not assig=
-ned
-=C2=A0 09:00.0 =C2=A0 =C2=A07c00000000-87ffffffff =C2=A048G =C2=A0not assig=
-ned
-=C2=A0 09:08.0 =C2=A0 =C2=A08800000000-93ffffffff =C2=A048G =C2=A0not assig=
-ned
-
-On v7.0 only 06:00.0 gets BAR1. The other three log:
-
-=C2=A0 pci 0000:0a:00.0: BAR 1 [mem size 0x800000000 64bit pref]: can't ass=
-ign; no space
-
-and the parent ports log:
-
-=C2=A0 pci 0000:09:00.0: bridge window [mem size 0x802000000 64bit pref]: c=
-an't assign; no space
-
-There is plenty of free root window space when this happens. The
-failure is inside the switch: pair A's window is the plain sum of its
-two children (2 x (32G + 32M)), but after the first child's BAR1 at
-0x6800000000 and its BAR3 at 0x7000000000, the second child's 32G
-BAR1 needs the next 32G-aligned address, 0x7800000000, which runs
-past the end of the pair window at 0x7803ffffff. Two such siblings
-need about 96G of parent window, not 64G + 64M.
-
-VM reproduction
----------------
-To bisect without rebooting the host, I reproduced it in a QEMU/KVM
-guest (q35, OVMF) with the same shape of topology built from emulated
-switches, and the four V100s passed through with vfio-pci behind it:
-
-=C2=A0 pcie-root-port -> x3130-upstream -> 2x xio3130-downstream
-=C2=A0 =C2=A0 -> each: x3130-upstream -> 2x xio3130-downstream -> V100
-
-with the guest's 64-bit hole set to 512G (pci-hole64-size). Inside the
-guest, a remove of the root port + rescan gives exactly the host's
-numbers: 48G port windows and 4/4 BAR1 on good kernels; 32G+32M port
-windows, 64G+64M pair windows and 1/4 BAR1 on bad kernels. I can share
-the exact QEMU arguments if that would be a useful test case.
-
-Release results (Ubuntu mainline builds, plus v7.3 built from stable):
-
-=C2=A0 v6.17.12 =C2=A0good
-=C2=A0 v6.18 =C2=A0 =C2=A0 good
-=C2=A0 v6.19 =C2=A0 =C2=A0 good
-=C2=A0 v7.0 =C2=A0 =C2=A0 =C2=A0bad
-=C2=A0 v7.0.14 =C2=A0 bad
-=C2=A0 v7.1 =C2=A0 =C2=A0 =C2=A0bad
-=C2=A0 v7.2 =C2=A0 =C2=A0 =C2=A0bad
-=C2=A0 v7.3-rc3 =C2=A0bad
-=C2=A0 v7.3 =C2=A0 =C2=A0 =C2=A0bad
-
-Bisect
-------
-Between v6.19 and v7.0, limited to drivers/pci, kernel/resource.c,
-include/linux/pci.h and include/linux/ioport.h.=20
-The parent of f909e3ee3ed1, 4326ab1806a5, is good; f909e3ee3ed1 is bad.
-
-# bad: [028ef9c96e96197026887c0f092424679298aae8] Linux 7.0
-# good: [05f7e89ab9731565d8a62e3b5d1ec206485eeb0b] Linux 6.19
-        git bisect start 'v7.0' 'v6.19' '--' 'drivers/pci' 'kernel/resource=
-.c' 'include/linux/pci.h' 'include/linux/ioport.h'
-# bad: [cb3ca564682a0a02a9f95b7b22ad434a7389daaf] Merge branch 'pci/control=
-ler/cadence-j721e'
-        git bisect bad cb3ca564682a0a02a9f95b7b22ad434a7389daaf
-# good: [bf37448d9b7793544904ccf21e5844b6ff4af3c0] Merge branch 'pci/pwrctr=
-l'
-        git bisect good bf37448d9b7793544904ccf21e5844b6ff4af3c0
-# bad: [73b4779864b1e6adad015d14047ae63b88ef9c4c] Merge branch 'pci/resourc=
-e'
-        git bisect bad 73b4779864b1e6adad015d14047ae63b88ef9c4c
-# bad: [9629f71722bb994f4b95088bc37a14f9aeaa5f90] PCI: Log reset and restor=
-e of resources
-        git bisect bad 9629f71722bb994f4b95088bc37a14f9aeaa5f90
-# bad: [f909e3ee3ed1a44202f09ac7e637a0f9ec372225] PCI: Remove old_size limi=
-t from bridge window sizing
-        git bisect bad f909e3ee3ed1a44202f09ac7e637a0f9ec372225
-# good: [bc75c8e5071120e919beb39e69f0979cccfdf219] PCI: Rewrite bridge wind=
-ow head alignment function
-        git bisect good bc75c8e5071120e919beb39e69f0979cccfdf219
-# good: [4326ab1806a52888d1cd076b9020677703e25545] resource: Increase MAX_I=
-ORES_LEVEL to 8
-        git bisect good 4326ab1806a52888d1cd076b9020677703e25545
-# first bad commit: [f909e3ee3ed1a44202f09ac7e637a0f9ec372225] PCI: Remove =
-old_size limit from bridge window sizing
-
-
-Notes
------
-From the patch discussion, f909e3ee3ed1 fixed Simon Richter's xe BAR
-resize failure (the aligned old size used as a lower bound after
-3baeae36039a), so I assume a plain revert would bring that back. I
-haven't tested a revert of v7.0 either: it conflicts with later
-changes in setup-bus.c and I didn't want to hand-port it.
-
-My reading of setup-bus.c, offered as a guess rather than a diagnosis:
-pbus_size_mem() sizes a window as the plain sum of max(r_size, align)
-over its children, while placement in __assign_resources_sorted()
-goes in descending alignment order. When a child window's size is not
-a multiple of its alignment (here 32G + 32M at 32G alignment), the
-next sibling's start has to skip to the next 32G boundary, and the
-plain sum leaves no room for that gap. Before f909e3ee3ed1 the old
-size lower bound seems to have covered it in my case. I couldn't work
-out exactly where the 48G per-port windows on v6.19 come from, so I
-may be missing something.
-
-I'm happy to test patches, a revert, or debug output on both the host
-and the VM. The VM setup makes it quick to try kernels.
-
+--=20
 Thanks,
-
-Matt
+Kuai
