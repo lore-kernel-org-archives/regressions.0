@@ -1,56 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792964871;
-	b=nsvUbt4iJbxxPa1CrywvheFlxSy+HG/tdganZlPMPiQ8ITZ+KoxOJ0fQQxKUolq1VZue
-	 l2JCca/8mV73ssvMSL7zfFEjqTMbrVPwq0wHGwIODyb76iXNjQX8e+EDZ4hZMcDb4lmWS
-	 q6HsKJ7Sy/fxcfkpiu1hIVTyc4dpIZ1a+8+AA7gi/HA/v7TFD/aUaELGciTiAovorTl2B
-	 s2COidBtwtEIjEvvi0dx8kiFWXvfz3xew6M8Z23N1YPH7K/n7hSndKzxe4jdiqfMtUCfl
-	 LnU6qrTgAnd1hfLiSGaQuIyEeG+7D7lRrMhD9dOfA5PI1ADacA4n6TpyXTXE46uLcaQ==
+	t=1792971004;
+	b=nUs+KLGZs849edwfz589O+Ms8KylRiBrOhJkL6oGngWZqB9pqsYQvnqQ+6vOakITzml1
+	 Ca8YGdmkdmRpFBCfxI+tKKEcofVyQI/fV6b0fKncgCv6vZrAfG8905OIwlIGlS8BRs5br
+	 E682/eSuZhHgYMUoOLhRu/mO5rDpwTRJhRXHEwhtDvoqSEjNzQvifGC18L4W47PNI9Acd
+	 Jp4r3kyL8P5Ff4ta6GuJQubYzbmTFMZR1rCcwmMNh7FF2yTs6gRz4QoU6AoRuVp8Z694d
+	 yHGsdHyOzxVyDEl/M+rfuv02YVv/uN9PQNjRAHd77h1v4bpP6jsneaB3kq9MaqASMLQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792964871;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
-	 Date:Message-ID:MIME-Version:Content-Type;
-	bh=lK7VOsx+Vp8IVSGkK2SMNsDU/gs393bwgE4b+y6VKL8=;
-	b=wVqocHmPeUR5ym7cWAeMKrb/yeSr/m69ma1RWn5pC2Kxxci4JaeKBqQ0iKAuE3kC5DNu
-	 nT67hJR7RkirBKmm6YT96VLA84LyZEYe+hYe0to5OGuzbQRuYKeuf+kV2h6q45UmdozOG
-	 Jd7Q5vy9ybPDwPZvLtzTOo06vW2agI8A3MKvAL3Votv4XiXAZJPfRpD0bq95dH2rMCzjI
-	 UDmTiZCUfeinxFnVx6ZO/GGtwK+FgYCTGIDQBhAXJ0rke5oVHWDadJvyB7pNcTud8wl4Z
-	 gLHJagNhFX6o1HBu/laABvv+UrycRkEvUO1qx/ZOqySce5fOzVihrlBo90sphKaj67Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792971004;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=E5YQoaj5YHm1eYEazSEM5pfLF2ybdrxOAMvKmHrv13U=;
+	b=Gr4hXM5Bjt+Qt8OK/iIpTo0mliWIrnPsNUxw7FyZgOwVJQiU+BRYML8kADNEImdSZr2x
+	 ZadKwLq8VOOGZocNrG5tk/9IY9Z2wezTqvvM6Rkacih5Q+JhWEtNdZTQzsqD5jPF9qWJp
+	 SsdxlHlGDW9RHmg9uqIHorzPiZk74sNWYWT1KT4N8dnk9gSIXgb4mNmF1jwOw84G/m9Y5
+	 PmaV0nQD/z4SctCjfDB6poginfd9DfciMs3W0TIq9oEG8ioN7GJPuWgUOKWX88HVuVxZy
+	 dTpYVseb8DDTdZJKF/26IXWBp9sKCuUNvqB9Lo+UWm81Fu40r8NIzQ1EQ1jD1akrFUw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GaUI7D5o;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aiZQD0dO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F98D606A325;
-	Sun, 25 Oct 2026 21:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8E6606A327;
+	Sun, 25 Oct 2026 23:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GaUI7D5o
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05B131F01829;
-	Sun, 25 Oct 2026 21:47:49 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aiZQD0dO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA8A1F031E2;
+	Sun, 25 Oct 2026 23:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792964870;
-	bh=lK7VOsx+Vp8IVSGkK2SMNsDU/gs393bwgE4b+y6VKL8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=GaUI7D5od9Sh/neziuU8fXdR+AJMSaT2EzfrOOD9kRIUAqJEBiADi28/hT3jS/Te/
-	 6ZJJds4G/jWJT8UYezV0GuV3HSI86RufleHJZx4C8IyAMxHQbmWwrdNwsdDvAqVe11
-	 BnbkzIkUi1s5AwuyB2c52yupVEeWtWEph6Fp9VT/sV1iNETpiMgBpcEdOWqWxvik+s
-	 s29aXDCQ3z2ofacA/Wks52V9VI8UtJ3Mu5U26XC5H+MRqcmJuaqrWuZYNw0nUKTc+F
-	 uRldwSEXkwmKf04ZsDhd7wwXc85IpW9HRpUABfcJz01r+jM5/72Jc4KwP7/KNpWVFM
-	 Lvt34rmUQ97AA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
- Miroslav Lichvar <mlichvar@redhat.com>, Jiri Wiesner <jwiesner@suse.de>,
- Daniel J Blueman <daniel@quora.org>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] clocksource: delayed watchdog can mark TSC unstable
-In-Reply-To: <atmhdRzqx5t8PYrc@gmail.com>
-References: <20261010065509.72916-1-kmehltretter@gmail.com>
- <87a4oeerwm.ffs@fw13> <atmhdRzqx5t8PYrc@gmail.com>
-Date: Sun, 25 Oct 2026 22:47:47 +0100
-Message-ID: <874ie9zc3g.ffs@fw13>
+	s=k20260515; t=1792971004;
+	bh=E5YQoaj5YHm1eYEazSEM5pfLF2ybdrxOAMvKmHrv13U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=aiZQD0dOYn048Dt5kIdHgZN4+KsVtKW3DNbW92Gy7LWFVxoweBBae7ZkSuxKWZLnl
+	 Vy8ht/HWaJjrCzfwImn8XGM3G1XXSCaI6jdMcbfPeyyMFDRx2bHebW5SKNEhKhTaW+
+	 m0C4+V0/hk7EBqHBt+vdcaOIisX1YZk2iPgvu8dA3Ijw1vTP1z4t2heheQA9rVAD2n
+	 E0FBpPiLvxkIthsFu2baIad4uhsKq8xxvk6zc0AlnTK+VHufrQI/BQwwNm9o3IpDY9
+	 rjXU1MJk2GsvstBb9Xy/ELdH6t1Uva+7d+cbEZzCEkDtCykmuqVE8baPGqzr4TVe3m
+	 9v0/vuqnhfN3w==
+From: Sasha Levin <sashal@kernel.org>
+To: Christoph Zwerschke <cito@online.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Erik Brangs <erik.brangs@gmx.de>,
+	benh@debian.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	linux-bluetooth@vger.kernel.org,
+	1149377@bugs.debian.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth: btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore working on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests firmware)
+Date: Sun, 25 Oct 2026 19:29:50 -0400
+Message-ID: <2026-10-25-1-daily-reply-0004-bluetooth-asus-rtl8761cu-hold@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <bdafa01c-f75a-41fa-a264-407400a2cd81@leemhuis.info>
+References: <bdafa01c-f75a-41fa-a264-407400a2cd81@leemhuis.info>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -60,43 +68,19 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 22 2026 at 07:43, Karl Mehltretter wrote:
-> On Thu, Oct 15, 2026 at 08:32:25PM +0100, Thomas Gleixner wrote:
->> I did not think about that scenario obvioulsy. The code is resilient
->> against long intervals between two measurements, so the easy and
->> straight forward fix is indeed what you (or the LLM) suggested.
->> 
->> Thanks,
->> 
->>         tglx
->> ---
->> --- a/kernel/time/clocksource.c
->> +++ b/kernel/time/clocksource.c
->> @@ -673,7 +673,7 @@ static void clocksource_watchdog(struct
->>  
->>  	/* Could have been rearmed by a stop/start cycle */
->>  	if (!timer_pending(&watchdog_timer)) {
->> -		watchdog_timer.expires += WATCHDOG_INTERVAL;
->> +		watchdog_timer.expires = jiffies + WATCHDOG_INTERVAL;
->>  		add_timer_local(&watchdog_timer);
->>  	}
->>  }
->
-> Yes, I tested this change on v7.3-rc5 (72d3fcf802c4)
->
->                               baseline   patched
-> TSC marked unstable           2/3 boots  0/3 boots
-> watchdog gaps below 250 ms    3/3 boots  0/3 boots
-> minimum traced gap            0.231 ms   505.484 ms
->
-> Each boot had four QEMU TCG vCPUs. I used PTRACE_ATTACH to
-> stop only the vCPU 0 TCG thread for 800 ms.
+> > If it helps, I can send reverts of 980084de4d9b and 6f0624b4427e
+> > (on top of bluetooth.git master, with Cc: stable). Alternatively,
+> > btrtl could fall back to the ROM firmware when rtl8761cu_fw.bin
+> > is missing.
+> I didn't see any regression reports for 7.x releases about those
+> changes, [...] So I'm still inclined to say: leave everything as it is
+> in mainline to avoid any risk and revert only the backports of those
+> two in 6.18.y and 6.12.y.
 
-Care to send a formal patch? After all you decoded the problem and
-suggested the fix. So you should get the credit for it not me.
+Yup, that would be appreciated.
 
+-- 
 Thanks,
-
-        tglx
+Sasha
