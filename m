@@ -1,101 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.170
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792928058;
-	b=pwWKV2eYAmxc2AF+hVz+HOhhIurp0epbZtiL27vfHIMtXQAgNPkB9F3jy4Ub0EH7gU3F
-	 cpUJ2TiFSJisKs0p0sTh84QFAlgWiXBnt7ZIGtb+E3//Z9sbmIcnncMWALNoPydLUb1tt
-	 b76bAojK53CwfwLyPwgGDCYUzVF1k5s5UQghzi/X1tZQW9gB1R8Mo2hw4hyaWUqDDxEiN
-	 403bh376iy86j6QOHAQzceOZaXDSYxj9hFxLdpWeKzSLvbdactrgTlFQwQux8zR9HsnLl
-	 19XFwkY3aLOpThvh8NF4Ahj9SpHNWowhglGzH9CcqDg86lD6Zu9dT/7pvJoKwUlqB2w==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792928058;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=41RAX7MgRXoDWB++MDi19DObLArHcqUImXX3BQuhLqI=;
-	b=wDLCsgTyj7Xvtj6kghjRwbHU+gOvD7YwM+nr+Unm6L8sn0jiVNC+43VUQ8BaB+mv23On
-	 /YICd9gBuTE1j06bsS/5xozHC+OxTPAyXdu9qJAv5L39AEOIqkkzqmd++Gv+E7VCBh7lA
-	 p/zGtywU2Jrr0/8GvJkp4AQCCs+HUtkig4rwQTEBFHOGuUnqabmPDqW7x+CGbX/87w9Zg
-	 zyFAFFaLMC62A/u/Zp8p02xuw7s+axtHn/A2sfkp7zjujwRAVyelZN5M4uHqs4s3PPn/Y
-	 qzs9DGhX4PjyOFQLkxO5C+l+TwG+rmlT/xzcN2B7QMA16ZV2i5YRsX7wdHXtpA3D/cA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="TbRob5/k";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.170
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.78.113
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792931073;
+	b=0n59qlqfGbBqFDXMe5ErhIvZzrVo3nd/5lB+rZJP01Kqhdrs+fP0dmwRBbFh+1BtJiqk
+	 z36MeCnvYlJYGFpFc5V9ozFRaK8APK0yQqFO3r1VXTTykTCTPeQ+qOoSCxICyrs4aRW4v
+	 kD6qFYXiqtb12T2VylVsDR2mfHeytOzRZV8NssgdHj2wcpxZAgo4SAo/nzdEgwzTVigOj
+	 zN1PZkVxQqhdZFHgAUyOjD8jr1pckG0NkeV6wF/IOe188aPU/21ZKJDdUcBLWQM68mhIM
+	 aAOvJbJoLWY22JRJYNiquP/XpBl86Lr1C3TR4VtclswnYuduNubORG/J0jqiqYIk21A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792931073;
+	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
+	 mail-alias-created-date:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-Authority-Info-Out:X-Proofpoint-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:X-JNJ;
+	bh=G9PnTYGt5cIFS5/QBfn2BHe94Zz+eSo3HCSqmXZsUis=;
+	b=VM/o4YAgv/PlTqtocerf8BiEmIbET9kfBkoWuMqbqiO7nh3PIi+ggglLUzBYlEByj2FH
+	 Q93aYxqmZhmWq0jn1EgaVXClb6Gu8OQE4MKF2pJ4Owm+6Zfx8pOA0kx5Y++JfZcDBwFMF
+	 QHNr1zvGE8GsvAPxzwRCq/FxIhsznXIq/ehOB/vQP08o50+hYzUEPvt/VSWXpgvAGD9vJ
+	 d6y389L7Zh/T3lgYaXVNDOtZjTXY8fudCVSb5+MHqQ4UkFwnlm/Y+wS3Mk4PJoChUMbD2
+	 b7Ocmr9JZ06YRQvXK3+dOTJaTXVGVnyop1KcDarl8Ju9uMtN+G4JV9W7+vjtkJcmTwQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=mennemann.net;
+	spf=pass smtp.mailfrom=mennemann.net;
+	dkim=pass header.d=mennemann.net header.i=@mennemann.net header.a=rsa-sha256 header.s=sig1 header.b=HDGTjyKM;
+	arc=none smtp.remote-ip=57.103.78.113
+Received: from outbound.st.icloud.com (st-2002c-snip4-11.eps.apple.com [57.103.78.113])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B37606A31B
-	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 11:34:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41B37606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A58C606A320
+	for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 12:24:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A58C606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mennemann.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mennemann.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=TbRob5/k
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-8ac4806e210so15918637b3.1
-        for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 04:34:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792928052; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pDmEwp6q0doQzJhTDOMZpaTocZx4YltkGHDaP9yrqLMTd7Dq7sF5al/lnwnPRxbgRH
-         g2KmHKR4Cc8oFowdPQSxVTF9fZQIbRN+FCjphHdZKZFrJSQVdIT9cFTtvJz5uMJ+Qj+m
-         uyJUQ2LMmkGq5bUmCAvf75d7ufn215STvy4HcGp6moVwulZTLc8QpeHLZpeX6onCmGem
-         RWDIlOTJ1g2BY0UzyvKr5oTMAEpLmjRky6aqTV8GK7jpjdbRT/rWPFCIRseJ71R9f9+X
-         cVnnyj/hB0s7I150rtAwtH209RjLt7A+BTt6sicYxRoCRakauMZUJdbsKffIngSXWOMB
-         3B4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=41RAX7MgRXoDWB++MDi19DObLArHcqUImXX3BQuhLqI=;
-        fh=w/1G4h4qs/PNfQVnc1O/b5K0lOOJHfZ92TC0jiBVvcc=;
-        b=Nr6Kq9dot9kfZA12xbHw5ZcJt6eqUi7d+oHPXZcInB6a8JC/lMBsudsVB9vxZRanyX
-         uRohQ0eNaMx/EqSSLKQ2Lt3YkP0rYVnu5Wc9ich6zr5yYgm2ivMvqoDz8kRtFsZQeC20
-         DKjqqO+N4d64hg2dWNSYU7W46XLLSZlxUsbP9e6gF/YHKYJNKh9c5YIaFipKQ8L42azQ
-         P5nRgGZ7tcTH+JsyicP7b14g6GsZ9bxYpYHAbXeEXnexHXDFkT8HC092yTeyYTiUln19
-         DJ3o5dmUS5h1YmvyT+v5Pi0eccNALhkl9h2kBxBsgnJANL8pjbqxXNIwbchQqRJ8dk8N
-         mSWQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792928052; x=1793532852; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=41RAX7MgRXoDWB++MDi19DObLArHcqUImXX3BQuhLqI=;
-        b=TbRob5/kp1nvwMWNroN9VjTLXPy8uEeApjJNRi4FUdk0j/3tCCvkLkMUFXCE+BytGl
-         D7yVivDXmEJB1x2uicnEDojwG+Va7eYD4r3AAStOw52ep6YP2KB7c07Ta9VXI0kwXv39
-         mhrfIbjVbl5LcJnQT5DBF8J9oDLuYeIecexflABqTfd6E4FGo8xYE5LOnl+rmdnbepLd
-         JtIirWbUMEmO+WW2BaHud2uWgaV+a4Herz+cC5UzvDLUr/xO9MJKBKpd43ftrY6flX54
-         qyffbWlYz2BYEDILAASlWC7xfgnSRm9jHohKHCUEUEC6Q/Upn6qVLdT27MxfRZuN4f0H
-         D2bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792928052; x=1793532852;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=41RAX7MgRXoDWB++MDi19DObLArHcqUImXX3BQuhLqI=;
-        b=RjX2spJ1GsGppKxBtoyrz0qKEmiaL8mdPQ050i29rTqNpTFq+zHhtcpO3dFXjxAXsx
-         R/9/OA7ZQZVtuJq+JUSg15IOleNaBYcldvLWqbFK5ipr4USVoQpXLKgHvf3h0h2fGLjF
-         2qmSpWRcT+na4EK0hxr1rnhQfsG0DIaG41B1oPE6x2uCTXc4Ey8nJOArkn/3oJLPeRUt
-         JhsTNzPjav1xjMpBruyiIaT8RuTBsRDt60DIoVz7ZUZFI4dwz4MLscdWT7Dhmmz83ecO
-         jZLUGdYlOfU9Wk/U7Rlz1RgVSNwtoCwf64yyJXoWIVY+OYBO/q9vS6rjAqQhPC+PhdLb
-         UkLQ==
-X-Forwarded-Encrypted: i=1; AKwUvBy2nKARjaX9eSupprFaIWC5pS/TJYyi83LkBlIS7lLnG15RP00O0KVpF7erX/aU+nq14Xy3QuIRgbFuYA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKkKqvacscxnXAyt31D/nLgABCAgxn2OZuF9v8mgCxMgcCaQ+nb
-	XyJSWhIAZ9z4VY1m5/0idNUX5m5granezDlg7TW4b6wJU7FbaPw2aJ4oiXEhn20ZY6CjnttP46U
-	2JcqYvpM5sGdcw0HOG+Wmmd5m2N7scFU=
-X-Gm-Gg: AYBFou2UIOGaRTIPZRwrQQgrm3/Cj6HyTJlDD4JTaGDywqNy1FULO4fM8bsWvf3/vNI
-	VMdUrIl9aRspzi0jDw2FY+qtwdp+GtTWIzRUWf+2+1OUWmnui0muZxaxa1af3RX06jBTARNu5UC
-	jhutnm/GApEq/+NUNd0zWNFYdPq8U10Vjxyv6I/GK3QjR6jjh0z/FVFPwS28RNHELxZGJ6X4sxL
-	/W0tc+/SLglhlyOqBWJEC4ZIWMya4bVxV3QAuYG3s7Xt32KtffeYg+QuMCar2kqRgymdfpOI7jL
-	xlghLAnSzHrKzShWrfgrK9oXcceM28953xGB1baYuKbJ/bkUGetyNd/PqtzwZrQC9dDf67LW2Uy
-	AgF46hEqUUDUDIeKrgNrj1PEbVjz2OgY3PVwp4z5Z24iQToeS1ZJZRrssR+xxo9J9UHO2de8GNg
-	/SeGFhpkvFqHnQ3TRz
-X-Received: by 2002:a53:d209:0:b0:679:c916:46f8 with SMTP id
- 956f58d0204a3-67a4543dad9mr1944040d50.64.1792928052316; Sun, 25 Oct 2026
- 04:34:12 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=mennemann.net header.i=@mennemann.net header.a=rsa-sha256 header.s=sig1 header.b=HDGTjyKM
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-100-percent-1 (Postfix) with ESMTPS id 51F71180018E;
+	Sun, 25 Oct 2026 12:24:30 +0000 (UTC)
+X-ICL-RepId: 01a17305-0112-7a53-a2e1-109895e024c6
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhPC0MFWwNeC0gLQwVaAFBcHA4AVhlRGVc4XghZBVcdWBZdQ1kORlBfHA4AUgVcFVQZXQMZBVcEGQpQUAFLWhVVFw4CQh9QH0wWV0NEHxwZWhRcGFNFUR9UWEMZRVZpQQtPHV0ZWxxCZFhXCQoGVx5XHV4MWQUcHlwMEwBeDw9MC0gBWwZbAEUISgFZBlocQQ1NBl0aWh8dWApQBFkrXxVXFlYAVgVcXlcdR1MXH0sAXEVQGEQfXR1mHFwAVgJc
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mennemann.net; s=sig1; t=1792931071; x=1824467071; bh=G9PnTYGt5cIFS5/QBfn2BHe94Zz+eSo3HCSqmXZsUis=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=HDGTjyKMDEy5iIW+OJC5Je3zYydBPqJUEXSwHA4dKgv3nor0eyQv9YhThIAxtkR7X3xUBCbCvaLFs2E6uEiTz8fqG2EO1PZB1f1UJRnnHyz7/WQofgjXRL81DhPuvjRznuaZWO8SZSBN4om/Kqn68sfNGwMpBn8KlkGh9hsqDt52rB29hO6Zsv+wV0KtIZj/VojO9fYTVAcTDArp9xWcSd7sHHQkwcoRybbbYzxsJcvIr7CNSsubGqEt1dUxQmqvktig8WcPl7Ydc8B3AsnNn9QSCIXADdTYQu+8wKAxyzuYFvnyffAnpCz/ne6Ekty2MFtCnCl6/LSgcVcg4QPaYw==
+mail-alias-created-date: 1719251376433
+Received: from archlinux.localdomain (unknown [17.156.216.30])
+	by p00-icloudmta-asmtp-us-east-1a-100-percent-1 (Postfix) with ESMTPSA id B304B1800198;
+	Sun, 25 Oct 2026 12:24:28 +0000 (UTC)
+From: Marcin Mennemann <marcin@mennemann.net>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: ntfs3@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Senjin <senjin@hatchling.org>,
+	marcin@mennemann.net
+Subject: Re: [PATCH] fs/ntfs3: fix SEEK_DATA/SEEK_HOLE for WOF compressed and dedup files
+Date: Sun, 25 Oct 2026 13:24:11 +0100
+Message-ID: <20261025122411.14550-1-marcin@mennemann.net>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261005223318.19303-1-marcin@mennemann.net>
+References: <20261005223318.19303-1-marcin@mennemann.net>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -105,47 +67,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CAJOGg3x1KWjXrMpXoCDEMAV10i4Utk8E+hoJx7UW6Lr3uDkbEA@mail.gmail.com>
- <e46ea453-5a56-4009-8b33-900166345905@gmx.de>
-In-Reply-To: <e46ea453-5a56-4009-8b33-900166345905@gmx.de>
-From: Julien <julien82453@gmail.com>
-Date: Sun, 25 Oct 2026 12:34:00 +0100
-X-Gm-Features: AclHuK-6yDmRDYnA6QItL78V10sOajvI8R4QtWENajW4D3u6F8oIBfkKhlNG-ic
-Message-ID: <CAJOGg3zRpJeaoZh=bSqcH7w4exu1Dvcwi73WRBEO0sfbFrpqKA@mail.gmail.com>
-Subject: Re: [REGRESSION] hp_bioscfg causes boot failure on model HP Laptop 15-bs1xx
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev, 
-	jorge.lopez2@hp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authority-Info-Out: v=2.4 cv=X6Vf6WTe c=1 sm=1 tr=0 ts=6addf4ff
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=Y3k0dO8rAAAA:8 a=T0gKZLgf3h4bJD4k0QUA:9
+ a=Vsd_HAn_fMcgZoXZC4y2:22
+X-Proofpoint-GUID: 61A4-thsRtX51QEt2OGM8FtXUQnc_H08
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI1MDA0OSBTYWx0ZWRfX0lA/WOaDJdXi
+ FxCWqEJjpq3f462E0dVTKrEdjJIRCy72MnaVGBS1wAg7z+NN/8k5RCC4jRO4YfmKmkK8dowogec
+ NJNuqC4xTnd7+LIeJb/ReifTDBKDB+el39XaGJTThR3o30G1VjULyyEwuW/ivRy5HmVdO5/HarA
+ e/O0OJiBHOb5pb3tXeSchPzzUKrAZAdvN6L/VbhLyTDQ4kaqE1JxHe5Acph6TYEODWuZxLCEQ0X
+ NuzSoiF/L/6rMkMke52LwN7g/lylUlL7906OckkmoL78/GMqwEzrvq82n38q8HmHt/l85zYF0c0
+ 3HEGR5CreYsQ1GS2u+KQ5SEwiNSRcssWeJIK7YuYIlrp/RDTw3Epb1DhmlCz34=
+X-Proofpoint-ORIG-GUID: 61A4-thsRtX51QEt2OGM8FtXUQnc_H08
+X-JNJ: AAAAAAABe0xD99npd/L/diIe32U0SdcD3JlWU9DjQLCvAAgm7cO9IM9jj8bDHU9ZSzMmGnpt8fw+aY2Lub6junFjdHbEHPIKJaR8XmdxUeCnVUznVKY6ieUnhhhaOg5vJNT4jmulARbJWQBtRi70VYM6rpoBZwftHJf6B3VzZvMeUyrJDRqoyUx8dY8G9dSQKUf5FqpcXIqbf9uMg5Eqyk7P9zpSPpp6pt+x8VhVaGoRQM8PozcrMrQl2Ryci+kJrg08MYXOgfeDfU8h9WScQMOJEaa8WL3uuvl0DMhVNIQp6IVhhwGgQl0rYCw3B6bjQ7bXv8rXEaIYd/KFQs7Oo9MlL6QPiO/17ev1QxgpAyzMxo7x80qjcw/7Dkbl+3kIZuA5INTxpH7RLTLn3WvgPJCnBMGz75wp0KT8kVgbsIa8hMy5gxPz3JuaCYgQTzc+zK4xUDCLwkoxxcIbA1muGi2sYf+3K9aBgORnnH0j7kYQbbq9R85mWfVAFkBcb1nPGU/SL2teMqg9d3fqmWkVz9uLI60HQR/AigRXjPpO0xKJST7zIQXxQ6ei+azq7xVxtrT8U82ySfcsU9nRH/gJTFpiDvU0V2ypmXEVokO81R/3ssdH4WS9wmX1c+l4EXcinavhFOm3Mg7Sg/Q/DEhV7Ao/E3ET/GeakqwBHz1WgaBOnthj87ky7B4UAp5uKH23wTdWYe/EeV0fotnHUjjNPhzEe9f4msA1ZuzFaGOpVmUD7FEz23bqvRnnJBYNjmFfJGIe0qNzl5GtDJaR2gACoQ4eP+cp1m0oDLX0MqAB0WfRoenkdTgphQst8T3uUpXcIgmlQ1lZ4dTX2S9yj9IL8j2TCsQc9dgVLO6yf8qPkSwudNJ/dHVLIFfTxIfTfRDquBTff7S4NGur0ghMDUmklD+n1TPfhcAlx1rvkUR0iqSWoCpELyZTvAYBVADU0yj7Ss7dMZ+ZNIQoO8AXClek3BUx0apcGD4
+ QNztOYNM4tU2FrK5il2Lh/IFFDBHHqioLq7OlUKHYsmcsSn+uO+NbBnvQZ7jLNMDgvco8OD4Ob6bzH8kQzCSfPxBo1BSizWhDhC3YnMjZAOlvc98kf28OuI3GWU5AJ/LHYG8BBvSufcqHkvgORaI1Mdb1G7d7n8xN4gbz2TG9/LT5QrMXJ7QXMK4xf2Ucj9+BE4PocJK4MDt/A8D2prrPCSlTtbRmbX78O9GsmZOEXI5VM6vQat0oIEy5xemadixHoEsddlYW+sf02jVN4FLFwegKyTj3rOwQa3iE7JUIUatiahoY8YfOXrYnixAaFFl6B100JWJSnxsq9S0rq4b2P7wBaLXm
 
-The same thing. The system hangs as soon as I load the module. I think
-it is a firmware quirk. I'll try to dig more in the next days.
+Hi Konstantin,
 
-On Sat, Oct 24, 2026 at 6:01=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 22.10.26 um 16:29 schrieb Julien:
-> > Since commit 467d4afc6caa ("platform/x86: hp-bioscfg: Fix automatic
-> > module loading"), the hp_bioscfg module is automatically loaded on HP
-> > Laptop 15-bs1xx.
-> >
-> > This module causes the system to hang during boot. Blacklisting
-> > hp_bioscfg allows the laptop to boot successfully.
-> >
-> > Sometimes the screen will go black but there is no kernel panic
-> > screen. When I get to see logs, there are no messages related to
-> > hp-bioscfg. I suspect the system crashes before it can display them
-> > because on a normal boot the next message I would see is "Module
-> > hp_bioscfg is blacklisted".
-> >
-> > I think the hp_bioscfg module should be disable on this hp model until
-> > a fix can be found.
-> >
-> > #regzbot introduced: 467d4afc6caa
-> >
->
-> What happens when you load the module manually after booting the system?
-> Does dmesg contains any interesting messages in this case?
->
-> Thanks,
-> Armin Wolf
+gentle ping on this one. This is a regression since v7.0: before
+c61326967728, cp copied WOF compressed files correctly; since then it
+silently produces zero-filled copies.
+
+Senjin has since posted a fix for the same problem [1]; either works
+for me, I just want to make sure the bug gets fixed. Mine also covers
+deduplicated files.
+
+#regzbot introduced: c61326967728
+#regzbot title: ntfs3: SEEK_DATA reports WOF compressed files as holes, cp creates zero-filled copies
+#regzbot monitor: https://lore.kernel.org/ntfs3/6adc95fc26efdd1658b01fc5@mailersend.net/
+
+[1] https://lore.kernel.org/ntfs3/6adc95fc26efdd1658b01fc5@mailersend.net/
+
+Thanks,
+Marcin
