@@ -1,101 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792976539;
-	b=dX+aeN9Z4jht63isY2L+xQ4UK3usdwLU1iqL+unpkO1Fywt/r7+TueAuTbv7+EAqw54p
-	 dJsByWbBkNKwLckOrII1HBwCdNpEQjmhjt547olqhFKJJQboIBu9oq85PTIt81ZBffAoF
-	 dH5wSlVCcN5WEiO0Bo84gcs8AzxBskGNwJwd/xelaTlsuhLhh+KJW094/CqOZl4+4Eiij
-	 XIbQQ/Pq2HZJVpLqHxyO6a82IZaTLrCk41iJzK+K7exmNYwW2bCjG3Q+FBQToq8vBLBZ/
-	 53jOKHlPAMkXzWBCiiNWR4gvLh0y32guyFhUdLRJo5y/p9ZG+gZNXj0fHHXv4usl3Ew==
+	t=1792987030;
+	b=AiqSSHR7aoKTsOSMvny0SOx+c4uQa4AxrtCubrShPTofUb8beCjL97LFALE1E7ePkJSi
+	 O0Se7NEHqD9zWxf/ZulQn6O4E3bJwylxrUh/d4VuDLJv1bW0vVwaCHFs7kufVxhrbfEaw
+	 mda2V79558GgF4TRhJsL8VBU8gqIt9UhHIdqkzUMteVIEbIPEgicIBJ2iqNeSQtbOrLRo
+	 hSdeSx04JtKcg8yCBLzdltdsuN+mt7w3X8ulIn4iafcYbMYeALj20E4VS7ek9rFXLljTb
+	 7NutiUSg82ILG9enC5SldFx4Dso43PaSPN/+viDI1rmkJOko96/8K8e3BrCK6fDlsQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792976539;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792987030;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=VjjpT/WS6GzMNNn96hvzrrjqoEJgWtlxD5KPXsnUWGQ=;
-	b=3nVWe2Vj8Lz2nEcm+neUg+WGcx4c9fcKFTD6cnYgziO/CwX3jQdZ0Alfjnz1zGjsN2SD
-	 GU1i9TBB1Pr3WOQ9FdG1C8vX2vvq5G1Lftcc56YD5hnm5uozrrNxAMMnLWISP+Vk8CeZL
-	 Rb9Ik+tO20DYTLvaSVH93tnnxa0s5F6lFZg7oSMQtKcOzldIKaO9t04RWYGDkstltrQO9
-	 3859xksIsOzG3koW4kP3TFaMuWOLxWbQb5lFaE6jFR+wnaqEhq1edy+XuR7siaqC4D1DV
-	 ziYc5HBxzhCOLOt5Waq1bR4CrNwt9fAXupBz3OF3W0UMEqhNPRUaR6kNC77e4PBO3ng==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=+ScCUUWyJM//qpTpz7tt0Fdxp9XvYrNhMa0jbjZM+Ng=;
+	b=BSKGwfcc7gr4waPURt1nTTf3Bo0n55LaOkXcERtI/8gEZ5ZQUl5HcDT24h5pUJ00j/Em
+	 iaTa7fW9H5krNR1pvkMrnmuOPdETWmRmleH9F8OH71gDR+ZcSPdbB/OwQnLY4N4DkXeGB
+	 Uw8PQ5MMHf/fRO5xD7/ixptxDa+X+FMHD0GlgvCZFicF1JqryARa+BI2SF+DJDTrHEu/l
+	 ZNw/J6q+N7XKk2eu2Ag+SDvBsoiK8WUROslacdNkd5IilbF+7Fxl2u6w773ubotl/bxzB
+	 ahYrVvmumbt4HbLJI9Mo73dgFhi2bxF2SvW1Ebt6T8r6Ki6bgWB5Uyx3qydhtzHS4bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=P7QCiv2U;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=T36z1pMz;
+	arc=none smtp.remote-ip=74.125.82.181
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0A5606A31D
-	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 01:02:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA0A5606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F6E606A31D
+	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 03:57:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 93F6E606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=P7QCiv2U
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a4d7ae1ae9so8092215e9.1
-        for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 18:02:18 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=T36z1pMz
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-35b2c599f43so467826eec.0
+        for <regressions@lists.linux.dev>; Sun, 25 Oct 2026 20:57:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792976537; x=1793581337; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VjjpT/WS6GzMNNn96hvzrrjqoEJgWtlxD5KPXsnUWGQ=;
-        b=P7QCiv2U2un2PMv+Yvdb6Ub21zi6/+5ZqpPB5kaF+gqdZuFOWzbkuS7bvx8rfsSw7u
-         93dqFvlpnDAGNRPl483VaLOYdoDA3RNUAgauODDzj4hBy45IgpSJfMbp9p8eZN181dn+
-         kbgKBpq+MbZQ7cVM4Ufdp4YzkXmh2Vpfn+1bwgYTWFJcZvecN99fmSTic0mADi+xGVI9
-         C/9HQwpdybGBp2GRsiCIP5yiWSMdfcAMdLynn+08lfq3E661cIEqnBbycJnLNfwEmWE3
-         iPwfODYE3OdSUHhXjZWo5gdbuYvqqzZRjWAD50t6WypY6KEmud8vH5jm6p6TqovpyNM0
-         //pA==
+        d=gmail.com; s=20251104; t=1792987029; x=1793591829; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+ScCUUWyJM//qpTpz7tt0Fdxp9XvYrNhMa0jbjZM+Ng=;
+        b=T36z1pMzm+2Wl3XZHdJ6qucTgaWN+zKqKndJptZz/CCaasAE3gMrWcKooKVy3SuamQ
+         raaH77cJ+SIEKy1Dr1Z3lpVcGAGRYvJCcAULEvnJ5E9sSFZrVONxPwLWZGLV58dmnVU9
+         EROcSH1dPkaVoW81nuSCMJGw/ZcnG6oSHtZR+ZuK1+VQvPn0Rt0oI0MbJKhbrkcbcIWE
+         1IYSdpRRyObBqxhS7Cixq8FFzMhITxn4cWltqqj9Vbk1BeUjVp+nOoVNWwkSF7TASUpD
+         0MIlGzBw/hmRVqb9x5YwELk2POU3wBt2UMtCFOfPpmFvh51Q5LI6XezL1y4hVjmeGZk2
+         /LtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792976537; x=1793581337;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VjjpT/WS6GzMNNn96hvzrrjqoEJgWtlxD5KPXsnUWGQ=;
-        b=aRZRIRwWeBBbwgTIX7JVpiI5Hnrcra4WZ1qtEsyARZj09KBPDLQbB8rphZo5sDVg4V
-         S2pRH6OKiY0OastkSO8iDBVChh6i++QdRlgpvMMOKQlb/pCLSiie4gA81Ijn+PxuAce5
-         7ySvD+oQF3/3OqqAqsfs2vmMV1Sej2shjJddFLQ5W32UlRcQspHPUST0HXqEZwilmY8i
-         n0NwpZAaMXBIS5W1arM8NHa5aLcAoCC1UU5KvWuQH67vwERMBQsDx7998lQgMskhhyme
-         qqRJMw2Y6JxSTzN+M+w93zla3dlFTJzDAhs1YV1/rqHYERD03+PHeHu0Mr7hempKc7tR
-         zUBQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxtabee9Ox0kJ7kt9vlyt/yNLd5oNQYdvSmq7wzIyR/qZeOsH02lCsm155IMc5qdTTAAIKGqboRH2Jdrg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIvB8ZSAPIsC0pxuJ2kpi+tYJCundLZIJqIqdj7AL6zXMsJP49n
-	hhaITnDnAmPyu6RgTp7u//oHREZ6bUZQ6hYAQznzHM/Kc+2HZyehesW/dmE7qw==
-X-Gm-Gg: AYBFou1w0DLAFAdX3qe8BxIJx9ixHm/HMlPVHzqAJxege1NXc7i8TCiiqnqyQ/dJGSw
-	DjAwIFIss6XhAkINV0uQyARNgn7bga+xK0gOa0IV+/+fWmE4DRf/BlH5q01SsKcmu2RJks/rCBg
-	9tr+7ENdcYUCSilpT0NQfOoRKZ5Q5MktWPqO/vJP2W0/ETQEk2LBCtKRrIIjwnM86hq7IMrzTL1
-	Jx3El1N3JyHmYgxAYGyRY1aUMorL+tRVpj0seqDca7QrW+PsG2by67/7/ezM/3mgiN24O3c0EfC
-	9lim0EGcKTVOU7xh4JziYUUjCCY4n5zemaksWMFSFsPgCdiZqSw3gk/YMX1CS22TvKYFGF9XfCW
-	4hnXB8DVhkeDZ5wksoYbfTLd2j4xzo846aIBX3vh8hFkwEU2MbflUTR+rDK0VpkDuvHKc70DTB7
-	WpI4vZ2tyxminITIFflGQfB7g649/mxfHU4aP9TqdzkvSlOPDWFHYeilS8PtLNyv1cpv9HwW/uZ
-	tX2UUWO6b7hPbCMhBcAnFdvtijWuF1wT2Hp9A9TDorJhtl+UWkFKeeaxTXDVYBS/kQONTp/RY6X
-	ltsI6XYEzF/0xWXz28uu/2X+Y0i3h2sDfYXWeeu1XV2vIpBZDpH/MlYlxn6KWAp7np0cXWRUwX0
-	gYuZqHzXWKvo4NYZfxX2Ofw9eW3a4Fw3aB81+vm6UIjOiqNdbg/1PWxD4iA==
-X-Received: by 2002:a05:600c:3148:b0:4a0:1efa:c74a with SMTP id 5b1f17b1804b1-4a35ac96da9mr81454535e9.20.1792976537008;
-        Sun, 25 Oct 2026 18:02:17 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-a9cc-4401-09c3-9199-30c4-c6a3.310.pool.telefonica.de. [2a02:3100:a9cc:4401:9c3:9199:30c4:c6a3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecd354asm12325195f8f.43.2026.10.25.18.02.15
+        d=1e100.net; s=20260707; t=1792987029; x=1793591829;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+ScCUUWyJM//qpTpz7tt0Fdxp9XvYrNhMa0jbjZM+Ng=;
+        b=YUOW74IHJd/jM3/UHMP/782uIjLCbMwQmMLFDCfvaRiQYnlYLReMWRQX4bdfybELHU
+         RIFDCSfVoiQqfu16qp9cpPMLI6bTKGWmaDmSIXRQCiJSNdgFDTG26pZEI5e042/PmqGH
+         SiuVJ4tcrIXm3IYuFSNewxKk0SrMK1j2z1Xzxvsb7qAVE7JVZ8AgaGHYyRrNtsSNq3O7
+         JwRgEiyGzOqxvRiFqd9ZveDBgxdrNWeI9UIK/uerFpHtZ393TDmkJLW1WjrpEC2Rx192
+         S7JYMdsU1fbkv5DFFDoo/LLoOHWdfgUxZTFcCnYcuc5yUS0UKepqBmc55QrEpRX+Gl8n
+         bojw==
+X-Forwarded-Encrypted: i=1; AKwUvBwXIZyriz3EY4s4f3pFOhgYyLSB0ZttUdYNgCzbSR+Oq2rE2VGhhwJR2oFT/3yQbSnkhIsKngxRkmDQ2A==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJe26HNR4enBZKDG3Lecef0yJIGdKqiL3cCN+7IT3wOnjZvy85p
+	W7YqoTxs26CXNE/XGjQOc/NtIvRKxy0FdSUxoCasfA1Zm1nwFOtlMQPI
+X-Gm-Gg: AYBFou3FDMnhV09plDKdUer4mCYohY9jjbJYaexkSfMBe+W4eN40x/8jgo6tSjsWOSF
+	JcILVR1QMHxvDsal5Ts3lxD7IRJq4EYa0lI82MIMubU1pmhWzRba11B1KrFX0vDe0yh27TnQ0XV
+	PgMU06+Y768a0C+dTk8wDV+vSKWPTnKq0Wola4crlpSSX4Y8ZYtCkc2kS1gNkex0T7cIoOOULHU
+	q6T4SwiT6xZBRvpZKoQFVnc0G2BbJxsJLPUDDfYRaSBKjqxeIjZ+yU7/ByxP4euAjfOohRuiX0H
+	4xGoqv0wyZOmSgSDm9VbwGIjrqnNcsWl7IttHTLy1rn/VtZ3EyUMWdW1PK9KPNazXbkqU3LRWw1
+	9dCNaELenlmwPJB/+R8b8pJ2diKOgeLeQaNHy1RHxNmxNc8rJ4skkk2FZqZPPZxTgXrpTPyaT8N
+	gRZH/M9si0iszUbS/ltgjL1vGUg9PX9sSgMK2MJItECqGyp3W/d3jv3Avh4icUxuAKCbcbMxX+0
+	9DfGf3/v3xi+gp6rsuagYJbcDf5fC3wZq9obatCPdTVebMW5Bl57JR8XGOZt+wz2BSjJA6JuD2q
+	Pj+E0U92lbdVyKEE4fvlVDACQsBpK+/6T+EKtmaaF1jhObOB5YSNzOECtADXTSLgr1s0sSKy
+X-Received: by 2002:a05:7300:f0ce:b0:366:846a:e21d with SMTP id 5a478bee46e88-369e84d35c0mr9182619eec.33.1792987028486;
+        Sun, 25 Oct 2026 20:57:08 -0700 (PDT)
+Received: from MacBookPro.lan (113x35x113x191.ap113.ftth.ucom.ne.jp. [113.35.113.191])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8d93663sm24441240eec.13.2026.10.25.20.57.05
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 25 Oct 2026 18:02:16 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Thomas Gleixner <tglx@kernel.org>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	Miroslav Lichvar <mlichvar@redhat.com>,
-	Jiri Wiesner <jwiesner@suse.de>,
-	Daniel J Blueman <daniel@quora.org>,
+        Sun, 25 Oct 2026 20:57:08 -0700 (PDT)
+From: =?UTF-8?q?Paul-Louis=20Charri=C3=A8re?= <plcharriere@gmail.com>
+To: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Florian Westphal <fw@strlen.de>
+Cc: Phil Sutter <phil@nwl.cc>,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	Jalen <jalen.lin@gmail.com>,
+	Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>,
 	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Paul-Louis=20Charri=C3=A8re?= <plcharriere@gmail.com>,
 	stable@vger.kernel.org
-Subject: [PATCH] clocksource: Prevent immediate watchdog rerun after a delay
-Date: Mon, 26 Oct 2026 02:02:00 +0100
-Message-Id: <20261026010200.96371-1-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <874ie9zc3g.ffs@fw13>
-References: <20261010065509.72916-1-kmehltretter@gmail.com> <87a4oeerwm.ffs@fw13> <atmhdRzqx5t8PYrc@gmail.com> <874ie9zc3g.ffs@fw13>
+Subject: [PATCH nf] netfilter: flowtable: remove hardware flows before unbinding
+Date: Mon, 26 Oct 2026 12:56:51 +0900
+Message-ID: <20261026035651.40052-1-plcharriere@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <CAHqkChbVoGHrWtaFyGFaLQDiAunWw1qOpW-vKSgkKxWEfQ_tCg@mail.gmail.com>
+References: <CAHqkChbVoGHrWtaFyGFaLQDiAunWw1qOpW-vKSgkKxWEfQ_tCg@mail.gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -105,56 +111,74 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The watchdog rewrite made the clocksource check handle long intervals
-between two measurements, but missed that the timer expiry needs to be
-rebased after such a delay.
+Since commit 13210fc63f35 ("netfilter: nf_tables: imbalance in flowtable
+binding"), FLOW_BLOCK_UNBIND is called when the flowtable hooks are
+unregistered, in the commit phase, and nf_flow_table_free() only tears
+the flows down later.  Their FLOW_CLS_DESTROY requests then find no
+block callback, so the rules stay in hardware: the flows keep being
+forwarded, and drivers such as mtk_eth_soc and mlx5 keep their entries
+and reject a later flow with the same cookie with -EEXIST.
+Commit 5acab91458ce ("netfilter: nf_tables: unbind callbacks from
+flowtable destroy path") had placed the unbind after nf_flow_table_free()
+for this reason.
 
-When a watchdog invocation is delayed by more than one interval, adding
-WATCHDOG_INTERVAL to the previous expiry leaves the timer expiry in the
-past. That causes an immediate second invocation. The resulting short
-measurement interval can mark a clocksource unstable.
+Remove the flows of the device from the hardware in
+nf_flow_table_offload_setup() before unbinding it, as
+nf_flow_table_indr_cleanup() does for indirect blocks.  The GC run that
+nf_flow_table_gc_cleanup() waits for may skip flows with pending offload
+work, or have started before the teardown, so queue the GC work once
+more, wait for it and flush the delete work again.  A direct
+nf_flow_table_gc_run() would race with the GC worker.  No BIND or
+UNBIND call is added.
 
-Cure this by rearming the timer based on jiffies, which places the next
-expiry one full watchdog interval into the future.
+Found on a router with mtk_eth_soc flow offloading, where each firewall
+reload left the flows of the old flowtable bound in the PPE.  Jalen
+reproduced it on mainline with mtk_eth_soc and mlx5 and tested this
+change on both, see the report.  Build-tested with W=1 and sparse on
+arm64 and x86_64.  In an arm64 guest with lockdep and KASAN, with TCP
+flows through an offload flowtable on netdevsim ports, the delete work
+of a deleted flowtable now runs before FLOW_BLOCK_UNBIND returns instead
+of after it, and nft_offload.sh passes.
 
-Fixes: 763aacf86f1b ("clocksource: Rewrite watchdog code completely")
-Closes: https://lore.kernel.org/r/20261010065509.72916-1-kmehltretter@gmail.com/
+Fixes: 13210fc63f35 ("netfilter: nf_tables: imbalance in flowtable binding")
+Reported-by: Jalen <jalen.lin@gmail.com>
+Closes: https://lore.kernel.org/netfilter-devel/CAHqkChbVoGHrWtaFyGFaLQDiAunWw1qOpW-vKSgkKxWEfQ_tCg@mail.gmail.com/
 Cc: stable@vger.kernel.org
-Assisted-by: LLM
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Assisted-by: Claude:claude-opus-5-5
+Signed-off-by: Paul-Louis Charrière <plcharriere@gmail.com>
 ---
-The baseline and patched builds used identical configs and initramfs
-images. Tested on v7.3-rc5 (72d3fcf802c4) with four QEMU 8.2.2 TCG
-vCPUs. PTRACE_ATTACH stopped only the vCPU 0 TCG thread for 800 ms,
-six times 12 seconds apart per boot.
+ net/netfilter/nf_flow_table_offload.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-                              baseline   patched
-TSC marked unstable           2/3 boots  0/3 boots
-boots with gaps below 250 ms  3/3        0/3
-minimum watchdog gap          0.231 ms   505.484 ms
-
-All 18 injected stalls completed for each kernel.
-
- kernel/time/clocksource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index f1253f5795c6e..58c0ca11cdc5a 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -673,7 +673,7 @@ static void clocksource_watchdog(struct timer_list *unused)
+diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
+index 4365859220e..3844a23af5b 100644
+--- a/net/netfilter/nf_flow_table_offload.c
++++ b/net/netfilter/nf_flow_table_offload.c
+@@ -1279,6 +1279,19 @@ int nf_flow_table_offload_setup(struct nf_flowtable *flowtable,
+ 	if (!nf_flowtable_hw_offload(flowtable))
+ 		return nf_flow_offload_xdp_setup(flowtable, dev, cmd);
  
- 	/* Could have been rearmed by a stop/start cycle */
- 	if (!timer_pending(&watchdog_timer)) {
--		watchdog_timer.expires += WATCHDOG_INTERVAL;
-+		watchdog_timer.expires = jiffies + WATCHDOG_INTERVAL;
- 		add_timer_local(&watchdog_timer);
- 	}
- }
++	/* Hardware rules are deleted through the block callbacks, so delete
++	 * the rules of this device's flows before unbinding it.  Run the GC
++	 * twice: the first run may skip flows with pending offload work, or
++	 * have started before the teardown.
++	 */
++	if (cmd == FLOW_BLOCK_UNBIND) {
++		nf_flow_table_gc_cleanup(flowtable, dev);
++		mod_delayed_work(system_power_efficient_wq,
++				 &flowtable->gc_work, 0);
++		flush_delayed_work(&flowtable->gc_work);
++		flush_workqueue(nf_flow_offload_del_wq);
++	}
++
+ 	if (dev->netdev_ops->ndo_setup_tc)
+ 		err = nf_flow_table_offload_cmd(&bo, flowtable, dev, cmd,
+ 						&extack);
 
-base-commit: 5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f
+base-commit: 734bef548a96e8774d6eef5dfa2026c6edc4e80b
 -- 
-2.39.5 (Apple Git-154)
+2.39.5
 
