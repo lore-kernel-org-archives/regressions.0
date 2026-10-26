@@ -1,98 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793014734;
-	b=DlL8T+BP/XBueX/oyQ+b6JQH+LOM11YWq20dbf811LULQbe943fjuYPGknqfwuw+VpK3
-	 mHQ2hr8qyMsqqBwTsLwfkXMvPBMzpsmfX1ifB24hnqTgNUZGtxGkpnN8kKPR9DYTwGpBN
-	 Eow8hEOmBNe5GJH52qfe+AQkrvaYQz+qkLj6VE6uRga8mDnd9zYv62Q/uz2ZaQYCvx/n6
-	 +w1pZ/yl34O84AdgBv8+o7iWrJL+XuJsJ6lqAwX/oviNMRGBsgoCT+ijtxr1mMaXNSz8c
-	 v5dKKdU4dHA5PXYbPf9gU5CsPMpyWgPjMiXgdNN4UPqWnq72zzNAu6A+nH7AHWihOjA==
+	t=1793015651;
+	b=caFhHPPYytPORLuRVRIGqsvOxuMH6GjpwfGmD25HqfttBGoQ8oJdYM+MP2zttzANuVAP
+	 15KOdBIPjk9jh9H/PLdPDy7QbW0aV/1kQbAehZBMnxDyMtotGq6V/+hgJhZqIyjVt2S6U
+	 O2zYT4I9edU8JvO2OlDzEk4CqozZqXgMljIzcm4YCHWFf+Le+2t7AEcKJMrdsZ9t3f12L
+	 89DIKB/Ny33H7kDjcMPpO/A+yqQy4jAjYZDghgmj2B25Nai2YwkX8UAO1Yrhg6+vvfuK1
+	 9UwXUInqRh620dSIlBXubayKx9jgoh61LItyaodDQAc6RfGSyAXzgsUmJ/nxmZe148Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793014734;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=lGTCUVwBVhHA0G6XFL+3+lxo/iNodYNJMNP7+hVT0qg=;
-	b=Y+R0QwHecbzLvLWZgEBol+dsUMlORSe06tAbijK5ADsqjaKUzy6WVKNbkpoEAQeUymHC
-	 qpsk2c3YX/jeH4AVg2ykoU4v1TbF7nOgSAyvXj4XAQ0R3U9AOawokzx2o71w2gREXvovJ
-	 3XqvMqUjAhesClVTa6i2LtKo6KVeHVtup3PQCZNyk7/Enj6kAULeye+PUHNdfesBbN97F
-	 EpfYvoHYmYQmvDDXqykKd3buGe6JuZ6AzBTKXm4O8vv9O0062MrKd+tTCesH7Neayqek5
-	 ln/R11tslhBc/yh5jsyOFWiGlVyoVzRax23cEBbNrpAi677yEcBKn7WsJqHfHpSt4bw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793015651;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=dOm5MRaOgdoFOy8UNmgvpmaOwg3mr6R0PvJvBB/oYAQ=;
+	b=tv6hAVhunv1QMucCDh3eJEOlyC6zQNjp0nJ5Xk6fOF5ycWqAjPhhI+LLttRRheRNnJwb
+	 WVGSUAxBkCppqxSSWVnKNEHfG52yuzhdyvaGhIQYGClau8+gE4rt/WQ4uoN3Cr7LRsNv9
+	 2LGlirJlvc2NZ4N0mbLSuqtZz75zvMaWzCCrOcd0SYcn/S7zFlMwhNa7lrPCY37fURunE
+	 lj7C3NLf88CRFz8tv53eddze8pz+Nh+IwvrEm7isnBOAjckdruz1AilLSo/RaZqSzgmWY
+	 QA3sUiVVyB2FIRKQLoxaPpmXDRFcXlLhZwfjBwy38iSteicESYl2PFcHT0l4mNxflxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Ij7N17z2;
-	arc=none smtp.remote-ip=209.85.221.42
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dOEkPKYQ;
+	arc=none smtp.remote-ip=198.175.65.9
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3769E606A31D
-	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 11:38:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3769E606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2145E606A31E
+	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 11:54:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2145E606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Ij7N17z2
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48e46e449e8so877369f8f.3
-        for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 04:38:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1793014733; x=1793619533; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=lGTCUVwBVhHA0G6XFL+3+lxo/iNodYNJMNP7+hVT0qg=;
-        b=Ij7N17z2qUH4x7+1lAp1j5tstZk6yQwOUtli+v49meUt/NgeBm0E4EhwRXmlg2vkEr
-         X7QLDHDNHhhfbZNV4OQ4Tv9jsaxqmwL2JiA7JDEu5bQlChd7oScHBXQQvo8ka6up3xA9
-         H1oswGf/dahOj5SyHk9HQSplZ03XQhFfPMm//NsRZaAhPzvssTvHJWRqJjAFVus+q1jv
-         vNT9OlgM8deasXWULZTSntLSXQ1bMQd6dfvQ1YPSsOiM/RCHEZc9++Q6BKRrjuncN8W9
-         cTjqoeNskA6Cwmzvsfb/qYhjww+oTkbkRi7fI5cp5wAOOr1nzzG+kGQWeMkUOpZtoWQY
-         JBYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793014733; x=1793619533;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lGTCUVwBVhHA0G6XFL+3+lxo/iNodYNJMNP7+hVT0qg=;
-        b=1iqeJdGHJ7JZu/FzuhvePbTOK7lsV6LSHHRbxTnLa9/85mLwp761iuPsUhgKdpe7mc
-         u3ASDNdTPHq9B4uPKA5RAPktlDRoui9oiymqdaHSHQ0HtHiThMebsiF2ksSVeUaoSeAU
-         SLt1SDYF2uAWYu/wyZG3FskEnb81YbmwmApdTQOuYzYpCnoss9qAdomisYi/acvaLm20
-         g7aiKWXNIh5nTt7w6/YwzFu1fqb1w+IQasW6t4fSK2UfX40qB103reFFFmmZnkBf7Mtx
-         Jy0JIR0sP1J/0mCx/qDvJRdN8Z5ohpe3ZgFlwwHqgOWFZuVJ+JVfMP/MpBC1wnzBDjKc
-         JRWw==
-X-Forwarded-Encrypted: i=1; AKwUvByq9mL0gnkX/TKstNtJwKY7agLYeRgRZJyji4u/TNdWqVytYhF8TnyIZTPsVEbgqb1YGIczi0Aeo+4F4Q==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKfove5/0GRPSvxn/Ts6GFsYHpdGNJN013XeN9B4irBdK75VOiL
-	aUqTI+vJvKzCI8hHtjxsEHkQeQaeVCo39kbYXDDZB0g2LfdaBKjlRbQvA6qHLw==
-X-Gm-Gg: AYBFou1p3pbTCdvsE84DBAk10p/FilADHJs2NY5h3Ydw/3iqI6dPYwJBJxwd9aaIa4g
-	op/+7ScERI+6hjrXlPd9Qhica8nMNNuZ7k3wqc218QPOcVVxxQAq+fU1ZoR0xr5RkvHBXyWeeRV
-	kclpDrkyNnQ8XD/1FzqakmSXfadRjXlE1WTOyaqFwTz0r6uMSk+YueD2+sH+N12++60vCUqZC13
-	ojYjSjXr7O32ii2zsmr/UOJ7eQeZfrYy5P5Fb+xL7iAoi146c/cwqPQCOh2s/qR/8xhF5S82aQn
-	tioEBVFlQC0hagSIeMGjiGNSCFccZCxTxLb5/c/X89Gwvg1R9IKqje756DuuujH7FxZkZCNQ6EV
-	U2Ch+psUyUD353lQ5obUFBbN/QNWgmyCNMkMt7+W2Fo/CZu8xamw4TpHV+Qkt5+tcJ21WSABaII
-	5qUEAEQYrWHZXFIZTPfV7Epfx9Aci1LBOJtwpsNFmLbX8VkFjQIR5Nb1qPzeGQJ2fhGturU5qKy
-	JIznc1++jhw1AOggcXJILOTbpADp2FKewXtsk0B3JmUL0nA5Ss++cI4Ig0Qv6U6
-X-Received: by 2002:a5d:5d86:0:b0:48d:f996:1814 with SMTP id ffacd0b85a97d-48e3eb9c7fdmr11109704f8f.57.1793014732636;
-        Mon, 26 Oct 2026 04:38:52 -0700 (PDT)
-Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ebd49afsm16227058f8f.35.2026.10.26.04.38.51
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 26 Oct 2026 04:38:52 -0700 (PDT)
-Date: Mon, 26 Oct 2026 12:38:47 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron
- M5 (3434:d068) at boot since v7.3
-Message-ID: <20261026123847.365209e2.michal.pecio@gmail.com>
-In-Reply-To: <20261026105139.6b86cb3c.michal.pecio@gmail.com>
-References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
-	<20261024203558.3181711-1-yiyu@yiyuzhou.io>
-	<SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
-	<20261025111410.2c14fcef.michal.pecio@gmail.com>
-	<7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
-	<20261026105139.6b86cb3c.michal.pecio@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dOEkPKYQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793015651; x=1824551651;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tysy31+zIqSbxAExMeBpmYlQeOFW3j5/c0YxXG8en2U=;
+  b=dOEkPKYQgWcpRddoxpWg8VDlwwDAi8JoPqAcrCUZJtiQlVPeIPBA0C83
+   y17Smh2OhSfh9DOjq1SWFFQBbGfhisC38C2p6CDFNiF85sNOoUzKHf0DD
+   sgL9tyg9Ll0kcyVig3+xPHS0LDYRjcTQiPh5S9JgvDhAcbKfXyVe7OP1O
+   7QFb3qGS4SDOwXuwWnX1pLwXtNH5LZgPcWx6KELPXfK+EBtZyvdOjZGsa
+   q1hxZqjGCwj+ojzAx8YjdRtPQZfnKMniirsx4hv4wTaaUBYdhW2dlob1S
+   vP6dQxBepeR5mif0IyIvMLreupo9Wc/xgTTpPMHZpVLavLK6JWVb09U0k
+   A==;
+X-CSE-ConnectionGUID: 9/yR8S/pShyI9A0sGSUafQ==
+X-CSE-MsgGUID: Ju3h04Q5TCGPu8aBSqPdxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1557822"
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="1557822"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 04:54:11 -0700
+X-CSE-ConnectionGUID: Pi5J+TLaQA+Tp4xgTv8PdA==
+X-CSE-MsgGUID: +WJ0AfmeRIes2cxfaMGIHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="4192383"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO [10.245.245.74]) ([10.245.245.74])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 04:54:09 -0700
+Message-ID: <6233126b-9ef9-4f69-9a52-42ff215b2109@linux.intel.com>
+Date: Mon, 26 Oct 2026 13:54:06 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -102,40 +72,59 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
+ (3434:d068) at boot since v7.3
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev
+References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
+ <20261024203558.3181711-1-yiyu@yiyuzhou.io> <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
+ <20261025111410.2c14fcef.michal.pecio@gmail.com>
+ <7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
+ <20261026105139.6b86cb3c.michal.pecio@gmail.com>
+ <20261026123847.365209e2.michal.pecio@gmail.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20261026123847.365209e2.michal.pecio@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 26 Oct 2026 10:51:39 +0100, Michal Pecio wrote:
-> On Mon, 26 Oct 2026 11:18:34 +0200, Mathias Nyman wrote:
-> > So even if we give back all pending URBs and clear the
-> > EP_DROP_PENDING flag we continue using the stale ring. We should
-> > either either move dequeue pointer, set TRBs to no-op, or clear and
-> > reinitialize whole ep0 ring at device reset.  
+On 10/26/26 13:38, Michal Pecio wrote:
+> On Mon, 26 Oct 2026 10:51:39 +0100, Michal Pecio wrote:
+>> On Mon, 26 Oct 2026 11:18:34 +0200, Mathias Nyman wrote:
+>>> So even if we give back all pending URBs and clear the
+>>> EP_DROP_PENDING flag we continue using the stale ring. We should
+>>> either either move dequeue pointer, set TRBs to no-op, or clear and
+>>> reinitialize whole ep0 ring at device reset.
+>>
+>> This may need to be fixed regardless, because EP_DROP_PENDING on EP0
+>> can result from xHCI "Error" aka USB3 "Inactive" state, which (AFAIU)
+>> may be cleared with warm reset, without reallocating the udev. That's
+>> the "existed since forever" issue I was thinking about.
 > 
-> This may need to be fixed regardless, because EP_DROP_PENDING on EP0
-> can result from xHCI "Error" aka USB3 "Inactive" state, which (AFAIU)
-> may be cleared with warm reset, without reallocating the udev. That's
-> the "existed since forever" issue I was thinking about.
+> 4.6.11 isn't 100% explicit what happens if EP 0 is halted at Reset
+> Device, but generally it should "terminate any USB activity, abort
+> any pending events and transition to the Running state".
+> 
+> So just a Set TR Dequeue to current enqueue will probably work, but
+> I think this has never been tried before.
+> 
+> I see that xhci_discover_or_reset_device() clears EP_DROP_PENDING
+> even in case of Reset Device failure, which looks a little odd. We
+> probably wouldn't want to issue Set TR Deq in such case and don't
+> want to clear this flag without fixing the endpoint.
+> 
+> What was the reason for placing this loop after and not before
+> the command_cleanup label?
 
-4.6.11 isn't 100% explicit what happens if EP 0 is halted at Reset
-Device, but generally it should "terminate any USB activity, abort
-any pending events and transition to the Running state".
 
-So just a Set TR Dequeue to current enqueue will probably work, but
-I think this has never been tried before.
+USB core may reset a device several times without reaching 'addresses'
+or 'configured' state in between resets.
 
-I see that xhci_discover_or_reset_device() clears EP_DROP_PENDING
-even in case of Reset Device failure, which looks a little odd. We
-probably wouldn't want to issue Set TR Deq in such case and don't
-want to clear this flag without fixing the endpoint.
+The reset device command in xhci fails with a "context state error" if
+the slot isn't in a addressed or configured state. Make sure we clear
+the flag in those cases.
 
-What was the reason for placing this loop after and not before
-the command_cleanup label?
+-Mathias
 
-command_cleanup:
-        for (i = 0; i < EP_CTX_PER_DEV; i++)
-                virt_dev->eps[i].ep_state &= ~EP_DROP_PENDING;
-
-        xhci_free_command(xhci, reset_device_cmd);
-        return ret;
-}
