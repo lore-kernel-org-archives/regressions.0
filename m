@@ -1,68 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793015651;
-	b=caFhHPPYytPORLuRVRIGqsvOxuMH6GjpwfGmD25HqfttBGoQ8oJdYM+MP2zttzANuVAP
-	 15KOdBIPjk9jh9H/PLdPDy7QbW0aV/1kQbAehZBMnxDyMtotGq6V/+hgJhZqIyjVt2S6U
-	 O2zYT4I9edU8JvO2OlDzEk4CqozZqXgMljIzcm4YCHWFf+Le+2t7AEcKJMrdsZ9t3f12L
-	 89DIKB/Ny33H7kDjcMPpO/A+yqQy4jAjYZDghgmj2B25Nai2YwkX8UAO1Yrhg6+vvfuK1
-	 9UwXUInqRh620dSIlBXubayKx9jgoh61LItyaodDQAc6RfGSyAXzgsUmJ/nxmZe148Q==
+	t=1793021340;
+	b=PM5stgtEaZGbLUY1VNMa9oOA1oaRADTyHIPbAahptsQDWRlfMQrwKruuqzKcpsC22vOo
+	 UWKH8C+QN0+6n2QooAvwHcJsNNIPim7nOJvdJje6bQouIaOeBRamu+BpXT1cUPSBC/2mV
+	 hsPSBflYlpqfRgh4S/AIVhd1K9sW1wdXqFVql+plkb6zc8166RyRPfzdDm4ZP4YlsqJyO
+	 bSmw4p0MzaFSik48MKDDNzUgezyQcCshUrAOFTLGrmAyXksYTyNgXkTsqG3vec0gwYA0M
+	 NC6WApUAJubWclRS6Mymjhf3VoY8ngcgQYkPfQXJTgeOkMk+WebDsG3+FH2Qh4VKX1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793015651;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=dOm5MRaOgdoFOy8UNmgvpmaOwg3mr6R0PvJvBB/oYAQ=;
-	b=tv6hAVhunv1QMucCDh3eJEOlyC6zQNjp0nJ5Xk6fOF5ycWqAjPhhI+LLttRRheRNnJwb
-	 WVGSUAxBkCppqxSSWVnKNEHfG52yuzhdyvaGhIQYGClau8+gE4rt/WQ4uoN3Cr7LRsNv9
-	 2LGlirJlvc2NZ4N0mbLSuqtZz75zvMaWzCCrOcd0SYcn/S7zFlMwhNa7lrPCY37fURunE
-	 lj7C3NLf88CRFz8tv53eddze8pz+Nh+IwvrEm7isnBOAjckdruz1AilLSo/RaZqSzgmWY
-	 QA3sUiVVyB2FIRKQLoxaPpmXDRFcXlLhZwfjBwy38iSteicESYl2PFcHT0l4mNxflxQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793021340;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=04ULgjusWlSg32LjKqce99PoYE98Nn7GHteRBpuo00o=;
+	b=vjsWhvhLrb1tOYGPXG+CAxO1CYc8cMtjA1uqj1U+uo4NkPPzDV9TCizg8yy5chmy+ea6
+	 RWkQvx/T+G7B+sJsHN/UC1QowXheXV5pFk4szhkQW7Btar0HjDj4DsC4OO8tW5iRo+U38
+	 WAjaY85CbtNiG3ZHDA9IMtnb5FQzgH9W93NQR+vn0+tbhd9W/XslNGVhsEjEZUNOe407M
+	 SkW67CWO9LJNjMUBtZyuIFuCrKWa2FoC7XRi4iHS/+4rtls/XsUvBJOt/cUBML0wIUgLy
+	 kLC0RPlxQGN75/VWcZzIK+WTb0CWpmCoqqVN+pU817nDSYHCxnjqCPbgm0C+IWNfNWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dOEkPKYQ;
-	arc=none smtp.remote-ip=198.175.65.9
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kMnAFsYT;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2145E606A31E
-	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 11:54:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2145E606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85393606A31F
+	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 13:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dOEkPKYQ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793015651; x=1824551651;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tysy31+zIqSbxAExMeBpmYlQeOFW3j5/c0YxXG8en2U=;
-  b=dOEkPKYQgWcpRddoxpWg8VDlwwDAi8JoPqAcrCUZJtiQlVPeIPBA0C83
-   y17Smh2OhSfh9DOjq1SWFFQBbGfhisC38C2p6CDFNiF85sNOoUzKHf0DD
-   sgL9tyg9Ll0kcyVig3+xPHS0LDYRjcTQiPh5S9JgvDhAcbKfXyVe7OP1O
-   7QFb3qGS4SDOwXuwWnX1pLwXtNH5LZgPcWx6KELPXfK+EBtZyvdOjZGsa
-   q1hxZqjGCwj+ojzAx8YjdRtPQZfnKMniirsx4hv4wTaaUBYdhW2dlob1S
-   vP6dQxBepeR5mif0IyIvMLreupo9Wc/xgTTpPMHZpVLavLK6JWVb09U0k
-   A==;
-X-CSE-ConnectionGUID: 9/yR8S/pShyI9A0sGSUafQ==
-X-CSE-MsgGUID: Ju3h04Q5TCGPu8aBSqPdxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1557822"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1557822"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 04:54:11 -0700
-X-CSE-ConnectionGUID: Pi5J+TLaQA+Tp4xgTv8PdA==
-X-CSE-MsgGUID: +WJ0AfmeRIes2cxfaMGIHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4192383"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO [10.245.245.74]) ([10.245.245.74])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 04:54:09 -0700
-Message-ID: <6233126b-9ef9-4f69-9a52-42ff215b2109@linux.intel.com>
-Date: Mon, 26 Oct 2026 13:54:06 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kMnAFsYT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCAB1F031E0
+	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 13:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793021339;
+	bh=04ULgjusWlSg32LjKqce99PoYE98Nn7GHteRBpuo00o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=kMnAFsYTdeRlFlai4nhvqWF9NBW4YEJ6tnFv7BHj8vOhHyZHx8nm0zfckOofb/EHe
+	 sA4kA8Yhyp5kwQg3lCKaHqbVjc5os9XfGijBFc4v+74SH/u10UrLDcbwASf73DX5Qa
+	 L5Df3QZUZnywZIXm8py9ROWJGl67ZBsokPP1gpgERoNwf4BhqAs2qez7RtWiUhBGAy
+	 wTpLAH6EgUXF2cU7QSSkIzbyv8/pI3qPp9AZN7iSTUi3xo6mang8Og+ObyTczfVPcI
+	 7IZCNAuxk+txSpxzOBmU6KhVeKr/yW7kQ3EjbhDMGZw8+ZBl/2F8kUvW6dne22qjz5
+	 iyF9xWG3kQW2A==
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-483d290f398so1735026fac.2
+        for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 06:28:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxyHVHSzY7ilBGT1YSR3e+SEsStlsTQrXIeX7/qO2rXdMuX1T+Dme7bZMy7FvcPzLmaiNgXp3NyOCuyAw==@lists.linux.dev
+X-Gm-Message-State: AFq9FYLRt0mJWsPqb6bbwBXBXdE2pfBSBX43fu/E41EB6CSGMf8DF38v
+	hBaL2Cwx+6wggI3NBfel5N704IE1v4D9odyTTVwU7TN+7ZLdhQlU/qqcbJjNDRVuRBHA8/dEw/h
+	Znkfro/eYLTk6ohjYwSKKzU0jfS/Y7RU=
+X-Received: by 2002:a05:6870:3c89:b0:4a2:4c6c:c9bc with SMTP id
+ 586e51a60fabf-4a83f4eb527mr4042375fac.19.1793021338390; Mon, 26 Oct 2026
+ 06:28:58 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -72,59 +59,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
- (3434:d068) at boot since v7.3
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev
-References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
- <20261024203558.3181711-1-yiyu@yiyuzhou.io> <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
- <20261025111410.2c14fcef.michal.pecio@gmail.com>
- <7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
- <20261026105139.6b86cb3c.michal.pecio@gmail.com>
- <20261026123847.365209e2.michal.pecio@gmail.com>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20261026123847.365209e2.michal.pecio@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+In-Reply-To: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+From: Eric Dumazet <edumazet@kernel.org>
+Date: Mon, 26 Oct 2026 14:28:47 +0100
+X-Gmail-Original-Message-ID: <CAL4WiirsfX-j2uP0HWq4dSPGK15N9GqjY6yz+fMFKreo=1MR7Q@mail.gmail.com>
+X-Gm-Features: AclHuK_7Y8Msockoq5cYfVUJitRoh-SWV4M7WKxBOBmiLFfT1caFqcdtwGCa_Us
+Message-ID: <CAL4WiirsfX-j2uP0HWq4dSPGK15N9GqjY6yz+fMFKreo=1MR7Q@mail.gmail.com>
+Subject: Re: [PATCH net 0/2] Revert advertising the TCP MSS from the
+ configured MTU
+To: echoowall@gmail.com
+Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>, 
+	David Ahern <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>, 
+	Jiayuan Chen <jiayuan.chen@linux.dev>, Shuah Khan <shuah@kernel.org>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/26/26 13:38, Michal Pecio wrote:
-> On Mon, 26 Oct 2026 10:51:39 +0100, Michal Pecio wrote:
->> On Mon, 26 Oct 2026 11:18:34 +0200, Mathias Nyman wrote:
->>> So even if we give back all pending URBs and clear the
->>> EP_DROP_PENDING flag we continue using the stale ring. We should
->>> either either move dequeue pointer, set TRBs to no-op, or clear and
->>> reinitialize whole ep0 ring at device reset.
->>
->> This may need to be fixed regardless, because EP_DROP_PENDING on EP0
->> can result from xHCI "Error" aka USB3 "Inactive" state, which (AFAIU)
->> may be cleared with warm reset, without reallocating the udev. That's
->> the "existed since forever" issue I was thinking about.
-> 
-> 4.6.11 isn't 100% explicit what happens if EP 0 is halted at Reset
-> Device, but generally it should "terminate any USB activity, abort
-> any pending events and transition to the Running state".
-> 
-> So just a Set TR Dequeue to current enqueue will probably work, but
-> I think this has never been tried before.
-> 
-> I see that xhci_discover_or_reset_device() clears EP_DROP_PENDING
-> even in case of Reset Device failure, which looks a little odd. We
-> probably wouldn't want to issue Set TR Deq in such case and don't
-> want to clear this flag without fixing the endpoint.
-> 
-> What was the reason for placing this loop after and not before
-> the command_cleanup label?
+Le lun. 26 oct. 2026 =C3=A0 08:23, Esko Mobius via B4 Relay
+<devnull+echoowall.gmail.com@kernel.org> a =C3=A9crit :
+>
+> Commit 2640e6419594 ("net: advertise TCP MSS from the configured MTU,
+> not the learned PMTU") breaks TCP for clients behind networks that
+> filter inbound ICMP, when the server reaches them through a hop with a
+> smaller MTU: the handshake completes, then the connection stalls as
+> soon as the client sends full-size segments. This was reported in [1]
+> and confirmed on 7.3-rc7; reverting the commit on top of 7.3-rc7 fixes
+> it. Details and numbers are in patch 2.
+>
+> The asymmetric (DSR-style) case that commit targets can still be served
+> by the existing per-route advmss metric, which overrides the default
+> after the revert; patch 2 includes a test of that as well. If you would
+> rather keep the new behaviour as an explicit opt-in some other way, I
+> am happy to test or rework this.
+>
+> Patch 1 removes the packetdrill tests that assert the reverted
+> behaviour, patch 2 is the revert itself.
+>
+> [1] https://lore.kernel.org/regressions/4F0FAEB6-A13B-47F3-BFF1-C706686C6=
+F64@gmail.com/
 
+Reviewed-by: Eric Dumazet <edumazet@kernel.org>
 
-USB core may reset a device several times without reaching 'addresses'
-or 'configured' state in between resets.
+Even if the reverted behavior was closer to RFC 2923 / RFC 1122, it
+was a long-standing
+user visible behavior and should not have been tagged for stable.
 
-The reset device command in xhci fails with a "context state error" if
-the slot isn't in a addressed or configured state. Make sure we clear
-the flag in those cases.
+Relays should really clamp MSS (nft "tcp option maxseg size set rt mtu"),
+but a revert is the right call for net and stable trees.
 
--Mathias
-
+If needed, the asymmetric/DSR case can be revisited in net-next as an opt-i=
+n.
