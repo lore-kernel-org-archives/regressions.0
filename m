@@ -1,70 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793008222;
-	b=xFq1VxXh8nuou1bqo5NVPf1rQyxMaGG6Uxip8NqcgyD/mvAnjQcwrB6vYphJEP5A6ae4
-	 fYXx7LYQpS6lZUZMTwrniXNUesKSOROsps9GcDhylZBZWXq08vDph9LmKC4FAfPQzNEpX
-	 dL7x7NlIhLMgQfgn2A79uzR2EDaGPQU5B9HIiQ5SR6lceqpJqGJ2tCukH7OmM7YzooqlU
-	 n84vHsWLd9ONtsdVDDMvSa0fV7e3kDUoS4IbGP7tahvwh45LJ/vT5UIJBhi17bR6UqiCs
-	 ijWvPwnVoH4uSupGN0J+k8hceglz1bunzh7xvvJ0LjhMw+9GvoJ64ZMzQWb4r5wyQUg==
+	t=1793008305;
+	b=CThPAI/YTzKIy+nOHnDpZy1DolCGHMz1M5Br/f3s7UdPz/SI/fv5X7gzk5by0rWKP45H
+	 527inXdt/yM4DR/68Ri5GxXn8iqyPjyxA9+2rJNeAtVHOKMPEepRwfOE4DJd7n48zbUeK
+	 0DRfr4pZJW7NR8Ibx6dng51s4SCZcL4hdt/DQj4SF8RW7uypCUf3wafPM/eyxgFNJ76wr
+	 bpKyAeYNefVwRItfCfjG8tEcG0V6yfdYI1NKxPz1LEs49MuCQUHmqMJ+0819ygmClNuhF
+	 wTFCEdmTkeosFCCYO4LMVf++/mjd752YfsY4QuODf7tqBn/gtAu8FX0n1TM7J7Zk3Hw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793008222;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=5HYhVdbJBMn5WQI7uz8IJgghfczctRWryrCIPZAr+hg=;
-	b=hMx7ezKunM3AJltEWPqUZXycduAtDuSwTxMbD+wAjYoGWFRmHnjIW/+fwWSH9XjNSU0D
-	 uskzLuDQFHFrPbSbpFpZyLHjsNIEDdbJMxihdckacI/Wghj4QEXclsbUIyIC34tn1Nl0I
-	 ZzVqEBY6khiFztyKT87xkAQfi0y5tRxEX6JPfxKzM7mZmoCfY6eUnq/4XP+gA0ehpoC3i
-	 as2RJO5NuG2NVLz4LrJKJcWyCLCXwAnCCUc+0pXR5fIlKl6wUsonhdQTqDTZ0ePWerUfG
-	 obHmrlmMBfcZPWy3xqow1x0Nc2V2FIbO3+sDdMl9Z22rI/tYxiuGbB1qqHPhG5XZvmw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793008305;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=JgmEPFVnTpRCUP0N3Fa9flIVssp/Qodc0qLnWI6QuoY=;
+	b=zzP1V02WCbgxqMFNNVVjuffIsLTfp0Va3Yd+msQv5Fhg98Az7zqK38QQCdEu2+yuBLnh
+	 33eYnTR6tq2l6v+dVG6VSmSXSF3nz1SQxrIjrdsLf6/vIjVutJKi/kyX65LpTAgAyv2bO
+	 ZCwAYaxkRcxJhkFyHAtzKwji6ho3WfFege4CtxdChuIhO8dfbtlhsD7lQnBrf/dG/HrSC
+	 9yRrWSsK6Y2mfc0ASHCr9I22myM8cspJzOeAIUL+qYio3kHyfIY4EVnac4yWYLknh+7W+
+	 /6qdIWeV/uQWURlYx+aHa01ZzNebn0gE4RKqeWlsYieaKsbD5Gw3vhu/ATvwjUwfePA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Du9HB+3i;
-	arc=none smtp.remote-ip=188.68.61.103
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dPw692CF;
+	arc=none smtp.remote-ip=209.85.221.44
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB53606A31A
-	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 09:50:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7FB53606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86563606A31A
+	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 09:51:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86563606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Du9HB+3i
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4jCpks3r7Tz89jb;
-	Mon, 26 Oct 2026 10:49:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793008197;
-	bh=lAUovamFEdKb/bmi0FF05sTH0plr1LxfaJuSpYrqSU8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Du9HB+3iIgepi1caasKLanIM17O3MLzw0Io0xjWZNXY8E9Q9eCx8QNu35cgLHDp4n
-	 BaFsibVeYyTuLjxRcf0kk1eIjGkQ17MJ8jLsN+7Sn89NjhLNyoKltIxpM6YdWGbgF6
-	 d01RkxLi1bBDucm8JEets4S7RHob5aIwujNHOS38BOMwCQWpQj2u9srC5Q7ENSBMN7
-	 VYi88LiXVvbcQ2wSrdHeBrfQljeKRJj6A/x0bQXPQ6nCs1QMbC24+NnR7ZiNAmbnix
-	 luA3OKyesoIb2ogkGPbAxV7hl69Nh4C70kQ5ZhqwUGkKSTf67QQbO+P5OzwaLeWt5t
-	 Ws0pccJjXhhng==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4jCpks35zBz83JW;
-	Mon, 26 Oct 2026 10:49:57 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jCpkq5lYlz8svJ;
-	Mon, 26 Oct 2026 10:49:55 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A28205FA2C;
-	Mon, 26 Oct 2026 10:49:50 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b090ac43-ff7f-481d-b0fc-8739ca1e288b@leemhuis.info>
-Date: Mon, 26 Oct 2026 10:49:49 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dPw692CF
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48e20ed3b9dso2521313f8f.2
+        for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 02:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793008304; x=1793613104; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JgmEPFVnTpRCUP0N3Fa9flIVssp/Qodc0qLnWI6QuoY=;
+        b=dPw692CFQv39byJAtqhInUVlYAUyihAhE/jA6ujD3VMryfn+sYbh6BbXPjWlVJUp68
+         ynfNmDcxhWSpl6IXoTyfwqHVYFTIqmbTLsidc0BqweK3/vbYF5JbD8A3hePXltaB3ouN
+         nG2X8PtFTe7psn5N6rf7LIqcUYxt4soqU7KXrNgEWISh2rkirnwXmFdJfLeQJmfR+7wR
+         WoAg5jX2F1zr3PG3PMd32yCWxeq0zvpzrDj3hnobNeGwVNtgo6yaOeRIh2WE3V+Mseio
+         S8pUUSRtTlj9is4k4P4zNtRFTE4yMutkeJkvAgTtDbDVAFxGnRn998FOFNv86FvbmMzo
+         UpUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793008304; x=1793613104;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JgmEPFVnTpRCUP0N3Fa9flIVssp/Qodc0qLnWI6QuoY=;
+        b=A/Ky+Ghl+x36o21RHHZyNWBiOi6aw9umUy1HPD4K/Sa+AcYqHCfC/GtA1mJHDvyOTM
+         Or76vRoSqVGFYKDmgcQ3fGvmWgZgVDei5/9DhMT3jsiLnrogoqty6fkEPyusrAeyR+SZ
+         2aB06scpib4wzcpLpE2TbRh4PJM/g64R6/8EurhG9u5ufDmgClypBcbvh9a673o8FwbM
+         hfbdomdgok9yXrZ+CG+n3jcmMyfmWxkA6wPuu/giTJWJbyawL3EMosm7A2+NvfSJXtmL
+         8cXt5+jDGNxiDJCUU3vsUMmGrHeGR7rhgwsvYLxKBk39Ikwlnhd4AEd+h/b3E5ScA1/D
+         RrMQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz7Ju4kuyYjVww8LI6+EOuf+cKmVT1aEbsPmP6mK0IBhTQvEanlNH4FDItm5go+ZNUCmvEO5ZyUhVmipw==@lists.linux.dev
+X-Gm-Message-State: AFq9FYK73hVVcIMnaEo+B9hYr7FuuIPIGtfYm0cUchyrdIMkLHEy6Cvs
+	Rc4NYypogRU0cdf+OTEJPGVHS8OryFPJLPOz4jiAenmg/BirgpotRXDO
+X-Gm-Gg: AYBFou3afwA7T1CnZu4uJIvGM0+304mSpbyCOba6J20B4w+EpMOk9X1HPa9MLWagKbv
+	vDUjyRZEgmPlELoZwv2yUxdsFVGlxrhRNKCChyvzUu6EAtssF61AL3p3Pi8V3iGb7jqYqPsbHhA
+	ad8Ldx0J28sh7efhpuc8MwsRzm7smF10PjJi+NnATE0UDL1XKPOysTHe/UneKfTwJ2FiGKXv3yH
+	EYbMpH3VP57JVqV1DDSNb4PswaEGXpr1XmV+UOPkHvxcWBswKLwA+i9iip4kpP1n0Y0nzb+i4Ru
+	8nSsBuKQMY5zG0akfbq9PNNQDrPZ4ZGe27pGq+V0YDe2BJ1B5dLktDEF6BGTRFvMKXqm+qLL91b
+	bf1ilgj+dwlxOuJYBOrT/fFOxh2kyM3wNuVvN/SdiPd2nzGboKxK1l2RJyz/GPUmseFhtSrUg0P
+	9xCfNPxuzyqeJxb6N/rOVGkPrZLXy0ytMU04bBO7pP99qn8clOYlmEct7YQ819fVWHXKkI6Ug0j
+	vFk60z8IPvOBH5qSw41/GwP30KiOtEpTFIi2jDpBogZoq1luvCoP10IbiYEURa1
+X-Received: by 2002:adf:f284:0:b0:48e:2980:d396 with SMTP id ffacd0b85a97d-48e3eb8d6a5mr9414467f8f.37.1793008303936;
+        Mon, 26 Oct 2026 02:51:43 -0700 (PDT)
+Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecdd5b3sm15297823f8f.53.2026.10.26.02.51.43
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 26 Oct 2026 02:51:43 -0700 (PDT)
+Date: Mon, 26 Oct 2026 10:51:39 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron
+ M5 (3434:d068) at boot since v7.3
+Message-ID: <20261026105139.6b86cb3c.michal.pecio@gmail.com>
+In-Reply-To: <7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
+References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
+	<20261024203558.3181711-1-yiyu@yiyuzhou.io>
+	<SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
+	<20261025111410.2c14fcef.michal.pecio@gmail.com>
+	<7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,82 +101,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
- (3434:d068) at boot since v7.3
-To: Mathias Nyman <mathias.nyman@linux.intel.com>,
- Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>
-Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- Greg KH <gregkh@linuxfoundation.org>
-References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
- <20261024203558.3181711-1-yiyu@yiyuzhou.io> <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
- <c8a3ffeb-8737-46d2-b01b-5ed9bc96012f@leemhuis.info>
- <a174538e-7c7f-4905-8aa5-f906e6664f4a@linux.intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <a174538e-7c7f-4905-8aa5-f906e6664f4a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <179300819102.1228414.5112879340971481519@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: A28205FA2C
-X-NC-CID: Nr72EGjYBT7re2f5pmYTlhxGTuDWsV3N8S+eTOTYW6Po5cue+YQ=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 10/26/26 10:28, Mathias Nyman wrote:
-> On 10/25/26 10:59, Thorsten Leemhuis wrote:
->> On 10/25/26 01:10, Dennis Wissel wrote:
->>> On Sat, 24 Oct 2026 13:34:07 -0700, Yiyu Zhou wrote:
->>>> The fix is queued in Mathias's for-usb-linus branch as 1f36cc9fa949
->>>> ("xhci: give back all TDs when skipping endpoint reset after
->>>> disconnect") and applies cleanly to v7.3:
->>> [...]
->>>> Could you test it?  If it fixes your case, please reply here so that
->>>> Mathias can add your Tested-by.  If it does not, reverting 042aad8d0db6
->>>> and 7e0ef4332ed9 on v7.3 would show whether these commits are involved.
->>>
->>> Thanks, I tested both on top of 7.3.0-4-cachyos, booting with the mouse
->>> plugged in each time.
->>>
->>> 1) With 1f36cc9fa949: much better, but not completely fixed.
->>
->> This btw is the third report about problems that that "xhci: give back
->> all TDs when skipping endpoint reset after disconnect" fixes; the first
->> was what lead to the fix, the second was:
->> https://lore.kernel.org/linux-usb/20261023190104.113331-1-
->> diogochaves@me.com/
->>
->> So it sounds like this is something we should mainline rather sooner
->> than later (ideally with a stable tag to ensure it's backported).
->> Mathias could you make that happen? If you are busy and need help, just
->> say so.
+On Mon, 26 Oct 2026 11:18:34 +0200, Mathias Nyman wrote:
+> > That's not good, your HC seems to be executing stale URBs, probably
+> > from before the device was reset. I suspect we reuse the default pipe
+> > without recovering it from the broken state left by EP_DROP_PENDING.
+> > (Such bug may have existed since forever, but only in USB3 and cases
+> > which seldom or never happen. 7.3 generalized it to more cases.)
+> > 
+> > But is USB core really resetting a device for which the hub has
+> > reported disconnection? Something isn't as I would expect.  
 > 
-> That fix isn't enough, we need to fix it properly.
+> I suspect udev, xhci virt_dev, and thus xhci ep0 ring stays intact
+> even if device has a short disconnect during reset/enumeration.
 
-Yeah, if there really is a remaining problem usually is the best. But
-that proper fix can be "revert and rethink" (see below) -- is that an
-option here to resolve the problem quickly?
-> 7.3 where the issue exists is already out, so that is too late.
-> 
-> What is the policy here?
-> Should we try to shoehorn regression fixes into rc1 during merge window,
-> or wait until rc1 is out?
-To quote Linus from Documentation/process/handling-regressions.rst /
-https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+But this doesn't make sense, right? If the port reports connect state
+change, we have no idea if it's still the same device or not, I would
+expect udev to be discarded. Or is this some "USB persist" magic?
 
-""But a user complaining should basically result in an immediate fix -
-possibly a "revert and rethink". [...]""
+I didn't want to dig into the hub driver or bother Alan, I hope we will
+get that debug log showing what usbcore is doing there.
 
-and
+> So even if we give back all pending URBs and clear the
+> EP_DROP_PENDING flag we continue using the stale ring. We should
+> either either move dequeue pointer, set TRBs to no-op, or clear and
+> reinitialize whole ep0 ring at device reset.
 
-""It's also worth noting that "immediate" obviously doesn't mean "right
-this *second* when the problem has been reported".
+This may need to be fixed regardless, because EP_DROP_PENDING on EP0
+can result from xHCI "Error" aka USB3 "Inactive" state, which (AFAIU)
+may be cleared with warm reset, without reallocating the udev. That's
+the "existed since forever" issue I was thinking about.
 
-But if it's a regression with a known commit that caused it, I think
-the rule of thumb should generally be "within a week", preferably
-before the next rc.""
-
-You'd have to ask Linus to be sure, but I doubt that an ongoing merge
-window make a difference from his POV; but at the same time I suspect
-some subsystem maintainers will disagree.
-
-Ciao, Thorsten
+Regards,
+Michal
