@@ -1,63 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793035735;
-	b=GwYZrqQpur0V+UoNnk3ZTnIu/WUTy/ctwBwcfgcqD7xwh6kdvyH7CLJUxNUZge3GVPx6
-	 G/FHolxrZ6oUgMKv2Wf134kv89a5v6CwaNnBQfZ6ulqbKadzGTdUzfLNd9FNs8b9N2WHn
-	 I2/I3jFILoz0OsfnMA/I32UiRdhCu60pKlmyNUnRdTS3kf9sJpmXTdCPmVOXvGny/LWCE
-	 /nJYCXUxzpsJ7r0/Ys14IFCjU1aRUCyCAJN3+/n9Y/qZ6HtVBiPDzpu2GBGHaxDE47v8t
-	 k454JZoYLN0C6qdYkO4/V+A5eu+VBR2S1FOutKiQ5wVqo6EDIyDfVjjZjEbyyWKgnQw==
+	t=1793036378;
+	b=La9CpjljLuGQb+RCWnbUKxWXVKNCHmerJeyCDUWjpj85Pc91qbpKrHm4cDD5q2cxHXuN
+	 1L+mAahSMlFGAdVHHbF6BdWGuEw8gEekeyRfy5a9lFwkiEwRjXl9f91fbRONQVWdt0QZu
+	 FbhGRNLSKewHnEkSIxQ/XKGXlbS3IFyiX2N5iGm56BOdohbX0c5APNGCV2GL2H7bjVywJ
+	 4sVz5EDG6EZ4w4il9KzqJYLKR1fK2nBD2+B13jYUgop5EXCtojfzYmWMJORUbMKZj6e1s
+	 4USncVyYRw0TNPxMwYqfJsUVxs1cwEDF+4WCaOTE9f5p0JGOvSaRHC1jSSg9AYS04Ww==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793035735;
-	h=DMARC-Filter:Message-ID:DKIM-Signature:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Content-Type:MIME-Version;
-	bh=rNYVoB/vG5hvRMg+OMSDk4D9eXpEA7XdikSaZ4l7fw8=;
-	b=MXiQsvdV5IIwo6/QYSZP74sDjwuq9QPIIsstbJuFbH4dtNthSmv7BsQO0a135Yq6H3F6
-	 nFQBySWku/qCthTvxjLHoVVPZxcKR+fY9z2vY0q5KlOQejmfyL5bdMZWut3dQi7ktzDmO
-	 /Z9weAk6+XfKOQtFBYo+DtSpGuRrqBhDhK+0RKMsdGkeV4CEjlRMheYYbCCufq9y+6Unu
-	 SnybUX5UusyoKiDP52GpfKvx2jPRCC5Q13yq+g0QUszdXfXO9mDLQ3ohzhoTHFAY6aive
-	 aiN43D/cKa+q1MmYc8ikQ9Q3LqakUzy7JraTMjPjpZDgqCJ9sCa4/bD9Fmiq12q4pBQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793036378;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=t8Or3b9/pQwlfW96GSEcWmN+qVfsQHETPMtYl66RaNU=;
+	b=SFmYkTCbXXYGLMlk71ow1jbs5z+NOwYWff+3oqzPFIcUAUZu+G8QxZk9j7+FUGlAQfep
+	 eRBQzt+p5/RbJCiIHb4s9y11ZTNmQSsbPSZ7qw9c+YeQ/I8j/LbCWJnHiWb905yplYfFb
+	 XgttFyMy2vQ+DNs6wXtNyNkgNs1VESDukt8urt1Zd5Yw7rILv6wzs/Z7qXyHnL2taIW9B
+	 cToi702ZHpOB3LV5HuOtTd9IElpPnZq42+QW82cB2awyOMBpqZqzWblW+uOzCYnF5sf30
+	 yPlokzA1dAFzqLHS/8v2ejquKf70cs/0wyAcFfELlbZ7xMn0xYyLSdL7wNh5kRxiikA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=itx.no;
-	spf=pass smtp.mailfrom=itx.no;
-	dkim=pass header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=amgzAXTc;
-	arc=none smtp.remote-ip=91.189.121.228
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DcTblxIK;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32ACF606A31E
-	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 17:28:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32ACF606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D65606A325;
+	Mon, 26 Oct 2026 17:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=amgzAXTc
-Message-ID: <1e00b909b81c6195b3ad5aeda207d20cbedc3971.camel@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1793035725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rNYVoB/vG5hvRMg+OMSDk4D9eXpEA7XdikSaZ4l7fw8=;
-	b=amgzAXTc5NZ/dPYXpBMPiLc6pEMpIXezfi6jYzpnRJcTayuGobqFYTYgQHDdHBtnB7lAjE
-	7ISROa000YgTZfZCG//gugzB3EH6Gfj4cBp/4+CdCEMtwU/1A54W6XSZf0ggc+pafwqLXd
-	ypULGgvlLtG6b6SIuankyq50xZTquhg=
-Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
- after idle exit
-From: Stian Halseth <stian@itx.no>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Paul Menzel
- <pmenzel@molgen.mpg.de>,  Thomas Gleixner <tglx@kernel.org>, Anna-Maria
- Behnsen <anna-maria@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>,  regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Mon, 26 Oct 2026 18:28:44 +0100
-In-Reply-To: <at-C_3rGi55L1v2X@localhost.localdomain>
-References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
-	 <20261025100202.2584654-1-stian@itx.no>
-	 <at-C_3rGi55L1v2X@localhost.localdomain>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-Xt8q2rvFat6JboAfAbBs"
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DcTblxIK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F5C21F01825;
+	Mon, 26 Oct 2026 17:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793036377;
+	bh=t8Or3b9/pQwlfW96GSEcWmN+qVfsQHETPMtYl66RaNU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=DcTblxIKUMbacZae6nQnDOLlJOAKsl2zHNVVwsdna3FHx04eCfESZinLgKdAHbSYZ
+	 64UZ5OVpCPydLM1YFBWrtrLZwPPVErHRxJDTImnAEeD7fXh1Ci9rEDk42bj4e43yoJ
+	 gn+1ghFxLMn62etYz4iP9fykfOHBE7dFRm/d0OtdoBBMyECoZzdO9Fy0S83XHDonR0
+	 YMsH0lCbPkk31FS8MuyltKiDdLqA6FsxPFaACx7EhgEaZcL4XxwsRmJFLVcO2+3DcQ
+	 M46gZMNrIsZ1waHdjY6XsECyPTVvMbtm7VqDdqRc9emfu/RDxpaAoJ2Huzf/Ve7m6Y
+	 cFZACiDwD6Uuw==
+Subject: Re: [PATCH net v2] net: qrtr: announce local services again once our
+ HELLO is sent
+From: netdev-bot+sashiko@kernel.org
+To: 26rote@gmail.com
+Cc: mani@kernel.org, davem@davemloft.net, edumazet@kernel.org, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, christopher.lew@oss.qualcomm.com,
+ deepak.singh@oss.qualcomm.com, pranav.phansalkar@oss.qualcomm.com,
+ andersson@kernel.org, linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Date: Mon, 26 Oct 2026 17:39:36 +0000
+Message-ID: <179303637610.3134.6464335759134048296@kernel.org>
+In-Reply-To: <20261022163116.1042-1-26rote@gmail.com>
+References: <20261022163116.1042-1-26rote@gmail.com>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -68,66 +67,145 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
---=-Xt8q2rvFat6JboAfAbBs
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Critical: 0 · High: 0 · Medium: 1 · Low: 1
 
-Hi Frederic,
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
+- [Medium] In net/qrtr/af_qrtr.c, qrtr_hello_work() replays the HELLO
+  once and never retries, so a failed replay is lost for good.
+- [Low] In net/qrtr/af_qrtr.c, the new HELLO replay in qrtr_hello_work()
+  is not serialized against qrtr_endpoint_unregister(), so the replayed…
 
-On Mon, 2026-10-26 at 17:42 +0100, Frederic Weisbecker wrote:
->=20
-> I'm a bit confused by the scenario that happens here. Do you mean
-> that after switching from a clocksource to another, ktime_get() goes
-> backward?
+--
 
-No, not going backward, my description was vague, sorry.
-It's tick_next_period that runs ahead, not ktime going back.
+net: qrtr: announce local services again once our HELLO is sent
 
-Also, please challenge my assumptions, as I might be analyzing this
-wrong. This codebase is still pretty new to me, and I might
-misinterpret some things.
+The patch records that the remote node has sent a HELLO. Once our own
+HELLO has gone out, qrtr_hello_work() passes a synthetic HELLO from that
+node to the local name service. The name service then announces the
+local services again, replacing the NEW_SERVER packets that
+qrtr_node_enqueue() dropped with -EAGAIN before hello_sent was set.
 
-But from how I see it, on jiffies, ktime only moves at the tick. So
-seen from the tick's point of view, tick_next_period =3D=3D ktime_get().=A0
+> diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
+> index e7b3647424b8f..508a2dd2d16d4 100644
+> --- a/net/qrtr/af_qrtr.c
+> +++ b/net/qrtr/af_qrtr.c
 
-After the switch ktime keeps moving between ticks, but the next tick
-still adds a full TICK_NSEC, so tick_next_period ends up ahead of now
-by the part of the period that jiffies never counted.=A0
-In a KVM guest at HZ=3D250 that was 2.3 ms.
+[ ... ]
 
-Do you follow my reasoning?
+> @@ -619,7 +626,20 @@ static void qrtr_hello_work(struct work_struct *work)
+>  	pkt->cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+>  	from.sq_node = qrtr_local_nid;
+>  	to.sq_node = node->nid;
+> -	qrtr_node_enqueue(node, skb, QRTR_TYPE_HELLO, &from, &to);
+> +	if (qrtr_node_enqueue(node, skb, QRTR_TYPE_HELLO, &from, &to))
+> +		goto out;
+> +
+> +	/* Pairs with smp_store_release() in qrtr_endpoint_post() */
+> +	if (!smp_load_acquire(&node->hello_rcvd))
+> +		goto out;
+> +
+> +	skb = qrtr_alloc_ctrl_packet(&pkt, GFP_KERNEL);
+> +	if (skb) {
+> +		pkt->cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+> +		to.sq_node = READ_ONCE(node->nid);
+> +		qrtr_local_enqueue(NULL, skb, QRTR_TYPE_HELLO, &to, &from);
+> +	}
 
->=20
-> Also refine-jiffies is not a suitable clocksource for nohz, so
-> last_tick shouldn't be updated while refine-jiffies is the
-> clocksource.
+[Severity: Medium]
+What happens if this replay is lost? If qrtr_alloc_ctrl_packet() returns
+NULL, the replay is skipped without any message.
 
-Yes, right.=A0last_tick gets its first value from the sched timer expiry,
-which is that tick_next_period rounded up to a tick multiple by
-tick_init_jiffy_update().=A0
+The return value of qrtr_local_enqueue() is also ignored. That function
+frees the skb and returns an error in two cases. It returns -ENODEV if
+the CTRL port lookup fails. It returns -ENOSPC if sock_queue_rcv_skb()
+rejects the skb because the name service socket's receive queue is full:
 
-In the guest that made the first expiry 4.66 ms after now, so for the
-first 0.66 ms a tick stop leaves last_tick - TICK_NSEC in the future.
-Paul's registers show the same, now 235623102 with last_tick
-240000000.
+net/qrtr/af_qrtr.c:qrtr_local_enqueue() {
+    ...
+	if (sock_queue_rcv_skb(&ipc->sk, skb)) {
+		qrtr_port_put(ipc);
+		kfree_skb(skb);
+		return -ENOSPC;
+	}
+    ...
+}
 
-I can rewrite the commit message along these lines, or fix up
-tick_next_period at the switch instead if you prefer that.
+At this point hello_sent is already true. So this re-arm in
+qrtr_node_enqueue() can no longer fire:
 
-/Stian
+	if (rc == -EAGAIN && type == QRTR_TYPE_HELLO)
+		schedule_delayed_work(&node->say_hello, msecs_to_jiffies(100));
 
---=-Xt8q2rvFat6JboAfAbBs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+The work only runs again after qrtr_endpoint_hello() on resume.
 
------BEGIN PGP SIGNATURE-----
+Without the replayed HELLO, ctrl_cmd_hello()->announce_servers() never
+runs. The NEW_SERVER packets dropped with -EAGAIN before hello_sent was
+set then stay lost, which is the outcome the commit message describes
+for rmtfs and the modem.
 
-iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCat+NzAAKCRDoeAEuJe36
-Vjt9AQDp8Boh0KnF7NRVAg6PQH/JONz79Sk6gO6LlNd8VTUF7gEA7gUWba17J7MI
-YwY8M9vsJE3MvrFvPmHmOD3iO6KW2g8=
-=9Apx
------END PGP SIGNATURE-----
+Earlier in the same function, the first allocation failure reschedules
+say_hello:
 
---=-Xt8q2rvFat6JboAfAbBs--
+	skb = qrtr_alloc_ctrl_packet(&pkt, GFP_KERNEL);
+	if (!skb) {
+		qrtr_port_put(ctrl);
+		schedule_delayed_work(&node->say_hello, msecs_to_jiffies(100));
+		return;
+	}
+
+Should a failed replay also be retried, or at least logged? The commit
+message lists duplicate NEW_SERVER announcements as the only cost. It
+does not say that the recovery is best effort.
+
+[Severity: Low]
+Can this replayed HELLO reach the name service after the node's BYE?
+
+After qrtr_node_enqueue() returns 0, ep_lock is no longer held, and
+nothing here checks node->ep again. The GFP_KERNEL allocation can also
+sleep. A concurrent teardown could run like this:
+
+CPU1                               CPU2
+qrtr_hello_work()
+  qrtr_node_enqueue()
+    xmit HELLO
+    hello_sent = true
+                                   qrtr_endpoint_unregister()
+                                     node->ep = NULL
+                                     queue QRTR_TYPE_BYE to NS
+                                     qrtr_node_release()
+                                       radix entries removed
+                                       cancel_delayed_work_sync()
+  qrtr_alloc_ctrl_packet()
+  qrtr_local_enqueue(HELLO)
+
+The NS worker would handle the BYE first in ctrl_cmd_bye(), then the
+stale HELLO. ctrl_cmd_hello()->announce_servers() would then send
+NEW_SERVER for every local server to the dead node id.
+
+qrtr_sendmsg() then fails at qrtr_node_lookup() with -ECONNRESET. That
+is not -ENODEV, so announce_servers() logs "failed to announce new
+service" and qrtr_ns_worker() logs "failed while handling packet". If a
+new endpoint has already registered with the same node id, it may get
+duplicate announcements.
+
+cancel_delayed_work_sync() prevents a use-after-free, so the effect
+looks limited to log noise and extra announcements. Before this patch,
+qrtr_hello_work() never sent anything to the local name service, so
+this reordering is new.
+
+Should the replay be ordered against qrtr_endpoint_unregister()?
+
+> +out:
+>  	qrtr_port_put(ctrl);
+>  }
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261022163116.1042-1-26rote%40gmail.com
