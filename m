@@ -1,93 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.48
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792998586;
-	b=vgCTbF4/CIhr62KqYqwv/t//nyGSpAHNmY3cCSxk/ZIgjTnfTLBwaqXqQOq1eZ2DNRzM
-	 MNxOHInoKVIOZ9vLxT68SSlrGDW1xFtrRZu7anJbq3elh9f0myA4MLC72uk7+EAjh+BQs
-	 vC9kla61anTywgwm7wsYeHHA0U1W2cM8ejLYrSoNYu0DykEoOmmZHqlhjzptJXhKTk4TO
-	 7M8By3ETXMuFwSZQjGPwo+nj9rbDkIKBWy+49lsj+PGCAaOgw3RKTboEvqlgM549gJKru
-	 F24w9Cfkfyfir4rAxafQurdvnnU3LG5XDlx1dSJ8bUPZ41PSJHpFrYFK7tWKm0YJ2HA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792998586;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:Date:Subject:To:Cc:In-Reply-To:References:Message-ID;
-	bh=NhqYyPv74NL/BY6caRQe870hWekwcUFmd+4G2FhAc5M=;
-	b=D51q3o/KJpKcJMfGY+Cm6X6WkOxGHftNcbMV47lbX3ASC+aURNVrSTilZjOdcm5dvFi2
-	 Z+81SNeC1f5g6A8iyFn2c/4RiwellD19Tduo4aWqZkUuJ3Byze9JwvFkpMY11GeFCHHik
-	 Ns2Tm1jS0xayCNMvx6Bu067NJtyzTtrNxfk4setdXF77t5/KRE/2qhlUZdbIBkk28GSVH
-	 tIDMm5JO7KAul6+0xQ0B/rVZRnRg2b4353kxOwyj3AfPzIOfP5OV3oCk4PjStm7s8/ooX
-	 urS57AXBieCcmi0Mm+zww2pDQLRhWbASccQfhdRQH0Z16MSBybLR0BOaA08RiePZOMA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=DFZHPpkL;
-	arc=none smtp.remote-ip=209.85.218.48
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792999391;
+	b=f0ktxxRJ7/7lJgUvXLP7I810cBtVjhPeJWTA3MagaVoMpkkHU25Wfr0AuVi/z6o2/O+D
+	 cKuswE4qkCFh2m5fN/tMG658DlUElbo82ISpGIfPGUrKQTYvZeEl35XLuWPs64RnTEL4Q
+	 ixcpviYiGFXJEYXkTMGvAnLoWiBNArgPFZADjuf/MlJ5Bb3nWHGSJJYaA8gaKQcNzg+s/
+	 BNgdt7f6jIBLENwxrPt01Bmol0Owj2lRo6ZQn0CQSg816hsfL030xdFPeR1MywrtsyXeo
+	 Hjb636/CEvaZeGBW4hMzDc4w8oi1Rt0b5C3tgQFecoJEh/ZMtdi8O0aJZ91Wj0cWEbQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792999391;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=hdoxCROF22ZPqUPMUDtk3Ya/rjSguXnAXbrfTEBlp40=;
+	b=KlrO+T/7Thzfrtyq+qkKG7mUPQY0k0MKGkBZVD97YVwSuDDMyTQSz6oLVmgSp5pcFPGE
+	 EdEvVqlO0GmYSHkV7FlWiBj7gj7MJ920BR7qhATW6xPovT4l3hPT2U1AZU38Ecy81VZjM
+	 BvSoHdf49vium8S0PmfH5OdoFTx9m8xIahBn5WD4iFZxG6XuMfLa0tPT0UHOgegUu0G9p
+	 NOGLIvGSlSbLWRQ/QjNizkKlW9nr5FxAl5RxGEBtVpsUNKF1A/fZKbT+qteNa864evGhp
+	 fIF9ZCPY6PxVaNFNkHDRsC3qMQf310qLGcXyQo6pX+1gXlc82f9LMwqWuwUDKdQen9w==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=euVW7Bqy;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4B1606A31A;
+	Mon, 26 Oct 2026 07:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=euVW7Bqy
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1792999391;
+	b=XlI+tS32Z8zC1w9x+D8E+PsbYz+7WTMypecaD7s1ohA3jqAOi3sCo1uRxnrW0oFnxUtM
+	 7rzuS69mttxyV3FhO+flUvt8N7nZPwOgXTm8xqVBD+tIidoxq8vJ/Y6ja+C4LJVrqd552
+	 rLhZ2DYAc8bDyNLk6uq69HfM6l7G1Ooee/7pf3XozB9aYDUTdqdjz29BIbgO7oOcxTlk2
+	 9CZtjlSrH9rWFGLtHAjTdveKmw8Ec7s+5W+BzXaDXNMx4hW9KhGRMwDU6kbEe+lgWLajc
+	 l7iRP6H3QM/9Yh5t+xJkULvK4JgFN+MEyPQeMrnq1HLo0dqcPpNArlA4DHXQ7y/ITtg==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1792999391;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=hdoxCROF22ZPqUPMUDtk3Ya/rjSguXnAXbrfTEBlp40=;
+	b=C9RA12i11mgP87Y8RxojEgyxTp7k0Kd6CiKKI+BwRhRrv9AEn/gWCk/b8x9ZVaV6jyX0
+	 73TXCvKG0C7NT+mzxEmIH6YUxnyeZ8tRFK2we46opKy/1m6ljx/om+lLWD/INanjznNIl
+	 cG+2wMziN+xUdIqcf7z8balrT2vOwP2ePSHuSn7/GWIY3NOubXoiQ7UEi3dK2GmtefyC1
+	 RnxXRZIacg0Kq/G6ef60mM2NxK/6PG19ZrKYip/Inf6kclQbbaesqrU+oD8iaJn+R3RqE
+	 zdgbJbtmt9xzRZp3wqY1AM1PYhOshkSPrmWf4qKfY62mJht3Pq6DptUMNLJgZ+Ai7iQ==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E17606A31D
-	for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 07:09:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01E17606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=DFZHPpkL
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c38ac26cc5dso384419666b.2
-        for <regressions@lists.linux.dev>; Mon, 26 Oct 2026 00:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792998584; x=1793603384; darn=lists.linux.dev;
-        h=message-id:references:in-reply-to:cc:to:subject:date:from:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=NhqYyPv74NL/BY6caRQe870hWekwcUFmd+4G2FhAc5M=;
-        b=DFZHPpkLxAoitcfG+JxfCT64lolxdNC8t+hhfrfBq92N9Jd94gNPSYFn5DuBs39LT9
-         KcGkEdcn/gmIQgps244eaVD1QRYY6+wK0TxoJUKvVj9NwVnlQiTTSUCnQOc65gaKh7ii
-         QgPsPWf9+kRrq7BOgkSNL/gLGR1DY9PGETVQEapd6ibcQoHPpJkYJS26GQj+FkqPt3d0
-         GMmPypRcJ1leLwGjxmut3xJS0SV5nd8pOFHNmcMiVjn761q1DleYwDcnUYVKMBNrf/gC
-         VpxhF+AoRTKl7M1Hc7ekQDNyMgXJr3P1TTGi1Q5TnawaYgQd+Lw6vH5QhQiYGyhy4Add
-         RWug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792998584; x=1793603384;
-        h=message-id:references:in-reply-to:cc:to:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NhqYyPv74NL/BY6caRQe870hWekwcUFmd+4G2FhAc5M=;
-        b=tOYw3c1GP6Njvq+blcuZEqM+gtS5fKg2IbtMyxeWRUuAzInbaiMmwgLSk7IpJO/cDs
-         5fgKmDaKhK7KXEDEDj2arCvo0E4FUJ3IPvGgqQHapGtj4cPd5801TMoGmHBdaalh4/Tm
-         g4pY0O3gkTxWIrISJAsRh1paa4tFxb3p9RFVhaCVAHJISSwZuwAa5u9pvYti61K1PQ4H
-         bnrrdpmLA8xRx8wTDR0jD3ADDpqjPCXjNzkT2eNuNadpdYuZxmkOf3BtHgUH4L4rtrUg
-         h8DvGn26bXSZ434dol3+6k3oZ/8FXJqRoAMZ3qwXySPaFasyMYzVE4nfRqbmwsu7vIo1
-         9m/Q==
-X-Forwarded-Encrypted: i=1; AKwUvBy/a3tZdlqWwTcMA0zW5Ah2QIOTWBqdngLFrHmuIW0Ye9os3rp9pV+XLr9Yc+3AOhtoo2Nw7NHxDVAuHw==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKXGQdHr+QZyCNEAiofJaBabeUDuW8ajorjRrjtPdB+qseLqdyA
-	ChkH47vR6t4vzuSgWltbGtg70QQCSY5rVZeaCSL1vkQ82dU5CCx9Q+c4
-X-Gm-Gg: AYBFou0YVaQfVW6hHwytSJPgb7pFy7izlYD4cFhnC/4fdSS2jqaHgk46XszUFgvd/99
-	3V0WRfxwsSFxq7pKRCfj5X+MKjt7YktXyxzL/2y/XFC1tNBZ55ce8iTytmx/J4zbh3PANsxg/4w
-	a4HUf9CbhwJS6bcRct0TnjsHE16YKWHwt3uOtOCiay8q6e0TkXNNKC+xgKvp2zCm2H9zH9YnNmM
-	H+ciA/C1qPXxSo0y1SIP5ipLgNPQmT0PzUsNYHsQsqkprmZ4Xu7s+2R1awGuX4RGm46x8/VqXPj
-	w/ERLtnPWv4GqOcLqP+m1PUwBoZp/ukydCiCcQArxFmsMXCRmiOmKni5vPPNHvhCAzzin+jZPQG
-	fzPrvQ+ku9/0P10J8f8dut5ybwEzI9zVmb6sR/AXIlEMfQ1twWr85/GaL8cT92KEHJG4UA7dANe
-	i9pkiOSnn7r7wGoLRBASX2NaM6CwvOa3P9BqUQmYQx+aLGk1S9nvA43shVvtWeUKA8CKQwfVTVM
-	vmPNA0ntHHyh5AWb+RzlJKX54DnbjwUuMtc3xjC2YCeLmIK8CKbXisn4EuH
-X-Received: by 2002:a17:906:c155:b0:c29:f5d8:9c73 with SMTP id a640c23a62f3a-c46bde6e440mr782878166b.34.1792998584236;
-        Mon, 26 Oct 2026 00:09:44 -0700 (PDT)
-Received: from [192.168.1.182] ([188.241.197.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b445991e83sm3363345a12.34.2026.10.26.00.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 00:09:42 -0700 (PDT)
-From: Konstantin Nikiforov <helllamer@gmail.com>
-Date: Mon, 26 Oct 2026 09:21:09 +0300
-Subject: [PATCH] md/raid5: complete unsupported discards successfully
-To: linux-raid@vger.kernel.org
-Cc: linux-bcache@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, yukuai@fygo.io,
- song@kernel.org, magiclinan@didiglobal.com, xiao@kernel.org, colyli@fygo.io,
- kent.overstreet@linux.dev
-In-Reply-To:
- <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
-References:
- <CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com>
-Message-ID: <179299857972.12222.2729359466842183358@gmail.com>
+	by smtp.kernel.org (Postfix) with ESMTPS id 4E6391F01828;
+	Mon, 26 Oct 2026 07:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792999390;
+	bh=hdoxCROF22ZPqUPMUDtk3Ya/rjSguXnAXbrfTEBlp40=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=euVW7Bqynryrrl1skxfTnbEHpBoDLpaNw8NUUBpwbk8F3286pWt+YFUMLwWNQ8/c9
+	 TRhhqKhe/lp2NZx8HXsSxqtUb8w4RT1MnQAYtlD7F7zo3iJSmZo6jogvVGJ6erRgLS
+	 7iMxnA72Dic2Dq0dpKrlSKlBNl8KWtrI10DGo3vcOLru4W2y6pywR+SoAcklVMdrF7
+	 KcHgmZPHbJr8YhMgfjPRNMEZbITtyfyXmYV4ZOega4Qqie3Invt5t5qiPulHXZrtvg
+	 +cfmZkKY8+nE+2H3sJs7c9Z4MAi5ltKvYNurdGiJb83SuD6eE/0Eh8TSI7zXY7zIpA
+	 tzXuD2Lc78nrQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id D04B344C47;
+	Mon, 26 Oct 2026 07:23:09 +0000 (UTC)
+From: Esko Mobius via B4 Relay <devnull+echoowall.gmail.com@kernel.org>
+Date: Mon, 26 Oct 2026 15:23:08 +0800
+Subject: [PATCH net 1/2] Revert "selftests: net: packetdrill: add tests for
+ advertised MSS with PMTU exceptions"
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -96,81 +82,198 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261026-advmss-revert-v1-1-272fa4b7ecb6@gmail.com>
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+In-Reply-To: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>, 
+ David Ahern <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>, 
+ Jiayuan Chen <jiayuan.chen@linux.dev>, Shuah Khan <shuah@kernel.org>, 
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Esko Mobius <echoowall@gmail.com>, 
+ Eric Dumazet <edumazet@kernel.org>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792999388; l=5480;
+ i=echoowall@gmail.com; s=20261026; h=from:subject:message-id;
+ bh=uFnONYx2E6brR0l6+uJjUZUsugs/bXfH+6zBoDLWc54=;
+ b=ULddStXmSXwCyHaZ46Fz3sv7//3MUR2oEh/dcoU8rRoKUg6NFa32swzD10M6rBqiBLz6pxB/j
+ 8ErFryqgmZfDuAGhVRXuNpw3laLQd4RMH3tfo21TFP6t+nVr47rQerU
+X-Developer-Key: i=echoowall@gmail.com; a=ed25519;
+ pk=9XP6JhqjjPsHCF6UZZZTeqTRnXIa4+ufggnxXtTJ+no=
+X-Endpoint-Received: by B4 Relay for echoowall@gmail.com/20261026 with
+ auth_id=1323
+X-Original-From: Esko Mobius <echoowall@gmail.com>
+Reply-To: echoowall@gmail.com
+Content-Transfer-Encoding: 7bit
 
-Since commit 90573092673c ("md/raid5: validate discard support at
-request time") raid5 advertises max_hw_discard_sectors = UINT_MAX no
-matter whether the member devices support discard or
-devices_handle_discard_safely is set, and make_discard_request() fails
-the discards it cannot handle with BLK_STS_NOTSUPP.
+From: Esko Mobius <echoowall@gmail.com>
 
-Before that commit such arrays did not advertise discard at all, so
-upper layers never sent one. Now they do, and the failure is not
-harmless:
+This reverts commit e5c8e301b497 ("selftests: net: packetdrill: add
+tests for advertised MSS with PMTU exceptions").
 
- - bcache forwards discards to its backing device whenever
-   bdev_max_discard_sectors() is non-zero, and backing_request_endio()
-   treats every non-zero bi_status as a media error. After io_error_limit
-   (64) of them bch_cached_dev_error() stops the cached device. On a
-   machine with root on LVM over bcache over a raid5 of three HDDs the
-   root filesystem disappeared a few minutes after every boot.
+These tests assert the behaviour introduced by commit 2640e6419594
+("net: advertise TCP MSS from the configured MTU, not the learned
+PMTU"), which is reverted in the next patch because it causes a
+regression. Remove them first so the series stays bisectable.
 
- - btrfs enables discard=async by default on any device that advertises
-   discard, which is what generated the discards in the first place.
-
-Discard is advisory: blkdev_issue_discard() already turns -EOPNOTSUPP
-into success for its callers, and md_submit_discard_bio() silently skips
-raid0/raid10 members without discard support. Do the same here and
-complete the bio successfully when the array cannot pass it down safely,
-so that callers submitting their own discard bios, like bcache, see the
-same behaviour.
-
-Fixes: 90573092673c ("md/raid5: validate discard support at request time")
-Cc: stable@vger.kernel.org # 7.2
-Closes: https://lore.kernel.org/all/CAO96y0V6oncv54ihXnHfJMYiG_QAQ-NM8BOdqPDXKL8r8-kR9Q@mail.gmail.com/
-Signed-off-by: Konstantin Nikiforov <helllamer@gmail.com>
+Signed-off-by: Esko Mobius <echoowall@gmail.com>
 ---
-Kuai, this is the raid5-side change you were fine with in the report
-thread. Reproducer: raid5 over three loop devices with a bcache backing
-device on top, four blkdiscard calls on the bcache device. On 7.2.11
-without the patch bcache's io_errors goes to 4 (bch_count_backing_io_errors
-in dmesg); with the patch applied to 7.2.11 it stays at 0, and the
-affected machine (root on LVM over bcache over raid5 of HDDs) boots and
-runs with the patched module without any backing-device errors.
-blkdiscard on the md device itself reports success either way because
-blkdev_issue_discard() masks EOPNOTSUPP.
+ .../net/packetdrill/tcp_advmss_pmtu_ipv4.pkt       | 67 ----------------------
+ .../net/packetdrill/tcp_advmss_pmtu_ipv6.pkt       | 67 ----------------------
+ 2 files changed, 134 deletions(-)
 
-One correction to my report: the "discard_granularity is 0" observation
-was a side effect of my own workaround (writing 0 to discard_max_bytes
-makes the block layer report granularity 0); on a fresh array the
-granularity is the stripe size as expected.
+diff --git a/tools/testing/selftests/net/packetdrill/tcp_advmss_pmtu_ipv4.pkt b/tools/testing/selftests/net/packetdrill/tcp_advmss_pmtu_ipv4.pkt
+deleted file mode 100644
+index f2ef931b7..000000000
+--- a/tools/testing/selftests/net/packetdrill/tcp_advmss_pmtu_ipv4.pkt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-//
+-// Test that IPv4 advertised MSS in SYN-ACK is derived from the configured
+-// interface MTU (1500 -> MSS 1460), not the ICMP-learned Path MTU.
+-
+---ip_version=ipv4
+-
+-`./defaults.sh
+-ethtool -K tun0 tso off
+-`
+-
+-//
+-// Connection 1: Learn PMTU exception (MTU 1200 -> MSS 1160)
+-//
+-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+-   +0 bind(3, ..., ...) = 0
+-   +0 listen(3, 1) = 0
+-
+-   +0 < S 0:0(0) win 65535 <mss 1460,sackOK,nop,nop,nop,wscale 8>
+-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8>
+-  +.1 < . 1:1(0) ack 1 win 257
+-   +0 accept(3, ..., ...) = 4
+-
+-// Send a full 1460-byte segment
+-   +0 write(4, ..., 1460) = 1460
+-   +0 > P. 1:1461(1460) ack 1
+-
+-// ICMP Fragmentation Needed arrives indicating next-hop MTU 1200
+-   +0 < icmp unreachable frag_needed mtu 1200 [1:1461(1460)]
+-
+-// Local host retransmits using the learned MTU 1200 (MSS = 1200 - 40 = 1160)
+-   +0 > . 1:1161(1160) ack 1
+-   +0 > P. 1161:1461(300) ack 1
+-   +0 < R 1:1(0) ack 1461 win 0
+-
+-// Close connection 1 and listener
+-   +0 close(4) = 0
+-   +0 close(3) = 0
+-
+-//
+-// Connection 2: New connection from the same peer
+-//
+-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+-   +0 bind(3, ..., ...) = 0
+-   +0 listen(3, 1) = 0
+-
+-   +0 < S 0:0(0) win 65535 <mss 1460,sackOK,nop,nop,nop,wscale 8>
+-
+-// Verify: SYN-ACK MUST advertise configured MSS 1460, NOT the learned PMTU MSS 1160
+-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8>
+-   +0 < . 1:1(0) ack 1 win 257
+-   +0 accept(3, ..., ...) = 4
+-
+-// Verify: Outgoing transmit MSS is still constrained by the learned PMTU 1200
+-   +0 write(4, ..., 1460) = 1460
+-   +0 > . 1:1161(1160) ack 1
+-   +0 > P. 1161:1461(300) ack 1
+-   +0 < . 1:1(0) ack 1461 win 257
+-
+-// Clean up
+-   +0 close(4) = 0
+-   +0 > F. 1461:1461(0) ack 1
+-   +0 < F. 1:1(0) ack 1462 win 257
+-   +0 > . 1462:1462(0) ack 2
+-   +0 close(3) = 0
+diff --git a/tools/testing/selftests/net/packetdrill/tcp_advmss_pmtu_ipv6.pkt b/tools/testing/selftests/net/packetdrill/tcp_advmss_pmtu_ipv6.pkt
+deleted file mode 100644
+index c7638b11a..000000000
+--- a/tools/testing/selftests/net/packetdrill/tcp_advmss_pmtu_ipv6.pkt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-//
+-// Test that IPv6 advertised MSS in SYN-ACK is derived from the configured
+-// interface MTU (1520 -> MSS 1460), not the ICMPv6-learned Path MTU.
+-
+---ip_version=ipv6
+-
+-`./defaults.sh
+-ethtool -K tun0 tso off
+-`
+-
+-//
+-// Connection 1: Learn PMTU exception (MTU 1280 -> MSS 1220)
+-//
+-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+-   +0 bind(3, ..., ...) = 0
+-   +0 listen(3, 1) = 0
+-
+-   +0 < S 0:0(0) win 65535 <mss 1460,sackOK,nop,nop,nop,wscale 8>
+-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8>
+-  +.1 < . 1:1(0) ack 1 win 257
+-   +0 accept(3, ..., ...) = 4
+-
+-// Send a full 1460-byte segment
+-   +0 write(4, ..., 1460) = 1460
+-   +0 > P. 1:1461(1460) ack 1
+-
+-// ICMPv6 Packet Too Big arrives indicating next-hop MTU 1280
+-   +0 < icmp packet_too_big mtu 1280 [1:1461(1460)]
+-
+-// Local host retransmits using the learned MTU 1280 (MSS = 1280 - 40 - 20 = 1220)
+-   +0 > . 1:1221(1220) ack 1
+-   +0 > P. 1221:1461(240) ack 1
+-   +0 < R 1:1(0) ack 1461 win 0
+-
+-// Close connection 1 and listener
+-   +0 close(4) = 0
+-   +0 close(3) = 0
+-
+-//
+-// Connection 2: New connection from the same peer
+-//
+-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+-   +0 bind(3, ..., ...) = 0
+-   +0 listen(3, 1) = 0
+-
+-   +0 < S 0:0(0) win 65535 <mss 1460,sackOK,nop,nop,nop,wscale 8>
+-
+-// Verify: SYN-ACK MUST advertise configured MSS 1460, NOT the learned PMTU MSS 1220
+-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8>
+-   +0 < . 1:1(0) ack 1 win 257
+-   +0 accept(3, ..., ...) = 4
+-
+-// Verify: Outgoing transmit MSS is still constrained by the learned PMTU 1280
+-   +0 write(4, ..., 1460) = 1460
+-   +0 > . 1:1221(1220) ack 1
+-   +0 > P. 1221:1461(240) ack 1
+-   +0 < . 1:1(0) ack 1461 win 257
+-
+-// Clean up
+-   +0 close(4) = 0
+-   +0 > F. 1461:1461(0) ack 1
+-   +0 < F. 1:1(0) ack 1462 win 257
+-   +0 > . 1462:1462(0) ack 2
+-   +0 close(3) = 0
 
- drivers/md/raid5.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index b91545ce090d..b462b18e47ff 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -1144,7 +1144,16 @@ static bool raid5_discard_limits(struct mddev *mddev, struct bio *bi)
- 	if (!conf->raid5_discard_unsupported)
- 		return true;
- 
--	bi->bi_status = BLK_STS_NOTSUPP;
-+	/*
-+	 * Discard is advisory. The array advertises discard regardless of
-+	 * member support, so an upper layer may legitimately send discards
-+	 * that cannot be forwarded safely. Complete them successfully
-+	 * instead of failing them: bcache counts every failed backing
-+	 * device bio as an I/O error and stops the device after
-+	 * io_error_limit of them, and btrfs enables discard=async on any
-+	 * device that advertises discard. This also matches what
-+	 * md_submit_discard_bio() does for members without discard support.
-+	 */
- 	bio_endio(bi);
- 	return false;
- }
-
-base-commit: 6b4b543fa18757297ac756a6fe6e64f506b7844a
 -- 
-2.56.0
+Git-157)
+
 
