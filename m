@@ -1,51 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.74.221
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793139723;
-	b=R8HA5JsXdn//jf73WGZ9bGGiS/yzS6VHA66ZEK93btt74K9lFdMPoyZZk6l6l/2xqvPn
-	 TFoPDlrZOyz5/2nnk4BS9/CaTEWHQhefy4Y3zxRzwoabzQYorcmczMuEL8HOqtFoEImDU
-	 LhIepPWPF8KaBapgYO07w/GExcqC2Su3rvseFDAeIWdIV0CmLzqDnoTzDWvfzSYUGX6sb
-	 8CGMilqtHibO+CD7vL9fJPMmPjHPva6g+1y8GJtYbMZa9J9AbGLGRqc2DdQucDMi/59tL
-	 T82U8vKeCEuuFejm7IjJjNRhGhKjhHqA0eHlB+aUFlwz0sbLHGimxK7sWR+mRPkvbWg==
+	t=1793140247;
+	b=04PkQo1XEg6Sgz5MVzP13lXcGK95kd0ihmwtnI+2bwcMo5ZunkEeYon4raWiC7A1reQ7
+	 gXvC5a1wJ/hQy4RUAP6sYyuv3LDVdk9e6p1dpzp3D+yucO0dEtQnX9XvvbD/YWItdAci3
+	 Qk0ZVCyQrqCNl7sKgb/0tVIMZpZOjIKgqawBhSZGM2XaL+iKm2D14g9FOT4ouqtC9YAVp
+	 7lEGJBH5BJ9m7s1hyTlpKpCbMiLpvoDexW8qFfg19Riy6iB6ixk1iKHrFY99JQKjXlCJC
+	 X+1VRaURCt6kSjrPscR0kmqlM4HXq97QHe09lbKnD9sq/9GKwuJKGlbdXxGFH9Kdkqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793139723;
-	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
-	 Received:Message-ID:Date:MIME-Version:User-Agent:Content-Language:To:
-	 Cc:From:Subject:Content-Type:Content-Transfer-Encoding:
-	 X-Authority-Info-Out:X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-JNJ;
-	bh=9HJ62GiGTy/gw8NufnOvKlJLBVkRKKV7d6QpXBkvd7E=;
-	b=wFYQjIze3Ov7wrKumL7bK3JHc7WH+12Jqg8lpOwCv83kGavOQiZrZRP9FIWfRCl/dmvc
-	 6WjtbBquxxeT6RzFqb7ATiZCnMKg71tPTRfI0q/PALYRtFFDjDhUUfn+3roXYq5+bofp0
-	 C1VYVF7gkLOElMhtveHEcHg9biA/O3NeqJBJDRck/EnlSEevWaPxXZx3Ts8jCESVivSU/
-	 tO5hKbWYQY6ztIV+bVpcAo/cX7qKzycBvE4KHpbOhgby+qHM5Fej3k5oR4J3NrXYDClco
-	 yRSOPQk/5hslc5U/f5nzSyPRLK4j4DDdd79WYvZMmB5jr1MMHsKYfnbL0MKDSBe3TVA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793140247;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=fF+hhLhhGF6DZRpl45mUYSu/W2Cwx5CQUq9wX62q4sI=;
+	b=On/17griSD7ncC8JwZz6isUzYqwB+Jssn2k+pRuM52pEQE1wPdVNJIKlB6v0jEkeTUeP
+	 3/sz6xxAAwbFCU/RXeF682vAiu4lPd7kyDeHaVpY0vnE4jWha6HROWChLrYgY5iWB9BFn
+	 DZ3RuKEvQa/nU89w18jKYPzLWyWlWDYggBgym2BAL0v3yPiEkTK3oAAs+z2HdWMIa3NwZ
+	 0Ezjl5LuPPYEXINigMAi+gCnFStY0DlWY57f0cQKuVHswCpEDqg1/MLVqX9qAm2Kq9fX6
+	 V7k9RvFL/oqCmoyzEEzstkjzy1mBChu5187/EyFNEpuJR99u5D+85bJzgUKThlxN9RQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=icloud.com;
-	spf=pass smtp.mailfrom=icloud.com;
-	dkim=pass header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=GYg0Zs0o;
-	arc=none smtp.remote-ip=57.103.74.221
-Received: from outbound.ms.icloud.com (ms-2004k-snip4-11.eps.apple.com [57.103.74.221])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IcKjFboC;
+	arc=none smtp.remote-ip=209.85.167.42
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7989E606A31A
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 22:22:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7989E606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C8C606A33D
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 22:30:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 90C8C606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=GYg0Zs0o
-Received: from outbound.ms.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-3a-100-percent-7 (Postfix) with ESMTPS id 6262F18000A6;
-	Tue, 27 Oct 2026 22:22:01 +0000 (UTC)
-X-ICL-RepId: 01a17f74-c466-7522-87aa-3ffceb447af1
-X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhNC0MDXBxCC0AdXwddEhVdRVAfXhhGGVgWHQ5WGEYVVRRSA1grWxNVF0YJGQhdHRkeV1BeCF4fTBwdDlgGEgJaRQZNXw5eHwQXRhlVBEceXVZeHhkCURxWDVdDVARfUEkMQVBsWgBHF0gdXRlZb1BdHA4EVAddBV1WUAJaS18ZXUUPDA9fVBUOGgZAVQoLQBRMVlgGRlMWWhseWANTVEhbSwNcD1tQMFAbXwJCDxwTVhUNTUMSQhUEEVABWB5W
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1793139722; x=1824675722; bh=9HJ62GiGTy/gw8NufnOvKlJLBVkRKKV7d6QpXBkvd7E=; h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type:x-icloud-hme; b=GYg0Zs0oxKfswLL50Dy9wQUyFJ9eaTegkAUgGtb6IAO5Z/9RKwUp/1aIXAMdJ5Nn67V1xzqJt9yumqI/vPn9XZqipoeFJRTHA+nb/F8hgi+LbW6+qRNRD8KNAvoTfo7NCZm7P7PWkAECUJHVzpe2qioByy6wt5gl9qpsf/kFiE0SweW8987dxXuLnoM0KskCNcozCeFJbyZfREP7W8HgMReAbdY7sewRUupDrL4daZcct8zVR2bNzPtm6PfIV1RdhF5cnaCdBFjC0ZAZbFYRvWGh/op4XUjeOXKXRpPvkn407L6t6KJjCku577QXuODnERi0X29nESGQnpLH9kg2EA==
-Received: from [192.168.1.50] (unknown [17.156.208.39])
-	by p00-icloudmta-asmtp-us-west-3a-100-percent-7 (Postfix) with ESMTPSA id 5196F180013C;
-	Tue, 27 Oct 2026 22:21:59 +0000 (UTC)
-Message-ID: <a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com>
-Date: Tue, 27 Oct 2026 23:21:57 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IcKjFboC
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5bfa686881fso362184e87.2
+        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 15:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793140245; x=1793745045; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fF+hhLhhGF6DZRpl45mUYSu/W2Cwx5CQUq9wX62q4sI=;
+        b=IcKjFboCw/jNuZhKj2SPWtFgkcC6gPM61WbQ5TwV8TpsjkkVDeQGDibvnCNZa6YQaN
+         6Bud5i1tKv2e691j+bhZihOeCdT1jVtvm9lOSpU3G85at4K6cpEdSxHBJk4/4ASWXTUO
+         CzWFxn/rcJEOBd236tiGKhClC3nGmLemKedFoAVB8umeQud3zpJpIQOGXTj1nbxBpnV3
+         Cfivoytcvi+1RgJiAWzfzUkBbVSyXR2QX/ujn82zoWWTZIFoNzZFbXbCg0zxU7Mhr3vQ
+         rrpBSxAivWQi32+58A+24sFsjLeoHsN8IVScMZzsWr2pV+joQ+NFxLCR/65xOTVVgUJV
+         vd2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793140245; x=1793745045;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fF+hhLhhGF6DZRpl45mUYSu/W2Cwx5CQUq9wX62q4sI=;
+        b=y6xnNZgCllVSx/R8a6gLko7vccZLm0VZtiyGipATEoCb7d+HPYoIhWaQTXHqpwgGEX
+         hhvCcWMfnnxmgT0m1lPPZ6iPzWQqkHVapkqxhvvlp6OnLEfdz+gyEEXBtSTyuAuSPuYE
+         t2i05y9fZMJAfjw+NBNtGglbDBzSrJ8bUlFJ+piXF7++rV4KlJTv+Lh5glRu9CS++uTl
+         dSCkUGeaiwOPeh647X5sKilvD4iWfaghWmyJpFy6CcvGhXEZ59cmBMtx2ZeEDcXThz4S
+         up92uc1Ws/GtJOPlNFMk5PwAD9iZ1RGBKS48by0/Spt/3p9CMhYiFSjaPOqNEOfKMnhL
+         QUgQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx0+GYgF+/ZTYR3A1T86EqHbz7TyNiUeurMC/91ULQzZ0k7BH/orBMp3ghrYvhdT5+zP5yE1QKGEsSFUA==@lists.linux.dev
+X-Gm-Message-State: AFq9FYLx/72xvI/ZaAgY+J5yXnVQW7G9narfO+/xG6R4vxZUNZTTFyK4
+	yDXWMTyaKbUppHJ3YQyewJ1tgt3iGtunIa6Os16DEO7LPMQS1G+vgQHZ
+X-Gm-Gg: AYBFou2ZkCP1G3VDaw4l+BeZp/VtKEU9Yf8JCcR21s0fNScLgNy3/m0JpGYlkMBAWIy
+	C+lLYj0MJAJocjSPsWGTEEaJQhF5IxFutiuxUCe4I8+dUqakr7mYpn3nJQoRr1zOkluvdipzqhB
+	vS6hlCTDaXk1snHBwrSIicMRynaK8c22dhdLIBJiBO4ttLtgwVAz3kk1HizP9OliETkxDkD2369
+	WUOt0kT22IWcu9kmujsn2104xv9VLouRd+ZLs9vXWxSp7EufvxxifayzdMe6k5va3qHGUwQzEN9
+	xneZ6gJvU9gpct6yI9cbvyWPXL0wLtFPanD7LUz4XGKgscc43eBGGlayzaXEUdGPUzI1305rkkH
+	X6OfwGMN+qDcALELqB183aLFt5KMHFXMcqK5e3V6g0+dq+JeJ7WlxZT13pND2GgC2IdA/EGpjt8
+	Wo6TNg18m34hTtJaHcypTGjPNvq7ZWRgs2m7IVoT0Xj+yzIE12nK02m+usbEijcV1bCqfNlGkjq
+	rvw/4Z4/1himAfhpCqiiv7vB+Ka2FfF+CyqjxC+m/y0QV/O/vi+hjVj55sgKxcTDMP9suSliyrS
+	SDpQkuxF3rmvcoY3Ay26qTZW2yH/s8HQVPXsiLKRDKqu4e59m0EdrQ==
+X-Received: by 2002:ac2:4e11:0:b0:5bc:c9e3:d5bc with SMTP id 2adb3069b0e04-5bfcad1f499mr228031e87.29.1793140244602;
+        Tue, 27 Oct 2026 15:30:44 -0700 (PDT)
+Received: from localhost ([178.214.243.78])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5bfca5c9ebdsm205370e87.84.2026.10.27.15.30.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 15:30:43 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Calvin Owens <calvin@wbinvd.org>
+Cc: linux-kernel@vger.kernel.org,
+	Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <siqueira@igalia.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Alex Hung <alex.hung@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Fangzhi Zuo <Jerry.Zuo@amd.com>,
+	George Zhang <george.zhang@amd.com>,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] Revert "drm/amd/display: Allocate DCN32/1 dmub memory to GTT"
+Date: Wed, 28 Oct 2026 03:30:37 +0500
+Message-ID: <20261027223038.299768-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org>
+References: <25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -55,114 +110,76 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: med.jebabli@gmail.com, tiwai@suse.de
-Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
-From: Cristian Castellano <cristian.castellano@icloud.com>
-Subject: [REGRESSION] ALSA: hda/tas2781: divide error on playback open after
- accepting V1 calibration data without CRC (Lenovo Yoga Pro 9 16IRP8)
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Authority-Info-Out: v=2.4 cv=SrOdKfO0 c=1 sm=1 tr=0 ts=6ae12409
- cx=c_apl:c_pps:t_out a=kRaGL2Q7qLiahLf3O6OaIA==:117
- a=kRaGL2Q7qLiahLf3O6OaIA==:17 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
- a=x7bEGLp0ZPQA:10 a=eD1N5GnKAbQA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VfikHhr-D2iK5rlxiJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI3MDA5MCBTYWx0ZWRfX8X/qb+UQpwhq
- 48wYsNv7WhrmnpP01REaPS4kYjvVJoAg6ZMb/XBsYpk30YpfGNnDTHHJfh6MyAB6u6UFmse6VPN
- 2OXNDPrYyHzt4Hk6wq8bdgWYuTD+BV9Xy75509siASZKscLGGut+iCoRLVz6gI3IWXtCRNo7y4H
- TsKcqE2cKSSmllR/oHsVzkMZpq9dc+9YQ9FpbtjPRc66nKwtvHSaWcJwoXjPIIs7pcIJ0aJDVSv
- PN+/FX9xgdYkatuBB36psEpy6Nb3+/uGufyKiVerzBUzWXCEo0J31z05Mfq243YNvrJ5WiACazx
- dtla8lbPm645QlxXlVCELwEdNKRDa55t6+j3s820XrVVrw00ts8rjk2eJ5U+AU=
-X-Proofpoint-GUID: zvmonwOqKB_Wd4m3Y7uZFogIyICaqb9Y
-X-Proofpoint-ORIG-GUID: zvmonwOqKB_Wd4m3Y7uZFogIyICaqb9Y
-X-JNJ: AAAAAAABqFK7fFSoe7rCT4ANnaHlhYTdBA0lRwtOCMx6VOTy/8iaEGvF/169W9N5AXD0na
- OXopY8FIA9LzETibOKNkitaouP8Qo2tEx4sXgXLlTPk8TUicADGZtWlhkGIHOWgIDSaLiD
- K11PIc1ZjvlxSSWVH7s9yImvCFx5sX3oTpiR9Vnh3g4sJaEC0C1nPRgOzBiw3imwEPxZu1
- 3SQVh4QkxYgqpl29Qf4h/zXsIoYrlxQzc2t+MA5y6OAHusAXghJBTJRvCB4gMhC9Nd1mpB
- 3FqdgnsneUXplnMoAHRAWqrZ1Nv1u5H9iYAmeKtqVUsoneudzbXqTZ6sbpXlGQE+cJmLQd
- QOGuWMVo7Dh0xfL6yu/bPlFXWeLdAHhSWdld7PBAXiyhrzrsrKxgV5u/VScKEFBNv59jPC
- 08uWUUD1xF4nmM2Y56YdzBT0VtPpGjqL6yFmG95thmnqpe/sJQpTmKjOldS98f7fCpSYnu
- sI7hv79YtVB/grpTZ6gfNDwZ9K7iWFNt8giDQ+zxSuVW44E/lHormsDhK2eEOZZyGTSPVt
- mVNUqaBWfvWRjVgyfOHw3sIcP5OELRLO3p80iegRYJla9JLfahRPGFlumIiLmXp910mDCi
- EbqnV0zELe//qWqQ0TOHq/oSkGNWLSzNYFnbiF5L1RNEqmULwkaVfLWfsERKHw+Y7Y8DE5
- JouC5lLQ9PnmZyi3YFGd1Dy/i7c+Xw9EjKpzmzozjDh824A0MTNYuv0AAiDgBRhghx6XQc
- /NPhwoC6nIU/jYPypy0eZfFv0eee5GVPeJx1teleTPf5g5i0nur4zmV54OrPGkBt//Qa7F
- AW8VuveUdp3YgNDc/6V4L2JpR0Kq3mK1RXAuCS5ByjLJUMjnwIhND72UATEG5swgZ+e5YD
- idAD1PFBvSJXb94E2xtvIzsn9QtFpvBTIh0SWhV1KzjNRSUPW45WQfSwh99uc0myxtUC4i
- itwWweSBsFU5LwcIFZVMTa7JzQWfjWTNa0FWVnLopCRtTSclVRUfGPbyLy7tRWNtb8Yd+R
- 6873Y59NjaPg2b3QNr6gHkXTNMdOjGabGxHAPkfH061OUJZ21oYXokTh+x7zb3cBdjhv9U
- r35EHens5QGW2f9UzU9M8NYWXG5k7ym9BHGcSMZ1NQIFn0j8zNn3ViYzBxN8L9VX13+yAw
- PS+E3s75syQMHGlM1TNXsJeGCmrgLY+YRocc3+wzRv2FUg+IgHRxXCd2kDBr1Ew5qqgDwP
- oS3FpyrB9q6AO/7Y1mwUHlqud+Z24WkdlyoPmbnM7Ny38+dT4ZU5ilYDR58Ta1JQ46A8A0
- v4Wqlkt1cTGwmmQ0xr9pc60EJpGgna3MUxKzky1ebI49xd9AEy0DETrAiUZw==
 
-Hello, since I updated to 7.2.11 (and then to 7.3), opening a playback stream on my Lenovo Yoga Pro 9
-16IRP8 (83BY, subsystem 17aa:3835, BIOS KVCN44WW) triggers a divide error in snd_soc_tas2781_fmwlib and audio stops working. 7.2.9 just works.
+I see the same kind of single-frame band across the whole screen on an
+RX 7900 XTX driving a 3840x2160 TV over HDMI, and measured a637a140ab86
+against the same parent: 35 times more events, over about eleven hours
+each [1].  What I found since may help decide how to fix it: here the
+band needs both the commit and DC switching the memory clock through
+sub-viewport (SubVP).  With either one missing, the rate stays at the
+same low level.
 
-The only tas2781 change between the two I found is:
-c1b708f712f5 ("ALSA: hda/tas2781: Accept V1 calibration data without CRC") (upstream 408249089c48).
+Events per 1000 eligible frames (frames whose neighbours show unchanged
+content), counted with the CRTC CRC as described in my report [4]:
 
-At boot the driver now logs:
+  kernel                 refresh  SubVP  events / eligible  per 1000
+  1d8327353de6 (parent)  4K@120   yes       7 / 3,019,571     0.0023
+  a637a140ab86           4K@120   yes     293 / 3,632,444     0.0807
+  7.3-rc6                4K@120   no        5 / 1,582,072     0.0032
+  7.3-rc6                4K@100   yes     139 /   712,333     0.195
 
-  tas2781-hda i2c-TIAS2781:00: tas2781_apply_calib: V1 data without CRC, accepting
+7.3-rc6 contains the commit.  The 4K@120 runs with and without SubVP
+differ in the TV's VRR setting, which decides whether DC may use SubVP
+at that rate; without SubVP, DC keeps the memory clock at its
+maximum [2].  In the 4K@100 run, 138 of the 139 bad frames have CRCs
+that occur nowhere else in the capture, so the content of the band is
+new nearly every time, which fits your "non-framebuffer data".
 
-Before that commit the data was rejected and the amplifiers worked with
-default parameters. On this machine the CALI_DATA EFI variable
-(CALI_DATA-1f52d2a1-bb3a-457d-bc09-43a3f4310a92) contains two non-zero
-device entries followed by zeros, with TimeStamp and CRC zeroed:
+A second user, on an RX 7900 XT, sees the band over HDMI and over
+DisplayPort whenever amdgpu_dm_capabilities reports SubVP enabled, and
+not when it is disabled [3].  The DC debugging documentation describes
+this kind of symptom: "a horizontal fillet of flickering happens in some
+specific part of the screen.  This could be an indication of
+Sub-Viewport issues" (Documentation/gpu/amdgpu/display/dc-debug.rst).
+It suggests force_disable_subvp to check; on a stock kernel that is
+amdgpu.dcdebugmask=0x20000.
 
-  0000000 07 00 00 00 5c c8 20 1d 28 b5 27 23 2a 79 42 16
-  0000016 f2 07 c5 00 00 00 e0 2e 01 f7 2a 1d 72 6f 1b 23
-  0000032 2a 41 4a 16 c4 0a c3 00 00 00 e0 2e 00 00 00 00
-  0000048 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  *
-  0000128 00 00 00 00
+Since it reproduces within 30 minutes for you, could you check three
+things on an unreverted kernel?
 
-(the first 4 bytes are the EFI attributes)
+  1. The refresh rate, HDMI or DisplayPort, whether VRR/FreeSync is
+     on, and what amdgpu_dm_capabilities says:
 
-Oops:
+       sudo sh -c 'head -v /sys/kernel/debug/dri/0000:*/amdgpu_dm_capabilities'
 
-  Oops: divide error: 0000 [#1] SMP NOPTI
-  CPU: 10 UID: 1000 PID: 1533 Comm: wireplumber Tainted: G        W  O        7.3.0-4-cachyos #1 PREEMPT(full)
-  Hardware name: LENOVO 83BY/LNVNB161216, BIOS KVCN44WW 03/05/2025
-  RIP: 0010:tasdevice_select_tuningprm_cfg+0x8c2/0xa90 [snd_soc_tas2781_fmwlib]
-  Code: 4c 89 f7 41 b8 04 00 00 00 2e 2e 2e 41 ff d3 85 c0 0f 88 97 01 00 00 48 8b 4c 24 10 66 0f 38 f0 01 0f b7 c0 0f af 44 24 18 99 <f7> 7c 24 24 88 21 88 41 01 c6 41 08 01 48 8b 4c 24 08 48 8b 44 24
-  RAX: 0000000000000000 RBX: 000000000000002a RCX: ffff8d36ca8af218
-  RDX: 0000000000000000 RSI: 0000000000000db8 RDI: ffff8d36ca8af21b
-  RBP: 0000000000000000 R08: 0000000000000004 R09: 000000000000000a
-  R10: 0000000000000100 R11: ffffffff87559290 R12: ffff8d3684e350df
-  R13: ffff8d36a861d9b8 R14: ffff8d3684e35038 R15: 0000000000000002
-  Call Trace:
-   <TASK>
-   tasdevice_tuning_switch+0x71/0x80 [snd_soc_tas2781_fmwlib]
-   tas2781_hda_playback_hook+0x4c/0x110 [snd_hda_scodec_tas2781_i2c]
-   hda_component_manager_playback_hook+0xb5/0x370 [snd_hda_scodec_component]
-   playback_pcm_open+0x79/0xa0 [snd_hda_codec_generic]
-   hdac_hda_dai_open+0x5c/0x90 [snd_soc_hdac_hda]
-   snd_soc_dai_startup+0x52/0x90 [snd_soc_core]
-   __soc_pcm_open+0x108/0x6c0 [snd_soc_core]
-   dpcm_be_dai_startup+0x153/0x3c0 [snd_soc_core]
-   dpcm_fe_dai_open+0x109/0xc00 [snd_soc_core]
-   snd_pcm_open_substream+0x604/0x920 [snd_pcm]
-   snd_pcm_open+0xeb/0x220 [snd_pcm]
-   snd_pcm_playback_open+0x39/0x60 [snd_pcm]
-   chrdev_open+0xbf/0x230
-   vfs_open+0x3f8/0x520
-   path_openat+0x4f4/0xc50
-   do_file_open+0xd7/0x150
-   do_syscall_64+0x8f/0x380
-   entry_SYSCALL_64_after_hwframe+0x76/0x7e
-   </TASK>
+  2. Whether the bars always appear in the same part of the screen,
+     as in the documentation's description, and if so, where.
 
-The kernel is  linux-cachyos 7.3 (taint O is from the NVIDIA module);
-CachyOS does not patch the tas2781 driver, and its LTS, 6.18.55  works. If it is needed, I can test patches.
+  3. Whether they come back when booted with amdgpu.dcdebugmask=0x20000.
+     amdgpu_dm_capabilities should then say "sub-viewport supported:
+     yes, enabled: no", and the memory clock may stay at its maximum.
 
-#regzbot introduced: 408249089c48
+I have not run the third test myself.
 
-Thank you,
-Cristian Castellano
+The commit moved DMUB memory to GTT because data from DMCUB sometimes
+reached the driver late, after DMCUB had signalled it.  SubVP is a path
+where DMCUB itself works to a deadline: DC budgets 15 us for its
+processing when it sizes the SubVP region (subvp_fw_processing_delay_us
+in dcn32_resource.c).  Since the commit, the windows the driver sets up
+for the firmware's data, mailbox and state are in system memory.
+Whether that can make the firmware miss its deadline is what I asked
+AMD earlier [2]; it is still open.
 
+If this goes in, Fixes: a637a140ab86 with Cc: stable would take it to
+7.3.y, and a Closes: tag pointing at my report [4] would let the
+regression tracker close it.
 
+[1] https://lore.kernel.org/all/20260919200820.799243-1-mikhail.v.gavrilov@gmail.com/
+[2] https://lore.kernel.org/all/20261011201833.853907-1-mikhail.v.gavrilov@gmail.com/
+[3] https://gitlab.freedesktop.org/drm/amd/-/work_items/5714
+[4] https://lore.kernel.org/all/20260829010525.29935-1-mikhail.v.gavrilov@gmail.com/
+
+-- 
+Thanks,
+Mikhail
