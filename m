@@ -1,67 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793105868;
-	b=HuohTDLHvtpCTsO/4Mb4lGwnN3ak+GvFbRQF5AxIOVd/Zhz1OBPHKRiKTV1cU19B0nKO
-	 bMDkEBypfoA2W7h+fC+GSd7i6B5h11CgW/TmVQjVv9e2FWEqCZ+297oMoXVWvxeKp6+DU
-	 Y4J77F8Im+sYJvLxA3WVK/o7HW+SXRs7bp/VD0xEgQe72Kp47lyQQ81mstGHjB+5YYrfq
-	 Nk9n17sBYyPek0xyaUmnTjPKwBmgOAPOoluKzta0ft07RkpoKcT+lz6uyeyGEuX9ltIHQ
-	 CUwy3rExNQh2+W+9KbZr/YvehzX1LWp9t5tkLirxH8IkjJvSM+HgbUMaAL9O0wNbM6Q==
+	t=1793106200;
+	b=GdM1KvVDlATzCdj+PDX2ojABX7wARef3uzu/v1jiMf6/DFtKQfXIvxZjZ3IfCC3RVKgz
+	 yKbNG9uhVuky3uZlp59ZPgiGQeOTqAi7b9Al/IvYuIvIHw2mzi6u0+IJu0NOD3MSXJLUf
+	 ZiSEp/ymGEFB3/3YI56YjTwcRrV1+Guzi4XFQND9r3sN38RMtaY8BZytxznB4Fv8Z5jDV
+	 6JNZOibxlqHUA/WxT6boiGTIXFr1kvR56MoBiA3KztdHspLO39vUSwzVogi2G5oXK5ufD
+	 adXWlfh3XfGHZ9lL4ZSTOsfHdhY5Gu8CuoA8POlmxe8e69v3na2fWbQoo+rZkPXZShA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793105868;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=521a5KiHMV0SqLCMajvruFvZwpk1Efpz42h4U52rsZI=;
-	b=q3ZGthCu9q8N1izjr4XIk9X0Jr/QnM87mYMBMro1nIuFw1yVlAG9MWFFtROHbFHz51q6
-	 u9Tk5P/65qltMm3LwFz24CVSBGl6Fdmy8gjAE+KjoFanIMDhaoA8WLVfEjLYn5UijBVuV
-	 CtuCNvls+rUgt9xDmcHuAZolmI/PKmclC+Hl1NDubWiyyBcb1uAbPal59Zjxbb8l5yhpi
-	 AnhPCwoVa/T9OwBJbbsx2XSh9qBbZ0asNHXwWfOtEolcXyDoZPZnrLEUK/3VUbWz33i9V
-	 xYSdknYrOaTgA7uRpXLJ+igJ7R2Eiz1fotj9A8+phCNmGkCk0DcFpqLTUUcpbrXmwlg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793106200;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=gmp1+598YRgh8xV6vRtgePkT+IRpuCg0m/DIj26GqFI=;
+	b=5gV5hDyKZ90uWghxul+7pz3hpkDhjeGIJod5g1cniC7OR9ECqOh95IDOXw4faFSW4ttG
+	 pXwLQNS2GoEh8h/3GpgQpb/zNInQGczUoAAlDcNnAfazFKVM84PaaHSg4fBvCG8h8n6yC
+	 /0Wok2eGAuEIE7Nju7dZqR6cqyLwrar42nUGXX7TfhMM6i4YU5NmqR8b5TYm/hKoIC50S
+	 AFhAAo3Sy53COJ6Jxg+Y6RETs5M+03o/hbStn4MFOg0Wea63ML0+89f+RJuNSb6ygSfA7
+	 YMgDpX2Y1uMlBrP/fLZX/Xm5p7xBY4Evi4iQGHSOgNm+8Mf+UbjyYDDEqTHFW1y6Ceg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	arc=none smtp.remote-ip=46.38.247.119
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zb0+D6Hm;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B131C606A31D
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 12:57:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B131C606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jDVrf30L1z8ZWh;
-	Tue, 27 Oct 2026 13:57:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793105842;
-	bh=F9UN7r5NdJQ1zWaDOKDK9sE858rSa5l4u47sjcAp0mM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PoO8LaOxz+IUHezCI5wUu3yNUk4Ok5X8lSMi5sp+qKARff4lTJEOnvLWOMeP3VqXS
-	 j5ARMaoaYdgzVtoJx50xrQDkD+LZYRbVtcR64e/uu+9X7wD1YfUeL9fcZSenFeg65J
-	 p//6dePZCRFuefT5Gt1KApYbfRXJpdndMvoFK9MgIU3Wm04+apwp7mpBT9VfuCeYkA
-	 kBwxfkbtakuWXvlpU0Ybxs4LpmA7bkdwz2wmTEXSV9e2pUcObv4D62I+yixaXGxfDv
-	 hygIDMMTosX2uqjwElmKR6ciaVV+k7Qc7230K4annS0iLZQJytAkpHERcIaD+nygy+
-	 uL6uJN+rOYIOQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jDVqD0Jmnz505Y;
-	Tue, 27 Oct 2026 13:56:08 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jDVqC0LkBz8sb7;
-	Tue, 27 Oct 2026 13:56:07 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 027775F9EA;
-	Tue, 27 Oct 2026 13:56:01 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7472a96a-313c-4bf3-a1b1-5687c010f7e4@leemhuis.info>
-Date: Tue, 27 Oct 2026 13:56:00 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1804606A31B
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 13:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zb0+D6Hm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7EC1F031E0
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 13:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793106194;
+	bh=gmp1+598YRgh8xV6vRtgePkT+IRpuCg0m/DIj26GqFI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Zb0+D6HmPiKSpTqonVpxXsiXeOTH+oqCk7Iio8ruOww1rFr+CxM/ODGBvWpPShKKD
+	 pwjhdNOVMw2TkdrfC52ZMGS4M5aUkXRAn6pqS0bUi8kZi1KBBQRHI9SpBahgNb4vVb
+	 BVaoij/PjwaH265ov6Fg9UIteyUiAhqj3Wl5HieRgALSFvnInFjy2iXjg74p76ioCq
+	 mcVn/yDAQ5hGXbmWasSqWpRo8SGZKkF4cj7oGNovdscP5UFxl/I5iYUIKZQrG0l/Pi
+	 +qcccqgFa/b1Fj9IdD1r1HD+Rp0ViROdkJqHhWSFd/Wsu4MRdcNphCVJ4aGhO1Kf+h
+	 cbcIJISxCLX3A==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3ab3b29a210so9781031fa.0
+        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 06:03:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwlA4pgBmTjHPZbaCA7g6dPmaA99ZblAz2vBGIaYJb5j3vWbpqn/qEDOi6J6u6xK9miQ58oTnUggOF6/A==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJNYdJ9+fgU6nmPSf4uvg+qW/s7DsIqKneN+ju7KFuqxStK4YLD
+	EyIP55fYAJa5ldtDPC9z+N5WJLyUTBRdXyN/lf+5GVXSf0ps6x/dtpb1XSucHjnY3zCebCuXNtl
+	pcqElRnB1r8rv6RA0DL5nEymcTPCr82I=
+X-Received: by 2002:a2e:be90:0:b0:3ab:1dcd:934c with SMTP id
+ 38308e7fff4ca-3ac9085cd16mr5034811fa.1.1793106193067; Tue, 27 Oct 2026
+ 06:03:13 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -71,84 +59,100 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pmdomain: qcom: rpmhpd: don't clamp gfx and gmxc before
- sync_state
-To: Ulf Hansson <ulfh@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: Oleg Keri <okerixx@gmail.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Abel Vesa <abel.vesa@oss.qualcomm.com>,
- Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Rob Clark <rob.clark@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20261021080517.2161-1-okerixx@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20261021080517.2161-1-okerixx@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179310576257.1469982.4921492503478710883@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 027775F9EA
-X-NC-CID: W4f2xB7Fsat1xO23TYCPIE9b90XxyjJEIuD+ilO0bRFVn8+02DE=
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+ <20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com> <e25fd292-5391-41fc-a324-0ec260828415@linux.dev>
+In-Reply-To: <e25fd292-5391-41fc-a324-0ec260828415@linux.dev>
+From: Eric Dumazet <edumazet@kernel.org>
+Date: Tue, 27 Oct 2026 14:02:58 +0100
+X-Gmail-Original-Message-ID: <CAL4Wiip=TkP2hmOFR-1Y-CU4rYHY_q=TBDhK6RmTj9UEMQ95Gw@mail.gmail.com>
+X-Gm-Features: AclHuK9rU7oOToqigMxIaaqt9b1_ic_1sOzFF6P0HJqOg7YsuT6ZI5h9HNYfk2s
+Message-ID: <CAL4Wiip=TkP2hmOFR-1Y-CU4rYHY_q=TBDhK6RmTj9UEMQ95Gw@mail.gmail.com>
+Subject: Re: [PATCH net 2/2] Revert "net: advertise TCP MSS from the
+ configured MTU, not the learned PMTU"
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: echoowall@gmail.com, netdev@vger.kernel.org, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Ido Schimmel <idosch@nvidia.com>, Shuah Khan <shuah@kernel.org>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/21/26 10:05, Oleg Keri wrote:
-> Until rpmhpd's sync_state every vote is clamped to the highest corner,
-> so that hardware the bootloader left running keeps the rail level it
-> needs until its driver takes over.  Nothing the bootloader leaves behind
-> runs on the GPU rails, but the clamp hits them anyway: the GPU clock
-> controller's probe runtime-resumes and suspends its GFX and GMXC
-> domains, and from then on both rails are pinned at their highest corner
-> until sync_state.
+Le mar. 27 oct. 2026 =C3=A0 13:45, Jiayuan Chen <jiayuan.chen@linux.dev> a =
+=C3=A9crit :
+>
+>
+> On 10/26/26 3:23 PM, Esko Mobius via B4 Relay wrote:
+> > From: Esko Mobius <echoowall@gmail.com>
+> >
+> > This reverts commit 2640e6419594 ("net: advertise TCP MSS from the
+> > configured MTU, not the learned PMTU").
+> >
+> > That commit stopped the learned PMTU from lowering the MSS we advertise
+> > in SYN and SYN-ACK. For symmetric paths it argued that "the peer runs
+> > its own PMTU discovery and usually already knows the real path MTU".
+> > That only holds if ICMP "fragmentation needed" can reach the peer. When
+> > the peer sits behind a firewall that drops inbound ICMP, its PMTU
+> > discovery is a black hole (RFC 2923, section 2.1), and the smaller MSS
+> > we advertised was the only thing keeping its full-size segments off the
+> > narrow hop.
+>
+>
+> A client that cannot receive ICMP is broken beyond this: QUIC's DPLPMTUD
+> hits the same black hole, and nothing the server advertises can help it.
+>
+>
+> >
+> > Inbound ICMP filtering is very common in enterprise and carrier
+> > networks, and it is pervasive in mainland China. We hit this in
+> > production after the commit was backported to 6.12.111: TCP connections
+> > that reach a server through a relay with a smaller-MTU hop complete the
+> > handshake, then stall as soon as the client sends full-size segments.
+>
+>
+>
+> The learned PMTU is keyed per destination address. If your relay
+> masquerades the clients, the server sees a single address, and one
+> client's download seeds the entry for everyone behind it. That is why
+> this looked reliable. Once the clients are spread over their own
+> addresses, each one needs its own fresh entry and it falls apart. The
+> old behaviour was never a mechanism for this.
 
-Ulf, Bjorn, FYI: this is a fix for a regression that was reported in
--next some time ago and recently made it to mainline. Linus hates when
-this happen. Strictly speaking the drm folks caused this and thus would
-have to fix it, too -- but there iirc was some reason why a revert was a
-bad option. Hence:
+Hi Jiayuan
 
-could you hence do us a favor and review and mainline this rather sooner
-than later? Maybe even before 7.4-rc1 to prevent more people from
-running into this (three people already did afaics).
+You are right on the technical side, and your patch was correct
+from an RFC point of view. The old behavior was a side effect,
+not a designed mechanism, and the reporter setup only works
+because the masquerading relay keeps the exception fresh.
 
-Ciao, Thorsten
-> On Glymur gfx.lvl has 14 levels and the clamp holds the rail at the top
-> one, 0x1d0, while the GMU's own performance table ends at level 11,
-> 0x1c4.  With the GPU driver and firmware built in, the GMU boots long
-> before sync_state, and its CLX DCVS calibration does not survive a gfx
-> rail held that high: the firmware gives up with HFI_F2H_MSG_ERROR
-> 0x007306c7 (ResMgrCalibrateDcvsLvl), the first HFI_H2F_MSG_GX_BW_PERF_VOTE
-> times out and the first GPU init fails.  On the Lenovo Yoga Slim 7x
-> Gen 11 this means the compositor cannot start at first login.  Pinning
-> gfx at level 11 or 12 instead fails the same way, level 10 and below
-> boot fine, and pinning gmxc alone has no effect.
-> 
-> Leave gfx and gmxc out of the clamp: they have no bootloader-configured
-> consumer to protect, and the GMU votes them through its own RSC.
-> 
-> Fixes: 93b6c8d10fad ("drm/msm/a8xx: Enable CLX feature on Adreno X2-85")
-> Link: https://lore.kernel.org/r/179248663855.32151.9955864156939592299@gmail.com
-> Acked-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
-> Signed-off-by: Oleg Keri <okerixx@gmail.com>
-> ---
->  drivers/pmdomain/qcom/rpmhpd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
-> index fa8fed5bd3e5..2c9d4beeffbe 100644
-> --- a/drivers/pmdomain/qcom/rpmhpd.c
-> +++ b/drivers/pmdomain/qcom/rpmhpd.c
-> @@ -1006,7 +1006,7 @@ static int rpmhpd_aggregate_corner(struct rpmhpd *pd, unsigned int corner)
->  	unsigned int peer_active_corner = 0, peer_sleep_corner = 0;
->  	unsigned int peer_enabled_corner;
->  
-> -	if (pd->state_synced) {
-> +	if (pd->state_synced || pd == &gfx || pd == &gmxc) {
->  		to_active_sleep(pd, corner, &this_active_corner, &this_sleep_corner);
->  	} else {
->  		/* Clamp to highest corner if sync_state hasn't happened */
-> 
-> base-commit: 2efb7a11f1aa4d2dc285fe2680cca22cb9f72f64
+But it did work for them, for years, and it stopped working after
+a stable update. That is the part we have to fix first, even if the
+setup relies on an accident. MSS clamping on the relay is the proper
+long term answer for them.
 
+This is partly my fault: I reviewed the patch and did not object to
+the Fixes: 1da177e4c3f4 + Cc: stable tags. A behavior change like this
+one should have stayed in net-next.
+
+> Maybe a better way out than a plain revert:
+>
+> Revert in stable, and in net-next add a sysctl, something like
+> net.ipv4.tcp_advmss_use_pmtu,
+> that decides whether an endpoint uses the PMTU it learned on its send
+> side for the MSS it advertises (even though these are two opposite
+> directions). Default on keeps your setup working, DSR-style setups turn
+> it off
+
+I think we mus take the revert in net as well, so that
+mainline and stable trees behave the same, and the stable
+backports do not diverge.
+
+Then a net-next patch is welcome, keeping the historical behavior
+as the default. Before adding a new sysctl, please check if the
+existing per-route advmss metric is enough for the DSR case,
+as Esko showed in the changelog. If it is not (for instance because
+it is too hard to deploy on many routes), a sysctl sounds fine to me.
+
+Thanks!
