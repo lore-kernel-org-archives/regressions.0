@@ -1,94 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793091054;
-	b=gtNo+xy7E5Xed6uZm2f8M0I7781xXpmZUC13f6/6bG5u1fPro/CeFXb2b1BLAF81mgGJ
-	 Hc8rbU/uzeH9l/W6SLbBP8thA2IV33uw7DNrZ0XZa90EVP2sKgPA44ptzf5kdSby3EMHG
-	 P5bJrlR/YMaGBLZinyy2zl9tkqR1nQuod6MXcnXdt90rj0qTT/1BPRdlQ6CY0nn/SJLpg
-	 BsjbcXnFLlFxeE59TZupyRxtgAO7NLVluvt3EGyJ9w+d1HEy8dEAR/ZAcZoiEghqpU9Vm
-	 IKO+h9ZCkuAFMeNCZo7d840ivlXHwiliPmCn8DjcY8TAGALT8v4BYfc0Q6jQSdJfq7Q==
+	t=1793094742;
+	b=cjd3pbRzOQRaLCBFbsrCEgZJ6HFVQXHj0SVkgQwU5I+n4MgKSn/M/lVF8KTPtGYhvcAb
+	 olpPcdrsYm19fbvmlznHzqoIqBLCqFR9Oi2iHX7vULKPJayVC8sdlIV9xVWYSKRAXNkYN
+	 MSXDzeL6JdkyPBV2RBWBsJS8hpCAKQR3yrFQPoxzdvMlXWs/Xhwub7Wlxq3yQJLmLP4HN
+	 Jq04+WjO/SrLmgw2MvGcecmSYdMSgMLMP65S05uVbBS+wfnhC+deE/SUp78yWcHDqHi0P
+	 cGPKVi/T3wCLhzmaOQTMiM04XRL0cMIEttIcb1PtbMmwDlHVxG+sabduRqEeHDa8h+A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793091054;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
-	 To:Cc:References:From:In-Reply-To:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Language:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=05pWYvdSFKuQTlIpLib2CW0D3AAIr02xLV3H0zVKlko=;
-	b=XHwxWoEPJl/TiUaIIzoPi0yZNEyBurWDwtcMv9UPy7gPKUL+uKW9agwpPpXUysNs9Hw9
-	 VP2IcxmHw8tE5hPeaww0YJUy45c3o4G+TBzRM+lBPuhJVeCsBUpIx1ixx6Yj5KzpY6uJO
-	 Uw8FSqyrSqGj8RG9xsY4ZeSj7+xEb2WXx2JVVC0xn/w7a70Te+PDVaARsm9Ts05TOz0TB
-	 PfYNkGM3QaOrsMirhHF7z1/7sgt3xAuOhj+7Z5BrxgYkpuF6hIW5dIiOI/l+Tdc7vtMVH
-	 azv5DddoA56ZhGad+IyoUaDSfD/U+xeRBaq1/NSZtzqMpS+RMrYL0FOF370z8hnz0TA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793094742;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=gU765r76gD1EGRDftTMSglU53FpTtOU0yEoP0lYj/T8=;
+	b=x1Zw3D8TYIXezkZg9eb4TfQmIkQwH+eiJ4IBacOnIQ2pNdy9HEW5nXBYHekIfiD28CzC
+	 zyS8UiyQt5MDre6oBdpSf//fukaL1tI75V0HWTAgh6amb3ZNijl4Nw3oX8DQLU3tNkEMi
+	 Ab6uU0qJA+BXXJCYGyDPczFVMeJHn/kz2TxbOAJVvODBJek40gsz+ke0cBdCNcq5nYDPm
+	 WFGLxw0mPpfRkiCt43gTUzVflGO7WMepj9+01TPJ2N3e/0cOozAT26U0XZwBqj1gkaEo+
+	 IG7vMtM2EJb8+DEg/4R73P2osJSt9QoyxGqMeoMqOBRbLJmvYYHtVpEUItxqB1mFFKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TCkFoK6B;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=SBiXBa5z;
+	arc=none smtp.remote-ip=188.68.63.98
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F3606A31B
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 08:50:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 768F3606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7F6606A31D
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 09:52:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A7F6606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TCkFoK6B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793091052;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=05pWYvdSFKuQTlIpLib2CW0D3AAIr02xLV3H0zVKlko=;
-	b=TCkFoK6BdyeWSDXRDds76wek9S8/AoUKw0AqZgkSUKz+KuZ145U9Hg1/xbosgXKWjp0MYV
-	1FRSULf2Y/yleZlqG+7HoxFVLmWhIqqS+jYY5iu8s0LFc4rJf2YWinND7g7uNutvZnLJCg
-	toIWx1EhYWbpwAmxFEIY1vQ5FfLjVY0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-583-nFA-GBoCPviUYEGwX7kH0Q-1; Tue, 27 Oct 2026 04:50:50 -0400
-X-MC-Unique: nFA-GBoCPviUYEGwX7kH0Q-1
-X-Mimecast-MFC-AGG-ID: nFA-GBoCPviUYEGwX7kH0Q_1793091049
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a210f93860so28111475e9.0
-        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 01:50:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793091049; x=1793695849;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=05pWYvdSFKuQTlIpLib2CW0D3AAIr02xLV3H0zVKlko=;
-        b=LHOZ7IrrPLiP8MicEZ6gUAXAqYnxx9VO9fPNBtY0WhgTAUCxqlKVd0zCCgx3GWDJAJ
-         PRgOTBIvmLTt2MF+aESJ9To4/YI18dyhoHo7Ex7Yd4OQvfxAjVTgTYqKGS5zSDIxrNuQ
-         2L1CSnEuo0qeV61/I190ISCBfeSgT9KCuDGybflO4z/uCOuw5diH8/uVaYyRda+OO3gr
-         9Qv4OIh7aFD8d8eyJFYwRNS1WjY8zipOSfbGAu20QJ8wysaF6QmzA0GfI2A6Z7TvUxYR
-         sXON/6KGDJcUWt9TcV9/iJNNwYVcjFmeZvG9k7Oscvwm6AaKeCbFYGSllbCgf6r284Kp
-         QQtQ==
-X-Forwarded-Encrypted: i=1; AKwUvBw+qQMia9Z4sBrbaxA1aYiiD/63tZBV8oiKj/PlyHKwwwzn1XJFXXudJ9hZbxvaaelVuzIDgMoVaB1NZQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYL06trKmlokJc0n4PFivYxFL4EDCvejHk0fS1fHjFSgMW20kLbY
-	WS8NvRELGIe/IYRaiv4DmyNvRWT1SSWCMuIbxOTrhmxJSCkta4nuozQZGVRfcPQB4VtrAueCJ5l
-	ioFngPI4k0DW/red8dsKdWPB7TqPcV5x1gvqzhD29DNM8tYsUpIUK3xZa3uN9lgWu
-X-Gm-Gg: AYBFou1hQR4ltIH7QjhH1TeXba65k9Nfad4o6H1HrHci8WY9aasDz8DTZMLa8eqPopK
-	dh6xIVrJ1/qzthSlUiFviG0JxKn/OPFbBGi6cIaD79UdqPESaPTnXwY/SmhkpRkR05p6/0++vyx
-	QqcH4UK/4RQhPSuVqWTPra6JB3kQhn9xTeN+KVybHjkA+cvxo4KIhb1ssXTUxgoy/fJNV0LTh8q
-	o2vbWuQmDZQjaZHS4hFgVBl3pg/gfHuErs1QMdu5s+KNt+9FMrTi+kzb63lIxrxY0LfqvLWthWM
-	+7W+V+w5apqmHjIZFv1gppBXW/X5Sty9u7fQudPfnEteWpEjay1PsO4kAepXKncC+KF8BdfKSCo
-	6HlzSU0uznrMGnfLh2kygMEw6B7W4ed/MX7JXoiN0S82Fs2klwBDWB5N8YvjYXslk/QLU2kAJ0g
-	==
-X-Received: by 2002:a05:600c:8b86:b0:4a3:59c9:a754 with SMTP id 5b1f17b1804b1-4a35acb17bfmr169457665e9.22.1793091049495;
-        Tue, 27 Oct 2026 01:50:49 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b86:b0:4a3:59c9:a754 with SMTP id 5b1f17b1804b1-4a35acb17bfmr169457205e9.22.1793091049010;
-        Tue, 27 Oct 2026 01:50:49 -0700 (PDT)
-Received: from [192.168.188.234] (ip174-129-192-82.pool-bba.aruba.it. [82.192.129.174])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e542ed998sm6698767f8f.13.2026.10.27.01.50.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2026 01:50:47 -0700 (PDT)
-Message-ID: <7136e772-513c-4ee3-b802-a9666fb8bdba@redhat.com>
-Date: Tue, 27 Oct 2026 09:50:45 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=SBiXBa5z
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jDQl14Nbgz65v9;
+	Tue, 27 Oct 2026 10:52:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1793094733;
+	bh=ZlwZtPeJK9YxrP9jD703Sz0Db+v1HcjsJo8q4VDmALk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SBiXBa5zKLXz063nNhDdNyvv7O47A3C6jISxoFWg/IMLAz268UyGLAegGAbLQGKEI
+	 j/V4UXYEL2CIEceFv/t5j8LwMLQkTmzpINx6ZY2ktgUWVohb92rNbC1omIyIjv5PA7
+	 MDvpESYnw1v0BEi3dHldIF2Nx+8uwMxaAOb3Bsm8FcmKzN11D2nOnqRjd6Fput7afs
+	 4fvUgo41EFXusJtz0EG/YgODSXn0q4vsEYXQdFt4yhASXwTqo6Jb+qpYuzcXrpBGWJ
+	 D2SoA8ScBEVIcABbxEjDDmfKpaAX4LRAGSYNIPhZ3QwCkbqaqrMMuNuCqfdbecO2mq
+	 1dghAPDGQz1UA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jDQl13fRdz4xLY;
+	Tue, 27 Oct 2026 10:52:13 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jDQl068RVz8sgW;
+	Tue, 27 Oct 2026 10:52:12 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 110D15FA4F;
+	Tue, 27 Oct 2026 10:52:02 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4e7a9bc8-4981-4dc4-bc2b-92579a694177@leemhuis.info>
+Date: Tue, 27 Oct 2026 10:52:01 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -99,57 +75,127 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/mlx4: always create the eth and ib auxiliary
- devices
-To: Peter Morrow <pdmorrow@gmail.com>, Tariq Toukan <tariqt@nvidia.com>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Yishai Hadas <yishaih@nvidia.com>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- regressions@lists.linux.dev, Leon Romanovsky <leon@kernel.org>
-References: <20261020164239.3808903-1-pdmorrow@gmail.com>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20261020164239.3808903-1-pdmorrow@gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4gQAcXT1ZD8J0B8NWoQVih1dyHSflndmD_H6fcf9bdI_1793091049
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 1/5] usb: xhci: clear stale bandwidth data after
+ hibernation
+To: Niklas Neronin <niklas.neronin@linux.intel.com>,
+ mathias.nyman@linux.intel.com
+Cc: linux-usb@vger.kernel.org, Harald Judt <h.judt@gmx.at>,
+ Lovekesh Solanki <lovekeshsolanki00@gmail.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20261006152427.3735383-1-niklas.neronin@linux.intel.com>
+ <20261006152427.3735383-2-niklas.neronin@linux.intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20261006152427.3735383-2-niklas.neronin@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179309472247.1118883.12082346900975870547@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 110D15FA4F
+X-NC-CID: hAXmz8Jh0ZAqkPUxytxGoXIFl8n6qXIX3M6vzSXbks9byQqK/a0=
 
-On 10/20/26 18:42, Peter Morrow wrote:
-> Since commit 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the
-> auxiliary bus"), mlx4_core creates the "ib" auxiliary device only for
-> an IB port or a device that advertises IBoE. Before it, each mlx4
-> interface was offered every device and decided in its own add callback.
-> mlx4_ib_add() accepted Ethernet ports without IBoE and registered them
-> for raw packet QPs only.
+On 10/6/26 17:24, Niklas Neronin wrote:
+> Controllers using software managed bandwidth accounting maintain
+> periodic endpoint bandwidth information in struct 'xhci_interval_bw_table'.
 > 
-> ConnectX-3 VFs on Azure have an Ethernet port and no IBoE, so since
-> v6.6 they get no RDMA device. DPDK's mlx4 PMD, which needs only raw
-> packet QPs, then cannot open them:
-> 
->    net_mlx4: cannot access device, is mlx4_ib loaded?
-> 
-> Restore the old behaviour by creating both auxiliary devices for every
-> device and letting mlx4_en and mlx4_ib decide in probe, as their add
-> callbacks did. mlx4_ib_probe() returns -ENODEV when there are no usable
-> ports, and mlx4_en_probe() binds a device without Ethernet ports but
-> creates no netdevs, as mlx4_en_add() did.
-> 
-> Tested on 6.12.111 on an Azure VM with two ConnectX-3 VFs: each gets an
-> eth and an ib auxiliary device, and DPDK attaches both VFs and passes
-> traffic through them.
-> 
-> Fixes: 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the auxiliary bus")
-> Closes: https://lore.kernel.org/r/20261014133951.3219055-1-pdmorrow@gmail.com
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Assisted-by: LLM
-> Signed-off-by: Peter Morrow <pdmorrow@gmail.com>
+> Each root hub port owns a bandwidth table and a list of TT bandwidth
+> domains, where each TT has its own bandwidth table. Virtual devices
+> reference the bandwidth table of their current bandwidth domain through
+> 'bw_table' or 'tt_info'.
 
-@Tariq, to avoid stalemates: this is waiting for an explicit ack from you.
+What happened to this? This from what I see fixes a regression from the
+7.1 cycle, so it would be good to finally resolve this for 7.4-rc1. But
+I see that Michal's review comment wasn't answered -- is that what we
+are waiting for. And I wonder if it was unwise to bundle this regression
+fix with other changed -- and if it should be resubmitted separately.
 
-Thanks,
+> Historically, resume from S4 re-allocated the entire xHCI driver state,
+> which implicitly cleared all bandwidth accounting data. After the
+> hibernation resume path was optimized to preserve parts of the driver
+> state, virtual devices and TT bandwidth information were freed and
+> recreated, but the root hub bandwidth tables were left intact.
+> 
+> As a result, stale bandwidth accounting data could remain in the root
+> hub bandwidth tables across hibernation resume, leading to incorrect
+> bandwidth calculations after devices were rediscovered.
+> 
+> Fix this by resetting all software bandwidth accounting state in
+> xhci_rh_bw_cleanup() so that resume starts with a clean bandwidth state.
+> This includes 'xhci->num_active_eps', which must remain consistent with
+> the cleared bandwidth tables.
 
-Paolo
+BTW in case this needs to be resubmitted:
+> Fixes: <2a70e5dc0301> ("usb: xhci: optimize resuming from S4 (suspend-to-disk)")
+
+Drop the "<" and the ">" please.
+
+Ciao, Thorsten
+
+> Reported-by: Harald Judt <h.judt@gmx.at>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=222071
+> Suggested-by: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+> Tested-by: Harald Judt <h.judt@gmx.at>
+> Signed-off-by: Niklas Neronin <niklas.neronin@linux.intel.com>
+> ---
+>  drivers/usb/host/xhci-mem.c | 16 +++++++++++++++-
+>  drivers/usb/host/xhci.c     |  1 +
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+> index af8d4b74c4ba..75577f441cdd 100644
+> --- a/drivers/usb/host/xhci-mem.c
+> +++ b/drivers/usb/host/xhci-mem.c
+> @@ -1903,24 +1903,38 @@ EXPORT_SYMBOL_GPL(xhci_remove_secondary_interrupter);
+>  void xhci_rh_bw_cleanup(struct xhci_hcd *xhci)
+>  {
+>  	struct xhci_root_port_bw_info *rh_bw;
+> +	struct xhci_interval_bw_table *bw_table;
+> +	struct xhci_interval_bw *interval_bw;
+>  	struct xhci_tt_bw_info *tt_info, *tt_next;
+>  	struct list_head *eps, *ep, *ep_next;
+>  
+>  	for (int i = 0; i < xhci->max_ports; i++) {
+>  		rh_bw = &xhci->rh_bw[i];
+>  
+> +		rh_bw->num_active_tts = 0;
+>  		/* Clear and free all TT bandwidth entries */
+>  		list_for_each_entry_safe(tt_info, tt_next, &rh_bw->tts, tt_list) {
+>  			list_del(&tt_info->tt_list);
+>  			kfree(tt_info);
+>  		}
+>  
+> +		bw_table = &rh_bw->bw_table;
+> +		bw_table->interval0_esit_payload = 0;
+> +		bw_table->bw_used = 0;
+> +		bw_table->ss_bw_in = 0;
+> +		bw_table->ss_bw_out = 0;
+> +
+>  		/* Clear per-interval endpoint lists */
+>  		for (int j = 0; j < XHCI_MAX_INTERVAL; j++) {
+> -			eps = &rh_bw->bw_table.interval_bw[j].endpoints;
+> +			interval_bw = &bw_table->interval_bw[j];
+> +			eps = &interval_bw->endpoints;
+>  
+> +			interval_bw->num_packets = 0;
+>  			list_for_each_safe(ep, ep_next, eps)
+>  				list_del_init(ep);
+> +			interval_bw->overhead[LS_OVERHEAD_TYPE] = 0;
+> +			interval_bw->overhead[FS_OVERHEAD_TYPE] = 0;
+> +			interval_bw->overhead[HS_OVERHEAD_TYPE] = 0;
+>  		}
+>  	}
+>  }
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index a9e47e178c28..4708fabba84a 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -1185,6 +1185,7 @@ int xhci_resume(struct xhci_hcd *xhci, bool power_lost, bool is_auto_resume)
+>  		for (int i = xhci->max_slots; i > 0; i--)
+>  			xhci_free_virt_devices_depth_first(xhci, i);
+>  
+> +		xhci->num_active_eps = 0;
+>  		xhci_rh_bw_cleanup(xhci);
+>  
+>  		xhci->cmd_ring_reserved_trbs = 0;
 
