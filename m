@@ -1,88 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.38.247.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793105767;
-	b=2KBQqrC2b+awwILzi6tnji5F6AzBzyYzXKj5mzhUIRS+6fDpv57+3GNRFtWB+RYxzUFs
-	 8bWgRUhGY2whjr7U3rBpIN0rJ3niFAUKwYpupo9dPwsfuQcRC1foe2UeGberjjcgbq91G
-	 kQdIXub8/XQAFhwauOnppRf784+9KdLYCeiKEBmg/dvXqQQF3y0BV5MXX5Q+TXeo4Bwkw
-	 xsR9ysjPhQpDXctoxD8moOVwCffnMrqm97ux1hL+wr90if4j3Kwmybgb3r6jONM/M4koI
-	 lvbgoYesD67yBSKhDTlurmvEYstftKWE55+BgUyjpA3I23ZKyDdbJblWWCU5XHLG2gA==
+	t=1793105868;
+	b=HuohTDLHvtpCTsO/4Mb4lGwnN3ak+GvFbRQF5AxIOVd/Zhz1OBPHKRiKTV1cU19B0nKO
+	 bMDkEBypfoA2W7h+fC+GSd7i6B5h11CgW/TmVQjVv9e2FWEqCZ+297oMoXVWvxeKp6+DU
+	 Y4J77F8Im+sYJvLxA3WVK/o7HW+SXRs7bp/VD0xEgQe72Kp47lyQQ81mstGHjB+5YYrfq
+	 Nk9n17sBYyPek0xyaUmnTjPKwBmgOAPOoluKzta0ft07RkpoKcT+lz6uyeyGEuX9ltIHQ
+	 CUwy3rExNQh2+W+9KbZr/YvehzX1LWp9t5tkLirxH8IkjJvSM+HgbUMaAL9O0wNbM6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793105767;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=lcXO+Vd8p/zIO/CVoOpxlqwT9gefkkK9PohzmT8jAVo=;
-	b=fZXY+uqRvl+A9JR+r/kBF7BBcZkb/53zFtoY6HHB6gEeMBbCdbplb4BRvtG/KvK6OvHX
-	 SDW7gUsWTrygRGWDGk9V5umw53h6dknQ1ChtEE+CnH1THwH1CycpmgXcnygsYXOVxZ/2r
-	 2Wv33fjAv6VJ6WtA7Yk3VOTpb4qCRnDL7FFslgcofeYD72DsTv9XYHslx/y4gR8Ui0Ips
-	 uWJ5wNbmQ9lbtUo91n3e4fdoY6t7J8hdDhDUmT4f8Ak3umpNq9goG7Nhx6p743fl0LX+o
-	 4B5njRqpQBTl016WAeGjdyiE7Km+Mp5NdavuOZAAIYylS7xORTy40aQJikiDpSXjyuA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793105868;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=521a5KiHMV0SqLCMajvruFvZwpk1Efpz42h4U52rsZI=;
+	b=q3ZGthCu9q8N1izjr4XIk9X0Jr/QnM87mYMBMro1nIuFw1yVlAG9MWFFtROHbFHz51q6
+	 u9Tk5P/65qltMm3LwFz24CVSBGl6Fdmy8gjAE+KjoFanIMDhaoA8WLVfEjLYn5UijBVuV
+	 CtuCNvls+rUgt9xDmcHuAZolmI/PKmclC+Hl1NDubWiyyBcb1uAbPal59Zjxbb8l5yhpi
+	 AnhPCwoVa/T9OwBJbbsx2XSh9qBbZ0asNHXwWfOtEolcXyDoZPZnrLEUK/3VUbWz33i9V
+	 xYSdknYrOaTgA7uRpXLJ+igJ7R2Eiz1fotj9A8+phCNmGkCk0DcFpqLTUUcpbrXmwlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kernel.dk;
-	spf=pass smtp.mailfrom=kernel.dk;
-	dkim=pass header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=y6Q0i3La;
-	arc=none smtp.remote-ip=74.125.82.42
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	arc=none smtp.remote-ip=46.38.247.119
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B747606A321
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 12:56:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2B747606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=y6Q0i3La
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-1a2761c69fbso3116986c88.0
-        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 05:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1793105764; x=1793710564; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lcXO+Vd8p/zIO/CVoOpxlqwT9gefkkK9PohzmT8jAVo=;
-        b=y6Q0i3LaL1uUe5j9IUl5XXPvF4zI5nVBHo3UnBwB5cmq2BrNM5H8hBuxpcwvJI6T0T
-         MbPLbQETUQKSWzegiH14W4P9EOKAq9rWcvy04oImD6eTy/2lTDY/qdf/nivK60dG14Ri
-         yNTwsJ7U2cTpC5AIoRgOBCpy36AqOZZ5N6vNuQikeAo6nlImai2GXAkaNZ8Ktwi4JZUb
-         nTnz7/wb35leO0nq1govKQ50g4HI8gSZHsW5fmsyY5fz+Bm2fUupEsZak6Ep2JzC6D7b
-         mpNg+g396UjMMy/WoRC3SjlYsepl9x1rzragEvLxd8RN2zAzL4V3mxv56RnH4AYO/ctZ
-         cl3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793105764; x=1793710564;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=lcXO+Vd8p/zIO/CVoOpxlqwT9gefkkK9PohzmT8jAVo=;
-        b=elZb0SzfbY9AY4Lddp+/MArUFcXxV03x4NUZaxsIsi7PZRzBLEvhHlg6MgJLY/Y0WH
-         qdTV4JOkIXKBAljftjofq9TquxuIDDhMfZujAslyJUuY/FS2heGA4nGwsJMbCnlJbg2Y
-         KPzHm8NVQUYGbfjI4LZpZlafe+uU0xBuwyk9S0DKPq6UmFHq824umaI44QYOgBS0Y0ea
-         8vsBsH4RGgEQG8e4HQKrOu3QEeCWf56/n35YyNch/prb3GnPB9Mh64Pt5oE8xjPn94n9
-         YoywfgCLC9JHFaCjksV89uiwEcTcLFiGnGduNmXvymkGc/1bsVD5UnLRhMmOsQLMjjBe
-         lTLg==
-X-Forwarded-Encrypted: i=1; AKwUvBzUd2GTnHWIDvBFO2NRx0g0uMNBZDH03UMKxj2RZCDMDUFyTjgtY9e3FlcYScoLaeGW2QfjprxGv+bBmg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIWEeUYE1YWJCUPYq7XSsVCyoK/WYgPGnkISTeNc3OmclMrrkUy
-	+VwmT3pA2gW/bJC2ujTAMquiml7v0fm5PMAyox4u30Vq8MhAzKoymTe+cxiEvtfIRIE=
-X-Gm-Gg: AYBFou0BHpGc57Vx1UEPDFU2x3Tm8zfONd4+9gO4c/VBESrhvysmvVFxTaJu/OgHD4T
-	Ar8P1tHafeCLXgVqmgsR/GFg2z84lz7y1VNL5+04Xiz92rCTahH/HxNUuPz22bXpWexxE1kfkO+
-	irxYW+NMA7+zqVuVxZPI1CfuPMbJbE/y++KEhOq7GqfKdWYZw5+zAITYyaPYAhU2j1dBWg3dlC5
-	BjsGYiGYJIb6L9na/wzkYoQixgIygYyvD6He6KJVTUAKUQyycSkeWG/vTNvhgjauOLuxv/T6VO5
-	POVpFKm+U+BFhcG2KhHAfEqeX8MrIG0kTfX6SRdps8z5a6ZcfjvzIdtO5ka+1t/vWLXVNibwPHx
-	seukshM6aSdG7NO2NEvJJlHZSZRRDrUx6YY6UsDqmwHk1CkxM6yXSzpsvRenmlTgDElvGfGIq8+
-	HowJfKGDKPm5tbLAtVjKWLh2pCweLj9HWVUT21+5K4osVKyZhAtUXnXvszk95CdV+KtVZOAZmSK
-	QP0yBp5IiRX4QPVpCAXUQZa6J92XxSuOIm0Ivt5YoEn6nbvw7EtU4DVhduP5Bj2ELnT0i9gwfe4
-	MyNse9dRu+TbfEWvb+J6YipjkCFD+lQKxRZr1ZE=
-X-Received: by 2002:a05:7022:90e:b0:194:3a84:e67d with SMTP id a92af1059eb24-1993f6d2c4dmr19379065c88.44.1793105763829;
-        Tue, 27 Oct 2026 05:56:03 -0700 (PDT)
-Received: from [192.168.1.106] ([198.8.77.135])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1a58093678esm4301247c88.18.2026.10.27.05.56.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2026 05:56:03 -0700 (PDT)
-Message-ID: <5f575079-a2a1-4f42-ba1b-204730a5402e@kernel.dk>
-Date: Tue, 27 Oct 2026 06:56:03 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B131C606A31D
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 12:57:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B131C606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jDVrf30L1z8ZWh;
+	Tue, 27 Oct 2026 13:57:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1793105842;
+	bh=F9UN7r5NdJQ1zWaDOKDK9sE858rSa5l4u47sjcAp0mM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PoO8LaOxz+IUHezCI5wUu3yNUk4Ok5X8lSMi5sp+qKARff4lTJEOnvLWOMeP3VqXS
+	 j5ARMaoaYdgzVtoJx50xrQDkD+LZYRbVtcR64e/uu+9X7wD1YfUeL9fcZSenFeg65J
+	 p//6dePZCRFuefT5Gt1KApYbfRXJpdndMvoFK9MgIU3Wm04+apwp7mpBT9VfuCeYkA
+	 kBwxfkbtakuWXvlpU0Ybxs4LpmA7bkdwz2wmTEXSV9e2pUcObv4D62I+yixaXGxfDv
+	 hygIDMMTosX2uqjwElmKR6ciaVV+k7Qc7230K4annS0iLZQJytAkpHERcIaD+nygy+
+	 uL6uJN+rOYIOQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jDVqD0Jmnz505Y;
+	Tue, 27 Oct 2026 13:56:08 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jDVqC0LkBz8sb7;
+	Tue, 27 Oct 2026 13:56:07 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 027775F9EA;
+	Tue, 27 Oct 2026 13:56:01 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <7472a96a-313c-4bf3-a1b1-5687c010f7e4@leemhuis.info>
+Date: Tue, 27 Oct 2026 13:56:00 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -93,33 +72,83 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] io_uring: requests can overtake consecutive drains
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: io-uring@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20261027043323.98916-1-kmehltretter@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20261027043323.98916-1-kmehltretter@gmail.com>
+Subject: Re: [PATCH] pmdomain: qcom: rpmhpd: don't clamp gfx and gmxc before
+ sync_state
+To: Ulf Hansson <ulfh@kernel.org>, Bjorn Andersson <andersson@kernel.org>
+Cc: Oleg Keri <okerixx@gmail.com>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Abel Vesa <abel.vesa@oss.qualcomm.com>,
+ Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+ Rob Clark <rob.clark@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20261021080517.2161-1-okerixx@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20261021080517.2161-1-okerixx@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179310576257.1469982.4921492503478710883@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 027775F9EA
+X-NC-CID: W4f2xB7Fsat1xO23TYCPIE9b90XxyjJEIuD+ilO0bRFVn8+02DE=
 
-On 10/26/26 10:33 PM, Karl Mehltretter wrote:
-> Commit ecb6817b769f ("io_uring: end the drain when the drain request
-> completes") lets a request submitted after one drain overtake a second
-> drain that is still running. This breaks IOSQE_IO_DRAIN ordering for
-> both standalone and linked drains.
+On 10/21/26 10:05, Oleg Keri wrote:
+> Until rpmhpd's sync_state every vote is clamped to the highest corner,
+> so that hardware the bootloader left running keeps the rail level it
+> needs until its driver takes over.  Nothing the bootloader leaves behind
+> runs on the GPU rails, but the clamp hits them anyway: the GPU clock
+> controller's probe runtime-resumes and suspends its GFX and GMXC
+> domains, and from then on both rails are pinned at their highest corner
+> until sync_state.
+
+Ulf, Bjorn, FYI: this is a fix for a regression that was reported in
+-next some time ago and recently made it to mainline. Linus hates when
+this happen. Strictly speaking the drm folks caused this and thus would
+have to fix it, too -- but there iirc was some reason why a revert was a
+bad option. Hence:
+
+could you hence do us a favor and review and mainline this rather sooner
+than later? Maybe even before 7.4-rc1 to prevent more people from
+running into this (three people already did afaics).
+
+Ciao, Thorsten
+> On Glymur gfx.lvl has 14 levels and the clamp holds the rail at the top
+> one, 0x1d0, while the GMU's own performance table ends at level 11,
+> 0x1c4.  With the GPU driver and firmware built in, the GMU boots long
+> before sync_state, and its CLX DCVS calibration does not survive a gfx
+> rail held that high: the firmware gives up with HFI_F2H_MSG_ERROR
+> 0x007306c7 (ResMgrCalibrateDcvsLvl), the first HFI_H2F_MSG_GX_BW_PERF_VOTE
+> times out and the first GPU init fails.  On the Lenovo Yoga Slim 7x
+> Gen 11 this means the compositor cannot start at first login.  Pinning
+> gfx at level 11 or 12 instead fails the same way, level 10 and below
+> boot fine, and pinning gmxc alone has no effect.
 > 
-> An LLM helped with the review and reproducer.
-
-Please have your LLM also make a patch that you can send out,
-then you get credit for fixing it as well. Same goes for the
-other one you sent out.
-
-> No privilege, special device, SQPOLL, or unusual setup flag is required.
-
-Puzzled why this is necessary to state.
-
--- 
-Jens Axboe
+> Leave gfx and gmxc out of the clamp: they have no bootloader-configured
+> consumer to protect, and the GMU votes them through its own RSC.
+> 
+> Fixes: 93b6c8d10fad ("drm/msm/a8xx: Enable CLX feature on Adreno X2-85")
+> Link: https://lore.kernel.org/r/179248663855.32151.9955864156939592299@gmail.com
+> Acked-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+> Signed-off-by: Oleg Keri <okerixx@gmail.com>
+> ---
+>  drivers/pmdomain/qcom/rpmhpd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
+> index fa8fed5bd3e5..2c9d4beeffbe 100644
+> --- a/drivers/pmdomain/qcom/rpmhpd.c
+> +++ b/drivers/pmdomain/qcom/rpmhpd.c
+> @@ -1006,7 +1006,7 @@ static int rpmhpd_aggregate_corner(struct rpmhpd *pd, unsigned int corner)
+>  	unsigned int peer_active_corner = 0, peer_sleep_corner = 0;
+>  	unsigned int peer_enabled_corner;
+>  
+> -	if (pd->state_synced) {
+> +	if (pd->state_synced || pd == &gfx || pd == &gmxc) {
+>  		to_active_sleep(pd, corner, &this_active_corner, &this_sleep_corner);
+>  	} else {
+>  		/* Clamp to highest corner if sync_state hasn't happened */
+> 
+> base-commit: 2efb7a11f1aa4d2dc285fe2680cca22cb9f72f64
 
