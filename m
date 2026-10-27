@@ -1,55 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793106200;
-	b=GdM1KvVDlATzCdj+PDX2ojABX7wARef3uzu/v1jiMf6/DFtKQfXIvxZjZ3IfCC3RVKgz
-	 yKbNG9uhVuky3uZlp59ZPgiGQeOTqAi7b9Al/IvYuIvIHw2mzi6u0+IJu0NOD3MSXJLUf
-	 ZiSEp/ymGEFB3/3YI56YjTwcRrV1+Guzi4XFQND9r3sN38RMtaY8BZytxznB4Fv8Z5jDV
-	 6JNZOibxlqHUA/WxT6boiGTIXFr1kvR56MoBiA3KztdHspLO39vUSwzVogi2G5oXK5ufD
-	 adXWlfh3XfGHZ9lL4ZSTOsfHdhY5Gu8CuoA8POlmxe8e69v3na2fWbQoo+rZkPXZShA==
+	t=1793106791;
+	b=l4Mp7lwovuvIbnrYJU+YMTWktX//rRzHTXeiQ5Tyt9sDyOBti2tcGnQLFzheRMKzG+eF
+	 QpfIo8xU57ZGAmIg6g3UhXS8Vq+GBLbkF8QARv10vWS18D6zPuYIifFALXOnpL0nO5rrc
+	 kb2REf13tkqae1gOkK+dw8LssJg1XxNnDeFYHF2NdTN3UrjZtXjy3VDIjLYHV+hmL8gpJ
+	 5qMFmOwS0UkLDqpHdHcN0EzuJGL+MQ14WCOOc3/uWbSphM7WPgVSpMe5TfsUtisbmiu4Q
+	 VrDviF0PLTxBzWKO6sshHwEs58sGuDcggD8ABuWJstm/rlutYlQ2tpvhFzpyTNDKQwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793106200;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=gmp1+598YRgh8xV6vRtgePkT+IRpuCg0m/DIj26GqFI=;
-	b=5gV5hDyKZ90uWghxul+7pz3hpkDhjeGIJod5g1cniC7OR9ECqOh95IDOXw4faFSW4ttG
-	 pXwLQNS2GoEh8h/3GpgQpb/zNInQGczUoAAlDcNnAfazFKVM84PaaHSg4fBvCG8h8n6yC
-	 /0Wok2eGAuEIE7Nju7dZqR6cqyLwrar42nUGXX7TfhMM6i4YU5NmqR8b5TYm/hKoIC50S
-	 AFhAAo3Sy53COJ6Jxg+Y6RETs5M+03o/hbStn4MFOg0Wea63ML0+89f+RJuNSb6ygSfA7
-	 YMgDpX2Y1uMlBrP/fLZX/Xm5p7xBY4Evi4iQGHSOgNm+8Mf+UbjyYDDEqTHFW1y6Ceg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793106791;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer;
+	bh=NLb4nDnDa6CheKrcmNiCI0BRgJPIlEmNmuOLfa1pfGM=;
+	b=RWC7X7AzGZ36fuwUH46LJ8/tatMtLn/SdXZReFudPEgLm1Q9ptJ1iPwJmjai/58pbO0n
+	 v67chKciw2J+Nf+Rj+RTuFqqUyi5+swszaA9c2c1YZ+5UFPNt+9LSyTHToQitcZUf2fhi
+	 sL+0mHmyhAb5NZ4dNOAqDlwzu3v2r/JQZZvbwz4P55eF2GA6wZfh82+rPqMRGyrGxHY+J
+	 xKAAIVD7HljdTGODNCOr86kmmmMdeiyrzwQqxh1N0ExfEYDYqqHeXGeHGr52X7SdluJve
+	 zYTTXMi6/t5gMW3Ldr2JFX4gfMoUQlIPmYcwT/I9v39AQj6SJgTnWL+YbzR0PRm6rCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zb0+D6Hm;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WAHkZqdH;
+	arc=none smtp.remote-ip=74.125.82.169
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1804606A31B
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 13:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23FC606A334
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 13:13:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F23FC606A334
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zb0+D6Hm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7EC1F031E0
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 13:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793106194;
-	bh=gmp1+598YRgh8xV6vRtgePkT+IRpuCg0m/DIj26GqFI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Zb0+D6HmPiKSpTqonVpxXsiXeOTH+oqCk7Iio8ruOww1rFr+CxM/ODGBvWpPShKKD
-	 pwjhdNOVMw2TkdrfC52ZMGS4M5aUkXRAn6pqS0bUi8kZi1KBBQRHI9SpBahgNb4vVb
-	 BVaoij/PjwaH265ov6Fg9UIteyUiAhqj3Wl5HieRgALSFvnInFjy2iXjg74p76ioCq
-	 mcVn/yDAQ5hGXbmWasSqWpRo8SGZKkF4cj7oGNovdscP5UFxl/I5iYUIKZQrG0l/Pi
-	 +qcccqgFa/b1Fj9IdD1r1HD+Rp0ViROdkJqHhWSFd/Wsu4MRdcNphCVJ4aGhO1Kf+h
-	 cbcIJISxCLX3A==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3ab3b29a210so9781031fa.0
-        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 06:03:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwlA4pgBmTjHPZbaCA7g6dPmaA99ZblAz2vBGIaYJb5j3vWbpqn/qEDOi6J6u6xK9miQ58oTnUggOF6/A==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJNYdJ9+fgU6nmPSf4uvg+qW/s7DsIqKneN+ju7KFuqxStK4YLD
-	EyIP55fYAJa5ldtDPC9z+N5WJLyUTBRdXyN/lf+5GVXSf0ps6x/dtpb1XSucHjnY3zCebCuXNtl
-	pcqElRnB1r8rv6RA0DL5nEymcTPCr82I=
-X-Received: by 2002:a2e:be90:0:b0:3ab:1dcd:934c with SMTP id
- 38308e7fff4ca-3ac9085cd16mr5034811fa.1.1793106193067; Tue, 27 Oct 2026
- 06:03:13 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WAHkZqdH
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-36a17a332ecso569592eec.1
+        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 06:13:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793106790; x=1793711590; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=NLb4nDnDa6CheKrcmNiCI0BRgJPIlEmNmuOLfa1pfGM=;
+        b=WAHkZqdHy165HIZu7gN9Fh8SNv6AdIACgCAqIKoNZyZZ1GknCQCuH+cjnd1MnLm+NT
+         YjNiXLb3ynfdRvPVfr6wErkMTc1NAq2Dxx40L8GbtTmYkerw/asIFdsyIx0+y1iW8DnP
+         GBrFDSYUyWDMutMOKEg54X7HSOqSMUyR04s0m6I/u5vY8uRkGl2nxgmXjvmChKq0ia/2
+         221OGIVLHofNuxGBkuvg3GSkT0Y/84Oil/9Wvzoi9m6hhzZEoPKBw05A2VDjnCtj3gB0
+         PLrn05F1zSg/PdJae8y+HoLExTQqFUrw6jMPuUl4VCbEa0hk6IjkU02ORlXFXi2uG42B
+         G6hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793106790; x=1793711590;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=NLb4nDnDa6CheKrcmNiCI0BRgJPIlEmNmuOLfa1pfGM=;
+        b=lq2nHVphdREFL9aRqt9mu/goaEIFlgv6SdRames21Jt5pKF9Y0ogRUL5HVncZWWoyl
+         qEgrPtCZxdcpq/f7iJGrC6uMcp21Wra3ProzHXiYSmwNwnSKrQANmnAFoeL1UEGHkjnv
+         8kUTtE4/mPIjIjuj/lNwybIAkv7jADiKAVgnPFLfEzSm1mJmYaeWdNLo3yyQYUYQfIJL
+         869zJtEiraLqU5/LIqWh1VmDUFz/ikvDDOewG3jBhC8CjhWYpbblrrkgSskVPxqTcSBN
+         BnwIz5GeiQ0DpBr0AQ/b5Sy4abFPd1Q0JdgKMlkj3Rf5Sj7UsNnrj1C4yfItyrJTmTv8
+         PVKQ==
+X-Forwarded-Encrypted: i=1; AKwUvByLJlS54+gl9Nt5YMByG7JkYcd+TGfSDgOF5MP6+30IZ4SkZZuMdJpNdUIcOQBUfbYXRnidiOizq4Etmg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJWjEz9An4+g3x3pAfWwq6pMVeG1p1hGFIn/vdSpzhByC+8HSxw
+	D19tjFXAkehOfspD9aGvm/R6AJBW0VcdmlMocFNr/vw+LSxhBewOqk/s
+X-Gm-Gg: AYBFou2KOZcmItvejsUJl3fi5zwe0GYsgqCiVHOp9KOIpYx5//vJlnzw9eXAL9TsL/0
+	TM+5p2Xhbifkwz53Trt85R+g5Fhh+OJiUo9ZNGdOTvIQH0MmJS/5e4DElcHPOCbgbfCWWTDNSMz
+	/uZsOBzKrzrMIrCoYd6tGRlSwfpqzRB6y1fYaHWTFovKUnCFyDsnD1vH9eZCU+XNU5+fVPIg59m
+	xs1gVTJ/0IuoboXHupC48dx3fJm62Tp1pESQRtizAcI8XT1Kc8vi79dM3HwsmNjW0LpHrbsy6ac
+	cnAgHc4jh9l9wmkvbypFLZjIXYq2kF0LOsQAeJ7Yn9pMJQQbvzs6JBJtsuaX2/F+qS6i2N0Jq+1
+	0M1cAqQs+sXWW407Aqjr6kjL4CrlIaLNVu+BcypoukCvk4mFNu3UO/9wa+SeoM4WdX+ucfcAyhD
+	NOUiGb3DmsfBf9F2yZcAWekfX18xNKjackuxOwINV+RyY+fXDjTkvdXGdncgqqE2HYnZqB1oTXv
+	rzekdCjBi2J1WmOB91EQv3RY+w+3nFU8PCkASbigdo+1ny59FcGsm/sS+tzgMYYmqaApRQ+zhW9
+	PicE/N31jZW9JA0h6Q==
+X-Received: by 2002:a05:693c:88c1:10b0:367:5e31:ce29 with SMTP id 5a478bee46e88-369e84fe37emr14011879eec.20.1793106789881;
+        Tue, 27 Oct 2026 06:13:09 -0700 (PDT)
+Received: from smtpclient.apple (v133-18-180-162.vir.kagoya.net. [133.18.180.162])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a002a486csm19339403eec.22.2026.10.27.06.13.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Oct 2026 06:13:09 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -58,101 +89,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
- <20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com> <e25fd292-5391-41fc-a324-0ec260828415@linux.dev>
-In-Reply-To: <e25fd292-5391-41fc-a324-0ec260828415@linux.dev>
-From: Eric Dumazet <edumazet@kernel.org>
-Date: Tue, 27 Oct 2026 14:02:58 +0100
-X-Gmail-Original-Message-ID: <CAL4Wiip=TkP2hmOFR-1Y-CU4rYHY_q=TBDhK6RmTj9UEMQ95Gw@mail.gmail.com>
-X-Gm-Features: AclHuK9rU7oOToqigMxIaaqt9b1_ic_1sOzFF6P0HJqOg7YsuT6ZI5h9HNYfk2s
-Message-ID: <CAL4Wiip=TkP2hmOFR-1Y-CU4rYHY_q=TBDhK6RmTj9UEMQ95Gw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
 Subject: Re: [PATCH net 2/2] Revert "net: advertise TCP MSS from the
  configured MTU, not the learned PMTU"
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: echoowall@gmail.com, netdev@vger.kernel.org, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Ido Schimmel <idosch@nvidia.com>, Shuah Khan <shuah@kernel.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Esko Mobius <echoowall@gmail.com>
+In-Reply-To: <CAL4Wiip=TkP2hmOFR-1Y-CU4rYHY_q=TBDhK6RmTj9UEMQ95Gw@mail.gmail.com>
+Date: Tue, 27 Oct 2026 21:12:52 +0800
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+ netdev@vger.kernel.org,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Simon Horman <horms@kernel.org>,
+ David Ahern <dsahern@kernel.org>,
+ Ido Schimmel <idosch@nvidia.com>,
+ Shuah Khan <shuah@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ regressions@lists.linux.dev,
+ linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <D438C59D-09D4-4008-9240-18DA0ABBDCEA@gmail.com>
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+ <20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com>
+ <e25fd292-5391-41fc-a324-0ec260828415@linux.dev>
+ <CAL4Wiip=TkP2hmOFR-1Y-CU4rYHY_q=TBDhK6RmTj9UEMQ95Gw@mail.gmail.com>
+To: Eric Dumazet <edumazet@kernel.org>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
-Le mar. 27 oct. 2026 =C3=A0 13:45, Jiayuan Chen <jiayuan.chen@linux.dev> a =
-=C3=A9crit :
+On 10/27/26 1:45 PM, Jiayuan Chen wrote:
+> This precondition does all the work. The server only learns the PMTU
+> when it sends a full-size segment itself. [...]
 >
->
-> On 10/26/26 3:23 PM, Esko Mobius via B4 Relay wrote:
-> > From: Esko Mobius <echoowall@gmail.com>
-> >
-> > This reverts commit 2640e6419594 ("net: advertise TCP MSS from the
-> > configured MTU, not the learned PMTU").
-> >
-> > That commit stopped the learned PMTU from lowering the MSS we advertise
-> > in SYN and SYN-ACK. For symmetric paths it argued that "the peer runs
-> > its own PMTU discovery and usually already knows the real path MTU".
-> > That only holds if ICMP "fragmentation needed" can reach the peer. When
-> > the peer sits behind a firewall that drops inbound ICMP, its PMTU
-> > discovery is a black hole (RFC 2923, section 2.1), and the smaller MSS
-> > we advertised was the only thing keeping its full-size segments off the
-> > narrow hop.
->
->
-> A client that cannot receive ICMP is broken beyond this: QUIC's DPLPMTUD
-> hits the same black hole, and nothing the server advertises can help it.
->
->
-> >
-> > Inbound ICMP filtering is very common in enterprise and carrier
-> > networks, and it is pervasive in mainland China. We hit this in
-> > production after the commit was backported to 6.12.111: TCP connections
-> > that reach a server through a relay with a smaller-MTU hop complete the
-> > handshake, then stall as soon as the client sends full-size segments.
->
->
->
-> The learned PMTU is keyed per destination address. If your relay
-> masquerades the clients, the server sees a single address, and one
-> client's download seeds the entry for everyone behind it. That is why
-> this looked reliable. Once the clients are spread over their own
-> addresses, each one needs its own fresh entry and it falls apart. The
-> old behaviour was never a mechanism for this.
+> Please re-run the 6.12.107 case without seeding the PMTU.
 
-Hi Jiayuan
+You are right. Without seeding, 6.12.107 stalls the same way:
 
-You are right on the technical side, and your patch was correct
-from an RFC point of view. The old behavior was a side effect,
-not a designed mechanism, and the reporter setup only works
-because the masquerading relay keeps the exception fresh.
+  kernel        PMTU seeded   SYN-ACK MSS   1 MB upload
+  6.12.107      no            1460          stalls
+  6.12.107      yes (ping)    1416          OK
 
-But it did work for them, for years, and it stopped working after
-a stable update. That is the part we have to fix first, even if the
-setup relies on an accident. MSS clamping on the relay is the proper
-long term answer for them.
+My reproducer took a shortcut there. What it should have modelled is
+our production setup, which is the masquerading relay you describe:
+the clients share the relay's address, so ordinary downloads by other
+clients keep the server's PMTU entry fresh. Modelling that directly,
+with no artificial seeding (cliA downloads 1 MB, then cliB, behind a
+firewall dropping frag-needed, uploads 1 MB through the same relay):
 
-This is partly my fault: I reviewed the patch and did not object to
-the Fixes: 1da177e4c3f4 + Cc: stable tags. A behavior change like this
-one should have stayed in net-next.
+  kernel        SYN-ACK MSS to cliB   cliB upload
+  6.12.107      1416                  OK
+  6.12.111      1460                  stalls
 
-> Maybe a better way out than a plain revert:
->
-> Revert in stable, and in net-next add a sysctl, something like
-> net.ipv4.tcp_advmss_use_pmtu,
-> that decides whether an endpoint uses the PMTU it learned on its send
-> side for the MSS it advertises (even though these are two opposite
-> directions). Default on keeps your setup working, DSR-style setups turn
-> it off
+So I agree it was never a designed mechanism, it is the side effect
+Eric describes. We have since added MSS clamping on our relays.
 
-I think we mus take the revert in net as well, so that
-mainline and stable trees behave the same, and the stable
-backports do not diverge.
+If it helps, I can send a v2 that describes the masquerading case
+instead of the seeded one in the changelog. And I am happy to test
+the net-next follow-up on this setup.
 
-Then a net-next patch is welcome, keeping the historical behavior
-as the default. Before adding a new sysctl, please check if the
-existing per-route advmss metric is enough for the DSR case,
-as Esko showed in the changelog. If it is not (for instance because
-it is too hard to deploy on many routes), a sysctl sounds fine to me.
+Thanks,
+Esko
 
-Thanks!
