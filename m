@@ -1,62 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.208
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793104743;
-	b=U2ntz6poD/LEOCFLofZSsEVNiYDjIJ/x0vq9c4Mtt7GwmtsGOp3VZhsvVdr3WcE+wsCJ
-	 +empZ8hbdq/xiWxQ3snpXMeT/U0vLbL7/vPSibd3SSRj1g81N4KUmKvfKySII7H3uGKAj
-	 g4c0MpffBiVOKxz7wESV1G6N4Jk6shUcqQgfKK6S5IkbxjUHj8MYKakXHPM8KJALExZsp
-	 539OBiNrjm90JxOO3U9/CeoLzYNxmd/Z32FWrkBv86KnnRmfOO7HkGtU0M3xc2aE/ngo1
-	 km09rtCeFT9cHnzQIToU77fSGkNeX+ShceQ/exUDQZuvGtxp0/r6WdwKgwjKrdRcS4A==
+	t=1793105147;
+	b=QNtSJlRxxHtWqDuqW8bN/F7yhaA0FBI6lQbaPkYkTxNoRjcGb41aJtaScc+5TPlHHVeM
+	 N+E2bE+HmjF4gr30EbdlU7YNla39qxpp+Ri56jPIliWNXU62GQ4Ahn4P+VxGjJp6xnGXo
+	 AauKLmiI/mK16XxqA4YDrrm8BRzMUF57+LVK/6sqyi7TrAByG56y/quaieSO1dvO0KH/m
+	 ZNnyJhuQGgnhETJD9GX38OAi8H1X6lxRiCWEHvbbWOfHtn7uyhirUKt0IYMCsMPf0hg3l
+	 +M/YOfmYgBsYHl66QMhg+g64M/aO17Jj4nwicd66cHLTnmIlJDsbzz0lEMWc7GsVMwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793104743;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=Jswp2crzQp9KqexGzBb3t1FkcdKy9t2g2KSUpLlbZf0=;
-	b=gKeZsemnhtE+ESIRG/InIukkd+ELbimYgibffOYup06hp0u6bF4yk9Hic+lQvfzhYBWh
-	 zG/TdsX7IzosETAWEimARp2mgSMdC/2P7UtWqn7crmAbkRcy64u/xvTD1ym/EyAj9c/gS
-	 w96zwMhUZtRVskPJPp9CFE8gs/2lUN/3MvgS9yXBuWe6domEOaYYlWVRzhdvSS/W/0K0D
-	 jONhKwtDLHu/THV2WD2w9KTc04OTjQJ/359Xhb9mscTIwuhjFhsw8jbU5uAmL8J+HHed2
-	 tKLUwSlTJ3lkW/+EGoXuVuFZfXf7vJKjyu7tzjmiN2R3EtxkTRikkksWAd2MPy5k+7Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793105147;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=koFtvkLfr2oI9uXtX/n3Ay3Dy+ycp8hbA1U6raVcKYE=;
+	b=ZHRwA57eAbgLr+2VwQxOOrstljF3Sa/+oBiVbkQUgjHIdNSbewMGvcCeQfXphfsdY0V3
+	 sc8tM4boE8h+ALjW+e0zsCzePPZEOy6lExPT6qcUYPZ+Ka0shYBUgy77hdEIPGX4U0jak
+	 lmeyKB9mdR/U7o9cmCq/+37AuYZwo4GISbERmWhhoz/p+/pPf2gPb770rJr+dZG9YIyzr
+	 MzCnDw8+5SnsRi5glvLKH3ok1uTXkiuARLEZsl5Lav/tplAtUGr0yI+bTFviU8wsGVYkH
+	 SvNYTQijDHXKHv18EnyBkT/hC5S5QYz2FxFVMZ7iX/Wf5UWPtEDk8A2KVBbNTVoPF5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="fC/kv9PZ";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o5B1imMU;
+	arc=none smtp.remote-ip=91.218.175.208
+Received: from mta0.migadu.com (out-208.mta0.migadu.com [91.218.175.208])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099E0606A31D;
-	Tue, 27 Oct 2026 12:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1380B606A335
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 12:45:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1380B606A335
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fC/kv9PZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CDD1F01825;
-	Tue, 27 Oct 2026 12:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793104742;
-	bh=Jswp2crzQp9KqexGzBb3t1FkcdKy9t2g2KSUpLlbZf0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=fC/kv9PZxxLXB6LBGvhYqCEArhYUkOlWtJrZH9VYZWQ6+7oQ/ZE3HlQayWc0Lv3d9
-	 qNWAyH1rQGwUHX1FZfsbn3Kr7vUb1gDrgng7WMNRp6O3B4VkdlBymh7Yic3rIeiTeg
-	 MWC2M3qmb7xaglhX5yi0z2N3KmzVdn1JmoHkrE/4T/mxpZNtYgfICwwIdBY/tF4dnV
-	 +NrKrLuAqIygI3gBBRZaLsCm2YzdODyNc4UvO3YX6zYvhd/HaKbQcaX1ZISOg3ad8f
-	 QJthbWvm5rCAPG3Gjc8G61uDZy/Mhkougzi8BUmAWTPHmEIFMjadvyEuZ/4nHWMP9c
-	 Mdu5M7pw+bKww==
-Subject: Re: [PATCH net] bnxt_en: Don't keep MSI-X vectors added before FW
- reserves them
-From: netdev-bot+sashiko@kernel.org
-To: vlad.wing@gmail.com
-Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
- pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- andrew.gospodarek@broadcom.com, tglx@kernel.org, maz@kernel.org,
- yangjinqian1@huawei.com, apreece@meta.com, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Tue, 27 Oct 2026 12:39:01 +0000
-Message-ID: <179310474137.3134.4690740150964769309@kernel.org>
-In-Reply-To: <20261023121321.2127263-1-vlad.wing@gmail.com>
-References: <20261023121321.2127263-1-vlad.wing@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=o5B1imMU
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=7hyLZnCptglh6ZfX27cwvtA9DMVa5PLCr9Si8AAJnHA=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793105144; v=1; x=1793709944;
+ b=o5B1imMUAsXMIe68c9yZ8nUysrg9IA3E5gU6Jo69SRBPFqKt990Xab1s4cfAE2x9M7THBwwA
+ 3+KbCVOHBt2XqQu4lrWHGQzoKEqn1BBqv8Aob+fNaFgruL63suAcGmi5Ee11M9EUXcFkeTN66Sd
+ ikXmkP6AWUjk+DkrHmtBniH4=
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id c7f68ba690e126ba;
+	Tue, 27 Oct 2026 12:45:23 +0000
+X-Mizu-Trace-ID: c7f68ba690e126ba
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <e25fd292-5391-41fc-a324-0ec260828415@linux.dev>
+Date: Tue, 27 Oct 2026 20:45:14 +0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -66,214 +58,121 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 2/2] Revert "net: advertise TCP MSS from the
+ configured MTU, not the learned PMTU"
+To: echoowall@gmail.com, netdev@vger.kernel.org
+Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>,
+ David Ahern <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>,
+ Shuah Khan <shuah@kernel.org>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Eric Dumazet <edumazet@kernel.org>
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+ <20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com>
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+In-Reply-To: <20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
 
-Critical: 0 · High: 0 (1) · Medium: 2 · Low: 0
+On 10/26/26 3:23 PM, Esko Mobius via B4 Relay wrote:
+> From: Esko Mobius <echoowall@gmail.com>
+>
+> This reverts commit 2640e6419594 ("net: advertise TCP MSS from the
+> configured MTU, not the learned PMTU").
+>
+> That commit stopped the learned PMTU from lowering the MSS we advertise
+> in SYN and SYN-ACK. For symmetric paths it argued that "the peer runs
+> its own PMTU discovery and usually already knows the real path MTU".
+> That only holds if ICMP "fragmentation needed" can reach the peer. When
+> the peer sits behind a firewall that drops inbound ICMP, its PMTU
+> discovery is a black hole (RFC 2923, section 2.1), and the smaller MSS
+> we advertised was the only thing keeping its full-size segments off the
+> narrow hop.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
 
-- [Medium] The fix is incomplete when FW grants fewer MSI-X vectors than
-  requested.
-- [Medium] New error path leaves the state inconsistent.
+A client that cannot receive ICMP is broken beyond this: QUIC's DPLPMTUD
+hits the same black hole, and nothing the server advertises can help it.
 
-Pre-existing issues:
-- [High] This problem wasn't introduced by this patch, but the DCB IEEE
-  ETS path reaches bnxt_check_rings() and bnxt_change_msix() holding…
 
---
+>
+> Inbound ICMP filtering is very common in enterprise and carrier
+> networks, and it is pervasive in mainland China. We hit this in
+> production after the commit was backported to 6.12.111: TCP connections
+> that reach a server through a relay with a smaller-MTU hop complete the
+> handshake, then stall as soon as the client sends full-size segments.
 
-bnxt_en: Don't keep MSI-X vectors added before FW reserves them
 
-When dynamic MSI-X is supported, bnxt_check_rings() grows the MSI-X
-vectors before FW has reserved them. On arm64 GICv3 the MSI message is
-written only once, at allocation, so the message for those entries is
-lost. This patch keeps the allocation in bnxt_check_rings() as an
-availability check. When BNXT_NEW_RM is set it frees the new vectors
-again right away, so that bnxt_reserve_rings() allocates them after
-__bnxt_reserve_rings().
 
-Closes: https://lore.kernel.org/all/20261022193620.2152038-1-vlad.wing@gmail.com/
+The learned PMTU is keyed per destination address. If your relay
+masquerades the clients, the server sees a single address, and one
+client's download seeds the entry for everyone behind it. That is why
+this looked reliable. Once the clients are spread over their own
+addresses, each one needs its own fresh entry and it falls apart. The
+old behaviour was never a mechanism for this.
 
-> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> index 0682060b048ce..2d14d991a3ead 100644
-> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> @@ -15093,6 +15093,7 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
->  			hwr.cp = min_t(int, hwr.cp, bnxt_get_max_func_irqs(bp));
->  		}
->  		if (hwr.cp > bp->total_irqs) {
-> +			int old_total = bp->total_irqs;
->  			int total_msix = bnxt_change_msix(bp, hwr.cp);
->  
->  			if (total_msix < hwr.cp) {
-> @@ -15100,6 +15101,17 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
->  					    hwr.cp, total_msix);
->  				rc = -ENOSPC;
->  			}
-> +			/* FW has not reserved the new vectors yet, and writes to
-> +			 * MSI-X table entries beyond the reserved IRQs don't
-> +			 * stick (seen on BCM57508).  Free them again;
-> +			 * bnxt_reserve_rings() allocates them after
-> +			 * __bnxt_reserve_rings().  Without the new resource
-> +			 * manager there is no IRQ reservation and
-> +			 * bnxt_reserve_rings() does not grow the vectors, so
-> +			 * keep them.
-> +			 */
-> +			if (BNXT_NEW_RM(bp))
-> +				bnxt_change_msix(bp, old_total);
 
-[Severity: Medium]
+> Clients on networks that let ICMP through, and connections that bypass
+> the relay, are unaffected, which made it hard to trace back to the
+> kernel.
+>
+> Reproducer, network namespaces on a single host:
+>
+>    cli --(1500)-- r1 --(1456)-- r2 --(1500)-- srv
+>
+> r1 drops ICMP frag-needed towards cli. srv has already learned PMTU
+> 1456 towards cli, then cli uploads 1 MB to srv:
 
-The comment says bnxt_reserve_rings() allocates the vectors after
-__bnxt_reserve_rings(). Is that allocation capped at the number of
-vectors FW actually granted?
 
-In bnxt_reserve_rings(), irqs_required is computed before the
-reservation is made:
+This precondition does all the work. The server only learns the PMTU
+when it sends a full-size segment itself. If it only sends ACKs or small
+replies it never learns it, the SYN-ACK MSS is 1460 on 6.12.107 as well,
+and the upload stalls the same way. The entry also expires after 10
+minutes (ip_rt_mtu_expires), so the server must have received a
+frag-needed within the last 10 minutes before each new connection.
 
-	if (BNXT_NEW_RM(bp) && !bnxt_ulp_registered(edev)) {
-		...
-		irqs_required = ulp_msix + bp->cp_nr_rings;
-	}
-	...
-	rc = __bnxt_reserve_rings(bp);
-	...
-	} else if (irq_change && !rc) {
-		if (bnxt_change_msix(bp, irqs_required) != irqs_required)
-			rc = -ENOSPC;
-	}
+Please re-run the 6.12.107 case without seeding the PMTU.
 
-If FW grants fewer MSI-X vectors than requested, bnxt_hwrm_get_rings()
-records the smaller count:
 
-	hw_resc->resv_irqs = le16_to_cpu(resp->alloc_msix);
+>
+>    kernel                     SYN-ACK MSS   1 MB upload
+>    6.12.107                   1416          OK
+>    6.12.111                   1460          stalls, times out
+>    7.3-rc7                    1460          stalls, times out
+>    7.3-rc7 + this revert      1416          OK
+>
+> The asymmetric case the commit was written for does not need a new
+> default: the advertised MSS can already be set per route with the
+> advmss metric, which takes precedence over default_advmss(). With this
+> revert applied, on an asymmetric path where srv learned PMTU 1456
+> towards cli while cli->srv is 1500 end to end:
+>
+>    srv route to cli           SYN-ACK MSS   largest cli->srv segment
+>    default                    1416          1404
+>    advmss 1460                1460          1448
+>
+> So DSR-style setups can opt in with "ip route ... advmss <mss>", while
+> hosts whose peers cannot complete PMTU discovery keep working by
+> default.
+>
+> Fixes: 2640e6419594 ("net: advertise TCP MSS from the configured MTU, not the learned PMTU")
+> Reported-by: Esko Mobius <echoowall@gmail.com>
+> Closes: https://lore.kernel.org/regressions/4F0FAEB6-A13B-47F3-BFF1-C706686C6F64@gmail.com/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Esko Mobius <echoowall@gmail.com>
 
-__bnxt_reserve_rings() then handles the partial grant by trimming
-cp_nr_rings and ulp_msix:
 
-	resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
-	ulp_msix = min_t(int, resv_msix, ulp_msix);
 
-However, bnxt_reserve_rings() still calls bnxt_change_msix() with the
-untrimmed irqs_required. Wouldn't the entries from resv_irqs up to
-irqs_required then be allocated and activated before FW backs them?
-That is the state this patch is trying to avoid.
 
-bnxt_change_msix() only programs indices at or above bp->total_irqs:
+Maybe a better way out than a plain revert:
 
-	for (i = bp->total_irqs; i < total; i++) {
+Revert in stable, and in net-next add a sysctl, something like 
+net.ipv4.tcp_advmss_use_pmtu,
+that decides whether an endpoint uses the PMTU it learned on its send
+side for the MSS it advertises (even though these are two opposite
+directions). Default on keeps your setup working, DSR-style setups turn
+it off
 
-so those entries would never be written again. FW could grant them
-later, for example on a channel increase where the new count is at or
-below total_irqs. Could the NQ rings bound to them then signal address
-0, giving the same lost completions and TX watchdog timeouts?
 
-It isn't clear how often FW returns a partial grant after
-bnxt_hwrm_check_rings() has succeeded (NPAR, multi-host or VFs may be
-cases). The driver does handle partial grants explicitly, though.
-
-Would capping the growth in bnxt_reserve_rings() at hw_resc->resv_irqs
-cover this case? Freeing and reallocating any vectors activated beyond
-the reservation would be another option.
-
-[Severity: Medium]
-
-Does freeing the vectors here change how an MSI-X allocation failure
-is handled?
-
-Before this patch, if pci_msix_alloc_irq_at() failed, bnxt_check_rings()
-caught it before any FW or ring state had changed. Now the growth
-always happens in bnxt_reserve_rings(). By that point,
-__bnxt_reserve_rings() has already committed the FW reservation and
-updated bp->hw_resc.
-
-The allocation can fail there, for example under memory pressure or if
-another device takes the vectors released here. bnxt_change_msix() then
-returns early with bp->total_irqs below irqs_required.
-bnxt_reserve_rings() returns -ENOSPC and nothing is rolled back.
-
-On the next open, bnxt_need_reserve_rings() compares only hw_resc
-against the ring config:
-
-	if ((bp->flags & BNXT_FLAG_CHIP_P5_PLUS) && BNXT_PF(bp) &&
-	    hw_resc->resv_irqs != hwr.cp)
-		return true;
-
-It returns false, so bnxt_reserve_rings() returns before growing the
-vectors:
-
-	if (!bnxt_need_reserve_rings(bp))
-		return 0;
-
-bnxt_setup_int_mode() also skips reinitialization, because bp->irq_tbl
-is non-NULL.
-
-bnxt_request_irq() then requests an IRQ for every cp ring using
-bp->irq_tbl[map_idx].vector, without checking map_idx against
-bp->total_irqs. For entries at or above total_irqs, wouldn't .vector be
-either 0 or a stale virq? The trim loop in bnxt_change_msix() frees the
-vector but leaves irq_tbl[].vector set:
-
-	for (i = bp->total_irqs; i > total; i--) {
-		map.index = i - 1;
-		map.virq = bp->irq_tbl[i - 1].vector;
-		pci_msix_free_irq(bp->pdev, map);
-		bp->total_irqs--;
-	}
-
-The open would then fail. If another device has reused the stale virq,
-could the bnxt handler end up attached to an interrupt it doesn't own?
-
-Running ethtool -L again with the same count seems to repeat the grow
-and trim in bnxt_check_rings() and the early return in
-bnxt_reserve_rings(). Is there a way to recover other than picking a
-different ring configuration or a FW reset?
-
-[Severity: High]
-
-This is a pre-existing issue, not one introduced by this patch.
-However, the new rollback adds another access to bp->irq_tbl in a
-window that doesn't appear to be protected against PCI error recovery.
-
-The DCB IEEE ETS path reaches this code holding only RTNL:
-
-dcbnl_ieee_set()
-  bnxt_dcbnl_ieee_setets()
-    bnxt_setup_mq_tc()
-      bnxt_check_rings()
-        bnxt_change_msix()
-
-net/dcb/dcbnl.c doesn't take the netdev instance lock.
-bnxt_io_error_detected(), on the other hand, takes netdev_lock() but
-not RTNL. For pci_channel_io_frozen it calls:
-
-bnxt_io_error_detected()
-  bnxt_fw_fatal_close()
-    bnxt_clear_int_mode()
-
-This frees bp->irq_tbl and sets it to NULL, but leaves bp->total_irqs
-unchanged.
-
-Suppose that runs between the grow in bnxt_check_rings() and the new
-bnxt_change_msix(bp, old_total). The trim loop would see the stale
-total_irqs, which is above old_total, and read
-bp->irq_tbl[i - 1].vector through a NULL or freed pointer. The existing
-write in the grow loop, bp->irq_tbl[i].vector = map.virq, has the same
-race.
-
-Should bnxt_dcbnl_ieee_setets() take the netdev instance lock? Taking
-it inside bnxt_check_rings() would deadlock callers that already hold
-it.
-
->  		}
->  	}
->  	return rc;
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261023121321.2127263-1-vlad.wing%40gmail.com
