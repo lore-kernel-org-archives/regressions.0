@@ -1,103 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793140383;
-	b=Rge3M3g08hXU/CrLFRq1LUwkhkEcdpgIt1Ju+YNxmP3PzsvRjbTgEwM27VIiNvmZFJn9
-	 LGBnVp1fGKJvHEkUePvAd/RWts1yiUR/7pUi8epwArQye8HBfu36ouHRVWPwUByiFrgI/
-	 Ohbx8vrtj0f6J4dyYllib2L7XQ+ZVD7WKhUlsTPKFLHqr9QLBiDTRbOo+/eGK//hhL9/v
-	 YdYSCt0ll5D735ESivDzo8mf3I3SutqqgQASR3WkvrC5X3tCe6peShmSWCjNzpx70/H1T
-	 vd39zoDWBSB7G2zibbylgSW2ffI4h5Zq5oC/3j4LWzk/UEVtZqJuDzjDiAPYFB1rmiA==
+	t=1793142381;
+	b=z5+yI03ke4BPrVgJYgUKPjf0R4O0ynoHwfNgX9s3mdwfMinynUC81kh7LdDwfmONVURw
+	 BXP16Va98kUIXM5za3Q5YoUQy0txkCGnfoVP3N7XLhIINRi1U9hsJek75lz0a6S9PHTU7
+	 ULD074MQaaWjfG0PPoNW9jPDbeA016Pv+tjtbrNUMGaJyK/VKZ3bmaagkyD4/9MNOSjSn
+	 m651ZHp3tpvYPoTYlIz3QjysGfRzEEL6NFbzbrTWbULjkkIkHsHyiaF5WO6kt4FhwfY/F
+	 4HWsmsV0IG5GH95CxYc8AhrK17ulPOPLCazuDWHDYNvv89D4BReWXECW+V7eHcD4XYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793140383;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=wPmToGC5y+VhdITU4V4ZbBMK8thCOWUoBfhcPC5IseQ=;
-	b=r41GAxDkT7MbQr2dF9x5bOFeTl/QGV6UGQb+Z+FBq2UpacnugR1CuFlturPJbpGYy15r
-	 O6Gcc/IX93oOP4ymbgUrXvoMQSuKg/AqdhQ7r2QlR0ATyQthu0++WEUafahAIJ3Zpqh99
-	 5+A902pC/cDggI3Wt8ZXTXqX9EFMc6eiFY+t7MGqiok3i95nfm0ue1JZgHcxa40uzsnox
-	 ybxuSshJXrZqGjoQexZ+ajrrW2z+SSb0ePqSL+LHUfFpxrd2NzHatvJfV3NqH3sMRdwpH
-	 csnMCIO0jgRx0b+0Fv2o+hMDiw8jZXtYbtWzds/2YY9KYRDMp/Y/5TIPW6Zkj9BHfbQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793142381;
+	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
+	 Message-ID:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Rspamd-Queue-Id;
+	bh=fmgkj98Q62DA/vR7MAUo1vkXFN1Y+OIb0JrIVNlgR2Y=;
+	b=Fm40iq8YaPjyfEoMxsX+o4z5kq8tH48aooOSb85sYdCa9jIBdRp9FB59KMyGrUNZ2CBW
+	 AtJV+gwWSYYNTyQ48XHotvuYddv5ODTxW4c9spI28bo61BtSYxr7fPlt0R6lMk9kUCKzw
+	 UpHLfMTCQ9Vd0QTTdW6g7yszasi2XsWhnMU+LXQpSmrnfLgK/rJOKo1ij1Utfnm1TBpNN
+	 o/YOFF6Mb3ztPHgiAkH5ek2GHTbih/diMeMvMBDxb2VnGF3TlPy+2PI+pVqoaf3nCdVyP
+	 +mD9qqsU4T287rkTtfAPsnq9nGasMx/B1cgvnnnwfp0U0qGDXGUR38zbARfOId92YTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eaOVK81H;
-	arc=none smtp.remote-ip=209.85.208.174
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=dsine.de;
+	spf=pass smtp.mailfrom=dsine.de;
+	dkim=pass header.d=dsine.de header.i=@dsine.de header.a=rsa-sha256 header.s=MBO0001 header.b=KEQVf+oD;
+	arc=none smtp.remote-ip=80.241.56.172
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7E0606A323
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 22:33:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ED7E0606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0E2606A31E
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 23:06:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D0E2606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dsine.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dsine.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eaOVK81H
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3a772ec8389so2330931fa.3
-        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 15:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793140381; x=1793745181; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wPmToGC5y+VhdITU4V4ZbBMK8thCOWUoBfhcPC5IseQ=;
-        b=eaOVK81HNYX0OH8INoDzGwYPts2+v5cJDGGcFZrLkJgmLZMeBXf95gLmQffGxkFp61
-         +Phwb3HFxkLm4I1GvRpHp8w20QPs0Bt+lZl4dwvRgOmDH3Lx6JljczJU/AqvEzpKwUTE
-         DqeiPS2KyRiP9SFXzgjoFqps7PEKByXeL0ZjsVujQKBuzOdZJsmDq7XEWokj3oV2suJa
-         wFYY/S5eRmf9rFFlKtuglBtjTQYsCjFJbl6YQ3Ksjk0ShA/3YbzFmmhInh//DzGGKf8y
-         /lfCmlmtv4DARNblnboiOFn1r+vG/9yRzOaxNCHJviQjEsebgUdCWy1JaABa3FGjqrJu
-         f0JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793140381; x=1793745181;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wPmToGC5y+VhdITU4V4ZbBMK8thCOWUoBfhcPC5IseQ=;
-        b=JOZ/0BUgqflEU2eArVxDLAieabsz0Un7VpfU3eMZq1oUfnQfElYrAYXvP4xe6AMGRu
-         BLNQj5AuxdbjhDSlQRqMQFbHhP+KuHpZQ3Xx+IvqnXQlwponwZUPKRyUAls8TIpra9i4
-         e0H8sNFDr2q+OE7gRdQj5qdMYt17pMC3itHjpPxKV9Jmw/eiNiWTIFO894QNUr28/FeL
-         wxBWxXxfj/oHMSQxwiQJtk+Q2Bu5+S0gz/HwxRzjfGAI4A/1NC82H5JvFJ+rw/09x8+F
-         9vNeiCz5c7LgozFCuB/6E+OKoEi748193cKasPKC26l2KT5Wgaj76Mto/MWTCkHmJ+ui
-         0Qbw==
-X-Forwarded-Encrypted: i=1; AKwUvBz2Ld/lWL7XhTEnWgz/5GtUOJ7c9A2ifUvaUE6dsklS3Z9hGbRTMy6px9SM0g7oJL8vdACu3aP8fh9JzA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJf4jJiC6xJckTZD1XEHdZJL5KM4iRUoGBSUkxxPL1YvkRqL0Ra
-	X7eyNwjxOZQbQ7F+bBZmZPkDb8C7PqeTG6RfP0ywDZY0wxoG06JWmr8Z
-X-Gm-Gg: AYBFou2I+O5dIEu0AYdni2GiPRQ+TotMh8eKeJcN9l3NBNpnNOVUV+q4Yn+2R68lqLU
-	jsJ71i9qWpo4KKgKtS1bLZJdo3repQrHkjut1Ei6IjnlqZ7V2tsw1+H/oTfXfk2ZPvYi4eu6EKY
-	3OWIwe7JWcVlvJngCYb6FoO6OgbmRlSMJ9zPEo8v6TA088dEjlYY9Hu8Bd2ebMNM2hxYM7GrIwJ
-	QDZqZ/JKKL5lbvTYLIWHCb5G4et4ZVDXfZVb2J+Dt8wP9VbwwnFeGtzHJF1f8SxYQSVhsBCeBs4
-	TOwsBk+09UCBo4KMom98Wpogw6dFvmZ4OAt5+0qCvKUeOHs0VVULavrWDVUc1AW33fTFAY/aOSy
-	VtWGdvxhGbrCAZGbB4q3AVP9XIrRgM3CCKc/TMFDuCHGTYrQJ2fC2xw7E1xPCB7AQPvpXp7XIl1
-	Mjf+LMQzc96ekw9SFdOBfVwv42TVh88lYqUlQzEPSNOfrktX4spbAreRZx+uY+TKV3x/vFxuWiD
-	I9ZkTzcT8d5B8LF4Lai8O7PxzJcgLG0ooctmcHND8oCLaVdKid0Zgsz8JcZqcsJYCvUczxvv/or
-	UCi0Z9In0ztgtgLt+20s+eKF7mCuB1klCAUZkHFmT3jSjzlvbOap
-X-Received: by 2002:a05:651c:4216:b0:3ab:690f:829f with SMTP id 38308e7fff4ca-3ac9cf5b6d2mr759271fa.15.1793140380999;
-        Tue, 27 Oct 2026 15:33:00 -0700 (PDT)
-Received: from localhost ([178.214.243.78])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3ac709d1c1asm27657721fa.16.2026.10.27.15.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2026 15:32:59 -0700 (PDT)
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <siqueira@igalia.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Fangzhi Zuo <Jerry.Zuo@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	George Zhang <george.zhang@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Calvin Owens <calvin@wbinvd.org>
-Subject: Re: [REGRESSION 7.3] drm/amd/display: single-frame scanout corruption on DCN32 at 120 Hz since a637a140ab86
-Date: Wed, 28 Oct 2026 03:32:47 +0500
-Message-ID: <20261027223247.300463-1-mikhail.v.gavrilov@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261018223905.32324-1-mikhail.v.gavrilov@gmail.com>
-References: <20261018223905.32324-1-mikhail.v.gavrilov@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=dsine.de header.i=@dsine.de header.a=rsa-sha256 header.s=MBO0001 header.b=KEQVf+oD
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4jDmMD4NcJzMlLw;
+	Wed, 28 Oct 2026 00:06:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsine.de; s=MBO0001;
+	t=1793142376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fmgkj98Q62DA/vR7MAUo1vkXFN1Y+OIb0JrIVNlgR2Y=;
+	b=KEQVf+oD7N18xYnzUFImg/ZMraFk4xBz4OxHRiquddz7QluKmeK1A8tsg7+gCXDB38fKTg
+	51Xgad5P2FSJAsF+hSLuRE9ptJaaGdbQ31S+9STiKQs4C/KZpQWbmyQHbHzAKy9kmnNLKn
+	vAWPu/BhsVHMKyck5ra48chaFMDFoRvZdgf/j/rYLqLELHbXiwukyahehYsHXS2VcZmuXB
+	8Nxm7+FsQVSCBC1mK0be9lcxhR0CMuVqjkc/Vj8vnxowRDeiMdjNouV1/V9rKl/AEQ5prK
+	Yi7hTyfhhGqBhfvrwreaF3JulYVQvS5NNsTWsGn0tDBFa1J4AYkIahKZAXJ/ZA==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=pass (outgoing_mbo_mout: domain of dennis@dsine.de designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=dennis@dsine.de
+From: Dennis Wissel <dennis@dsine.de>
+To: yiyu@yiyuzhou.io, Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ diogochaves@me.com, michal.pecio@gmail.com, raoxu@uniontech.com,
+ gregkh@linuxfoundation.org, Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject:
+ Re: [RFT PATCH 0/2] xhci: clean up endpoint rings after disconnect detect
+Date: Wed, 28 Oct 2026 00:05:33 +0100
+Message-ID: <oKoY8F_0Rv-eBKI0YHyHcQ@dsine.de>
+In-Reply-To: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
+References:
+ <20261027184117.2461065-1-yiyu@yiyuzhou.io>
+ <20261027192128.386082-1-mathias.nyman@linux.intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -107,26 +76,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-Rspamd-Queue-Id: 4jDmMD4NcJzMlLw
 
-Calvin Owens bisected the same artefact to a637a140ab86 on his RX 7900,
-with the same parent good, and posted a revert.  On his machine the
-band appears within 30 minutes, and the revert removes it:
+I tested v7.3 (CachyOS 7.3.0-4) + both patches with the Keychron M5
+(3434:d068) plugged in at boot, two boots, with
+xhci_hcd.dyndbg=+p usbhid.dyndbg=+p usbcore.dyndbg=+p.
 
-  https://lore.kernel.org/all/25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org/
+In both boots the M5 drops off at the first control transfers after
+Set Configuration, and ep0 on the disconnected port now goes through
+the new path:
 
-#regzbot monitor: https://lore.kernel.org/all/25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org/
+[    3.536042] xhci_hcd 0000:00:14.0: Not resetting ep 2 slot 1 after disconnect
+[    3.536404] xhci_hcd 0000:00:14.0: Transfer error for slot 1 ep 0 on endpoint
+[    3.536447] xhci_hcd 0000:00:14.0: TRB error 4, halted endpoint index = 0
+[    3.536487] xhci_hcd 0000:00:14.0: Hard-reset ep 0, slot 1
 
-A correction to my earlier mails, which listed the instruction
-constants and the stack among the DMUB windows that a637a140ab86 moves
-to GTT.  When the firmware is loaded through the PSP, the default on
-these cards, the driver neither copies the instruction constants into
-its window nor programs the instruction and stack windows
-(dm_dmub_hw_init(), dmub_srv_hw_init()), so the firmware does not run
-from the driver's copies of those two.  The windows the driver does set
-up -- BSS data, VBIOS, mailbox, trace buffer, firmware state, shared
-state and the rest -- did move.
+followed by Set TR Deq, the URB given back with -71 and further URBs
+refused with "Can't queue urb, port disconnect or link inactive".
 
--- 
-Thanks,
-Mikhail
+Boot 1: no interface was bound before the drop, so all four fail
+within 2 ms, as on v7.2. hub_wq handles the disconnect at 5.31 s and
+the M5 comes back as a new device at 5.72 s, all four interfaces bound
+at 5.94 s.
+
+Boot 2: interfaces 0 and 1 were bound, so usbhid requested a reset:
+
+[    4.539124] usbhid 1-1:1.1: resetting device
+[    4.771324] usb usb1-port1: not enabled, trying reset again...
+[    5.023262] usb 1-1: reset full-speed USB device number 2 using xhci_hcd
+[    5.135351] xhci_hcd 0000:00:14.0: Can't reset device (slot ID 1) in default state
+[    5.135498] xhci_hcd 0000:00:14.0: Successful setup address command
+[    5.148062] xhci_hcd 0000:00:14.0: Successful Endpoint Configure command
+
+The device is resuscitated in place on the same slot and ep0 works
+again after the reset. Mouse and keyboard work after boot.
+
+In neither boot are there "not part of TD" messages or any stall (with
+1f36cc9fa949 alone, hub_wq stalled from 4.97 s to 16 s). initrd takes
+2.9-3.0 s, the same as v7.2.11.
+
+One observation, probably not xhci related: in boot 2, interfaces 2
+and 3 failed their probe before the reset ("reading report descriptor
+failed") and stay unbound after the in-place reset, until the mouse is
+replugged. On v7.2 the device was re-enumerated instead, so all four
+interfaces ended up bound.
+
+Tested-by: Dennis Wissel <dennis@dsine.de>
+
+Full logs are available if needed.
+
+Regards, Dennis
+
+
