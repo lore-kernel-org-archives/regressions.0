@@ -1,95 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.74.221
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793133954;
-	b=fkT2UKex26DpS0VHSnZcj2PQRI3l6yD5qsJL0lYbVnE29t7VvCf+L4kY4KeTWpskUBxe
-	 fiRivy57b1HwTMXPLSIUKynY/OcfTtorhMV5PmXm7CAJu+EQU+37pq2yffVTMx1/LdVDD
-	 rSJMz5pWF3yzyPnbNuxjHchM84wr8MYfxpsUrmsClMmSaVSexGMT9d1kbR8eQqnsNdFDs
-	 4TF7/wwvcYaS3lPfnjnPAtrNPmXSJfcho/NKitG9GJ/Y1erc+o0sI5CSf6x7fwFgV4S9I
-	 PcOpApYKBzKhHAvSEQ1Ogv7wXh9BaJpokGS3/O9HejhM5uvxQLOq1BxHzGS5xnu4neQ==
+	t=1793139723;
+	b=R8HA5JsXdn//jf73WGZ9bGGiS/yzS6VHA66ZEK93btt74K9lFdMPoyZZk6l6l/2xqvPn
+	 TFoPDlrZOyz5/2nnk4BS9/CaTEWHQhefy4Y3zxRzwoabzQYorcmczMuEL8HOqtFoEImDU
+	 LhIepPWPF8KaBapgYO07w/GExcqC2Su3rvseFDAeIWdIV0CmLzqDnoTzDWvfzSYUGX6sb
+	 8CGMilqtHibO+CD7vL9fJPMmPjHPva6g+1y8GJtYbMZa9J9AbGLGRqc2DdQucDMi/59tL
+	 T82U8vKeCEuuFejm7IjJjNRhGhKjhHqA0eHlB+aUFlwz0sbLHGimxK7sWR+mRPkvbWg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793133954;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=Qh00ezH7qk6YhQbSVUDAycO8TgQqa9yC0VmKndI+OZI=;
-	b=L5rj3ozBZl/W2/W9nh9r7Xant3aY2FU+RKCpYFdzj1cANCLGKZpNZAlA3uxiEX/kTtDP
-	 YjiiHRO7T163gfjmvsnvbc5c6TDcN/LNBiziv3ef8CTzx//ukZZhBMDx6Rjqt9fP2yFvj
-	 2SZouuhX1ZYUjfHii38jqyjzCCH7to33zPeXYfSRyKqUC6rKJSE1LUsNYPhIVWBEMdmKb
-	 0kBaRrH1/5Jlkrf5GgYz9p7jKddScZAiFdnbIs042CJdX9V1o2Vi8aJ/W9Lve0nVOEihR
-	 wvHJZ98kadnDkRdyVN/sSAzJ8jqm1Exs81pgQGSO+FWI99PQaqW0t5yfKEbwye/cswg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793139723;
+	h=DMARC-Filter:Received:X-ICL-RepId:X-ICL-Out-Info:Dkim-Signature:
+	 Received:Message-ID:Date:MIME-Version:User-Agent:Content-Language:To:
+	 Cc:From:Subject:Content-Type:Content-Transfer-Encoding:
+	 X-Authority-Info-Out:X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
+	 X-Proofpoint-ORIG-GUID:X-JNJ;
+	bh=9HJ62GiGTy/gw8NufnOvKlJLBVkRKKV7d6QpXBkvd7E=;
+	b=wFYQjIze3Ov7wrKumL7bK3JHc7WH+12Jqg8lpOwCv83kGavOQiZrZRP9FIWfRCl/dmvc
+	 6WjtbBquxxeT6RzFqb7ATiZCnMKg71tPTRfI0q/PALYRtFFDjDhUUfn+3roXYq5+bofp0
+	 C1VYVF7gkLOElMhtveHEcHg9biA/O3NeqJBJDRck/EnlSEevWaPxXZx3Ts8jCESVivSU/
+	 tO5hKbWYQY6ztIV+bVpcAo/cX7qKzycBvE4KHpbOhgby+qHM5Fej3k5oR4J3NrXYDClco
+	 yRSOPQk/5hslc5U/f5nzSyPRLK4j4DDdd79WYvZMmB5jr1MMHsKYfnbL0MKDSBe3TVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IkSsmNhR;
-	arc=none smtp.remote-ip=209.85.128.52
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=icloud.com;
+	spf=pass smtp.mailfrom=icloud.com;
+	dkim=pass header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=GYg0Zs0o;
+	arc=none smtp.remote-ip=57.103.74.221
+Received: from outbound.ms.icloud.com (ms-2004k-snip4-11.eps.apple.com [57.103.74.221])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA1D606A321
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 20:45:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7CA1D606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7989E606A31A
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 22:22:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7989E606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IkSsmNhR
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a20bdaf39cso2907245e9.1
-        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 13:45:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793133953; x=1793738753; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Qh00ezH7qk6YhQbSVUDAycO8TgQqa9yC0VmKndI+OZI=;
-        b=IkSsmNhRy1SFwrEVsiotaXVvwqvfmImojJfMhMoemMVpyRdQIUn2H9lXa7Bl0+y04Y
-         CTA9V16IpAsgttHCSAPKvkCyAVrQSgM4ra85KvXx6AczXKHMWKLv3mvQQFedvx19XjJ0
-         ebYBt27dLQ7sfRovP23AKUO+AapBH9cOLpToMyXqKYY+pJhO4MZqViPdeZsJMw/Y2d/f
-         Wvt2gWtnsUA+VVcqTQXj7iQRUY+rtPfLWn9yJjwjJ5Xh64Glb8sTbIsnSAERU8gHzCG+
-         vr5U/Yg0nh76izEaF3HOL6AQ09NO+GDcTGW9vJCgjcUicXCoHiftjXuJB1Ruqo34tYHq
-         g/0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793133953; x=1793738753;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Qh00ezH7qk6YhQbSVUDAycO8TgQqa9yC0VmKndI+OZI=;
-        b=SxkmCv1nP0+z2cyZjwwZpdkit392Loiex9fXpjH3EersTIcMbqL/7Lrsn9L131hOQc
-         7cMnSglJucvTR8dLAcHprmVD13t+LVEQ9Y5myr3nrpdSgNbKapiBsmO51VSOMhwAWVkX
-         gucCJ56lkvo9JwZKvXXeNf/uJl4HN4S58wyUv6wrgtj1XEzuF8ToOEv7EJmRneHVp+9+
-         S5PxcyYOG0QOVtjY0caQQM9QZOri8+FRaoWDu8YuYmPCRH9BDa23hFFGU1+0po59FwbU
-         RDL1a7SMiIdD/ldzEHOyU6lKZtEZL/Z1+O8XsCoDLvBqkizDk7pcUdLqvd21c2T83ZNE
-         94Rw==
-X-Forwarded-Encrypted: i=1; AKwUvBwdJ/zRA/50LhG0afy5B8tMibNtkp68hqHpCVw1NmnRyw4p6nzIxmbB5i4Q90LLlw6o650EaGvOeVmDEQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYLCrD9h7IDcN4X1zcJ8B6ajWZbdsxc/kJbGPR3FpI5CtPIyFxhw
-	lvFUtxTkev8uTg8FwdYzrlb8uq8+7ndG0jEPzmCzI/JRh8um1RKUjxnEb8BGmxKBSdU=
-X-Gm-Gg: AYBFou0iS8uNzcr3lCNFa1bgoBe3/OarJMvIsTPW37sbCgszVcnnM2/idXfx7xPSwUx
-	wz4fkvP59QsV/jmzSZHU/cHXyP22KxxGz/FVAukvixY6asD+MGp7cwHon2WMgyp22V0alVFZKqN
-	yNAdpjD8pfofqlxrWYzHsmEseU2a7a1ljsV+7HNK7Ama62IGvkrroN0p4kau86vOMKr+PLP9ebR
-	fy8b/ndweOJjND8zkz9wk0Nb7cGG1B3YneFNDg7jh4dY9yW/oKCoNlY4t+XLMOv5c/6B/CfHbVd
-	fQVVXQtBJA5JsLJMpetpkaAG0YLhEts0x4647BsPKzMYNLrveGasWTfM6GYJXUxhA3cd3rSNrsH
-	Uwy4q6wjldUHh4s+NjklY6/naDyFGYf6vRdOxfBPIbJ5rkWts0ZQPS5+wOFC6+IHkIJhIFWyGMj
-	+8McVdAPvBuq7+KgbaNqAIMzARtS7UexLDPacCzNdn3NSJp++NQL/TaOSq85jsyBuVkEs6nAVPw
-	v+ANLcbMTtQfDziKuX/mHHh7OaUnbmozY3VFbysWiuywn3pqr6dHRy3gLHt5rZqy8GslyMbaynq
-	+emQH9k6WbfqjX3Oln8XYfu9151KA2u4gdtZFpaae00E6/OpjUoWy1eRPEWAoxDhFpjZLCfpm3+
-	H6FrfRU1Ys1/CpXHd1W93Xq9718T6DyCY7lgEJACnZjq6H8362e2MlqFZ
-X-Received: by 2002:a05:600c:6208:b0:4a1:db17:c7e6 with SMTP id 5b1f17b1804b1-4a9643d51b5mr2268405e9.2.1793133952638;
-        Tue, 27 Oct 2026 13:45:52 -0700 (PDT)
-Received: from unknown748F3CBA5068 (dynamic-2a02-3100-b2ac-9b01-21dd-e5b3-2a30-2e97.310.pool.telefonica.de. [2a02:3100:b2ac:9b01:21dd:e5b3:2a30:2e97])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecd35c2sm24338968f8f.39.2026.10.27.13.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2026 13:45:51 -0700 (PDT)
-Date: Tue, 27 Oct 2026 21:45:50 +0100
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: io-uring@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] io_uring: final close can hang on a stopped
- submitter
-Message-ID: <auENFo-ONkpSYcNq@gmail.com>
-References: <20261027043521.99446-1-kmehltretter@gmail.com>
- <b50196b6-cc04-4d3e-965a-28c4f75ef263@kernel.dk>
+	dkim=pass (2048-bit key, unprotected) header.d=icloud.com header.i=@icloud.com header.a=rsa-sha256 header.s=1a1hai header.b=GYg0Zs0o
+Received: from outbound.ms.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-3a-100-percent-7 (Postfix) with ESMTPS id 6262F18000A6;
+	Tue, 27 Oct 2026 22:22:01 +0000 (UTC)
+X-ICL-RepId: 01a17f74-c466-7522-87aa-3ffceb447af1
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhNC0MDXBxCC0AdXwddEhVdRVAfXhhGGVgWHQ5WGEYVVRRSA1grWxNVF0YJGQhdHRkeV1BeCF4fTBwdDlgGEgJaRQZNXw5eHwQXRhlVBEceXVZeHhkCURxWDVdDVARfUEkMQVBsWgBHF0gdXRlZb1BdHA4EVAddBV1WUAJaS18ZXUUPDA9fVBUOGgZAVQoLQBRMVlgGRlMWWhseWANTVEhbSwNcD1tQMFAbXwJCDxwTVhUNTUMSQhUEEVABWB5W
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1793139722; x=1824675722; bh=9HJ62GiGTy/gw8NufnOvKlJLBVkRKKV7d6QpXBkvd7E=; h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type:x-icloud-hme; b=GYg0Zs0oxKfswLL50Dy9wQUyFJ9eaTegkAUgGtb6IAO5Z/9RKwUp/1aIXAMdJ5Nn67V1xzqJt9yumqI/vPn9XZqipoeFJRTHA+nb/F8hgi+LbW6+qRNRD8KNAvoTfo7NCZm7P7PWkAECUJHVzpe2qioByy6wt5gl9qpsf/kFiE0SweW8987dxXuLnoM0KskCNcozCeFJbyZfREP7W8HgMReAbdY7sewRUupDrL4daZcct8zVR2bNzPtm6PfIV1RdhF5cnaCdBFjC0ZAZbFYRvWGh/op4XUjeOXKXRpPvkn407L6t6KJjCku577QXuODnERi0X29nESGQnpLH9kg2EA==
+Received: from [192.168.1.50] (unknown [17.156.208.39])
+	by p00-icloudmta-asmtp-us-west-3a-100-percent-7 (Postfix) with ESMTPSA id 5196F180013C;
+	Tue, 27 Oct 2026 22:21:59 +0000 (UTC)
+Message-ID: <a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com>
+Date: Tue, 27 Oct 2026 23:21:57 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -99,31 +55,114 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b50196b6-cc04-4d3e-965a-28c4f75ef263@kernel.dk>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: med.jebabli@gmail.com, tiwai@suse.de
+Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+From: Cristian Castellano <cristian.castellano@icloud.com>
+Subject: [REGRESSION] ALSA: hda/tas2781: divide error on playback open after
+ accepting V1 calibration data without CRC (Lenovo Yoga Pro 9 16IRP8)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Info-Out: v=2.4 cv=SrOdKfO0 c=1 sm=1 tr=0 ts=6ae12409
+ cx=c_apl:c_pps:t_out a=kRaGL2Q7qLiahLf3O6OaIA==:117
+ a=kRaGL2Q7qLiahLf3O6OaIA==:17 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
+ a=x7bEGLp0ZPQA:10 a=eD1N5GnKAbQA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VfikHhr-D2iK5rlxiJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI3MDA5MCBTYWx0ZWRfX8X/qb+UQpwhq
+ 48wYsNv7WhrmnpP01REaPS4kYjvVJoAg6ZMb/XBsYpk30YpfGNnDTHHJfh6MyAB6u6UFmse6VPN
+ 2OXNDPrYyHzt4Hk6wq8bdgWYuTD+BV9Xy75509siASZKscLGGut+iCoRLVz6gI3IWXtCRNo7y4H
+ TsKcqE2cKSSmllR/oHsVzkMZpq9dc+9YQ9FpbtjPRc66nKwtvHSaWcJwoXjPIIs7pcIJ0aJDVSv
+ PN+/FX9xgdYkatuBB36psEpy6Nb3+/uGufyKiVerzBUzWXCEo0J31z05Mfq243YNvrJ5WiACazx
+ dtla8lbPm645QlxXlVCELwEdNKRDa55t6+j3s820XrVVrw00ts8rjk2eJ5U+AU=
+X-Proofpoint-GUID: zvmonwOqKB_Wd4m3Y7uZFogIyICaqb9Y
+X-Proofpoint-ORIG-GUID: zvmonwOqKB_Wd4m3Y7uZFogIyICaqb9Y
+X-JNJ: AAAAAAABqFK7fFSoe7rCT4ANnaHlhYTdBA0lRwtOCMx6VOTy/8iaEGvF/169W9N5AXD0na
+ OXopY8FIA9LzETibOKNkitaouP8Qo2tEx4sXgXLlTPk8TUicADGZtWlhkGIHOWgIDSaLiD
+ K11PIc1ZjvlxSSWVH7s9yImvCFx5sX3oTpiR9Vnh3g4sJaEC0C1nPRgOzBiw3imwEPxZu1
+ 3SQVh4QkxYgqpl29Qf4h/zXsIoYrlxQzc2t+MA5y6OAHusAXghJBTJRvCB4gMhC9Nd1mpB
+ 3FqdgnsneUXplnMoAHRAWqrZ1Nv1u5H9iYAmeKtqVUsoneudzbXqTZ6sbpXlGQE+cJmLQd
+ QOGuWMVo7Dh0xfL6yu/bPlFXWeLdAHhSWdld7PBAXiyhrzrsrKxgV5u/VScKEFBNv59jPC
+ 08uWUUD1xF4nmM2Y56YdzBT0VtPpGjqL6yFmG95thmnqpe/sJQpTmKjOldS98f7fCpSYnu
+ sI7hv79YtVB/grpTZ6gfNDwZ9K7iWFNt8giDQ+zxSuVW44E/lHormsDhK2eEOZZyGTSPVt
+ mVNUqaBWfvWRjVgyfOHw3sIcP5OELRLO3p80iegRYJla9JLfahRPGFlumIiLmXp910mDCi
+ EbqnV0zELe//qWqQ0TOHq/oSkGNWLSzNYFnbiF5L1RNEqmULwkaVfLWfsERKHw+Y7Y8DE5
+ JouC5lLQ9PnmZyi3YFGd1Dy/i7c+Xw9EjKpzmzozjDh824A0MTNYuv0AAiDgBRhghx6XQc
+ /NPhwoC6nIU/jYPypy0eZfFv0eee5GVPeJx1teleTPf5g5i0nur4zmV54OrPGkBt//Qa7F
+ AW8VuveUdp3YgNDc/6V4L2JpR0Kq3mK1RXAuCS5ByjLJUMjnwIhND72UATEG5swgZ+e5YD
+ idAD1PFBvSJXb94E2xtvIzsn9QtFpvBTIh0SWhV1KzjNRSUPW45WQfSwh99uc0myxtUC4i
+ itwWweSBsFU5LwcIFZVMTa7JzQWfjWTNa0FWVnLopCRtTSclVRUfGPbyLy7tRWNtb8Yd+R
+ 6873Y59NjaPg2b3QNr6gHkXTNMdOjGabGxHAPkfH061OUJZ21oYXokTh+x7zb3cBdjhv9U
+ r35EHens5QGW2f9UzU9M8NYWXG5k7ym9BHGcSMZ1NQIFn0j8zNn3ViYzBxN8L9VX13+yAw
+ PS+E3s75syQMHGlM1TNXsJeGCmrgLY+YRocc3+wzRv2FUg+IgHRxXCd2kDBr1Ew5qqgDwP
+ oS3FpyrB9q6AO/7Y1mwUHlqud+Z24WkdlyoPmbnM7Ny38+dT4ZU5ilYDR58Ta1JQ46A8A0
+ v4Wqlkt1cTGwmmQ0xr9pc60EJpGgna3MUxKzky1ebI49xd9AEy0DETrAiUZw==
 
-On Tue, Oct 27, 2026 at 12:04:59PM +0100, Jens Axboe wrote:
-> >   3. A unmaps the ring but keeps its fd. B drops its fd and mappings,
-> >      then stops itself with SIGSTOP.
-> >   4. After confirming that B is stopped, controller P tells A to close
-> >      the final ring fd.
-> >   5. P resumes B after two seconds so the test can finish.
-> > 
-> > B keeps both pipe ends open and remains alive until close returns. This
-> > excludes pipe HUP and process exit as completion sources.
-> 
-> This is working as intended. With the change, close() waits for
-> requests still in flight, as otherwise they keep files pinned after
-> the ring is gone. If you SIGSTOP a task, then that task can't run
-> the required work to complete it. A fatal signal will still kill
-> it.
-> 
-> Unsurprisingly, sending SIGSTOP to something may prevent it from
-> doing work...
-> 
+Hello, since I updated to 7.2.11 (and then to 7.3), opening a playback stream on my Lenovo Yoga Pro 9
+16IRP8 (83BY, subsystem 17aa:3835, BIOS KVCN44WW) triggers a divide error in snd_soc_tas2781_fmwlib and audio stops working. 7.2.9 just works.
 
-Good point. This is not a real regression.
+The only tas2781 change between the two I found is:
+c1b708f712f5 ("ALSA: hda/tas2781: Accept V1 calibration data without CRC") (upstream 408249089c48).
 
-Thanks,
-Karl
+At boot the driver now logs:
+
+  tas2781-hda i2c-TIAS2781:00: tas2781_apply_calib: V1 data without CRC, accepting
+
+Before that commit the data was rejected and the amplifiers worked with
+default parameters. On this machine the CALI_DATA EFI variable
+(CALI_DATA-1f52d2a1-bb3a-457d-bc09-43a3f4310a92) contains two non-zero
+device entries followed by zeros, with TimeStamp and CRC zeroed:
+
+  0000000 07 00 00 00 5c c8 20 1d 28 b5 27 23 2a 79 42 16
+  0000016 f2 07 c5 00 00 00 e0 2e 01 f7 2a 1d 72 6f 1b 23
+  0000032 2a 41 4a 16 c4 0a c3 00 00 00 e0 2e 00 00 00 00
+  0000048 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  *
+  0000128 00 00 00 00
+
+(the first 4 bytes are the EFI attributes)
+
+Oops:
+
+  Oops: divide error: 0000 [#1] SMP NOPTI
+  CPU: 10 UID: 1000 PID: 1533 Comm: wireplumber Tainted: G        W  O        7.3.0-4-cachyos #1 PREEMPT(full)
+  Hardware name: LENOVO 83BY/LNVNB161216, BIOS KVCN44WW 03/05/2025
+  RIP: 0010:tasdevice_select_tuningprm_cfg+0x8c2/0xa90 [snd_soc_tas2781_fmwlib]
+  Code: 4c 89 f7 41 b8 04 00 00 00 2e 2e 2e 41 ff d3 85 c0 0f 88 97 01 00 00 48 8b 4c 24 10 66 0f 38 f0 01 0f b7 c0 0f af 44 24 18 99 <f7> 7c 24 24 88 21 88 41 01 c6 41 08 01 48 8b 4c 24 08 48 8b 44 24
+  RAX: 0000000000000000 RBX: 000000000000002a RCX: ffff8d36ca8af218
+  RDX: 0000000000000000 RSI: 0000000000000db8 RDI: ffff8d36ca8af21b
+  RBP: 0000000000000000 R08: 0000000000000004 R09: 000000000000000a
+  R10: 0000000000000100 R11: ffffffff87559290 R12: ffff8d3684e350df
+  R13: ffff8d36a861d9b8 R14: ffff8d3684e35038 R15: 0000000000000002
+  Call Trace:
+   <TASK>
+   tasdevice_tuning_switch+0x71/0x80 [snd_soc_tas2781_fmwlib]
+   tas2781_hda_playback_hook+0x4c/0x110 [snd_hda_scodec_tas2781_i2c]
+   hda_component_manager_playback_hook+0xb5/0x370 [snd_hda_scodec_component]
+   playback_pcm_open+0x79/0xa0 [snd_hda_codec_generic]
+   hdac_hda_dai_open+0x5c/0x90 [snd_soc_hdac_hda]
+   snd_soc_dai_startup+0x52/0x90 [snd_soc_core]
+   __soc_pcm_open+0x108/0x6c0 [snd_soc_core]
+   dpcm_be_dai_startup+0x153/0x3c0 [snd_soc_core]
+   dpcm_fe_dai_open+0x109/0xc00 [snd_soc_core]
+   snd_pcm_open_substream+0x604/0x920 [snd_pcm]
+   snd_pcm_open+0xeb/0x220 [snd_pcm]
+   snd_pcm_playback_open+0x39/0x60 [snd_pcm]
+   chrdev_open+0xbf/0x230
+   vfs_open+0x3f8/0x520
+   path_openat+0x4f4/0xc50
+   do_file_open+0xd7/0x150
+   do_syscall_64+0x8f/0x380
+   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+   </TASK>
+
+The kernel is  linux-cachyos 7.3 (taint O is from the NVIDIA module);
+CachyOS does not patch the tas2781 driver, and its LTS, 6.18.55  works. If it is needed, I can test patches.
+
+#regzbot introduced: 408249089c48
+
+Thank you,
+Cristian Castellano
+
+
