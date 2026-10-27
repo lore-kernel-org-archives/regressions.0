@@ -1,70 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.38.247.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793087440;
-	b=DYT6AeKkwYfWxSsLu9mdE9xiMMgXxhh4RNX9K7gA3k2wNUj77GTUfnan3pjDADwZIuG3
-	 4iR+u6B8W+fHpcXNG0GkAW7s+Sxlv7AGyJYZqJ5lYk8b1GEcBXg10TJpaqzPtQg1Laiqi
-	 UlTkdCWpHOsdXjF3sDjnbP7J3GVz+wQQSpF96U873c13YsdWRS3OTYEVo3PwTNzdPZ/29
-	 2xZ0zt40Jhb2JCBEu/dNymTW89q1PTJW+XXrxENBq5KO5GtxS+MebfWkW53sT5HTZKZGW
-	 TWMaREiVf4PzSMjmnaLrrKE10/Um0dIiyW9ZXlineM7AIMyFFc6kwKkfDjGvQPbBlEA==
+	t=1793087723;
+	b=TQpWqc1/V0TAaYvrCealhcQR2Mr1CcaT3fYbMe7iRrhvyQTRZ9vhAniX0P1h5h1UvSJh
+	 y4USDw7v2fkUwW5/NI8Fza90MiuR9h2sxJHgeI5trbtSjytc8PgO41UBJUXJiQcOW2uxD
+	 b8hwvILHtKoG+i8VGRcxo6wIUpUrAbVVH8s45kY7oV4kSw52V/7Hl4/SRI+f0hmAravDr
+	 3aRAoMmMJiZWGTFmMe1zBv0WKUXG9IlpwPes5b5hVXtbOWkzMkV2IcqKZGJTdrkEIznJk
+	 e6eiaOoviF0PfTP7EZ4ATsGMPpYBvX6ZOtNRXj38P1UcBeRYcsl5+/hLvyO99KZzk3g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793087440;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793087723;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
 	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
 	 References:From:Content-Language:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
 	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=uBFlnf4zZWU6cOTbN86hfRAP6AeoL9i7Ja6BGfaY0Ro=;
-	b=ccXkHcD6xzkptU+f+KYibNgVsQyYEK7Bg7wjpkSbXGOHc7ncyMAy+SQaXQpJ0D3p2Rex
-	 mZAkEBy+XryaJ+FPUj9qExi38+zRLsTBR7Ky/TUIQfjDG3qEe3aQOjpjokMNcVSK7cKhT
-	 mDu2MZd/L+D1VmtTaQ3FzILi81AHYu+1OmmpzrPDOQCbJsV0E7SIOg/eOf0C+L9Uesya1
-	 MA//8VLYjToMzaCZlo9nYu/kEyVMlWQe/EWaRFW//f5JBqHih0IRF9lbkj7OhXdnFGLV9
-	 27KsDeKJcr+sIFz18X/V15jS5qQIgvGuzOuiZ8jMeLNlJ8+NNVzq18YZAHt7/evSF+w==
+	bh=jhgLB/G+bnU+2NF4b/GbQk/18YkilOwbFiadUiWuDC4=;
+	b=RICoAZOrw5crhY4CuaxLX6V/2hmvP6QABBuIEDZP5MAq3aHBk/MrcEDLH9UF56bU1kxR
+	 0mPS5/Yow8Vn+u3HRAyFknDAxLhsMjBt3/AeyDWv2VrxF1xN4X/hN2ztpVrCCZcoC9L2j
+	 nUvV4mpzxxAbxYT85hHse5uiQBYWBkcKLLpK3tLfkHGHfbmNnnzbJT6igRgS5c4yhzRzH
+	 vGGgx1qrd3bQqDHG60sHpG8ZzWhnFiGg3TOorrPPDuNqIfd9IrLUsQ+J3BWiz6Hhv/xNp
+	 CK71oU6T5PYSFknOBD9hF9Yod2QPu3BzRfZ6qyRmRlw4oFyA1WAijM8NpkzOdgrGECg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=leemhuis.info;
 	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=HkZ4V1IB;
-	arc=none smtp.remote-ip=185.244.194.184
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=BNuy2gTW;
+	arc=none smtp.remote-ip=46.38.247.119
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633BC606A31B;
-	Tue, 27 Oct 2026 07:50:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 633BC606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C65606A31E
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 07:55:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2C65606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=HkZ4V1IB
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jDN2M2bgnz9Vp6;
-	Tue, 27 Oct 2026 08:50:19 +0100 (CET)
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=BNuy2gTW
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jDN831lNcz8YgS;
+	Tue, 27 Oct 2026 08:55:15 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793087419;
-	bh=csswwopQr0L6Iq80y+T2GffvxU9tazEIvHHPF/uJQv0=;
+	s=key2; t=1793087715;
+	bh=Ijsej1QAoO/3PN6iWABBfAJJaRGLph/2eyq6W4qoBw8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HkZ4V1IBXdbR8zIBbXo0biyKDXITZj3lEUomkG8fLcUGk6y8uJFdNlqNeWnHr2wfh
-	 jwjIEjA/8pY66iUUCzX4TCsKM7EQXVwqvFqIir4wcOUq6yvwazRrLoC4TpA6XRMWAe
-	 Hdbb07jovHsIT/ojDa0yxSzVpO/47Emx+8tG3dNS/QloU8wZCGfn+PkcEy7Gn4cnGz
-	 Ml8Y4bcuZYI3g8cI8iSEj2/t/9DkfraTyrYBkpmV/2b+Vt/B75/XGtEhZFUN5fBYrX
-	 Z3GbqqbEKWhU5Rpg8RzRcay56rXb3GkhUXUZMXdy/EKAV83ubGQ8gdwoPAD+iI0lSA
-	 hsD/3Ey4Y6chQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jDN151s5pz7wqj;
-	Tue, 27 Oct 2026 08:49:13 +0100 (CET)
+	b=BNuy2gTWo8ujB+fFm9ZYpDfx/SrVsQuki/5zYZ/9OBY0m39PH4FZ5vAJb9wzsqH69
+	 ieTnTyL3xg08xv8eqACies5rHlWlmchY+W2e6+CD6AFcFk8tMDSJN1SrpI0uTuc2T1
+	 yHl3hT4LEp2SVORrxsZVApMI4iGf+hGtpTBmVl8Klr6Dojfv4XCRwG//vAdwaZBhuw
+	 80eeilzNoztfm382It8JM99+G7kpvYnOehaz5zc4DIBq+uysiy3ttxI2xmtrNGfyTW
+	 6Aw1YEt3X+GzNZ4SIBvpF72D+kI/fD3b2//abuWAcqpbK6prjVbmDxortgCaS0dvsZ
+	 +ffTmkH1PE8og==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jDN8312MTz502k;
+	Tue, 27 Oct 2026 08:55:15 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jDN150GL9z8svC;
-	Tue, 27 Oct 2026 08:49:13 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jDN822v70z8tk9;
+	Tue, 27 Oct 2026 08:55:14 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 168085F98B;
-	Tue, 27 Oct 2026 08:49:08 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9034E5F98B;
+	Tue, 27 Oct 2026 08:55:09 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7f21f160-f637-4b63-aa15-066d7b18e2ed@leemhuis.info>
-Date: Tue, 27 Oct 2026 08:49:07 +0100
+Message-ID: <9a92165c-93dd-42a1-b61c-b494008f45b7@leemhuis.info>
+Date: Tue, 27 Oct 2026 08:55:09 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -75,304 +80,186 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] drm/vblank: Don't arm vblank timer with invalid frame
- duration
-To: Thomas Zimmermann <tzimmermann@suse.de>, Roman Ilin <me@romanilin.is>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maxime Ripard <mripard@kernel.org>, Louis Chauvet
- <louis.chauvet@bootlin.com>, Javier Martinez Canillas <javierm@redhat.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
- <ville.syrjala@linux.intel.com>, Peter Arnesen <peter.m.arnesen@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-References: <20260613224434.96501-1-me@romanilin.is>
- <20260702181027.98526-1-me@romanilin.is>
- <E697A2AE-5413-48AE-BFD6-3383819B388B@romanilin.is>
- <3b192119-9709-4f21-841f-a4706cc85e4a@suse.de>
- <0600a3f0-b2d2-4a07-ab21-f590c2979612@leemhuis.info>
- <f0e4cc76-5cf3-4fdb-b42c-f405a09c0d2a@suse.de>
- <ec0c2486-b127-4a47-a81c-499130f268d9@leemhuis.info>
- <d106ad8a-78d4-45be-95da-0222c44107c5@suse.de>
+Subject: Re: [PATCH iwlwifi-fixes 3/5] wifi: iwlwifi: honor the per-channel
+ 320 MHz regulatory flag
+To: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: linux-wireless@vger.kernel.org,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <20260930122439.f8a1ea3af242.I282fab02ab2f183633df0f070229fb5a2d5c9ec3@changeid>
+ <20260930122439.08094e4c344f.Ic0a4bf544fd6ebaf1fc62b40bf463bd289e58cf0@changeid>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <d106ad8a-78d4-45be-95da-0222c44107c5@suse.de>
+In-Reply-To: 
+ <20260930122439.08094e4c344f.Ic0a4bf544fd6ebaf1fc62b40bf463bd289e58cf0@changeid>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <179308734871.898318.4642876887831960881@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179308770986.901241.14769111465113550766@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 168085F98B
-X-NC-CID: 03+Wsu/eo55EKoo4FpYSMVEN9eFUU4u2SjKgZFAKQ8+/Avnxn6c=
+X-Rspamd-Queue-Id: 9034E5F98B
+X-NC-CID: OkT08XUM0Ix4ZJ6JWXsJjg+ncpKuZ6jSmPowZaZN+cT/fdNzIeU=
 
-On 9/14/26 13:00, Thomas Zimmermann wrote:
-> Am 11.09.26 um 09:39 schrieb Thorsten Leemhuis:
->> On 9/4/26 08:19, Thomas Zimmermann wrote:
->>> Am 03.09.26 um 16:07 schrieb Thorsten Leemhuis:
->>>> On 7/3/26 09:26, Thomas Zimmermann wrote:
->>>>> Am 02.07.26 um 20:23 schrieb Roman Ilin:
->>>>>> Apologies, I accidentally fired off send-email before saving my final
->>>>>> changelog notes. Please ignore the changelog and notes in the
->>>>>> original
->>>>>> v3 email.
->>>>> We want to know when this happens. And user space will only be able to
->>>>> trigger this once, so there's no risk of spamming the kernel log.
->>>>>> Hmmm, just wondering: what's the status here?
->>>> Roman Ilin, did you loose interest? Or was this continued somewhere or
->>>> maybe even resolved and I just missed that?
->>>>
->>>> Thomas: if Roman left this behind, could you maybe handle this, [...]
->>> AFAICT it was almost there except for the error messaging. The v4 then
->>> never happened. I can finish the patch if Roman is no longer around.
->> No answer from Roman since then, so yes, that would be great! Tia!
+On 9/30/26 11:25, Miri Korenblit wrote:
+> From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 > 
-> I've now sent out an update with minor changes.
+> When support for the MCC update response version 8 was added, the API
+> change was implemented only partially. That version introduced two new
+> pieces of information about 320 MHz: the global capability
+> REG_CAPA_V5_320MHZ_ALLOWED and a per-channel bit, BIT(12), in the
+> channel flags carried by the response. Only the former was picked up.
+> BIT(12) kept its previous meaning in the driver, NVM_CHANNEL_DC_HIGH,
+> a leftover from old devices that nothing used, so the new bit was
+> silently dropped.
 
-Many thx again. But the thing is: it still sits on the list waiting for
-review afaics:
-
-https://lore.kernel.org/all/20260914110004.211027-1-tzimmermann@suse.de/
-
-Can you maybe prod the right people to finally get this resolved? Or
-what should be do instead?
+Just wondering: what happened to this regression fix? It from what I see
+seems to sit in iwlwifi fixes branch for a while already, but missed
+both 7.3 final and also the main net merge in this merge window. Did it
+fell trough the cracks?
 
 Ciao, Thorsten
-
->>>>> So this is not really a problem. drm_WARN_ON_ONCE was ok for that. You
->>>>> can also use a regular DRM print macro. But instead of drm_dbg_kms()
->>>>> should use drm_err_once(). But please also output linedur_ns and
->>>>> framedur_ns in the error. We want to know which of them is incorrect.
->>>>> You can also add more information to the error message. See [1] for
->>>>> the
->>>>> mode-formating macros.
->>>>>
->>>>> [1] https://elixir.bootlin.com/linux/v7.1.2/source/include/drm/
->>>>> drm_modes.h#L422
->>>>>
->>>>>
->>>>>> - Updated drm_calc_timestamping_constants with the goto error
->>>>>> fallback
->>>>>>      to clear the stale state.
->>>>>>
->>>>>> Also, an automated review bot pointed out an AB-BA deadlock in
->>>>>> drm_crtc_vblank_start_timer(). But I am leaving this out of the
->>>>>> patch to
->>>>>> keep the fixes orthogonal.
->>>>>>
->>>>>> Sorry for the noise.
->>>>>>
->>>>>>> On Jul 2, 2026, at 21:10, Roman Ilin <me@romanilin.is> wrote:
->>>>>>>
->>>>>>> When a CRTC's display mode carries a too small pixel clock,
->>>>>>> drm_calc_timestamping_constants() computes a frame duration that
->>>>>>> exceeds INT_MAX. drm_vblank_crtc.framedur_ns becomes negative.
->>>>>>> drm_crtc_vblank_start_timer() then arms the vblank hrtimer with this
->>>>>>> interval, after which vblank events are no longer delivered. Pending
->>>>>>> page flips never complete and the display appears frozen.
->>>>>>>
->>>>>>> This could be triggered on virtio-gpu guests that have dynamic
->>>>>>> resolution
->>>>>>> enabled: when the SPICE agent or the X server resizes the output, it
->>>>>>> submits a mode whose pixel clock is off by a factor of 1000, e.g.:
->>>>>>>
->>>>>>>       clock = 406 kHz, htotal = 3152, vtotal = 2148
->>>>>>>
->>>>>>>       framedur_ns = 3152 * 2148 * 1000000 / 406 = 16675852216 ns
->>>>>>> (~16.7 s)
->>>>>>>
->>>>>>> 16675852216 does not fit into an int and wraps to roughly
->>>>>>> -504000000.
->>>>>>> ns_to_ktime() then yields a negative interval and the timer stops
->>>>>>> working.
->>>>>>>
->>>>>>> Found by bisection, which pointed at commit a036f5fceedb ("drm/
->>>>>>> virtgpu:
->>>>>>> Use vblank timer"). That commit merely made virtio-gpu use the
->>>>>>> vblank
->>>>>>> timer and thereby exposed the pre-existing problem in the timer
->>>>>>> setup
->>>>>>> added by commit 74afeb812850 ("drm/vblank: Add vblank timer").
->>>>>>>
->>>>>>> To fix this, modify drm_calc_timestamping_constants() to use u64 for
->>>>>>> calculations, check for INT_MAX overflows, and return an error code.
->>>>>>> drm_crtc_vblank_start_timer() will then propagate the error,
->>>>>>> enabling
->>>>>>> the driver to fall back to immediate vblank events. Valid modes are
->>>>>>> unaffected, and the timer self-heals on the next mode with a sane
->>>>>>> clock.
->>>>>>>
->>>>>>> Fixes: 74afeb812850 ("drm/vblank: Add vblank timer")
->>>>>>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>>>>> Signed-off-by: Roman Ilin <me@romanilin.is>
->>>>>>> ---
->>>>>>> Changes in v3:
->>>>>>>
->>>>>>> - Changed the WARN_ON_ONCE to drm_err_once
->>>>>>>
->>>>>>> Notes:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> drivers/gpu/drm/drm_vblank.c | 71 ++++++++++++++++++++++
->>>>>>> +-------------
->>>>>>> include/drm/drm_vblank.h     |  4 +-
->>>>>>> 2 files changed, 48 insertions(+), 27 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/
->>>>>>> drm_vblank.c
->>>>>>> index f90fb2d13..629b9fcc7 100644
->>>>>>> --- a/drivers/gpu/drm/drm_vblank.c
->>>>>>> +++ b/drivers/gpu/drm/drm_vblank.c
->>>>>>> @@ -631,42 +631,51 @@ EXPORT_SYMBOL(drm_crtc_vblank_waitqueue);
->>>>>>>     * drm_crtc_vblank_helper_get_vblank_timestamp(). They are
->>>>>>> derived from
->>>>>>>     * CRTC's true scanout timing, so they take things like panel
->>>>>>> scaling or
->>>>>>>     * other adjustments into account.
->>>>>>> + *
->>>>>>> + * Returns:
->>>>>>> + * 0 on success, or a negative errno code otherwise.
->>>>>>>     */
->>>>>>> -void drm_calc_timestamping_constants(struct drm_crtc *crtc,
->>>>>>> -     const struct drm_display_mode *mode)
->>>>>>> +int drm_calc_timestamping_constants(struct drm_crtc *crtc,
->>>>>>> +    const struct drm_display_mode *mode)
->>>>>>> {
->>>>>>> struct drm_device *dev = crtc->dev;
->>>>>>> unsigned int pipe = drm_crtc_index(crtc);
->>>>>>> struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
->>>>>>> - int linedur_ns = 0, framedur_ns = 0;
->>>>>>> + u64 linedur_ns, framedur_ns;
->>>>>>> int dotclock = mode->crtc_clock;
->>>>>>> + unsigned int frame_size;
->>>>>>>
->>>>>>> if (!drm_dev_has_vblank(dev))
->>>>>>> - return;
->>>>>>> + return 0;
->>>>>>>
->>>>>>> if (drm_WARN_ON(dev, pipe >= dev->num_crtcs))
->>>>>>> - return;
->>>>>>> + return -EINVAL;
->>>>>>>
->>>>>>> - /* Valid dotclock? */
->>>>>>> - if (dotclock > 0) {
->>>>>>> - int frame_size = mode->crtc_htotal * mode->crtc_vtotal;
->>>>>>> + if (dotclock <= 0) {
->>>>>>> + drm_err(dev, "crtc %u: Can't calculate constants, dotclock =
->>>>>>> %d!\n",
->>>>> Please turn this into drm_err_once() because this call can actually be
->>>>> triggered repeatedly from userspace.
->>>>>
->>>>> Best regards
->>>>> Thomas
->>>>>
->>>>>
->>>>>>> + crtc->base.id, dotclock);
->>>>>>> + goto error;
->>>>>>> + }
->>>>>>>
->>>>>>> - /*
->>>>>>> - * Convert scanline length in pixels and video
->>>>>>> - * dot clock to line duration and frame duration
->>>>>>> - * in nanoseconds:
->>>>>>> - */
->>>>>>> - linedur_ns  = div_u64((u64) mode->crtc_htotal * 1000000,
->>>>>>> dotclock);
->>>>>>> - framedur_ns = div_u64((u64) frame_size * 1000000, dotclock);
->>>>>>> + frame_size = (unsigned int)mode->crtc_htotal * (unsigned int)mode-
->>>>>>>> crtc_vtotal;
->>>>>>> - /*
->>>>>>> - * Fields of interlaced scanout modes are only half a frame
->>>>>>> duration.
->>>>>>> - */
->>>>>>> - if (mode->flags & DRM_MODE_FLAG_INTERLACE)
->>>>>>> - framedur_ns /= 2;
->>>>>>> - } else {
->>>>>>> - drm_err(dev, "crtc %u: Can't calculate constants, dotclock = 0!
->>>>>>> \n",
->>>>>>> - crtc->base.id);
->>>>>>> + /*
->>>>>>> + * Convert scanline length in pixels and video dot clock to line
->>>>>>> duration
->>>>>>> + * and frame duration in nanoseconds.
->>>>>>> + */
->>>>>>> + linedur_ns  = div_u64((u64)mode->crtc_htotal * 1000000, dotclock);
->>>>>>> + framedur_ns = div_u64((u64)frame_size * 1000000, dotclock);
->>>>>>> +
->>>>>>> + /*
->>>>>>> + * Fields of interlaced scanout modes are only half a frame
->>>>>>> duration.
->>>>>>> + */
->>>>>>> + if (mode->flags & DRM_MODE_FLAG_INTERLACE)
->>>>>>> + framedur_ns /= 2;
->>>>>>> +
->>>>>>> + if (linedur_ns > INT_MAX || framedur_ns > INT_MAX) {
->>>>>>> + drm_dbg_kms(dev, "crtc %u: Can't calculate constants, mode clock
->>>>>>> too small!\n",
->>>>>>> +    crtc->base.id);
->>>>>>> + goto error;
->>>>>>> }
->>>>>>>
->>>>>>> vblank->linedur_ns  = linedur_ns;
->>>>>>> @@ -678,7 +687,16 @@ void drm_calc_timestamping_constants(struct
->>>>>>> drm_crtc *crtc,
->>>>>>>        crtc->base.id, mode->crtc_htotal,
->>>>>>>        mode->crtc_vtotal, mode->crtc_vdisplay);
->>>>>>> drm_dbg_core(dev, "crtc %u: clock %d kHz framedur %d linedur %d\n",
->>>>>>> -     crtc->base.id, dotclock, framedur_ns, linedur_ns);
->>>>>>> +     crtc->base.id, dotclock,
->>>>>>> +     vblank->framedur_ns, vblank->linedur_ns);
->>>>>>> +
->>>>>>> + return 0;
->>>>>>> +
->>>>>>> +error:
->>>>>>> + vblank->linedur_ns  = 0;
->>>>>>> + vblank->framedur_ns = 0;
->>>>>>> + drm_mode_copy(&vblank->hwmode, mode);
->>>>>>> + return -EINVAL;
->>>>>>> }
->>>>>>> EXPORT_SYMBOL(drm_calc_timestamping_constants);
->>>>>>>
->>>>>>> @@ -2221,6 +2239,7 @@ int drm_crtc_vblank_start_timer(struct
->>>>>>> drm_crtc
->>>>>>> *crtc)
->>>>>>> struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
->>>>>>> struct drm_vblank_crtc_timer *vtimer = &vblank->vblank_timer;
->>>>>>> unsigned long flags;
->>>>>>> + int ret;
->>>>>>>
->>>>>>> if (!vtimer->crtc) {
->>>>>>> /*
->>>>>>> @@ -2239,7 +2258,9 @@ int drm_crtc_vblank_start_timer(struct
->>>>>>> drm_crtc
->>>>>>> *crtc)
->>>>>>> hrtimer_try_to_cancel(&vtimer->timer);
->>>>>>> }
->>>>>>>
->>>>>>> - drm_calc_timestamping_constants(crtc, &crtc->mode);
->>>>>>> + ret = drm_calc_timestamping_constants(crtc, &crtc->mode);
->>>>>>> + if (ret)
->>>>>>> + return ret;
->>>>>>>
->>>>>>> spin_lock_irqsave(&vtimer->interval_lock, flags);
->>>>>>> vtimer->interval = ns_to_ktime(vblank->framedur_ns);
->>>>>>> diff --git a/include/drm/drm_vblank.h b/include/drm/drm_vblank.h
->>>>>>> index 2fcef9c0f..d99772dfa 100644
->>>>>>> --- a/include/drm/drm_vblank.h
->>>>>>> +++ b/include/drm/drm_vblank.h
->>>>>>> @@ -311,8 +311,8 @@ void drm_crtc_vblank_on(struct drm_crtc *crtc);
->>>>>>> u64 drm_crtc_accurate_vblank_count(struct drm_crtc *crtc);
->>>>>>> void drm_crtc_vblank_restore(struct drm_crtc *crtc);
->>>>>>>
->>>>>>> -void drm_calc_timestamping_constants(struct drm_crtc *crtc,
->>>>>>> -     const struct drm_display_mode *mode);
->>>>>>> +int drm_calc_timestamping_constants(struct drm_crtc *crtc,
->>>>>>> +    const struct drm_display_mode *mode);
->>>>>>> wait_queue_head_t *drm_crtc_vblank_waitqueue(struct drm_crtc *crtc);
->>>>>>> void drm_crtc_set_max_vblank_count(struct drm_crtc *crtc,
->>>>>>>      u32 max_vblank_count);
->>>>>>> -- 
->>>>>>> 2.54.0
->>>>>>>
+> The two are not equivalent, the per-channel bit can be more restrictive
+> than the global capability. When that happens, cfg80211 is told that
+> 320 MHz is allowed, mac80211 builds a 320 MHz channel context, and the
+> firmware rejects the resulting PHY_CONTEXT_CMD and asserts with
+> 0x200014FC.
 > 
+> Rename the bit to NVM_CHANNEL_320MHZ and set NL80211_RRF_NO_320MHZ for
+> the channels that don't have it, so that we cap the bandwidth at
+> 160 MHz instead of asserting the firmware. The bit is checked in every
+> band, so that a future band that supports 320 MHz is covered as well.
+> 
+> Fixes: e9b63341dc15 ("wifi: iwlwifi: update response for mcc_update command")
+> Assisted-by: GitHub-Copilot:claude-opus-5
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221675
+> Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+> ---
+>  .../wireless/intel/iwlwifi/iwl-nvm-parse.c    |  6 ++---
+>  .../wireless/intel/iwlwifi/iwl-nvm-parse.h    |  7 ++++--
+>  .../wireless/intel/iwlwifi/tests/nvm_parse.c  | 24 +++++++++++++++----
+>  3 files changed, 28 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+> index 863d5e358152..f4df00514fb1 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+> @@ -106,8 +106,6 @@ static const u16 iwl_unii9_nvm_channels[] = {
+>  #define IWL_NVM_NUM_CHANNELS_EXT	51
+>  #define IWL_NVM_NUM_CHANNELS_UHB	110
+>  #define IWL_NVM_NUM_CHANNELS_UNII9	ARRAY_SIZE(iwl_unii9_nvm_channels)
+> -#define NUM_2GHZ_CHANNELS		14
+> -#define NUM_5GHZ_CHANNELS		37
+>  #define FIRST_2GHZ_HT_MINUS		5
+>  #define LAST_2GHZ_HT_PLUS		9
+>  #define N_HW_ADDR_MASK			0xF
+> @@ -280,7 +278,7 @@ static inline void iwl_nvm_print_channel_flags(struct device *dev, u32 level,
+>  		      CHECK_AND_PRINT_I(40MHZ),
+>  		      CHECK_AND_PRINT_I(80MHZ),
+>  		      CHECK_AND_PRINT_I(160MHZ),
+> -		      CHECK_AND_PRINT_I(DC_HIGH),
+> +		      CHECK_AND_PRINT_I(320MHZ),
+>  		      CHECK_AND_PRINT_I(VLP),
+>  		      CHECK_AND_PRINT_I(AFC));
+>  #undef CHECK_AND_PRINT_I
+> @@ -1631,6 +1629,8 @@ u32 iwl_nvm_get_regdom_bw_flags(const u16 *nvm_chan,
+>  		flags |= NL80211_RRF_NO_80MHZ;
+>  	if (!(nvm_flags & NVM_CHANNEL_160MHZ))
+>  		flags |= NL80211_RRF_NO_160MHZ;
+> +	if (!(nvm_flags & NVM_CHANNEL_320MHZ))
+> +		flags |= NL80211_RRF_NO_320MHZ;
+>  
+>  	if (!(nvm_flags & NVM_CHANNEL_ACTIVE))
+>  		flags |= NL80211_RRF_NO_IR;
+> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h
+> index 9ebb72d3726a..7b11682f5d45 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.h
+> @@ -10,6 +10,9 @@
+>  #include "iwl-nvm-utils.h"
+>  #include "mei/iwl-mei.h"
+>  
+> +#define NUM_2GHZ_CHANNELS		14
+> +#define NUM_5GHZ_CHANNELS		37
+> +
+>  /**
+>   * enum iwl_nvm_sbands_flags - modification flags for the channel profiles
+>   *
+> @@ -82,7 +85,7 @@ struct iwl_reg_capa {
+>   * @NVM_CHANNEL_40MHZ: 40 MHz channel okay
+>   * @NVM_CHANNEL_80MHZ: 80 MHz channel okay
+>   * @NVM_CHANNEL_160MHZ: 160 MHz channel okay
+> - * @NVM_CHANNEL_DC_HIGH: DC HIGH required/allowed (?)
+> + * @NVM_CHANNEL_320MHZ: 320 MHz channel okay
+>   * @NVM_CHANNEL_VLP: client support connection to UHB VLP AP
+>   * @NVM_CHANNEL_AFC: client support connection to UHB AFC AP
+>   * @NVM_CHANNEL_VLP_AP_NOT_ALLOWED: UHB VLP AP not allowed,
+> @@ -101,7 +104,7 @@ enum iwl_nvm_channel_flags {
+>  	NVM_CHANNEL_40MHZ			= BIT(9),
+>  	NVM_CHANNEL_80MHZ			= BIT(10),
+>  	NVM_CHANNEL_160MHZ			= BIT(11),
+> -	NVM_CHANNEL_DC_HIGH			= BIT(12),
+> +	NVM_CHANNEL_320MHZ			= BIT(12),
+>  	NVM_CHANNEL_VLP				= BIT(13),
+>  	NVM_CHANNEL_AFC				= BIT(14),
+>  	NVM_CHANNEL_VLP_AP_NOT_ALLOWED		= BIT(15),
+> diff --git a/drivers/net/wireless/intel/iwlwifi/tests/nvm_parse.c b/drivers/net/wireless/intel/iwlwifi/tests/nvm_parse.c
+> index 853911900bfd..5a50807e3181 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/tests/nvm_parse.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/tests/nvm_parse.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * KUnit tests for NVM parse
+>   *
+> - * Copyright (C) 2025 Intel Corporation
+> + * Copyright (C) 2025-2026 Intel Corporation
+>   */
+>  #include <kunit/static_stub.h>
+>  #include <kunit/test.h>
+> @@ -12,7 +12,9 @@ MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+>  
+>  static const struct nvm_flag_case {
+>  	const char *desc;
+> +	int ch_idx;
+>  	u16 nvm_flags;
+> +	struct iwl_reg_capa reg_capa;
+>  	u32 reg_rule_flags;
+>  	u32 set_reg_rule_flags;
+>  	u32 clear_reg_rule_flags;
+> @@ -36,6 +38,20 @@ static const struct nvm_flag_case {
+>  		.clear_reg_rule_flags = NL80211_RRF_ALLOW_6GHZ_VLP_AP |
+>  					NL80211_RRF_NO_6GHZ_VLP_CLIENT,
+>  	},
+> +	{
+> +		.desc = "Allow 320 MHz on a 6 GHz channel that reports it",
+> +		.ch_idx = NUM_2GHZ_CHANNELS + NUM_5GHZ_CHANNELS,
+> +		.nvm_flags = NVM_CHANNEL_320MHZ,
+> +		.reg_capa = { .allow_320mhz = true, },
+> +		.clear_reg_rule_flags = NL80211_RRF_NO_320MHZ,
+> +	},
+> +	{
+> +		.desc = "Restrict 320 MHz on a 6 GHz channel without the bit",
+> +		.ch_idx = NUM_2GHZ_CHANNELS + NUM_5GHZ_CHANNELS,
+> +		.nvm_flags = 0,
+> +		.reg_capa = { .allow_320mhz = true, },
+> +		.set_reg_rule_flags = NL80211_RRF_NO_320MHZ,
+> +	},
+>  };
+>  
+>  KUNIT_ARRAY_PARAM_DESC(nvm_flag, nvm_flag_cases, desc)
+> @@ -43,11 +59,11 @@ KUNIT_ARRAY_PARAM_DESC(nvm_flag, nvm_flag_cases, desc)
+>  static void test_nvm_flags(struct kunit *test)
+>  {
+>  	const struct nvm_flag_case *params = test->param_value;
+> -	struct iwl_reg_capa reg_capa = {};
+>  	u32 flags = 0;
+>  
+> -	flags = iwl_nvm_get_regdom_bw_flags(NULL, 0, params->nvm_flags,
+> -					    reg_capa);
+> +	flags = iwl_nvm_get_regdom_bw_flags(NULL, params->ch_idx,
+> +					    params->nvm_flags,
+> +					    params->reg_capa);
+>  
+>  	if ((params->set_reg_rule_flags & flags) != params->set_reg_rule_flags)
+>  		KUNIT_FAIL(test, "Expected set bits:0x%08x flags:0x%08x\n",
 
