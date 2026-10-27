@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793128920;
-	b=nPJVfCSxTMQxvahbpFN/jULRTnfwl3A3jjr4o4qYH9IM62xuoq6G+TtMrgpGBobPLlwC
-	 4TY3usWYf3ZsH33ChtNv1r5qMmkjsJrBOrtIMfUooC7AsIh8oeA98oAHOwXOH45u7gdVF
-	 pjVQ2l7gzEZFkfiq7I5zw8IOYjX6gyKIT6sgP6K1hfEJ+oEPQGPE2t8PrvG7ObHWZ9hKr
-	 QSIIepd0m+yaVDYxv3acAsKgLLZ1HlASghapvDta2sFHdX6yA7kBxm6EUCt1tgyMw0BRu
-	 kyVcYthSxTAEI447mX+W1DaLgmwdmdO4RmZsuKOyiJkiVTK0NMNbE+dfXUJLJk7gd2A==
+	t=1793128922;
+	b=m47V7FDBOjdgXH5LRFkIs839xSskRhK2poSd5sz2zrNJGUAR55KMFhjesjHSOy8ofBVc
+	 tb+y+hDWMJeZfS8PIEg6S5pWSopgcnOq25VfgtmT40qxwkWsr6FYxokv8y4YA4RR5j6m7
+	 ocfTR7Nz4TObP018zOn0RNN44gz1cHiiOZReaU8lMwEIFiaxZT3Wk4hqh5MpFrBu0XaaU
+	 vYrt7Q3miXNB9sMTLcFyGLvfB0aGGLOGbnn1ftGfMNFd5PJMEA28po2oS45kidJfx3DwF
+	 edOjNwQUlJW93kojVWanN6ZQlU+wWDKWNnuhD2LWsrAu8rznAanyTkI4PBbX2yhMCjQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793128920;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793128922;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=/gQcf+jw8GIurwSk/Qo8Eoe4Jx6fP0xzW30Vqarn+bQ=;
-	b=P4FNsV4H+DXJcNtTaVN5girlU2BSyJrs0NFLwGRW1Ztp7JZlT+DwvTuI84ctHXPCDbXo
-	 K3RFk0I57UAwV/2l6Dmj1Vmpg+CpxCS304C4WRRSlDxYwiPTj7tY3dLMGJRJl80TINosl
-	 cZq559JRbU/5nBlSur/Y/QOpRBoxSnkRmjab37pLiu4o3wL1vnMtU6SWUsEhHtS+TlMx0
-	 OzIO5YgqxJEUmYYTXoPW7gHyzu7v4GaBsfUCgpkD2Bd+8d4/3Xg5+cVfQiVqdOKW50yx8
-	 mxAJ0BqI9wdGInlEixV6rlvluLMfVnPfN+LWK5nyK2H2AC622RZB4rhOSow9oFNFEMg==
+	bh=V0o2MwoTm1a+uK5cXDvIGjvEsu8ErE5O+nL6S7q9SXA=;
+	b=BcoyNH2Rm5rG+/UeY35/xeH8HeukdiiYXyu+Sj3koNXmaOzKOlZC5ZmgwSmu5ydhGFKM
+	 0QGu2mCaBBVL71tKuDLdFgxmOXH1JKHNm6OlE8tqGWu8X9GDxPUaBHJmhSfKvwZYMyvdO
+	 chVjhqFaB9m99TOGJuYiBI829kOmGc4aWHtpTKZSxF5aH78sOz4xqzbd+WB4hojS3vQeV
+	 NMYtUVojIoLfewsLeIJPBVWjdYobsSne+DBe3DhXpxNxJ8OnLsibnexRKCy84tLFqWbwN
+	 nnGzB9QHqmLhdbz4SQ6AtIRHReTR2gT30A1nLJNglaGKVPSBJ8nGgNQVbpSrgM2jdSg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XxCYX3Ux;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=eyMJMWUU;
 	arc=none smtp.remote-ip=198.175.65.19
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6992A606A31F
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 19:21:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6992A606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C1A606A31E
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 19:22:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62C1A606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XxCYX3Ux
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=eyMJMWUU
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793128920; x=1824664920;
+  t=1793128922; x=1824664922;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+kQPwHL2nncxW++ZI9loXuFFiUWkxlO2cfQUt8m9DHo=;
-  b=XxCYX3Uxd+slgJauZFtGtICoH8pxosjHVh6YIyAlrCxZdoOYqrN5OBCT
-   bWd4NiglSBbHnEW3OnwiG9c6G8NfSoTTYk/bU8x4aB5hwVw1oN4UQAkh8
-   end+kDeUK6GWwe6kq03+/M4vKlq7ObJN5H52xCKjhRC3XFVO55U9nRIbr
-   xe4KzCLPL2dlF1ct4AMe/uWGQjS9SFdU58xcLgQ/U6VEcm13uX0QSG83k
-   9jCZU+whrrVYY/HSJ1dd/1wHkatO8wbAwKC3lu7yr107fPMKPHCOQmNK0
-   szb3fRlDP2XCuzCMuk594wu5cZd26exWgPd0L6UyuyjxLrh5VprINDUbQ
-   Q==;
-X-CSE-ConnectionGUID: 4t8iXBpXRo2d9Arq6NRhkA==
-X-CSE-MsgGUID: Wvu30w9EQYOxZfXTZBYT7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11948"; a="1863749"
+  bh=VXeBeakhswHVta8Zt4aCwkj7yG5QX5bhs9hi25tHbRM=;
+  b=eyMJMWUU+Mk2SVy5AZvR+bh6PU3rhJ44NkV3GcwXfi5MW+FztrqxV1v1
+   fO7swRqqVNYBWPIzaRzKJo3zoj/ryow5FOvt+ZQ7H2HTr5BZoiU8Q9jwj
+   Ug3bGDf62l/nfGk55uAWMcIbSa23uqURw5sJPWOADvB6GMgE7rTRCuNmS
+   g0azLcojYktDqItvtvual4+g45mhbNHQuMQi3bw3HGVO4Nv66JZYfikqO
+   T25B0FQ8KVnDAW5tEd8+GarWgi1WbsEUhSlvV6q84BJ/m4xuJb5sbk8CS
+   gjJqw+0nzVYw0Zi+e3QwGMrcnPNc8UtmKg0qvMQmPYNKaxW5fR6PdYVFZ
+   A==;
+X-CSE-ConnectionGUID: zffmmvJPSG6QCb4T4Ab9ug==
+X-CSE-MsgGUID: A8M4VoalTUCZDX2UeYDasw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11948"; a="1863756"
 X-IronPort-AV: E=Sophos;i="6.27,181,1787036400"; 
-   d="scan'208";a="1863749"
+   d="scan'208";a="1863756"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2026 12:21:59 -0700
-X-CSE-ConnectionGUID: N0y2KO/mREmx00t8rVjpDA==
-X-CSE-MsgGUID: dydoNJIeS22R71QhBPEedA==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2026 12:22:02 -0700
+X-CSE-ConnectionGUID: 8plDceJkT+eCl0bukx9Iiw==
+X-CSE-MsgGUID: tL2AF65oSlS/0DsjUoj+gQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,181,1787036400"; 
-   d="scan'208";a="4579909"
+   d="scan'208";a="4579913"
 Received: from conormcd-mobl2.ger.corp.intel.com (HELO mnyman-desk.home) ([10.245.245.227])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2026 12:21:56 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2026 12:21:58 -0700
 From: Mathias Nyman <mathias.nyman@linux.intel.com>
 To: yiyu@yiyuzhou.io
 Cc: <linux-usb@vger.kernel.org>,
@@ -71,12 +71,13 @@ Cc: <linux-usb@vger.kernel.org>,
 	dennis@dsine.de,
 	gregkh@linuxfoundation.org,
 	Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [RFT PATCH 0/2] xhci: clean up endpoint rings after disconnect detect
-Date: Tue, 27 Oct 2026 21:21:25 +0200
-Message-ID: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
+Subject: [RFT PATCH 1/2] xhci: give back all TDs when skipping endpoint reset after disconnect
+Date: Tue, 27 Oct 2026 21:21:26 +0200
+Message-ID: <20261027192128.386082-2-mathias.nyman@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261027184117.2461065-1-yiyu@yiyuzhou.io>
+In-Reply-To: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
 References: <20261027184117.2461065-1-yiyu@yiyuzhou.io>
+ <20261027192128.386082-1-mathias.nyman@linux.intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -88,50 +89,133 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Yiyu Zhou wrote PATCH 1/2, fixing a regression in USB HID device
-enumeration caused by the endpoint recovery prevention code added in
-v7.3-rc1. Some HID devices that used to enumerate after a brief
-disconnect during enumeration now got stuck until URBs timed out.
+From: Yiyu Zhou <yiyu@yiyuzhou.io>
 
-PATCH 1/2 gives back the pending URBs right away, which solves most of
-the problem, but it leaves the TRBs of the given back URBs on the ep0
-ring. ep0 survives a brief disconnect during a port reset, so the xHC
-may later process those TRBs during an enumeration retry, writing into
-buffers that were already given back, or ep0 stays halted and the next
-control transfer times out.
+Commit 042aad8d0db6 ("xhci: prevent endpoint recovery after roothub
+disconnect") makes xhci_handle_halted_endpoint() return early when the
+root port is disconnected, and commit 7e0ef4332ed9 ("xhci: avoid xHC
+endpoint changes after disconnect or link error.") also sets
+EP_DROP_PENDING there, which keeps the doorbell from being rung until
+the device is reset.
 
-PATCH 2/2 cleans up the ep0 ring by resetting ep0 and moving its
-dequeue pointer past the cancelled TDs, even if a disconnect or link
-error is detected. Only Reset Endpoint and Set TR Dequeue Pointer
-commands are issued; ep0 is not restarted while the disconnect is
-pending. The rapid endpoint reset, restart and stop sequence that made
-some xHC hosts fail Stop Endpoint commands is still avoided. Other
-endpoints are still given back without resetting them, but their TRBs
-are turned into no-ops first.
+The callers rely on xhci_handle_halted_endpoint() to take over the
+halted TD.  For example, finish_td() returns right after calling it,
+expecting the TD to be given back once the Reset Endpoint command
+completes.  With the early return, nobody gives the TD back.  Its URB
+stays pending until the submitter times out and unlinks it.  URBs
+queued behind it are stuck the same way, and every URB queued on the
+endpoint afterwards never starts, because the doorbell is blocked, and
+also has to time out.
 
-If you have seen the HID enumeration issue, or the xHC Stop Endpoint
-failures with rapid endpoint state changes, testing these two patches
-would be greatly appreciated.
+Devices that disconnect and reconnect themselves during enumeration hit
+this.  A PFU HHKB Professional HYBRID Type-S keyboard (04fe:0021) drops
+off the bus about 300 ms after its first enumeration, while usbhid is
+still probing its third interface.  The probe runs in hub_wq, so the
+disconnect is not handled until the probe returns.  On a root port the
+HID descriptor request and its four retries in hid_get_class_descriptor()
+each wait for the full 5 second USB_CTRL_GET_TIMEOUT:
 
-If these patches work, they might be squashed into one before going
-upstream.
+  [57685.006036] usb 3-2: new full-speed USB device number 24 using xhci_hcd
+  ...
+  [57685.291304] hid-generic 0003:04FE:0021.0017: input,hidraw1: USB HID v1.11 Keyboard [PFU Limited HHKB-Hybrid] on usb-0000:00:14.0-2/input1
+  [57711.221083] usbhid 3-2:1.2: can't add hid device: -110
+  [57711.221613] usbhid 3-2:1.2: probe with driver usbhid failed with error -110
+  [57711.221842] usb 3-2: USB disconnect, device number 24
 
-[This message, and PATCH 2/2 commit message were cleaed up by LLM,
-Code is still 'organic'.]
+The re-enumeration that follows can stall the same way, leaving the
+keyboard dead until reboot.  Behind an external hub, where the root
+port stays connected, the same keyboard recovers in about 300 ms, as it
+did on the root port before these commits.
 
-Thanks
-Mathias
+Keep skipping Reset Endpoint on a disconnected or inactive port, but
+give back the halted TD right away, with -EPROTO if no error status was
+set yet, and all other TDs on the endpoint with -ESHUTDOWN.  The
+endpoint is not restarted until the device is reset or dropped, so the
+ring dequeue pointer can stay where it is, as
+xhci_invalidate_cancelled_tds() already assumes for cancelled TDs on
+such endpoints.  Also refuse new URBs on an endpoint with
+EP_DROP_PENDING set, like xhci_urb_enqueue() already does for an
+inactive link, so they fail right away instead of timing out.
 
-Mathias Nyman (1):
-  xhci: clean up ep0 ring after disconnect instead of leaving stale TRBs
+[mn: merge EP_DROP_PENDING and link_inactive checks in xhci_urb_enqueue()]
 
-Yiyu Zhou (1):
-  xhci: give back all TDs when skipping endpoint reset after disconnect
+Fixes: 042aad8d0db6 ("xhci: prevent endpoint recovery after roothub disconnect")
+Fixes: 7e0ef4332ed9 ("xhci: avoid xHC endpoint changes after disconnect or link error.")
+Closes: https://lore.kernel.org/all/20261010071811.20483-1-yiyu@yiyuzhou.io/
+Assisted-by: LLM
+Signed-off-by: Yiyu Zhou <yiyu@yiyuzhou.io>
+Tested-by: Diogo Chaves <diogochaves@me.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+---
+ drivers/usb/host/xhci-ring.c | 12 ++++++++++--
+ drivers/usb/host/xhci.c      | 13 +++++++------
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
- drivers/usb/host/xhci-ring.c | 71 ++++++++++++++++++++++++++++++------
- drivers/usb/host/xhci.c      | 13 ++++---
- 2 files changed, 67 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index ec278a9f9540..8262ed516d37 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -65,6 +65,7 @@
+ static int queue_command(struct xhci_hcd *xhci, struct xhci_command *cmd,
+ 			 u32 field1, u32 field2,
+ 			 u32 field3, u32 field4, bool command_must_succeed);
++static void xhci_kill_endpoint_urbs(struct xhci_hcd *xhci, int slot_id, int ep_index);
+ 
+ /*
+  * Returns zero if the TRB isn't in this segment, otherwise it returns the DMA
+@@ -989,12 +990,19 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
+ 	int err;
+ 
+ 	/*
+-	 * Avoid resetting endpoint if link is inactive or device disonnected.
++	 * Avoid resetting endpoint if link is inactive or device disconnected.
+ 	 * Can cause host hang.
+-	 * Device will be reset to recover an inactive link, so don't do anything
++	 * The endpoint won't restart before the device is reset or the endpoint
++	 * dropped, so give back all its TDs now instead of letting them time out.
+ 	 */
+ 	if (rhub_port->link_inactive || !rhub_port->connected) {
++		xhci_dbg(xhci, "Not resetting ep %u slot %u after disconnect or link error\n",
++			 ep->ep_index, slot_id);
+ 		ep->ep_state |= EP_DROP_PENDING;
++		if (td)
++			xhci_td_cleanup(xhci, td, xhci_urb_to_transfer_ring(xhci, td->urb),
++					td->status ?: -EPROTO);
++		xhci_kill_endpoint_urbs(xhci, slot_id, ep->ep_index);
+ 		return -ENODEV;
+ 	}
+ 
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 7f7babe9d681..fa3012bf4c0f 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1665,12 +1665,6 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+ 		goto free_priv;
+ 	}
+ 
+-	if (xhci->devs[slot_id]->rhub_port->link_inactive) {
+-		xhci_dbg(xhci, "Can't queue urb, port error, link inactive\n");
+-		ret = -ENODEV;
+-		goto free_priv;
+-	}
+-
+ 	if (xhci->xhc_state & XHCI_STATE_DYING) {
+ 		xhci_dbg(xhci, "Ep 0x%x: URB %p submitted for non-responsive xHCI host.\n",
+ 			 urb->ep->desc.bEndpointAddress, urb);
+@@ -1680,6 +1674,13 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
+ 
+ 	ep_state = &xhci->devs[slot_id]->eps[ep_index].ep_state;
+ 
++	if (xhci->devs[slot_id]->rhub_port->link_inactive ||
++	    *ep_state & EP_DROP_PENDING) {
++		xhci_dbg(xhci, "Can't queue urb, port disconnect or link inactive\n");
++		ret = -ENODEV;
++		goto free_priv;
++	}
++
+ 	if (*ep_state & (EP_GETTING_STREAMS | EP_GETTING_NO_STREAMS)) {
+ 		xhci_warn(xhci, "WARN: Can't enqueue URB, ep in streams transition state %x\n",
+ 			  *ep_state);
 -- 
 2.43.0
 
