@@ -1,73 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.15
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793091038;
-	b=ctZwn3SxwsYMTM7absD/uq53FRkYQfsVmqUY2vxaXvBLtF+Sh9HlD9CUgIBbXD6qeRVK
-	 mRt+F7GXtRlwhRvpj6SU1eQigAW1h1Fuv04b8eri8EyQzYwSKiHP0ER7uMA6dHeXiXUZV
-	 SkHfC2uELcuCN6L1jOpsnIiNuVtiF1dqt/3JRrsUbZMHgXxVmnfkYabXLKBBdP4ucmrxF
-	 DNpbApOYLHz57p+hwJE/Bq9zCl002uorSK1zZigD2sJyVdCCCF8bLTJaEeSm3iKyltrUY
-	 g7YkALkbRoI5E3E3nZdScslA9NW1koaeKHl8p8ahQcQ+gA0uI+RdfCWIHQz9xne3jLA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793091038;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-ZohoMailClient;
-	bh=FLj38MVz5n0Sq7sa0yZGgLRLbZd6FbVVIQAz21Dvemo=;
-	b=ByMOJR2/JFd+ORbuTFtmfUitbEna9crL9G/GmMxNZGRInvDXjTtLkIsuM4Defa6xtico
-	 pKtg3hzNItNjOBn6Z8EGelTFI5m31O4V9PMKcoJCD7yBjItRLNMFpbfnOGMtj6M9fTZNn
-	 7sJ4uhZwkAp08M8x1Qdml7iqpZ2KR8m34Tb3+f+nDWIbJtjhGC+Lt1l7EyqvotJqCK1xQ
-	 jc/UY/ORftWmn4BMjQ/d0c7yL6tGMgwmEQPu5v/Hpr05dz38EbDo3G1kq9yujK6Rc0S3m
-	 vozx46HNgbKVgooFuhZTiI6iqIOgL1NYG1zHpeyZwNTZpBBmM+VdSGRD5vB4EWLL95g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=yiyuzhou.io;
-	spf=pass smtp.mailfrom=yiyuzhou.io;
-	dkim=pass header.d=yiyuzhou.io header.i=yiyu@yiyuzhou.io header.a=rsa-sha256 header.s=zmail header.b=GLrwHEUg;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.15
-Received: from sender5-op-o15.zoho.com (sender5-op-o15.zoho.com [165.173.182.15])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793091054;
+	b=gtNo+xy7E5Xed6uZm2f8M0I7781xXpmZUC13f6/6bG5u1fPro/CeFXb2b1BLAF81mgGJ
+	 Hc8rbU/uzeH9l/W6SLbBP8thA2IV33uw7DNrZ0XZa90EVP2sKgPA44ptzf5kdSby3EMHG
+	 P5bJrlR/YMaGBLZinyy2zl9tkqR1nQuod6MXcnXdt90rj0qTT/1BPRdlQ6CY0nn/SJLpg
+	 BsjbcXnFLlFxeE59TZupyRxtgAO7NLVluvt3EGyJ9w+d1HEy8dEAR/ZAcZoiEghqpU9Vm
+	 IKO+h9ZCkuAFMeNCZo7d840ivlXHwiliPmCn8DjcY8TAGALT8v4BYfc0Q6jQSdJfq7Q==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793091054;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 To:Cc:References:From:In-Reply-To:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Language:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=05pWYvdSFKuQTlIpLib2CW0D3AAIr02xLV3H0zVKlko=;
+	b=XHwxWoEPJl/TiUaIIzoPi0yZNEyBurWDwtcMv9UPy7gPKUL+uKW9agwpPpXUysNs9Hw9
+	 VP2IcxmHw8tE5hPeaww0YJUy45c3o4G+TBzRM+lBPuhJVeCsBUpIx1ixx6Yj5KzpY6uJO
+	 Uw8FSqyrSqGj8RG9xsY4ZeSj7+xEb2WXx2JVVC0xn/w7a70Te+PDVaARsm9Ts05TOz0TB
+	 PfYNkGM3QaOrsMirhHF7z1/7sgt3xAuOhj+7Z5BrxgYkpuF6hIW5dIiOI/l+Tdc7vtMVH
+	 azv5DddoA56ZhGad+IyoUaDSfD/U+xeRBaq1/NSZtzqMpS+RMrYL0FOF370z8hnz0TA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TCkFoK6B;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AC5606A31B
-	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 08:50:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 13AC5606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yiyuzhou.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yiyuzhou.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F3606A31B
+	for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 08:50:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 768F3606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=yiyuzhou.io header.i=yiyu@yiyuzhou.io header.a=rsa-sha256 header.s=zmail header.b=GLrwHEUg
-ARC-Seal: i=1; a=rsa-sha256; t=1793091022; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mNIgdz7R3r11ZTdxDrF1Q4UNAj/msS2HRtozDlQJSSJt2JF1XeqM5R3fqe0egEeBge134OZnCYIg8nLeYTjBrIyrWpgDerO8KX4+9i6OZz6wwjqMlnXNtJr1NaKqTI2E+9loBXl7++S392yzKQ7pBXj8ls4Kp6GdmM2wOzfU0do=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793091022; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FLj38MVz5n0Sq7sa0yZGgLRLbZd6FbVVIQAz21Dvemo=; 
-	b=c87bfdFCXjb5gR2PsR8BOdmGMCaRupck5ZtE3sA4AZNsUmOk1gsAmiusRhEybBQBEIabaYyPd4h6NRcc0y0CFw8iWSdKprFUoQyoNUAezXwJ5+XXP8lyXsdTbGQGnk65eEUcvgNQatPnQNiMuypGV+Ae/YtLyIebVoxBC9xNx1M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=yiyuzhou.io;
-	spf=pass  smtp.mailfrom=yiyu@yiyuzhou.io;
-	dmarc=pass header.from=<yiyu@yiyuzhou.io>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1793091022;
-	s=zmail; d=yiyuzhou.io; i=yiyu@yiyuzhou.io;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=FLj38MVz5n0Sq7sa0yZGgLRLbZd6FbVVIQAz21Dvemo=;
-	b=GLrwHEUgbTUGf6R/WLG13CeYhpiA8658UGY7+Mi/ec1jW9yV6uc50Vo2O++5AsfZ
-	UaR36wdvJskpkykrqtlAesO4tjCQFM6QBWRfOkR3pWeU9jtZeBVBfNQqmN4YgZMkFUN
-	Kg8nwZd6TvDxG02N3QWPliO6jWALXgPbAKC/5gEM=
-Received: by smtp.zohomail.com with SMTPS id 1793091020208282.5273528004707;
-	Tue, 27 Oct 2026 01:50:20 -0700 (PDT)
-From: Yiyu Zhou <yiyu@yiyuzhou.io>
-To: mathias.nyman@intel.com,
-	gregkh@linuxfoundation.org
-Cc: Yiyu Zhou <yiyu@yiyuzhou.io>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	michal.pecio@gmail.com,
-	regressions@lists.linux.dev,
-	Dennis Wissel <dennis@dsine.de>
-Subject: [PATCH] xhci: keep ep0 blocked after disconnect until Address Device reloads it
-Date: Tue, 27 Oct 2026 01:48:42 -0700
-Message-ID: <20261027084845.1588204-1-yiyu@yiyuzhou.io>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <qLQr_bD2TzCrwVMFdRe7Wg@dsine.de>
-References: <qLQr_bD2TzCrwVMFdRe7Wg@dsine.de>
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TCkFoK6B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1793091052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=05pWYvdSFKuQTlIpLib2CW0D3AAIr02xLV3H0zVKlko=;
+	b=TCkFoK6BdyeWSDXRDds76wek9S8/AoUKw0AqZgkSUKz+KuZ145U9Hg1/xbosgXKWjp0MYV
+	1FRSULf2Y/yleZlqG+7HoxFVLmWhIqqS+jYY5iu8s0LFc4rJf2YWinND7g7uNutvZnLJCg
+	toIWx1EhYWbpwAmxFEIY1vQ5FfLjVY0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-583-nFA-GBoCPviUYEGwX7kH0Q-1; Tue, 27 Oct 2026 04:50:50 -0400
+X-MC-Unique: nFA-GBoCPviUYEGwX7kH0Q-1
+X-Mimecast-MFC-AGG-ID: nFA-GBoCPviUYEGwX7kH0Q_1793091049
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a210f93860so28111475e9.0
+        for <regressions@lists.linux.dev>; Tue, 27 Oct 2026 01:50:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793091049; x=1793695849;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=05pWYvdSFKuQTlIpLib2CW0D3AAIr02xLV3H0zVKlko=;
+        b=LHOZ7IrrPLiP8MicEZ6gUAXAqYnxx9VO9fPNBtY0WhgTAUCxqlKVd0zCCgx3GWDJAJ
+         PRgOTBIvmLTt2MF+aESJ9To4/YI18dyhoHo7Ex7Yd4OQvfxAjVTgTYqKGS5zSDIxrNuQ
+         2L1CSnEuo0qeV61/I190ISCBfeSgT9KCuDGybflO4z/uCOuw5diH8/uVaYyRda+OO3gr
+         9Qv4OIh7aFD8d8eyJFYwRNS1WjY8zipOSfbGAu20QJ8wysaF6QmzA0GfI2A6Z7TvUxYR
+         sXON/6KGDJcUWt9TcV9/iJNNwYVcjFmeZvG9k7Oscvwm6AaKeCbFYGSllbCgf6r284Kp
+         QQtQ==
+X-Forwarded-Encrypted: i=1; AKwUvBw+qQMia9Z4sBrbaxA1aYiiD/63tZBV8oiKj/PlyHKwwwzn1XJFXXudJ9hZbxvaaelVuzIDgMoVaB1NZQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYL06trKmlokJc0n4PFivYxFL4EDCvejHk0fS1fHjFSgMW20kLbY
+	WS8NvRELGIe/IYRaiv4DmyNvRWT1SSWCMuIbxOTrhmxJSCkta4nuozQZGVRfcPQB4VtrAueCJ5l
+	ioFngPI4k0DW/red8dsKdWPB7TqPcV5x1gvqzhD29DNM8tYsUpIUK3xZa3uN9lgWu
+X-Gm-Gg: AYBFou1hQR4ltIH7QjhH1TeXba65k9Nfad4o6H1HrHci8WY9aasDz8DTZMLa8eqPopK
+	dh6xIVrJ1/qzthSlUiFviG0JxKn/OPFbBGi6cIaD79UdqPESaPTnXwY/SmhkpRkR05p6/0++vyx
+	QqcH4UK/4RQhPSuVqWTPra6JB3kQhn9xTeN+KVybHjkA+cvxo4KIhb1ssXTUxgoy/fJNV0LTh8q
+	o2vbWuQmDZQjaZHS4hFgVBl3pg/gfHuErs1QMdu5s+KNt+9FMrTi+kzb63lIxrxY0LfqvLWthWM
+	+7W+V+w5apqmHjIZFv1gppBXW/X5Sty9u7fQudPfnEteWpEjay1PsO4kAepXKncC+KF8BdfKSCo
+	6HlzSU0uznrMGnfLh2kygMEw6B7W4ed/MX7JXoiN0S82Fs2klwBDWB5N8YvjYXslk/QLU2kAJ0g
+	==
+X-Received: by 2002:a05:600c:8b86:b0:4a3:59c9:a754 with SMTP id 5b1f17b1804b1-4a35acb17bfmr169457665e9.22.1793091049495;
+        Tue, 27 Oct 2026 01:50:49 -0700 (PDT)
+X-Received: by 2002:a05:600c:8b86:b0:4a3:59c9:a754 with SMTP id 5b1f17b1804b1-4a35acb17bfmr169457205e9.22.1793091049010;
+        Tue, 27 Oct 2026 01:50:49 -0700 (PDT)
+Received: from [192.168.188.234] (ip174-129-192-82.pool-bba.aruba.it. [82.192.129.174])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e542ed998sm6698767f8f.13.2026.10.27.01.50.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Oct 2026 01:50:47 -0700 (PDT)
+Message-ID: <7136e772-513c-4ee3-b802-a9666fb8bdba@redhat.com>
+Date: Tue, 27 Oct 2026 09:50:45 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -77,97 +98,58 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/mlx4: always create the eth and ib auxiliary
+ devices
+To: Peter Morrow <pdmorrow@gmail.com>, Tariq Toukan <tariqt@nvidia.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ regressions@lists.linux.dev, Leon Romanovsky <leon@kernel.org>
+References: <20261020164239.3808903-1-pdmorrow@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20261020164239.3808903-1-pdmorrow@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4gQAcXT1ZD8J0B8NWoQVih1dyHSflndmD_H6fcf9bdI_1793091049
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-After a root port disconnect or link error, xhci_handle_halted_endpoint()
-sets EP_DROP_PENDING instead of resetting the endpoint, and gives back
-its TDs.  Their TRBs stay on the ring, and the endpoint's dequeue
-pointer still points at the halted TD.
+On 10/20/26 18:42, Peter Morrow wrote:
+> Since commit 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the
+> auxiliary bus"), mlx4_core creates the "ib" auxiliary device only for
+> an IB port or a device that advertises IBoE. Before it, each mlx4
+> interface was offered every device and decided in its own add callback.
+> mlx4_ib_add() accepted Ethernet ports without IBoE and registered them
+> for raw packet QPs only.
+> 
+> ConnectX-3 VFs on Azure have an Ethernet port and no IBoE, so since
+> v6.6 they get no RDMA device. DPDK's mlx4 PMD, which needs only raw
+> packet QPs, then cannot open them:
+> 
+>    net_mlx4: cannot access device, is mlx4_ib loaded?
+> 
+> Restore the old behaviour by creating both auxiliary devices for every
+> device and letting mlx4_en and mlx4_ib decide in probe, as their add
+> callbacks did. mlx4_ib_probe() returns -ENODEV when there are no usable
+> ports, and mlx4_en_probe() binds a device without Ethernet ports but
+> creates no netdevs, as mlx4_en_add() did.
+> 
+> Tested on 6.12.111 on an Azure VM with two ConnectX-3 VFs: each gets an
+> eth and an ib auxiliary device, and DPDK attaches both VFs and passes
+> traffic through them.
+> 
+> Fixes: 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the auxiliary bus")
+> Closes: https://lore.kernel.org/r/20261014133951.3219055-1-pdmorrow@gmail.com
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Assisted-by: LLM
+> Signed-off-by: Peter Morrow <pdmorrow@gmail.com>
 
-If the device comes back before hub_wq handles the disconnect, a driver
-may reset it on the same slot.  usbhid does this after 1 s of
-interrupt-in errors.  xhci_discover_or_reset_device() then clears
-EP_DROP_PENDING on every endpoint.  The other endpoints are disabled by
-Reset Device and get new rings, but ep0 keeps its ring and dequeue
-pointer.  For USB 2 devices, usbcore by default sends a 64 byte
-GET_DESCRIPTOR before SET_ADDRESS, and so before Address Device reloads
-the ep0 context.  That request is queued behind the stale TRBs.  With a
-Keychron M5 the reset stalled for 11 s, and the xHC then ran the old
-TDs ("Event dma ... for ep 0 ... not part of TD"), writing into buffers
-of URBs that had already been given back.
+@Tariq, to avoid stalemates: this is waiting for an explicit ack from you.
 
-Keep EP_DROP_PENDING set on ep0 through Reset Device, and clear it when
-an Address Device command succeeds.  That command loads the ep0 context
-from the input context, whose dequeue pointer is our enqueue pointer, so
-the xHC skips the stale TRBs.  Until then, ep0 requests fail with
--ENODEV.  If Address Device comes first, as for SuperSpeed devices, the
-device recovers in place.  Otherwise the reset fails quickly, and
-usbcore re-enumerates the device on a new slot, as after a real
-disconnect.  The same applies when Reset Device fails because the slot
-was never addressed: the next enumeration attempt uses a new slot
-instead of the stale ring.
+Thanks,
 
-Fixes: 042aad8d0db6 ("xhci: prevent endpoint recovery after roothub disconnect")
-Fixes: 7e0ef4332ed9 ("xhci: avoid xHC endpoint changes after disconnect or link error.")
-Reported-by: Dennis Wissel <dennis@dsine.de>
-Closes: https://lore.kernel.org/linux-usb/4MjB9K-2SoiA85WbI9iEig@dsine.de/
-Tested-by: Dennis Wissel <dennis@dsine.de>
-Signed-off-by: Yiyu Zhou <yiyu@yiyuzhou.io>
----
-This is the RFC from the regression thread [1], unchanged apart from
-Dennis's Tested-by.  It applies on top of 1f36cc9fa949 ("xhci: give
-back all TDs when skipping endpoint reset after disconnect") in
-for-usb-linus and depends on it: without that patch, ep0 requests are
-not rejected while EP_DROP_PENDING is set, so they would wait for their
-timeouts.  7.3 needs both, so they should probably go to stable
-together.
-
-I used an LLM to trace the code and draft the patch.
-
-[1] https://lore.kernel.org/linux-usb/20261026203944.2235991-1-yiyu@yiyuzhou.io/
-
- drivers/usb/host/xhci.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index fa3012bf4c0f..15f4ee4aa2c3 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4091,7 +4091,13 @@ static int xhci_discover_or_reset_device(struct usb_hcd *hcd,
- 	ret = 0;
- 
- command_cleanup:
--	for (i = 0; i < EP_CTX_PER_DEV; i++)
-+	/*
-+	 * Reset Device leaves the ep0 ring and dequeue pointer as they were.
-+	 * After a disconnect or link error, ep0 may still point at TRBs of TDs
-+	 * that were given back, so keep it blocked until Address Device
-+	 * reloads its context.
-+	 */
-+	for (i = 1; i < EP_CTX_PER_DEV; i++)
- 		virt_dev->eps[i].ep_state &= ~EP_DROP_PENDING;
- 
- 	xhci_free_command(xhci, reset_device_cmd);
-@@ -4463,6 +4469,16 @@ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
- 	}
- 	if (ret)
- 		goto out;
-+
-+	/*
-+	 * Address Device loaded the ep0 context from the input context, so
-+	 * the xHC now starts at our enqueue pointer, past any TRBs of TDs
-+	 * given back after a disconnect or link error.  Unblock ep0.
-+	 */
-+	spin_lock_irqsave(&xhci->lock, flags);
-+	virt_dev->eps[0].ep_state &= ~EP_DROP_PENDING;
-+	spin_unlock_irqrestore(&xhci->lock, flags);
-+
- 	temp_64 = xhci_read_64(xhci, &xhci->op_regs->dcbaa_ptr);
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_address,
- 			"Op regs DCBAA ptr = %#016llx", temp_64);
-
-base-commit: 1f36cc9fa9496189e95fe5762cde8a74e0cd9d68
--- 
-2.55.0
+Paolo
 
