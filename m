@@ -1,96 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.41
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793171270;
-	b=n5GuVcOE30w5ynwcBKR9o/beXYiS2N7GeYW2bSw4ewgGhBgWhlgIFpJ0Hi6fFoF4os8i
-	 XSXRBkrj7+vhSjJwpYad1J9wEUMHMaPAaQa2wsrCR2QVWvZ5ZbOCrgLsr10WJN8NAnEyk
-	 XeDM8YwPl34xwk9RzcGtjPR7LWNRg0nloF8vKNgHsSVTHP8DY5CTX4xCF9D6MtZJLAdx7
-	 RUiD86S8hEm5bML6qKBLzpn5/S79vZPLvD2n8VyywSUDChbO8PIemA6oq5kxVvwVPEnRx
-	 RYr4iLX2K8bke9XelIGnaxwJcnlYYvsxzn3Ehq+BcAadZNwqKu1K9Gum0nIpQNZYL6g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793171270;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=Pm025ZShfKc4fvyqH4mMFAlI8sexFbSUc+W1NS0NOoo=;
-	b=0Rw/ALsvK324dRpg80sfxO1wGbSxHerdjca+tYuJNvIQKNbbpmnjf6VJ7H43bSI39FXS
-	 Wwmcs9TqpyiCWVopnb3Eeb8aw+hKRM3lr0nhHitBdXYEiVj4ZT/3lEZGuIEIkCD9/jgdb
-	 Ahm45O/9Ow3YS2inEGdAA7cpq75WdqgeH0qPgpDLTgW6q9Pbv/jYHd8yULEmpPLY+Uagj
-	 397SxUA4XJu1sGcoXvSy6LQ9QIVJl3H/GuntBvIDUtwVmI2Ev49CX7PSZfyqXGbg+ya/c
-	 /XOFf4ID2dHHRo0aX6hjge7dsdo1aP0krK+y7c1ctq5zONVOuuWdVaMSb+BauDOLERg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qq4YDQ6p;
-	arc=none smtp.remote-ip=209.85.221.41
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.0
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793172043;
+	b=AsNuP9IsMroXaYP+20JnCmZyey7zIjpkjHkYbz5/vCSbYibif5psL/DDx13YG8nB8ljw
+	 1u1LcSi7Wk6/liqggnYpVf1IDzaAE5pcnjBYwrnjGUk3nNgE+ud6qvTd7iKqRog2sC66M
+	 Ng4Xh0236Tl3J75TQfs40G8nOH0hleS1E2WHuw1UVGZfQXHcq0XT4BSdiQwnKl3rwoJBn
+	 KbXMK/rlUWPQG4SAxBue7Jj6lF+7y+PtG+4DeyD5pS/+GxcfuWgL0tM6W9sCKr0anOrlA
+	 QDE3YNXuc7DMvfL+ZTFyfgyPN8wHF5gbO6bzsRE05Xf9Xj6zFE37X0UmeOUlLrVdboA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793172043;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=dd039E+fcyjQa0y4NMdYTJD5JLIHFu5O0cyXbp7CSks=;
+	b=4wpUeESUzAZV/j0RsuB/Rtr7TDe3tp7Xh42SzJ9z2xNf6umnBlcDLCnbHXEWCgN/7Gbk
+	 c1Pn++c7K8Zr/rcv9Ldm+z3RPonirWth8aZh9ifn2yUSigcTpYF4KbWqrrJukieYH2lI0
+	 T5ULciOGhhIr1u+YBjDrpP3V78NFDky9VXCXsJSxb5xjciWuEfmn9XSCRW1vBb5EMoaWu
+	 xngyw7uu1OX1Vr5Cq9CN06dPTAPunmZ8SIWpAZmWkxFjg+PurS3zaHyrd1eb5Ku2eGjK3
+	 YIlBn8hxboHb0kV5b0VkLX1KJDQv1249CAoohe7WL2vbcw87Gp/N2Us6KRELZM8PTqw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=nvidia.com;
+	spf=fail smtp.mailfrom=nvidia.com;
+	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b="mJrYg/EO";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.0
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010000.outbound.protection.outlook.com [52.101.193.0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789DF606A31D
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 07:07:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 789DF606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D756B606A31A
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 07:20:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D756B606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qq4YDQ6p
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-48e4831c028so501246f8f.0
-        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 00:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793171269; x=1793776069; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Pm025ZShfKc4fvyqH4mMFAlI8sexFbSUc+W1NS0NOoo=;
-        b=qq4YDQ6peNJOT+j3oC8DZjnvkWG0yiJ5+ntZssWWncUNZ4N8vMi8SvIeQ/VDhtOTOC
-         Z5OUQukqwi6e6lKPWfvu8K4Ww2NUc7sS3FA0EehMdDmjCAScXJ0WtXgPiNYNFbTGL+bV
-         rlQzofINvPPNvmaEMf4SuVPicRuoOGM0Sy06xFL0SUlbpH+6fj6zrxYjuBq6RXnabzYj
-         DM9C0G6Yw+FxrBa7bGxZ4MGemeSQPFa3KshKERP9ib35C3O5f4pT87dW0gwnB9U1AJrq
-         Frt0/aU/9zFl+4RVlzhuPMCYcGpEx89xoREC+9LeM3e34jnkZt0PNPaCZphVRtth8Rhs
-         92tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793171269; x=1793776069;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Pm025ZShfKc4fvyqH4mMFAlI8sexFbSUc+W1NS0NOoo=;
-        b=aFEfpQ9iHwurvrSnxZYjdCvsb5hJKYwut6UoGYftxrs+OAo/vBphi+v4BiYOmgoQQl
-         5e6h7OVbL9fyAt7xK5+jZ524nqfi1CUYx96M6VfH5WbZE5Lw7moML4iXSod4WoXdWw3u
-         qzvw6q5wuUW5BMEWgnBtI6DGeF71niPUTTLYzbaYAE5GvlP3xoCTPezbfg5w3mWMLpy4
-         1HXMGQlDxpzjG6qdT5qytESg6Sz5k6K5qzicJjBGHdSZQKzP3qe4lrSP0cjOHs6yQfXY
-         h7o+zN5B02LkPv/bb/Vud8AfPlPr4Hgs34+lV6BA6CRIbKPmW6w2o+atP52kun8sHvXC
-         Jk8A==
-X-Forwarded-Encrypted: i=1; AKwUvBybcEG9HhDJXzQX/X+nvGTLBzraMeZ+IzMNkav6rDj8j8jwtdwSwfOe2qzpgUFV9cY8I1Hd0pFOn1hnAg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKJcFXaSaqS2faYHfylDbxzgQ/7yMhz9MsHoCSWIBCtTEU0g0JT
-	IS6W6wa3dTmnK5cHZd9dPmbYd6Vx/iZWpEtioJP70TFyhM6SNWV0MGMV
-X-Gm-Gg: AYBFou2uBnnSg9ghzpSO7Tkl0ebvgXSFpDBxTRF/GdYaxHlGptdqgjreNoIXvVSwOFz
-	VNzAvw5TVSfAWI+t5GWKFyIlKu2RldiPkNTxmA4ut/t78dViAQ7vPxtYRn7e/goavUxfnw3qhXt
-	h0J+ENUUile8f/buz/JnRiT8tkTq4hk/YyOkAF602JtVgiWYmNLuMqvMCJW2ZXfN0hqnLjBJYKZ
-	3h1K+geLK3WnU59udYODB5kJR4do2fJSILIjZSLhTCgEL1NpjUUQ6VGtz74mZrXpc9NyqnzMw7q
-	F/VMxmJ/ftigKxVtppPDBQmv0WNTF/y94L5Gj2KFrFkRNbE6aAmGwScoYmq4ul1+njr+jAAB/6G
-	QdKAuAT8jvezRXgAQifIN9oBebZVCywot3tgorrYb01oovhU8Zr3v40r0l6b5+DUdaKZ/fl3tM6
-	XQETgV9e/crj3dt75Gb+1kH0M1laeqnsmt8avfFlhkqMlnw9rTTgAVLutjPJL6X4reaeLauaUvt
-	kWuxa6amSmANtaICQqeIslanuHDl92vvFWpjEWTHcpEWqGgrmQGl4sm/m1OKcw1UL1bAjTPCQIP
-	XwswY22gvQgQP3FWSzqzVDRSBoQadkdGldVIcw==
-X-Received: by 2002:a5d:6f13:0:b0:48e:4e00:b737 with SMTP id ffacd0b85a97d-48e5d56d4fdmr3824012f8f.54.1793171268566;
-        Wed, 28 Oct 2026 00:07:48 -0700 (PDT)
-Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3eb8f248sm26280670f8f.6.2026.10.28.00.07.47
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 28 Oct 2026 00:07:48 -0700 (PDT)
-Date: Wed, 28 Oct 2026 08:07:34 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: yiyu@yiyuzhou.io, <linux-usb@vger.kernel.org>,
- regressions@lists.linux.dev, diogochaves@me.com, raoxu@uniontech.com,
- dennis@dsine.de, gregkh@linuxfoundation.org
-Subject: Re: [RFT PATCH 0/2] xhci: clean up endpoint rings after disconnect
- detect
-Message-ID: <20261028080734.173da0e4.michal.pecio@gmail.com>
-In-Reply-To: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
-References: <20261027184117.2461065-1-yiyu@yiyuzhou.io>
-	<20261027192128.386082-1-mathias.nyman@linux.intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=mJrYg/EO
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fdGa/tnoIiiVJLR/AX//1n18vDkLtS4Y4XG+vv92f+UBHVpVWviaJ/MbKpthrfB16eDwR9Hib7fV8zaC+x8MyUyjrso8vs+JE3Oeo8kdZifnsg5sCuWtdlne5BNb0/dAY2hCfkp75v9AiwF7uOiWi82Tz0pUKwKBZo93PVr/06Uwz8HBcwTbke3oPWYoJ77UYggcpFSe+KQgCfs80w6c5q/iLtyTquB+H8a+JH2i4l0FH1KwVmtOk39XZOm5gj73aBVLRSI9WZovkpJHn0SS5Ltv5ELKnwlUu3X/sx74J/gDlzoOuSlPglm1HRuO2gbUV1QDcg2U+14EhcqqO7XoDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dd039E+fcyjQa0y4NMdYTJD5JLIHFu5O0cyXbp7CSks=;
+ b=lJ4m5T8foSkxZZ5eIObcmbdssf4Mh4hvFS2G/7qHRlLM1Ss1OUDZBxYu+IE6Z6Gd6JeczfGYdijSXeLa5kSVmkrLjSNKmGaqevJ3PnOO5uDWojVnxqJ1D7TvQfGtaqozEqt+tXhE03q+cOnV/JkSV4HrWPhVGkd2/hzNE11cVSdeSTUEo3UtV2+toU22nYcQ81nERqzPqiw3oh8SWKqqFbapmy3eMXIxr5y79j91dXRR20c3/nN/rw0L0KuLonvCKmcYzyfzgHTp7XCIaIp1bXlZMr2+gnTV0U3rRqXlnDNzti+kAHAueKTrF2vmz0UP36LD26VcPdqwlfJ7ioVD0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dd039E+fcyjQa0y4NMdYTJD5JLIHFu5O0cyXbp7CSks=;
+ b=mJrYg/EOKfH42zyfi5xhXRkpnFoQdqFtgkzDSEmmog2SrBBl/qBrf+WB3I6/RrNNlcMf1n8de792/tsUHsDUxEaWek5A5mtK8P8PUIc943XQXX5L3wsxtOXZpJR1DxQ9MOIMK1XcoOh08y3FJ9ERytEQFqU8157IW+LXIxzs927EJImksRIQ5D1ujiidLGsEeFihQwidrBn0vWGlCAzKH24QxGxsfHdRj/1MhoQt+FC0sM6gRapHmya9XvYSJraVTbWhc3PYvh7ToDprIOVMyY9/HnBJMN2VH8YUAe16N13+vGaif6yiIFqaQGGERPBgzTsfZHVPnvg/3aACC0NNjg==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA4PR12MB932075.namprd12.prod.outlook.com
+ (2603:10b6:207:12d::15) by SA5PPF530AE3851.namprd12.prod.outlook.com
+ (2603:10b6:80f:fc04::8c9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Wed, 28 Oct
+ 2026 07:20:39 +0000
+Received: from IA4PR12MB932075.namprd12.prod.outlook.com
+ ([fe80::5a6f:1f74:6ccb:cf2f]) by IA4PR12MB932075.namprd12.prod.outlook.com
+ ([fe80::5a6f:1f74:6ccb:cf2f%5]) with mapi id 15.21.0569.007; Wed, 28 Oct 2026
+ 07:20:39 +0000
+Message-ID: <90b2aec6-a473-4de1-9334-947e1a02c090@nvidia.com>
+Date: Wed, 28 Oct 2026 09:20:36 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/mlx4: always create the eth and ib auxiliary
+ devices
+To: Peter Morrow <pdmorrow@gmail.com>, Tariq Toukan <tariqt@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Yishai Hadas <yishaih@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20261020164239.3808903-1-pdmorrow@gmail.com>
+Content-Language: en-US
+From: Tariq Toukan <tariqt@nvidia.com>
+In-Reply-To: <20261020164239.3808903-1-pdmorrow@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR2P281CA0135.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9e::19) To IA4PR12MB932075.namprd12.prod.outlook.com
+ (2603:10b6:207:12d::15)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -100,139 +102,138 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA4PR12MB932075:EE_|SA5PPF530AE3851:EE_
+X-MS-Office365-Filtering-Correlation-Id: cae80015-dafa-4dba-cab4-08df34c3f7a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|10067099003|22082099003|18002099003|261026140227099003|11063799006|56012099006|261021121427099003|261009223027099003|261021123027099003|261022105027099003;
+X-Microsoft-Antispam-Message-Info:
+	/CbhKnNn1TkzvukRKKs2z8lhaymbE5Hp7bY5ujN4lSk8+yWucM8gg+TJ/Yu0iqt8yc86dKlZ125gqB+0HtlVZK2QNI5neovdhOZ4tvSHtnlQwByk1VVgLovnuIfpM5QZJI4b4GT9mqvtsIqTgE7/5cB1gNWScVXRoXoxOmKTmY9V9GT100d+mpKbay6+sjlxZsJ8rRm2zTJPCGSM1uAwfaNYHYISsd1dzqL3bJ8uExtlkhpPuRqrPxCbLvMbzp+/RHezpqjH1UFhZF4ETW8aJLRWqlNpnjP1eFEGGBpPLBcVPhA28+tj10/riG1enENsh/fXnvLSVMFnaRQITR3K6kP2PGDTfM9Rq4wfmn2MVsGDwq6W60o70uY+YFBnZ4jehbfDtgZguMcRU9Lr4b2YTEvtW24GITtaNmSyIlrT4bIgNK3L5EfnFz/DjDFIR9ENOqyZuCxJH9DIZcoR55I9cfZUYD/rgyhcCOrJBfdgeuQljp90uPWdXjogKYZ0u/FY8AqAk+Xit7e4sov5k5nQl280C0ei4RdnEpznGTfKCLBGCrB8DsGTSO2rSYVe71l1zoRZVxSR2dSIGbxmTbgFx+r905APfcnYod2hocNzSXdoS+Q5kESbAcLZqaBVsSZGxsoSxQu00CwtRYPvbnbzUXK97U9jCei4m10Q0mvBvL4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA4PR12MB932075.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(10067099003)(22082099003)(18002099003)(261026140227099003)(11063799006)(56012099006)(261021121427099003)(261009223027099003)(261021123027099003)(261022105027099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bGJLcy93bXFBT3JxdXd2ZDNOek12dDZGV3crWldJWkh4Q3dkZ2JtYnltM3Qx?=
+ =?utf-8?B?R1kvdHN4emJmUlA3ZlhJMFZDVnNlTzNlQndwbEwrZ21mUEZKdzdVVjRLQTZD?=
+ =?utf-8?B?WThCaytMSnM3U3RSTGJHck93WWd3QXQ1ZUNVVkdoRXhkbjVPTGVnd3JWVUJC?=
+ =?utf-8?B?RHV6dWI0YjQ1cUZjNEowMzRObVUxYkQxa1EyaDRyWTVnWlVNRWMxZk1Rbk1J?=
+ =?utf-8?B?VkVzbGt6djdtY2hGQmlvYlkyRHRWdE5EeWswRnFNbFZTaUIzc2NmRDZPbjBv?=
+ =?utf-8?B?RWoxcEtBRFRnME9MRDdkZkJpSk1GSHJQdU9xR2l4TkMwV0NJSlJrMDVuS3Bz?=
+ =?utf-8?B?RW5ZL3U1ZVZ5ZVFscWdqZEFlNHR0cW5hMDl5TXplN2lGeEFrMzVZcHMwaDI5?=
+ =?utf-8?B?dzlaWkU2QldTSmQxRjAwQ1FBYmVJYzFNRW5BM1ZhQmNQNmR4c2IzeVdXWXph?=
+ =?utf-8?B?dVBzVFZSekVKUnM5WVFnNm40YkhaL2UwV3pKamw4UFBiUCs3UlVVTW0rQ3pj?=
+ =?utf-8?B?MzZhNlpyQUlDNkRncE9laVV4QVVoZHNFUmN4UVNaeHQyZDBCVklNUHlnUHdH?=
+ =?utf-8?B?N1hUT1dQZmJaZEpZY1c2clRuZU1nVWNsQTA1VjFiMVhlVWF0NEhwS3ZkNVBY?=
+ =?utf-8?B?ekVsSHJsZHBYMW1xcSsrckN6ZVJSblpXSGxFckZoUUNzQW1wUUhEOEN3Rm5G?=
+ =?utf-8?B?Nmo1Z0pic1N1K24vRFhWeVQrcW05MlQvMFlRWHR5L0NETXplV3JLZlg3UHQr?=
+ =?utf-8?B?dW9JUndXeGRhTXlSLzBSV2Y1N1Jwa3F3YmRQQVRwNnBpNTFjaEdpRURUR3Zn?=
+ =?utf-8?B?V1NaWjlNZDFJSGltWUtJdzZxRGs2RnYzRWZaaU4xZ1pPTnMrcm02Z2hjTTRv?=
+ =?utf-8?B?cGg1a2FDbll3R0tyUVN0Y3pKNmdlanM2VER3Unkya2NsZ25INUx5U0FiekxB?=
+ =?utf-8?B?azZ5SGRpWFdlRjdrY1BqNHZYNDFsTzl1MDdBQTAvcGdUdUhWR21Lc2J6aG5x?=
+ =?utf-8?B?REd0RFdWYk5RU1g4Mm5ib1BlN3JrR0RjTjQzTnFsdDlrdWZyK05IOXo3RHZG?=
+ =?utf-8?B?MDVYTjc3bURzbFFsTk5ydUFYUVUvb05EVmRiUTdvdzg0L0tkQytRVUR6N2JI?=
+ =?utf-8?B?Y2JxbmdTWlBRWkRvdGNETzFkemxnMUhtdVVhL1VXWDZQaGx2QWZaNzdjUWs0?=
+ =?utf-8?B?MnRzNk9IcC91MFowZ2dHb0RGNEJnQ25YTWR4SytNdGlNanR3MVV6VVp5T3gy?=
+ =?utf-8?B?L2I0dzZTb3ZTaGtrclpVMUJrWlF2QjUwVzd5dTFiK095aUdMSVFEbG0wS3BM?=
+ =?utf-8?B?cTQzWDJzT3ZmQU9aSGNHYm50KzNQckFrQTlKcWJBQWo1aTZzY3VGWE9ybnpZ?=
+ =?utf-8?B?RDNSazZSODMxUEF4UEppdGxMSElpeGNHc2VidFpxSWEvVTUrdUZueU12Nk9i?=
+ =?utf-8?B?TEVpNzZrVDdKSGtXSDZKSE95VUJWazdwMVZ3R0dYYjNrekRVY0FsZ2dHWkk0?=
+ =?utf-8?B?Wll4b1RJWWVNL1o4T09mQnRKOGFFL09lYWJzQVVaRkxqSkw0Y01SQ1JqWE9m?=
+ =?utf-8?B?VXRyMFJoSWxvb2FEd1doMUErU2toQklubEs5eUFaSHlUbFFONE1sYXBrQXVh?=
+ =?utf-8?B?Z253YVNsZDJtdkVmUkhkTklXVDQxVHVVcGt3UjNwMmpyRUpFQW1HYmRKdFpi?=
+ =?utf-8?B?UW5iRW5TSGxqblJuUEoyNjdNOEtDSWM2WFZib3pYdGRaVU1jUlEzWm13Smlw?=
+ =?utf-8?B?OFFubllqRmhZMG5pa2Jmeno1UHBzRzl2TXNYWnNYYWIwUC9oZWJHVXZPcXE2?=
+ =?utf-8?B?Y3hCUlJ2ejN6Nk41VXMva2grekk3a0JhZDk3ZlUrbTBHQmg1ZzV1c24randr?=
+ =?utf-8?B?K0ZFK0pHd2w5elNBZDNRdGlRSDgxZmRQd0dNbnZyR1p2bGUwSVpFWUE2ajB0?=
+ =?utf-8?B?OXpmN0Q2RTR6eXJJT0c3NGlmSENOMEU2NTFOLzdaVldEYm1jaWhCQzduRVNX?=
+ =?utf-8?B?aFduQ05SQzdsYThWaEE3ejlsWlJudndDSmF2RHVrZUMrUnZ2YWltbHltNXhW?=
+ =?utf-8?B?OHJIa2hkcE1WVkRIdXRJblZxOHVLSllIOWtSOXl5MklOTDJ6VTJCWEtiSndm?=
+ =?utf-8?B?cW1YZlQrVklXYkltUDQzNHdQa3JCYUs1LzIwU05EVmowemt4VTFTVER5cFRn?=
+ =?utf-8?B?RUhmNC9sSHMrdzN3QkhWS1JUeFNHRGNPZklaRXdzd3RDd0srQno0MWRoTHpW?=
+ =?utf-8?B?UmplVDZHUXNZblhzdWtsUzZFbHZoT3pKbEFTTk5VTnJjS2VlNjlDNHpsaXNx?=
+ =?utf-8?Q?3zCJ7HZq0Lr4Dpr6zn?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cae80015-dafa-4dba-cab4-08df34c3f7a2
+X-MS-Exchange-CrossTenant-AuthSource: IA4PR12MB932075.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2026 07:20:38.9512
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gW9xNjnqzOHKxalkNpwRoF/UIMUXH3NFjkjun+F3FlvsWmEi7w149fZ8BwA3qSSQ1UpU4W1OZ4ckMhMGvnWrYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF530AE3851
 
-On Tue, 27 Oct 2026 21:21:25 +0200, Mathias Nyman wrote:
-> Yiyu Zhou wrote PATCH 1/2, fixing a regression in USB HID device
-> enumeration caused by the endpoint recovery prevention code added in
-> v7.3-rc1. Some HID devices that used to enumerate after a brief
-> disconnect during enumeration now got stuck until URBs timed out.
+
+
+On 20/10/2026 19:42, Peter Morrow wrote:
+> Since commit 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the
+> auxiliary bus"), mlx4_core creates the "ib" auxiliary device only for
+> an IB port or a device that advertises IBoE. Before it, each mlx4
+> interface was offered every device and decided in its own add callback.
+> mlx4_ib_add() accepted Ethernet ports without IBoE and registered them
+> for raw packet QPs only.
 > 
-> PATCH 1/2 gives back the pending URBs right away, which solves most of
-> the problem, but it leaves the TRBs of the given back URBs on the ep0
-> ring. ep0 survives a brief disconnect during a port reset, so the xHC
-> may later process those TRBs during an enumeration retry, writing into
-> buffers that were already given back, or ep0 stays halted and the next
-> control transfer times out.
+> ConnectX-3 VFs on Azure have an Ethernet port and no IBoE, so since
+> v6.6 they get no RDMA device. DPDK's mlx4 PMD, which needs only raw
+> packet QPs, then cannot open them:
 > 
-> PATCH 2/2 cleans up the ep0 ring by resetting ep0 and moving its
-> dequeue pointer past the cancelled TDs, even if a disconnect or link
-> error is detected. Only Reset Endpoint and Set TR Dequeue Pointer
-> commands are issued; ep0 is not restarted while the disconnect is
-> pending. The rapid endpoint reset, restart and stop sequence that made
-> some xHC hosts fail Stop Endpoint commands is still avoided. Other
-> endpoints are still given back without resetting them, but their TRBs
-> are turned into no-ops first.
+>    net_mlx4: cannot access device, is mlx4_ib loaded?
 > 
-> If you have seen the HID enumeration issue, or the xHC Stop Endpoint
-> failures with rapid endpoint state changes, testing these two patches
-> would be greatly appreciated.
+> Restore the old behaviour by creating both auxiliary devices for every
+> device and letting mlx4_en and mlx4_ib decide in probe, as their add
+> callbacks did. mlx4_ib_probe() returns -ENODEV when there are no usable
+> ports, and mlx4_en_probe() binds a device without Ethernet ports but
+> creates no netdevs, as mlx4_en_add() did.
 > 
-> If these patches work, they might be squashed into one before going
-> upstream.
-
-Might? :)
-
-1/2 is a possibly dangereous regression and shouldn't be used alone.
-
-Anyway, I think it all can be done with a bit less code, while also
-handling disconnection during unlink. Particularly on EP0, multiple
-URBs may be submitted by different drivers and/or userspace. Just
-because one of them unlinks its URB doesn't mean that the others are
-aware of anything being wrong and won't stall for <N> seconds.
-
-This below is a rudimentarily tested RFC but it seems to work. It's
-simple enough that hopefully it might even be correct. I will test it
-more and write a changelog later today if there are no objections.
-
-I tweaked the logic to return everything with -ESHUTDOWN and not
-bother to assign proper status to the URB which halted. Intuition:
-we want them to give up, not call clear_halt() or reset_device().
-
----
-
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index fa6684746305..b37056cb8576 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -987,14 +987,11 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
- 	int err;
- 
- 	/*
--	 * Avoid resetting endpoint if link is inactive or device disonnected.
--	 * Can cause host hang.
--	 * Device will be reset to recover an inactive link, so don't do anything
-+	 * Mark endpoints behind disconnected or SS.Inactive root hub ports.
-+	 * Restarting them is futile and known to triggers HC bugs on USB3.
- 	 */
--	if (rhub_port->link_inactive || !rhub_port->connected) {
-+	if (rhub_port->link_inactive || !rhub_port->connected)
- 		ep->ep_state |= EP_DROP_PENDING;
--		return -ENODEV;
--	}
- 
- 	/* add td to cancelled list and let reset ep handler take care of it */
- 	if (reset_type == EP_HARD_RESET) {
-@@ -1011,6 +1008,12 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
- 		return 0;
- 	}
- 
-+	/* Don't reset lost endpoints, only EP0 can survive device reset */
-+	if (ep->ep_state & EP_DROP_PENDING && ep->ep_index) {
-+		xhci_process_cancelled_tds(xhci, ep);
-+		return 0;
-+	}
-+
- 	err = xhci_reset_halted_ep(xhci, slot_id, ep->ep_index, reset_type);
- 	if (err)
- 		return err;
-@@ -1022,6 +1025,9 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
- 	return 0;
- }
- 
-+static void xhci_kill_endpoint_urbs(struct xhci_hcd *xhci, int slot_id, int ep_index);
-+
-+
- /*
-  * Fix up the ep ring first, so HW stops executing cancelled TDs.
-  * We have the xHCI lock, so nothing can modify this list until we drop it.
-@@ -1047,6 +1053,22 @@ static int xhci_invalidate_cancelled_tds(struct xhci_hcd *xhci, struct xhci_virt
- 	if (ep->ep_state & SET_DEQ_PENDING)
- 		return 0;
- 
-+	if (ep->ep_state & EP_DROP_PENDING) {
-+		xhci_dbg(xhci, "Nuking dead slot %d ep %d\n", ep->vdev->slot_id, ep->ep_index);
-+		if (ep->ep_index) {
-+			xhci_kill_endpoint_urbs(xhci, ep->vdev->slot_id, ep->ep_index);
-+			return 0;
-+		}
-+		/* EP0 may be reused after device reset, clean up the ring properly */
-+		list_for_each_entry(td, &ep->ring->td_list, td_list) {
-+			td->status = -ESHUTDOWN;
-+			if (list_empty(&td->cancelled_td_list)) {
-+				list_add_tail(&td->cancelled_td_list, &ep->cancelled_td_list);
-+				td->cancel_status = TD_DIRTY;	// for clarity, it's redundant
-+			}
-+		}
-+	}
-+
- 	list_for_each_entry_safe(td, tmp_td, &ep->cancelled_td_list, cancelled_td_list) {
- 		xhci_dbg_trace(xhci, trace_xhci_dbg_cancel_urb,
- 			       "Removing canceled TD starting at 0x%llx (dma) in stream %u URB %p",
-@@ -1061,12 +1083,6 @@ static int xhci_invalidate_cancelled_tds(struct xhci_hcd *xhci, struct xhci_virt
- 			continue;
- 		}
- 
--		/* device disconnected or link error, ep will be dropped */
--		if (ep->ep_state & EP_DROP_PENDING) {
--			td->cancel_status = TD_CLEARED;
--			continue;
--		}
--
- 		/*
- 		 * If a ring stopped on the TD we need to cancel then we have to
- 		 * move the xHC endpoint ring dequeue pointer past this TD.
+> Tested on 6.12.111 on an Azure VM with two ConnectX-3 VFs: each gets an
+> eth and an ib auxiliary device, and DPDK attaches both VFs and passes
+> traffic through them.
+> 
+> Fixes: 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the auxiliary bus")
+> Closes: https://lore.kernel.org/r/20261014133951.3219055-1-pdmorrow@gmail.com
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Assisted-by: LLM
+> Signed-off-by: Peter Morrow <pdmorrow@gmail.com>
+> ---
+>   drivers/net/ethernet/mellanox/mlx4/intf.c | 15 ++-------------
+>   1 file changed, 2 insertions(+), 13 deletions(-)
+> 
 
 
+Acked-by: Tariq Toukan <tariqt@nvidia.com>
+
+
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/intf.c b/drivers/net/ethernet/mellanox/mlx4/intf.c
+> index 82e467c..31860b4 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/intf.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/intf.c
+> @@ -43,23 +43,12 @@ static DEFINE_IDA(mlx4_adev_ida);
+>   
+>   static bool is_eth_supported(struct mlx4_dev *dev)
+>   {
+> -	for (int port = 1; port <= dev->caps.num_ports; port++)
+> -		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_ETH)
+> -			return true;
+> -
+> -	return false;
+> +	return true;
+>   }
+>   
+>   static bool is_ib_supported(struct mlx4_dev *dev)
+>   {
+> -	for (int port = 1; port <= dev->caps.num_ports; port++)
+> -		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_IB)
+> -			return true;
+> -
+> -	if (dev->caps.flags & MLX4_DEV_CAP_FLAG_IBOE)
+> -		return true;
+> -
+> -	return false;
+> +	return true;
+>   }
+>   
+>   static const struct mlx4_adev_device {
 
