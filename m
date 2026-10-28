@@ -1,64 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.112
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793196858;
-	b=ECb7jdBnNMKen3rVocgZ5r7uDhUR7H/xOxpDCQWCiqRNmcm2yVY7jEsIhfmg/jILIN7z
-	 Q1ItPNOt3XEQujb5lOEzWAliaLcuUZ1VmemtdFftbrtNHvVyE4Z1mitQu58+ti9X1eFnw
-	 JenNJPNSGKXyXJ0QNpXUleDrqtNnKlAcloOO5zsCJ26/odsHxeJszz36Tn6WPn1xUXyv3
-	 aJBhP3zE/KyURDKotIta/E0qSHGV7tOft2HKe/Lxbl0TseHmaDEVW0sQuC0G6Y/TDqp/+
-	 lRUogGg6JJkGjCUzAb8BY2uSE0+0gmWHDxIOuoDX8n2f/9nYKtFGKUUyc1dBXWD0N/A==
+	t=1793203380;
+	b=mRhm5SnvZSoSI4I7a4exFnwdEh+1RHc/87UyfifTF2bze7OhVZndFXlZpWcCSS+suNpL
+	 b7mkvzfEPYqXscdtXrezyK5GyaOzwAf0/NIYlwfjqkIBl1NlKntKRml9W4Fb7m2biBADg
+	 1YSv1oLEf+3HEsXZv4D9/xx5j08Ir2rhANm4PXeOVkkn7Fi08BXobmxVQa4pY02ayhqY3
+	 o0ZgTGbIgrrrjjkD8pvRd3wFghfRu/Lk6wp9GywPXPSGvndg6NT887NTyP/giI+knj91/
+	 Y/VerZqjhdGAzN6VS7yRfu6UJV4SydXaQC/uUDb7suLa+iAL3kp+Y1+lmaaWgaW+a7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793196858;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=BqdCbO5Ut770wMKCPxk+JDzKFsU8wGiYFlxDAYWMQg0=;
-	b=hrGAjdt72FLXaqODqaap+mu/ntrIPX9N9ZiKCAq7u0EdPBi1JrsM6OjsJVGjlqQ2jzkh
-	 jANLaswHKv1oF/vRXnUKloMEXQvpmB0jR5bUMSKxZ9v3c4h4zH0yS5mBORqR+/d1s1PiX
-	 wHcCHbBddrASKHZSuzXPHqJZ34O6EWafRKxjikcc2g3A7Cy8um9jVosSJUqroJyhAXIdW
-	 eL8zv+/Xp5K/WgOCoVQYPwTann4qzGC/uAImRkRQ7+POizR9n8GgJEyb9JBNHdqW3wx3Y
-	 QewYJibEfbgzq/6VlY/OfAThA+husXBs+eYIzv8YsIe407jEF5RQasoSsDYqzz9HrPw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793203380;
+	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=wKs3vJN4ZKJpeX5LXglj/FvmPaj4cVCU3oClZIx8D0c=;
+	b=xtfZgNiGDV4BvNGTqQkzU0vZdloVP60U680SDt3lS4bMEnushPSYtwapxLL4Vha5gr6p
+	 SAWnywU1G78BDA6mMEOBHtKgP+OgR73PvA0OVVXojTLYTVjN+livUc+7ppdPy0ceYoiGj
+	 Tq/gHqfZWKHTypo7r6ZsHcXMympwBYevBzTH5THpeJIlfExzm2C6rDApJyi1MM+C74lQZ
+	 pPwbxFGFr4vjMixqWwAqQlvXthnpZxsxIVy/s1XM/u3TUPidsumSmS+WtIq1mVs0Sr4oe
+	 lrJb4/SHTwZDeFpvCk728TRt0l0Kv1jNZUGp29SNd2ebLz0hRtNwEB2lO+rN+YcVgPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d7WdcUEs;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=michaelburch.net;
+	spf=pass smtp.mailfrom=michaelburch.net;
+	arc=none smtp.remote-ip=79.135.106.112
+Received: from mail-106112.protonmail.ch (mail-106112.protonmail.ch [79.135.106.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F882606A31C;
-	Wed, 28 Oct 2026 14:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d7WdcUEs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582721F01825;
-	Wed, 28 Oct 2026 14:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793196857;
-	bh=BqdCbO5Ut770wMKCPxk+JDzKFsU8wGiYFlxDAYWMQg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=d7WdcUEshtnGEY0jtT+5U3gtfFTzY5U4BrxTzKp6flf9vOhpmzfpZ09YZ7mEA7Esd
-	 3v0poyhZfNUHrUkZ3K865/Mx4oyYq9S+nOv7rUG7Fbf0zPJttCsdZSUhGMackv6t9Q
-	 FVjyx4pm/+cDgtkQV7NSlDJQb9Gf1bxAJS5wi2kZzUftC7Pj9KvAtHLIlaViUk15cg
-	 qUYeKqcJnMj8iAh0DJiqJjYhmfZiCSwPBfp/jW8fjRdX/NkqPTtsu8CuRzkYREjIss
-	 ssBc9zFRTSLfZ+DWPXhi6JWsneLSUwKBiKLin7LagI06R8hHbQj3PM/is76KBUiHXB
-	 tvaQDMzTqi6og==
-Date: Wed, 28 Oct 2026 15:14:14 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Stian Halseth <stian@itx.no>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
- after idle exit
-Message-ID: <auIDNl9EUX4CzWzr@localhost.localdomain>
-References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
- <20261025100202.2584654-1-stian@itx.no>
- <at-C_3rGi55L1v2X@localhost.localdomain>
- <1e00b909b81c6195b3ad5aeda207d20cbedc3971.camel@itx.no>
- <auDaMdhD2zGBLhDE@localhost.localdomain>
- <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F95606A31C
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 16:02:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6F95606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=michaelburch.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michaelburch.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michaelburch.net;
+	s=protonmail; t=1793203370; x=1793462570;
+	bh=wKs3vJN4ZKJpeX5LXglj/FvmPaj4cVCU3oClZIx8D0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=Jt4sLcnfHw2wqjq78XGZQKUE3kF6VJbqSCvrO9nhkfFZNTCElSapRkr3tmLid51p/
+	 42O2O4HYmn8Wgs45QxT5eMbBKDl1CiZDXRJcm7D5ZE8wVcIGug1NCaJfBg3fg0sjDO
+	 XwN+uAE21c1rg7POSH5JUzepdIBq+kkjWxUj/fn0o+LUJfBb+H0eCc4l3V+i5gP4Ao
+	 9UEprSoRMQXApBL0mdftZkPVFU9YnKHN1uS/ZgX74YARA1WMvuoUe+ZqqdKDrJs20x
+	 zn5KEmXXR/z4ajmSKenJG8DLAhyxrfYX9/L8xHcbb25QjJJyJtEtPZEui0Dwdj80Fc
+	 DDKZ2nMWelV0A==
+X-Pm-Submission-Id: 4jFBw52kD8z2ScPp
+From: Michael Burch <me@michaelburch.net>
+To: regressions@leemhuis.info,
+	Vinod Koul <vkoul@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Qiang Yu <qiang.yu@oss.qualcomm.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Abel Vesa <abel.vesa@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] Revert "phy: qcom: qmp-pcie: Skip PHY reset if already up"
+Date: Wed, 28 Oct 2026 11:01:21 -0500
+Message-ID: <20261028160121.10729-1-me@michaelburch.net>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <f6a49cbb-e000-4dcf-8b3b-61c3b8d934a9@leemhuis.info>
+References: <20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net> <f6a49cbb-e000-4dcf-8b3b-61c3b8d934a9@leemhuis.info>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -68,74 +73,16 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
 
-Le Tue, Oct 27, 2026 at 08:05:49PM +0100, Stian Halseth a écrit :
-> Hi Frederic,
-> 
-> On Tue, 2026-10-27 at 18:06 +0100, Frederic Weisbecker wrote:
-> 
-> > Ok let me try to picture this:
-> > 
-> > Initially, jiffies or tsc-early, not sure, is the clocksource:
-> > 
-> > - tick_setup_device() sets tick_next_period to ktime_get()
-> > - tick_periodic() adds TICK_NSEC to tick_next_period right before updating 
-> > jiffies. So as you said tick_next_period == ktime_get()
-> > - Note last_tick is not involved in that mode
-> > 
-> > Then later on boot comes a oneshot device:
-> 
-> The clocksource is initially jiffies, and I believe there is a step missing
-> before the oneshot switch: the clocksource switch, while the tick is still
-> periodic.
-> 
-> Please let me know where I lose you
 
-If I knew where I was, I wouldn't be lost. But don't worry I was already
-"there" way before you arrived :-)
+Yes, still needed. I retested today with unpatched upstream 7.3.0 on
+the Dell XPS 13 9345 (X1E80100). It still reports "Device found, but not
+active" for 1bf8000.pcie, enumerates only root port 0006:00:00.0, and
+drops to dracut with no NVMe endpoint or /dev/nvme* devices. My patched
+7.3.0 kernel with the revert boots successfully.
 
-> or if/when you disagree with
-> my analysis. Not sure if you're more confused about my attempt of an
-> explanation, or by what's really happening ;)
-> 
-> Here we go... 
-> 
-> The oneshot switch can only happen inside a tick, so at the earliest
-> in the first tick after the clocksource switch. In the guest it came 
-> 0.7s later since tsc-early waits for the watchdog in the guest.
-> 
-> So...for a while tick_periodic() runs on tsc-early. ktime now moves
-> between ticks too, but the next tick still adds a full TICK_NSEC, so
-> tick_next_period gets ahead of ktime_get() by the part of the period
-> that had passed at the switch. Still here? :)
 
-So let me depict that:
-
-// clocksource = jiffies ?
-// clockevent = lapic ?
-tick_setup_device()
-   tick_next_period = ktime_get() // jiffies_to_nsecs(jiffies)
-
-tick_periodic()
-   tick_next_period += TICK_NSECS
-   jiffies++ // ktime_get() == tick_next_period
-
-// jiffies > tsc_early
-clocksource_select()
-
-tick_periodic()
-   //one tick has passed, so ktime_get() == jiffies + 1
-   tick_next_period += TICK_NSECS
-   jiffies++ // ktime_get() == tick_next_period == jiffies
-
-No?
-
-Thanks.
-
--- 
-Frederic Weisbecker
-SUSE Labs
+Thanks,
+Michael
