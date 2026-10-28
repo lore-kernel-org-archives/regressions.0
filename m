@@ -1,69 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793182281;
-	b=R3+OX7SiMx7EIV/UecS/lQ8+3vk7oj+KTrEKu5Ed2v4tXIEvGWv+hrpBM2dhHOvGEBLV
-	 D6AIAACLfWz/c/hbORl/NG4Ty75YPoXGVtXRi3L2mI2qHB2xNBIm119+gOmp3g4bbA2bu
-	 kePdxXsMNwfG1mESJnVnM7snrPQxA/xOlQf9fMppDiaZxl8fEq3xT5E5y1+fTg7Dy9+60
-	 tm8w/OhcUPZqnkMy2t2TIP3OwwuwFqjlHZLJNy5ZQ3tiaQKR2uzbOuqclewyxaceHeDYL
-	 hMg8/CGU2a/yD9gER5Ia4ts3V4Hq6ysOpjgqzvzlw/AQT2IKwGHKLP5+nZC3TLr8JeA==
+	t=1793188120;
+	b=3K6TeE2qEZn05QljW13FmK0tUCbwQAdN0w3Arkto0/6CiCNR4AsWWcLILj81Puxaxgpt
+	 wrikChBWWaA1o4GQFzw4pzh4dHloUe9f7nmrteuiTUOjtdsif2S5K5GKSVEOJsFMwYZom
+	 JiId04bnCLMaQWGZyEocbSTrzIy7TsKXd8arOoGpDIrd6CY+R5Sy+vBxQwMJJXkNTpo84
+	 q+RosASvT4jvyRmz8FQySwJY/zIr4dcOXGz1Az+YwXQFSMUkyqT9A9uohWnKdJL5rvU+R
+	 i4jA10wyMi54LB4TTBob9L9PW6MoozTCIKeGCxJAQjys/B5oC2MpXD8lNKo/auG+rrg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793182281;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=JC7ENHgPyYkLkxK4VJ5n3NbFEr1vdT7paouVRp4uw7E=;
-	b=FlpKdmqETzn2/J2SEPJvK4w/ZCmXIUwsKU4Bv4KvCYs9eCwmmiHNv1ZK7hNAuoxlR5tT
-	 dGBlNL76kIBjB5cErwgUBQPyTvZwx1ya7Lod0Zsw1SI+IHuHKdhuhptV/QFflrEHMcO1H
-	 O9guYwuXNxrsK7XNV4/GaPxQoWD8hBRHADqMV8DEdy0IaEmAfxoVN+Lbw1Hf+F5WOLjaL
-	 O0kqYGjIb87d8DLUyMBoRBctGrswrvoESv7hn//GEKgOPYynj9ze5ICyQQ7yLkI5nNJLm
-	 4GDLrQRZF7LqPMXmsGx4oJjFrtZhYC2In4OAYoux9YzYZAyfDWJa5+8yf0ijCnv8LfA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793188120;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=rz4LcTuIBFgFlzGCEXc77TsZGPHM5RG2DLR5yTjpqhU=;
+	b=DGFsYckF0rLnkduRL1LxMmT3+Nw5CxvISNlxbKDFoOrt+ZYA3M40M6fW0HoVoClbv/qj
+	 DpytOeBhsAJtM1nESROLhKpI+uaDC5WZLRdwt0Wu6reMz4UlHbDLerJh+Wz+T2/YhEihT
+	 437Tc//fYdSblS7sxAm5mXUGdP3Hxzo96Qfu1bGjNU/nQ+tvyjVoeZLPvbLUZnnaiUH+K
+	 NkLNh5q4bS5J1n2eWH7DMtZK25QCdXp/oD8XrPlHgYHqpH+q6xJKNApOUeDg0df3ruLcL
+	 2iBj2D1ctAodwxJz2vP6bhAhM5d6aOAuJQSNHMWdnX6rW3lVevDKg8331epX9meYJsw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=eC7BbD48;
-	arc=none smtp.remote-ip=185.244.194.184
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=K8zWYtld;
+	arc=none smtp.remote-ip=209.85.218.43
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5C5606A320
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 10:11:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA5C5606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EB1606A322
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 11:48:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97EB1606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=eC7BbD48
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jF35y2vxlz9bfH
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 11:10:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793182246;
-	bh=JC7ENHgPyYkLkxK4VJ5n3NbFEr1vdT7paouVRp4uw7E=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=eC7BbD4818s6Fddrl65mYML0u/yOOTuX5AYOlarc0ulz7W6GNI7a6KylNjTwuFTL5
-	 0oymQnePvOiavX3/OZJI0VbPuycdbkE6a6Nvok9lTkfRODGbs2CzOL3fEGR7Sq/5n8
-	 NH4SdbqvJPJfS41uc6J9z18h9aNRelAbEpG9sEmqMw+p3MtF9oKtq/nPBnY7F9bvBZ
-	 a80C9wgwMacYXGRxvlxjZD3C0HgB2EioyfbLc8XZA6pADjaYSa+xPeqYZDkIbv5Qxk
-	 EwCR+GptCWcJR7p9lvyUmWU4SULyFXLxqUDkvF/Ra44fwUCQOiQ7VWB1NmhKsd5zec
-	 i6KOR9qx3qPnA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jF35y2BrLz7wl4
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 11:10:46 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jF35y0f1nz8sb7
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 11:10:45 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C4FC05F9FC
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 11:10:36 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <1450c545-977e-4065-a18b-1c8e13f21f59@leemhuis.info>
-Date: Wed, 28 Oct 2026 11:10:36 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=K8zWYtld
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c450ab1483cso125707466b.3
+        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 04:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793188118; x=1793792918; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=rz4LcTuIBFgFlzGCEXc77TsZGPHM5RG2DLR5yTjpqhU=;
+        b=K8zWYtldcVFojFOR01nsLXXgv8zYGNSVJATOgktUjUx+lV0dm5wBSIwTc+lvvh1D4B
+         lFQHm2j7Up/PawJy4dhMNazD0romggh+ZFPPJkdh5aNq0E6+72nbfNK4LbeNPQeBescn
+         DemKe0FSmwFBPVBbytseKzgxBWoB48gt5D66C2zY78RVKYKxlHU6k/WDn3gS7UVOdzI/
+         BvvKENHA1CkXz9X3vDkeXCP4AzzCXZ4D01Mo11/OvOuPpOwBozGwhYKNgrcgo/BeEcxf
+         VC1RT4LbbcCOM35x+Tx+WAt3Xh3umuUApvvoTx6THYZ7iHkpCXOnZ0+nfffC1QtF//MX
+         nXnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793188118; x=1793792918;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=rz4LcTuIBFgFlzGCEXc77TsZGPHM5RG2DLR5yTjpqhU=;
+        b=N6BkQDv9y0Ta9ag+M0Rgs3SyYiJFCVD8thwbKN+QCzU2DjjGJA9KUvCN/VTuozNlhl
+         epmoeyTvBtRY7bDTd7TX3zofxDFZ5WGPhLSX3A8gONpIyNw6IBSeoarkS6Yvqrbl+1vr
+         bik90VHsquouD8hRjIIEPVFOM7w1D3wkxdwS1eqDx3MtrX+N7+4F4WOe6Em70ppQqaDZ
+         kU4OXbNdH/V4+z48sGru12mWBTt3M8SlI5939t7myWfT4gVnbAau3TCXubpJhgt+X+ND
+         GWsiNWJ+Bo/YcST0VdF7Bt2tsR0LP1MjEUayu3eIq4sx6MK7J4sIwmquaMQwaDg8x34r
+         7Szw==
+X-Forwarded-Encrypted: i=1; AKwUvBxmFzXVdDltI+oAXMFCiSR6GZgUNjrQxNINjpu5rmKhcK/xO5BQ81YmyzOpUjhis4bdEe/Erpdkg303/g==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJPgLbpjQOuy/9w9ZJAPLoKRyLCz6Ez6cNvMXMStTGNdLqnfA9m
+	rdkyPf6/YQdmMyeILfGs1KN+68us8vTxEZy9Txnk7dFKYF/qEOAAJBFy
+X-Gm-Gg: AYBFou2wYBOwiBiscwP/BspjAq2jHTgiZDdEbIHeJ6gWf64vT/9a0nnJktiJKGrfHgO
+	QoZXudiehxQIFowfcPoGmr0xVPIv8djsfnFxTkSletG/D2XKDLEOTz0VTCiLCcEDjeyFOpaFUtv
+	LPuWppbuHmOcV5Pba1u5UCGPEMBvR3CSgveywrcnu8l/J9qipCUU4gFUHa0IwGsk/0qRe6TXEPR
+	smA+m1g7ECMsaybrMRDljjnZgc/FZQ2FSG4PZucds/AJJ7TtnAosoIGrsusX8nAfmWVBS9tnz2f
+	FVm/3iGkXQf5ps2dQ5LZJUlOkQ4C7TCqftg672/GjCiXqIPdVuvkb3vWDPxZGqogUyCSRdQR3ek
+	293R8u64aIxZyaoNfiDrAdGavs20k0DgDKTrA4wxlSMu32tsD2orFPpuoKvkKBl5jk9ZMhDx0kZ
+	EW7mZQ3tV/PKpg92Il9s087ETmBLH7fiBzOAYe1w8Ra3e2/WNHa3VBReA+18mX+HJSnQGWFIt9x
+	eCCLQEOYKkuJOAibIoPT70zIQixyPHh8u0+oWUYP27LKhlfLHh1D20AmqguI/RApZajWi0Nfgg3
+	dJM9DkUQRLJW7DYX5ikNbc8=
+X-Received: by 2002:a17:907:94c9:b0:c3e:34fa:611d with SMTP id a640c23a62f3a-c49be00bf6fmr159888566b.35.1793188117832;
+        Wed, 28 Oct 2026 04:48:37 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:43::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b496459f10sm1375962a12.36.2026.10.28.04.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 04:48:36 -0700 (PDT)
+From: Vlad Poenaru <vlad.wing@gmail.com>
+To: netdev-bot+sashiko@kernel.org,
+	netdev@vger.kernel.org
+Cc: Michael Chan <michael.chan@broadcom.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Jinqian Yang <yangjinqian1@huawei.com>,
+	Andrew Preece <apreece@meta.com>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] bnxt_en: Don't keep MSI-X vectors added before FW reserves them
+Date: Wed, 28 Oct 2026 04:48:33 -0700
+Message-ID: <20261028114833.239086-1-vlad.wing@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <179310474137.3134.4690740150964769309@kernel.org>
+References: <179310474137.3134.4690740150964769309@kernel.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,41 +111,42 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179318223701.1196986.9588512707623354134@mxe9fb.netcup.net>
-X-NC-CID: eCX8blJvp9GY1/zfiqWPgKdO0bbJ9WzQj2BXq9STfFljqZ/E/oo=
+Content-Transfer-Encoding: 8bit
 
+On Tue, Oct 27, 2026 at 12:39:01PM +0000, netdev-bot+sashiko@kernel.org wrote:
+> - [Medium] The fix is incomplete when FW grants fewer MSI-X vectors than
+>   requested.
 
+Agreed. bnxt_reserve_rings() grows to the irqs_required it computed
+before the reservation, so a partial grant would still activate
+entries that FW has not reserved. In v2 the allocation is sized from
+bnxt_get_num_msix() after __bnxt_reserve_rings(), i.e. from the rings
+actually kept. With no RoCE driver registered, that fits within what
+FW granted, and it is never more than the old pre-reservation count.
+With RoCE registered, __bnxt_reserve_rings() can still keep more L2
+rings than a partial grant covers, because the ULP share isn't taken
+out of resv_irqs. That accounting predates this patch and belongs with
+the ring accounting work on net-next, so I've left it out of this fix.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> - [Medium] New error path leaves the state inconsistent.
 
-#regzbot report:
-https://lore.kernel.org/all/20261027043521.99446-1-kmehltretter@gmail.com/
-#regzbot resolve: invalid: turned out to not be a regression
+Agreed. This path existed before for the bnxt_reserve_rings() grow,
+but the patch makes it the main one. In v2, bnxt_reserve_rings() also
+grows the vectors when no reservation is needed but bp->total_irqs is
+below what the reserved rings need, so the next open recovers instead
+of returning early. bnxt_change_msix() also clears irq_tbl[].vector
+when it trims, so a stale virq can't be requested again.
 
-#regzbot report:
-https://lore.kernel.org/all/a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com/
-#regzbot dup:
-https://lore.kernel.org/all/dbe1bd3d-5246-4dd0-9b05-52e9ca7d0103@icloud.com/
+> Pre-existing issues:
+> - [High] This problem wasn't introduced by this patch, but the DCB IEEE
+>   ETS path reaches bnxt_check_rings() and bnxt_change_msix() holding...
 
-#regzbot report:
-https://lore.kernel.org/all/20261027223247.300463-1-mikhail.v.gavrilov@gmail.com/
-#regzbot unmon:
-https://lore.kernel.org/all/25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org/
-#regzbot dup:
-https://lore.kernel.org/all/25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org/
+This race between the DCB path (RTNL only) and PCI error recovery
+(netdev lock only) is real as far as I can tell. It predates this
+patch, and the grow loop already has it. I'll leave the locking in
+bnxt_dcbnl_ieee_setets() to Michael and Pavan rather than mix it into
+this regression fix.
 
+v2 follows.
 
+pw-bot: cr
