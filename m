@@ -1,55 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.189.121.228
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793203780;
-	b=SYNLe42jX8DHyacRL7ZQ4XHyDiSnYYfgSSaMpu7vIWfi98sl+MYzc0uOy9a8flmFtnbg
-	 MDKzYbp0ndQhakJpSjD2QSYWetpR1Md3LeZqZqeDw3hOSK5KDSFNj/HnA5it/dv8R8tpl
-	 gjGWLHxRhS3QAyVi6ZHmZIaOLJpkQeZhrhWd+1kXSRGJTNV5Q771Vq+ma9KOXe5ORWibM
-	 qblhuyD6I816zE6lx9v+IKzvAleiBYmXi5xvRa7BUmlsfaRrqG29Jnpws6M5ATql/FOhm
-	 5u0nrk4QmyjgNE+IJy0f6Y6KC7JpF2MomN9QlbiBzjyOc+DW0mWu+eZsmKVJxcl9tmw==
+	t=1793209047;
+	b=UGefDrt/node0/SSP8LDIJvjRRlidXh4aE+vYm1boeGEK9vt9ZPOtmsaewGerrhxjbkm
+	 2mqfl2sTb4k3kboIszj5CHwSZrzl4IWp5aqqss29utaZtcdhuSuqTdjo1mu+yHmzw1I0+
+	 ugqED61cTcblttcbDvJ+a7kRoGvb4BNFa5cbsccYgamkThjBh6fJ5uHuy33Ci6/5V6Vk7
+	 wQqIyYHSaiQvD13hYXsoSZMAZoaJ6KTUIxd7r0Zf4Z5QhtOwzFWo5QOs4P4fVIotaeQxC
+	 oOqfP5/jgBvk+ZwcBmKlzk6jXn2V2sOZL6PnwHIjstj6+Z+6MMjHEmJbNUj3tJaZq2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793203780;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=zNxy4TxKEn9W0ao1LVIid/JgYPfZELsjFwGZuxfMh4E=;
-	b=GVhFtUR3vCPvsHDG7Z+oZf0l9feGVcbsn42AFmE28ws7oZViWUcWWqypfd/2AV1eGsiH
-	 lsxYtUOlhlIyHE+s0jQUdAZzRtnSZ7RCU2HsoDRubl501fYwAV3f2NcmXfsMHc5PGLZNv
-	 1I2T3OQ0XN2tx1dOPY6p/YejChTIUj6YkL+XhtE0ZLsQ2QE8Nlk7NS+pQQS6MhPVLMow2
-	 F/MqXVovs8smuMWLKcYhPrt5J7lHsFB70akrygF0m1CX7SCHXVw/fRauiVH7QL9gmUxky
-	 ijMYBS/XoLPicJOfp9MNzhkK6BaxOmsu8aaW6QDHDpE9e2OtkmLE+g2baz+UbY2b/bg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793209047;
+	h=DMARC-Filter:Message-ID:DKIM-Signature:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:MIME-Version;
+	bh=D+E5f9szfVDKnVHCxdofpBpBimR9XEjRAg4gzouCl8c=;
+	b=mbPS4xYvBZAfnI8XvG4Td3MgSNjdO6kbW1AqOlJS4FP45Bh77RSx02haTB3ot+7ctylG
+	 R9OeBbLkrPLa+B7pAOiv2jhU9VEc0RdsD4F91U4zDGzwMof/UAB4Ei2/Pt5PbhJ1NrYOi
+	 58YVQZ4P3vKYPc/YNUsXZrH0UROTqnC8s0cS9wBWnIAzkLVfgBUngIVtoXWP9oOzuvyLw
+	 ybXZ74yJo1ycdQ8DLWhJTcm+ANLzvE0fbEg25xvKfWfMk+f4vxCfOCiUMSzkaOfXaO++n
+	 y2CB9do/na5VnFuR7ThPMjoOtqFpvQoBbr4kVQtXSfyHyxUBDog9cWmm6Wl0xJTzlgA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BCbi5gX6;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=itx.no;
+	spf=pass smtp.mailfrom=itx.no;
+	dkim=pass header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=hhlVuW3A;
+	arc=none smtp.remote-ip=91.189.121.228
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6DC606A31C
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 16:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F0A60A262B
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 17:37:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06F0A60A262B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BCbi5gX6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA411F01302
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 16:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793203779;
-	bh=zNxy4TxKEn9W0ao1LVIid/JgYPfZELsjFwGZuxfMh4E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BCbi5gX6+ASNOLCcSx55hoaYyYBWW0Cb1GBSeTpC9W9Lj6yvTBmk6n9XF6HlQpTae
-	 yK8NjGTO6CMH2MCf3ShVLEp0YlTLQBjnHw3gDtNQ9aHjMh3JaXrylWbGOqrU2G52yH
-	 /SCI4HD6l73515cSoPu3Fzsgp+ALMg7d3xNojCF+TVJSZPDsVqOnYwIKqmhRechG6e
-	 8J9hkRdo+XheIqbBcMPGBikm45XnznxhPIMbGBSMbsuv4/2stxz/0y83Lu/kgDPFlH
-	 bsUr0xcakhuPipi/0puXuhDX6wbuCaVcNdzxpQnsrGOILOcv5ii85jnBXjPw9lr5Ld
-	 Hm3kGpVQ/dC0Q==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5bfa7c09c9eso996524e87.2
-        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 09:09:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvByF5dKmipxgaK+vxl2qcjBRDSXDw+p6nRv+NJnh8ZEXNN1ynE+9bYw028WMxOkLQYY77qy516yyPuS7ew==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKCySu4+pckYwbAoL+o6L4M0UWgqTVdfylz/IeJShS669yZNfEx
-	brrYb0/8SG6ZIcdGORWu+JcCMGBTrRtw+gIcRK2Lx+pC/Z3kNJp6pbhza/z72G+zLUaCC2XwqOS
-	+42/oRGm5ZFcg2RVMMjC9SXMipOj3OY4=
-X-Received: by 2002:a05:6512:618a:b0:5bf:a172:db38 with SMTP id
- 2adb3069b0e04-5bfcad74135mr1174502e87.59.1793203778257; Wed, 28 Oct 2026
- 09:09:38 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=hhlVuW3A
+Message-ID: <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1793209044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D+E5f9szfVDKnVHCxdofpBpBimR9XEjRAg4gzouCl8c=;
+	b=hhlVuW3AcpCwM7iTuJnW8JGDeSpUmJjzVIYObgdZY7m6EUXXdbncuE5+dpzX006QdF9b4d
+	9ca0jNtUX4m9QbCmmIDZ+XYvkleXPKoYFgNjnuDSwEApNXbMY60pdLNHwKZP9cq3f2c2Kh
+	k8kE+cFJuNqEx+PMpq+zPqgjhifWe9A=
+Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
+ after idle exit
+From: Stian Halseth <stian@itx.no>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Paul Menzel
+ <pmenzel@molgen.mpg.de>,  Thomas Gleixner <tglx@kernel.org>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>,  regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Date: Wed, 28 Oct 2026 18:37:22 +0100
+In-Reply-To: <auIDNl9EUX4CzWzr@localhost.localdomain>
+References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
+	 <20261025100202.2584654-1-stian@itx.no>
+	 <at-C_3rGi55L1v2X@localhost.localdomain>
+	 <1e00b909b81c6195b3ad5aeda207d20cbedc3971.camel@itx.no>
+	 <auDaMdhD2zGBLhDE@localhost.localdomain>
+	 <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
+	 <auIDNl9EUX4CzWzr@localhost.localdomain>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-a3jHAuohABOcCIkgh4uO"
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -59,200 +71,73 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
- <b859285b-e43e-43f2-a4f7-af82705d3513@6bit.com> <CAJZ5v0h8ke_CE1Y_nesgOU8L-R6WcPaoxFjjRp0rfyRdg+Lj1Q@mail.gmail.com>
- <c9672648-d01d-4063-b0e2-df38c3868eea@6bit.com> <CAJZ5v0i0XL0iBHE0OcM0sw8_KKBAapinJ-ZOqztn9-8=RCgxQw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i0XL0iBHE0OcM0sw8_KKBAapinJ-ZOqztn9-8=RCgxQw@mail.gmail.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Wed, 28 Oct 2026 17:09:26 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hOCtJMdH8VuTcMXV112JwonZg07oUrJXCHZ6JqtRHo3w@mail.gmail.com>
-X-Gm-Features: AclHuK9dMc6H2Y7UBbksEDryxAqR0SF-1y3j70LPpwOIopLFtjIzaVV7ErV8brc
-Message-ID: <CAJZ5v0hOCtJMdH8VuTcMXV112JwonZg07oUrJXCHZ6JqtRHo3w@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION_6=2E16=5D_r8169_RTL8168h=2F8111h_fails_to_?=
-	=?UTF-8?Q?probe_=E2=80=94_=22Unable_to_change_power_state_from_D3cold_to_D0=22_?=
-	=?UTF-8?Q?=E2=80=94_bisected_to_4d4c10f763d7?=
-To: linux-pci@vger.kernel.org
-Cc: Josh Perry <josh@6bit.com>, Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com, 
-	bhelgaas@google.com, hkallweit1@gmail.com, nic_swsd@realtek.com, 
-	netdev@vger.kernel.org, regressions@lists.linux.dev, 
-	Keng-Yu Lin <keng-yu.lin@hpe.com>, Linux PM <linux-pm@vger.kernel.org>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+
+
+--=-a3jHAuohABOcCIkgh4uO
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 23, 2026 at 9:33=E2=80=AFPM Rafael J. Wysocki (Intel)
-<rafael@kernel.org> wrote:
->
-> On Thu, Oct 22, 2026 at 11:33=E2=80=AFPM Josh Perry <josh@6bit.com> wrote=
-:
-> >
-> > On 10/22/26 04:50, Rafael J. Wysocki (Intel) wrote:
-> > > On Thu, Oct 22, 2026 at 3:37=E2=80=AFAM Josh Perry <josh@6bit.com> wr=
-ote:
-> > >>
-> > >> On 6/11/26 19:07, Josh Perry wrote:
-> > >>> #regzbot introduced: 4d4c10f763d7
-> > >>>
-> > >>> Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fa=
-ils
-> > >>> to probe on boot; the device drops to D3cold and the driver can't b=
-ring
-> > >>> it back:
-> > >>>
-> > >>>     r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID=
- 541,
-> > >>> IRQ 137
-> > >>>     r8169 0000:04:00.0: Unable to change power state from D3cold to=
- D0,
-> > >>> device inaccessible
-> > >>>     r8169 0000:04:00.0: Mem-Wr-Inval unavailable
-> > >>>     r8169 0000:04:00.0: error -EIO: PCI read failed
-> > >>>     r8169 0000:04:00.0: probe with driver r8169 failed with error -=
-5
-> > >>>
-> > >>> The board has two identical RTL8168h NICs (both XID 541): 0000:02:0=
-0.0
-> > >>> and 0000:04:00.0. Only 04:00.0 fails =E2=80=94 its sibling 02:00.0,=
- on a
-> > >>> different root port, probes and works normally on the very same ker=
-nel
-> > >>> and boot. The failing NIC then does not appear (no enp4s0), taking =
-the
-> > >>> machine's WAN offline. This strongly suggests the problem is port/
-> > >>> topology-specific rather than device- or driver-specific: the upstr=
-eam
-> > >>> port behind 04:00.0 is placed in D3cold and the endpoint cannot be
-> > >>> resumed to D0.
-> > >>>
-> > >>> Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
-> > >>> Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A
-> > >>> (2026-03-25, latest available). Firmware is current, so this is not=
- a
-> > >>> platform-firmware issue.
-> > >>>
-> > >>> Bisection: v6.15 good, v6.16 bad (verified by booting both). I then
-> > >>> reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
-> > >>> initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: S=
-et up
-> > >>> runtime PM even for devices without PCI PM") on top of 6.16.7: the =
-NIC
-> > >>> probes and links at 1Gbps/Full normally, with no workaround:
-> > >>>
-> > >>>     r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID=
- 541,
-> > >>> IRQ 138
-> > >>>     r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow contr=
-ol rx/tx
-> > >>>
-> > >>> Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=
-=3Doff
-> > >>> also restores the NIC, which is consistent with the upstream port b=
-eing
-> > >>> placed in D3cold and the device failing to resume to D0 after the
-> > >>> explicit-D0 init change.
-> > >>>
-> > >>> The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 =
-is
-> > >>> still affected (retested today on current firmware).
-> > >>>
-> > >>> Happy to test patches or provide full dmesg / lspci.
-> > >>
-> > >>
-> > >> Hey guys,
-> > >>
-> > >> Thanks, and apologies for the slow follow-up. Multiple of you asked =
-me
-> > >> to test on the latest mainline.
-> > >>
-> > >> I had a chance to do just that today with the latest mainline v7.3.
-> > >> Verdict is that it's still broken, same messages as in the original
-> > >> report. pcie_port_pm=3Doff on the same build still works around it.
-> > >>
-> > >> dmesg, "sudo lspci -vvv" and the sysfs PM state for both boots (same
-> > >> v7.3 build, only the command line differs) are attached here:
-> > >>
-> > >>     https://bugzilla.kernel.org/show_bug.cgi?id=3D222179
-> > >>
-> > >> New detail from the failing boot: the root port above the dead NIC
-> > >> (00:1d.3) is in D0 but its link shows DLActive-, and the endpoint's
-> > >> config space reads all-ones ("Unknown header type 7f"). With
-> > >> pcie_port_pm=3Doff the port shows DLActive+ and the NIC is in D0 at
-> > >> 2.5GT/s x1. So the port seems to come back but the link to 04:00.0
-> > >> doesn't retrain.
-> > >>
-> > >> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D222179
-> > >
-> > > Please also try v7.3 with this patch applied:
-> > >
-> > > https://lore.kernel.org/linux-pci/20261015020811.1132314-1-keng-yu.li=
-n@hpe.com/raw
-> >
-> > No dice, unfortunately. Same issue:
-> >
-> >    r8169 0000:04:00.0: Unable to change power state from D3cold to D0,
-> > device inaccessible
-> >    r8169 0000:04:00.0: Mem-Wr-Inval unavailable
-> >    r8169 0000:04:00.0: error -EIO: PCI read failed
-> >    r8169 0000:04:00.0: probe with driver r8169 failed with error -5
-> >
-> > Same state as unpatched v7.3: root port 00:1d.3 in D0 with LnkSta
-> > DLActive- and ASPM L1 enabled, 04:00.0 config space reads all-ones
-> > ("Unknown header type 7f"), and the correctable RxErr on 00:1d.3 at
-> > ~9.7s. The PCI/r8169 dmesg lines match the unpatched boot line for line=
-.
-> >
-> > I attached the same info for the patch run to the bugzilla ticket.
->
-> Thanks for the info!
->
-> Let's see what can be deduced from it.
->
-> First of all, the device is clearly accessible in pci_pm_init() and
-> then it somehow drops off the bus.  However, the complaint about the
-> failing power state change is not from the initial power-up.  It is
-> printed after setting the driver for the device, so most likely it
-> comes from pci_enable_device() triggered by rtl_init_one().
-> Interestingly enough, that message also says that the device's power
-> state before the attempted transition to D0 is D3cold, but that is not
-> the power state in which the initial power-up leaves it.  Had the
-> initial power-up left the device in D3cold, it would have printed an
-> "Unable to change power state" message which it doesn't do, so most
-> likely right after the initial power-up the device is actually in D0.
->
-> Since pcie_port_pm=3Doff makes a difference, the problem is most likely
-> related to what happens to the failing device's parent port.  Namely,
-> pcie_port_pm=3Doff simply prevents the port from going into D3cold which
-> indicates that the failing device drops off the bus because its parent
-> port goes into D3cold.  Indeed, that may be happening because the port
-> probes after the failing device has been initialized and if user space
-> flips the "power/control" attribute of the failing device from "on" to
-> "auto" after probing the port and before probing the device itself,
-> the port will suspend and go into D3cold.  Moreover, the device under
-> it is still in D0 when that happens because pci_pm_runtime_suspend()
-> does not change the power states of unbound devices (there is even a
-> comment in that function regarding the parent of an unbound device
-> possibly going into D3cold while the device is still in D0).  If that
-> happens, the pci_update_current_state() call in
-> pci_enable_device_flags() will update current_state for the device to
-> D3cold.
->
-> Of course, I'm not sure if this is what really happens and it still
-> needs to be figured out why things started to fail after introducing
-> the initial power-up.  I'd prefer to use the BZ ticket for
-> investigating it though.
+Hi Frederic,
 
-And so it turns out that turning off an ACPI power resource associated
-with a PCIe root port other than the one holding the affected NIC
-causes the clock of that NIC to be gated which means that this is a
-platform firmware issue (the shared clock should be represented as a
-shared power resource in the ACPI tables).  The older kernels hide
-this issue because they never flip the ACPI power resource in question
-on and off in the default configuration, but it can be provoked with
-the help of the runtime PM sysfs interface of the PCIe root port in
-question.
+On Wed, 2026-10-28 at 15:14 +0100, Frederic Weisbecker wrote:
+>=20
+> So let me depict that:
+>=20
+> // clocksource =3D jiffies ?
+> // clockevent =3D lapic ?
+> tick_setup_device()
+> =A0=A0 tick_next_period =3D ktime_get() // jiffies_to_nsecs(jiffies)
+>=20
+> tick_periodic()
+> =A0=A0 tick_next_period +=3D TICK_NSECS
+> =A0=A0 jiffies++ // ktime_get() =3D=3D tick_next_period
+>=20
+> // jiffies > tsc_early
+> clocksource_select()
+>=20
+> tick_periodic()
+> =A0=A0 //one tick has passed, so ktime_get() =3D=3D jiffies + 1
 
-A patch from Mario to add a quirk preventing D3cold from being used
-for root ports on the affected system is available:
+Here is where it goes wrong. One tick has passed in real time, but not
+in ktime. The switch happened d after the last tick, jiffies never
+counted that d, and the tsc only counts from the switch on, so here
+ktime_get() =3D=3D jiffies + TICK_NSEC - d.
 
-https://bugzilla.kernel.org/attachment.cgi?id=3D311295&action=3Ddiff&collap=
-sed=3D&headers=3D1&format=3Draw
+> =A0=A0 tick_next_period +=3D TICK_NSECS
+> =A0=A0 jiffies++ // ktime_get() =3D=3D tick_next_period =3D=3D jiffies
+
+So after this, tick_next_period =3D=3D ktime_get() + d.
+
+The same thing as a diagram:
+
+// jiffies -> tsc-early, d after the last tick
+clocksource_select()
+   ktime_get() =3D=3D last tick          // the d is not in there
+
+tick_periodic()                      // TICK_NSEC after the last tick
+   ktime_get() =3D=3D last tick + TICK_NSEC - d
+   tick_next_period +=3D TICK_NSEC     // =3D=3D last tick + TICK_NSEC
+   // tick_next_period =3D=3D ktime_get() + d
+
+=46rom a measurement I did with a QEMU guest: at the switch both were
+329532326. At the next tick ktime_get() was 331212239, 1.68 ms later,
+so d was 2.32 ms, and tick_next_period became 333532326, 2.32 ms
+ahead.
+
+/Stian
+
+
+
+--=-a3jHAuohABOcCIkgh4uO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCauIy0gAKCRDoeAEuJe36
+VkNYAP9XvdCbPewvZN+Amteil8ZSilKqJlwP3sdH7AOqnHoT8AEA0gD9K98dWBrK
+vPqcfK5ZOh4xDke24KdxeW0s+PX9tQw=
+=5uKS
+-----END PGP SIGNATURE-----
+
+--=-a3jHAuohABOcCIkgh4uO--
