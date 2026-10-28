@@ -1,70 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793167380;
-	b=h2SX813jvKurKCn11VPfOdsyad44BffVPaf54b5/PiaFZYs6TZmj407lIloxWyflG9ui
-	 V+eQcB+GF6ctfEAflIV9SfUi55mYT+UydPthxreCAq7c5xw6l0ppxWzfM6LctnmHFl6pn
-	 WSnnkTq6cVosTJcb+lbg9OhNDcC1atI0Hhxpsiu+L81qLuJFiQBJX8JFsCmiQ+t6Byv5o
-	 1CRQBnNpP5TgZf0WZr724ZaIeuelX6EmnW+Bn45TLnyZ5Dxc07oSHXkt93rWS+Ba8ucfr
-	 UwIxNIqVOjHu+zmCMmN36DWPTIDL9lk9vxio772zACw/L+h3N6VHfF8EL76VHUtWk0A==
+	t=1793171270;
+	b=n5GuVcOE30w5ynwcBKR9o/beXYiS2N7GeYW2bSw4ewgGhBgWhlgIFpJ0Hi6fFoF4os8i
+	 XSXRBkrj7+vhSjJwpYad1J9wEUMHMaPAaQa2wsrCR2QVWvZ5ZbOCrgLsr10WJN8NAnEyk
+	 XeDM8YwPl34xwk9RzcGtjPR7LWNRg0nloF8vKNgHsSVTHP8DY5CTX4xCF9D6MtZJLAdx7
+	 RUiD86S8hEm5bML6qKBLzpn5/S79vZPLvD2n8VyywSUDChbO8PIemA6oq5kxVvwVPEnRx
+	 RYr4iLX2K8bke9XelIGnaxwJcnlYYvsxzn3Ehq+BcAadZNwqKu1K9Gum0nIpQNZYL6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793167380;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=grngWBuiji8lwqsdeZEwLlbBmKPklRKaERiWSs5Ihh0=;
-	b=3bKmHARjNbi+68v1ogEdFjvkVIjJH6PzUzFJ2SAQS9b59VCrj6XXb76h6BysX0EvcQ/K
-	 dryTbBbU7Dx4e6uNbXVrdrwGuilRbaMNhjNBomSJnWB8M368TkO8VH7SuiefEy0A6inXC
-	 Z5F8qTTIIjGKqjUsq1lNEQm0Uf6G/HvZ/90En5LIWx5yzi7tUXaIMFwyFAP5d2xXCxSO5
-	 VpnH9Ew0mkX+DmeFdWbEI8bimVu0otD5BGEkNa/dxHhHKBQ7qOAnpfHoZ4UCsLUKM2cHW
-	 oZN5LCPYokzW+vLnvX5pHIFQBbGlNmS1bbcerpfmwBnBB/s26mvFq4wAHXYllkiDifw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793171270;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=Pm025ZShfKc4fvyqH4mMFAlI8sexFbSUc+W1NS0NOoo=;
+	b=0Rw/ALsvK324dRpg80sfxO1wGbSxHerdjca+tYuJNvIQKNbbpmnjf6VJ7H43bSI39FXS
+	 Wwmcs9TqpyiCWVopnb3Eeb8aw+hKRM3lr0nhHitBdXYEiVj4ZT/3lEZGuIEIkCD9/jgdb
+	 Ahm45O/9Ow3YS2inEGdAA7cpq75WdqgeH0qPgpDLTgW6q9Pbv/jYHd8yULEmpPLY+Uagj
+	 397SxUA4XJu1sGcoXvSy6LQ9QIVJl3H/GuntBvIDUtwVmI2Ev49CX7PSZfyqXGbg+ya/c
+	 /XOFf4ID2dHHRo0aX6hjge7dsdo1aP0krK+y7c1ctq5zONVOuuWdVaMSb+BauDOLERg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=fAiBo8UL;
-	arc=none smtp.remote-ip=188.68.63.174
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qq4YDQ6p;
+	arc=none smtp.remote-ip=209.85.221.41
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5BB606A31F
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 06:02:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DE5BB606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789DF606A31D
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 07:07:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 789DF606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=fAiBo8UL
-Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4jDxbz4T3fz8sd2;
-	Wed, 28 Oct 2026 06:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793167375;
-	bh=1okY4/WQi99J7SX0kElMLxT+6AgqYCI7lGDlpsDqa+A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fAiBo8ULWstc9LQnFor1eWiy9y2h1iQVBO8Ml0nYw6NgYJnJqC6CGNvDeInwQN8DQ
-	 K/YrYmEpEvGvaNzav6FPa5YpGSFFWenbu3xepK1f1bkfTIHzW+20rTMxeI73biav6y
-	 M+44CEY5xcXqaV3moEIwbgQqnWRW57EaprPF4gik9Hsu6a3kBzvsapzk3HDaSqdpZF
-	 AQb/kspy+U6e4/LRz0TkqBt/D4nMPaIUZXTbfrLqwnzMGzzIvzLXJ4UNsyevgyZMpZ
-	 e3gmqrJU9K2NoYF4ALm1/AVhyF8s3SNEbDSyyQjpREHg3AjcNaNtInSzeLWpKo0e/v
-	 iqOx/Fgzi/Z7A==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4jDxbz3mJ9z8sbb;
-	Wed, 28 Oct 2026 06:02:55 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jDxbv1pfpz8sgW;
-	Wed, 28 Oct 2026 07:02:51 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id F2C265F9FD;
-	Wed, 28 Oct 2026 07:02:43 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <18f0bae1-5cdb-460c-a147-33cd1fa2acdf@leemhuis.info>
-Date: Wed, 28 Oct 2026 07:02:42 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qq4YDQ6p
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-48e4831c028so501246f8f.0
+        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 00:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793171269; x=1793776069; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Pm025ZShfKc4fvyqH4mMFAlI8sexFbSUc+W1NS0NOoo=;
+        b=qq4YDQ6peNJOT+j3oC8DZjnvkWG0yiJ5+ntZssWWncUNZ4N8vMi8SvIeQ/VDhtOTOC
+         Z5OUQukqwi6e6lKPWfvu8K4Ww2NUc7sS3FA0EehMdDmjCAScXJ0WtXgPiNYNFbTGL+bV
+         rlQzofINvPPNvmaEMf4SuVPicRuoOGM0Sy06xFL0SUlbpH+6fj6zrxYjuBq6RXnabzYj
+         DM9C0G6Yw+FxrBa7bGxZ4MGemeSQPFa3KshKERP9ib35C3O5f4pT87dW0gwnB9U1AJrq
+         Frt0/aU/9zFl+4RVlzhuPMCYcGpEx89xoREC+9LeM3e34jnkZt0PNPaCZphVRtth8Rhs
+         92tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793171269; x=1793776069;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Pm025ZShfKc4fvyqH4mMFAlI8sexFbSUc+W1NS0NOoo=;
+        b=aFEfpQ9iHwurvrSnxZYjdCvsb5hJKYwut6UoGYftxrs+OAo/vBphi+v4BiYOmgoQQl
+         5e6h7OVbL9fyAt7xK5+jZ524nqfi1CUYx96M6VfH5WbZE5Lw7moML4iXSod4WoXdWw3u
+         qzvw6q5wuUW5BMEWgnBtI6DGeF71niPUTTLYzbaYAE5GvlP3xoCTPezbfg5w3mWMLpy4
+         1HXMGQlDxpzjG6qdT5qytESg6Sz5k6K5qzicJjBGHdSZQKzP3qe4lrSP0cjOHs6yQfXY
+         h7o+zN5B02LkPv/bb/Vud8AfPlPr4Hgs34+lV6BA6CRIbKPmW6w2o+atP52kun8sHvXC
+         Jk8A==
+X-Forwarded-Encrypted: i=1; AKwUvBybcEG9HhDJXzQX/X+nvGTLBzraMeZ+IzMNkav6rDj8j8jwtdwSwfOe2qzpgUFV9cY8I1Hd0pFOn1hnAg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKJcFXaSaqS2faYHfylDbxzgQ/7yMhz9MsHoCSWIBCtTEU0g0JT
+	IS6W6wa3dTmnK5cHZd9dPmbYd6Vx/iZWpEtioJP70TFyhM6SNWV0MGMV
+X-Gm-Gg: AYBFou2uBnnSg9ghzpSO7Tkl0ebvgXSFpDBxTRF/GdYaxHlGptdqgjreNoIXvVSwOFz
+	VNzAvw5TVSfAWI+t5GWKFyIlKu2RldiPkNTxmA4ut/t78dViAQ7vPxtYRn7e/goavUxfnw3qhXt
+	h0J+ENUUile8f/buz/JnRiT8tkTq4hk/YyOkAF602JtVgiWYmNLuMqvMCJW2ZXfN0hqnLjBJYKZ
+	3h1K+geLK3WnU59udYODB5kJR4do2fJSILIjZSLhTCgEL1NpjUUQ6VGtz74mZrXpc9NyqnzMw7q
+	F/VMxmJ/ftigKxVtppPDBQmv0WNTF/y94L5Gj2KFrFkRNbE6aAmGwScoYmq4ul1+njr+jAAB/6G
+	QdKAuAT8jvezRXgAQifIN9oBebZVCywot3tgorrYb01oovhU8Zr3v40r0l6b5+DUdaKZ/fl3tM6
+	XQETgV9e/crj3dt75Gb+1kH0M1laeqnsmt8avfFlhkqMlnw9rTTgAVLutjPJL6X4reaeLauaUvt
+	kWuxa6amSmANtaICQqeIslanuHDl92vvFWpjEWTHcpEWqGgrmQGl4sm/m1OKcw1UL1bAjTPCQIP
+	XwswY22gvQgQP3FWSzqzVDRSBoQadkdGldVIcw==
+X-Received: by 2002:a5d:6f13:0:b0:48e:4e00:b737 with SMTP id ffacd0b85a97d-48e5d56d4fdmr3824012f8f.54.1793171268566;
+        Wed, 28 Oct 2026 00:07:48 -0700 (PDT)
+Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3eb8f248sm26280670f8f.6.2026.10.28.00.07.47
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 28 Oct 2026 00:07:48 -0700 (PDT)
+Date: Wed, 28 Oct 2026 08:07:34 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: yiyu@yiyuzhou.io, <linux-usb@vger.kernel.org>,
+ regressions@lists.linux.dev, diogochaves@me.com, raoxu@uniontech.com,
+ dennis@dsine.de, gregkh@linuxfoundation.org
+Subject: Re: [RFT PATCH 0/2] xhci: clean up endpoint rings after disconnect
+ detect
+Message-ID: <20261028080734.173da0e4.michal.pecio@gmail.com>
+In-Reply-To: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
+References: <20261027184117.2461065-1-yiyu@yiyuzhou.io>
+	<20261027192128.386082-1-mathias.nyman@linux.intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,69 +100,139 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/gem-shmem: Install writable PTEs for write faults
-To: Konstantin Fastov <kfastov@gmail.com>,
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- Paolo Bonzini <pbonzini@redhat.com>, Sergio Lopez <slp@redhat.com>
-References: <20260804140403.16337-1-kfastov@gmail.com>
- <20260804162924.0268f80a@fedora-21.home>
- <CABWhNekebS6dt=Ft+74iG4YpCq-5ZcV1EvvERNxT612VUOC9Ww@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CABWhNekebS6dt=Ft+74iG4YpCq-5ZcV1EvvERNxT612VUOC9Ww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <179316736461.617485.9239835948581871887@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: F2C265F9FD
-X-NC-CID: zzZh23SNCmq0eCiirHBvMPb1mMm7zOOn/wv4ZUvO7omB48g47ew=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-[CCing Paolo and Sergio]
-
-On 8/4/26 16:57, Konstantin Fastov wrote:
-> вт, 4 авг. 2026 г. в 17:29, Boris Brezillon <boris.brezillon@collabora.com>:
->> On Tue,  4 Aug 2026 17:04:03 +0300
->> Konstantin Fastov <kfastov@gmail.com> wrote:
->>
->>> Since the introduction of dirty tracking, drm_gem_shmem_vm_ops has a
->>> .pfn_mkwrite handler.  Its presence makes vma_wants_writenotify() true,
->>> so vma_set_page_prot() removes the write bit from vm_page_prot of
->>> shared mappings, and the vmf_insert_pfn() call in the fault handler now
->>> installs read-only PTEs even when serving a write fault.
->>>
->>> For regular CPU accesses this is transparent: the retried access faults
->>> again on the present read-only PTE, goes through wp_pfn_shared() into
->>> .pfn_mkwrite() and the PTE is upgraded to writable.  But consumers that
->>> resolve faults through fixup_user_fault() + follow_pfnmap_start()
->>> perform no such retry.  In particular KVM's hva_to_pfn_remapped(),
->>> after "successfully" handling a write fault, finds a present read-only
->>> PTE, treats it as KVM_PFN_ERR_RO_FAULT and fails the vcpu run with
->>> EFAULT.  Observed as AsahiLinux/linux#560: muvm/libkrun microVMs
->>> mapping virtio-gpu blob resources die with EFAULT on first GPU access.
->>> The traced failing sequence: [...]
->>
->> The same issue is being discussed here [1].
->> [...]
->> [1]https://lore.kernel.org/dri-devel/20260804120529.1730187-1-pbonzini@redhat.com/
+On Tue, 27 Oct 2026 21:21:25 +0200, Mathias Nyman wrote:
+> Yiyu Zhou wrote PATCH 1/2, fixing a regression in USB HID device
+> enumeration caused by the endpoint recovery prevention code added in
+> v7.3-rc1. Some HID devices that used to enumerate after a brief
+> disconnect during enumeration now got stuck until URBs timed out.
 > 
-> Thanks, I missed that series, I searched dri-devel but not the kvm list.
-> Paolo's patches 1-2 are indeed the same fix (down to the same function
-> name), so please consider my patch superseded by his series. [...]
-FWIW, it seems that series takes a while to get polished and mainlined:
-https://lore.kernel.org/all/CABgObfYgZ87%3DW%2B6E%3DN%3DWwTuyYkaoKU3hqd84JDTSAvT3_9dh6w@mail.gmail.com/
+> PATCH 1/2 gives back the pending URBs right away, which solves most of
+> the problem, but it leaves the TRBs of the given back URBs on the ep0
+> ring. ep0 survives a brief disconnect during a port reset, so the xHC
+> may later process those TRBs during an enumeration retry, writing into
+> buffers that were already given back, or ep0 stays halted and the next
+> control transfer times out.
+> 
+> PATCH 2/2 cleans up the ep0 ring by resetting ep0 and moving its
+> dequeue pointer past the cancelled TDs, even if a disconnect or link
+> error is detected. Only Reset Endpoint and Set TR Dequeue Pointer
+> commands are issued; ep0 is not restarted while the disconnect is
+> pending. The rapid endpoint reset, restart and stop sequence that made
+> some xHC hosts fail Stop Endpoint commands is still avoided. Other
+> endpoints are still given back without resetting them, but their TRBs
+> are turned into no-ops first.
+> 
+> If you have seen the HID enumeration issue, or the xHC Stop Endpoint
+> failures with rapid endpoint state changes, testing these two patches
+> would be greatly appreciated.
+> 
+> If these patches work, they might be squashed into one before going
+> upstream.
 
-To quote: "It ballooned a bit and getting acks from everyone involved is
-hard... Either I or Sergio will get back to it."
+Might? :)
 
-Is that something you/AsahiLinux/the world can live with?
+1/2 is a possibly dangereous regression and shouldn't be used alone.
 
-Ciao, Thorsten
+Anyway, I think it all can be done with a bit less code, while also
+handling disconnection during unlink. Particularly on EP0, multiple
+URBs may be submitted by different drivers and/or userspace. Just
+because one of them unlinks its URB doesn't mean that the others are
+aware of anything being wrong and won't stall for <N> seconds.
+
+This below is a rudimentarily tested RFC but it seems to work. It's
+simple enough that hopefully it might even be correct. I will test it
+more and write a changelog later today if there are no objections.
+
+I tweaked the logic to return everything with -ESHUTDOWN and not
+bother to assign proper status to the URB which halted. Intuition:
+we want them to give up, not call clear_halt() or reset_device().
+
+---
+
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index fa6684746305..b37056cb8576 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -987,14 +987,11 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
+ 	int err;
+ 
+ 	/*
+-	 * Avoid resetting endpoint if link is inactive or device disonnected.
+-	 * Can cause host hang.
+-	 * Device will be reset to recover an inactive link, so don't do anything
++	 * Mark endpoints behind disconnected or SS.Inactive root hub ports.
++	 * Restarting them is futile and known to triggers HC bugs on USB3.
+ 	 */
+-	if (rhub_port->link_inactive || !rhub_port->connected) {
++	if (rhub_port->link_inactive || !rhub_port->connected)
+ 		ep->ep_state |= EP_DROP_PENDING;
+-		return -ENODEV;
+-	}
+ 
+ 	/* add td to cancelled list and let reset ep handler take care of it */
+ 	if (reset_type == EP_HARD_RESET) {
+@@ -1011,6 +1008,12 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
+ 		return 0;
+ 	}
+ 
++	/* Don't reset lost endpoints, only EP0 can survive device reset */
++	if (ep->ep_state & EP_DROP_PENDING && ep->ep_index) {
++		xhci_process_cancelled_tds(xhci, ep);
++		return 0;
++	}
++
+ 	err = xhci_reset_halted_ep(xhci, slot_id, ep->ep_index, reset_type);
+ 	if (err)
+ 		return err;
+@@ -1022,6 +1025,9 @@ static int xhci_handle_halted_endpoint(struct xhci_hcd *xhci,
+ 	return 0;
+ }
+ 
++static void xhci_kill_endpoint_urbs(struct xhci_hcd *xhci, int slot_id, int ep_index);
++
++
+ /*
+  * Fix up the ep ring first, so HW stops executing cancelled TDs.
+  * We have the xHCI lock, so nothing can modify this list until we drop it.
+@@ -1047,6 +1053,22 @@ static int xhci_invalidate_cancelled_tds(struct xhci_hcd *xhci, struct xhci_virt
+ 	if (ep->ep_state & SET_DEQ_PENDING)
+ 		return 0;
+ 
++	if (ep->ep_state & EP_DROP_PENDING) {
++		xhci_dbg(xhci, "Nuking dead slot %d ep %d\n", ep->vdev->slot_id, ep->ep_index);
++		if (ep->ep_index) {
++			xhci_kill_endpoint_urbs(xhci, ep->vdev->slot_id, ep->ep_index);
++			return 0;
++		}
++		/* EP0 may be reused after device reset, clean up the ring properly */
++		list_for_each_entry(td, &ep->ring->td_list, td_list) {
++			td->status = -ESHUTDOWN;
++			if (list_empty(&td->cancelled_td_list)) {
++				list_add_tail(&td->cancelled_td_list, &ep->cancelled_td_list);
++				td->cancel_status = TD_DIRTY;	// for clarity, it's redundant
++			}
++		}
++	}
++
+ 	list_for_each_entry_safe(td, tmp_td, &ep->cancelled_td_list, cancelled_td_list) {
+ 		xhci_dbg_trace(xhci, trace_xhci_dbg_cancel_urb,
+ 			       "Removing canceled TD starting at 0x%llx (dma) in stream %u URB %p",
+@@ -1061,12 +1083,6 @@ static int xhci_invalidate_cancelled_tds(struct xhci_hcd *xhci, struct xhci_virt
+ 			continue;
+ 		}
+ 
+-		/* device disconnected or link error, ep will be dropped */
+-		if (ep->ep_state & EP_DROP_PENDING) {
+-			td->cancel_status = TD_CLEARED;
+-			continue;
+-		}
+-
+ 		/*
+ 		 * If a ring stopped on the TD we need to cancel then we have to
+ 		 * move the xHC endpoint ring dequeue pointer past this TD.
+
+
+
