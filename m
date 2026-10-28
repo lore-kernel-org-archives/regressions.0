@@ -1,69 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.112
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793203380;
-	b=mRhm5SnvZSoSI4I7a4exFnwdEh+1RHc/87UyfifTF2bze7OhVZndFXlZpWcCSS+suNpL
-	 b7mkvzfEPYqXscdtXrezyK5GyaOzwAf0/NIYlwfjqkIBl1NlKntKRml9W4Fb7m2biBADg
-	 1YSv1oLEf+3HEsXZv4D9/xx5j08Ir2rhANm4PXeOVkkn7Fi08BXobmxVQa4pY02ayhqY3
-	 o0ZgTGbIgrrrjjkD8pvRd3wFghfRu/Lk6wp9GywPXPSGvndg6NT887NTyP/giI+knj91/
-	 Y/VerZqjhdGAzN6VS7yRfu6UJV4SydXaQC/uUDb7suLa+iAL3kp+Y1+lmaaWgaW+a7w==
+	t=1793203780;
+	b=SYNLe42jX8DHyacRL7ZQ4XHyDiSnYYfgSSaMpu7vIWfi98sl+MYzc0uOy9a8flmFtnbg
+	 MDKzYbp0ndQhakJpSjD2QSYWetpR1Md3LeZqZqeDw3hOSK5KDSFNj/HnA5it/dv8R8tpl
+	 gjGWLHxRhS3QAyVi6ZHmZIaOLJpkQeZhrhWd+1kXSRGJTNV5Q771Vq+ma9KOXe5ORWibM
+	 qblhuyD6I816zE6lx9v+IKzvAleiBYmXi5xvRa7BUmlsfaRrqG29Jnpws6M5ATql/FOhm
+	 5u0nrk4QmyjgNE+IJy0f6Y6KC7JpF2MomN9QlbiBzjyOc+DW0mWu+eZsmKVJxcl9tmw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793203380;
-	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=wKs3vJN4ZKJpeX5LXglj/FvmPaj4cVCU3oClZIx8D0c=;
-	b=xtfZgNiGDV4BvNGTqQkzU0vZdloVP60U680SDt3lS4bMEnushPSYtwapxLL4Vha5gr6p
-	 SAWnywU1G78BDA6mMEOBHtKgP+OgR73PvA0OVVXojTLYTVjN+livUc+7ppdPy0ceYoiGj
-	 Tq/gHqfZWKHTypo7r6ZsHcXMympwBYevBzTH5THpeJIlfExzm2C6rDApJyi1MM+C74lQZ
-	 pPwbxFGFr4vjMixqWwAqQlvXthnpZxsxIVy/s1XM/u3TUPidsumSmS+WtIq1mVs0Sr4oe
-	 lrJb4/SHTwZDeFpvCk728TRt0l0Kv1jNZUGp29SNd2ebLz0hRtNwEB2lO+rN+YcVgPw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793203780;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=zNxy4TxKEn9W0ao1LVIid/JgYPfZELsjFwGZuxfMh4E=;
+	b=GVhFtUR3vCPvsHDG7Z+oZf0l9feGVcbsn42AFmE28ws7oZViWUcWWqypfd/2AV1eGsiH
+	 lsxYtUOlhlIyHE+s0jQUdAZzRtnSZ7RCU2HsoDRubl501fYwAV3f2NcmXfsMHc5PGLZNv
+	 1I2T3OQ0XN2tx1dOPY6p/YejChTIUj6YkL+XhtE0ZLsQ2QE8Nlk7NS+pQQS6MhPVLMow2
+	 F/MqXVovs8smuMWLKcYhPrt5J7lHsFB70akrygF0m1CX7SCHXVw/fRauiVH7QL9gmUxky
+	 ijMYBS/XoLPicJOfp9MNzhkK6BaxOmsu8aaW6QDHDpE9e2OtkmLE+g2baz+UbY2b/bg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=michaelburch.net;
-	spf=pass smtp.mailfrom=michaelburch.net;
-	arc=none smtp.remote-ip=79.135.106.112
-Received: from mail-106112.protonmail.ch (mail-106112.protonmail.ch [79.135.106.112])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BCbi5gX6;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F95606A31C
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 16:02:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6F95606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=michaelburch.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michaelburch.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michaelburch.net;
-	s=protonmail; t=1793203370; x=1793462570;
-	bh=wKs3vJN4ZKJpeX5LXglj/FvmPaj4cVCU3oClZIx8D0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=Jt4sLcnfHw2wqjq78XGZQKUE3kF6VJbqSCvrO9nhkfFZNTCElSapRkr3tmLid51p/
-	 42O2O4HYmn8Wgs45QxT5eMbBKDl1CiZDXRJcm7D5ZE8wVcIGug1NCaJfBg3fg0sjDO
-	 XwN+uAE21c1rg7POSH5JUzepdIBq+kkjWxUj/fn0o+LUJfBb+H0eCc4l3V+i5gP4Ao
-	 9UEprSoRMQXApBL0mdftZkPVFU9YnKHN1uS/ZgX74YARA1WMvuoUe+ZqqdKDrJs20x
-	 zn5KEmXXR/z4ajmSKenJG8DLAhyxrfYX9/L8xHcbb25QjJJyJtEtPZEui0Dwdj80Fc
-	 DDKZ2nMWelV0A==
-X-Pm-Submission-Id: 4jFBw52kD8z2ScPp
-From: Michael Burch <me@michaelburch.net>
-To: regressions@leemhuis.info,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Qiang Yu <qiang.yu@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Abel Vesa <abel.vesa@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] Revert "phy: qcom: qmp-pcie: Skip PHY reset if already up"
-Date: Wed, 28 Oct 2026 11:01:21 -0500
-Message-ID: <20261028160121.10729-1-me@michaelburch.net>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <f6a49cbb-e000-4dcf-8b3b-61c3b8d934a9@leemhuis.info>
-References: <20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net> <f6a49cbb-e000-4dcf-8b3b-61c3b8d934a9@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6DC606A31C
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 16:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BCbi5gX6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA411F01302
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 16:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793203779;
+	bh=zNxy4TxKEn9W0ao1LVIid/JgYPfZELsjFwGZuxfMh4E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=BCbi5gX6+ASNOLCcSx55hoaYyYBWW0Cb1GBSeTpC9W9Lj6yvTBmk6n9XF6HlQpTae
+	 yK8NjGTO6CMH2MCf3ShVLEp0YlTLQBjnHw3gDtNQ9aHjMh3JaXrylWbGOqrU2G52yH
+	 /SCI4HD6l73515cSoPu3Fzsgp+ALMg7d3xNojCF+TVJSZPDsVqOnYwIKqmhRechG6e
+	 8J9hkRdo+XheIqbBcMPGBikm45XnznxhPIMbGBSMbsuv4/2stxz/0y83Lu/kgDPFlH
+	 bsUr0xcakhuPipi/0puXuhDX6wbuCaVcNdzxpQnsrGOILOcv5ii85jnBXjPw9lr5Ld
+	 Hm3kGpVQ/dC0Q==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5bfa7c09c9eso996524e87.2
+        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 09:09:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvByF5dKmipxgaK+vxl2qcjBRDSXDw+p6nRv+NJnh8ZEXNN1ynE+9bYw028WMxOkLQYY77qy516yyPuS7ew==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKCySu4+pckYwbAoL+o6L4M0UWgqTVdfylz/IeJShS669yZNfEx
+	brrYb0/8SG6ZIcdGORWu+JcCMGBTrRtw+gIcRK2Lx+pC/Z3kNJp6pbhza/z72G+zLUaCC2XwqOS
+	+42/oRGm5ZFcg2RVMMjC9SXMipOj3OY4=
+X-Received: by 2002:a05:6512:618a:b0:5bf:a172:db38 with SMTP id
+ 2adb3069b0e04-5bfcad74135mr1174502e87.59.1793203778257; Wed, 28 Oct 2026
+ 09:09:38 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,16 +59,200 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
+ <b859285b-e43e-43f2-a4f7-af82705d3513@6bit.com> <CAJZ5v0h8ke_CE1Y_nesgOU8L-R6WcPaoxFjjRp0rfyRdg+Lj1Q@mail.gmail.com>
+ <c9672648-d01d-4063-b0e2-df38c3868eea@6bit.com> <CAJZ5v0i0XL0iBHE0OcM0sw8_KKBAapinJ-ZOqztn9-8=RCgxQw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i0XL0iBHE0OcM0sw8_KKBAapinJ-ZOqztn9-8=RCgxQw@mail.gmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Wed, 28 Oct 2026 17:09:26 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hOCtJMdH8VuTcMXV112JwonZg07oUrJXCHZ6JqtRHo3w@mail.gmail.com>
+X-Gm-Features: AclHuK9dMc6H2Y7UBbksEDryxAqR0SF-1y3j70LPpwOIopLFtjIzaVV7ErV8brc
+Message-ID: <CAJZ5v0hOCtJMdH8VuTcMXV112JwonZg07oUrJXCHZ6JqtRHo3w@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION_6=2E16=5D_r8169_RTL8168h=2F8111h_fails_to_?=
+	=?UTF-8?Q?probe_=E2=80=94_=22Unable_to_change_power_state_from_D3cold_to_D0=22_?=
+	=?UTF-8?Q?=E2=80=94_bisected_to_4d4c10f763d7?=
+To: linux-pci@vger.kernel.org
+Cc: Josh Perry <josh@6bit.com>, Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com, 
+	bhelgaas@google.com, hkallweit1@gmail.com, nic_swsd@realtek.com, 
+	netdev@vger.kernel.org, regressions@lists.linux.dev, 
+	Keng-Yu Lin <keng-yu.lin@hpe.com>, Linux PM <linux-pm@vger.kernel.org>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Oct 23, 2026 at 9:33=E2=80=AFPM Rafael J. Wysocki (Intel)
+<rafael@kernel.org> wrote:
+>
+> On Thu, Oct 22, 2026 at 11:33=E2=80=AFPM Josh Perry <josh@6bit.com> wrote=
+:
+> >
+> > On 10/22/26 04:50, Rafael J. Wysocki (Intel) wrote:
+> > > On Thu, Oct 22, 2026 at 3:37=E2=80=AFAM Josh Perry <josh@6bit.com> wr=
+ote:
+> > >>
+> > >> On 6/11/26 19:07, Josh Perry wrote:
+> > >>> #regzbot introduced: 4d4c10f763d7
+> > >>>
+> > >>> Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fa=
+ils
+> > >>> to probe on boot; the device drops to D3cold and the driver can't b=
+ring
+> > >>> it back:
+> > >>>
+> > >>>     r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID=
+ 541,
+> > >>> IRQ 137
+> > >>>     r8169 0000:04:00.0: Unable to change power state from D3cold to=
+ D0,
+> > >>> device inaccessible
+> > >>>     r8169 0000:04:00.0: Mem-Wr-Inval unavailable
+> > >>>     r8169 0000:04:00.0: error -EIO: PCI read failed
+> > >>>     r8169 0000:04:00.0: probe with driver r8169 failed with error -=
+5
+> > >>>
+> > >>> The board has two identical RTL8168h NICs (both XID 541): 0000:02:0=
+0.0
+> > >>> and 0000:04:00.0. Only 04:00.0 fails =E2=80=94 its sibling 02:00.0,=
+ on a
+> > >>> different root port, probes and works normally on the very same ker=
+nel
+> > >>> and boot. The failing NIC then does not appear (no enp4s0), taking =
+the
+> > >>> machine's WAN offline. This strongly suggests the problem is port/
+> > >>> topology-specific rather than device- or driver-specific: the upstr=
+eam
+> > >>> port behind 04:00.0 is placed in D3cold and the endpoint cannot be
+> > >>> resumed to D0.
+> > >>>
+> > >>> Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
+> > >>> Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A
+> > >>> (2026-03-25, latest available). Firmware is current, so this is not=
+ a
+> > >>> platform-firmware issue.
+> > >>>
+> > >>> Bisection: v6.15 good, v6.16 bad (verified by booting both). I then
+> > >>> reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
+> > >>> initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: S=
+et up
+> > >>> runtime PM even for devices without PCI PM") on top of 6.16.7: the =
+NIC
+> > >>> probes and links at 1Gbps/Full normally, with no workaround:
+> > >>>
+> > >>>     r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID=
+ 541,
+> > >>> IRQ 138
+> > >>>     r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow contr=
+ol rx/tx
+> > >>>
+> > >>> Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=
+=3Doff
+> > >>> also restores the NIC, which is consistent with the upstream port b=
+eing
+> > >>> placed in D3cold and the device failing to resume to D0 after the
+> > >>> explicit-D0 init change.
+> > >>>
+> > >>> The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 =
+is
+> > >>> still affected (retested today on current firmware).
+> > >>>
+> > >>> Happy to test patches or provide full dmesg / lspci.
+> > >>
+> > >>
+> > >> Hey guys,
+> > >>
+> > >> Thanks, and apologies for the slow follow-up. Multiple of you asked =
+me
+> > >> to test on the latest mainline.
+> > >>
+> > >> I had a chance to do just that today with the latest mainline v7.3.
+> > >> Verdict is that it's still broken, same messages as in the original
+> > >> report. pcie_port_pm=3Doff on the same build still works around it.
+> > >>
+> > >> dmesg, "sudo lspci -vvv" and the sysfs PM state for both boots (same
+> > >> v7.3 build, only the command line differs) are attached here:
+> > >>
+> > >>     https://bugzilla.kernel.org/show_bug.cgi?id=3D222179
+> > >>
+> > >> New detail from the failing boot: the root port above the dead NIC
+> > >> (00:1d.3) is in D0 but its link shows DLActive-, and the endpoint's
+> > >> config space reads all-ones ("Unknown header type 7f"). With
+> > >> pcie_port_pm=3Doff the port shows DLActive+ and the NIC is in D0 at
+> > >> 2.5GT/s x1. So the port seems to come back but the link to 04:00.0
+> > >> doesn't retrain.
+> > >>
+> > >> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D222179
+> > >
+> > > Please also try v7.3 with this patch applied:
+> > >
+> > > https://lore.kernel.org/linux-pci/20261015020811.1132314-1-keng-yu.li=
+n@hpe.com/raw
+> >
+> > No dice, unfortunately. Same issue:
+> >
+> >    r8169 0000:04:00.0: Unable to change power state from D3cold to D0,
+> > device inaccessible
+> >    r8169 0000:04:00.0: Mem-Wr-Inval unavailable
+> >    r8169 0000:04:00.0: error -EIO: PCI read failed
+> >    r8169 0000:04:00.0: probe with driver r8169 failed with error -5
+> >
+> > Same state as unpatched v7.3: root port 00:1d.3 in D0 with LnkSta
+> > DLActive- and ASPM L1 enabled, 04:00.0 config space reads all-ones
+> > ("Unknown header type 7f"), and the correctable RxErr on 00:1d.3 at
+> > ~9.7s. The PCI/r8169 dmesg lines match the unpatched boot line for line=
+.
+> >
+> > I attached the same info for the patch run to the bugzilla ticket.
+>
+> Thanks for the info!
+>
+> Let's see what can be deduced from it.
+>
+> First of all, the device is clearly accessible in pci_pm_init() and
+> then it somehow drops off the bus.  However, the complaint about the
+> failing power state change is not from the initial power-up.  It is
+> printed after setting the driver for the device, so most likely it
+> comes from pci_enable_device() triggered by rtl_init_one().
+> Interestingly enough, that message also says that the device's power
+> state before the attempted transition to D0 is D3cold, but that is not
+> the power state in which the initial power-up leaves it.  Had the
+> initial power-up left the device in D3cold, it would have printed an
+> "Unable to change power state" message which it doesn't do, so most
+> likely right after the initial power-up the device is actually in D0.
+>
+> Since pcie_port_pm=3Doff makes a difference, the problem is most likely
+> related to what happens to the failing device's parent port.  Namely,
+> pcie_port_pm=3Doff simply prevents the port from going into D3cold which
+> indicates that the failing device drops off the bus because its parent
+> port goes into D3cold.  Indeed, that may be happening because the port
+> probes after the failing device has been initialized and if user space
+> flips the "power/control" attribute of the failing device from "on" to
+> "auto" after probing the port and before probing the device itself,
+> the port will suspend and go into D3cold.  Moreover, the device under
+> it is still in D0 when that happens because pci_pm_runtime_suspend()
+> does not change the power states of unbound devices (there is even a
+> comment in that function regarding the parent of an unbound device
+> possibly going into D3cold while the device is still in D0).  If that
+> happens, the pci_update_current_state() call in
+> pci_enable_device_flags() will update current_state for the device to
+> D3cold.
+>
+> Of course, I'm not sure if this is what really happens and it still
+> needs to be figured out why things started to fail after introducing
+> the initial power-up.  I'd prefer to use the BZ ticket for
+> investigating it though.
 
-Yes, still needed. I retested today with unpatched upstream 7.3.0 on
-the Dell XPS 13 9345 (X1E80100). It still reports "Device found, but not
-active" for 1bf8000.pcie, enumerates only root port 0006:00:00.0, and
-drops to dracut with no NVMe endpoint or /dev/nvme* devices. My patched
-7.3.0 kernel with the revert boots successfully.
+And so it turns out that turning off an ACPI power resource associated
+with a PCIe root port other than the one holding the affected NIC
+causes the clock of that NIC to be gated which means that this is a
+platform firmware issue (the shared clock should be represented as a
+shared power resource in the ACPI tables).  The older kernels hide
+this issue because they never flip the ACPI power resource in question
+on and off in the default configuration, but it can be provoked with
+the help of the runtime PM sysfs interface of the PCIe root port in
+question.
 
+A patch from Mario to add a quirk preventing D3cold from being used
+for root ports on the affected system is available:
 
-Thanks,
-Michael
+https://bugzilla.kernel.org/attachment.cgi?id=3D311295&action=3Ddiff&collap=
+sed=3D&headers=3D1&format=3Draw
