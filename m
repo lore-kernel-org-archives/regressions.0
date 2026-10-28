@@ -1,57 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.123
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.59.206.189
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793178935;
-	b=GUHDvvvgTybqDOSttWtHJZ0iFFckxk7wuDwC/0d7Y/369YX8rdcgK2rDxcq9APn7bTYb
-	 eBzXXhoUeWBf3f8u/stSX3MrSy9GX9uqcpv6sOxB9KyhqLsjv44kXHw4tt1qNLCt8FJO1
-	 vT4/kxh+9XVZOVhI+UpL8ZfeIuSxNpQOEFncptsYFjZ7rqiDkRfdCpJ/2eQ15lFcQhzBM
-	 7E4V+vXAaQozO/ygwg8NlGjoKEcj4Bpb9LHpvXt1KHbRBSfGD5Hb4cHvTmJGhKi/kmolu
-	 DVCE4NRzL8eXItJQiRFFOWLaxxVo7MNCNqgXpkv6+gXUgX3PnR5hgA5ha9Ayts4NTCg==
+	t=1793179849;
+	b=SuxRJnzM/JLrwn1q5fQAbt+anExXDGpdC7G7n6ie0rN5HvDJH7Tuq1PVanC3xHWAbvK6
+	 ews75zWf5ZG/s8YSvCXVCa9rxwCltolN/+G0+HC1MllEPYOcT5DqEnCLdOxgCcq7uX6Hj
+	 27UDoitbztOEujpYRUMp4rmlDvV+CqhvLs5P9uPCEGFOvYciODRRCtQcvVM5n2cF3+td/
+	 C7XSH2AtB51jIdqDi3bhNEI6GtMoV0G0tGP4dZgMIiX1FD3mRUfK4GREBVJjkp9/xHUrH
+	 5iYB4s6BUzOwAzGHbmYD9duQVB+uScTgs9/dBW85krNyUNoEnuL9C9eV/blHJdymC+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793178935;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=1PN3XFQA8hmS+b9H5ZLf4bj/cunANQckoieL+vBmMEg=;
-	b=aOblGKvNJASFI3ni6amZEiizOOJ4QM0j1cVIvdHbI1Q2OAZZwH8qUygDc2lN2bU/3CaP
-	 tJzjATpvgdWJO+yNy7RcF6OZ39f+7GqOgluU+XrQE8xKV1NHH2Z2AH1c2VkCdiTnueTe3
-	 w7zc91ae4vCVJdySC8p8k0cqVcGNll9hKHMO/8119W6S86RHjKGG0Ky3qTcZTBwUGhgEk
-	 6PIW0E+A43t/FMUcwa4HiYHnyppaac0HkrHdIRWelNwJ7OTKwUWlBbsFD9gpmOXEKI+Wz
-	 gJOd3AsmtSzyQVBDpsUMa38Chy0X5eqsAzDaAPg3Sl6fZIQLhQscHmGUrmRxCjJ/NXA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793179849;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=Yz76oOmF8BT8+08e1VGZ0CzES0UkXP8ivIRndu1Jn+I=;
+	b=u5GXqj5HxE7wgwiMXeLW5guOamixqtCqJ25WOCGCmwFgtlYnyvzby0WAg5M3ePq0okjz
+	 KDSGD8K7pCNyUfROIECtq5Mp+7StM1ZGzau/bJnun1n6tu66jnFgYpTewBSwl5jAmwHx5
+	 1am4+BiWj02ijWE0EQw2worCtOj1v/r5mhhtka/F1YY/w1IlN/8VjH3XoVR2kGOx+L29a
+	 15RmKHDLPOd1JEbsszFzSQhZi2b9qFolCPctWy9imSEgkK5H18EQi7f0IWJCzAHUeK5rg
+	 UKadJSMfqiJwoZIHwoqLk+PdCxqk/o6ReF+XYbx3i7LQNT/I/p2xFlixutE0nBl04og==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	arc=none smtp.remote-ip=109.224.244.123
-Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=XXOkfy8f;
+	arc=none smtp.remote-ip=194.59.206.189
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21666606A31E
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 09:15:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21666606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1793178925; x=1793438125;
-	bh=1PN3XFQA8hmS+b9H5ZLf4bj/cunANQckoieL+vBmMEg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=qdf7NK3yWEY+tumIWnnZtkKag9R6cHp0wpcrD9+gA4gdoJ6znBeXKu9UkMN7IqV8o
-	 arSoNhHmwFp0Kb3ZAcNOX3RmcqnebxUyUOCgBUI3hgVyj+sb5H0hsnUzXDlk2XE7P8
-	 rdWmMFl0G5pwqbIAsHzi6tSqeUzIFTHSfxozem4+aqNTbFCpxjJVyLvx3fzguQVN2y
-	 fSGXw1H9SU35PF84RXDJCvDqhCZYh5eFGuj+gqvENdFz0yZz5dcfqccXidkB+vM0ng
-	 5fErZ5wjqAmni5uuGt54x6abEB2BUOdUyLwD59VE3rAsuM7D8V6se+CKdab79tMxGT
-	 1HSju2+QPQ60w==
-Date: Wed, 28 Oct 2026 09:15:22 +0000
-To: Sasha Levin <sashal@kernel.org>
-From: Mikkel Sejdelin <mikkel.sejdelin@proton.me>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "rafael@kernel.org" <rafael@kernel.org>
-Subject: Re: [REGRESSION] 6.18.57: resume from s2idle triggers poweroff and hangs when tiny_power_button is built as a module
-Message-ID: <dyJyEj-TY1YtRVdDYPD4xnYF_aIP78z9wliSc3251tj6aZEZxux0c81AiZAFPpZvbg6rjgqivtHTFfY29YHTS9WZmw569IbyVF0NPVTxqrA=@proton.me>
-In-Reply-To: <20261024-rc-reply-0001-tiny-power-button-s2idle@kernel.org>
-References: <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me> <20261024-rc-reply-0001-tiny-power-button-s2idle@kernel.org>
-Feedback-ID: 151291767:user:proton
-X-Pm-Message-ID: 677249792e5eb5522e0e2f6eeff973e20bcae6dc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4CD606A32D
+	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 09:30:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BA4CD606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=XXOkfy8f
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jF2Cg4wlZz4gB3;
+	Wed, 28 Oct 2026 10:30:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1793179839;
+	bh=b98VBHicFPHHWx0A6xKSF3YDtQW4jPChJfnqgGAgdKc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XXOkfy8fZr3BIlV3qgmG8ps5OhHwzPHvJpy0Ier9Bf9UswfxqJDtmuWYNKux+ouA+
+	 aIH/1NCvf6WUFtwIxReelu6Yjq9ES7osjoM/Uz/V5OJI4x0Q0tl9dgCMn5vtJyXGnd
+	 g9eDe77cwur6eIgHjwaWM4V0U2xHdEVjjCxwiVcRTnKe25vvSw3zXlpUwAt7BrKJyr
+	 zHSjbnWZPIqNX+mBoUTjR1p5EuzrD96cMQEnNzoTCTenxXm5wsEB+WWGDPCoK2r4O/
+	 IFcSL1rD3uPw+qhk+qSqVz7081OVeyB4ZFK1NLAOWhBN8IZNqOc3vJryBVhaXIS4y+
+	 RTfUtpH081gLQ==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jF2Cg4FHXz7yvw;
+	Wed, 28 Oct 2026 10:30:39 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jF2Cd4rrqz8thr;
+	Wed, 28 Oct 2026 10:30:37 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 533C85F8B3;
+	Wed, 28 Oct 2026 10:30:36 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <fe5a4a48-3054-4a53-8487-d968b3983d89@leemhuis.info>
+Date: Wed, 28 Oct 2026 10:30:35 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -61,34 +79,58 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.18.57: resume from s2idle triggers poweroff and
+ hangs when tiny_power_button is built as a module
+To: Mikkel Sejdelin <mikkel.sejdelin@proton.me>,
+ Sasha Levin <sashal@kernel.org>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "rafael@kernel.org" <rafael@kernel.org>, Ting-Han Hou <ue081723@gmail.com>
+References: 
+ <1kU98bgDqqEMGUcpGahaBYlaPiP2ssSCZj1uIKq1MEaGpNv2exGeJc3VWzXxB8-VJQ1Uk62W19oByt2KC-v1bSA4Sux9fBhnlA_IHWjV2Zw=@proton.me>
+ <20261024-rc-reply-0001-tiny-power-button-s2idle@kernel.org>
+ <dyJyEj-TY1YtRVdDYPD4xnYF_aIP78z9wliSc3251tj6aZEZxux0c81AiZAFPpZvbg6rjgqivtHTFfY29YHTS9WZmw569IbyVF0NPVTxqrA=@proton.me>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <dyJyEj-TY1YtRVdDYPD4xnYF_aIP78z9wliSc3251tj6aZEZxux0c81AiZAFPpZvbg6rjgqivtHTFfY29YHTS9WZmw569IbyVF0NPVTxqrA=@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179317983672.1123909.5267239163159569902@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 533C85F8B3
+X-NC-CID: 8BhwjSnzVcSoDK9NTl/C+VSzlBdyli9V1RllZ+Cn/TkMRJGgSi8=
 
-On Sat, Oct 24, 2026 at 10:26:52 -0400, Sasha Levin wrote:
-> I have dropped f4203ec64e11 ("ACPI: tiny-power-button: Convert the
-> driver to a platform one") from the 6.18 queue. It cannot go out without
-> ab06eb920401 ("ACPI: scan: Register platform devices for fixed event
-> buttons")
+On 10/28/26 10:15, Mikkel Sejdelin wrote:
+> On Sat, Oct 24, 2026 at 10:26:52 -0400, Sasha Levin wrote:
+>> I have dropped f4203ec64e11 ("ACPI: tiny-power-button: Convert the
+>> driver to a platform one") from the 6.18 queue. It cannot go out without
+>> ab06eb920401 ("ACPI: scan: Register platform devices for fixed event
+>> buttons")
+> 
+> Now that ab06eb920401 is queued for 6.18 again [1], could f4203ec64e11
+> be queued with it? ab06eb920401 alone does not fix this report: on my
+> machine (control-method power button, PNP0C0C) it changes nothing, and
+> tiny-power-button keeps binding next to button until it is a platform
+> driver too. 6.18.59 is still affected.
+> 
+> I tested v6.18.58 + ab06eb920401 (with Ting-Han's 2/3 and 3/3) +
+> f4203ec64e11 on this laptop: platform devices and bindings unchanged
+> from 6.18.57, acpi-button binds PNP0C0C:00, acpi-tiny-power-button
+> stays unbound, 3/3 s2idle resumes OK, no SIGRTMIN+4.
+> 
+> Tested-by: Mikkel Sejdelin <mikkel.sejdelin@proton.me>
+> 
+> Thorsten: regzbot has ab06eb920401 as the fix for this report, but it
+> needs f4203ec64e11 as well:
+> 
+> #regzbot fix: ACPI: tiny-power-button: Convert the driver to a platform one
+> 
+> [1] https://lore.kernel.org/all/20261024105710.593-2-ue081723@gmail.com/
+Thx for fixing this up -- and sorry, my fault, got that wrong, the cover
+letter from Ting-Han Hou (now CCed) sounded to me like f4203ec64e11
+would not be needed anymore.
 
-Now that ab06eb920401 is queued for 6.18 again [1], could f4203ec64e11
-be queued with it? ab06eb920401 alone does not fix this report: on my
-machine (control-method power button, PNP0C0C) it changes nothing, and
-tiny-power-button keeps binding next to button until it is a platform
-driver too. 6.18.59 is still affected.
-
-I tested v6.18.58 + ab06eb920401 (with Ting-Han's 2/3 and 3/3) +
-f4203ec64e11 on this laptop: platform devices and bindings unchanged
-from 6.18.57, acpi-button binds PNP0C0C:00, acpi-tiny-power-button
-stays unbound, 3/3 s2idle resumes OK, no SIGRTMIN+4.
-
-Tested-by: Mikkel Sejdelin <mikkel.sejdelin@proton.me>
-
-Thorsten: regzbot has ab06eb920401 as the fix for this report, but it
-needs f4203ec64e11 as well:
-
-#regzbot fix: ACPI: tiny-power-button: Convert the driver to a platform one
-
-[1] https://lore.kernel.org/all/20261024105710.593-2-ue081723@gmail.com/
-
-Thanks,
-Mikkel
+Ciao, Thorsten
