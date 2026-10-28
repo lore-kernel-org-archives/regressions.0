@@ -1,63 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793227981;
-	b=4Fg7/x/zoRO172AuenHHgtdHEMCaoKakDsFH9PTEfAKwmnK3SYoqFf0rJARTGT3EOP12
-	 R/wWhNqwBzLI91cGeoOF9t0/zlowetjE5l+pYW0HX3ggUpMunH4qO/i8SWbInW6R7jaIU
-	 58xNT6dKQswygEj60TKUa0ARbLE6JfH4kG0UWgRl3hrf5S0DuWL7ypNqoIYMjhjXsA7Q2
-	 tlC4MK7JjffLGqLXHS7hRE2aHp/VfTiDZcFHD2/vKwjo6dW7i3EoKHF0tCKub788dUo6O
-	 erCpaUOQbwYIn/PlOHDh/8vgcu9lqEUuyz3xg3brMPNqnrIhRo3hoh0wQDh88UShKEQ==
+	t=1793229007;
+	b=gzZ62O+JaZ5MfTR/XL7gFNUUUOnr2z1vcP8oCthFr0MW71GGVbaGJ7rbeX8Nz3R1ImsJ
+	 HIcJnpFpoB+au77igOnK11Tt25UyViDJ5BFUKfKaYGisbzXbQT054fCwQVXCG7SobNhI6
+	 0/2/8VImR107QMsd8L7y3he3I1wbE82QEgS9N2PZyXKXq/EBhfSc1ejcWglp33fti+NUl
+	 SUn2vxgz2I6ykjZ2z9yKj5hXMGuKWUiMlRqlSscQiFbeRRLF6Y9dVW19X0MTHjz1yJPN0
+	 YQjwwABT1pQzu4RfPsv2rMy/GpeNrGWcC7nSe/bgjufH8hwu0vtkPUoPzEstXU3fn2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793227981;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=7YC5j2ssFWEjwqFWHWsXZEzhpYxoMIwo3twbK6FLCoQ=;
-	b=YQ9I89ylNIJ8tjbUqE8Vuu5XSlRNMbLGKexzu7Zb6fQ/I/ntlVSutjbgSJy5HDBaBhd1
-	 fPt7Vj5zxCLT2Sv6YNKEhLxFPmNdGtSv4MEF44clmZ6UHax24dtEXoZVczEDeNcaK9HGJ
-	 kUe1AUz9MjTXBfVoq51XuCM+FU0OfET7Y4Bdu7RWNW61hCKPyJiH8M0wGIJY0h0roWNPp
-	 K2IZpVqdqp8uGftZtjHNTorwxWDP9yl1Q9rp57niA+lXrfQ2PqP8K+SkMZFAfFyANvJn8
-	 DTXeQepi44YNuKMFcfaPoOKsfDpAEtMWRz++pBUHBFF3h0Yq4JyXcKXZmm2LBHaL8+A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793229007;
+	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc;
+	bh=ZOxopfCgic5R7Aeo/hqd3+pQx4C+2s3b4c+s8g5N62E=;
+	b=J44XrhlgQWb0ID5fgXRXx91rv28Lbod5hZXlEDVQKsGNYZp31W25IGC6GwrWwhiTvVzp
+	 UEiuJHqrrc55zmb+JDQuJiSvYMszSrrOM8yCFBTOnllZ9uiQIY9cRKFfphnIYijeVRYja
+	 daDVPeW7hBQx2IRF5GNNERm2SaSPgmFfh78EM0+S7QuCln5A6aKUh5KSnIqOp5ugNns+a
+	 Ks35dymvUnyeHWHl+n6xSSFCCP6+GOZ58y6RcQP5WWsl15Ne8ouInlTkgCskGsr14/TBZ
+	 34AzPUjMzXUzxz1bPr81PjK+GaMfBl0D/v2PNDLUTgHvYFf2a9UasAveRVYfxTgdIjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fs2PlsKO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cMWmqGSW;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE1C606A31E;
-	Wed, 28 Oct 2026 22:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBEA606A327;
+	Wed, 28 Oct 2026 23:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fs2PlsKO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C021F01825;
-	Wed, 28 Oct 2026 22:53:00 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cMWmqGSW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A601F01829;
+	Wed, 28 Oct 2026 23:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793227981;
-	bh=7YC5j2ssFWEjwqFWHWsXZEzhpYxoMIwo3twbK6FLCoQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Fs2PlsKOunPf4mKdtCRP70bP22ox7atM6qZeeuBZrh4TgWPd2m/vEFH1Encq1t75q
-	 8gXBNBQKYKLusuNIe1IODcpPTbkK6f8LcKqrUa0UGLaJ/kpQHDBo3vB/CqB23EkXls
-	 ccz34BWzeZplGNlqgjC285El/IckQ1YdUXc0ZfbXFLcv8vDsqafcBRMV4axVrhwHGr
-	 TyIDOFUJgKt8BvRZJMAF6HoTlk4oAFXtzUQz/N/TKGYu773x1oGY9ywymC30hsXFP5
-	 VczkO4jcIq5vSx51Z0pwNRWHeFrqsQYFsMcxoBHTsYMF/okMlEjaGqODPZ4jIGEY4A
-	 kzBJLJT4+Tp9g==
-Date: Wed, 28 Oct 2026 15:52:59 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Esko Mobius <echoowall@gmail.com>
-Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, "David S.
- Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>, David Ahern
- <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>, Jiayuan Chen
- <jiayuan.chen@linux.dev>, Shuah Khan <shuah@kernel.org>, Thorsten Leemhuis
- <regressions@leemhuis.info>, regressions@lists.linux.dev,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Eric Dumazet <edumazet@kernel.org>
-Subject: Re: [PATCH net 2/2] Revert "net: advertise TCP MSS from the
- configured MTU, not the learned PMTU"
-Message-ID: <20261028155259.280feac5@kernel.org>
-In-Reply-To: <D0F0DCA1-9CAB-4BB3-92CF-223C9ECA9BF5@gmail.com>
-References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
-	<20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com>
-	<20261027161813.3092f32c@kernel.org>
-	<D0F0DCA1-9CAB-4BB3-92CF-223C9ECA9BF5@gmail.com>
+	s=k20260515; t=1793229007;
+	bh=ZOxopfCgic5R7Aeo/hqd3+pQx4C+2s3b4c+s8g5N62E=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=cMWmqGSWRNceRIBKm9sypqCBQCCTstQ+sWjOo9F5Qnb8akIOkcIwqDKxQCoJeEQBb
+	 8fMYBsSu38Eh6+qVIaSftHmrUisBvPE8ibS0/xZUUEoqfwaMVX7aLbm3QK87iKZzlJ
+	 qgxg4Wb3YdOWFC9kln+YseUAaBJT1y2hiakvpvJre5L9kgNTK8i35LYZfbv3PbSYXE
+	 u47i4nARHOn0hLgHf/NKolucdY26ECrBoUplVnwwA3m8R0cdDnL8joRrRTau7HZOM+
+	 9eYyB7qKInW+0WSma8FtWPfgWk1jA3jv2uqYRPlCSW7O/fRdtIcgJsz9WTZOFDSpm9
+	 1ETGv94QZr7ow==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 074D23AAFC4A;
+	Wed, 28 Oct 2026 23:10:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -67,20 +53,48 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/2] Revert advertising the TCP MSS from the
+ configured
+ MTU
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179322900582.1471258.8439548147927472759.git-patchwork-notify@kernel.org>
+Date: Wed, 28 Oct 2026 23:10:05 +0000
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+In-Reply-To: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+To: Esko Mobius <echoowall@gmail.com>
+Cc: netdev@vger.kernel.org, kuba@kernel.org, pabeni@redhat.com,
+ davem@davemloft.net, horms@kernel.org, dsahern@kernel.org, idosch@nvidia.com,
+ jiayuan.chen@linux.dev, shuah@kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, edumazet@kernel.org
 
-On Wed, 28 Oct 2026 11:38:24 +0800 Esko Mobius wrote:
-> On Wed, 28 Oct 2026, Jakub Kicinski wrote:
-> > Is this your real name? We need a real names for code contributions.  
-> 
-> Sorry, it is not. My real name is Yongjian Wang. If you can fix it up
-> when applying, please use this identity as the author and sign-off on
-> both patches (and in the Reported-by of patch 2):
-> 
-> Signed-off-by: Yongjian Wang <echoowall@gmail.com>
-> 
-> Otherwise I am happy to resend a v2 with the corrected identity.
+Hello:
 
-Thanks! Switched up when applying, hopefully it doesn't confuse our
-bots.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 26 Oct 2026 15:23:07 +0800 you wrote:
+> Commit 2640e6419594 ("net: advertise TCP MSS from the configured MTU,
+> not the learned PMTU") breaks TCP for clients behind networks that
+> filter inbound ICMP, when the server reaches them through a hop with a
+> smaller MTU: the handshake completes, then the connection stalls as
+> soon as the client sends full-size segments. This was reported in [1]
+> and confirmed on 7.3-rc7; reverting the commit on top of 7.3-rc7 fixes
+> it. Details and numbers are in patch 2.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/2] Revert "selftests: net: packetdrill: add tests for advertised MSS with PMTU exceptions"
+    https://git.kernel.org/netdev/net/c/b4aac29a21d9
+  - [net,2/2] Revert "net: advertise TCP MSS from the configured MTU, not the learned PMTU"
+    https://git.kernel.org/netdev/net/c/564313447e54
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
