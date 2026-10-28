@@ -1,98 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.0
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793172043;
-	b=AsNuP9IsMroXaYP+20JnCmZyey7zIjpkjHkYbz5/vCSbYibif5psL/DDx13YG8nB8ljw
-	 1u1LcSi7Wk6/liqggnYpVf1IDzaAE5pcnjBYwrnjGUk3nNgE+ud6qvTd7iKqRog2sC66M
-	 Ng4Xh0236Tl3J75TQfs40G8nOH0hleS1E2WHuw1UVGZfQXHcq0XT4BSdiQwnKl3rwoJBn
-	 KbXMK/rlUWPQG4SAxBue7Jj6lF+7y+PtG+4DeyD5pS/+GxcfuWgL0tM6W9sCKr0anOrlA
-	 QDE3YNXuc7DMvfL+ZTFyfgyPN8wHF5gbO6bzsRE05Xf9Xj6zFE37X0UmeOUlLrVdboA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793172043;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=dd039E+fcyjQa0y4NMdYTJD5JLIHFu5O0cyXbp7CSks=;
-	b=4wpUeESUzAZV/j0RsuB/Rtr7TDe3tp7Xh42SzJ9z2xNf6umnBlcDLCnbHXEWCgN/7Gbk
-	 c1Pn++c7K8Zr/rcv9Ldm+z3RPonirWth8aZh9ifn2yUSigcTpYF4KbWqrrJukieYH2lI0
-	 T5ULciOGhhIr1u+YBjDrpP3V78NFDky9VXCXsJSxb5xjciWuEfmn9XSCRW1vBb5EMoaWu
-	 xngyw7uu1OX1Vr5Cq9CN06dPTAPunmZ8SIWpAZmWkxFjg+PurS3zaHyrd1eb5Ku2eGjK3
-	 YIlBn8hxboHb0kV5b0VkLX1KJDQv1249CAoohe7WL2vbcw87Gp/N2Us6KRELZM8PTqw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b="mJrYg/EO";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.0
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010000.outbound.protection.outlook.com [52.101.193.0])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793172459;
+	b=vOtCTzayfNvTtwGWerL8PWdS0w5+SaX65IcRkEnZJsuDM5mt/MukKeEfmki/hMcvVz7t
+	 WNpj8a0kOtIcgBWqKU/zS+clalPCyY5xsDfQGya8ClPufANRFsk2wkxYGmjHRTdEs3E7P
+	 Gv809UzywGGBnEQVliVmInU9epdlgRH78cfy9keG4VJM4YBjdn3awui2c6LzXKbrxpqi0
+	 pCIHGLT5JvotCY/rqaJIhzqQxF/LRLX74rDBeeG1Em+INwrGKUABtukE4FcFJKwn5tzh0
+	 cedpWeHUziZsF7SIPgtgm2OQ/SJ7NK3qCmFAB8pb6lddW491mtolPefo69fc1aztV1w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793172459;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:Autocrypt:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Rspamd-Queue-Id:
+	 X-Spam-Level:X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:
+	 X-Spamd-Result:X-Spam-Score;
+	bh=mbGa7/pJLqNh9s5lB1eARfC8HZvlkVr7AS4gBr7kAhI=;
+	b=lD4t7jrR4y5knCp2gH2QuyiwtP3fuEy5t6iU2EFlK3aT94JfrR9RT4/JU7ALjp/mPYld
+	 7H3oZKX4VTfbKEVTWfp+Y39a7DYNifnYd1LWxNYrqP4fgwy9m5SSTlLPmUI4obtiS+htR
+	 sNS6xG/CKsaZSFC/S5lIM1VN+L4z+GNUh2W4vY1P32q8pTm+mhizzxiecdaMWq6pUFAf6
+	 2LSSBQgWwPO6zCmXovKrVqzpVBUAMy2yxKJsZpmqPSMx0/QA7ACeyZLpHs8gfeKk/KBR8
+	 cKtyA4LS9f08jiITyaz/KfWQOUxXZN077J8XPfhM9LrgtX9haGkf0l+TLitnMoC+6Qg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=haRmA17N;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=sDIkijTX;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=haRmA17N;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=sDIkijTX;
+	arc=none smtp.remote-ip=195.135.223.130
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D756B606A31A
-	for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 07:20:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D756B606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E497A606A31D;
+	Wed, 28 Oct 2026 07:27:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E497A606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=mJrYg/EO
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fdGa/tnoIiiVJLR/AX//1n18vDkLtS4Y4XG+vv92f+UBHVpVWviaJ/MbKpthrfB16eDwR9Hib7fV8zaC+x8MyUyjrso8vs+JE3Oeo8kdZifnsg5sCuWtdlne5BNb0/dAY2hCfkp75v9AiwF7uOiWi82Tz0pUKwKBZo93PVr/06Uwz8HBcwTbke3oPWYoJ77UYggcpFSe+KQgCfs80w6c5q/iLtyTquB+H8a+JH2i4l0FH1KwVmtOk39XZOm5gj73aBVLRSI9WZovkpJHn0SS5Ltv5ELKnwlUu3X/sx74J/gDlzoOuSlPglm1HRuO2gbUV1QDcg2U+14EhcqqO7XoDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dd039E+fcyjQa0y4NMdYTJD5JLIHFu5O0cyXbp7CSks=;
- b=lJ4m5T8foSkxZZ5eIObcmbdssf4Mh4hvFS2G/7qHRlLM1Ss1OUDZBxYu+IE6Z6Gd6JeczfGYdijSXeLa5kSVmkrLjSNKmGaqevJ3PnOO5uDWojVnxqJ1D7TvQfGtaqozEqt+tXhE03q+cOnV/JkSV4HrWPhVGkd2/hzNE11cVSdeSTUEo3UtV2+toU22nYcQ81nERqzPqiw3oh8SWKqqFbapmy3eMXIxr5y79j91dXRR20c3/nN/rw0L0KuLonvCKmcYzyfzgHTp7XCIaIp1bXlZMr2+gnTV0U3rRqXlnDNzti+kAHAueKTrF2vmz0UP36LD26VcPdqwlfJ7ioVD0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dd039E+fcyjQa0y4NMdYTJD5JLIHFu5O0cyXbp7CSks=;
- b=mJrYg/EOKfH42zyfi5xhXRkpnFoQdqFtgkzDSEmmog2SrBBl/qBrf+WB3I6/RrNNlcMf1n8de792/tsUHsDUxEaWek5A5mtK8P8PUIc943XQXX5L3wsxtOXZpJR1DxQ9MOIMK1XcoOh08y3FJ9ERytEQFqU8157IW+LXIxzs927EJImksRIQ5D1ujiidLGsEeFihQwidrBn0vWGlCAzKH24QxGxsfHdRj/1MhoQt+FC0sM6gRapHmya9XvYSJraVTbWhc3PYvh7ToDprIOVMyY9/HnBJMN2VH8YUAe16N13+vGaif6yiIFqaQGGERPBgzTsfZHVPnvg/3aACC0NNjg==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA4PR12MB932075.namprd12.prod.outlook.com
- (2603:10b6:207:12d::15) by SA5PPF530AE3851.namprd12.prod.outlook.com
- (2603:10b6:80f:fc04::8c9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Wed, 28 Oct
- 2026 07:20:39 +0000
-Received: from IA4PR12MB932075.namprd12.prod.outlook.com
- ([fe80::5a6f:1f74:6ccb:cf2f]) by IA4PR12MB932075.namprd12.prod.outlook.com
- ([fe80::5a6f:1f74:6ccb:cf2f%5]) with mapi id 15.21.0569.007; Wed, 28 Oct 2026
- 07:20:39 +0000
-Message-ID: <90b2aec6-a473-4de1-9334-947e1a02c090@nvidia.com>
-Date: Wed, 28 Oct 2026 09:20:36 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/mlx4: always create the eth and ib auxiliary
- devices
-To: Peter Morrow <pdmorrow@gmail.com>, Tariq Toukan <tariqt@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Yishai Hadas <yishaih@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20261020164239.3808903-1-pdmorrow@gmail.com>
-Content-Language: en-US
-From: Tariq Toukan <tariqt@nvidia.com>
-In-Reply-To: <20261020164239.3808903-1-pdmorrow@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0135.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9e::19) To IA4PR12MB932075.namprd12.prod.outlook.com
- (2603:10b6:207:12d::15)
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=haRmA17N;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=sDIkijTX;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=haRmA17N;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=sDIkijTX
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 09E312210B;
+	Wed, 28 Oct 2026 07:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1793172456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mbGa7/pJLqNh9s5lB1eARfC8HZvlkVr7AS4gBr7kAhI=;
+	b=haRmA17NVxVr/JiFYm/O6+mOC+/ctud0hBrGljNy0Zbdo+YDgJan6LujjLB7fSVLb/Zjua
+	//c8RtmOK+RhsuGA8qLQz754oXGa+h6UEV7FHzLng2sv1n1CWhsDWA5X0uR2ZzfkjwcEOR
+	PCi/rx/LBVb792i7FnFuNKkHUddhvIQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1793172456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mbGa7/pJLqNh9s5lB1eARfC8HZvlkVr7AS4gBr7kAhI=;
+	b=sDIkijTXOHEuKluliVY5fBgXxuB1WncaOrvU0jFMAjrrRt9oL1i9kCnpvxx8x6YZhUVriY
+	fvziUnSPvecZKvDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=haRmA17N;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sDIkijTX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1793172456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mbGa7/pJLqNh9s5lB1eARfC8HZvlkVr7AS4gBr7kAhI=;
+	b=haRmA17NVxVr/JiFYm/O6+mOC+/ctud0hBrGljNy0Zbdo+YDgJan6LujjLB7fSVLb/Zjua
+	//c8RtmOK+RhsuGA8qLQz754oXGa+h6UEV7FHzLng2sv1n1CWhsDWA5X0uR2ZzfkjwcEOR
+	PCi/rx/LBVb792i7FnFuNKkHUddhvIQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1793172456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mbGa7/pJLqNh9s5lB1eARfC8HZvlkVr7AS4gBr7kAhI=;
+	b=sDIkijTXOHEuKluliVY5fBgXxuB1WncaOrvU0jFMAjrrRt9oL1i9kCnpvxx8x6YZhUVriY
+	fvziUnSPvecZKvDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 821931321C;
+	Wed, 28 Oct 2026 07:27:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0//wCeej4Wp8PwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 28 Oct 2026 07:27:35 +0000
+Message-ID: <2b2f1c04-4638-4622-9816-639d4fffa51d@suse.de>
+Date: Wed, 28 Oct 2026 08:27:34 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -102,138 +108,378 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA4PR12MB932075:EE_|SA5PPF530AE3851:EE_
-X-MS-Office365-Filtering-Correlation-Id: cae80015-dafa-4dba-cab4-08df34c3f7a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|10067099003|22082099003|18002099003|261026140227099003|11063799006|56012099006|261021121427099003|261009223027099003|261021123027099003|261022105027099003;
-X-Microsoft-Antispam-Message-Info:
-	/CbhKnNn1TkzvukRKKs2z8lhaymbE5Hp7bY5ujN4lSk8+yWucM8gg+TJ/Yu0iqt8yc86dKlZ125gqB+0HtlVZK2QNI5neovdhOZ4tvSHtnlQwByk1VVgLovnuIfpM5QZJI4b4GT9mqvtsIqTgE7/5cB1gNWScVXRoXoxOmKTmY9V9GT100d+mpKbay6+sjlxZsJ8rRm2zTJPCGSM1uAwfaNYHYISsd1dzqL3bJ8uExtlkhpPuRqrPxCbLvMbzp+/RHezpqjH1UFhZF4ETW8aJLRWqlNpnjP1eFEGGBpPLBcVPhA28+tj10/riG1enENsh/fXnvLSVMFnaRQITR3K6kP2PGDTfM9Rq4wfmn2MVsGDwq6W60o70uY+YFBnZ4jehbfDtgZguMcRU9Lr4b2YTEvtW24GITtaNmSyIlrT4bIgNK3L5EfnFz/DjDFIR9ENOqyZuCxJH9DIZcoR55I9cfZUYD/rgyhcCOrJBfdgeuQljp90uPWdXjogKYZ0u/FY8AqAk+Xit7e4sov5k5nQl280C0ei4RdnEpznGTfKCLBGCrB8DsGTSO2rSYVe71l1zoRZVxSR2dSIGbxmTbgFx+r905APfcnYod2hocNzSXdoS+Q5kESbAcLZqaBVsSZGxsoSxQu00CwtRYPvbnbzUXK97U9jCei4m10Q0mvBvL4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA4PR12MB932075.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(10067099003)(22082099003)(18002099003)(261026140227099003)(11063799006)(56012099006)(261021121427099003)(261009223027099003)(261021123027099003)(261022105027099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bGJLcy93bXFBT3JxdXd2ZDNOek12dDZGV3crWldJWkh4Q3dkZ2JtYnltM3Qx?=
- =?utf-8?B?R1kvdHN4emJmUlA3ZlhJMFZDVnNlTzNlQndwbEwrZ21mUEZKdzdVVjRLQTZD?=
- =?utf-8?B?WThCaytMSnM3U3RSTGJHck93WWd3QXQ1ZUNVVkdoRXhkbjVPTGVnd3JWVUJC?=
- =?utf-8?B?RHV6dWI0YjQ1cUZjNEowMzRObVUxYkQxa1EyaDRyWTVnWlVNRWMxZk1Rbk1J?=
- =?utf-8?B?VkVzbGt6djdtY2hGQmlvYlkyRHRWdE5EeWswRnFNbFZTaUIzc2NmRDZPbjBv?=
- =?utf-8?B?RWoxcEtBRFRnME9MRDdkZkJpSk1GSHJQdU9xR2l4TkMwV0NJSlJrMDVuS3Bz?=
- =?utf-8?B?RW5ZL3U1ZVZ5ZVFscWdqZEFlNHR0cW5hMDl5TXplN2lGeEFrMzVZcHMwaDI5?=
- =?utf-8?B?dzlaWkU2QldTSmQxRjAwQ1FBYmVJYzFNRW5BM1ZhQmNQNmR4c2IzeVdXWXph?=
- =?utf-8?B?dVBzVFZSekVKUnM5WVFnNm40YkhaL2UwV3pKamw4UFBiUCs3UlVVTW0rQ3pj?=
- =?utf-8?B?MzZhNlpyQUlDNkRncE9laVV4QVVoZHNFUmN4UVNaeHQyZDBCVklNUHlnUHdH?=
- =?utf-8?B?N1hUT1dQZmJaZEpZY1c2clRuZU1nVWNsQTA1VjFiMVhlVWF0NEhwS3ZkNVBY?=
- =?utf-8?B?ekVsSHJsZHBYMW1xcSsrckN6ZVJSblpXSGxFckZoUUNzQW1wUUhEOEN3Rm5G?=
- =?utf-8?B?Nmo1Z0pic1N1K24vRFhWeVQrcW05MlQvMFlRWHR5L0NETXplV3JLZlg3UHQr?=
- =?utf-8?B?dW9JUndXeGRhTXlSLzBSV2Y1N1Jwa3F3YmRQQVRwNnBpNTFjaEdpRURUR3Zn?=
- =?utf-8?B?V1NaWjlNZDFJSGltWUtJdzZxRGs2RnYzRWZaaU4xZ1pPTnMrcm02Z2hjTTRv?=
- =?utf-8?B?cGg1a2FDbll3R0tyUVN0Y3pKNmdlanM2VER3Unkya2NsZ25INUx5U0FiekxB?=
- =?utf-8?B?azZ5SGRpWFdlRjdrY1BqNHZYNDFsTzl1MDdBQTAvcGdUdUhWR21Lc2J6aG5x?=
- =?utf-8?B?REd0RFdWYk5RU1g4Mm5ib1BlN3JrR0RjTjQzTnFsdDlrdWZyK05IOXo3RHZG?=
- =?utf-8?B?MDVYTjc3bURzbFFsTk5ydUFYUVUvb05EVmRiUTdvdzg0L0tkQytRVUR6N2JI?=
- =?utf-8?B?Y2JxbmdTWlBRWkRvdGNETzFkemxnMUhtdVVhL1VXWDZQaGx2QWZaNzdjUWs0?=
- =?utf-8?B?MnRzNk9IcC91MFowZ2dHb0RGNEJnQ25YTWR4SytNdGlNanR3MVV6VVp5T3gy?=
- =?utf-8?B?L2I0dzZTb3ZTaGtrclpVMUJrWlF2QjUwVzd5dTFiK095aUdMSVFEbG0wS3BM?=
- =?utf-8?B?cTQzWDJzT3ZmQU9aSGNHYm50KzNQckFrQTlKcWJBQWo1aTZzY3VGWE9ybnpZ?=
- =?utf-8?B?RDNSazZSODMxUEF4UEppdGxMSElpeGNHc2VidFpxSWEvVTUrdUZueU12Nk9i?=
- =?utf-8?B?TEVpNzZrVDdKSGtXSDZKSE95VUJWazdwMVZ3R0dYYjNrekRVY0FsZ2dHWkk0?=
- =?utf-8?B?Wll4b1RJWWVNL1o4T09mQnRKOGFFL09lYWJzQVVaRkxqSkw0Y01SQ1JqWE9m?=
- =?utf-8?B?VXRyMFJoSWxvb2FEd1doMUErU2toQklubEs5eUFaSHlUbFFONE1sYXBrQXVh?=
- =?utf-8?B?Z253YVNsZDJtdkVmUkhkTklXVDQxVHVVcGt3UjNwMmpyRUpFQW1HYmRKdFpi?=
- =?utf-8?B?UW5iRW5TSGxqblJuUEoyNjdNOEtDSWM2WFZib3pYdGRaVU1jUlEzWm13Smlw?=
- =?utf-8?B?OFFubllqRmhZMG5pa2Jmeno1UHBzRzl2TXNYWnNYYWIwUC9oZWJHVXZPcXE2?=
- =?utf-8?B?Y3hCUlJ2ejN6Nk41VXMva2grekk3a0JhZDk3ZlUrbTBHQmg1ZzV1c24randr?=
- =?utf-8?B?K0ZFK0pHd2w5elNBZDNRdGlRSDgxZmRQd0dNbnZyR1p2bGUwSVpFWUE2ajB0?=
- =?utf-8?B?OXpmN0Q2RTR6eXJJT0c3NGlmSENOMEU2NTFOLzdaVldEYm1jaWhCQzduRVNX?=
- =?utf-8?B?aFduQ05SQzdsYThWaEE3ejlsWlJudndDSmF2RHVrZUMrUnZ2YWltbHltNXhW?=
- =?utf-8?B?OHJIa2hkcE1WVkRIdXRJblZxOHVLSllIOWtSOXl5MklOTDJ6VTJCWEtiSndm?=
- =?utf-8?B?cW1YZlQrVklXYkltUDQzNHdQa3JCYUs1LzIwU05EVmowemt4VTFTVER5cFRn?=
- =?utf-8?B?RUhmNC9sSHMrdzN3QkhWS1JUeFNHRGNPZklaRXdzd3RDd0srQno0MWRoTHpW?=
- =?utf-8?B?UmplVDZHUXNZblhzdWtsUzZFbHZoT3pKbEFTTk5VTnJjS2VlNjlDNHpsaXNx?=
- =?utf-8?Q?3zCJ7HZq0Lr4Dpr6zn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cae80015-dafa-4dba-cab4-08df34c3f7a2
-X-MS-Exchange-CrossTenant-AuthSource: IA4PR12MB932075.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2026 07:20:38.9512
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gW9xNjnqzOHKxalkNpwRoF/UIMUXH3NFjkjun+F3FlvsWmEi7w149fZ8BwA3qSSQ1UpU4W1OZ4ckMhMGvnWrYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF530AE3851
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] drm/vblank: Don't arm vblank timer with invalid frame
+ duration
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Roman Ilin <me@romanilin.is>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maxime Ripard <mripard@kernel.org>, Louis Chauvet
+ <louis.chauvet@bootlin.com>, Javier Martinez Canillas <javierm@redhat.com>,
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+ dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, Peter Arnesen <peter.m.arnesen@gmail.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+References: <20260613224434.96501-1-me@romanilin.is>
+ <20260702181027.98526-1-me@romanilin.is>
+ <E697A2AE-5413-48AE-BFD6-3383819B388B@romanilin.is>
+ <3b192119-9709-4f21-841f-a4706cc85e4a@suse.de>
+ <0600a3f0-b2d2-4a07-ab21-f590c2979612@leemhuis.info>
+ <f0e4cc76-5cf3-4fdb-b42c-f405a09c0d2a@suse.de>
+ <ec0c2486-b127-4a47-a81c-499130f268d9@leemhuis.info>
+ <d106ad8a-78d4-45be-95da-0222c44107c5@suse.de>
+ <7f21f160-f637-4b63-aa15-066d7b18e2ed@leemhuis.info>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <7f21f160-f637-4b63-aa15-066d7b18e2ed@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 09E312210B
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-12.00 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	URIBL_BLOCKED(0.00)[romanilin.is:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,bootlin.com:url,suse.com:url,suse.de:dkim,suse.de:email];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,kernel.org,bootlin.com,redhat.com,collabora.com,lists.freedesktop.org,lists.linux.dev,vger.kernel.org,linux.intel.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email,suse.com:url]
+X-Spam-Score: -12.00
 
+Hi
 
+Am 27.10.26 um 08:49 schrieb Thorsten Leemhuis:
+> On 9/14/26 13:00, Thomas Zimmermann wrote:
+>> Am 11.09.26 um 09:39 schrieb Thorsten Leemhuis:
+>>> On 9/4/26 08:19, Thomas Zimmermann wrote:
+>>>> Am 03.09.26 um 16:07 schrieb Thorsten Leemhuis:
+>>>>> On 7/3/26 09:26, Thomas Zimmermann wrote:
+>>>>>> Am 02.07.26 um 20:23 schrieb Roman Ilin:
+>>>>>>> Apologies, I accidentally fired off send-email before saving my final
+>>>>>>> changelog notes. Please ignore the changelog and notes in the
+>>>>>>> original
+>>>>>>> v3 email.
+>>>>>> We want to know when this happens. And user space will only be able to
+>>>>>> trigger this once, so there's no risk of spamming the kernel log.
+>>>>>>> Hmmm, just wondering: what's the status here?
+>>>>> Roman Ilin, did you loose interest? Or was this continued somewhere or
+>>>>> maybe even resolved and I just missed that?
+>>>>>
+>>>>> Thomas: if Roman left this behind, could you maybe handle this, [...]
+>>>> AFAICT it was almost there except for the error messaging. The v4 then
+>>>> never happened. I can finish the patch if Roman is no longer around.
+>>> No answer from Roman since then, so yes, that would be great! Tia!
+>> I've now sent out an update with minor changes.
+> Many thx again. But the thing is: it still sits on the list waiting for
+> review afaics:
+>
+> https://lore.kernel.org/all/20260914110004.211027-1-tzimmermann@suse.de/
+>
+> Can you maybe prod the right people to finally get this resolved? Or
+> what should be do instead?
 
-On 20/10/2026 19:42, Peter Morrow wrote:
-> Since commit 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the
-> auxiliary bus"), mlx4_core creates the "ib" auxiliary device only for
-> an IB port or a device that advertises IBoE. Before it, each mlx4
-> interface was offered every device and decided in its own add callback.
-> mlx4_ib_add() accepted Ethernet ports without IBoE and registered them
-> for raw packet QPs only.
-> 
-> ConnectX-3 VFs on Azure have an Ethernet port and no IBoE, so since
-> v6.6 they get no RDMA device. DPDK's mlx4 PMD, which needs only raw
-> packet QPs, then cannot open them:
-> 
->    net_mlx4: cannot access device, is mlx4_ib loaded?
-> 
-> Restore the old behaviour by creating both auxiliary devices for every
-> device and letting mlx4_en and mlx4_ib decide in probe, as their add
-> callbacks did. mlx4_ib_probe() returns -ENODEV when there are no usable
-> ports, and mlx4_en_probe() binds a device without Ethernet ports but
-> creates no netdevs, as mlx4_en_add() did.
-> 
-> Tested on 6.12.111 on an Azure VM with two ConnectX-3 VFs: each gets an
-> eth and an ib auxiliary device, and DPDK attaches both VFs and passes
-> traffic through them.
-> 
-> Fixes: 7d22b1cb9d84 ("mlx4: Connect the infiniband part to the auxiliary bus")
-> Closes: https://lore.kernel.org/r/20261014133951.3219055-1-pdmorrow@gmail.com
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Assisted-by: LLM
-> Signed-off-by: Peter Morrow <pdmorrow@gmail.com>
-> ---
->   drivers/net/ethernet/mellanox/mlx4/intf.c | 15 ++-------------
->   1 file changed, 2 insertions(+), 13 deletions(-)
-> 
+The right people are in cc already. It's just that no one reviewed. I'll 
+ping them to get this resolved.
 
+Best regards
+Thomas
 
-Acked-by: Tariq Toukan <tariqt@nvidia.com>
+>
+> Ciao, Thorsten
+>
+>>>>>> So this is not really a problem. drm_WARN_ON_ONCE was ok for that. You
+>>>>>> can also use a regular DRM print macro. But instead of drm_dbg_kms()
+>>>>>> should use drm_err_once(). But please also output linedur_ns and
+>>>>>> framedur_ns in the error. We want to know which of them is incorrect.
+>>>>>> You can also add more information to the error message. See [1] for
+>>>>>> the
+>>>>>> mode-formating macros.
+>>>>>>
+>>>>>> [1] https://elixir.bootlin.com/linux/v7.1.2/source/include/drm/
+>>>>>> drm_modes.h#L422
+>>>>>>
+>>>>>>
+>>>>>>> - Updated drm_calc_timestamping_constants with the goto error
+>>>>>>> fallback
+>>>>>>>       to clear the stale state.
+>>>>>>>
+>>>>>>> Also, an automated review bot pointed out an AB-BA deadlock in
+>>>>>>> drm_crtc_vblank_start_timer(). But I am leaving this out of the
+>>>>>>> patch to
+>>>>>>> keep the fixes orthogonal.
+>>>>>>>
+>>>>>>> Sorry for the noise.
+>>>>>>>
+>>>>>>>> On Jul 2, 2026, at 21:10, Roman Ilin <me@romanilin.is> wrote:
+>>>>>>>>
+>>>>>>>> When a CRTC's display mode carries a too small pixel clock,
+>>>>>>>> drm_calc_timestamping_constants() computes a frame duration that
+>>>>>>>> exceeds INT_MAX. drm_vblank_crtc.framedur_ns becomes negative.
+>>>>>>>> drm_crtc_vblank_start_timer() then arms the vblank hrtimer with this
+>>>>>>>> interval, after which vblank events are no longer delivered. Pending
+>>>>>>>> page flips never complete and the display appears frozen.
+>>>>>>>>
+>>>>>>>> This could be triggered on virtio-gpu guests that have dynamic
+>>>>>>>> resolution
+>>>>>>>> enabled: when the SPICE agent or the X server resizes the output, it
+>>>>>>>> submits a mode whose pixel clock is off by a factor of 1000, e.g.:
+>>>>>>>>
+>>>>>>>>        clock = 406 kHz, htotal = 3152, vtotal = 2148
+>>>>>>>>
+>>>>>>>>        framedur_ns = 3152 * 2148 * 1000000 / 406 = 16675852216 ns
+>>>>>>>> (~16.7 s)
+>>>>>>>>
+>>>>>>>> 16675852216 does not fit into an int and wraps to roughly
+>>>>>>>> -504000000.
+>>>>>>>> ns_to_ktime() then yields a negative interval and the timer stops
+>>>>>>>> working.
+>>>>>>>>
+>>>>>>>> Found by bisection, which pointed at commit a036f5fceedb ("drm/
+>>>>>>>> virtgpu:
+>>>>>>>> Use vblank timer"). That commit merely made virtio-gpu use the
+>>>>>>>> vblank
+>>>>>>>> timer and thereby exposed the pre-existing problem in the timer
+>>>>>>>> setup
+>>>>>>>> added by commit 74afeb812850 ("drm/vblank: Add vblank timer").
+>>>>>>>>
+>>>>>>>> To fix this, modify drm_calc_timestamping_constants() to use u64 for
+>>>>>>>> calculations, check for INT_MAX overflows, and return an error code.
+>>>>>>>> drm_crtc_vblank_start_timer() will then propagate the error,
+>>>>>>>> enabling
+>>>>>>>> the driver to fall back to immediate vblank events. Valid modes are
+>>>>>>>> unaffected, and the timer self-heals on the next mode with a sane
+>>>>>>>> clock.
+>>>>>>>>
+>>>>>>>> Fixes: 74afeb812850 ("drm/vblank: Add vblank timer")
+>>>>>>>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>>>>>> Signed-off-by: Roman Ilin <me@romanilin.is>
+>>>>>>>> ---
+>>>>>>>> Changes in v3:
+>>>>>>>>
+>>>>>>>> - Changed the WARN_ON_ONCE to drm_err_once
+>>>>>>>>
+>>>>>>>> Notes:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> drivers/gpu/drm/drm_vblank.c | 71 ++++++++++++++++++++++
+>>>>>>>> +-------------
+>>>>>>>> include/drm/drm_vblank.h     |  4 +-
+>>>>>>>> 2 files changed, 48 insertions(+), 27 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/
+>>>>>>>> drm_vblank.c
+>>>>>>>> index f90fb2d13..629b9fcc7 100644
+>>>>>>>> --- a/drivers/gpu/drm/drm_vblank.c
+>>>>>>>> +++ b/drivers/gpu/drm/drm_vblank.c
+>>>>>>>> @@ -631,42 +631,51 @@ EXPORT_SYMBOL(drm_crtc_vblank_waitqueue);
+>>>>>>>>      * drm_crtc_vblank_helper_get_vblank_timestamp(). They are
+>>>>>>>> derived from
+>>>>>>>>      * CRTC's true scanout timing, so they take things like panel
+>>>>>>>> scaling or
+>>>>>>>>      * other adjustments into account.
+>>>>>>>> + *
+>>>>>>>> + * Returns:
+>>>>>>>> + * 0 on success, or a negative errno code otherwise.
+>>>>>>>>      */
+>>>>>>>> -void drm_calc_timestamping_constants(struct drm_crtc *crtc,
+>>>>>>>> -     const struct drm_display_mode *mode)
+>>>>>>>> +int drm_calc_timestamping_constants(struct drm_crtc *crtc,
+>>>>>>>> +    const struct drm_display_mode *mode)
+>>>>>>>> {
+>>>>>>>> struct drm_device *dev = crtc->dev;
+>>>>>>>> unsigned int pipe = drm_crtc_index(crtc);
+>>>>>>>> struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
+>>>>>>>> - int linedur_ns = 0, framedur_ns = 0;
+>>>>>>>> + u64 linedur_ns, framedur_ns;
+>>>>>>>> int dotclock = mode->crtc_clock;
+>>>>>>>> + unsigned int frame_size;
+>>>>>>>>
+>>>>>>>> if (!drm_dev_has_vblank(dev))
+>>>>>>>> - return;
+>>>>>>>> + return 0;
+>>>>>>>>
+>>>>>>>> if (drm_WARN_ON(dev, pipe >= dev->num_crtcs))
+>>>>>>>> - return;
+>>>>>>>> + return -EINVAL;
+>>>>>>>>
+>>>>>>>> - /* Valid dotclock? */
+>>>>>>>> - if (dotclock > 0) {
+>>>>>>>> - int frame_size = mode->crtc_htotal * mode->crtc_vtotal;
+>>>>>>>> + if (dotclock <= 0) {
+>>>>>>>> + drm_err(dev, "crtc %u: Can't calculate constants, dotclock =
+>>>>>>>> %d!\n",
+>>>>>> Please turn this into drm_err_once() because this call can actually be
+>>>>>> triggered repeatedly from userspace.
+>>>>>>
+>>>>>> Best regards
+>>>>>> Thomas
+>>>>>>
+>>>>>>
+>>>>>>>> + crtc->base.id, dotclock);
+>>>>>>>> + goto error;
+>>>>>>>> + }
+>>>>>>>>
+>>>>>>>> - /*
+>>>>>>>> - * Convert scanline length in pixels and video
+>>>>>>>> - * dot clock to line duration and frame duration
+>>>>>>>> - * in nanoseconds:
+>>>>>>>> - */
+>>>>>>>> - linedur_ns  = div_u64((u64) mode->crtc_htotal * 1000000,
+>>>>>>>> dotclock);
+>>>>>>>> - framedur_ns = div_u64((u64) frame_size * 1000000, dotclock);
+>>>>>>>> + frame_size = (unsigned int)mode->crtc_htotal * (unsigned int)mode-
+>>>>>>>>> crtc_vtotal;
+>>>>>>>> - /*
+>>>>>>>> - * Fields of interlaced scanout modes are only half a frame
+>>>>>>>> duration.
+>>>>>>>> - */
+>>>>>>>> - if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+>>>>>>>> - framedur_ns /= 2;
+>>>>>>>> - } else {
+>>>>>>>> - drm_err(dev, "crtc %u: Can't calculate constants, dotclock = 0!
+>>>>>>>> \n",
+>>>>>>>> - crtc->base.id);
+>>>>>>>> + /*
+>>>>>>>> + * Convert scanline length in pixels and video dot clock to line
+>>>>>>>> duration
+>>>>>>>> + * and frame duration in nanoseconds.
+>>>>>>>> + */
+>>>>>>>> + linedur_ns  = div_u64((u64)mode->crtc_htotal * 1000000, dotclock);
+>>>>>>>> + framedur_ns = div_u64((u64)frame_size * 1000000, dotclock);
+>>>>>>>> +
+>>>>>>>> + /*
+>>>>>>>> + * Fields of interlaced scanout modes are only half a frame
+>>>>>>>> duration.
+>>>>>>>> + */
+>>>>>>>> + if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+>>>>>>>> + framedur_ns /= 2;
+>>>>>>>> +
+>>>>>>>> + if (linedur_ns > INT_MAX || framedur_ns > INT_MAX) {
+>>>>>>>> + drm_dbg_kms(dev, "crtc %u: Can't calculate constants, mode clock
+>>>>>>>> too small!\n",
+>>>>>>>> +    crtc->base.id);
+>>>>>>>> + goto error;
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> vblank->linedur_ns  = linedur_ns;
+>>>>>>>> @@ -678,7 +687,16 @@ void drm_calc_timestamping_constants(struct
+>>>>>>>> drm_crtc *crtc,
+>>>>>>>>         crtc->base.id, mode->crtc_htotal,
+>>>>>>>>         mode->crtc_vtotal, mode->crtc_vdisplay);
+>>>>>>>> drm_dbg_core(dev, "crtc %u: clock %d kHz framedur %d linedur %d\n",
+>>>>>>>> -     crtc->base.id, dotclock, framedur_ns, linedur_ns);
+>>>>>>>> +     crtc->base.id, dotclock,
+>>>>>>>> +     vblank->framedur_ns, vblank->linedur_ns);
+>>>>>>>> +
+>>>>>>>> + return 0;
+>>>>>>>> +
+>>>>>>>> +error:
+>>>>>>>> + vblank->linedur_ns  = 0;
+>>>>>>>> + vblank->framedur_ns = 0;
+>>>>>>>> + drm_mode_copy(&vblank->hwmode, mode);
+>>>>>>>> + return -EINVAL;
+>>>>>>>> }
+>>>>>>>> EXPORT_SYMBOL(drm_calc_timestamping_constants);
+>>>>>>>>
+>>>>>>>> @@ -2221,6 +2239,7 @@ int drm_crtc_vblank_start_timer(struct
+>>>>>>>> drm_crtc
+>>>>>>>> *crtc)
+>>>>>>>> struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
+>>>>>>>> struct drm_vblank_crtc_timer *vtimer = &vblank->vblank_timer;
+>>>>>>>> unsigned long flags;
+>>>>>>>> + int ret;
+>>>>>>>>
+>>>>>>>> if (!vtimer->crtc) {
+>>>>>>>> /*
+>>>>>>>> @@ -2239,7 +2258,9 @@ int drm_crtc_vblank_start_timer(struct
+>>>>>>>> drm_crtc
+>>>>>>>> *crtc)
+>>>>>>>> hrtimer_try_to_cancel(&vtimer->timer);
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> - drm_calc_timestamping_constants(crtc, &crtc->mode);
+>>>>>>>> + ret = drm_calc_timestamping_constants(crtc, &crtc->mode);
+>>>>>>>> + if (ret)
+>>>>>>>> + return ret;
+>>>>>>>>
+>>>>>>>> spin_lock_irqsave(&vtimer->interval_lock, flags);
+>>>>>>>> vtimer->interval = ns_to_ktime(vblank->framedur_ns);
+>>>>>>>> diff --git a/include/drm/drm_vblank.h b/include/drm/drm_vblank.h
+>>>>>>>> index 2fcef9c0f..d99772dfa 100644
+>>>>>>>> --- a/include/drm/drm_vblank.h
+>>>>>>>> +++ b/include/drm/drm_vblank.h
+>>>>>>>> @@ -311,8 +311,8 @@ void drm_crtc_vblank_on(struct drm_crtc *crtc);
+>>>>>>>> u64 drm_crtc_accurate_vblank_count(struct drm_crtc *crtc);
+>>>>>>>> void drm_crtc_vblank_restore(struct drm_crtc *crtc);
+>>>>>>>>
+>>>>>>>> -void drm_calc_timestamping_constants(struct drm_crtc *crtc,
+>>>>>>>> -     const struct drm_display_mode *mode);
+>>>>>>>> +int drm_calc_timestamping_constants(struct drm_crtc *crtc,
+>>>>>>>> +    const struct drm_display_mode *mode);
+>>>>>>>> wait_queue_head_t *drm_crtc_vblank_waitqueue(struct drm_crtc *crtc);
+>>>>>>>> void drm_crtc_set_max_vblank_count(struct drm_crtc *crtc,
+>>>>>>>>       u32 max_vblank_count);
+>>>>>>>> -- 
+>>>>>>>> 2.54.0
+>>>>>>>>
 
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri, (HRB 36809, AG Nürnberg)
 
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/intf.c b/drivers/net/ethernet/mellanox/mlx4/intf.c
-> index 82e467c..31860b4 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/intf.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/intf.c
-> @@ -43,23 +43,12 @@ static DEFINE_IDA(mlx4_adev_ida);
->   
->   static bool is_eth_supported(struct mlx4_dev *dev)
->   {
-> -	for (int port = 1; port <= dev->caps.num_ports; port++)
-> -		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_ETH)
-> -			return true;
-> -
-> -	return false;
-> +	return true;
->   }
->   
->   static bool is_ib_supported(struct mlx4_dev *dev)
->   {
-> -	for (int port = 1; port <= dev->caps.num_ports; port++)
-> -		if (dev->caps.port_type[port] == MLX4_PORT_TYPE_IB)
-> -			return true;
-> -
-> -	if (dev->caps.flags & MLX4_DEV_CAP_FLAG_IBOE)
-> -		return true;
-> -
-> -	return false;
-> +	return true;
->   }
->   
->   static const struct mlx4_adev_device {
 
