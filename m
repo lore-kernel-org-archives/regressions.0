@@ -1,85 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793275810;
-	b=NWndu8603hb2vejQgXbTftF6ChGQtrYL3nwmcgNfba/HVutpy9y4rDywF05BD3QmhGId
-	 dhdAy6G7yGiKWL2Meim++IEVTPXf7SB0cjLH3Fa3lPjWQhVnR3ZYLnj1+/g1JJlTTgNQ3
-	 /D3fx8sasqrtc/aC/aS6+/I8OAx+VxBGDyOH0UX0W3OTuElS15TWU2piVlNp/n3BtemO9
-	 3pp6B3FGGZUIbPAPWqc2f7lQyAnPSRAQ1FN4ZWRtUjWTAH33edKd5Ek6FRt6+I2SHJxb4
-	 QfX/xtE+OQTmjYzpF63JpiXjscvFLyTcl3UBGMtnjb73Cb2bQmUsZgKN1SmSkTK8k4Q==
+	t=1793277413;
+	b=1zN6vcxUxwWOHw4sGnnAidhQ34DWBqH+k5JP74gw/YR9Zwt7djzVYDIULpE33kHZYqo6
+	 XQBQ7JkV7JcgSrVWz5LGl+f/xcOyRCGCZ6vWLW5AUql5Y/A5VWaml8qTGb0IzDjV1/opt
+	 WltQtQ2O3c5oHt7lOBLdFgdT5T69g1udc5pCphpjNXdHR7D2H7UyAhJqPpIEZX3QxX3d5
+	 Ssddea83CIlFIm5MncKAai2iHrEKjq069CY98S8YOTr9nSnl11ZsimL6iI9Uv02dN3s50
+	 bJ2PYwQVzY4TM8qaMKot7JfD3f/Vigjp13DYpfiAc+hLKHBfp3QRmOWXHalJX2/phxw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793275810;
-	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
-	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=U/GLzhO+8Tu2q9rpniCo3uEIbsbNdFc1r0M6YD8YoCg=;
-	b=xPpH7KHIlUWnEDmutjiLgJI+U0AC8Wi3VU/o6rIruGpMl+UiyQgs0CulUqZWdieV4zWt
-	 ukU4Fzx0pKreU6GbMq7kasppOGcUvewGrnK4ou3CQVPzIt1iO0/R8x1iJYPeeiIAj0/9+
-	 CIKDpY8ERkeFqaYG1mHhpHcaxRQXmxHcCbHX00W/0psEMqWf3DW5WbAen9jpD9L8C5w+c
-	 JZoEUU4ePAz11pX6XT8oB9jvbh5LWUQDinaAxYXhDaFIQp54sOBO247qSblFZW/2B0/6T
-	 gHP2cbf4txyN4h22sDSAU2xNOD5+adXV9OJoOGxe8eIB6519FZWtxIC95dgswmR3dgg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793277413;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer;
+	bh=hmc/RolTYy7SeBRxKLMjWzilnvA83GevNb7ysMoswG4=;
+	b=4qc/A/nZsblgtEpCxnpb0SuZs8DG96CpZHbz2AAArKLT842gG11E3QgFfGpLISvt2Evi
+	 Cvxvl+AdWq+k/jotuLTbCCuM4GaIfMSmgAWkzTFAy3TAqEdZxKGdqLFG6wxTxgRSD+2VN
+	 1rBJQoXABYr0LIC4BIHL26lpo/gb6wtX+/PFT14akG+NqcXuWFQ9mx1TiWsC26BN+GI6L
+	 1ICwS7gHfg46Q5rmxKls0AyF1nyGe1GE5Q9/F38HJQ7NbBvmWkS6jatZuGljE1CYoRKIS
+	 EGJGK0HJDX6RaBueJqvsq8slvEUNEGzyUlMQfnNWryEXd9Djt0mSyiCmRalk5eDP81A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=czlPgh+f;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=s9eSswp0;
+	arc=none smtp.remote-ip=209.85.215.176
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F124606A31D
-	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 12:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B90360A2600
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 12:36:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6B90360A2600
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=czlPgh+f
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CBD1F031E2;
-	Thu, 29 Oct 2026 12:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793275810;
-	bh=U/GLzhO+8Tu2q9rpniCo3uEIbsbNdFc1r0M6YD8YoCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=czlPgh+fMpcy9TuAFGsdkERT2El2sGBs/ucRkvPo4+3587dSYTprGRRYB4qR6oA9B
-	 G4njPNZ27ndenSmHL3scOCo3aDKg2XlZK86YC0ecGP+EBp8H/zcxLRx2xL02gMjeps
-	 lCsT5fyDK/0vbbIQZOMDvx5RWwGZgpy/Xd4q9u7z/8HMoIZ71T7RwqNHXm6ygc+smP
-	 LJwuKh277g71y3psshYzmoCYpoz0TWvDO7ac9cqW2+hyqZItXi18JK8eaKKZNo1wJU
-	 80tPBmmFMuv8tXkcVoUqTpkYy5nLQh0lB87f6HoSln4AjvQOHKwbA2ifdo/8thgy+b
-	 opgNxx00goXsA==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 4D0C0198003A;
-	Thu, 29 Oct 2026 08:10:06 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Thu, 29 Oct 2026 08:10:07 -0400
-X-ME-Sender: <xms:nTfjagLOU6BoivDMc2GLgDM1wkcq_oHdukaRL66sr8VWOqUeRCQ_qw>
-    <xme:nTfjaglKCVAahrMP49k5B3wzDrEx7IZaKaa1DUXuCQWy41Q_1aIITfjFbfm2PKxUn
-    dMbMZVTv9gokVm4RgX5MyJJl1ERU9bKX7mNtV9EXZy0dscbczK9-eU>
-X-ME-Received: <xmr:nTfjamLfgk8sfmC3O2wjfcyjD9XM5rVKfMbxTVmSDFDoTsVJgDgryDIQqzs>
-X-ME-Proxy-Cause: dmFkZTFyUOsv9zEwE14IcG4IXkaDraA3LYs+kVmkCd6BEWjS3bK5dNIHo8qFdbsq4nnFaR
-    jNsLlK0yJkYI3ptekwEDEuw9UADrC83DWwTgWYMpMEHXvbfZicpBYdOs7QoVnAIFRHuoZy
-    kkCH/EdfBs5e8UWcH58AJczdDAazoF2Yq3rHLXXHN71EABRfGNlqAxYMkeUndhWwKgP8nl
-    SjB2QPnrZV50fTaurVRszgIdZSAq58bAVTbYeCGJA6fz6aAN03AvAWCkl3aiXGZ0cfcj2W
-    WMxVAOSCPiAEwCALuXiqVgAK08Ya/RkQ6VwglsFoNkIjLv5F/3grdn3CsjIVgW2XDfU0t1
-    w24tBm74Atv6bYuLOoEB06NfHyaZOJPljuZ5WaILR5KcTPxKV/4K+S9NppejIjRQnYg3CV
-    13qkvKmqBfUzhF817W4WlFyG5+Dt4H8/wk2oyg3AWLn0wJKfGv1O6KWnQ7NbB1PzD+D4DP
-    J1NVeSaxdNgXukAIN/YGjtWHUVPxMQpw7TIZdSv5Aakets5LP++3STh9Q4iuoqYi96EIrf
-    OTGCjtwEI7w6WvDSK0WOE9IJjoK5DL4F5Ac3LDmEZgmy3B711tj3DpyvABSbNqttehDjjk
-    /wCkyOlw5bGRcusMtl/TMBzW8yLCIFUsR+Y7S5murCZildnRBomiCinX+e2A
-X-ME-Proxy: <xmx:nTfjarV_-28KYu5uy5Q4cp4gOxYMSgMHLdqq6uXOJfXP2jZMyRCH0g>
-    <xmx:nTfjarN2ZUuH1eIRvy_4lYAJIFvEAb1BZggKGV77qaOZcOtCUEqvVQ>
-    <xmx:nTfjanljpf9TOX-XyD5I694ym5tQxh52SF_iZ_MrzsXgOknlXWG1-g>
-    <xmx:nTfjauX1F3nRaV0zP7d-AAV91VXx1YRqH8o0wMo95npCQI8DVifD9A>
-    <xmx:nTfjamIXTSENBf4e29CPVi179ndD1cOz6O8X_JvqH9nuOYu7rxH9Amnu>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 29 Oct 2026 08:10:05 -0400 (EDT)
-Date: Thu, 29 Oct 2026 12:10:03 +0000
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Challvy Tee <challvy.tee@gmail.com>
-Cc: x86@kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, dave.hansen@linux.intel.com, 
-	rick.p.edgecombe@intel.com, vishal.l.verma@intel.com, kai.huang@intel.com, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module
- is not initialized
-Message-ID: <auM3KKutfutAqgWG@thinkstation>
-References: <20261029080731.890996-1-challvy.tee@gmail.com>
- <20261029094705.896693-1-challvy.tee@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=s9eSswp0
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cdadf7e248aso794804a12.3
+        for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 05:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793277412; x=1793882212; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=hmc/RolTYy7SeBRxKLMjWzilnvA83GevNb7ysMoswG4=;
+        b=s9eSswp0kxA4IVfjTQCl7gS1pyCp6Fpz0CYXsi8oAWMh8bw6ok4JV+8kD0jPt6Rg3n
+         /oP/GbpLMhoqou0l/vwN05SJ035RPGdGEu86z+Yuhk68hJm3ggvsvgCcuhCJvHru53OL
+         sDTlk/LtdJfJLKvIwQcRzfbWDANZIc3bUfCL9iHnVrZEgcv5lnOZPomR7kK6HkkIyLfE
+         P6ATzJ8SjDXNsfIP5VbJsCnRQzZqUWr+P/uIPXaXzp9utCSOVI9v1gBSpe6s65QJjwSG
+         2NP7qpfn86PdirGKMpy7/c5wbyLAiIySwSPjqF6jdKuG9+93CcMqJt08rQZO5c5Q9Ya3
+         0/lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793277412; x=1793882212;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hmc/RolTYy7SeBRxKLMjWzilnvA83GevNb7ysMoswG4=;
+        b=C8cVPgvA3Kxad00asXvmZL5/9F7YX1fjf6pkA0wa8pcZIlQKuIIoCXNHohS4dhljXM
+         v0FJtcsNaIPDo0ccfMzsa8M04QQUhNFP2cTg0cOtZ2UyFZBye7QTdsIcClKrMk6Envrf
+         T2Ggtf/s/kYngBhdbCHBoMdW1aJJW1AKMBXLYQBvUB0K6jqdSAsb5bt7ysUWFTOomW+/
+         Vt6de7pQim/IW85hd9/uY5L8KOIVRn8a1lXmPA5D8AisM6p9qa22I9Zqtl8Yf+a60/yG
+         0AAYHxzxTVp/eytBdKuUQegjWo0eWqRed7AU7E3ba5I+Ch1QxSPBd0UYp0eh8S4Kd6bn
+         b6+g==
+X-Forwarded-Encrypted: i=1; AKwUvBxfIUwezAyd1IyeY+7qzLneIMZcEj76bmT8KBiW9z69jn+m8SMPzpQpfl0du0QPOYnOpsdwDsE/LeyUuQ==@lists.linux.dev
+X-Gm-Message-State: AFq9FYLlQBPWa2V2iv2f3SyrP6lYqKxNWOXw2IYo9SZ8sifXXZJx2FIQ
+	/5VRBdPHHwEMl/9pA1s3Ngwn687tpHnEgWlTt4VMwgZLB3u5GCo0fjjW
+X-Gm-Gg: AYBFou0TuMrvA+rO/p4FZHoQ1FXjLjAyX5JoJkC+1RZ1HTOyuHVv2ekWDvqW2I6o8sV
+	Bxb+xfjL0+5W3npLc0CgBJAKHEb6Cb+ulNWGEuTRWeKtFAHytPG2oHEav2Zx6M/KMMVQyEa510W
+	UOR+JUgLu66+c+9RqOSw8masr7B9nJK//5J2JKL5Y7GNwYkbeUHFvfREGBvaarSnoz2XC1+teCv
+	QLHOL0SrQiYdIqWkQjgOE8e/l9du/EikJSYvJkzqgrIHOaWu0eyg4HCr2l3PHFZKLqhhfzMQ3hL
+	1TCv9Egg4XhZcv4xyT+zv32i/SQmKpJxyDOa+0SnYAbzcqouGcrKuZKe7JWk3g78qMqzbHbdL9n
+	1Yhru5QlrknAbvTKwX6jUhTehgr/sN8y6yGRkgXBTAbwTmXSDwXay/YASdjVCocLbOQW/9d7Ojn
+	/pFiMtu5inMKZXi640i0Plpe0F4z5y9YBUczfzhdrxh7xqyipu/uQYSzprHIGzrqCfLftxP13Ec
+	ma29VIvRydspupfEe6YI/1q1QGIdSZfIK90O8pdNt0LfE1OrejXpH5rmN8zw5mpa+Iv+jOcxP08
+	H4tAveUkke3wpMqO2ge1eScuVg9FZ9zD8xhG9r6lo4/RulmJadAF4Kyw+RqNPWO5br0=
+X-Received: by 2002:a05:6a21:8804:b0:3e2:97ac:274e with SMTP id adf61e73a8af0-3e9023ed955mr3933798637.65.1793277411671;
+        Thu, 29 Oct 2026 05:36:51 -0700 (PDT)
+Received: from smtpclient.apple (v133-18-180-162.vir.kagoya.net. [133.18.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd8ccc46482sm5225375a12.11.2026.10.29.05.36.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 29 Oct 2026 05:36:51 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -88,79 +89,62 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261029094705.896693-1-challvy.tee@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
+Subject: Re: [PATCH net 2/2] Revert "net: advertise TCP MSS from the
+ configured MTU, not the learned PMTU"
+From: Esko Mobius <echoowall@gmail.com>
+In-Reply-To: <20261029112045.5e7d4317@pumpkin>
+Date: Thu, 29 Oct 2026 20:36:33 +0800
+Cc: netdev@vger.kernel.org,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Simon Horman <horms@kernel.org>,
+ David Ahern <dsahern@kernel.org>,
+ Ido Schimmel <idosch@nvidia.com>,
+ Jiayuan Chen <jiayuan.chen@linux.dev>,
+ Shuah Khan <shuah@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ regressions@lists.linux.dev,
+ linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org,
+ Eric Dumazet <edumazet@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <40993B2C-6390-4BC6-B4AD-967518B0CBE9@gmail.com>
+References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
+ <20261026-advmss-revert-v1-2-272fa4b7ecb6@gmail.com>
+ <20261029101859.6893f1a0@pumpkin>
+ <22077B76-12B0-4DD6-813E-A3968003575F@gmail.com>
+ <20261029112045.5e7d4317@pumpkin>
+To: David Laight <david.laight.linux@gmail.com>
+X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
-On Thu, Oct 29, 2026 at 05:47:05PM +0800, Challvy Tee wrote:
-> Commit 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and
-> kdump") made native_machine_crash_shutdown() call tdx_sys_disable(), but
-> tdx_sys_disable() has no runtime gate: its only guard is compile time
-> (CONFIG_INTEL_TDX_HOST), which is enabled in most kernel configs.  On a
-> system where the TDX module was never initialized, kdump now issues a
-> TDH.SYS.DISABLE SEAMCALL that it did not issue before, and the crash
-> path never reaches machine_kexec().  The capture kernel is never entered
-> and no vmcore is written, so kdump is completely non-functional.
-> 
-> Having the TDX module uninitialized is an ordinary state rather than an
-> error.  tdx_enable() returns -ENODEV early when
-> X86_FEATURE_TDX_HOST_PLATFORM is absent, and it also bails out if
-> init_tdx_module() fails.  Any guest whose host does not expose TDX is in
-> this state and logs:
-> 
->   virt/tdx: TDX not supported by the host platform
-> 
-> The syscore path is implicitly protected: register_syscore() only runs
-> after init_tdx_module() succeeds, so tdx_shutdown() cannot be reached on
-> an uninitialized system.  That is why plain kexec still works and only
-> kdump regressed.
-> 
-> The crash path calls tdx_sys_disable() directly and bypasses that
-> protection.
-> 
-> Reproduced with 'echo c > /proc/sysrq-trigger' in VM guests on Intel
-> Sapphire Rapids, Emerald Rapids and Granite Rapids platforms, in every
-> case on a kernel that already contains the change described above: the
-> capture kernel is never entered and no vmcore is produced.  With this
-> patch applied kdump completes normally on all of them.
-> 
-> Three negative controls, all of which produce a vmcore as expected: the
-> same guests on kernels without that change, guests on platforms without
-> SEAM support, and plain kexec on every platform tested.
-> 
-> On a host where the module did initialize the new gate is a no-op and
-> TDH.SYS.DISABLE is still issued, so the poison clearing that the above
-> commit was added for is unaffected.  We do not have a TDX host to test
-> on, so this part is reasoned from the code rather than measured.
-> 
-> Gate the SEAMCALL on tdx_module_state.initialized, the same predicate
-> tdx_get_sysinfo() already uses in this file.  Putting the check inside
-> tdx_sys_disable() rather than at the crash.c call site also covers the
-> syscore caller and any future caller.
-> 
-> Fixes: 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and kdump")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Challvy Tee <challvy.tee@gmail.com>
+On Thu, 29 Oct 2026, David Laight wrote:
+> But that relies on something having gone the other way first.
+> In general that won't be true.
 
-The changelog is long for a three-line check, and it doesn't say why
-the crash path stops. It takes time to understand what you try to fix.
+Agreed, that is the same point Jiayuan made.
 
-A SEAMCALL that hits #UD is caught by the fixup in tdxcall.S and returns
-TDX_SEAMCALL_UD; tdx_sys_disable() then leaves the loop without printing
-anything. That is your no-SEAM control, and kdump works there.
+> It is almost worth implement something that retries with the shorter mtu
+> to detect the PPPoE mtu blackhole at the sending end.
 
-On SPR and later, SEAMCALL in VMX non-root causes a VM exit instead, and
-what happens next is up to the hypervisor. KVM injects #UD only since
-9d7dfb95da2c ("KVM: VMX: Inject #UD if guest tries to execute SEAMCALL
-or TDCALL"); before that it is an unexpected exit reason and the VMM
-gets KVM_EXIT_INTERNAL_ERROR. What hypervisor are your guests running
-on? Does the host log "unexpected exit reason 0x4c"?
+Linux already has this: net.ipv4.tcp_mtu_probing (RFC 4821). With it
+set to 1, once the retransmission timeouts reach tcp_retries1 the
+connection drops to tcp_base_mss and probes up from there. It is off
+by default, and the same goes for Windows (EnablePMTUBHDetect); macOS
+turns it on by default.
 
-If that is it, kdump is broken only in guests on SEAM-capable hosts
-whose hypervisor doesn't handle the exit.
+> Or even just use the shorter mtu for long RTT connections.
 
-The changelog should say so in a couple of paragraphs.
+Both of these have to happen at the sending end, which in my case is
+the client (it is an upload), so the server can't help. The only lever
+the server has is the MSS it advertises in the SYN-ACK, and it has no
+RTT sample at that point. For now the MSS is clamped on the path.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+While reading this code I noticed there are no selftests for the black
+hole detection or for MTU probing. I'd like to add packetdrill tests
+for both once net-next reopens.
+
+Thanks,
+Yongjian
