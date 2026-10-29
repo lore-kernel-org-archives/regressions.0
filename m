@@ -1,65 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793306617;
-	b=4MDu5xuE6sphxlgcX8kviscKld9tJPSnUmiA2/gRuYbz58nQTo/D4wEIgteSWLstHwHL
-	 y/hmnIO9jdPCANSw6f77iOeUuRYnkK3IFzUPN2G4RGeCE1oPZP3wG0tyky1pi2e+Ai5mS
-	 oH8+0esxIJD1/Z8PgSJpDDrNDafGRFXN0PUYow4jdyOtXdmI1Q5F/bIlkz1xbTTX/FbBh
-	 vd7z+1C4C9Or2QwofVObRXKPgZ4IU8xzBE1MljqBjHYxu/ddZ8XL2i1VniPlV5EMxoMop
-	 srHzdDwVWFujAn/5/WQAjt9Bpy2rofyQabbat4N9MwjeComSgv2KPuv8qCoMgq9cWxw==
+	t=1793306619;
+	b=ctez9ziFsOGHpNQTvpr/PGEh+YTm9ZSmFMHiHoQOw3Qoa3qUF/YyomUiYq4gBqgGXlsI
+	 UC8eCJYGRK0vi2RH5c7mfLsUtDltxoY7O2sr3UdMbzhgMazqx5YBCZ2TKp+pc6DqVLz1p
+	 mwmOyUXRLn5XLx0lxwavVSKxhjAp5Xo5ELNfuQtFgQW22Oh+vuEovwIbWC2VoV6Lf5AZm
+	 AF5H194SGjkeUHX4fkeBMDRhWBArL333jcXAHWw1OCULNi0daD7jATvFLIMCXhI9gJmu4
+	 B9EBm/hobmlF4yaSBoYNgsSj4l+PUAII6RbXcgRQIQSHIi5Lyhx5mG3phwZG4Cm0/dQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793306617;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793306619;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
 	bh=c6b4Qtq+bNR0rF++KTcCnd8ayRIaioB8/rOswk1DNdg=;
-	b=BcRQ8WVob1TXzNxJXGTYLE36aaTcTUxYHgGkvAr5J8aM5yCY4Tz5uxWygkU3PpQSYiEF
-	 v/hPKUlFOXKTzxS+BLWO1XHPdLoeTYzw6Za16UeJV0bd4wjYv4vDVVSvLWYT2oVXSqkrt
-	 2XFw3xbq73g/sJelNMxXQ5G18kw5kT3p6fv9onfcfWeqic/233BtT5DwQAahoD7oKPuyx
-	 TOjXY4W/+tiV8mtT4thuB5roZip1N9rgvdk9vN1irIg4YroBER2ber0CEVKbhQc5tS6+s
-	 PmlskEiC8z2geAqPWZCu+pvhdOV15ARvIz013jasJ36dCpUyK2QZiE2BA1U27OPls4A==
+	b=k422WPAz8Op608YM1oR0QFyMOlE5q4yNq1kzrvW2/A0ygvR1TjRsHdAZY2ExmS/eMZce
+	 Fd8WSsq6MVWf8vvDbVaOukSgmpziMZVmfJL4pUOmdhoxxXIvOewGz6M1Yk1NvUs5uxjz4
+	 2LHaslFGGU12rTr7hj3fX9H1HsN2Ax/paWVVLVbaYHK+a3V0pknU1rzK3AZqrGsbkOm2X
+	 qUykMg8+gEolrhwZXYUHX4UVIIem1wIQk9ceLk514LShpMGI0gYND30WUskhyiByc2V6L
+	 WBxnTzZhbRCrFVmsbazBMNuojqqu55XnkkLGGqszLz0u2YZB/zItrjonnxwWKtbDB8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=T3MRb1CM;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SYxrrwBx;
 	arc=none smtp.remote-ip=192.198.163.13
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1633F606A31C
-	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 20:43:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1633F606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06587606A32A
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 20:43:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06587606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=T3MRb1CM
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=SYxrrwBx
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793306616; x=1824842616;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
+  t=1793306618; x=1824842618;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
   bh=4pYAZ2i1g+CguPEstEC+bYebTm5aKWvzJjX844x4ssQ=;
-  b=T3MRb1CM/F3hxD8g+GFOOTl5vyUYmH2VILzHMTtwQlPcxbtTiNMH47oF
-   Hy98wcUxS22DdH67hbPNMtl/vQB9adKOWm2EONKw1X2cvoDUQU/4kEteW
-   CXmJRgixvGP3+6QYENUlAVkbdPQR5OkGeXnIzG9UAe7axMJxjOewh0ZCx
-   79Xn/Z16pJygi77qwU2KfhPwrU3js3U5XFMiALVXQX4md9N5UAYAM6yWb
-   krct9abKOQKR6+A8osUSYyQBq9lPGSIxtgCUpBkRgjV3Y6V73IRYNwOwN
-   wQychS33/Q/VYWCPj7v/5wymrm65GnUV5FViDDaEXY3gNrD0QVh36ZWG0
-   g==;
-X-CSE-ConnectionGUID: biOrETatQiuBlQPiRj1Dcw==
-X-CSE-MsgGUID: 7U8zVtYOQQWu7wUiuLVhWA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2053639"
+  b=SYxrrwBxhaD1wKXeoxcdfCZbFby3kLcUwJuqPpgsEQM8+uJPRc98QpNM
+   JICvsK7up9Ifi1g5CVpfI+V76cAIdDs5tXV+Mytf3ACppCPSgRRtXitaC
+   Asc5aVshua18e6JYzeAR0QOf5nL/LT1WARe0Is+LXjzAjLnpNw8Xa2z1C
+   dEEM7aSdpPJ4pBZ5pY6PRHDurGNL3R5zki2hPpyIbrzqVFJVhPgPuQSye
+   rjeTskdnwxoTx128YKV4EhXz+0dReLo8wtn6uyRQmrtcZ0logtRE2vLm7
+   X7LHpjNwd1alPVxaBuETZGaHfNO5wg/yEWkjj5127OGLtEi31m2jNgmLR
+   w==;
+X-CSE-ConnectionGUID: 07ZUsjKqTOG6Du11oneTEA==
+X-CSE-MsgGUID: KOW92xELRIeRu+p+pYuHeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2053647"
 X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
-   d="scan'208";a="2053639"
+   d="scan'208";a="2053647"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 13:43:35 -0700
-X-CSE-ConnectionGUID: /Y8xDStpRDmj7H6DZHu1Tg==
-X-CSE-MsgGUID: NR0kPU8mQDigvCUyDz618Q==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 13:43:37 -0700
+X-CSE-ConnectionGUID: uou8LRolRFCbUWZZfcXJ0g==
+X-CSE-MsgGUID: ivnvjs5CTbyNsX6Ehzd47Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
-   d="scan'208";a="5162382"
+   d="scan'208";a="5162385"
 Received: from kniemiec-mobl1.ger.corp.intel.com (HELO mnyman-desk.home) ([10.245.245.98])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 13:43:33 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 13:43:35 -0700
 From: Mathias Nyman <mathias.nyman@linux.intel.com>
 To: <gregkh@linuxfoundation.org>
 Cc: <linux-usb@vger.kernel.org>,
@@ -69,9 +70,11 @@ Cc: <linux-usb@vger.kernel.org>,
 	Dennis Wissel <dennis@dsine.de>,
 	Mathias Nyman <mathias.nyman@linux.intel.com>
 Subject: [PATCH v2] xhci: give back TDs and clean up ep0 after disconnect
-Date: Thu, 29 Oct 2026 22:43:23 +0200
-Message-ID: <20261029204324.658845-1-mathias.nyman@linux.intel.com>
+Date: Thu, 29 Oct 2026 22:43:24 +0200
+Message-ID: <20261029204324.658845-2-mathias.nyman@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261029204324.658845-1-mathias.nyman@linux.intel.com>
+References: <20261029204324.658845-1-mathias.nyman@linux.intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
