@@ -1,49 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793229007;
-	b=gzZ62O+JaZ5MfTR/XL7gFNUUUOnr2z1vcP8oCthFr0MW71GGVbaGJ7rbeX8Nz3R1ImsJ
-	 HIcJnpFpoB+au77igOnK11Tt25UyViDJ5BFUKfKaYGisbzXbQT054fCwQVXCG7SobNhI6
-	 0/2/8VImR107QMsd8L7y3he3I1wbE82QEgS9N2PZyXKXq/EBhfSc1ejcWglp33fti+NUl
-	 SUn2vxgz2I6ykjZ2z9yKj5hXMGuKWUiMlRqlSscQiFbeRRLF6Y9dVW19X0MTHjz1yJPN0
-	 YQjwwABT1pQzu4RfPsv2rMy/GpeNrGWcC7nSe/bgjufH8hwu0vtkPUoPzEstXU3fn2g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793229007;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=ZOxopfCgic5R7Aeo/hqd3+pQx4C+2s3b4c+s8g5N62E=;
-	b=J44XrhlgQWb0ID5fgXRXx91rv28Lbod5hZXlEDVQKsGNYZp31W25IGC6GwrWwhiTvVzp
-	 UEiuJHqrrc55zmb+JDQuJiSvYMszSrrOM8yCFBTOnllZ9uiQIY9cRKFfphnIYijeVRYja
-	 daDVPeW7hBQx2IRF5GNNERm2SaSPgmFfh78EM0+S7QuCln5A6aKUh5KSnIqOp5ugNns+a
-	 Ks35dymvUnyeHWHl+n6xSSFCCP6+GOZ58y6RcQP5WWsl15Ne8ouInlTkgCskGsr14/TBZ
-	 34AzPUjMzXUzxz1bPr81PjK+GaMfBl0D/v2PNDLUTgHvYFf2a9UasAveRVYfxTgdIjA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cMWmqGSW;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.15
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793247574;
+	b=K6DBelZBzyHIDaCruAzcKRMx5gQ2w+xeatxWC56/X+J/zPAvMM4T5TRguf6+AIZBOAgH
+	 XfYXYAQqKqE/qEYeU1LvlJPNfAW6BmGHxXeZii/FUfAHCFraW0+X0mu56ldEmMwGpyllO
+	 prcMpTGErhw+w3RF01FQWdH5DXSgtG0D+ZLRdfb2Ly9mnzRJCX7HzMUa/2lmUZDFzf4Pc
+	 7P2QT3FKfTtq5fWUu0dvSNihT5f26uRX+USEBox6htdUiQmP9j2/vE/c0sUNGBrmIk4RV
+	 m9z0zU9QEKXAPf9FrUZpDQcgk6uh3PjbOfd6gNWVEpU90QZ2vbofEfHMreC2DGb+q7g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793247574;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-ZohoMailClient;
+	bh=S4U7y3JKaQogbd5mPlOpxdl5u2U6YAES36RqoO48nJY=;
+	b=NzDbyo9Xfmo/evaAfdwah2UZSJKcgMCycQNxFWmGIYUUjVZ0SZBUME2pBuPT7piMKd/D
+	 0lDWwbstqqQz+gxZp5aExiABY9W/9c+0VA+90MkJpvvtPt+sQTh6MHMge3wcpy9Wdg+ZV
+	 4TB44wZ8cVNDzqw7H56DG1Yqls6SKHMT8vwIarNS+flOBCLgcxnIouPF3c5h6KoomLF8z
+	 sfMi359PraOC3UiGtM5PA+WhwxUgzWB9M3KF0Ni9B1lWxvTiWSrmeD6fQ3sjQmcuS4uOa
+	 LbXF59NoW4mALjQJAD+dOqRhOfEN2mIh22gcD6QI3lBYoMPUxKdRGjl2PALROw0Uryw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=yiyuzhou.io;
+	spf=pass smtp.mailfrom=yiyuzhou.io;
+	dkim=pass header.d=yiyuzhou.io header.i=@yiyuzhou.io header.a=rsa-sha256 header.s=zmail header.b=UMr8WiJ2;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.15
+Received: from sender5-op-o15.zoho.com (sender5-op-o15.zoho.com [165.173.182.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBEA606A327;
-	Wed, 28 Oct 2026 23:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53995606A31A
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 04:19:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53995606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yiyuzhou.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yiyuzhou.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cMWmqGSW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A601F01829;
-	Wed, 28 Oct 2026 23:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793229007;
-	bh=ZOxopfCgic5R7Aeo/hqd3+pQx4C+2s3b4c+s8g5N62E=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=cMWmqGSWRNceRIBKm9sypqCBQCCTstQ+sWjOo9F5Qnb8akIOkcIwqDKxQCoJeEQBb
-	 8fMYBsSu38Eh6+qVIaSftHmrUisBvPE8ibS0/xZUUEoqfwaMVX7aLbm3QK87iKZzlJ
-	 qgxg4Wb3YdOWFC9kln+YseUAaBJT1y2hiakvpvJre5L9kgNTK8i35LYZfbv3PbSYXE
-	 u47i4nARHOn0hLgHf/NKolucdY26ECrBoUplVnwwA3m8R0cdDnL8joRrRTau7HZOM+
-	 9eYyB7qKInW+0WSma8FtWPfgWk1jA3jv2uqYRPlCSW7O/fRdtIcgJsz9WTZOFDSpm9
-	 1ETGv94QZr7ow==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 074D23AAFC4A;
-	Wed, 28 Oct 2026 23:10:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key, unprotected) header.d=yiyuzhou.io header.i=@yiyuzhou.io header.a=rsa-sha256 header.s=zmail header.b=UMr8WiJ2
+ARC-Seal: i=1; a=rsa-sha256; t=1793247554; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NL1V4y2Bpbw4D3ykFjsIKv5Rlcyc2z0t2ZF/zv90kY0Z3raKON/AtlHzBU+tpVksPiZzqGwsa0Aqn5IwsRAQP0/pclYk9JOXXcb7C4lIb644+1OcJ204HDB86Euqhrr2GzTJHobjfNs1oeY5f14B45WgY+G4QZKLNHlZMgys1ws=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1793247554; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=S4U7y3JKaQogbd5mPlOpxdl5u2U6YAES36RqoO48nJY=; 
+	b=aKTd21bdfr4KPwjM9kWGAB0rgc78rzOGikIxEenPfmSDL7dOpBTZ2/zZLANUoHNOrIOREk6cgEHu3ChGf+HL8VHRTTVQpReF3f5ru2DKSHALMygvB0HraV50Fx1FiSZfxkJmY0Z1YszlYOyOLz/ujOaIe7DDnJgdvIami0DIZ40=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=yiyuzhou.io;
+	spf=pass  smtp.mailfrom=yiyu@yiyuzhou.io;
+	dmarc=pass header.from=<yiyu@yiyuzhou.io>
+DKIM-Signature: a=rsa-sha256; b=UMr8WiJ24QinuW5+dofrP87bmZnBb2jOFqepKbgklhlMXQ+uAHfsoqNYQkd4mxBfI2jtl5c69bWolxKGUffNzozg7WcsKFVT6eZ7b5Dh6iEAiJ9V939fIM41Oq+GarG7iUQXQMjuug58HzFPoUoQzk5TXSx4IN7c4Lf0waZpTEg=; c=relaxed/relaxed; s=zmail; d=yiyuzhou.io; v=1; bh=S4U7y3JKaQogbd5mPlOpxdl5u2U6YAES36RqoO48nJY=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1793247552047289.2558339205044;
+	Wed, 28 Oct 2026 21:19:12 -0700 (PDT)
+From: Yiyu Zhou <yiyu@yiyuzhou.io>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Yiyu Zhou <yiyu@yiyuzhou.io>,
+	Michal Pecio <michal.pecio@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dennis Wissel <dennis@dsine.de>,
+	diogochaves@me.com,
+	raoxu@uniontech.com,
+	linux-usb@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [RFT PATCH 0/2] xhci: clean up endpoint rings after disconnect detect
+Date: Wed, 28 Oct 2026 21:18:53 -0700
+Message-ID: <20261029041854.699752-1-yiyu@yiyuzhou.io>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
+References: <20261027184117.2461065-1-yiyu@yiyuzhou.io> <20261027192128.386082-1-mathias.nyman@linux.intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -54,47 +73,65 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] Revert advertising the TCP MSS from the
- configured
- MTU
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179322900582.1471258.8439548147927472759.git-patchwork-notify@kernel.org>
-Date: Wed, 28 Oct 2026 23:10:05 +0000
-References: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
-In-Reply-To: <20261026-advmss-revert-v1-0-272fa4b7ecb6@gmail.com>
-To: Esko Mobius <echoowall@gmail.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org, pabeni@redhat.com,
- davem@davemloft.net, horms@kernel.org, dsahern@kernel.org, idosch@nvidia.com,
- jiayuan.chen@linux.dev, shuah@kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, edumazet@kernel.org
+X-ZohoMailClient: External
 
-Hello:
+On Tue, 27 Oct 2026 21:21:25 +0200, Mathias Nyman wrote:
+> If you have seen the HID enumeration issue, or the xHC Stop Endpoint
+> failures with rapid endpoint state changes, testing these two patches
+> would be greatly appreciated.
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+I have seen the HID enumeration issue, and I tested both patches on the
+laptop that shows it: a System76 Galago Pro (galp7) with an Intel Alder
+Lake PCH xHCI (8086:51ed), running v7.3 plus these two patches, with the
+xhci_hcd dynamic debug messages enabled.  The keyboard is a PFU HHKB
+Professional HYBRID Type-S (04fe:0021) on root port 3-2.  It drops off
+the bus about 0.28 s after its first enumeration, which is what used to
+hang.
 
-On Mon, 26 Oct 2026 15:23:07 +0800 you wrote:
-> Commit 2640e6419594 ("net: advertise TCP MSS from the configured MTU,
-> not the learned PMTU") breaks TCP for clients behind networks that
-> filter inbound ICMP, when the server reaches them through a hop with a
-> smaller MTU: the handshake completes, then the connection stalls as
-> soon as the client sends full-size segments. This was reported in [1]
-> and confirmed on 7.3-rc7; reverting the commit on top of 7.3-rc7 fixes
-> it. Details and numbers are in patch 2.
-> 
-> [...]
+I unplugged and replugged it three times, once right after an S3
+resume.  Each time the keyboard was back with all three interfaces
+bound about 0.9 s after the first "new full-speed USB device" line.
+There was no -110 from usbhid, no hung task, no "not part of TD" error
+and no command timeout.  The dynamic debug output was on for the last
+two replugs.  This is the second one (trimmed):
 
-Here is the summary with links:
-  - [net,1/2] Revert "selftests: net: packetdrill: add tests for advertised MSS with PMTU exceptions"
-    https://git.kernel.org/netdev/net/c/b4aac29a21d9
-  - [net,2/2] Revert "net: advertise TCP MSS from the configured MTU, not the learned PMTU"
-    https://git.kernel.org/netdev/net/c/564313447e54
+  [  526.532129] usb 3-2: new full-speed USB device number 7 using xhci_hcd
+  [  526.764553] xhci_hcd 0000:00:14.0: Port change event, 3-2, id 2, portsc: 0x202a0
+  [  526.765548] xhci_hcd 0000:00:14.0: Not resetting ep 2 slot 6 after disconnect
+  [  526.766517] xhci_hcd 0000:00:14.0: Giveback URB 00000000123956d9, len = 0, expected = 8, status = -71
+  [  526.767395] xhci_hcd 0000:00:14.0: Not resetting ep 4 slot 6 after disconnect
+  [  526.768195] xhci_hcd 0000:00:14.0: Giveback URB 00000000fa65d958, len = 0, expected = 31, status = -71
+  [  526.780018] xhci_hcd 0000:00:14.0: Can't queue urb, port disconnect or link inactive
+  [  526.812029] xhci_hcd 0000:00:14.0: TRB error 4, halted endpoint index = 0
+  [  526.812280] xhci_hcd 0000:00:14.0: Hard-reset ep 0, slot 6
+  [  526.812752] xhci_hcd 0000:00:14.0: Ignoring reset ep completion code of 1
+  [  526.813210] xhci_hcd 0000:00:14.0: Set TR Deq ptr 0x112dd12f0, cycle 1
+  [  526.813846] xhci_hcd 0000:00:14.0: Successful Set TR Deq Ptr cmd, deq = @112dd12f0
+  [  526.814254] xhci_hcd 0000:00:14.0: Giveback URB 00000000aa106b15, len = 0, expected = 0, status = -71
+  [  526.814648] xhci_hcd 0000:00:14.0: Can't queue urb, port disconnect or link inactive
+  [  526.815742] usb 3-2: USB disconnect, device number 7
+  [  527.167687] usb 3-2: new full-speed USB device number 8 using xhci_hcd
+  [  527.426094] hid-generic 0003:04FE:0021.000E: hiddev96,hidraw2: ... on usb-0000:00:14.0-2/input2
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> Only Reset Endpoint and Set TR Dequeue Pointer commands are issued;
+> ep0 is not restarted while the disconnect is pending.
 
+That is what the log shows here.  Reset Endpoint on the disconnected ep0
+completed with success, Set TR Dequeue Pointer succeeded, the control
+URB was given back with -71, and later URBs were refused until hub_wq
+re-enumerated the device.  The other endpoints were given back without a
+reset.  I saw no controller hang or command timeout, so this Intel xHC
+is fine with Reset Endpoint on a disconnected ep0 (it ran twice).
 
+> If these patches work, they might be squashed into one before going
+> upstream.
+
+Squashing is fine with me.  1/2 alone leaves the stale TRBs on the ep0
+ring, as the cover letter says, so I would not apply it separately.
+
+Tested-by: Yiyu Zhou <yiyu@yiyuzhou.io>
+
+I have not tried the RFC diff Michal posted in this thread.  I am happy
+to run it on the HHKB once it has a changelog.
+
+-YZ
