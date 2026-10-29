@@ -1,68 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.15
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793247574;
-	b=K6DBelZBzyHIDaCruAzcKRMx5gQ2w+xeatxWC56/X+J/zPAvMM4T5TRguf6+AIZBOAgH
-	 XfYXYAQqKqE/qEYeU1LvlJPNfAW6BmGHxXeZii/FUfAHCFraW0+X0mu56ldEmMwGpyllO
-	 prcMpTGErhw+w3RF01FQWdH5DXSgtG0D+ZLRdfb2Ly9mnzRJCX7HzMUa/2lmUZDFzf4Pc
-	 7P2QT3FKfTtq5fWUu0dvSNihT5f26uRX+USEBox6htdUiQmP9j2/vE/c0sUNGBrmIk4RV
-	 m9z0zU9QEKXAPf9FrUZpDQcgk6uh3PjbOfd6gNWVEpU90QZ2vbofEfHMreC2DGb+q7g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793247574;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-ZohoMailClient;
-	bh=S4U7y3JKaQogbd5mPlOpxdl5u2U6YAES36RqoO48nJY=;
-	b=NzDbyo9Xfmo/evaAfdwah2UZSJKcgMCycQNxFWmGIYUUjVZ0SZBUME2pBuPT7piMKd/D
-	 0lDWwbstqqQz+gxZp5aExiABY9W/9c+0VA+90MkJpvvtPt+sQTh6MHMge3wcpy9Wdg+ZV
-	 4TB44wZ8cVNDzqw7H56DG1Yqls6SKHMT8vwIarNS+flOBCLgcxnIouPF3c5h6KoomLF8z
-	 sfMi359PraOC3UiGtM5PA+WhwxUgzWB9M3KF0Ni9B1lWxvTiWSrmeD6fQ3sjQmcuS4uOa
-	 LbXF59NoW4mALjQJAD+dOqRhOfEN2mIh22gcD6QI3lBYoMPUxKdRGjl2PALROw0Uryw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=yiyuzhou.io;
-	spf=pass smtp.mailfrom=yiyuzhou.io;
-	dkim=pass header.d=yiyuzhou.io header.i=@yiyuzhou.io header.a=rsa-sha256 header.s=zmail header.b=UMr8WiJ2;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.15
-Received: from sender5-op-o15.zoho.com (sender5-op-o15.zoho.com [165.173.182.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793253725;
+	b=GLwQV4msahQcZiYdixrSdAaKrX1mYAkAVh9D/0cdnBasP2klTeRO0LLYZlBL6nYtK0As
+	 llyWPvOYxpuuzxhXs/48HJn70DC8jxThsXuA64n1lNMN8CoQ/hwTYRME1Rh+2qsBaibKa
+	 xzAPM90lsBrtkV4ExH4lUs2+K7r2obw5z1xvhUghG7TVNl1C7qJfK03LOj5fUWGfBlKFQ
+	 z7TmGxcZW9WGVFw2ifia3HsKt5f+HilIXHC8Fvqa6Uy6BnBN/nUan5NbOlJNpiZK0LDBT
+	 kwT9uAuxtgV5W38C7h9HUVXTIlhdy1SE7Dmh/WODbYYy79/q3RHukPEADOkSPFlRP9w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793253725;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Sender:Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=EdAvBAcKZJXO5bQEx4evcyI+B32P4syy7lujkQHXbGg=;
+	b=QJuRrSuejKbnrttlWD7nTJ0F0q8BkJ6hAYPeJpC2+fKVzI4Gvp+pNXu+fkJItNw177pn
+	 U7WkQ+5DPTIxBUnGQmvpbvhWB2+WHxyQWY052ozq8EacsC0TKEe9CfC5/7ZR+/nwEPVdo
+	 p6QPCAr8U+xCYGyjgdflO8pbxcZC50qzVdZwFiBEgosLX1viqheYCLNMrnBSd3jX8AXtq
+	 eM32EMLvJx+HAG7BJ9OJJFhuf4n5aHVUyMDG3rW9QIg7j3VJe8zrrBji57HK2l92ZZF2o
+	 ac+45z39wG05ztQEMXZnbU4AAf1n22JdOnfPumCOB1PjmPskhPhD9zxx7ZN2kV0aLLA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=fail header.from=debian.org;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zDmmBQkw;
+	arc=none smtp.remote-ip=209.85.128.43
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53995606A31A
-	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 04:19:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53995606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yiyuzhou.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yiyuzhou.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7FA606A31D
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 06:02:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1A7FA606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=yiyuzhou.io header.i=@yiyuzhou.io header.a=rsa-sha256 header.s=zmail header.b=UMr8WiJ2
-ARC-Seal: i=1; a=rsa-sha256; t=1793247554; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NL1V4y2Bpbw4D3ykFjsIKv5Rlcyc2z0t2ZF/zv90kY0Z3raKON/AtlHzBU+tpVksPiZzqGwsa0Aqn5IwsRAQP0/pclYk9JOXXcb7C4lIb644+1OcJ204HDB86Euqhrr2GzTJHobjfNs1oeY5f14B45WgY+G4QZKLNHlZMgys1ws=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1793247554; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=S4U7y3JKaQogbd5mPlOpxdl5u2U6YAES36RqoO48nJY=; 
-	b=aKTd21bdfr4KPwjM9kWGAB0rgc78rzOGikIxEenPfmSDL7dOpBTZ2/zZLANUoHNOrIOREk6cgEHu3ChGf+HL8VHRTTVQpReF3f5ru2DKSHALMygvB0HraV50Fx1FiSZfxkJmY0Z1YszlYOyOLz/ujOaIe7DDnJgdvIami0DIZ40=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=yiyuzhou.io;
-	spf=pass  smtp.mailfrom=yiyu@yiyuzhou.io;
-	dmarc=pass header.from=<yiyu@yiyuzhou.io>
-DKIM-Signature: a=rsa-sha256; b=UMr8WiJ24QinuW5+dofrP87bmZnBb2jOFqepKbgklhlMXQ+uAHfsoqNYQkd4mxBfI2jtl5c69bWolxKGUffNzozg7WcsKFVT6eZ7b5Dh6iEAiJ9V939fIM41Oq+GarG7iUQXQMjuug58HzFPoUoQzk5TXSx4IN7c4Lf0waZpTEg=; c=relaxed/relaxed; s=zmail; d=yiyuzhou.io; v=1; bh=S4U7y3JKaQogbd5mPlOpxdl5u2U6YAES36RqoO48nJY=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1793247552047289.2558339205044;
-	Wed, 28 Oct 2026 21:19:12 -0700 (PDT)
-From: Yiyu Zhou <yiyu@yiyuzhou.io>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Yiyu Zhou <yiyu@yiyuzhou.io>,
-	Michal Pecio <michal.pecio@gmail.com>,
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zDmmBQkw
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a5036bbac7so10564915e9.3
+        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 23:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793253723; x=1793858523; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=EdAvBAcKZJXO5bQEx4evcyI+B32P4syy7lujkQHXbGg=;
+        b=zDmmBQkw/zdwD02i1c9xjUhpdXHIzaBEcxMTB0aGRtgOX30bQPPixaDXz7gdKn7sT3
+         Qdc6DCQsJMTMAi2HYPE2RjlQ7SlO+MDDPfXO0fZBB5pfTXvQlH6sFyFjUG5HJtXBTnAS
+         XAcnc5NlBIieadV60dpkcl0wlSlNA/U7Q1uxP5lJEZo7rdn2gfvgRKeyb9GVcsQZhdbj
+         TNEOtpfIig8qiLvUtbOtN78bPkk2Y94u8iOoREePIONPprvhLFv6kzyWg/YalORc3y8w
+         pD4ahz8fa+0HlZr8WH7h9Vm7SlrqLDqbIZUOtCDnN73DlrfOu83U/+K1cp1DNrEB59Ji
+         Hm0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793253723; x=1793858523;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EdAvBAcKZJXO5bQEx4evcyI+B32P4syy7lujkQHXbGg=;
+        b=DjCUScU/qrYDbs1ExxUWq+ezF1LcH8Yk3Bk9J4GP3192QHA/HflvHWKJgwrnmSDnXP
+         hqn1I+w0KmseyioDEK31We37PpBBKRKenmxv2hRLAdUxIUSDdDs0/rEckxtMIt3vcYEY
+         mfWM1rqgdm1E4IFDmT1ftkMkzhYdIuZ+7ZRncjTRB/k4D9DBdBqSk9x0RYdG1+zh8rUr
+         +kTQHuTqwyP8kCiw3q/tf0gzqU04SdtDeaHptUgT/s8wxlpUrKTRYNECoxZkHjz4wIGe
+         xotmM79KISHRb6tL8KDy6uOuj0drAFf6pauX9U0zNKAU3zXdQlhOEmwZaGBn6IXxeY7I
+         InkQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwN4YeKkR7VhdnF9Kw6CR5OZJ3uqBu9o+tRSs2ta52w1HGcler5399qyxghy9y3rjSx2GGXsvKak1bvQw==@lists.linux.dev
+X-Gm-Message-State: AFq9FYI0NUhlznxOBZK8rzdqs77aMolrf4EigE1EHNSou+9jcAUkAKKe
+	dOloz9i10pPSLCLfRhJKQu25nd1WxMqXjOHIqwZTxZFEjt3mwyAIZc+3
+X-Gm-Gg: AYBFou125CT8J4+ildbApLDtAJc2Boh1PRFHA7wBjDKg1Nxv++7yNmDaGr22ZzA1/8e
+	42DJ0o/zOgruL+7IcdnGXbRQh2Ho2JhYb05VXUac2eoDqN9hkN7iYA0NMWpErM59TT8hTwP8Nfh
+	rWHae6UyoaFPIGhV9Nhgv0zBOIu4m7EXEqAdIQrN8RsmvWKB0033cRFRw1KNCBBEcSXE4dTnQYa
+	GPxQTZT7JjfWEZzpzN97AnIQQuC0UdYtl3ihDgOJGA1kT0UyzE44H91xCEJvSD7krhAjQyoClwa
+	fS8H3FO4jkLTiOa8hE4iRb9iY8SIJ+1TPGczQJyXd78q4Gd8omy7oGSuM89oAYFOWuW0amLEK48
+	vC5NDXFMW26Kp3/31WEx3axuey8fWgkzRMXBJK9z8tJpZhpXyMVNyD/NnBzJ0HEzbIiE/cdqvCi
+	4StTtMzMubJMAmRl12kxZ8MtJOrKpf6rJlH5VmbIHF+9JkG7Y15ASwNKGx5FhqiG9mEw06j3+dU
+	D68O41dqIN2Xm/l7El1w+Tzai8HwPxL7dJwADR4s/gcAhp2JwxIcdC6YL+r145MEWRKuEzjviK4
+	bkGRck8uR4l6iGKFKgq+Wc6t2RY3oPotWhwbqb6mcZKWJgFu33FaWBXRVly5kIhb
+X-Received: by 2002:a05:600c:3b8f:b0:4a1:dbdf:17a8 with SMTP id 5b1f17b1804b1-4a9643d381amr107367955e9.2.1793253722974;
+        Wed, 28 Oct 2026 23:02:02 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a94f05e4e4sm64585985e9.3.2026.10.28.23.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 23:02:02 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 59608DC0300; Thu, 29 Oct 2026 07:02:01 +0100 (CET)
+Date: Thu, 29 Oct 2026 07:02:01 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Christoph Zwerschke <cito@online.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dennis Wissel <dennis@dsine.de>,
-	diogochaves@me.com,
-	raoxu@uniontech.com,
-	linux-usb@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [RFT PATCH 0/2] xhci: clean up endpoint rings after disconnect detect
-Date: Wed, 28 Oct 2026 21:18:53 -0700
-Message-ID: <20261029041854.699752-1-yiyu@yiyuzhou.io>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261027192128.386082-1-mathias.nyman@linux.intel.com>
-References: <20261027184117.2461065-1-yiyu@yiyuzhou.io> <20261027192128.386082-1-mathias.nyman@linux.intel.com>
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Erik Brangs <erik.brangs@gmx.de>, benh@debian.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	linux-bluetooth@vger.kernel.org, 1149377@bugs.debian.org,
+	Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth:
+ btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore
+ working on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests
+ firmware)
+Message-ID: <auLhWSOpMQg6cALq@eldamar.lan>
+References: <bdafa01c-f75a-41fa-a264-407400a2cd81@leemhuis.info>
+ <2026-10-25-1-daily-reply-0004-bluetooth-asus-rtl8761cu-hold@kernel.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -72,66 +109,29 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026-10-25-1-daily-reply-0004-bluetooth-asus-rtl8761cu-hold@kernel.org>
 
-On Tue, 27 Oct 2026 21:21:25 +0200, Mathias Nyman wrote:
-> If you have seen the HID enumeration issue, or the xHC Stop Endpoint
-> failures with rapid endpoint state changes, testing these two patches
-> would be greatly appreciated.
+Hi,
 
-I have seen the HID enumeration issue, and I tested both patches on the
-laptop that shows it: a System76 Galago Pro (galp7) with an Intel Alder
-Lake PCH xHCI (8086:51ed), running v7.3 plus these two patches, with the
-xhci_hcd dynamic debug messages enabled.  The keyboard is a PFU HHKB
-Professional HYBRID Type-S (04fe:0021) on root port 3-2.  It drops off
-the bus about 0.28 s after its first enumeration, which is what used to
-hang.
+On Sun, Oct 25, 2026 at 07:29:50PM -0400, Sasha Levin wrote:
+> > > If it helps, I can send reverts of 980084de4d9b and 6f0624b4427e
+> > > (on top of bluetooth.git master, with Cc: stable). Alternatively,
+> > > btrtl could fall back to the ROM firmware when rtl8761cu_fw.bin
+> > > is missing.
+> > I didn't see any regression reports for 7.x releases about those
+> > changes, [...] So I'm still inclined to say: leave everything as it is
+> > in mainline to avoid any risk and revert only the backports of those
+> > two in 6.18.y and 6.12.y.
+> 
+> Yup, that would be appreciated.
 
-I unplugged and replugged it three times, once right after an S3
-resume.  Each time the keyboard was back with all three interfaces
-bound about 0.9 s after the first "new full-speed USB device" line.
-There was no -110 from usbhid, no hung task, no "not part of TD" error
-and no command timeout.  The dynamic debug output was on for the last
-two replugs.  This is the second one (trimmed):
+I'm bit lost here :) Who is now going to sen the reverts for the older
+stable series? I'm bit worried that it will fall through the cracks,
+but at least from Debian point of view given we want to closely follow
+upstream stable releases I would pick the revert only in advance once
+I know it is already as well in the stable queue for the next release.
 
-  [  526.532129] usb 3-2: new full-speed USB device number 7 using xhci_hcd
-  [  526.764553] xhci_hcd 0000:00:14.0: Port change event, 3-2, id 2, portsc: 0x202a0
-  [  526.765548] xhci_hcd 0000:00:14.0: Not resetting ep 2 slot 6 after disconnect
-  [  526.766517] xhci_hcd 0000:00:14.0: Giveback URB 00000000123956d9, len = 0, expected = 8, status = -71
-  [  526.767395] xhci_hcd 0000:00:14.0: Not resetting ep 4 slot 6 after disconnect
-  [  526.768195] xhci_hcd 0000:00:14.0: Giveback URB 00000000fa65d958, len = 0, expected = 31, status = -71
-  [  526.780018] xhci_hcd 0000:00:14.0: Can't queue urb, port disconnect or link inactive
-  [  526.812029] xhci_hcd 0000:00:14.0: TRB error 4, halted endpoint index = 0
-  [  526.812280] xhci_hcd 0000:00:14.0: Hard-reset ep 0, slot 6
-  [  526.812752] xhci_hcd 0000:00:14.0: Ignoring reset ep completion code of 1
-  [  526.813210] xhci_hcd 0000:00:14.0: Set TR Deq ptr 0x112dd12f0, cycle 1
-  [  526.813846] xhci_hcd 0000:00:14.0: Successful Set TR Deq Ptr cmd, deq = @112dd12f0
-  [  526.814254] xhci_hcd 0000:00:14.0: Giveback URB 00000000aa106b15, len = 0, expected = 0, status = -71
-  [  526.814648] xhci_hcd 0000:00:14.0: Can't queue urb, port disconnect or link inactive
-  [  526.815742] usb 3-2: USB disconnect, device number 7
-  [  527.167687] usb 3-2: new full-speed USB device number 8 using xhci_hcd
-  [  527.426094] hid-generic 0003:04FE:0021.000E: hiddev96,hidraw2: ... on usb-0000:00:14.0-2/input2
-
-> Only Reset Endpoint and Set TR Dequeue Pointer commands are issued;
-> ep0 is not restarted while the disconnect is pending.
-
-That is what the log shows here.  Reset Endpoint on the disconnected ep0
-completed with success, Set TR Dequeue Pointer succeeded, the control
-URB was given back with -71, and later URBs were refused until hub_wq
-re-enumerated the device.  The other endpoints were given back without a
-reset.  I saw no controller hang or command timeout, so this Intel xHC
-is fine with Reset Endpoint on a disconnected ep0 (it ran twice).
-
-> If these patches work, they might be squashed into one before going
-> upstream.
-
-Squashing is fine with me.  1/2 alone leaves the stale TRBs on the ep0
-ring, as the cover letter says, so I would not apply it separately.
-
-Tested-by: Yiyu Zhou <yiyu@yiyuzhou.io>
-
-I have not tried the RFC diff Michal posted in this thread.  I am happy
-to run it on the HHKB once it has a changelog.
-
--YZ
+Regards,
+Salvatore
