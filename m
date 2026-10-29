@@ -1,97 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793257032;
-	b=kzn+pPGxe4SBPu/yrdAYl6BswAUzFaW7z9KkNQsjmXs2EJT2srTSnDxoMedcXzM1/HsU
-	 LBidHUWHwkLOuXRVi233jhdrEWhT8pUScq4lQzqt11FhcKUIMg3pf0zpO2JbUhAfphbL8
-	 Oul/Zl727mSCb7HOKzeb2TdiVBacF2Vs/5pt/2hhB8HWAYdWG+KVpqxG5Dj9BMBxkQryB
-	 CXfpHfOt+e/hIZzn6ynMuv2DH43/ZNvYIIqag+44ETN/xNEqb1X+Sg2c6P+JmxqVL3BhM
-	 VHXUGcKXRMua0jy1OuXUV7JI7A33CSRYuYfAMJXh9Ma3D0TFc4ZRk+GyudQSrkQcYnQ==
+	t=1793258254;
+	b=kbtxazTs9mUb9qjHumZgdG9SnW/2tM66nsd5FnlqQHMGMLABtAMfLyAE7VcwhdajYhk/
+	 BAMt+NI4zYsqnVgbhxogfutoUUwUXtu6uLCYW5gV/ctNu9eqNbFJj4nOgwnnZ0hNFkQm5
+	 cU16OVPYM03x6aXiftNXut5/8RHiRn9Rt6sZ0ojx0S/+F8pn7YX8oEooV2MTSIktYflAI
+	 HvOmLZcZlw+yWox7FCS1sEk+Jkjju+aB07qN1gPYvwDeDkUdKj1Pi1cIrGbGluSTaT8pm
+	 Jx8JYAkfJ1GUzgCaM2cxu5N+W7ad4mFAtcWn0eCSLCJOn9LSiig3442m5jKZBYXunBg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793257032;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=A30FZzabbD5cMKb9xpxtiuIiZ1pI6R+Xz37DjCLPTT0=;
-	b=F0dBCxHXc+DkC1ShP0/h6jZzxALTl5Tj6bhz6/Nt0QvQTE5RqMGya6/XAeX8lSNiiBXS
-	 FCrChlRLYtC01a0XrCeWa50EW8dNf1dACNjpcPGx42MfVz3eAE9s+U7UpDwHdr2/+1ZN+
-	 hTNO1tYqrgyU8GCuV1xxThRFpavQWtJZwBkcqljXC4LKEiIr0096fb7wSVHtNIHFl0IZ+
-	 pPdWG06AHEEzW9hVlTqeJjETht5kY+S5qpR8/9W/QlCpEuD4/aryyGd8cxJ6LFeCqgFJS
-	 0VnHlcueCXI0v3M4xiktqSmbFD3Le3RTsXTgqn+oUS0v3Plr2BTnMq8r1KIqQKjzqAA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793258254;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=6db9oh7/WHVy/QrnOBJwzRS8Xizly5Ed53s5Ygt67Sg=;
+	b=2RraHwcfMbAvJcsbs4wAEN5TPQofYaz5QgzrcLBNnHYLIUbDx6OfPooWhHLbmH5bU/CC
+	 p80ro/8w4KUDF7Mh+GlapdWfmua6dUrsNy6bIJOUAL0zMyzFRWSrT7mLY83i4w400mEC7
+	 mBQZWStfS9HpOUx360vNT+IHx3TOecXSTVHj1l0WpCnlzWdWKY3qObpT9PsobVHDsTyCF
+	 hnr9i63KCzlxLaaz8NIVPFS/FQkTdW9zcGGWbI8p08pO6m5ASl+x7B4muqSAzqYyRvHrJ
+	 anHem9eO2bK1ew09Pv5CfL/xvBHDCdcQsyglCBOxDMbDqY7xOwBgkpSoUhkwr+W15QQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PNYjsBtg;
-	arc=none smtp.remote-ip=209.85.128.43
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=YUGbi+wg;
+	arc=none smtp.remote-ip=188.68.63.102
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1E7606A31C
-	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 06:57:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2D1E7606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C45606A31A
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 07:17:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5C45606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PNYjsBtg
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a5087a5348so16414025e9.0
-        for <regressions@lists.linux.dev>; Wed, 28 Oct 2026 23:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793257030; x=1793861830; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=A30FZzabbD5cMKb9xpxtiuIiZ1pI6R+Xz37DjCLPTT0=;
-        b=PNYjsBtgiBBVaLaa18tiFM5NYO0oqcJJ7WHnehWCixGRrZHBUExhDAuZY2Xyba+0lz
-         ZoBqsQZJYYj3lPjf/2VtwnHbSkDGim7rFKmKTUn+/KaAfc4kNcTsvOtvpNURson3AbPd
-         +3rJlncxH2qWROe+R2POwDc8seO25Lpb9lDW3XQR5IN0+uF3f68oOujpfYFZqxz9i9fl
-         7AiQO2XCPiCTcOjeJo4CjEh6IRtTw8LpMLz9oJrZISU7Y9KBedIcJCuqElzCkNIU8As+
-         H01Y7URu6xJeI7v+Jj57RNIHL15P4IDbwAVhJvsoUlo63jN3yIwNGLVZwFrLnXVLqEql
-         dhvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793257030; x=1793861830;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=A30FZzabbD5cMKb9xpxtiuIiZ1pI6R+Xz37DjCLPTT0=;
-        b=Uz6bhjofWatCXDolH0ZioBlXfdRttIH3gF2nxe1Bp9ef1pLBHH6tyXd3wwcDFjqeEf
-         /IYKg12shVByvw3WSKIOaGjZmMSCfi0tsZn7VwtPkNbBwI8IuAiVvpCAuH2EkngSLkDB
-         ZrB9DpLj+GzvGEErK1CZvVGR6lvnZ4WkL73ylPrgGaakF5gpI0Vn/OqIBoBcwjoYsr9S
-         M2c9SbFmaXEM7/dIh2pZdeCqAwKY5oYZth1wh5LedjTWcmniFlAL2a2Mnv8iFxcjYcu7
-         JMUEi1nPLTK2etY5uEfPwprlWl2xVoxdUwdT7C+V3fOS082rAqsZ1iQMzmOBT+TXg88Z
-         4/wA==
-X-Forwarded-Encrypted: i=1; AKwUvBw2KPqBl8l6ptQ/QxVz5XUAqHMHuybgev4lSM0FeDZCZ1cHRrhyaZDmiYGo7HlK+iF4rYeXEIY5pl6oOg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYIlLD67fRLKKlN+zRs/JQy1Z7cOLtF8knYR/h4Fpt77fYb67SdN
-	9pxarVeGGBPRCi+OUZkKVherevsRL4I+9CzGNaxAMwgA8esIEkpw7Jcw
-X-Gm-Gg: AYBFou3VE67p7eeVdRnAf2YK4y8T9qbsREDhqYG7z6FPLI+Uh34sSMS4f9tcxAnl5+A
-	fk5FR594goVQDXzo1HTtO8hm15o3P1T9Arg0bPl1y9XdTpr+W8HidazvPHDAFfRNLRLuTi+jw5C
-	3LUuIYLK8IZZpt2mn0e4fxk5mY672TcxL6KueZiLP8HjcNrC6lmSbkNbAAP7PFVmg83dVsE3qy+
-	/l+6NBf/8IL+xVaLfjeq9TnspLXOeGwJ0P0W3vv7IMRKNRGNTvCFslMhN22NUq4x/+nmwhH4/AQ
-	V3FzZCCk/ATp8dJ8h8W4dQsW8S5rMNzo1xjp9APAEJV8aXUoCRDHiRU1whgI5ukoBNswLygOaz1
-	gGzIiAF/FzQiHxoPtizRzRyKdKvJi2SWMdeNcrmI1O9fvGwUJhN6RS0d5VdZ/US2EvJzpJ/ZcFe
-	+GSpryvqEbJwDkR0+8b4HsVbqVDXAvFjGfiGakbwzzpEHiTRqKpJPyXIOeuRt8HLOg8m6lUfOA7
-	RycUqF/HmHNgA6EBHWUdpzwn0mlVjudhVI+jY+jPICSkWVJlD8xiGlyJuDmkOutWI6Tk03+Fjr2
-	QArzJaM96jMrHTdTDyZdOqSgBEKL3nv1/nYaijs=
-X-Received: by 2002:a05:600c:1391:b0:49f:e701:51c8 with SMTP id 5b1f17b1804b1-4a966c41a4emr99419435e9.9.1793257030439;
-        Wed, 28 Oct 2026 23:57:10 -0700 (PDT)
-Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ebc3dd7sm32815744f8f.15.2026.10.28.23.57.08
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 28 Oct 2026 23:57:09 -0700 (PDT)
-Date: Thu, 29 Oct 2026 07:57:06 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: yiyu@yiyuzhou.io, <linux-usb@vger.kernel.org>,
- regressions@lists.linux.dev, diogochaves@me.com, raoxu@uniontech.com,
- dennis@dsine.de, gregkh@linuxfoundation.org
-Subject: [PATCH 4/4] usb: xhci: Reject URBs to disconnected devices
-Message-ID: <20261029075706.69aaa77f.michal.pecio@gmail.com>
-In-Reply-To: <20261029075409.4b203658.michal.pecio@gmail.com>
-References: <20261027184117.2461065-1-yiyu@yiyuzhou.io>
-	<20261027192128.386082-1-mathias.nyman@linux.intel.com>
-	<20261028080734.173da0e4.michal.pecio@gmail.com>
-	<20261029075409.4b203658.michal.pecio@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=YUGbi+wg
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jFbCR6ytdz6Ny9
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 08:17:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1793258244;
+	bh=6db9oh7/WHVy/QrnOBJwzRS8Xizly5Ed53s5Ygt67Sg=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=YUGbi+wgV1KXZ2tGGj/DlplBf8Af0epHzi2/SOn5fTbDaqiEVdXMOPSsxTM3dTTFg
+	 8/tq8E8jRxdinQTzdFTQHmdeHEgxy4OGR1kTQBFOLQ2mQo4u5+/jBTAUJWdfS1u5GD
+	 RMQ+BO7DTJq49wACsbDXGokIbLnAwClU15KBW6iWL57cFP9YxCGdtALCsfKJ3wCjd1
+	 jXL+12bul/WYkgTemCtzlxTRXB0tEWgJGbRJNO6kn3W2OAi8FpwKtbYaDNwwraCaVa
+	 1unvCGl2dPX8E4NX7oxRhUKylTAh2YHdjCwxCDWFkJ4lJ7pmSIputHvnKwPXa2TaOh
+	 h9Exe6plYN77g==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jFbCR6Fb5z4xxS
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 08:17:23 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jFbCR48Ncz8svJ
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 08:17:23 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4EF985F984
+	for <regressions@lists.linux.dev>; Thu, 29 Oct 2026 08:17:18 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <cc3d55bf-a1a3-40e2-ba9b-7fc30a62f56d@leemhuis.info>
+Date: Thu, 29 Oct 2026 08:17:17 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -101,54 +74,39 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179325823849.917297.5216925497099807667@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 4EF985F984
+X-NC-CID: 6TAIQGMEXtNxzwZChTaQVD78iUUkIuRodaK6lkufkIfYq7hPaA8=
 
-Restarting halted endpoints of disconnected USB3 devices triggers
-some HW bugs and we actually prevent this on all devices now. Keep
-drivers from pointlessly submitting URBs and needing to unlink
-them later, which may involve excessive timeouts.
 
-This generalizes existing check for USB3 ports in the Error state.
 
-Suggested-by: Yiyu Zhou <yiyu@yiyuzhou.io>
-Fixes: 7e0ef4332ed9 ("xhci: avoid xHC endpoint changes after disconnect or link error.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
----
- drivers/usb/host/xhci.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index e5c8b3a945a6..66b9fed65ac7 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1662,12 +1662,6 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
- 		goto free_priv;
- 	}
- 
--	if (xhci->devs[slot_id]->rhub_port->link_inactive) {
--		xhci_dbg(xhci, "Can't queue urb, port error, link inactive\n");
--		ret = -ENODEV;
--		goto free_priv;
--	}
--
- 	if (xhci->xhc_state & XHCI_STATE_DYING) {
- 		xhci_dbg(xhci, "Ep 0x%x: URB %p submitted for non-responsive xHCI host.\n",
- 			 urb->ep->desc.bEndpointAddress, urb);
-@@ -1677,6 +1671,13 @@ static int xhci_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flag
- 
- 	ep_state = &xhci->devs[slot_id]->eps[ep_index].ep_state;
- 
-+	if (xhci->devs[slot_id]->rhub_port->link_inactive ||
-+	    !xhci->devs[slot_id]->rhub_port->connected || *ep_state & EP_DROP_PENDING) {
-+		xhci_dbg(xhci, "Can't queue urb, link error or disconnected\n");
-+		ret = -ENODEV;
-+		goto free_priv;
-+	}
-+
- 	if (*ep_state & (EP_GETTING_STREAMS | EP_GETTING_NO_STREAMS)) {
- 		xhci_warn(xhci, "WARN: Can't enqueue URB, ep in streams transition state %x\n",
- 			  *ep_state);
--- 
-2.48.1
+#regzbot report:
+https://lore.kernel.org/lkml/b911ff91-ce7b-462e-a7fb-f8c6d682c85b@gmail.com/
+#regzbot title: arm64: dts: imx8qm-ss-conn: USB 3.0 broken on Apalis iMX8QM
+
+#regzbot report:
+https://lore.kernel.org/all/20260829010525.29935-1-mikhail.v.gavrilov@gmail.com/
+#regzbot unmonitor:
+https://lore.kernel.org/all/25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org/
+#regzbot dup:
+https://lore.kernel.org/all/25995707c39c0c191e3ac46c4813f55a7f928403.1793131583.git.calvin@wbinvd.org/
+
+#regzbot report: https://lore.kernel.org/lkml/ar_AuRr1eaZzOfw9@baldur/
+
