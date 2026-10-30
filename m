@@ -1,69 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793376795;
-	b=0n4ruEMYHB0WMFcHilxk9T6eX6dgXcClcLLLTVule8ChLnu9PGDXNV7nr+IuGICLt0rM
-	 5OjQke4Y2kipw/+pt4D/Op26smgXiT6H2cL0wgx7bnFmX9tvwaeQ/BDUpOtYXShsnCC0W
-	 7fnlC55KvYIzBIG+c2f+Gktvg7zr3akwDOHxdrD5hKhzCJR7N80ckBg96OjvbPIV6xVPG
-	 RyZGZW8kaJDkMTjAPdMLDuUA2BUV3sa4qaGTS7ei0JhUWj2z7XUZhGjE0wsVg47Skoz6f
-	 uYJSU/ecJc89KRpaMtO8tVqKZ0/fWT2yVAWYXAcDTbcS26HmtikuE/VheaeW3+C94FA==
+	t=1793376890;
+	b=JCQS60jh85SVxYDpY0GrE0D8WGKMhKCUBwZP/pjWZ/WeMJw6eJfnimsH3qhCgll56Tpk
+	 1s3ot9e/6e8zOT+TPmj5cca4DSm70CHhHbY5eTQF6s8wTjJoXwknmp9NJg3U68eJZ/I/K
+	 kll/5Zz8lChqLpeVSkqmKX/xLRWRlk7QWGezV+V7xvIgjV63is3+ELgygTmEWt/uqxx/m
+	 rAfzx1xUjVkbt9k0NIDcRZAEr1xuxpCns/EL2nIR1ABWc8x2qsyaRICNVPU6BcA+CRLf0
+	 GezUqSEy0e50Wkm46LYfV8ZKwi5kn2LAKGjrUnHXZB/Uxillx5mb+ZSWr0D7y4Rf9Yw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793376795;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=KK8pJaQH5lIoMU0qwbST6x47M5egpHp6PIXlQuLC+i8=;
-	b=CB0pfV/bIG5gVJLm8LRCDkLdLaZwUFalOLU96rCEyLJNHcMFH7I7vyb8j/dLnFm5Hjdz
-	 ObSwfDi4fqbmvagKyTvqi/h1QSVfe3zid4LD9rgOtiuXzqRhI5UOiUpMFGI0XRPMAh6c8
-	 NDhG2ROt/mfiJTQIfeqhXAigylY9pxQ4qXe9tYveyBQgzpuSMeSsO8gB02vwrtldeBt3O
-	 8wWddCAYc1LImmNF/xphY11zCA5BBIE4/TuPUx4T00uT9bLvK77XAfavaHyGeFWE39w0r
-	 Rt2NhYwe0bmrTl23+8qdTvL4GbqaNp8dV2Bs70KdzxyFrYFxQXOtbxEmGzEiH47Z3hg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793376890;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Debian-User;
+	bh=6VFcCQ8+hkv/Z0Ast47jgNhih51hX02Kw8npjw5+umQ=;
+	b=lDUvvvMUZuX+X/TW1LMDfplhzaBztR51SkzIlpyO3SQhN8J2kQkauw49eBFtzAEdpmJs
+	 g+sLFoCDVzrSjXfdyowXL14hy2ub8KFJOv/p0k7zNaKgVsg+ruc9hbncLKX2wyQ0OsQJq
+	 kTZ3vKUiPYbt3d8UeScIaSO7nqDnSDDLiy2rrk+3Zpd1w84SSwtkuaxfLnp+6ka9qrWFi
+	 +E2Pfe4PxI7ccyZ7ts7QgcNRMF6bW640EJGBHRTR8HKAmKeBG4u9Mbzm7lsd74/vJHi7I
+	 jR9uYn7lnn7gsp9nL26F7KhLj8KNMsE/AvzukGdKDB7LXfadKEOdl1MS7RWZMdEv0LA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I8nnGdOw;
-	arc=none smtp.remote-ip=198.175.65.15
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=DmPE+J6r;
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB49606A31A;
-	Fri, 30 Oct 2026 16:13:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3EB49606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E60C606A31A;
+	Fri, 30 Oct 2026 16:14:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E60C606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I8nnGdOw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793376795; x=1824912795;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uAicCO+jPwcDKA4dY7pgebv4wA+Z858oYVakj2wROsc=;
-  b=I8nnGdOwDUsJKOQ2iPsNh0yq1jMo8IZlaImP+UC13pcHY9XVC9P366dp
-   v9fwmWSEqU0fHGlWFF9JKzofrXlnxJV7vTiI4eXj7g362bZ78xkmmh29+
-   BmTwv6cKOFqOgrB+UuMIZwiQmR/pVEc1f1rFGvjmDxMuY/wCY07chquv4
-   3d6VD0J+SoAiqHeFKRC3EPUkXb9hs4rojdhA2Zaeq3Zf51P8g9YI5L9qj
-   5laxP1Oywb6ahobS3RYEd1t/sx6U4l6EjtJ1JPaAGBQ4ZptpyHFGhKdvG
-   TkzfR1ikHUrpdycRuXYnag3dnsjJw57gr0eNlwz1qxR+pim4yjV2LkPng
-   Q==;
-X-CSE-ConnectionGUID: 8pSGqGWjSq67bGDc5PL8nw==
-X-CSE-MsgGUID: cb805d+3RXmr3dfqvVkb8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2147384"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2147384"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:13:14 -0700
-X-CSE-ConnectionGUID: NTp0fqX4TsquFoCBR6I98Q==
-X-CSE-MsgGUID: n7ulosMeRbyq5LgqgqGgTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="5875989"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.109.71]) ([10.125.109.71])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:13:13 -0700
-Message-ID: <939b4cc7-5c7f-429d-a9be-830aa1c53ac5@intel.com>
-Date: Fri, 30 Oct 2026 09:13:12 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=DmPE+J6r
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6VFcCQ8+hkv/Z0Ast47jgNhih51hX02Kw8npjw5+umQ=; b=DmPE+J6rcLlWvdvEniU5xjHTMg
+	H+d/de0QEzHOXUJBPiPynAt/Er7KQmwKTorPs0E8sNua1hxr1/mBuwFqsHvhM4yG/ePe0vDver6E2
+	0pj2N8OQtUbAt5fzO5DER1IC3Nzcc2Suf+pl6yECGnLl93zJRbnyEmisQW6fQ8AVmM5Ef7bBHOKg7
+	1rB7PdX0zxqRzcRYRhY0oAawJL0UbspiHi7fVF5Ekqu6sCVjtsIYgm7x0gZnWgKFKSnhVazuJGmdt
+	0h9S/lzqu7p5F9sfk9eFNolYHXMK6bWwDAKKchRywhK/ontbW2lh9Ojjfzi6ZCjnR5RRfnR/+G3QX
+	jtOMl+Wg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xMpFQ-003wWM-2I;
+	Fri, 30 Oct 2026 16:14:33 +0000
+Date: Fri, 30 Oct 2026 09:14:27 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Stian Halseth <stian@itx.no>
+Cc: Frederic Weisbecker <frederic@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Thomas Gleixner <tglx@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
+ after idle exit
+Message-ID: <auTCQauaU733PY5z@gmail.com>
+References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
+ <20261025100202.2584654-1-stian@itx.no>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,77 +71,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module
- is not initialized
-To: Challvy Tee <challvy.tee@gmail.com>, x86@kernel.org,
- linux-coco@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org, kas@kernel.org,
- dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com,
- vishal.l.verma@intel.com, kai.huang@intel.com, seanjc@google.com
-References: <auM3KKutfutAqgWG@thinkstation>
- <20261030154851.907726-1-challvy.tee@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20261030154851.907726-1-challvy.tee@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261025100202.2584654-1-stian@itx.no>
+X-Debian-User: leitao
 
-On 10/30/26 08:48, Challvy Tee wrote:
-> --- a/arch/x86/virt/vmx/tdx/tdx.c
-> +++ b/arch/x86/virt/vmx/tdx/tdx.c
-> @@ -2321,6 +2321,9 @@ void tdx_sys_disable(void)
->  	struct tdx_module_args args = {};
->  	u64 ret;
->  
-> +	if (!tdx_module_state.initialized)
-> +		return;
+On Sun, Oct 25, 2026 at 11:02:02AM +0100, Stian Halseth wrote:
+> I could not hit the window in a KVM guest, but instrumented, the guest
+> showed the sched timer armed 5.9 ms after now at HZ=250 right after a
+> jiffies -> hpet switch, and tick stops saving a ts->last_tick more than
+> a tick ahead. The fix boots without warnings there.
 
-NAK from me on this.
+I am seeing this on my testing real hosts:
 
-If SEAMCALL is fatal then we need stronger barriers on the generic paths
-to SEAMCALLs themselves, not one-off patches of the sites.
+           clocksource: Switched to clocksource tsc-early
+           ------------[ cut here ]------------
+           WARNING: kernel/sched/cputime.c:481 at kcpustat_dyntick_stop+0x15e/0x1d0, CPU#2: swapper/2/0  [warn]
+           Modules linked in:
+           CPU: 2 UID: 0 PID: 0 Comm: swapper/2 Tainted: G S                   7.3.0-0_fbk701_debugnightly_rc0_upstream_17997_gc339f4010dea #1 PREEMPTLAZ
+           Tainted: [S]=CPU_OUT_OF_SPEC
+           Hardware name: Quanta Twin Lakes MP/Twin Lakes Passive MP, BIOS F09_3A23 12/08/2020
+           RIP: 0010:kcpustat_dyntick_stop+0x15e/0x1d0
+           Code: de e8 96 00 00 00 42 0f b6 44 2d 00 84 c0 75 4d 41 c6 07 00 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b e9 2e ff ff ff <0f> 0b eb
+           RSP: 0000:ffff88828a22fe38 EFLAGS: 00010087
+           RAX: 0000000b9aef1500 RBX: 0000000b9aeb7036 RCX: 0000000000000001
+           RDX: 00092e9200000000 RSI: ffffffff851ec9c0 RDI: ffffffff851ccaa0
+           RBP: 1ffff111c3e65a3b R08: ffffffff8152bd65 R09: 0000000000000001
+           R10: dffffc0000000000 R11: fffffbfff0f78a9a R12: fffffffffffc5b36
+           R13: dffffc0000000000 R14: 0000000b9aef1500 R15: ffff888e1f32d1d8
+           FS:  0000000000000000(0000) GS:ffff888e9684e000(0000) knlGS:0000000000000000
+           CR2: 0000000000000000 CR3: 000000107162a001 CR4: 00000000007706f0
+           PKRU: 55555554
+           Call Trace:
+           <TASK>
+           tick_nohz_idle_exit+0x1d5/0x2d0
+           do_idle+0x3b7/0x4a0
+           cpu_startup_entry+0x45/0x60
+           start_secondary+0x1b3/0x200
+           common_startup_64+0x13e/0x140
+           </TASK>
+           irq event stamp: 406130
+           hardirqs last  enabled at (406129): [<ffffffff849e90cf>] cpuidle_enter_state+0x13f/0x465
+           hardirqs last disabled at (406130): [<ffffffff81557bc2>] tick_nohz_idle_exit+0x62/0x2d0
+           softirqs last  enabled at (406118): [<ffffffff8126dc76>] __irq_exit_rcu+0xc6/0x230
+           softirqs last disabled at (406111): [<ffffffff8126dc76>] __irq_exit_rcu+0xc6/0x230
+           ---[ end trace 0000000000000000 ]---
+
