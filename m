@@ -1,79 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793356864;
-	b=ep3UkilTLIAglzm7texEe1N/bIUMr9Cz2CWV+dizClemUnVG7kpg2zwfLp0535ZKRhDG
-	 OyHIWu+QdhOdxo2jx7PKtmc8ghHVJ1CyNkxho5KLO78Zx38at3L0tXsvWQwNOlNL7Bubb
-	 8QX9it4k2MDo00PNjbcJfRwC87ooy6QzkwyUkBtfYr7E+D7teto3efISaoXN3PgWEVDFq
-	 EPVF4CHgGBAhDLAcre8aF9Qf1aycJdUDTw4qCgqP2AEnCjgYDnaDLCrUaa8wvwlSOkvW4
-	 JsuqtixnjP4w9rQIw2P+ClzckFkj15LhhntZIG3UzwSFyma7+DKtoN5lhPPpUrA2Vsw==
+	t=1793358343;
+	b=KE61G/iDK9eVcA0b1M2U6aq9zU3i0lcU753cbJO/sckwQZdo4Kna30UPq+WWyRDr2RPs
+	 BARSutQ8N2hvtwE220NU0esw7OkQngagi/Tovd9w8fhcBgGM/jJ5bxbGxiyOnK2bBCl0z
+	 b7561aoBr1l49gz4jLmJucEKdjTOFQwxamugAP8TWaHafRnfcAhwcF3BnwkGpF5dfKG0M
+	 8iR2H8nVrpn5BUeei++D0+ia/MuF1EA1g3oe22e8AhlttmXO2rpOrDsSQaVQU+DndTubs
+	 aCYqSyJ3m6h0NjSykNBaMRzQwHNYZKut028+0xEUBm2BqLjsNThHHtw6Ys8Whr6ceMg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793356864;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793358343;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 In-Reply-To:Organization:References:Date:Message-ID:MIME-Version:
-	 Content-Type;
-	bh=OecWFWtnpeI+kxtFniab3JxKEVWTHzdquNuIUurozis=;
-	b=W01Whz0lU74DLhlWbYU2jmIR0Pfi9O7NRDlr+bDDG1jCZTqgJqXrv78Z1y3V2U775ylj
-	 2xdS8CdJgyuP+ZQ4lNv06bACwZIi+kFfwprfyZl+zS2Np2rNk/7+6fuzWPE11GAuWJ1sU
-	 kbRuHrbGPi7b8Yr2Xke6lj5+XlX1O4FQ5aWYxJFEVJPDRwMNMZiRiWPOZvEWEwrv8Bcju
-	 ScBRV6WyM2OhYraFTmGP7ZnmU+Baj7MWgiB9qZi4XrQwDA2rSiqTbx1Uw5YESpdLbdFNY
-	 U/5ozO0a0HGXv/wG9qgbL4p+BbqfPImF+MXd9m0/zlyNdN2FQJTRdYTOOVvpx6TimvA==
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=agPdL3qf24JsUrVZj63GCPygkTFupZp996BGcl/rBUE=;
+	b=ogXA2KNrRMRq3GiyhWAA7viC7fIPdHf4pmfC51w0LSEIJD2xRsLOZGPeBdFnStvXeaJ8
+	 iVDU9BzM4I3UeHnWx4kCDm1VNnaMcXX6u/ToBQANQoJgSMi3WRfkzvuCjByhMTRTV77Cw
+	 rocB3/Ef5gsLKofst9VtwpGN2deOf6aGCZttIQGF9pk1tjt0HKoJgwtjmJevlAZr4wPCi
+	 AlzVR374CdiuhFLroakAYLoqHi+NSJZTVkMW7UBqKQEIywYhasPJyZxkoGoHcCfDy81mC
+	 cxCo7sRNp9H5XQWxBFfZY7l/20PprBOpfFblWWRgOSNIQ1ua6d2/wtYXWH0guB9iDoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iUTeqSZi;
-	arc=none smtp.remote-ip=192.198.163.10
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=R9tiDqIo;
+	arc=none smtp.remote-ip=198.175.65.20
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E75606A31A
-	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 10:41:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66E75606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9B2606A31A
+	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 11:05:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9F9B2606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iUTeqSZi
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=R9tiDqIo
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793356864; x=1824892864;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=T5KXMNQ4RIOzej+TfuL+2Xe6pCzPNA+WHYz1J3vH/BY=;
-  b=iUTeqSZit/m18rhGX2Z4BQmvPcwPlU10K6NYJbAQ/1QcRCiDFU70a/55
-   bDRWdqUY69568jsbRCQXDz8bNgFud5jb7zfVt4j40irP3VQX+HUW729I+
-   JSzECFGSWo/TvJdH4hnM9wEo0fhcHU75QItjvpEcNhADz89C23zlbwma7
-   Ym03W+x3ZOPOBQQOPRttMxZxdR0c0Ww3g4UN+y5tJLu7poAyBfsWtoiKO
-   CALw9p0+L3/N8kwLttt7etJQAnaby3vt9/W/+uzfWBIlYYVlkd7juqMV5
-   CARv5+NJ40RkdTrRwtTUIkIO7x2w2EzRz6KuUnbXEMZIry626MbOXSKRM
-   g==;
-X-CSE-ConnectionGUID: jchQhtKwTVGiNMQLJTgLAw==
-X-CSE-MsgGUID: 3suodFqwR0W7bmqELSajyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2022599"
+  t=1793358343; x=1824894343;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RPmCyYVF42T+rjNF3nsLyULwsX3PjwgLJgwv02au+5M=;
+  b=R9tiDqIowmnvNWWzoBPu5FuX6m8MZspVUUYgpk/VpCN++TQL4YwoVuwQ
+   pOfcmAOXKqGcvpwlbu6nJBYukeVd5LxDAcD4CpHqXwtKQMqBAmESu0txC
+   hWi1J3XKXF+6balRveMyFHKfV2uT47FIdK0I/opxFWy5qJvNwRIbU0ktJ
+   0TvKbqKZBiA75zoy+EgV4HGRpHqqi0no+RoexfuDdfKF5+0A13vJVn+i9
+   qKF3HS699s9q+kRpyk8quLv2L3kiEtIaYWCvoZ+VNKGGLEprbf6qI2KyF
+   ovB+M54hbCr0gBaaX3b3lWWuf46hZmX1rygiz7VcbDYnL9HWDg6SBvOZw
+   Q==;
+X-CSE-ConnectionGUID: NvcBYGw/QJeBfdnEo0GUNQ==
+X-CSE-MsgGUID: 78I7Ybm4SxW6DqDSMp+TEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2144576"
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2022599"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 03:41:03 -0700
-X-CSE-ConnectionGUID: f8auXAckQHChf9XFPNJZtg==
-X-CSE-MsgGUID: wluOryQaRoGcAEOFWd+CcA==
+   d="scan'208";a="2144576"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 04:05:42 -0700
+X-CSE-ConnectionGUID: SpbQ9/50R7SLZRuaaqf1Ng==
+X-CSE-MsgGUID: NfFiClmeQAmaeA9d/TJJ3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="7230603"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 03:41:01 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Mitul Golani
- <mitulkumar.ajitkumar.golani@intel.com>, intel-gfx@lists.freedesktop.org
-Cc: intel-xe@lists.freedesktop.org, stable@vger.kernel.org, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v1] drm/i915/display: Allow port sync on PTL
-In-Reply-To: <3918d7f2-2c8e-4c91-8de3-ae412acc75a0@leemhuis.info>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
- 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
-References: <20261012040402.3332398-1-mitulkumar.ajitkumar.golani@intel.com>
- <3918d7f2-2c8e-4c91-8de3-ae412acc75a0@leemhuis.info>
-Date: Fri, 30 Oct 2026 12:40:59 +0200
-Message-ID: <041969576ff0e2ef6abc03650e077e44669a2b72@intel.com>
+   d="scan'208";a="5300912"
+Received: from slindbla-desk.ger.corp.intel.com (HELO [10.245.244.25]) ([10.245.244.25])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 04:05:41 -0700
+Message-ID: <f362a385-e1d6-437c-a31c-fbf4414fa0f5@linux.intel.com>
+Date: Fri, 30 Oct 2026 13:05:16 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -83,51 +72,47 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] xhci: give back TDs and clean up ep0 after disconnect
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ michal.pecio@gmail.com, Yiyu Zhou <yiyu@yiyuzhou.io>,
+ Dennis Wissel <dennis@dsine.de>
+References: <20261029204324.658845-1-mathias.nyman@linux.intel.com>
+ <20261029204324.658845-2-mathias.nyman@linux.intel.com>
+ <2026103009-handful-labored-d1ce@gregkh>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <2026103009-handful-labored-d1ce@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 30 Oct 2026, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
-> On 10/12/26 06:04, Mitul Golani wrote:
->> Some dual-SST tiled displays exhibit visual corruption on PTL, with
->> one tile's image vertically shifted or wrapped by a random amount
->> that changes on every hotplug.
->> 
->> PTL supports port sync, so allow it to be used to avoid these
->> display issues.
->
-> Is this fix for a recent regression still in the "to review" list of
-> anyone, or did it fell through the cracks? Or was this solved meanwhile
-> and I just missed it?
+On 10/30/26 07:22, Greg KH wrote:
+> On Thu, Oct 29, 2026 at 10:43:24PM +0200, Mathias Nyman wrote:
+>> From: Yiyu Zhou <yiyu@yiyuzhou.io>
+>>
+>> Fix a regression in v7.3 introduced by the commits in the Fixes tags.
+>> Those patches avoid endpoint recovery and rapid state changes after
+>> the root port link is lost.
+>>
+>> This caused a regression in device enumeration.
+> 
+> I see this patch twice?
+> 
 
-Pushed now, thanks for the reminder.
+My mistake, bash history shows I added the same file twice after git send-email
 
-BR,
-Jani.
+> And sashiko seems to object to it, is that response correct?
+> 
 
->
-> Ciao, Thorsten
->
->> Closes: https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/8991
->> Fixes: 05cffc074938 ("drm/i915/display: Implement Wa_16024710867")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Mitul Golani <mitulkumar.ajitkumar.golani@intel.com>
->> ---
->>  drivers/gpu/drm/i915/display/intel_ddi.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
->> index a46ab5d3d70f..a0aff087fafa 100644
->> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
->> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
->> @@ -4629,7 +4629,7 @@ intel_ddi_port_sync_transcoders(const struct intel_crtc_state *ref_crtc_state,
->>  	 * From, xe3lpd onwards we have defeatured this with reference to
->>  	 * Wa_16024710867
->>  	 */
->> -	if (!IS_DISPLAY_VER(display, 9, 20))
->> +	if (!IS_DISPLAY_VER(display, 9, 30))
->>  		return 0;
->>  
->>  	if (!intel_crtc_has_type(ref_crtc_state, INTEL_OUTPUT_DP))
->
+It does find one potential case where this patch does not fix the enumeration
+of devices that disconnect during reset.
 
--- 
-Jani Nikula, Intel
+This patch however is tested and does resolve the two real life regressions
+where devices briefly disconnect during enumeration.
+
+There's a risk for more real life regression if I too hastily fix this patch
+to cover that sashiko case.
+
+Thanks
+Mathias
