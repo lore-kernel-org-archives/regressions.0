@@ -1,68 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793379493;
-	b=21m4CAOUmNV3iuRUV9MLIeXxpC+iaQejoaxktL4e6atxEQGud1oKOVfsG7AKLolY0C+3
-	 CuYeOHq9DOzuZUq7PTrAWrwh87xkDpGuorB0ACa0LaQiZK50/rRD4roIWWV4MdR29s0E2
-	 jlcJcV0r2izc5nuCxkMrQrbKk3Vhhwx7u+lXPGVr47YP5ycJW6WsB8bzeS5nY0RBnujVA
-	 5xbAl4sPNLjHy2vTWdAkLbOcXfN3ViP0gQRCvPjigGgRkAA2Zv5Izj285cc73Z7fjkVTx
-	 kLqz/PGI0D43YowKEE09SienArTn3ZFjSIfpDu5ajGawhCqpY8WjQTA4xNJm2ArwKcA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793379493;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=PTW8I6iZfsC800YjWu3LAWaa5wQe3pJ93PAUK12Q3Xg=;
-	b=SIt/iZ/O3qMxN9ruadr9v+7Oppw0vkHZchbV5YbFRy2NB1OSjXdreuxYmHR04OevLUeF
-	 o1HthkIbliF7Ftferd4vVpg9p1J4szzH8nEOZz2mHCjBg7pqqy+JieiQ8oXxl+y9aOFFH
-	 o8Tr5Rg4VPpCe+6/arJYDKtAZ+ZaimmKMcuV9mtnHjNAQjkWXHyUVW2YJpsEzS3pQ2yKP
-	 U8e+RPpn8k54YZTBsEpJ8xtgEmO3KIp7lGMlxGdf5f0qNpZuAHxdmK8CiYFC8XBbCeTgk
-	 d3e8Aa3w/cNQiZykx+H+mwDD1986O6mld/SdlXd0CbG5sp7vXi14Dby1sPeLarAfkrQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=P9saNjs+;
-	arc=none smtp.remote-ip=198.175.65.18
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.69.20
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793380189;
+	b=22Wye32kLJreJg0yT9B0NorM5TZpBPQ+tABFd3qf5aPRYqpnTJ7yNjpP/KGkbl+xTnFO
+	 6fBSsgeDDD0PjgUaBarIDiJ5vnu36FBAC3i4s41MXVVO3KnqXtNk1L6xa69iRhTj5JM7B
+	 uhbpkRuagmigYp6uB2/hYTJRsMwac/lC3Ir33+jfuVrEG2Bm1D6NWuENIvK137IxNrhoH
+	 tgRTLJcRmNIZk0mlZJ3MD2TsQihluBuQ1oWv3wtZ6AVrtnLI4O/Mv/Z8OBWYnHoIe/cGa
+	 h388BlJLkNiRlzhLp1YMKfG0YVcPfD4xIWqb6W0wMrUzY28X4B50vyELcp255rhwhSA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793380189;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:Content-Type:Content-Disposition:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-LD-Processed:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=IA9sYotJmbL2Yr3kpwPmqSBX/u6xE75w+0WSu2aSScI=;
+	b=Oe22ZovPbEXGqy2tVK94CWOBdnpkoJRuzQ5R1g32yW3k7mucKhHc3XXkOZpF/gj9QfS4
+	 pRQbJ3CHmr4UB7tjCr45y1X07BqA30ckX3J5j663mnrp9PXUMuA36UuAKWcNpVyTqG9VW
+	 G2bwY2+DBra+ru47mv1SdEbcNQGU+UObFd5XDNatfbv2YEh02TveNFgWOXL+aRzsgll+Y
+	 w1koyoA8JhNuL5ackkDYzPJWqrpsDuloLHt7VJbk0xWYylYveb9C/ZHEVgRYuAgQYNm18
+	 5mmIhkCBxIIy4W0OSOFS72kw6Szuo/61KkNFcRP3YtIfxorCd86liRbGiUHy0AQresA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=oss.nxp.com;
+	spf=pass smtp.mailfrom=oss.nxp.com;
+	dkim=pass header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.a=rsa-sha256 header.s=selector1-NXP1-onmicrosoft-com header.b=QuFGVUW7;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.69.20
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010020.outbound.protection.outlook.com [52.101.69.20])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E31606A31A
-	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 16:58:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 52E31606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FAE606A324;
+	Fri, 30 Oct 2026 17:09:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D7FAE606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=P9saNjs+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793379492; x=1824915492;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SZOyLKymwrogOfg2BP1CMLkHtyxNMc/8mlf9iHEmM4c=;
-  b=P9saNjs+uFVdRRTMf3iGwzjsZ7v9mGhTfTrlBam6P7UdgVTAOLNNFUig
-   /giduhoijIjygadKYWXfwKi3eTfXP9TeNopRo6zaufZhXiJm9nf+WEq9X
-   cJIVJiO6oQROU6+sMDRzdhSKYTaqQg9+bIH0M8OU+AEB+YHVhswpr71YA
-   PjzSkdna0LyUm3cXDha7AyrZHYPWOHhNeppLCOrGV4H0N8FHlNxe3Lnh8
-   yvCrn0vym3y/bjY8Sm7RvDteX5Ch4BCI5RKoCpvOJV5M5lfgNPTwpJ25d
-   d44yWoGzPEhJL4IGaG73ZrLUrJgENSH2BgJhk8PDNopCPqwaDXlGfaH5t
-   Q==;
-X-CSE-ConnectionGUID: dRaaJqB7T9yoZzFKr7Q1HQ==
-X-CSE-MsgGUID: tt553TlDTbudgx5Mdb4rVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2164471"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2164471"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:57:19 -0700
-X-CSE-ConnectionGUID: 659wPiD6TK+wG7+2z8UGqQ==
-X-CSE-MsgGUID: dncL5VLBT/OdtNzTiAQ3NA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="5369874"
-Received: from slindbla-desk.ger.corp.intel.com (HELO [10.245.244.25]) ([10.245.244.25])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:57:17 -0700
-Message-ID: <35b20a70-f1b8-4e86-9fb4-35877b63d6fd@linux.intel.com>
-Date: Fri, 30 Oct 2026 18:57:14 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.a=rsa-sha256 header.s=selector1-NXP1-onmicrosoft-com header.b=QuFGVUW7
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cWXUmu+pbQ2PLNfWa+1Nsjgw545M43LJ+N5pajXx2ghnR0AkccbT2E1e9hSy5dp+yIYbSdRlQWWlABBoQ9Z+VQf2lKPugmsxfU/BIVexwqhfSzKZUXssD7G/U45eKMt00uFkF5Dof0qvhnlHa5WOTDb42EF9RYfVuGtnlFXlaJDM87sNPF3WTIcoVHx737jPFenSjA7SiNg4/Jyda9+6wHzR4C3s99IqvAOFxcG2GayhEl60G+GiRw/HGQzyDc9yA7qxvPRa1fs6PyW+3bytKwjjXbeEqEExuQnHqsLyf9iCA7KQhqTr1S6IdzmlKrzq1iaNHTpgoilbU6+p+FSjGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IA9sYotJmbL2Yr3kpwPmqSBX/u6xE75w+0WSu2aSScI=;
+ b=JpXWf19thACUqy0niQ46E8Lv85cLNC0b+NANszWH1HSAdvd41BNdTc04F9e6MII4AVVAaxZPL05M/N/ZYlT+vI8s1xCq64GM+ad2bnyZxFlcdJOALWMb9f8Y816j+xVqa+VrGBj/Jyei5r929laxJlX/U9yUI62NcCsNBnCluKIUOAbi5qThF6MCNAC7odsse9XCj9vI2fueO3iJFhedL1nKUIgRDbWSrvGiib1bhVnFrCZUZkKYOLemP0c+K0vskJ74egQC5JhWov4JjvH4k3cB4nmmNNOj0l5innFyn+XX6+R5kX4/nWtvNqhqZbOMgCn70ZqwJ7Zyd+8q2RrLKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IA9sYotJmbL2Yr3kpwPmqSBX/u6xE75w+0WSu2aSScI=;
+ b=QuFGVUW70L4EKQJ+NZgpmxUVPqR5tYoCULSpJEn6RPYFzr183T5x25NttBDf7SnxNfxEyJakfr9r2PqO4P3tfk+nFmM47AhEcRgiyo+Q0RzDqeSMHlXaQwSGzwb4P4d89OOlm1Fo0Bhfd5k0OCtzmtMkITphGEbLsaSeCYfjsqbDiy0WXZjglitzJQwULCKoiS1LsTHsS4PysZ25Bga04KqmwhHay5B3y6wJFRhgZwNHcuvO+y/a2aKeD7zI2ENAoZny6pIuH10XZb60MCbt2ztFOjt++kuhpfAcNkqpdiunf8ZRE4DbxaltNuJaJ3IODyyeVXazb37ybWVD3B043g==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AMBPR04MB12445.eurprd04.prod.outlook.com
+ (2603:10a6:20b:75e::21) by PAXPR04MB9491.eurprd04.prod.outlook.com
+ (2603:10a6:102:2c3::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Fri, 30 Oct
+ 2026 17:09:45 +0000
+Received: from AMBPR04MB12445.eurprd04.prod.outlook.com
+ ([fe80::ba23:1fa4:ce58:ff06]) by AMBPR04MB12445.eurprd04.prod.outlook.com
+ ([fe80::ba23:1fa4:ce58:ff06%3]) with mapi id 15.21.0569.008; Fri, 30 Oct 2026
+ 17:09:45 +0000
+Date: Fri, 30 Oct 2026 12:09:35 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Xu Yang <xu.yang_2@nxp.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8qm-ss-conn: add usbotg3 iommu
+ information
+Message-ID: <auTPTxt5ioBJrr27@SMW015318>
+References: <20260720-qm_smmu-v1-0-3689fbd8b516@nxp.com>
+ <20260720-qm_smmu-v1-1-3689fbd8b516@nxp.com>
+ <b911ff91-ce7b-462e-a7fb-f8c6d682c85b@gmail.com>
+ <auJWI1bqt4kX70pZ@lizhi-Precision-Tower-5810>
+ <auJjlYWf2JCa22Ai@lizhi-Precision-Tower-5810>
+ <2a1eb85c-8a30-4594-bdad-8a1dec17b141@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a1eb85c-8a30-4594-bdad-8a1dec17b141@gmail.com>
+X-ClientProxiedBy: PH0P220CA0013.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:d3::11) To AMBPR04MB12445.eurprd04.prod.outlook.com
+ (2603:10a6:20b:75e::21)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -72,113 +110,111 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] xhci: give back TDs and clean up ep0 after disconnect
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, Yiyu Zhou <yiyu@yiyuzhou.io>,
- Dennis Wissel <dennis@dsine.de>
-References: <20261029204324.658845-1-mathias.nyman@linux.intel.com>
- <20261029204324.658845-2-mathias.nyman@linux.intel.com>
- <2026103009-handful-labored-d1ce@gregkh>
- <f362a385-e1d6-437c-a31c-fbf4414fa0f5@linux.intel.com>
- <20261030130532.36a75025.michal.pecio@gmail.com>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20261030130532.36a75025.michal.pecio@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMBPR04MB12445:EE_|PAXPR04MB9491:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec242082-ea46-436d-2223-08df36a8987e
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|23010399003|376014|19092799006|366016|22082099003|18002099003|261026121527099003|3023799007|56012099006|11063799006|4143699003|261028144727099003|261022105027099003|10067099003|261009223027099003|261026140227099003;
+X-Microsoft-Antispam-Message-Info:
+	3cE22Vu1otZSM8URd+5orlsm4r3E1JF8TtDSgeIarpp6dgrL97mGNcri6/z9WBermAL14lQjTm1/nGIVAXZtiwosQ0Pk/Et24XiJoDrUrvtx8UeBvJxTo/oA0lLXsOvGxQImEeUkCwBxg/oidII63pdSGiP9ZsjgVSFWIcpoZSL/ru1F4AqTugAZ5oXZKfFm3AScbe2PnCDulilhad5jbjFHGorawgX1n9/CCmqoLuht87RNEaxtoJ6wBzn6PvUyrMFIWyy2ZIJh2qOuo75qQxMHw48y4RsZtqplz69ke/umtVy3LOOQ2xyOgC5HlQazupB1y1vBerUp1eS7TzZa/z7fDt8tVWJbXgTZh0A9tyh/QmMXmE8mPxgGbaB3mlPGXOU6GHe/qUZrPUdTjO7aF7suo/I3KACxp/+42765v2moXuV2dAQizfExSCQbf+cgHQawyAiaqQQ7GFVet4WKU1RPIXYtIFc/Dg3J456cmEvsioKXmbWQ9TwWCk9HlZ54F1akT7r4mepUHC8xT4w7USufjkPbDv8Rk9uXZYzROSnAUi64fyFokUe01Mo3NBJInVp3YtbggJdudgXA2WwEr7YxlrDsFplsbAttcl338DBf3ue0yyKoLXs0VbCvEO2OXH2m/x+kcYHAELz4kAzXOooDP2DEiv7mVWCAV3zvxcY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AMBPR04MB12445.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(23010399003)(376014)(19092799006)(366016)(22082099003)(18002099003)(261026121527099003)(3023799007)(56012099006)(11063799006)(4143699003)(261028144727099003)(261022105027099003)(10067099003)(261009223027099003)(261026140227099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZQvZ9qfwuKOs+uE4bcFdzYdzfqoc/5QNhhc65sLedspX4Y6qA9MhflEcfDTU?=
+ =?us-ascii?Q?rJWwnilX10FS5fXeWrrDEc2rslAYUn5t6UbMWj6PI6Xqqr68ji6cB3ulylVm?=
+ =?us-ascii?Q?P+UbmJ8UHWL4CgaDstsgy9MWNpm/F5Ou/EVxBbicPoi56JHcuz09wHxZHwIz?=
+ =?us-ascii?Q?OSoB97wpnEmuDJjvObRZrj+yVFS/MtyrmEG7sHzD3NU947AvC+o43pOtlbP0?=
+ =?us-ascii?Q?ahvMMqCZCy5+5TByijak4oSTBF56oc5MvUx6QV8L13/SXVeFIXy751SByHTd?=
+ =?us-ascii?Q?rkZSgtHqOpVvN6qNEQ5EVE7L0G5w/4C0OPhFGfzFkw8JOLMzbdeh/RJhkope?=
+ =?us-ascii?Q?Lg26QXSP/1IAZ+gKECzzM5Wy1Q8wE7Lzj+EHDD15shW0vdL6CEd1LHtbKwgg?=
+ =?us-ascii?Q?FLdb55RLKBzEfBZpcQY0zepfyf4kTaAD1R9QU/NNWzFGhxAuyJ6o3SspPVtw?=
+ =?us-ascii?Q?ZkDmFR65cbepI/ip+2fECe5fXuE0GJqsT+76jLPdQFUPUWIfVXu9ZHQ+GuBb?=
+ =?us-ascii?Q?2UGQN3hx5DfulgShbJUG4Mti0H7H5q7d2UXm/PdgVXIF3iB2DpXZVMjt0xIC?=
+ =?us-ascii?Q?msWzv+Xzelk3hnFK4bgkMUKP6eydTcdZn015BR3oZIvwfhaXcYI5noasvEVk?=
+ =?us-ascii?Q?0wFhk10opYWdxOmLxah7KUYe4sgmzCW+Kz09HiFSlq98EYWvuDDtakfdvqTd?=
+ =?us-ascii?Q?WGD+zBqCaQmaAnCaq+BljaNVWavh2wuqi/9JJ2B9JFR0eZl/O339IezYCjJD?=
+ =?us-ascii?Q?l5j0DF5QMqB/C4nlZnwVE9417XnRajmXvGXYtmPML4wdQuZag45oyk+xiYNL?=
+ =?us-ascii?Q?tFVyaIfpHlLdE84dYZGrfnD45K4mMpgjPEQSiDlvXsEs8MB5MOy8l/Lo00f5?=
+ =?us-ascii?Q?qAQaGBfdLRV4d9cKA11JG7uUETSCsM+pkoXzQMVwSQNTMKmtWjSYx5K/CD6K?=
+ =?us-ascii?Q?kx7tG/NTg8uoHnZC2l+VO5nOHuBKOlNukGNUn4XGjPwvn8nr/Wo1VLmr7Zil?=
+ =?us-ascii?Q?AvJjOpt7PHGJMiDugORx2ASqlxWMHMWKGUWqLiD8uS44rIo/XA2oykMeGS1J?=
+ =?us-ascii?Q?F3DmUjpP7+qpnpBJIVz2wrMlJNsIfw+hT7t3f/DY8HbYRiWkWfbq7aWC2wTH?=
+ =?us-ascii?Q?6yFa8DqstTyxNRvVBt6nWlu29b9c++WCWuyQoCmVNKh6E24WrJOXp9TNO5y0?=
+ =?us-ascii?Q?8pG64LXy5FE06clAtpSIjtTD0RH7GOBtf9jVYxnUmoShoWhUlr9gVOOnjgAk?=
+ =?us-ascii?Q?HCckwcZohLdDMLnr/3AHT5Q50fUpuWEPsvpQTp6hL5VUKsR5fBv0hW8Mnn+3?=
+ =?us-ascii?Q?7xUrFSTv/UnWoVcbo4LwaAgdBlUEcOb88VwDLP2qyZ3aeJNO875HNaKFJUu+?=
+ =?us-ascii?Q?jA059sv9TYpoM7fhQiz9Uroaa6y4alyHFvrxeWn2XHKmYpzYsRyE8F4TLi9N?=
+ =?us-ascii?Q?LVlQc8Us6yFmBM20z4UZhomGoNfotwkBYlI18dFoev6gT/NfJke7q5n1Roxd?=
+ =?us-ascii?Q?xJAmwl9TE8m+vSRB36SaJ8KtowS6g3EFYh8wIwQvEMo1bq9IRrAj55ZFJC0k?=
+ =?us-ascii?Q?Hmf9fZxGie9sP+NwsfPkWEbvqZJpWcOWz7IMx9kEzihtfnwbWShBHJf97pGC?=
+ =?us-ascii?Q?57dwSeOGaYgzhG4cK2cRQjlUVkpBNXQ067Q27TGaDbONFqoXg4VlrpE8ddSj?=
+ =?us-ascii?Q?U5xZeSBnnOcbHb4BmVGU7gTQ9nLEYsyVRnHFX6+7RzlS6Jt8PYrDpYdjpi+c?=
+ =?us-ascii?Q?jyI586D/IPDDtU5cJ4QQwEMUUly0mbkNoO9Vow4lrfumJ69YAcX0?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec242082-ea46-436d-2223-08df36a8987e
+X-MS-Exchange-CrossTenant-AuthSource: AMBPR04MB12445.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2026 17:09:45.2931
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jD22XNmN0ZeghO0KlB9arAv6x8eX0R0qoIMw6ApxCRtysd6hppauFb/APWBq4sv2t5fV+z1TDgvdUc6Llyfnd5bgsUdM1Hlch0IHWSf8tob3hfZe2+iY6WlCa0r32Mps
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9491
 
-On 10/30/26 14:05, Michal Pecio wrote:
-> On Fri, 30 Oct 2026 13:05:16 +0200, Mathias Nyman wrote:
->>> And sashiko seems to object to it, is that response correct?
->>>    
->>
->> It does find one potential case where this patch does not fix the
->> enumeration of devices that disconnect during reset.
-> 
-> Honestly, is this 7.3 code being fixed here reliable at all?
-> 
-> As Sashiko points out (and I did before), we are 100% at the mercy of
-> hardware and USB core with those "connected" and "link error" flags.
-> Sashiko thinks that we may fail to clear these flags in some cases.
-> Is it guaranteed that we can't clear them prematurely at other times?
+On Thu, Oct 29, 2026 at 07:55:41AM +0100, Emanuele Ghidoli wrote:
+>
+>
+> On 10/28/26 22:05, Frank Li wrote:
+> > Does it only impact superspeed? High speed work?
+>
+> No, it's not even enumerated, on the Dev board.
+>
+> >
+> > Thank you report this problem. Suppose below patch should fix this problem.
+> >
+> > I have not time to test it today.
+> >
+> >
+> > Frank
+>
+> Tested, it doesn't help.
+>
+> xhci-hcd.1.auto has no fwnode, so platform_dma_configure() never calls
+> of_dma_configure() and the new code in of_iommu_configure() is never
+> reached.
 
-'connected' and 'link error' flags can't be cleared prematurely, they
-can be cleared late in case xHC doesn't generate port change events
-for port changes. (change bits uncleared, hub driver is polling)
+Finially, it is hack at uboot.
 
-Sashiko reports the exact same issue in your 4/4 patch.
-
-We can fix that, ask Dennis Wissel and Yiyu Zhou nicely if they still
-can run one more test round. Maybe even make sashiko happy.
-
-
-> 
-> If USB3 link comes back after core has cleared all status change bits
-> (brief disconnection), we will get another Port Status Change Event,
-> observe the port in "Connected/U0" state and reset these flags.
-
-This is what we want.
-These flags are tracking root port states, not trying to track usb device
-states
-
-> 
-> Is it guaranteed that core won't clear change bits until it finishes
-> disconnection of affected devices so that all URBs are unlinked and
-> we can no longer run into those HW bugs anymore?
-
-No, and that is not the goal.
-We are trying to avoid excessive endpoint state mangling after devices
-are disconnected. We avoided too much in 7.3 when we left ep0 in a bad
-state, assuming it will be dropped and freed after a disconnect.
-
-> 
-> If this fails to work, it's another regression vs 7.2 and prior. The
-> old VDEV_PORT_ERROR flag used to stick for device lifetime. And it
-> could have been extended to all disconnected devices, not just the
-> one directly attached to the root port, to fix disconnection of whole
-> trees with hubs while avoiding the above race condition.
-
-moving the flags to all child vdev devices won't help, you
-have all the same issues, plus the fact that vdevs are sometines
-reallocated mid enumeration, and sometimes will stick even if device
-briefly disconnects mid enumeration, just like ep0.
-
-> 
-> The reported USB2 regressions would have also been avoided, because
-> old code only applied to USB3 ports and there is no actual need to
-> generalize it to USB2 at this time. The bug still affected USB3, but
-> it seems nobody uses USB3 devices that trigger it.
-
-It's more about the hosts than the devices.
-
-It appears some xHC hosts stop reporting endpoint states and changes
-correctly some time after roothub connection is gone.
-
-I recall some xHC had to disable soft retry because it almost immediately
-went to some internal sleep state after last usb device was disconnected.
-
-xhci driver first tried to soft-reset endpoint a few times, then hard-reset,
-set-TR deq, restart ring, then hub driver noticed disconnect, cancelled URBs
-which lead to trying to stopping the endpoint again.
-
-At this point xHC no longer responded to stop endpoint command,
-so xhci driver assumed host was broken.
-
-once a new device was connected to host it immediately 'woke up'
-and processed all endpoint related commands correctly.
-
-> 
-> I suppose I could fix the Renesas disconnection issue which the 7.3
-> rework tried to address with an alternative patch smaller than this
-> fixup, provided that the whole series is reverted. The preexisting
-> USB3 bug would remain unsolved for now, however.
-
-Doesn't make sense to start from scratch because of this sashiko report.
-You'll just run into a new set of issues and regressions.
-
-Thanks
-Mathias
+592: static int config_smmu_fdt_device_sid(void *blob, int device_offset, int sid)
+601:     prop = fdt_getprop(blob, device_offset, "fsl,sc_rsrc_id", &proplen);
+618:     ret = fdtdec_parse_phandle_with_args(blob, device_offset,
+620:                                          "power-domains", ...
+578:     err = sc_rm_set_master_sid(-1, rsrc, sid);
+681:     prop = fdt_getprop(blob, offset, "iommus", &proplen);
+848:     if (is_imx8qm()) { ret = config_smmu_fdt(blob);
 
 
+Need combine power-domains with iommus.
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+index 176e2e332f87c..cc2b9a212780f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+@@ -189,6 +189,7 @@ usbotg3_cdns3: usb@5b120000 {
+                        phys = <&usb3_phy>;
+                        phy-names = "cdns3,usb3-phy";
+                        cdns,on-chip-buff-size = /bits/ 16 <18>;
++                       power-domains = <&pd IMX_SC_R_USB_2>;
+                        status = "disabled";
+                };
+        };
+
+Frank
+
+>
+> Emanuele
