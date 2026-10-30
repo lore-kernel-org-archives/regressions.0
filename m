@@ -1,98 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793361939;
-	b=YVVP2Pcpay18sXsZ6jaazO5oNZVyDvQdAqtGtnkcILvhGe7DtSfx3RPjUbBU44eVnGYz
-	 sa1YtrTcVXGvmKe6LKKMhTaKojNp0D3vF+YbPADVfJ3p+qTSJ0Uj3odOQ4Xm1rBPIQi09
-	 U8VxCVIkXe/Khp/twNPzY1jKM/lI1rcfV+b72BoJSI9lsI8vGGREeulm03QD9d0+Ft2hh
-	 rqBd1SiHvF7wYc7NeTTbxcn1HYmxFsvvrz7p3B8K78VDmaLPcBn6i9f4H8/EFZGvzMo35
-	 eB+qj/Wbse9OWUFg2rXX46sS96gyyZ0BU22XzQewSIpsTNYY1WZ6YW/482KlbFXUmMQ==
+	t=1793363119;
+	b=EbAuLyiv1nwq7l//63rPAN3hK21Va6V2S/wtGG6PCCfTZeWJYpHHVHMEgtYUNYraFZ7e
+	 fasmu8g4lm5rpbnSIzS5C6reAMZ8ypESGVYp/E66P4qBgRVKW3sG3PodC1OXsDSjjEP/y
+	 I7VqJVlN0oG44Kg3o0mpuozW6jWfTlp14KG4Ih73M0WhCG6tcZaIC4jD2e5yLvmP+1igD
+	 ybQvlHPwz3ipTktSGheuyTwfWb4b3e+4cNSo8RHZnXOHjkp4f3UtH4zMKdvQKtUjxSox4
+	 x8mhxNWNE1NUUFRk1p6LpC7rxCEBnXw3Inco1EP6ZE6UPGy0MtjI3iI7Fc73jvKowOA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793361939;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=jr3UzJy1RXD3EkYxBH1h5gaWx4Lr73w+qKlc2cURMHI=;
-	b=Tftt3u9G5PIh8lmW6QUuE/GEN6rL+TcHDRRZ+Y4nhAUnWJAKFLwzEbrUdXZznC3R0atx
-	 BkHXucfgyGVx82o3fhuMUWeK8UYeVB7WcXOtncNDDELSJ5mk9FyO38ZdImUz+guJwzBCb
-	 lmlcnQyIfI5UqQx8lyJR6ulnAmVaollBrzCqmbVuESoxBVTqjZ7EEa+1skGaLKlpyBsti
-	 JSev69QK1RVUbh/9C6/Zo16JbxeO0hnZGX8FOch4QHLcaSkhKJQ7LYsIsFwJir7nbqwVt
-	 YrnwPNJ4f55Hg0ryGAPmvYdNxkvxN7WuU1Y/Q3C1C5Z6fcWZ13Gu7FxfnvssD4hRi8w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793363119;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=J8dAsB3ABUd2P8nmGjUreI+WMzKE8n8IiSWGI4JbEHM=;
+	b=1C4w4m+mmRYQ7PtOtR4D6eYfp3wSSCoXTYasNHIpW+W0M6RXrUyAoyAoAHkS/E2Yb8fV
+	 xc7N9fHUTTuaYgvYAhrVTs1cVdN/DbKy0MR34JbHmyMv3kziK3YX8YAU3j9OzTgiI5zvv
+	 JoOUjcWZdT1GTTmtPcZwy1Eriivv6lKCrl2JoAMwSkC/E3XweV6j0xP1ZqWL+VWHXN9rf
+	 i6UMy/NrZlsAH5dPCvUKt/jR5aB5yCzA/pp2nzxsj5WQMfihT2iTRxrdiIYTJ0SyKxMpj
+	 wEe1GL19GSvHoMenTWoEM/gzaSiIkKb6eSC/RAYkWLZHLoaghkF4GDb+0+YULE2rnrw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sWyna3kX;
-	arc=none smtp.remote-ip=209.85.128.46
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=arndb.de;
+	spf=pass smtp.mailfrom=arndb.de;
+	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=NnYKhc8O;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=ruVTPoyU;
+	arc=none smtp.remote-ip=103.168.172.152
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C5A606A336
-	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 12:05:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 71C5A606A336
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A87606A31C
+	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 12:25:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49A87606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sWyna3kX
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4a35d5d4a20so6380755e9.2
-        for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 05:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793361938; x=1793966738; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jr3UzJy1RXD3EkYxBH1h5gaWx4Lr73w+qKlc2cURMHI=;
-        b=sWyna3kXix5MUvRW9FIpVZM8PXhQp0sRIoNuB16FdkusiH7o6o5g8DpiaX3725m3jz
-         s9SjlCiplOBOmHPA4k9LtxW66v4wYIwYrt082ZxABqQvMWXpzbzIcHZ+qT+PqA1ymor6
-         +R2CeCPVIa2axJg2YQloWBBOP1+VnAPyXctm0GTGddcBoXn+6jsDJDldCu5jpf4NB1hC
-         yoARp5iit33PgfBY6b4fDrb++nlKMYEuzvGUQNlXfchsz3PnwTWUMbrYRaNZHKHEaoLf
-         PlJkE1J0Xq/BmfxZq4gyhizS4gBtcUX8ST1ELh+Dot5InyN2S6l4gvWawMVi0GocqiSz
-         ZXng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793361938; x=1793966738;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jr3UzJy1RXD3EkYxBH1h5gaWx4Lr73w+qKlc2cURMHI=;
-        b=xocApG9mgGPfiG0MK/KglqGb8gmrWCQk110WQ7JlUM3XBo5vP+iN9Pg3nF9l6hXreI
-         XOJ/RCvdEFKMFfAgxpbRo/bKsVm24IFQULDY88173jOVwcuPN0I5/zOP/AIPOYi7WV0I
-         txH/bFkOp9aCheDIcsSvBsewFHJaDTPYlKybz8YqF0UqJsGxBZzgfLG4ZcbWYSqTYXwX
-         XNPJoCld8K3FfAac6Lt9hpE72ihvLQMUy53Mxgi7H4kvcbVAMwhZ294gjLM2anxDlP4c
-         v6U3BnulX+ml7V1J5WwhETDV5fPQATdz9UkZXv5gROKDOIgu+fnABUVlu7uUUifdQlb3
-         a6Zg==
-X-Forwarded-Encrypted: i=1; AKwUvBxNcUK8/bQYLD8cdfLjesi6OkIxvtzA8ZrwzJ4gI69O0TAnfAvD8IXkuxGZ2tvoELmsNBMRhR/htzrERg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJV8MQRLMruWXq1MvNxvTtnP26Dq20qCDoEkfPOr0oKvfza91zC
-	gyFt5FEKSX/y7pis8y+bYh1ORKnnCNNlxi06OUA6Ysz7ZlvY8dOCKR2KgUVliqs9
-X-Gm-Gg: AYBFou1Qdv/0Fh/xjhMrCJ7mP+Z1XYy53BSnSE48BseOz0RUE3RhXU6aeeaQVZWTCNP
-	rtkm1cWYa3o53B10+OvUeQsujP5BBy/oRCJzj66NkjMG88CqVM8l/YccNp7MhKG5q0w2WN/Wj3R
-	Xny3SFEIxfEK0+RhH3eq3g0rdK+32yIOYi5cJ5Wmisi2FPyVbbu2qbrTORnMwGz4JvNBEtKQdzG
-	axKVS1P5YHDdvOhpwBsNB33uvpJmbOVKJ73z5zMOk65Usv/dM03hvNhyMpT6VlSZY/sS380a4qL
-	GEHgsTXFL5WwqIi9Ssx7vh1w5AL+aE61h969J8tX9Q6bfU93YdY/3oVBU6baBjGPShljx9Tg8LS
-	MiktE4XQdWza1wipROC/RfxEFmQY69sFRt0GXHzAWagngjV+80T1aafLzJ9DX4yFYIvH/ER3zZ/
-	qmsXOHK26OextDxP9JgjBFIHHGdKyTpKuVm3jReKwdKw/duuU4nShRE9qTJjjnfuTSBYwKVdrxa
-	cWLfkPa72f2OxCHxFyDOIZg1phbUuq9gYJttMZHeRo2iOlkjWQbje8pQpQ3jacLEfjZMLMGQ+Dv
-	2gPo0NUwiw09VQTs2PmPVjJu2bBBi7C651JHrCkRbC7L7Y/TOFZN+f3TchU=
-X-Received: by 2002:a05:600c:5397:b0:4a3:5991:719 with SMTP id 5b1f17b1804b1-4ac1899353bmr43628725e9.31.1793361937662;
-        Fri, 30 Oct 2026 05:05:37 -0700 (PDT)
-Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71ba24f6sm2853609f8f.51.2026.10.30.05.05.35
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 30 Oct 2026 05:05:36 -0700 (PDT)
-Date: Fri, 30 Oct 2026 13:05:32 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, Yiyu Zhou <yiyu@yiyuzhou.io>, Dennis Wissel
- <dennis@dsine.de>
-Subject: Re: [PATCH v2] xhci: give back TDs and clean up ep0 after
- disconnect
-Message-ID: <20261030130532.36a75025.michal.pecio@gmail.com>
-In-Reply-To: <f362a385-e1d6-437c-a31c-fbf4414fa0f5@linux.intel.com>
-References: <20261029204324.658845-1-mathias.nyman@linux.intel.com>
-	<20261029204324.658845-2-mathias.nyman@linux.intel.com>
-	<2026103009-handful-labored-d1ce@gregkh>
-	<f362a385-e1d6-437c-a31c-fbf4414fa0f5@linux.intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=NnYKhc8O;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=ruVTPoyU
+Received: from ams-compute-01.internal (ams-compute-01.internal [10.64.2.61])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id DB4281400062
+	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 08:25:16 -0400 (EDT)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-01.internal (MEProxy); Fri, 30 Oct 2026 08:25:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1793363114;
+	 x=1793449514; bh=J8dAsB3ABUd2P8nmGjUreI+WMzKE8n8IiSWGI4JbEHM=; b=
+	NnYKhc8OxhnuTLAhJbRHmsyXxr7iSNm0NhcLETnHmLlwdxquROZS10DPKZYNpL4Q
+	2yGHRipLfeq+D+PICH7hFpla9cQKTnLkjDZRQMAhKNmO3YjoDr9cBbh9cUifoZyS
+	Rsuy1vecDxoowQCiiHSAojqtmYSosyG9I1CkvoGUcVXbwPMx+yVxfPq2a2iekEAP
+	6+ObZ7JV//KJgZeKBDgjjdOQd+YWI7UVhk1mOU1LDZMdz8VqWc5PDeQ6+/+WmY7L
+	rn1ebJM3gUW7MQj/nc9g9tZPWv7e2WTiwvXwrH4l+jlkMpp9+UOYZTYUVGxtTTxj
+	zf0eJh5PLI6gWtLhqYnsXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793363114; x=
+	1793449514; bh=J8dAsB3ABUd2P8nmGjUreI+WMzKE8n8IiSWGI4JbEHM=; b=r
+	uVTPoyUCLgWu8Gm1TzCJzzH+w4hWxGlrNxJSYZ90I5H07rGOApI9czQvQH5G7d6c
+	MMto7icwSOJmceDzxaNL71BpzFOOL7CvgFn22fXnU0oP/oBYTYFX7cjWN7Bvp9LH
+	8ZgR397lCepU2FTQizCBqQ3nHpH3TaX2NbLiIgizJqn/jf9+APztJyz5hyWIRPJG
+	xbnUqF7/FcCWhYIHf3aAQRNZtnBbTE4z4ZkTOmPouSkquRYm9hpzlrLLdOSPNzrL
+	lMDTMCmRfb9kwjhw+zB4YojlCv/t63NPxzgqxONQj90MRnvo2aON8xN693GJL4Aq
+	KmeCf85K70b9f1tXH1xQA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+	action=sign d=arndb.de a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793363114; d=arndb.de;
+	mf=PGFybmRAYXJuZGIuZGU+;
+	rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
+	s=fm2:rsa-sha256:WwLSJrFpGzuQSnuYUEmgyw6kJgLiLp55Ct3HFYH4jwKmXtZ
+	crd+rH8EL0YQk4ZU5UELGIpP6GJ+apO1zWihbhlOAhbnOQ5D28hRzlpgwrX3vEAt
+	PxXFgIcq50Iye5XvEq3+rrMhqPLqgQJNeMyL7qC419zyUdlFLurx0uFkr74QTm2y
+	K8bDLtAXh3frZxhoiBeAQuohFP0Q0nDxhsBfGJHZ882eGuhjYqj4ooBRUqrodaEi
+	t/5+lqLS8eUmuQICSoWuRWO83DnmMBJy1nT6nQN4JtJm3oOhMnG4Iy9T0StGSpoZ
+	6H6Lok96t871g8AAUolsOy5GZG6iG81yNS605ZQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:UxV6YTAoizPqtWa2AKjflWrZ77Hac13iK0pOv5rsOTE=:Zb2QRSDduhAAZaKJYul8Fpn1yObyVkEUtJHw3o0ClbQ=;
+X-ME-Sender: <xms:pYzkahReiNadF71TTxmY85O4IfeA8J1dmYOUcAOEZh_x7xClk6S69A>
+    <xme:pYzkakM8R5xQWll_ZILuDt4bMTHxxZ0kFWawAJE2FYahkKoQ24yZdri_oxVUb_cQ8
+    GaeFE1OlwN0RCwuVzw4UjcFPSV5ll9UXmUkwv0G8lWM-Q9yPblQmtTN>
+X-ME-Proxy-Cause: dmFkZTEjdZ0WgKkDeZ8IivnHN+6FPi2JsxEAcdLRcU74d11ptltXsOcEZjcgcfftZR168E
+    EIO6J7QiGPQhuHkRDyG6EOG4oAJQ4UYkVdOUJI20ULjkxm7ziBeG52p28bahXxlpCY3UNE
+    g68WjC/XnD4RBVHNhJPdtq8tXpN0R5KRf1WNe5IaB45Yfj7TJKbZsiduV3NicElToLV7iW
+    qV/o0BNeWEflK2OQESy5mqGWEijeriULooLwws4KKtnIneMx2NbMoOU+UyJr+4zbEXLsuO
+    TNznEF6cHoRSev/AS+8N74XtUlIj0s0NkQfiF3PikAxBSLvgApRMMEmYCgH/vdDcUdeUcU
+    7LFIwMXT3KUo1Kke0WrSjSCAcgJZW5iA6vr7sDlpVB42Rt5s7yDXU0VjvrHBGVkLOgR63h
+    TRua6UzXd/s8L51Jw1YXLOdVQ4WBdeKCkiHwheGudyzR3KI8mNHDZ9zXvr5vLV/rjZnZBf
+    O06vlJ6cocxbVKkqJd276EuuOOUdteQzEi6PbFR1n3zhMQf4yVo+0MNgvzy4iZZRKFf9Iv
+    NXEyzqvwcJPXrWIFJ6HwdLmBH2i/rq6SxRrAOwpa3aIYFzwv5z1zxrijy1dUl35cWxiIne
+    pvjlj+1L9ZShKPsQVLOvF8prqgnjARLBYbezMCKhswtkwubg+4pHt/fILLHw
+X-ME-Proxy: <xmx:qIzkalTJdaYVdlRDHnqAMt1yAN8Zdiu_lyxC9YS9WY-ZrQbrEfYqig>
+    <xmx:qIzkamo7Iz_ZsiYWFDE6AThXyvdqemjpNBvO-1YTVUzvPT_wnbK4bA>
+    <xmx:qIzkaqPnzO5SSUvkUhpu5GFniLnw3mSEiEJWGDwmShbtjxMqsxiGCg>
+    <xmx:qIzkakya8L1StVeIWzkABZsO-WjOwJ0emIqiXVTcA28L_9-Z-MHCuA>
+    <xmx:qozkajw6P7XiW7VrfJnlv8PvD5-6XSb2j8BYbCY7QveDIbQPgymwf90e>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id ED26F32A0097; Fri, 30 Oct 2026 08:25:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -102,49 +115,97 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ThreadId: A9hbWorxIEzB
+Date: Fri, 30 Oct 2026 13:24:49 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Clark" <jjc@jclark.com>, "Matthias Kaehlcke" <mka@chromium.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Doug Anderson" <dianders@chromium.org>,
+ "Ravi Chandra Sadineni" <ravisadineni@chromium.org>,
+ "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ regressions@lists.linux.dev
+Message-Id: <10ad94b3-66db-49b5-95c6-3ce9090f3278@app.fastmail.com>
+In-Reply-To: <20261030114705.3159093-1-jjc@jclark.com>
+References: <20261030114705.3159093-1-jjc@jclark.com>
+Subject: Re: [PATCH] usb: misc: onboard_usb_dev: don't defer the USB device probe
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Fri, 30 Oct 2026 13:05:16 +0200, Mathias Nyman wrote:
-> > And sashiko seems to object to it, is that response correct?
-> >   
-> 
-> It does find one potential case where this patch does not fix the
-> enumeration of devices that disconnect during reset.
+On Fri, Oct 30, 2026, at 12:47, James Clark wrote:
+> On a BeagleY-AI with BeagleBoard's device tree, kernels since commit
+> f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64 platforms")
+> no longer boot to a usable system. The log repeats "hub 1-1:1.0: USB hub
+> found" for the on-board TUSB8041 hub every few milliseconds, with no USB
+> disconnect in between. The flood of uevents stalls udev and the boot ends
+> in emergency mode. Reverting that commit makes the board boot normally
+> again.
+>
+> The underlying problem is in onboard_usb_dev. Both peer hub nodes in this
+> device tree carry the same reset-gpios, so the GPIO is now a shared one,
+> and with CONFIG_GPIO_SHARED_PROXY=m (the default) the hub's platform
+> probe is legitimately deferred until udev has loaded that module. The
+> bootloader leaves the hub running, so the USB core enumerates it long
+> before, and the USB device probe finds the platform device without
+> driver data.
 
-Honestly, is this 7.3 code being fixed here reliable at all?
+> At that point, onboard_dev_usbdev_probe() returns -EPROBE_DEFER. This is
+> what causes the problem. The driver has generic_subclass set, so
+> usb_probe_device() has already run the generic probe, which configured
+> the device and bound the interface drivers. Each binding is a
+> deferred-probe trigger, and the driver core re-triggers when a trigger
+> happened during a probe that then deferred. So the device is re-probed
+> straight away, reconfigured, its interfaces bound again, and so on for
+> as long as the platform device remains unbound. This is not specific to
+> shared GPIOs: it happens whenever the platform probe is deferred, and
+> briefly whenever onboard_usb_dev is a module.
 
-As Sashiko points out (and I did before), we are 100% at the mercy of
-hardware and USB core with those "connected" and "link error" flags.
-Sashiko thinks that we may fail to clear these flags in some cases.
-Is it guaranteed that we can't clear them prematurely at other times?
+It sounds like the underlying problem should be fixed elsewhere,
+possibly by preventing the deferred probe to be retried each time.
+ 
+> +/*
+> + * Attach a USB device that was bound by onboard_dev_usbdev_probe() 
+> while its
+> + * platform device was still unbound. The device lock serialises this 
+> with
+> + * the probe and with an unbind. This walks the USB bus, not the 
+> driver's
+> + * device list: unbinding a device holds its lock while it waits for 
+> all
+> + * references to its node on the driver's list to be dropped, so an 
+> iterator
+> + * over that list that takes the device lock would deadlock with it.
+> + */
+> +static int onboard_dev_attach_usbdev(struct usb_device *udev, void 
+> *data)
+> +{
 
-If USB3 link comes back after core has cleared all status change bits
-(brief disconnection), we will get another Port Status Change Event,
-observe the port in "Connected/U0" state and reset these flags.
+This conceptually looks like a layering violation: no driver should
+have to look through the list of devices like this.
 
-Is it guaranteed that core won't clear change bits until it finishes
-disconnection of affected devices so that all URBs are unlinked and
-we can no longer run into those HW bugs anymore?
+> +	struct device *dev = &udev->dev;
+> +	struct onboard_dev *onboard_dev;
+> +	int err;
+> +
+> +	/* Unlocked pre-check, so as not to wait for every USB device's lock. 
+> */
+> +	if (READ_ONCE(dev->driver) != &onboard_dev_usbdev_driver.driver)
+> +		return 0;
+> +
+> +	device_lock(dev);
+> +
+> +	if (dev->driver != &onboard_dev_usbdev_driver.driver ||
+> +	    dev_get_drvdata(dev))
+> +		goto out;
+> +
+> +	onboard_dev = _find_onboard_dev(dev);
+> +	if (IS_ERR_OR_NULL(onboard_dev))
+> +		goto out;
 
-If this fails to work, it's another regression vs 7.2 and prior. The
-old VDEV_PORT_ERROR flag used to stick for device lifetime. And it
-could have been extended to all disconnected devices, not just the
-one directly attached to the root port, to fix disconnection of whole
-trees with hubs while avoiding the above race condition.
+IS_ERR_OR_NULL() is almost always a bug, make sure you understan
+the interface and what this can return. If the function can
+actually return both error codes or NULL pointers, fix that
+first.
 
-The reported USB2 regressions would have also been avoided, because
-old code only applied to USB3 ports and there is no actual need to
-generalize it to USB2 at this time. The bug still affected USB3, but
-it seems nobody uses USB3 devices that trigger it.
-
-I suppose I could fix the Renesas disconnection issue which the 7.3
-rework tried to address with an alternative patch smaller than this
-fixup, provided that the whole series is reverted. The preexisting
-USB3 bug would remain unsolved for now, however.
-
-Regards,
-Michal
-
-
-
+     Arnd
