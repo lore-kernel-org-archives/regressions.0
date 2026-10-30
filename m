@@ -1,69 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793378304;
-	b=XKU2F45FqLN2cTHc+UnxCnBoSK4Az7X50UUC20+IV7Am0oar6Gz0d3vt8qu0QOYB9m2F
-	 kaZjtmhK+cpVwfWcu+PWU5LqWc1c6S733MvfY4T8Kj1jKSJH8iBaTe055DIVLaXBqY0BX
-	 ydHXkV0uKBrHFzDlUis8Uedsru7VHtNucBuWHxS08rrqlDnN5+zc8+cBRmatZcmdbSpXw
-	 e0fsXgQNHYuft8lyXpHGWJrd8EiXOJxfa15JfY6HHH4VXHWK0pC2loohuhAxsrTyZ4joi
-	 t4AUjrOgnLeN/kCQGIwt7WJefQh8K7x2KPqtIYDAaDjvd14uc76GCazabWBd+KTsAoQ==
+	t=1793378845;
+	b=LzJO8Z36t9eWsQJZllg/dwSdsN6aTJrxajHqQdQlTNgIzJL1kidt2M+VXeDWm8e/U8QH
+	 GarqkWO4Akk+IAcgK826+9ggxj09i21cPkBx+wIzWB773lmOVn11u8vBI0ITLqnVBxYjB
+	 ZNe857f5KtoYfs5eq7Gs4neclUYAW6H/ql67yC7RfoDUTmPf6NIB/OWNzSSiLepuWL7NL
+	 zK8dzWGUrm4VIpzMS/3dIeYhuoIkmbJGP46cVgjEN+We2f4ZTO+/l+7mtTD16a1/WG9i8
+	 8NUpJIDC9pL/8eBaWAk6vZ8HgMhjEbnWMvHt4xMIC+Br0TcPoSqc9JfzAfIlZ4A2zEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793378304;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=lmiyVDfmhgCeLECAq9Kvvld1LYn1lD8BCxmRxoOvlpc=;
-	b=WIhWV9T1YlHZv5kR4CitM3pFzPgcLxfwSDv9A/HkF0D1vFAZHXiGGU+f7SoiHcgNcd3c
-	 W3j7hE/l6wZekoWEnxE96vwrCipc9nSVku+sizcacOMNJBlPaImJdNt47bnVhCBUsuL3x
-	 VRKAyhut8GPIutj/uMLYqx6rIV/erajYQkFHz2oeONNYfPkMqWZGFEHVOY893pNndqMeo
-	 O2phV2Kuh8k0vlHtTD0qHmof8lw8pROv60LB7jPK8JY5fCicIWmvfAhv0L/opkQLfHUiY
-	 iAxWZdkYye7ihhjJSvAdQHKAWkm2r24W+NAro5SHyYGdryWwmaUnZnrhfY98Z6wCKlQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793378845;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=FMmE5g1sOpByMOfnDKLbtK5O3vhD4LZZZqXjGPprOuY=;
+	b=TmFbnn93hicKi3BATaXnBdHlC44fu82beQjH0TbX7nlJVRiUYnmTYQkYmnJ7qwz+nX0K
+	 4jtQreIWBNAdty1llqAOYxYSwvXMgNBus3TwSRZ61Nb496/wfEQB33SBblV1QU088+T83
+	 5gi9evxNvYMIbsmh/d2kAwiUINaps1LC/vRfW/+nrP0gGHWrNARn0N3tR1uZUD6PCr4VF
+	 Xg02jfQjp6zVKbwKg5iufc2nwWNLp59nhdJvwkuzZJeUTNFRIEbnCx6lahMgrFgF+c1Jq
+	 m+w4Q+3kuIJdC2zazRC+s5PYaeIc6CY+5BWlGivcZ7MOD0hgUoxGKJx5gMW51dpJfqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lRU208nV;
-	arc=none smtp.remote-ip=198.175.65.21
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="yFOX7/D+";
+	arc=none smtp.remote-ip=209.85.221.49
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161AC606A333;
-	Fri, 30 Oct 2026 16:38:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 161AC606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1335E606A31E
+	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 16:47:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1335E606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=lRU208nV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793378304; x=1824914304;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QRgmhf/8HrL5jp+mSWNkdgH7jksrQ4/5gi/MuQs4mw0=;
-  b=lRU208nVF74HW7WTaQi/c8hQgpS0x3u9SAYRi9tQrvwSG2jqHS+mqaZy
-   t043MnCH4EsjvxSVt6oaEKC3BFNqY3ru4D+1wl+1JhP0Y5XhuQQ2i19ae
-   3Cbj9VbCMVUP1+sJ//uPstICpyMMcMfj4fo7loOa7UCZuy/H/kddSv85K
-   LSICcsdPogfWUJzH05puLiEQB/p7uCIR3LKVcsR8aoqJrNPJFHFimydWx
-   kFNCGiliYw4+iC4ri05aYe72FhmOzUZeQQ0pen8tC49ghJyNF2Bw092JZ
-   +yW5NFHAK10QgsZmnZws3h5oXlKnaxx0Qaq6dU/7d+wBljjsUVonrD4U5
-   Q==;
-X-CSE-ConnectionGUID: u3FnmfveR+G5bQxj6g/0bg==
-X-CSE-MsgGUID: B+vXFoSNSfqXW1Z/FLUc6Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2239540"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="2239540"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:38:23 -0700
-X-CSE-ConnectionGUID: CYKQvGNRThyjOX0WtOwBxA==
-X-CSE-MsgGUID: +7yC1JGUQtaffzqtuTipqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
-   d="scan'208";a="5486569"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.109.71]) ([10.125.109.71])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:38:22 -0700
-Message-ID: <07cfa95a-e766-411b-8765-33352a04c0be@intel.com>
-Date: Fri, 30 Oct 2026 09:38:21 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yFOX7/D+
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48e20edd106so787084f8f.1
+        for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 09:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793378843; x=1793983643; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=FMmE5g1sOpByMOfnDKLbtK5O3vhD4LZZZqXjGPprOuY=;
+        b=yFOX7/D+RY9P+xSron+sf1TFlfuwv4D50qjtw0r3vuoBe+ia2AjuzNRB59kZEowRM9
+         gBU+6tcBK7zkAMhuetJ6N8AXFhssGGr01+tYM88PEUxD2P4Msjm23EQ8dUO1y7DUIHOy
+         hcLxk2WR6yOFnUH1XWetsJj9Xp0hfHwNdQKKacaaVsv2+q/2SJYYXbzXCU9Zub+jhzPZ
+         KFm0Ya+qsc9+khbziMh03HleUxdUpj5ZhjyqMW5MvL/ay1DMs1Vv+MSJmwbJRX79+yyS
+         eeBfySgLXV/ivtf5RXuBRe8JRxnw7IC5Qz4e9iCMkpO8arl4R+U0cF6PafB612ePnvtO
+         yC2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793378843; x=1793983643;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FMmE5g1sOpByMOfnDKLbtK5O3vhD4LZZZqXjGPprOuY=;
+        b=TAE6ZOXSQmmj5nDhq3crk2dw7FDw0NoRvdLxML6Bku1SQw8ql87NVXrXOn9QwkdE75
+         jm6K3WFHGPD8b8G6gxrqbEERFZGIcY9ADjMpMIVLcQiHs1UBvSImEacc21bNi/F7c3DA
+         Hkb8ZDBt6TxYQC3zfHSVH9CtUxh+eh6xsonfjUNFNIOho7LwggRRhDGy5ONLx6lbmc8U
+         1hxQ2KKPHm7R8USRsvaLNV8WYAD2QjUKqwJ+5uKl9Hr7pi1kIMoAztj6QPwommAelmMk
+         Og+GQE3/5yZe5DyaATjtR2qz+6+DfILHANvhwE++UvRFq5yIglUGrUy2TLeJRkA3/Mnv
+         Mliw==
+X-Forwarded-Encrypted: i=1; AKwUvBwtfo+z/oMI5V1EpEfkFFC4I2OeWBDYPWsJfc/hgSnAcUZs7h4qVia+4PGr922jjuoxyj0LSEShLdgq4A==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJ4ew4cr2pn8VqiWsxMMvfgplEa8EA8dzPVKwX5rGZiDnNCjN3P
+	Ju6TSvRgPogwbGt5c7ex0yvhMIzLF+jhLLWUHqRh5hJ1cHMgHpRcNbupBoIGzX/p
+X-Gm-Gg: AYBFou1iMqvojHmnWHBL52BPcAR3Fkkd4J779Nl3sXS6p4ahLPKIoEwzXHCA0WKBqf+
+	XcoZoKLAOCqU8BQSrqbuT+J0/Edmpjv5ygdlRDYnSp7vmxPSA4lbsGpBVS9csdHgATc+v+iFNLo
+	oLS09S95QRvCLx4AZrlIUODVizsQBT7zuOxV34773Y6p97p5MJH9f12CMK9bldNA7R425Vsmxmo
+	IdLH8j8ivBRGyxGvFK3Zhh7zXLN48WDH7EKLf9p82Db5pBpuAsFNi8WadLq6GXNLjWOLGvXq1en
+	CD/VgSVMufzeZIewjKsJ/Soj4A2VMQsTW5EsIoE/FsVCSHJ1AnEf2wtE7LpMH08pM32055E8/Sr
+	jSYpSJsYTu9nyR2rzpUccs+jAtUEXmdz9udXdZl6UOzcX7QndmK3uD6g/NGpIRNNR0x70fM9E9J
+	F5T52sMYqpzt9hWD2BUv/Wjy61TBAs93a2spltGtUX+OOMyv4Zlinv9VukXkSXWntRgLfTbVJw4
+	m0p0X+vGsO6An6OSVqw7VNsSctAXt/MZ/5wUr9l/W7ZdqtzEyMwoxHjzE9GFae3BHYCduxOypUf
+	vEIS28jDuv1fxPK2xEvWNnunWathV9JSBtklUw==
+X-Received: by 2002:a05:6000:184b:b0:48d:deaa:4dbb with SMTP id ffacd0b85a97d-48e6e2fc210mr6951364f8f.40.1793378843333;
+        Fri, 30 Oct 2026 09:47:23 -0700 (PDT)
+Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b78c10sm3901707f8f.25.2026.10.30.09.47.22
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 30 Oct 2026 09:47:22 -0700 (PDT)
+Date: Fri, 30 Oct 2026 17:47:18 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Dennis Wissel
+ <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron
+ M5 (3434:d068) at boot since v7.3
+Message-ID: <20261030174718.1f28218a.michal.pecio@gmail.com>
+In-Reply-To: <3ddd9334-6dee-48cf-8a62-82cebbe51d7f@rowland.harvard.edu>
+References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
+	<20261024203558.3181711-1-yiyu@yiyuzhou.io>
+	<SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
+	<20261025111410.2c14fcef.michal.pecio@gmail.com>
+	<7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
+	<20261026105139.6b86cb3c.michal.pecio@gmail.com>
+	<3ddd9334-6dee-48cf-8a62-82cebbe51d7f@rowland.harvard.edu>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,79 +105,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module
- is not initialized
-To: Kiryl Shutsemau <kas@kernel.org>
-Cc: Challvy Tee <challvy.tee@gmail.com>, x86@kernel.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, regressions@lists.linux.dev, stable@vger.kernel.org,
- dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com,
- vishal.l.verma@intel.com, kai.huang@intel.com, seanjc@google.com
-References: <auM3KKutfutAqgWG@thinkstation>
- <20261030154851.907726-1-challvy.tee@gmail.com>
- <939b4cc7-5c7f-429d-a9be-830aa1c53ac5@intel.com>
- <auTExTAMoaKKjBrb@thinkstation>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <auTExTAMoaKKjBrb@thinkstation>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 10/30/26 09:26, Kiryl Shutsemau wrote:
->>
->> If SEAMCALL is fatal then we need stronger barriers on the generic paths
->> to SEAMCALLs themselves, not one-off patches of the sites.
-> I don't think the generic path is the right place for it. For every
-> other caller, reaching a SEAMCALL on a non-TDX system means something
-> went wrong higher up, and we want to see it. A check there that quietly
-> returns an error hides that. Making it WARN would catch it, but then the
-> crash path would still need its own check before the call.
+On Mon, 26 Oct 2026 14:56:49 -0400, Alan Stern wrote:
+> You can read the login in hub.c:hub_port_connect_change().
 > 
-> So gate the call on X86_FEATURE_TDX_HOST_PLATFORM, the same way
-> paddr_is_tdx_private() does.
+> Broadly speaking, if the port is enabled after a connect-change
+> event, the core tries to resuscitate the child device (and checks
+> whether the descriptors have changed).  Also, if the child device was
+> suspended when the connect change occurred, the core will try to
+> resuscitate it by treating the change as a wakeup event.
 
-Sounds fine to me.
+Thanks.
+
+For USB2, this seems to happen if a reset was queued before a brief
+disconnection and executed after it.
+
+We believe the issues reported here happen when a device disappears,
+usbhid sees -EPROTO and tries to reset it, then the device comes back.
+But what happens to a device that reconnects during probe doesn't seem
+to matter, as long as it ultimately gets probed (reasonably fast).
+
+So I wonder how important is this feature and what motivated it? Are
+there known use cases that depend on it? Like devices disappearing
+mid-operation for a few ms which need to have their state preserved?
+Should we worry about things breaking if xhci-hcd begins to act like
+the device is gone: ESHUTDOWN completions, ENODEV on submit?
+
+And if this happens to a hub, can we rely that its children will be
+freed and reenumerated, or may they also get reused somehow? If they
+can't, are they guaranteed to go away before the hub is reset?
+(Because that would be convenient...)
+
+Regards,
+Michal
