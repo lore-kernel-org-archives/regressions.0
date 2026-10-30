@@ -1,102 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793375342;
-	b=wgB9t3WHr2Km2QVgTbqCyJoIBqqkhkpM/iee/08BO+wj5Ap6lBmxZf66o6jEV4SndgTM
-	 8yTbaskduuyA5czJVKJeah8VOPL/Hidr5KkNC4izNzWCkVYLSgTdHErYgX5kQ8MqVqTcK
-	 EopnMPQ46IHhdKfmwRm8R23DJjIJj2QP6LMrSYoFXfXsL8NfO4ua/F9FkVpe8jR43+QzE
-	 jh43N0qzssR0htrhy3InWAP0LkgOxHL1W64NbHXKsi4LGh308d5XiDVjS4Z3yU+JfX96L
-	 MeH0Cgsq8CqyxsvzLA1Q4FYpNEoF2AyXC9k72VBKoKCmzLrv4QNdkZNJGEO0IH/uKoQ==
+	t=1793376795;
+	b=0n4ruEMYHB0WMFcHilxk9T6eX6dgXcClcLLLTVule8ChLnu9PGDXNV7nr+IuGICLt0rM
+	 5OjQke4Y2kipw/+pt4D/Op26smgXiT6H2cL0wgx7bnFmX9tvwaeQ/BDUpOtYXShsnCC0W
+	 7fnlC55KvYIzBIG+c2f+Gktvg7zr3akwDOHxdrD5hKhzCJR7N80ckBg96OjvbPIV6xVPG
+	 RyZGZW8kaJDkMTjAPdMLDuUA2BUV3sa4qaGTS7ei0JhUWj2z7XUZhGjE0wsVg47Skoz6f
+	 uYJSU/ecJc89KRpaMtO8tVqKZ0/fWT2yVAWYXAcDTbcS26HmtikuE/VheaeW3+C94FA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793375342;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=d0SM8LOepW7XUMwU+ZDps/Wc1zMBVt4O8GKS2q6Z4u8=;
-	b=nGOQ6GVu3xAW8O+IJOUuUfxgY9NI/gBdG032K3NsLcvz5GjYHXW5Y10eldm5Hc8WJAqb
-	 JpXLFSuxgI07MXuWAHOMWxZ3Xx3IyqbQeMXCp2b1E9EV9CFj0+gdni0xRhhJfLnsE68a+
-	 La3HXE7Sljdo64kkdlaBuD0URmoVQInLCVbDqzsO1eGljGFmMBGjGdPts4kGv0tdIH1VB
-	 p8A/mGpk+xp2BQ3k2B8U1Mxk6Yk/q69s+A3YUCvlwIHhLWTaNvhPC9UJ2qivJafCszHq+
-	 XoGGCt4KmsW402oTrO1Wuzxyb5CdzEwWUkNClLF/lcXwKIymtglWtRUgaKfPfdrOhsA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793376795;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:Autocrypt:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=KK8pJaQH5lIoMU0qwbST6x47M5egpHp6PIXlQuLC+i8=;
+	b=CB0pfV/bIG5gVJLm8LRCDkLdLaZwUFalOLU96rCEyLJNHcMFH7I7vyb8j/dLnFm5Hjdz
+	 ObSwfDi4fqbmvagKyTvqi/h1QSVfe3zid4LD9rgOtiuXzqRhI5UOiUpMFGI0XRPMAh6c8
+	 NDhG2ROt/mfiJTQIfeqhXAigylY9pxQ4qXe9tYveyBQgzpuSMeSsO8gB02vwrtldeBt3O
+	 8wWddCAYc1LImmNF/xphY11zCA5BBIE4/TuPUx4T00uT9bLvK77XAfavaHyGeFWE39w0r
+	 Rt2NhYwe0bmrTl23+8qdTvL4GbqaNp8dV2Bs70KdzxyFrYFxQXOtbxEmGzEiH47Z3hg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=injfLSpH;
-	arc=none smtp.remote-ip=209.85.214.173
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I8nnGdOw;
+	arc=none smtp.remote-ip=198.175.65.15
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF391606A31A
-	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 15:49:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CF391606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB49606A31A;
+	Fri, 30 Oct 2026 16:13:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3EB49606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=injfLSpH
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ea7987517aso6701985ad.0
-        for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 08:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793375341; x=1793980141; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=d0SM8LOepW7XUMwU+ZDps/Wc1zMBVt4O8GKS2q6Z4u8=;
-        b=injfLSpHBv3MZ6dRlVOEAHIfNI/VXZ7gLnjNwyHRQva9O/m8G+qs9goJlE0/WwwC9z
-         bECublmeILUgikfurBxSn4MFEjDCnCDOe7fAG99pqXDwd1r+kj8ssGJCZAqlHGFWHIBt
-         58Fg6ywEVuCt8QnPtM5mjR+tLnER3n6y9cWUSzVv52yOBkdR1nI/j56GcPr/yev2k4ss
-         hUM+bETD0ktBlzB7Om4AE5HwOjS2U6nCA9IP9gbw3ZSvmb6YVGF9sMyvmPy75GOdmMWW
-         XowVe+0BAVBVHeb7uzroGwRGOAmQc0BywXrhSwc/VuhUxPua4ud8hEnKQxxqHhKDT6TC
-         o3cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793375341; x=1793980141;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=d0SM8LOepW7XUMwU+ZDps/Wc1zMBVt4O8GKS2q6Z4u8=;
-        b=LQrURCuWJXvL2ZBYF+lkM5HDl6au2Q890pMsUYt9Aco40+R01nbo8bvwp3iKswEA8R
-         adzgGNtMgdeJwo2iuKySO4cw1Q0gFNtTrKxLafvr+9+ZgpoHO451NmBq6B5QrKA0/giU
-         0yOThjydvFG5fkatEAllRxGe4I1lxGiXA52WIo+zqrehfgWkCqjEyY3O+66IQvoZyrbb
-         ek0c2qVwZ7rEWC8PXuupzZ2NaliDd9v1QOVtDUtHk2dG+zbWf2AAIrfCqqBXkBs4wFQn
-         lPowW9aVcwurRtrNIyet2QVRUH8XDvj0RF8lVI6JSoj2l4QnXo5f9mS3HCN/tpiP8u+n
-         hcww==
-X-Forwarded-Encrypted: i=1; AKwUvBywKehac/hXLkNr4bQ7pehvKtYDzSsuspIyf2I+UJjnFdp7+UNBUKASeUM7r5nQjmnbrtUwcygVxadpAA==@lists.linux.dev
-X-Gm-Message-State: AFq9FYINUgJO68s8GPBi9LfCreiEgbby3lSyaBwvbtpbbISuF45hMhuU
-	5bNFoT6qhldzOz07F44+eUw0d9lCpUWgM33QnV7s1eZoRHRXpb0b62wy
-X-Gm-Gg: AYBFou0chOBce6gTQxTdMipyYeD2bn1V4TqILkNF1FpM/hIBlAurYYv2efFs0uilARF
-	7LYiCWrXBcOWpn3pVzxLnQdne0bTOEaCRUgjauSbgE1r2WUnhGr5Roa1SxoGwPfkB2mr9Mxf/H+
-	EQ6CJeiYGsN+ZgJ0QBteL6VgWTOzVvRBEgI/EmIl5jMrmg96yDl27EO3hB/pjQXYT21PZG050Y1
-	xhsvzfCroFfIaaEX/Xg3TZ6pJq/NXW0sLSSUIhKlSndGXDIbDsN3ryyiPHxEmX9Ir9xe7G7YEtL
-	Er/x0C8ADxCPWcGa4QLyVPC7r4J4yP4x2XGO+1BfUaujrSXy0GK7qzIrBLeWSjOuORcRgNXHbzH
-	b356h1CX8NjwFVWTWWPAPjTOslTPJtpaPROLVByHLjLn55+UR7Qqc3zWqq3gdRSckZPElxE60Sk
-	iMm0VOfrsEA4wA56467V8AewI5yrIyALrNtVs3JrNsRGd1+cXX5XhDFjT3jYf0iFvFjwzOiLumm
-	qeR6ZVEI/9uM2U0uZrEVa82ZgIgVusrJxxvpSZjjsQeAPIUG+zlpjcEf/40SKVSezIwrWxEnFyw
-	BFoFZSVTUs2QMbqJ1k7E/pJ9WUQidnFaq4pibdmtyog=
-X-Received: by 2002:a17:903:3c6c:b0:2e9:73db:3c78 with SMTP id d9443c01a7336-2eb3649bef0mr30087255ad.17.1793375341157;
-        Fri, 30 Oct 2026 08:49:01 -0700 (PDT)
-Received: from iZj6c0kydq3fvfrtx5kta5Z ([47.86.51.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb39248621sm9426235ad.28.2026.10.30.08.48.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 08:49:00 -0700 (PDT)
-From: Challvy Tee <challvy.tee@gmail.com>
-To: x86@kernel.org,
-	linux-coco@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org,
-	kas@kernel.org,
-	dave.hansen@linux.intel.com,
-	rick.p.edgecombe@intel.com,
-	vishal.l.verma@intel.com,
-	kai.huang@intel.com,
-	seanjc@google.com
-Subject: [PATCH v3] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module is not initialized
-Date: Fri, 30 Oct 2026 23:48:51 +0800
-Message-ID: <20261030154851.907726-1-challvy.tee@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <auM3KKutfutAqgWG@thinkstation>
-References: <auM3KKutfutAqgWG@thinkstation>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I8nnGdOw
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793376795; x=1824912795;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uAicCO+jPwcDKA4dY7pgebv4wA+Z858oYVakj2wROsc=;
+  b=I8nnGdOwDUsJKOQ2iPsNh0yq1jMo8IZlaImP+UC13pcHY9XVC9P366dp
+   v9fwmWSEqU0fHGlWFF9JKzofrXlnxJV7vTiI4eXj7g362bZ78xkmmh29+
+   BmTwv6cKOFqOgrB+UuMIZwiQmR/pVEc1f1rFGvjmDxMuY/wCY07chquv4
+   3d6VD0J+SoAiqHeFKRC3EPUkXb9hs4rojdhA2Zaeq3Zf51P8g9YI5L9qj
+   5laxP1Oywb6ahobS3RYEd1t/sx6U4l6EjtJ1JPaAGBQ4ZptpyHFGhKdvG
+   TkzfR1ikHUrpdycRuXYnag3dnsjJw57gr0eNlwz1qxR+pim4yjV2LkPng
+   Q==;
+X-CSE-ConnectionGUID: 8pSGqGWjSq67bGDc5PL8nw==
+X-CSE-MsgGUID: cb805d+3RXmr3dfqvVkb8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11951"; a="2147384"
+X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
+   d="scan'208";a="2147384"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:13:14 -0700
+X-CSE-ConnectionGUID: NTp0fqX4TsquFoCBR6I98Q==
+X-CSE-MsgGUID: n7ulosMeRbyq5LgqgqGgTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,186,1787036400"; 
+   d="scan'208";a="5875989"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.109.71]) ([10.125.109.71])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 09:13:13 -0700
+Message-ID: <939b4cc7-5c7f-429d-a9be-830aa1c53ac5@intel.com>
+Date: Fri, 30 Oct 2026 09:13:12 -0700
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -106,104 +73,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module
+ is not initialized
+To: Challvy Tee <challvy.tee@gmail.com>, x86@kernel.org,
+ linux-coco@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org, kas@kernel.org,
+ dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com,
+ vishal.l.verma@intel.com, kai.huang@intel.com, seanjc@google.com
+References: <auM3KKutfutAqgWG@thinkstation>
+ <20261030154851.907726-1-challvy.tee@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20261030154851.907726-1-challvy.tee@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and
-kdump") made native_machine_crash_shutdown() call tdx_sys_disable(),
-whose only gate is compile time (CONFIG_INTEL_TDX_HOST).  A kernel that
-never initialized the TDX module therefore still issues
-TDH.SYS.DISABLE.
+On 10/30/26 08:48, Challvy Tee wrote:
+> --- a/arch/x86/virt/vmx/tdx/tdx.c
+> +++ b/arch/x86/virt/vmx/tdx/tdx.c
+> @@ -2321,6 +2321,9 @@ void tdx_sys_disable(void)
+>  	struct tdx_module_args args = {};
+>  	u64 ret;
+>  
+> +	if (!tdx_module_state.initialized)
+> +		return;
 
-In VMX non-root operation on a SEAM-capable host, SEAMCALL causes a VM
-exit instead of a native #UD.  KVM injects #UD only since
-commit 9d7dfb95da2c ("KVM: VMX: Inject #UD if guest tries to execute
-SEAMCALL or TDCALL"), first released in v6.18.  On an older host the
-VMM gets KVM_EXIT_INTERNAL_ERROR and the vCPU never resumes, so
-machine_kexec() is never reached and no vmcore is written.  Kdump is
-thus broken only in guests on SEAM-capable hosts whose hypervisor does
-not handle the exit; plain kexec is unaffected because tdx_shutdown()
-only runs as a syscore op, registered after init_tdx_module() succeeds.
+NAK from me on this.
 
-Gate the SEAMCALL on tdx_module_state.initialized, the predicate
-tdx_get_sysinfo() already uses in this file: a kernel that never
-initialized the module has no module to disable, and where it did the
-gate is a no-op.  Doing it here rather than at the crash.c call site
-also covers the syscore caller and any future one.
-
-It also decouples kdump from the host KVM version -- a guest cannot
-require its host to inject the #UD.
-
-Fixes: 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and kdump")
-Cc: stable@vger.kernel.org
-Signed-off-by: Challvy Tee <challvy.tee@gmail.com>
----
-v2 -> v3:
- - Rework the changelog around the VM exit mechanism from the review
-   and scope the impact to guests on SEAM-capable hosts whose
-   hypervisor does not handle the exit.
- - Shorten it and move the reproduction data below the fold.
- - Cc the author of the KVM commit now cited.  No code change.
-   v2: https://lore.kernel.org/all/20261029094705.896693-1-challvy.tee@gmail.com/
-
-Hypervisor -- KVM on all five (CPUID leaf 0x40000000), across three
-clouds: Alibaba Cloud ECS, AWS EC2 and Tencent Cloud CVM.
-
-Host log -- yes, from the Alibaba ECS host of the Emerald Rapids guest:
-
-  KVM internal error. Suberror: 4
-  extra data[0]: 4c
-  extra data[1]: 2f
-  RAX=0000000000000045 RDI=0000000000000045 RIP=ffffffff855422fe
-  R12=8000020300000000 R13=8000000300000000 R14=8000020200000000
-  Code=... 4c 8b 5e 28 <66> 0f 01 cf 72 05 ...
-  check runstate transition: 'running' -> 'internal-error'
-
-Suberror 4 is KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON; the two data
-words are the exit reason (0x4c = EXIT_REASON_SEAMCALL) and
-last_vmentry_cpu, i.e. kvm_prepare_unexpected_reason_exit().
-
-RAX and RDI hold 0x45 = TDH_SYS_DISABLE and RIP is at the '66 0f 01 cf'
-SEAMCALL opcode in __seamcall.  RAX still holds the input leaf rather
-than a status code: the SEAMCALL never returned.
-
-Reproduced with 'echo c > /proc/sysrq-trigger'.  All five have
-CONFIG_INTEL_TDX_HOST=y, kexec_crash_loaded=1, a kernel changelog
-naming both backported commits, and "TDX not supported by the host
-platform" in dmesg:
-
-  Microarch          x86_vfm  Cloud          Kernel             echo c
-  Sapphire Rapids    0x68F    AWS EC2        6.12.0-278.el10    no vmcore
-  Emerald Rapids     0x6CF    Alibaba ECS    6.12.0-278.el10    no vmcore
-  Granite Rapids     0x6AD    Alibaba ECS    6.12.0-278.el10    no vmcore
-  Granite Rapids     0x6AD    AWS EC2        6.12.0-278.el10    no vmcore
-  Granite Rapids     0x6AD    Tencent CVM    6.12.0-278.el10    no vmcore
-
-Controls, each producing a vmcore: the same platform on a kernel
-without 5b25f249be32 (tdx_sys_disable absent from kallsyms), platforms
-without SEAM support (Skylake, Cascade Lake, Ice Lake, AMD), and plain
-kexec.
-
-With the gate applied kdump produces a vmcore on the two Alibaba ECS
-guests; the others have not been retested.  No TDX host was available,
-so the no-op case is reasoned from the code rather than measured.
-
- arch/x86/virt/vmx/tdx/tdx.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 96ced0494b68..a7eae7492c1e 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -2321,6 +2321,9 @@ void tdx_sys_disable(void)
- 	struct tdx_module_args args = {};
- 	u64 ret;
- 
-+	if (!tdx_module_state.initialized)
-+		return;
-+
- 	/*
- 	 * Don't loop forever.
- 	 *
--- 
-2.52.0
-
+If SEAMCALL is fatal then we need stronger barriers on the generic paths
+to SEAMCALLs themselves, not one-off patches of the sites.
