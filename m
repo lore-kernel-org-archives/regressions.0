@@ -1,67 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793376890;
-	b=JCQS60jh85SVxYDpY0GrE0D8WGKMhKCUBwZP/pjWZ/WeMJw6eJfnimsH3qhCgll56Tpk
-	 1s3ot9e/6e8zOT+TPmj5cca4DSm70CHhHbY5eTQF6s8wTjJoXwknmp9NJg3U68eJZ/I/K
-	 kll/5Zz8lChqLpeVSkqmKX/xLRWRlk7QWGezV+V7xvIgjV63is3+ELgygTmEWt/uqxx/m
-	 rAfzx1xUjVkbt9k0NIDcRZAEr1xuxpCns/EL2nIR1ABWc8x2qsyaRICNVPU6BcA+CRLf0
-	 GezUqSEy0e50Wkm46LYfV8ZKwi5kn2LAKGjrUnHXZB/Uxillx5mb+ZSWr0D7y4Rf9Yw==
+	t=1793377603;
+	b=aI4mXHr3TvMVlTRlCZIazcbDX29bwxyKpxaRHMlwdP72imV+nR2GVAMlSltEBWJ3h9vf
+	 f/56E+eOcT6InclYz1YOCMvR7chyvHdjvqwjXasKRh/cB/juc4EEOxKJ3HX/5i+uryDT8
+	 ILvjmcStxXAE+Mho4nqdb8OuVH7KR5SPbPSLfRW7MB2jKnTgRKluUC7i9FouW4MIpUQvR
+	 yJceV+cXwvZ+eGkojdLDNo2HLeHsbbAJ329aWpMSQnppEvtybydoPbLC6zb9wp34127Ls
+	 m9ZgUd42WS8fVLB6Gm8ypC2odkX39wxWlsuAyd6Xf2FdjYFA+5SiVPAjoc1XQCF5lgA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793376890;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Debian-User;
-	bh=6VFcCQ8+hkv/Z0Ast47jgNhih51hX02Kw8npjw5+umQ=;
-	b=lDUvvvMUZuX+X/TW1LMDfplhzaBztR51SkzIlpyO3SQhN8J2kQkauw49eBFtzAEdpmJs
-	 g+sLFoCDVzrSjXfdyowXL14hy2ub8KFJOv/p0k7zNaKgVsg+ruc9hbncLKX2wyQ0OsQJq
-	 kTZ3vKUiPYbt3d8UeScIaSO7nqDnSDDLiy2rrk+3Zpd1w84SSwtkuaxfLnp+6ka9qrWFi
-	 +E2Pfe4PxI7ccyZ7ts7QgcNRMF6bW640EJGBHRTR8HKAmKeBG4u9Mbzm7lsd74/vJHi7I
-	 jR9uYn7lnn7gsp9nL26F7KhLj8KNMsE/AvzukGdKDB7LXfadKEOdl1MS7RWZMdEv0LA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793377603;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=vewquYtyWMTTPew/3rciXZBlW6QyJvk7tE2jn/GyFDA=;
+	b=2xCgOOQOO9Y4wcIlWrDW0Dl7pknjKuc1ZaOLSHQPxNepRTfcgCYuGpaU6deLh5O3wudh
+	 tdCz6yUum5EYUG0BvMKqFs7mDH+vM+OUmm/YojYRCIoywOcfg9nNUv6ymGLiPfQdW6+Bm
+	 qIg50fBn/8XEjNluubntIXhqNbAUSioSWkz28ZuSb75b7PsjEggAnf5fkL8aHXCMTJC3t
+	 Wrb84JnrRHYF3RolBmBvsGaPjJUV/J1nqdNnaVvRQcEigPpQi5BQMS8+tlYJVHiG4aFiY
+	 y0T5WwWgRpRIX+BpJgiF4sp3Bx18pKQInCDgArhLQql89eXqPtS4iRzUDHJng8ZMmmg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=debian.org;
-	spf=pass smtp.mailfrom=debian.org;
-	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=DmPE+J6r;
-	arc=none smtp.remote-ip=82.195.75.108
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="XRRyQGq/";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E60C606A31A;
-	Fri, 30 Oct 2026 16:14:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E60C606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD441606A31D
+	for <regressions@lists.linux.dev>; Fri, 30 Oct 2026 16:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=DmPE+J6r
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6VFcCQ8+hkv/Z0Ast47jgNhih51hX02Kw8npjw5+umQ=; b=DmPE+J6rcLlWvdvEniU5xjHTMg
-	H+d/de0QEzHOXUJBPiPynAt/Er7KQmwKTorPs0E8sNua1hxr1/mBuwFqsHvhM4yG/ePe0vDver6E2
-	0pj2N8OQtUbAt5fzO5DER1IC3Nzcc2Suf+pl6yECGnLl93zJRbnyEmisQW6fQ8AVmM5Ef7bBHOKg7
-	1rB7PdX0zxqRzcRYRhY0oAawJL0UbspiHi7fVF5Ekqu6sCVjtsIYgm7x0gZnWgKFKSnhVazuJGmdt
-	0h9S/lzqu7p5F9sfk9eFNolYHXMK6bWwDAKKchRywhK/ontbW2lh9Ojjfzi6ZCjnR5RRfnR/+G3QX
-	jtOMl+Wg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1xMpFQ-003wWM-2I;
-	Fri, 30 Oct 2026 16:14:33 +0000
-Date: Fri, 30 Oct 2026 09:14:27 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Stian Halseth <stian@itx.no>
-Cc: Frederic Weisbecker <frederic@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	Thomas Gleixner <tglx@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
- after idle exit
-Message-ID: <auTCQauaU733PY5z@gmail.com>
-References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
- <20261025100202.2584654-1-stian@itx.no>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XRRyQGq/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91851F00A02;
+	Fri, 30 Oct 2026 16:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793377602;
+	bh=vewquYtyWMTTPew/3rciXZBlW6QyJvk7tE2jn/GyFDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=XRRyQGq/3uX+IPDR3SK024hDqphSBS30P0FW0sJZLwHGnA2+Au/3EphLELAKkNCyB
+	 vMoadFt5l+1hEa2MhxDa4B1WNlkJEL8fePVMvyrHIA99alHJIY5Ga0lAoIUaUUz4+b
+	 HxjTC6DO/GKHJS3vXPC934doaX6Au7OvBQQZ4vk0gJ0RZTL+nC8Ehn7+GshLVkKJDe
+	 8taoix+UEcGcQASoL+fM/8+WrhTuW0y4PSLVaIZi5knozggxn28scdDLIwsGLc0oKm
+	 VCe2k04wQqAEOjdECPL9fhLK+Ebu4w3W3Jq44LpMlrwM+r8q2vfqvpNhMjbtbIOcZE
+	 JzE5bMmFntX/Q==
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 0B6BE198003A;
+	Fri, 30 Oct 2026 12:26:37 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Fri, 30 Oct 2026 12:26:40 -0400
+X-ME-Sender: <xms:PcXkarepDZcwkXPaDvw1l9meX1ix8cBNcbSba9-rds1sl6XeloMfDQ>
+    <xme:PcXkaiYAI_vT59BqHq0ZygNMM5okQJjYKU_DN9AduU74co3ByTkWXIHszmuEWklPW
+    pgBXsdumm_lvCkL06kjKhQ-_xXGCB8jRqzrMoP2wm0GjyteJBdcuMs->
+X-ME-Received: <xmr:PcXkak8ezFsZAfxW4l0Mvcm4LtO1fFfXqEJiulOIBKEWLfmrRvW-8zTaQBY>
+X-ME-Proxy-Cause: dmFkZTGEAIFWzBJh0zWLN17+nisZqat9HnPlshouus3rVlwm90kalixREFWaFGYcU/tF0W
+    3UdkUB5dz3jJ/7gphqEuNFHpf+z8VsmOxTezlK75l5ORKrVKFBa2NEgRwbYKxcTq7uyZQA
+    W2W98B6jmDIrAQO8QKfXxueVgpiWnggcI/BJ/18E5DEgyYQ/qfuiqqVvOgCo9BjplJFuNF
+    Cq2lBkk/rOOp1wPHM5RPg+KN1AdKgUA5k0+FVNS57TFgOuKqthusIzIHYb5h9oR56n2lPD
+    m3bIIIT/Oa4M4xQorz7MW066A5A3Ilw7G7kLTJS6cCINZEIS17roHp+ddyILdojq+VTTHE
+    2MY3XR+A2l7OBM2ub01U6gbuYDHwIWf+Swtm5zC7sOi3harXi4z0yCXZWSoHi3RAKslPon
+    otpxzqyqAYRWWojiWcoT7qUs6tH5gim5jFMxHgdLDNVKCh5KbnwHxj24tVQmrM/pPr+8RU
+    Lse0RbqcqIjr9tKNAVnOGXNH8X5IFxsk3dnHXP064AXskGHK77xRqxNkH/D/NDqgQHTFjU
+    4Cn1v8+ReLH7NyMTA+RnhfJZnIw+IahQV8Cs5go/vouHMcd46srIpH0UsKCBuYR6U+VhFT
+    5X4IrG3Jg78xgttGn+AtH7t6hdR4nEakdA4xO0VeCYxleQm716CLywLEHQrQ
+X-ME-Proxy: <xmx:PcXkamVlQ2jGwIgyyw7CUrFTE9b22yNeHLvUZX0SYWvWKneZMieQJA>
+    <xmx:PcXkatdRTC1wqqXKq8XEshFHyfBdgKMD7rGUhJu0dEwBET2-mSU3FQ>
+    <xmx:PcXkarXiQS1P0vfF0vaQ6CaF_zxTEGGxOu_yo6_3rmhGSuJ5WdPWJQ>
+    <xmx:PcXkakWDbmZZj9fKf7Gmq_vbad2xvqM_FADgEPUBMqoLcDaV9qZ0Cw>
+    <xmx:PcXkarMhj1T7gDsxJAxPahlNVUaY2kwoc8YFK8_raX-_IUOofkJZ5i26>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 30 Oct 2026 12:26:36 -0400 (EDT)
+Date: Fri, 30 Oct 2026 16:26:35 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Challvy Tee <challvy.tee@gmail.com>, x86@kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, dave.hansen@linux.intel.com, 
+	rick.p.edgecombe@intel.com, vishal.l.verma@intel.com, kai.huang@intel.com, seanjc@google.com
+Subject: Re: [PATCH v3] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module
+ is not initialized
+Message-ID: <auTExTAMoaKKjBrb@thinkstation>
+References: <auM3KKutfutAqgWG@thinkstation>
+ <20261030154851.907726-1-challvy.tee@gmail.com>
+ <939b4cc7-5c7f-429d-a9be-830aa1c53ac5@intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,47 +92,32 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261025100202.2584654-1-stian@itx.no>
-X-Debian-User: leitao
+In-Reply-To: <939b4cc7-5c7f-429d-a9be-830aa1c53ac5@intel.com>
 
-On Sun, Oct 25, 2026 at 11:02:02AM +0100, Stian Halseth wrote:
-> I could not hit the window in a KVM guest, but instrumented, the guest
-> showed the sched timer armed 5.9 ms after now at HZ=250 right after a
-> jiffies -> hpet switch, and tick stops saving a ts->last_tick more than
-> a tick ahead. The fix boots without warnings there.
+On Fri, Oct 30, 2026 at 09:13:12AM -0700, Dave Hansen wrote:
+> On 10/30/26 08:48, Challvy Tee wrote:
+> > --- a/arch/x86/virt/vmx/tdx/tdx.c
+> > +++ b/arch/x86/virt/vmx/tdx/tdx.c
+> > @@ -2321,6 +2321,9 @@ void tdx_sys_disable(void)
+> >  	struct tdx_module_args args = {};
+> >  	u64 ret;
+> >  
+> > +	if (!tdx_module_state.initialized)
+> > +		return;
+> 
+> NAK from me on this.
+> 
+> If SEAMCALL is fatal then we need stronger barriers on the generic paths
+> to SEAMCALLs themselves, not one-off patches of the sites.
 
-I am seeing this on my testing real hosts:
+I don't think the generic path is the right place for it. For every
+other caller, reaching a SEAMCALL on a non-TDX system means something
+went wrong higher up, and we want to see it. A check there that quietly
+returns an error hides that. Making it WARN would catch it, but then the
+crash path would still need its own check before the call.
 
-           clocksource: Switched to clocksource tsc-early
-           ------------[ cut here ]------------
-           WARNING: kernel/sched/cputime.c:481 at kcpustat_dyntick_stop+0x15e/0x1d0, CPU#2: swapper/2/0  [warn]
-           Modules linked in:
-           CPU: 2 UID: 0 PID: 0 Comm: swapper/2 Tainted: G S                   7.3.0-0_fbk701_debugnightly_rc0_upstream_17997_gc339f4010dea #1 PREEMPTLAZ
-           Tainted: [S]=CPU_OUT_OF_SPEC
-           Hardware name: Quanta Twin Lakes MP/Twin Lakes Passive MP, BIOS F09_3A23 12/08/2020
-           RIP: 0010:kcpustat_dyntick_stop+0x15e/0x1d0
-           Code: de e8 96 00 00 00 42 0f b6 44 2d 00 84 c0 75 4d 41 c6 07 00 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b e9 2e ff ff ff <0f> 0b eb
-           RSP: 0000:ffff88828a22fe38 EFLAGS: 00010087
-           RAX: 0000000b9aef1500 RBX: 0000000b9aeb7036 RCX: 0000000000000001
-           RDX: 00092e9200000000 RSI: ffffffff851ec9c0 RDI: ffffffff851ccaa0
-           RBP: 1ffff111c3e65a3b R08: ffffffff8152bd65 R09: 0000000000000001
-           R10: dffffc0000000000 R11: fffffbfff0f78a9a R12: fffffffffffc5b36
-           R13: dffffc0000000000 R14: 0000000b9aef1500 R15: ffff888e1f32d1d8
-           FS:  0000000000000000(0000) GS:ffff888e9684e000(0000) knlGS:0000000000000000
-           CR2: 0000000000000000 CR3: 000000107162a001 CR4: 00000000007706f0
-           PKRU: 55555554
-           Call Trace:
-           <TASK>
-           tick_nohz_idle_exit+0x1d5/0x2d0
-           do_idle+0x3b7/0x4a0
-           cpu_startup_entry+0x45/0x60
-           start_secondary+0x1b3/0x200
-           common_startup_64+0x13e/0x140
-           </TASK>
-           irq event stamp: 406130
-           hardirqs last  enabled at (406129): [<ffffffff849e90cf>] cpuidle_enter_state+0x13f/0x465
-           hardirqs last disabled at (406130): [<ffffffff81557bc2>] tick_nohz_idle_exit+0x62/0x2d0
-           softirqs last  enabled at (406118): [<ffffffff8126dc76>] __irq_exit_rcu+0xc6/0x230
-           softirqs last disabled at (406111): [<ffffffff8126dc76>] __irq_exit_rcu+0xc6/0x230
-           ---[ end trace 0000000000000000 ]---
+So gate the call on X86_FEATURE_TDX_HOST_PLATFORM, the same way
+paddr_is_tdx_private() does.
 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
