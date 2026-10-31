@@ -1,102 +1,45 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793464363;
-	b=KuZplalayCp9lMNSITPsPwVfxcJfLy2JXpgwj8v+FWGFZwUprUsnV86uZKS2sQLsxqR1
-	 6STx0yb3F3XW4mlcZxKsT/YLw4xIaK3cNhmMc3SKRzncsjY68kzAvquVmhDgUt1zsl8P5
-	 GX3/KqypQVRBWyfGSSez7tHgrSC6cMabV1Q66JuevuVqMrZ1EAa+aXo/ahDVeZZoadDfH
-	 x1RHrZfuJx6TH3vol8xmiYu1P/kt6YRWK1+CW1Yib2Kaski4kib4l0z6yrHM04s7IL77G
-	 xfXYgtWKuW57inmzfaBqYcDdqdaDBc0FCZTWZ95KfLMwBUC7RbiFYnhqxwDJqBj6a6A==
+	t=1793468434;
+	b=A0q8R7beusEZTZ0EYWz6fY84YC4QLyMrHRKOQIOmWb4ppvmmAP/QjvfxjXhdJdRrErhl
+	 KdLCJYKrEpJ9fqClX1m9UvWkYABMIYT2p+R8O5s+pA/bMTBAWJuODyai+ZcQ9i7hXUqgE
+	 rI/j6ljaoR3ls5WtgR/sJLtZtITwEID5mawQm2XkqaQvdF/Fx5fHrecpD7s6wrwpUIqIM
+	 8wmltHp40W2Qx7ckdsfVUTH4aglUIyLx46AUs3md8NtxuRWBWcxgwCL8f24qDe0SJdU3s
+	 9cX4XVlqV+CDeDGKGZygAa9frFbA2uEB68Kqdlta2+ADXnP5sN6XTgLqwn1z+DzcYEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793464363;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=mp4gO+fjAtIo2pyXMs3mDPHOrNMwKVTtKclVo7+AAps=;
-	b=BCEPQuX6amdKnKyuNFgkYE7Js5vpXjWlz0glS3zHFgLFt01Bq3IJRuLuqWGXlw5zvPol
-	 C39OhlfcUdTc/Yz9vLhZof7DX2T271IdFd5RysE4Oqwt+sp9vtrx4KvaupgN07W8FsdQq
-	 gHq3trvDkCvzmviphHcGnr41IQc50gFGPW/DJEY/Xuc74bqQgOyDhKSAkQ+SnG5MiYUlT
-	 oRqmlDtcqV5BR2CCdeaM35OBtLROLMgUKQler9RE87fBr7coXCi66dOWPP/WzHJkMq7jJ
-	 88pWQKhuObqVsWytAYpb4T8Gf/N6wMP/RFidkfO5p9cGBF3ivzgihAs1p65qyk4Svkw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793468434;
+	h=Received:DKIM-Signature:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
+	 Date:Message-Id:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=+7k1NaGz5TOnOiTpgvvEXdv7k27RwmSfbCON8FW0kxw=;
+	b=SxDQRZkKnpexya9mbt4/pkpJBskt459auzH+lbZI1y6SBxm1IDHUeuHA93LVfUQ0ZUI9
+	 lWr3sKRadofcSco3mz4ZWp6RiPmGh993EXYI9iZfxdsuc6AU67awZ5rpQJ+34LahvKFPi
+	 bF5B5K+YTG8WLHXSTTUObTANup+g6SgegrFZobD1kjS0qBpbaQVQmmzrPRLH4elkPcfiA
+	 sPgXWyfCQ6BLP+KPXTNztmFPiJuZIUBRz9gO2eyUCBsCtn+WhYXnuHOG4vP25+XTBU3Ky
+	 LuqEVGdpYF6CvAQcrmyg0popW46uR1gKwGNJ49tVWtikdX8mVUR5XXX4vvsFyUBwu7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rowland.harvard.edu;
-	spf=fail smtp.mailfrom=g.harvard.edu;
-	dkim=pass header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b="k/vuMpSU";
-	arc=none smtp.remote-ip=209.85.222.172
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="JDN8500/";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B480D606A31A
-	for <regressions@lists.linux.dev>; Sat, 31 Oct 2026 16:32:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B480D606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D359B606A31C;
+	Sat, 31 Oct 2026 17:40:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=k/vuMpSU
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-93f2f2edb19so166570385a.0
-        for <regressions@lists.linux.dev>; Sat, 31 Oct 2026 09:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1793464361; x=1794069161; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=mp4gO+fjAtIo2pyXMs3mDPHOrNMwKVTtKclVo7+AAps=;
-        b=k/vuMpSUwZ9oacZuaZTu/PxjvO9+xgJxxETNoSTx6yv3FApqWiBohbzCKZ+TvTjX8p
-         f8+C+kdeRl5qY+5x/oBqtvqEPeleeEXFcS7a3Q6zyc+LikNEIeHC0XAg9det3V/JvZWH
-         EaU0XshxsomAt/5J1mCQgpv6Rn91zsjm3G1XO02vTgKhmoFcmrjfjuNpthSgCy3oX+iU
-         pcXfEn417CBBQS5mF2FLlnXaMPweFyAxR1p1CBMd7DbnyiwHVRwAA5dkR/fNjohyQdke
-         R6GWLxV4iZeGQ3+6evxxGzevNXfexxkSQnps80AXhQWETfRh6FU96p/BIcsJ4B8Jvbtw
-         b3Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793464361; x=1794069161;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=mp4gO+fjAtIo2pyXMs3mDPHOrNMwKVTtKclVo7+AAps=;
-        b=iNvLhAkBkyohHPNK2NMznXod8OWcjsndFoXEDVvo6rCYnOCTv1xpD+F2UT4UsOqbeJ
-         1Ehyq9Sr/O5C85w6f0ThkBH1XNaIOoN9yYAJRZw3g0DyPGsAP6rFpMsePTbwOgwJENrG
-         OrSvQ5W2Y4l4BOSLfIQUeANaLLVTWYRewNNcjHuUwYy/qLkvITYCjKVQNkncVbrKOU40
-         inES2HhXljvqEYowybjaNU9OrYOJc05yqe8BOlvOnZz0LYomUtapXQf3cL2O7HkWFD+f
-         lxwUEln7f2vRsALo/2VxGluhDBwT8/SupDfXDCHI7J87B4Osqm0vs+GrZxtk9bR+YZ1T
-         j70Q==
-X-Forwarded-Encrypted: i=1; AKwUvBx4mvnFP7wT67AXrUU/uWO873Q5Mumerd5fkbYQJT17v0DgvDKTbZVtzAzWncQWbuvz8pg00tetfdV6Qw==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKCa3GRw1D39BWet/Z4V1S/iKhO/P+fkMyV7nFt9tk+f+tCHAb2
-	1AX53hNwa3wixejbd1GNgIHMjsUGmD+61Xonxr/2yofZNCim2jmSXAevaLa4GledxT3GPiBOVol
-	nyDgoxQ==
-X-Gm-Gg: AYBFou0dbX5tVnT8dPkAImy9+0laNWL7x7ajIh8yuWuBVu4maAgw+3UQUtqjaUysecU
-	TDQxndm0q0mQmVEhFTnNrlzieRzStQTcllHU5iiIDSEDMPiEP4E9OoJ1s9ESXu51qUNWQFWEeh3
-	tVm71kb8K8mG4HrSBOGrupdh/agLoNLpywF+4G8uWjmak9FroMICgDm04Oh/+VScVxrYVv3cx4T
-	FualPRJJ5XmKR5r5Eyvs2qO6IBfi96to7oKO/Kg/ZPmHOXgpnqQ8BJkKftQs2HJFvt17087L8Hp
-	qiSnBjehvM5lMZVktgwYguO552Ds5M1xJ7DxFD72/BMYe7zZjCZMLGelSPsypbivktZpw/64APZ
-	fYjIqYQZ9aQECoGtR1OvB2jYQlvwySQl9ofMZtXeQe+ICafhrShErBwcjZoyh/vSngq18eKSTIA
-	3xqqzssFfLj1CC6mjFfkK6KOo3XO8a3ZYkWSCiuioyb3znuj8HgHPu+SqKLxIJ/L1ej6sGBz9gd
-	/3kvRGlOFifbSCmdYbtSyPPCqjXVKjA8wYBtsf5LZ/tqQa3fjYSQgNSt3FS8Jxd9lY24O9ZDZ6r
-	HTD/+IkdVONMlGNRXpQ53tW8N+3OPHB2K4UQ35Mu8vi54Q0gc18=
-X-Received: by 2002:a05:620a:6844:b0:93e:c12c:4400 with SMTP id af79cd13be357-9442172bcecmr893711385a.77.1793464361471;
-        Sat, 31 Oct 2026 09:32:41 -0700 (PDT)
-Received: from rowland.harvard.edu ([2601:19b:d01:d210::66b0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-94425ac6bddsm417925285a.37.2026.10.31.09.32.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Oct 2026 09:32:40 -0700 (PDT)
-Date: Sat, 31 Oct 2026 12:32:38 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>,
-	Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>,
-	linux-usb@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
- (3434:d068) at boot since v7.3
-Message-ID: <387e9e3b-683e-474c-ba00-4b12c7c77b7c@rowland.harvard.edu>
-References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
- <20261024203558.3181711-1-yiyu@yiyuzhou.io>
- <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
- <20261025111410.2c14fcef.michal.pecio@gmail.com>
- <7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
- <20261026105139.6b86cb3c.michal.pecio@gmail.com>
- <3ddd9334-6dee-48cf-8a62-82cebbe51d7f@rowland.harvard.edu>
- <20261030174718.1f28218a.michal.pecio@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JDN8500/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A38571F000C1;
+	Sat, 31 Oct 2026 17:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793468433;
+	bh=+7k1NaGz5TOnOiTpgvvEXdv7k27RwmSfbCON8FW0kxw=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=JDN8500/3P01cYmIsV8CpwYjOiXOUz0EXUq3PVUNx3UQEgfh079uahNBYdsdnp7xd
+	 9Z0PxyBRM0ydrsTs18AviGmMAR/WZ2bgPvgHQa5LgMWMQEnJmC2s0GllDuEHOXUG5m
+	 tQG3Q7Fcz7mFT3Xm36W+WChrVIO1gvC1aERSBIc/bUjif+jXwykHli1gmykhSNXjts
+	 h0E9r/kk4a1J3B+/QyTs56S4JwipW8ZK4WahKjbdMLm4uc/L8/T6k/n7Sa/m95XGvP
+	 PTNbkjtJibfDvtEceuvAC6lbElu8kpf35yeFtzfc7hdF3//I9B5z9XYff6hIYLQle+
+	 7m4LvgHHUrtiA==
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -106,108 +49,87 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261030174718.1f28218a.michal.pecio@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] Revert "phy: qcom: qmp-pcie: Skip PHY reset if already
+ up"
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Michael Burch <me@michaelburch.net>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ Qiang Yu <qiang.yu@oss.qualcomm.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Abel Vesa <abel.vesa@oss.qualcomm.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Hans de Goede <johannes.goede@oss.qualcomm.com>, 
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ regressions@lists.linux.dev
+In-Reply-To: <20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net>
+References: <20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net>
+Date: Sat, 31 Oct 2026 23:10:21 +0530
+Message-Id: <179346842169.7309.953613001579327741.b4-reply@b4>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2212; i=mani@kernel.org;
+ h=from:subject:message-id; bh=MIzTd1itZPpW7FCl5YwWGtQIeJPAAhpsZ38f5D6eUQU=;
+ b=owGbwMvMwMUYOl/w2b+J574ynlZLYsh6psGZ4fnkq2XWt7t1x7msGUP7WBYY5yqy6uRa+v+1D
+ dVMnDalk9GYhYGRi0FWTJElfamzVqPH6RtLItSnwwxiZQKZwsDFKQATCZrBwTBj5WLWvc4VcisS
+ HaoYj84p8Iyq+C3byiB894p1mfriqZVXfiSpSQv7X9OdwHvsn51Je96ctn+a0XcktNxffSgp4l4
+ o45OS6VmeX/3vQPGjvXY2bJKbMn4fzQuZlvHaxnEzy5ffMQlx84S/JStMvHohTDugymCnh/raSF
+ 9fg2522fs8+5mtn3n9Uwq7dWvBU5kdDxccYJ+0u7lO9a2NuUZm4vP2D2+Y1n223Tmhf1HMLDvXm
+ Plz1Z6wPWMV08l5fOLU0fi4f3/DZBQPmp/mTA8oLw9I1nvQoVq0Uvx6lK6OVzXfid5phXsvu3us
+ U7RMbcjQ4g6dNGcdy1XedSyldpKPyyTP7hRZclvV418VAA==
+X-Developer-Key: i=mani@kernel.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-On Fri, Oct 30, 2026 at 05:47:18PM +0100, Michal Pecio wrote:
-> On Mon, 26 Oct 2026 14:56:49 -0400, Alan Stern wrote:
-> > You can read the login in hub.c:hub_port_connect_change().
-> > 
-> > Broadly speaking, if the port is enabled after a connect-change
-> > event, the core tries to resuscitate the child device (and checks
-> > whether the descriptors have changed).  Also, if the child device was
-> > suspended when the connect change occurred, the core will try to
-> > resuscitate it by treating the change as a wakeup event.
+On 2026-10-13 09:22 -0500, Michael Burch wrote:
+> This reverts commit 910b828b22b7b91054b3bd4be676a017444b0e00.
 > 
-> Thanks.
+> That commit skips the no-csr reset assert/deassert (and the 200-300us
+> settle) whenever the bootloader already brought the PCIe QMP PHY up:
 > 
-> For USB2, this seems to happen if a reset was queued before a brief
-> disconnection and executed after it.
+>   skip_reset = qmp->skip_init &&
+>                !qphy_checkbits(pcs, cfg->regs[QPHY_PCS_STATUS],
+>                                cfg->phy_status);
 > 
-> We believe the issues reported here happen when a device disappears,
-> usbhid sees -EPROTO and tries to reset it, then the device comes back.
-> But what happens to a device that reconnects during probe doesn't seem
-> to matter, as long as it ultimately gets probed (reasonably fast).
+> and states its own assumption explicitly: "This relies on the assumption
+> that when skip_init is enabled and the PHY is reported as up, the
+> bootloader has already configured the PHY correctly and the link is in a
+> usable state."
 > 
-> So I wonder how important is this feature and what motivated it? Are
-> there known use cases that depend on it? Like devices disappearing
-> mid-operation for a few ms which need to have their state preserved?
-> Should we worry about things breaking if xhci-hcd begins to act like
-> the device is gone: ESHUTDOWN completions, ENODEV on submit?
+> That assumption does not hold on the Dell XPS 13 9345 (X1E80100).  UEFI
+> boots from the NVMe behind pcie6a, so the PHY is always already started
+> when Linux takes over, skip_init is true, and the reset is skipped.  The
+> link then never retrains and the root port comes up with no endpoint:
+> 
+>   qcom-pcie 1bf8000.pcie: Device found, but not active
+>   pci 0006:00:00.0: [17cb:0111] type 01 class 0x060400 PCIe Root Port
+>   (no 0006:01:00.0, no nvme at all)
+> 
+> "Device found, but not active" is dw_pcie_wait_for_link() reporting LTSSM
+> stuck in POLL.Active/POLL.Compliance -- receiver detected, training never
+> completes -- so the machine cannot find its root filesystem and drops to
+> a dracut emergency shell.  v7.2 is unaffected because it always performed
+> the reset.
+> 
+> The commit was applied on its own as patch 1/4 of "PCI: qcom: Add link
+> retention support"; 2/4-4/4 have not landed. Without them,
+> qcom_pcie_host_init() still asserts PERST# and resets the controller
+> before qcom_pcie_phy_power_on(), so the link is down while
+> QPHY_PCS_STATUS still reports the bootloader's state, and the skip's
+> precondition never holds. Revert it until the rest of the series lands.
+> 
 
-The USB-Persist stuff in the hub driver was originally motivated by the 
-desire to recover from disconnections during system suspend.  For 
-example, disconnections caused by host controllers that don't provide 
-Vbus power while they are suspended, or users unplugging a device while 
-the system is suspended and then plugging it back in before the system 
-resumes.  A more detailed description, somewhat out of date by now, is 
-given in the changelog for 8808f00c7adf ("USB: try to salvage lost power 
-sessions").
+Ouch. This dependency should've been mentioned in the cover letter of the
+offending series :/
 
-Yes, this feature is very important.  Mostly it was meant for USB 
-mass-storage devices going away and then reappearing following a system 
-resume.  Before the USB-Persist facility was added, if the device held a 
-mounted filesystem the result would _not_ be what users desired, to put 
-it mildly.  The ability to handle transient disconnections was just an 
-unintended side benefit, although there did seem to be some real cases 
-where it helped -- USB mice or something like that.
+> Fixes: 910b828b22b7 ("phy: qcom: qmp-pcie: Skip PHY reset if already up")
+> Signed-off-by: Michael Burch <me@michaelburch.net>
 
-To the device and driver, what happens looks like a reset, or rather, a 
-reset-resume because the former configuration and altsettings are 
-restored.  Naturally any ongoing operations would be expected to be cut 
-short, but while the device is suspended this isn't an issue.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-It seems that you're concerned about two slightly different types of 
-thing.  In one, the disconnection happens while the device is suspended 
-and it is discovered when we want to resume the device.  Presumably 
-that's not a problem for you (?), because in this case we really do go 
-through the whole reset-resume procedure.
+- Mani
 
-The other type of thing is when we see a port-connect-change or 
-port-enable-change, but the port is again connected and enabled by the 
-time we see it.  In theory this shouldn't happen for USB-2 devices; as 
-best I can recall the code was written that way to cover a theoretical 
-possibility (hardware not behaving according to the spec).  But with 
-USB-3, of course, the possibility is quite real.  The commit meant to 
-take care of this is a4f55d8b8c14 ("usb: hub: Check device descriptor 
-before resusciation").  If you need to modify the code added by that 
-commit, go ahead.
 
-> And if this happens to a hub, can we rely that its children will be
-> freed and reenumerated, or may they also get reused somehow? If they
-> can't, are they guaranteed to go away before the hub is reset?
-> (Because that would be convenient...)
-
-When a hub is reset, the logic for what happens to its children is a 
-little tricky to follow. I think that each port with a connected child 
-ends up being handled by hub_port_connect_change(), which treats it as a 
-new connection _unless_ the child was suspended beforehand, in which 
-case we follow the reset-resume path.  So yes, it is possible for the 
-child will be reused in this way.
-
-Why not try to make the child persist even if it wasn't suspended?  
-Largely because there's no general way for class drivers to recover 
-from such events.  However, it's possible that I'm misremembering the 
-behavior here, so if this is important to you then you should check that 
-my description above agrees with reality.
-
-But even when the children aren't reused, unless their 
-udev->persist_enabled flag is clear, they don't go away until well after 
-the hub has been reset.  The reason is that the hub driver has to look 
-at each one, after the hub is running again, and evaluate whether the 
-connection can be recovered.  Maybe this can be improved.
-
-The case you mentioned, about a reset being queued but not occurring 
-until after a transient disconnection, is a little different from the 
-other cases.  The core basically ignores disconnections while a reset is 
-in progress (in USB-2, the electrical signalling used during a reset 
-actually makes it impossible for the upstream port to tell whether the 
-device remains connected or not).  Disconnections before a reset starts 
-end up getting handled much the same way; the most that happens is that 
-the connect-change status is cleared and the reset is retried.
-
-This was all implemented before USB-3 appeared.  If we were to do it 
-again now, we might do it differently.
-
-Alan Stern
