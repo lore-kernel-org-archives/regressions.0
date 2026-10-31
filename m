@@ -1,64 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793448954;
-	b=Q2yfE2pdL5BqHzZ2n6c+hYjeGTiBHyXyDlWGksttyKg45eY6CJCHxSpaj+KIptPGYog+
-	 nRf/nb+a8yZ9/IKxJP3PQTgADF+2x/u6GGB5Epw9//hbX4rpZzBCCX3J3s4QJgDDGb2Py
-	 ZkEWUz2Yo7y8k2mm5NxKkVAfBCBClmSG7ah16w8JYJxC9jwveWoSSxjhnXDBbK0RIVnTx
-	 ytc2I/zOEqnHlcVQ4VIT5BN41E65ViQWUzUAloawYUTW5IEDNAU/tHKFG8yEp3ZvgVoq0
-	 Sm1DuYvmv1xM8GepLZCABHYgeaLHk2JjHJE+9cic7bopEOlP/aLY8kKpR7Ti4ekmiDg==
+	t=1793454885;
+	b=si9WmV/TOeqP6m4evmAWDglyhhJOPcA9DHGMSL0lDqWSWBa9a9d6Y2ts6WZzehdlWhMD
+	 prvrijmnxBCA4xl3xYNkjkduF9pyY2xWqgXymZRGlk02uTomnoeNzFpPKum39xO5dN45O
+	 a9vglEm+ZgD/hmQTTDHqgKyz/ebLdzNaHdc2xiAAXDeF+tobaFGF47MVhVsRzRZfhOA71
+	 vYjf617r3PYdpchmcrIpq5yWeMoY4e45PNqdhHje2OTK+29GRZ2jPKGOCEePyoEj7ivHI
+	 KuzTh2mIz1Q3HpQNusvdtdaj4sO247gTNLwRobsk7Q8KatdjVusLHKyKvew8IyZQTgA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793448954;
-	h=DMARC-Filter:Message-ID:DKIM-Signature:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Content-Type:MIME-Version;
-	bh=EDnpldi5RK0AnuEzL3K5R2iyu0Pi3r3gBMzfdKdH7kY=;
-	b=mNDmFzlWhgSatr/7n/J1KZ3runzZoo2msMEcnXlFFYz/xIYSEOrRYwr4AwkSXl5K0e1a
-	 i/uvYkTEIMcnkNVZodLZExbTkiQTF0YeBCZA7U99FV6HYViY8iqg1t7V76IXTFFdxVvn5
-	 cs3zsv96qQyLZ79NC7HZ2vL14uGHUso9C+5LhBM6F8zPYp4pEISE8uI5T+R/sYjmJeoFY
-	 mvW1Zl4tEgfZqB2gS7wyg0TJdgkkW2j4OUPA6KzZcINNt9rI/jI9ocB5Zsc7Tfn6Cgj7Q
-	 /SuO+czApip6Cr7dFtnwQ8m2pVnlmO/q1+NKG38M+ICSTla1y2KjgnUk7XVazrClwKg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793454885;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=SAztymwg+1aT7fmppIIECZake9mLXZOFcliz/rEV6Yg=;
+	b=O7bo/Qhyv7/jERXi4+iOFWW3olyh3aZuWYUuCC5s3YPZ3zUIWl4lfprVR6w3yFzKsqOd
+	 kgrbIZWnADytDn2l5bOjk5MGGSfmy41iG3pdbnBNkcxQqro9/Hd+tdU2DeL4Od5o3XCSO
+	 ZyhbLHPPwANn+pKzxGDrsL2bZKlxMuqYEJLkAjoWAWu4hR985VU/TxRIlP+Yk+fhlDRaT
+	 hPn+6PaMRxZL41/HhbkLQSGc4XsyodedfO8LeZxCUGNHemDkCX1thQLR6i4BJNsSMWus2
+	 x3iH0m6wBatL7zNzthtsGao4suz0fCeCj6ltCfQadCFQnM1HQuOGG42nTEDFp0q8+CA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=itx.no;
-	spf=pass smtp.mailfrom=itx.no;
-	dkim=pass header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=EwmoYvxk;
-	arc=none smtp.remote-ip=91.189.121.228
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cPKUfF85;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5DB606A31C
-	for <regressions@lists.linux.dev>; Sat, 31 Oct 2026 12:15:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA5DB606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF96606A31A;
+	Sat, 31 Oct 2026 13:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=EwmoYvxk
-Message-ID: <9bf3339ad6bf6b15668f6c35b57a8f42265b7f6e.camel@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1793448951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EDnpldi5RK0AnuEzL3K5R2iyu0Pi3r3gBMzfdKdH7kY=;
-	b=EwmoYvxkqH/hqN+UsiyREG55YjF9GhjlnPm2KDvmj6HnsKOEaXr90TwVMzH2yjgo0psomQ
-	M+w629M374F7Eh0rKz85UMovDv6ZbQ+BJvp+YxiZqPsyVdtqmpoaoczFODQcbHd+YoFba6
-	jI4em8Zpzq+N3FWjGBWRLet3lsrcY/k=
-Subject: Re: [PATCH v2] sched/cputime: Don't warn when the tick period
- starts after idle exit
-From: Stian Halseth <stian@itx.no>
-To: Kayra Cizmeci <kayracizmeci@gmail.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Paul Menzel <pmenzel@molgen.mpg.de>, Breno
- Leitao <leitao@debian.org>, Thorsten Leemhuis <linux@leemhuis.info>, Thomas
- Gleixner <tglx@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Sat, 31 Oct 2026 13:15:49 +0100
-In-Reply-To: <auW3XbhjMjakWAhT@scheduler.schedules>
-References: <20261031081408.3378884-1-stian@itx.no>
-	 <auW3XbhjMjakWAhT@scheduler.schedules>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-VoUST8Xfb5JSxNKPyQ83"
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cPKUfF85
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1519C1F000C1;
+	Sat, 31 Oct 2026 13:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793454884;
+	bh=SAztymwg+1aT7fmppIIECZake9mLXZOFcliz/rEV6Yg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=cPKUfF855EqJibsijDWeOa813F+Hh8hERpo4jZ0GpPvIdBbF3YECPPKkS5eZ/Wa38
+	 lvJSJX7nuBkZPYtaga1cY71iYRU15qGMhMoq/FJj2/JZkrI9yiqoX5e99O5slWZcdT
+	 7a/Z0940ZGFAZK0+32XAl/e4HeDKawD7+nv7YyFYMSR7zneW6L2t5Y9uLCm5HhU/Gp
+	 3k5MloZRH/0nGOK3N6ivsRs0gMySIqpq+Jga9cVIlu7JRDW0gUAHOomGKLQqf/xudG
+	 frTVmvH0s+glBWPIQ5LEE/Ni2Ot3tBtm07Uysmjt5t7/umUKTX7/A7wWvrZc5p8X/X
+	 m7kICxSMzUH8Q==
+Date: Sat, 31 Oct 2026 14:54:41 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Stian Halseth <stian@itx.no>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
+ after idle exit
+Message-ID: <auXzIbzU9aWBD_fM@pavilion.home>
+References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
+ <20261025100202.2584654-1-stian@itx.no>
+ <at-C_3rGi55L1v2X@localhost.localdomain>
+ <1e00b909b81c6195b3ad5aeda207d20cbedc3971.camel@itx.no>
+ <auDaMdhD2zGBLhDE@localhost.localdomain>
+ <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
+ <auIDNl9EUX4CzWzr@localhost.localdomain>
+ <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -68,70 +70,82 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
 
+Le Wed, Oct 28, 2026 at 06:37:22PM +0100, Stian Halseth a écrit :
+> Hi Frederic,
+> 
+> On Wed, 2026-10-28 at 15:14 +0100, Frederic Weisbecker wrote:
+> > 
+> > So let me depict that:
+> > 
+> > // clocksource = jiffies ?
+> > // clockevent = lapic ?
+> > tick_setup_device()
+> >    tick_next_period = ktime_get() // jiffies_to_nsecs(jiffies)
+> > 
+> > tick_periodic()
+> >    tick_next_period += TICK_NSECS
+> >    jiffies++ // ktime_get() == tick_next_period
+> > 
+> > // jiffies > tsc_early
+> > clocksource_select()
+> > 
+> > tick_periodic()
+> >    //one tick has passed, so ktime_get() == jiffies + 1
+> 
+> Here is where it goes wrong. One tick has passed in real time, but not
+> in ktime. The switch happened d after the last tick, jiffies never
+> counted that d, and the tsc only counts from the switch on, so here
+> ktime_get() == jiffies + TICK_NSEC - d.
 
---=-VoUST8Xfb5JSxNKPyQ83
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
+So that assume that during the clocksource switch, the new clock synchronize
+with the old one so that ktime_get() from the new clock should start from the
+last value of the old clock. I'm having troubles to verify if
+tk_setup_internals() does exactly that. Trying to recollect the few pieces of
+my brain lost in the process.
 
-Hi Kayra,
+I just added this patch to see what happens in practice:
 
-On Sat, 2026-10-31 at 14:47 +0300, Kayra Cizmeci wrote:
->=20
-> TICK_NSEC =3D 4
->=20
-> =A0=A0=A0=A0=A0=A0=A0=A0 switch
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 v
-> Real: 8 9 10 11 12 13 14 15 16 17 18
->=20
-> Time: 8 8 8=A0 9=A0 10 11 12 13 14 15 16
->=20
-> Tick: 8 8 8=A0 8=A0 10 10 10 10 10 10 16
->=20
->=20
-> So if we enter idle at real-12, and exit at real-13 this happens:
->=20
-> last_tick is 16, so last_tick - 4 =3D 12. But normally, last_tick needs t=
-o
-> be 14 and tick_start needs to be 10. Or am I missing something?
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index ea2e6e55f37b..e8f3fc435933 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1854,6 +1854,7 @@ static int change_clocksource(void *data)
+ {
+ 	struct clocksource *new = data, *old = NULL;
+ 
++	printk("old= %lld\n", ktime_get());
+ 	/*
+ 	 * If the clocksource is in a module, get a module reference.
+ 	 * Succeeds for built-in code (owner == NULL) as well. Abort if the
+@@ -1876,7 +1877,7 @@ static int change_clocksource(void *data)
+ 		tk_setup_internals(tks, new);
+ 		timekeeping_update_from_shadow(&tk_core, TK_UPDATE_ALL);
+ 	}
+-
++	printk("new= %lld\n", ktime_get());
+ 	tk_aux_update_clocksource();
+ 
+ 	if (old) {
 
-Your diagram is correct AFAICT, and that's the case this patch is about.
+And I get this dump when jiffies switched to tsc_early:
 
-10 and 14 would follow the old periodic ticks, but after the switch the
-tick runs on a grid that is d ahead of them.
+[    1.549194] old= 1352575566
+[    1.549930] new= 1352578748
+[    1.550636] clocksource: Switched to clocksource tsc-early
 
-Idle ends at 11, before tick_start at 12. The code already accounted
-that correctly but warned about it, and v2 drops the warning.
+That's 3 us, it could be the simple difference between the 2 printk.
 
->=20
-> IDK if there is a better solution tho.
-> Maybe fixing it from the root would be better. If its even possible to do=
- it
-> cleanly...
+But the switch from tsc-early to tsc is much more:
 
-Someone might have a better idea, but maybe we could realign
-tick_next_period when the clocksource switches away from jiffies.
+[    2.639818] old= 2445754540
+[    2.640172] new= 2446107950
+[    2.640927] clocksource: Switched to clocksource tsc
 
-I kept v2 to the warning though, since this is a regression in the
-current release, and a change to the tick setup could be a potential
-follow-up.
+That's 353 us.
 
-Thanks for the review!
-
-/Stian
-
-
---=-VoUST8Xfb5JSxNKPyQ83
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCauXb9QAKCRDoeAEuJe36
-VqEZAQC2E0gGPVVWwk7ejLcmaZxNocbAcJhx1JjlibzdMIVwLgD/dGfqMB876H+W
-GfrivKJdNnMZ9Y8fuomOe2qVUozYGgw=
-=WNqC
------END PGP SIGNATURE-----
-
---=-VoUST8Xfb5JSxNKPyQ83--
+What do you think?
