@@ -1,69 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793455911;
-	b=T1I4LoAxm8yh0u7zXtkbC5AXiP2gh65ViF/7TW/d0xuEhXc4DQoKEnmNqTMWvb4Fl/Xa
-	 TazX5k+TG0k/Cuyv44QfxEAzUILu75HIcf4JrZnGeu9DPXpiWarupGz/kcl3G18GJXYCI
-	 oi4CxOeV43Jco9WlMEKI4kJrmII3CM3HzY4Vpqd/zEK5u7vXesYcZFvWaTMywIk+JqOwB
-	 NqqOa5pzAMS2ozRco4sga2hMSrdqxRqjsAfO/Qdh1AXMBwNAsvE4KppIRKu9QZb6jQVid
-	 5JlbLiXd31AvJmMAUhwso6AuBXaHSA40KW0pOHX6X9qSWMG71z9D2K+27ed+SbzAeeg==
+	t=1793464363;
+	b=KuZplalayCp9lMNSITPsPwVfxcJfLy2JXpgwj8v+FWGFZwUprUsnV86uZKS2sQLsxqR1
+	 6STx0yb3F3XW4mlcZxKsT/YLw4xIaK3cNhmMc3SKRzncsjY68kzAvquVmhDgUt1zsl8P5
+	 GX3/KqypQVRBWyfGSSez7tHgrSC6cMabV1Q66JuevuVqMrZ1EAa+aXo/ahDVeZZoadDfH
+	 x1RHrZfuJx6TH3vol8xmiYu1P/kt6YRWK1+CW1Yib2Kaski4kib4l0z6yrHM04s7IL77G
+	 xfXYgtWKuW57inmzfaBqYcDdqdaDBc0FCZTWZ95KfLMwBUC7RbiFYnhqxwDJqBj6a6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793455911;
-	h=DMARC-Filter:Message-ID:DKIM-Signature:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Content-Type:MIME-Version;
-	bh=lvlz765PeiLIZOiym9FNUcuzEVbVNRreYuI+C2LJcxg=;
-	b=H3Zbd928VtSX4Bx/fH/Vdvl+5WKEEH4O/5mINojA6v3C3wCAze0oUHLu44nWv85cnhH7
-	 SIdeJK5KqcPbNq7apx9dRl0Zhsjco7CYzOPeGQuOGBRN6BguEvF9H5azaV588qUJXlyyQ
-	 EgWtX6mgWTh0m3vzLGDprqK8Q9En29+ARNDbPZspSDxTQLiYmc6y0ol2+FBQ28Gi5XwNS
-	 1Ubuk7DgMcz+YsL9wZEZmOLpvDBegC27oAtu008aSbhLq01ZEyZVuUNwTBY8lS+zSW0wT
-	 dNQAlPGb4uiYSCQ/NBA3nFscsea31pFelYrhAR4lPpA1oMgMrl5gZBuvFn3b/MQUBYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793464363;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=mp4gO+fjAtIo2pyXMs3mDPHOrNMwKVTtKclVo7+AAps=;
+	b=BCEPQuX6amdKnKyuNFgkYE7Js5vpXjWlz0glS3zHFgLFt01Bq3IJRuLuqWGXlw5zvPol
+	 C39OhlfcUdTc/Yz9vLhZof7DX2T271IdFd5RysE4Oqwt+sp9vtrx4KvaupgN07W8FsdQq
+	 gHq3trvDkCvzmviphHcGnr41IQc50gFGPW/DJEY/Xuc74bqQgOyDhKSAkQ+SnG5MiYUlT
+	 oRqmlDtcqV5BR2CCdeaM35OBtLROLMgUKQler9RE87fBr7coXCi66dOWPP/WzHJkMq7jJ
+	 88pWQKhuObqVsWytAYpb4T8Gf/N6wMP/RFidkfO5p9cGBF3ivzgihAs1p65qyk4Svkw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=itx.no;
-	spf=pass smtp.mailfrom=itx.no;
-	dkim=pass header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=fEszFz5Z;
-	arc=none smtp.remote-ip=91.189.121.228
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=rowland.harvard.edu;
+	spf=fail smtp.mailfrom=g.harvard.edu;
+	dkim=pass header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b="k/vuMpSU";
+	arc=none smtp.remote-ip=209.85.222.172
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20191606A31A
-	for <regressions@lists.linux.dev>; Sat, 31 Oct 2026 14:11:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20191606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B480D606A31A
+	for <regressions@lists.linux.dev>; Sat, 31 Oct 2026 16:32:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B480D606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=fEszFz5Z
-Message-ID: <a4ba7e5be50ed4de4cad3d3e53355eb533587694.camel@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1793455907;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lvlz765PeiLIZOiym9FNUcuzEVbVNRreYuI+C2LJcxg=;
-	b=fEszFz5Z3nynviUrhTPmHzI8erwiqpKmx5HQM7/56p+bimpZ/V6fhIX/UOre5vXeP55JlW
-	4O1mTyLIm48+Iui4LFmeo8DrIXEgvX5lj80v9DweSSOiWlJ1pAbBeXlzr2d0Ai50H7il+g
-	iDJs6FJM6A7pfoykCDcnBxXZwtrmCfg=
-Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
- after idle exit
-From: Stian Halseth <stian@itx.no>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Paul Menzel
- <pmenzel@molgen.mpg.de>,  Thomas Gleixner <tglx@kernel.org>, Anna-Maria
- Behnsen <anna-maria@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>,  regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Sat, 31 Oct 2026 15:11:46 +0100
-In-Reply-To: <auXzIbzU9aWBD_fM@pavilion.home>
-References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
-	 <20261025100202.2584654-1-stian@itx.no>
-	 <at-C_3rGi55L1v2X@localhost.localdomain>
-	 <1e00b909b81c6195b3ad5aeda207d20cbedc3971.camel@itx.no>
-	 <auDaMdhD2zGBLhDE@localhost.localdomain>
-	 <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
-	 <auIDNl9EUX4CzWzr@localhost.localdomain>
-	 <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
-	 <auXzIbzU9aWBD_fM@pavilion.home>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-Xwu0bUm283+Mi4l8kNS5"
+	dkim=pass (2048-bit key, unprotected) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=k/vuMpSU
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-93f2f2edb19so166570385a.0
+        for <regressions@lists.linux.dev>; Sat, 31 Oct 2026 09:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1793464361; x=1794069161; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=mp4gO+fjAtIo2pyXMs3mDPHOrNMwKVTtKclVo7+AAps=;
+        b=k/vuMpSUwZ9oacZuaZTu/PxjvO9+xgJxxETNoSTx6yv3FApqWiBohbzCKZ+TvTjX8p
+         f8+C+kdeRl5qY+5x/oBqtvqEPeleeEXFcS7a3Q6zyc+LikNEIeHC0XAg9det3V/JvZWH
+         EaU0XshxsomAt/5J1mCQgpv6Rn91zsjm3G1XO02vTgKhmoFcmrjfjuNpthSgCy3oX+iU
+         pcXfEn417CBBQS5mF2FLlnXaMPweFyAxR1p1CBMd7DbnyiwHVRwAA5dkR/fNjohyQdke
+         R6GWLxV4iZeGQ3+6evxxGzevNXfexxkSQnps80AXhQWETfRh6FU96p/BIcsJ4B8Jvbtw
+         b3Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793464361; x=1794069161;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mp4gO+fjAtIo2pyXMs3mDPHOrNMwKVTtKclVo7+AAps=;
+        b=iNvLhAkBkyohHPNK2NMznXod8OWcjsndFoXEDVvo6rCYnOCTv1xpD+F2UT4UsOqbeJ
+         1Ehyq9Sr/O5C85w6f0ThkBH1XNaIOoN9yYAJRZw3g0DyPGsAP6rFpMsePTbwOgwJENrG
+         OrSvQ5W2Y4l4BOSLfIQUeANaLLVTWYRewNNcjHuUwYy/qLkvITYCjKVQNkncVbrKOU40
+         inES2HhXljvqEYowybjaNU9OrYOJc05yqe8BOlvOnZz0LYomUtapXQf3cL2O7HkWFD+f
+         lxwUEln7f2vRsALo/2VxGluhDBwT8/SupDfXDCHI7J87B4Osqm0vs+GrZxtk9bR+YZ1T
+         j70Q==
+X-Forwarded-Encrypted: i=1; AKwUvBx4mvnFP7wT67AXrUU/uWO873Q5Mumerd5fkbYQJT17v0DgvDKTbZVtzAzWncQWbuvz8pg00tetfdV6Qw==@lists.linux.dev
+X-Gm-Message-State: AFq9FYKCa3GRw1D39BWet/Z4V1S/iKhO/P+fkMyV7nFt9tk+f+tCHAb2
+	1AX53hNwa3wixejbd1GNgIHMjsUGmD+61Xonxr/2yofZNCim2jmSXAevaLa4GledxT3GPiBOVol
+	nyDgoxQ==
+X-Gm-Gg: AYBFou0dbX5tVnT8dPkAImy9+0laNWL7x7ajIh8yuWuBVu4maAgw+3UQUtqjaUysecU
+	TDQxndm0q0mQmVEhFTnNrlzieRzStQTcllHU5iiIDSEDMPiEP4E9OoJ1s9ESXu51qUNWQFWEeh3
+	tVm71kb8K8mG4HrSBOGrupdh/agLoNLpywF+4G8uWjmak9FroMICgDm04Oh/+VScVxrYVv3cx4T
+	FualPRJJ5XmKR5r5Eyvs2qO6IBfi96to7oKO/Kg/ZPmHOXgpnqQ8BJkKftQs2HJFvt17087L8Hp
+	qiSnBjehvM5lMZVktgwYguO552Ds5M1xJ7DxFD72/BMYe7zZjCZMLGelSPsypbivktZpw/64APZ
+	fYjIqYQZ9aQECoGtR1OvB2jYQlvwySQl9ofMZtXeQe+ICafhrShErBwcjZoyh/vSngq18eKSTIA
+	3xqqzssFfLj1CC6mjFfkK6KOo3XO8a3ZYkWSCiuioyb3znuj8HgHPu+SqKLxIJ/L1ej6sGBz9gd
+	/3kvRGlOFifbSCmdYbtSyPPCqjXVKjA8wYBtsf5LZ/tqQa3fjYSQgNSt3FS8Jxd9lY24O9ZDZ6r
+	HTD/+IkdVONMlGNRXpQ53tW8N+3OPHB2K4UQ35Mu8vi54Q0gc18=
+X-Received: by 2002:a05:620a:6844:b0:93e:c12c:4400 with SMTP id af79cd13be357-9442172bcecmr893711385a.77.1793464361471;
+        Sat, 31 Oct 2026 09:32:41 -0700 (PDT)
+Received: from rowland.harvard.edu ([2601:19b:d01:d210::66b0])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-94425ac6bddsm417925285a.37.2026.10.31.09.32.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Oct 2026 09:32:40 -0700 (PDT)
+Date: Sat, 31 Oct 2026 12:32:38 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>,
+	Dennis Wissel <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>,
+	linux-usb@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron M5
+ (3434:d068) at boot since v7.3
+Message-ID: <387e9e3b-683e-474c-ba00-4b12c7c77b7c@rowland.harvard.edu>
+References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
+ <20261024203558.3181711-1-yiyu@yiyuzhou.io>
+ <SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
+ <20261025111410.2c14fcef.michal.pecio@gmail.com>
+ <7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
+ <20261026105139.6b86cb3c.michal.pecio@gmail.com>
+ <3ddd9334-6dee-48cf-8a62-82cebbe51d7f@rowland.harvard.edu>
+ <20261030174718.1f28218a.michal.pecio@gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,75 +106,108 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261030174718.1f28218a.michal.pecio@gmail.com>
 
+On Fri, Oct 30, 2026 at 05:47:18PM +0100, Michal Pecio wrote:
+> On Mon, 26 Oct 2026 14:56:49 -0400, Alan Stern wrote:
+> > You can read the login in hub.c:hub_port_connect_change().
+> > 
+> > Broadly speaking, if the port is enabled after a connect-change
+> > event, the core tries to resuscitate the child device (and checks
+> > whether the descriptors have changed).  Also, if the child device was
+> > suspended when the connect change occurred, the core will try to
+> > resuscitate it by treating the change as a wakeup event.
+> 
+> Thanks.
+> 
+> For USB2, this seems to happen if a reset was queued before a brief
+> disconnection and executed after it.
+> 
+> We believe the issues reported here happen when a device disappears,
+> usbhid sees -EPROTO and tries to reset it, then the device comes back.
+> But what happens to a device that reconnects during probe doesn't seem
+> to matter, as long as it ultimately gets probed (reasonably fast).
+> 
+> So I wonder how important is this feature and what motivated it? Are
+> there known use cases that depend on it? Like devices disappearing
+> mid-operation for a few ms which need to have their state preserved?
+> Should we worry about things breaking if xhci-hcd begins to act like
+> the device is gone: ESHUTDOWN completions, ENODEV on submit?
 
---=-Xwu0bUm283+Mi4l8kNS5
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
+The USB-Persist stuff in the hub driver was originally motivated by the 
+desire to recover from disconnections during system suspend.  For 
+example, disconnections caused by host controllers that don't provide 
+Vbus power while they are suspended, or users unplugging a device while 
+the system is suspended and then plugging it back in before the system 
+resumes.  A more detailed description, somewhat out of date by now, is 
+given in the changelog for 8808f00c7adf ("USB: try to salvage lost power 
+sessions").
 
-Hi Frederic,
+Yes, this feature is very important.  Mostly it was meant for USB 
+mass-storage devices going away and then reappearing following a system 
+resume.  Before the USB-Persist facility was added, if the device held a 
+mounted filesystem the result would _not_ be what users desired, to put 
+it mildly.  The ability to handle transient disconnections was just an 
+unintended side benefit, although there did seem to be some real cases 
+where it helped -- USB mice or something like that.
 
+To the device and driver, what happens looks like a reset, or rather, a 
+reset-resume because the former configuration and altsettings are 
+restored.  Naturally any ongoing operations would be expected to be cut 
+short, but while the device is suspended this isn't an issue.
 
-On Sat, 2026-10-31 at 14:54 +0100, Frederic Weisbecker wrote:
-> >=20
-> > Here is where it goes wrong. One tick has passed in real time, but not
-> > in ktime. The switch happened d after the last tick, jiffies never
-> > counted that d, and the tsc only counts from the switch on, so here
-> > ktime_get() =3D=3D jiffies + TICK_NSEC - d.
->=20
-> So that assume that during the clocksource switch, the new clock synchron=
-ize
-> with the old one so that ktime_get() from the new clock should start from
-> the last value of the old clock. I'm having troubles to verify if
-> tk_setup_internals() does exactly that.=A0
+It seems that you're concerned about two slightly different types of 
+thing.  In one, the disconnection happens while the device is suspended 
+and it is discovered when we want to resume the device.  Presumably 
+that's not a problem for you (?), because in this case we really do go 
+through the whole reset-resume procedure.
 
-Not that one, the timekeeping_forward_now() just before it. It folds
-the old clock into xtime_nsec, and tk_setup_internals() keeps that and
-only resets cycle_last from the new clock. On jiffies that value is the
-last tick.
+The other type of thing is when we see a port-connect-change or 
+port-enable-change, but the port is again connected and enabled by the 
+time we see it.  In theory this shouldn't happen for USB-2 devices; as 
+best I can recall the code was written that way to cover a theoretical 
+possibility (hardware not behaving according to the spec).  But with 
+USB-3, of course, the possibility is quite real.  The commit meant to 
+take care of this is a4f55d8b8c14 ("usb: hub: Check device descriptor 
+before resusciation").  If you need to modify the code added by that 
+commit, go ahead.
 
->=20
-> [=A0=A0=A0 1.549194] old=3D 1352575566
-> [=A0=A0=A0 1.549930] new=3D 1352578748
-> [=A0=A0=A0 1.550636] clocksource: Switched to clocksource tsc-early
->=20
-> That's 3 us, it could be the simple difference between the 2 printk.
+> And if this happens to a hub, can we rely that its children will be
+> freed and reenumerated, or may they also get reused somehow? If they
+> can't, are they guaranteed to go away before the hub is reset?
+> (Because that would be convenient...)
 
-Look at the timestamps: 736 us passed between the two printks, but
-ktime moved 3 us. The 3 us is tsc-early, from the read in
-tk_setup_internals() to your second ktime_get(). The time from the
-last tick to the first printk, plus the 733 us from there to
-tk_setup_internals(), is never counted. That is the d. If you print
-ktime_get() in tick_periodic() as well, old=3D will match the previous
-tick exactly.
+When a hub is reset, the logic for what happens to its children is a 
+little tricky to follow. I think that each port with a connected child 
+ends up being handled by hub_port_connect_change(), which treats it as a 
+new connection _unless_ the child was suspended beforehand, in which 
+case we follow the reset-resume path.  So yes, it is possible for the 
+child will be reused in this way.
 
->=20
-> But the switch from tsc-early to tsc is much more:
->=20
-> [=A0=A0=A0 2.639818] old=3D 2445754540
-> [=A0=A0=A0 2.640172] new=3D 2446107950
-> [=A0=A0=A0 2.640927] clocksource: Switched to clocksource tsc
->=20
-> That's 353 us.
+Why not try to make the child persist even if it wasn't suspended?  
+Largely because there's no general way for class drivers to recover 
+from such events.  However, it's possible that I'm misremembering the 
+behavior here, so if this is important to you then you should check that 
+my description above agrees with reality.
 
-Here the printks are 354 us apart and ktime moved 353 us. Both clocks
-run, so nothing is lost: tsc-early counts up to the switch and tsc
-continues from there.
+But even when the children aren't reused, unless their 
+udev->persist_enabled flag is clear, they don't go away until well after 
+the hub has been reset.  The reason is that the hub driver has to look 
+at each one, after the hub is running again, and evaluate whether the 
+connection can be recovered.  Maybe this can be improved.
 
+The case you mentioned, about a reset being queued but not occurring 
+until after a transient disconnection, is a little different from the 
+other cases.  The core basically ignores disconnections while a reset is 
+in progress (in USB-2, the electrical signalling used during a reset 
+actually makes it impossible for the upstream port to tell whether the 
+device remains connected or not).  Disconnections before a reset starts 
+end up getting handled much the same way; the most that happens is that 
+the connect-change status is cleared and the reset is retried.
 
-/Stian
+This was all implemented before USB-3 appeared.  If we were to do it 
+again now, we might do it differently.
 
-
---=-Xwu0bUm283+Mi4l8kNS5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCauX3IgAKCRDoeAEuJe36
-Vm63AQDQGv3N0diSFTWp+l2Ve0ji6no/verLCGOZM8j/6mEARQD+LsaZJKEYH6Ac
-hVj1Ob+CQjxKCa1+nmNCcVTlgYFucwA=
-=epro
------END PGP SIGNATURE-----
-
---=-Xwu0bUm283+Mi4l8kNS5--
+Alan Stern
