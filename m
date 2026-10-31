@@ -1,46 +1,46 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793483696;
-	b=zimw9/hCjfQZDscDriMmelY4vbv6onu2mB4P4G2EfSJ2RERRauWyx5ADd+EXhydSjX6T
-	 8xFTkAhuupSXhHhcDkEDPVCAzpIA7L0SJtngF2/J9Z0YbwcZPhuWkZXNz081MLolESVso
-	 W4C/hILyMH1Mj96HUTd/eUUcoBH1txNNgR7tjaZv4C4zwx31a+m2R6o082WEsc0nWAGcd
-	 DWiNQwPTs2d1T6rPqMyGWCNE1tp8p9qaXxZfinaEleE3lDOjvNZGS1qsrLsNpK3bDVQvQ
-	 5E9LeKwSv5b/ueA0knoAzgdym7IGfRqegB+7DFwPyXDwh0nmUqYXha/RV5vWVnAYOHA==
+	t=1793484340;
+	b=jJSrR3TJyCXq/opEijXIyRHKo8S4vuaDUGxfGg0GDwaLRC32+360TcbklTqoIbHD1phq
+	 s8S9S+eGmXRyBFcw+01DNRI1OTloLheujddgG21ygC+jawaixNtFkn5kPjQquxlfh7CUe
+	 PYAb+VhIXIzOoXDa+00Mw4PztK0QNvyQhRy7Jp0PL16+EEkKxb6WUWN/hSukTwQiV011A
+	 0t6V1VtlwAnvfBlxej69nyh0vfSF3Lr3Sy+iq0Obst40I95Hcbn5NjuLZ36BAOtzwKWoR
+	 Jsu3nadObfxQ5InB56O0YDI2PO+Hv3wOF4fb1jA8P4PQJVZKxPj8hS88kLNc6cFK4bA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793483696;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793484340;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:
 	 Content-Transfer-Encoding:In-Reply-To;
-	bh=bmRh68Ilom1bhJ7ML/nGa6lB3Zj+T3YtBf/Ie36Y2BQ=;
-	b=eRtzlGsy7lB5AUc2Cm+Le5Ok+HE7MEVlTF/+ZEVBbC7rtpAlorMM0J8RSeJuWtky0o3x
-	 jtc60CgP4oHuidKDDks+lW6oEkNnT9+nCcv5GFRvkoEf4ARZXPZl4//XLoZjKAO36BDIO
-	 ldy8mTArU3mE6PDzY6GzXX6ZOgyrJemTcNMzyOGHEZqPSc0l4gGcsnyNdinwjkvJckezo
-	 o2I33Mjjh7msgeuu8TO4oQI0v2QnjjtkAOdyaNS6Y4WcScbgN0ovXAyMNJf1sdEmNk7al
-	 qxpPSvnGzFxks/k2tIWnC/W8QOxzbZ3DoCUg1MPPyvQID13fB9EegTZ+KWta2ybdozw==
+	bh=kUYxDlUcQBIJfE+eurUEaEcJ7kCZ/UJLn+2IozuGLFs=;
+	b=Wd2//9peQ85QrueU+1W8Ai1fV2pigiF4onP1/QvBQP56NtZr5j1U4VcSDvqgPwLrJV37
+	 wzntpspLnABRc5luaPY0QUscLNtiZChK/FAOhjI1W6RSQGpko4EmYyWiy2DwRSmDyG6f0
+	 Sa+xqAnzgjucb8SVolew5piOsvj0rf1XCzIPLyY9OHlGFLrc8bFWwnFnptO/lJAYyDMZm
+	 qVkwlY4iQE5WeGTdGC/lzLcZzU6kWv83g0BPivTqCsgiZyWQY7Puw5Q1hniqyyK1l1qIY
+	 cFzNyCt9SWtPH5jZa0Rw4Vpz9Eq3xDZXI55/feSa4dMapteC+11OrXhbIOyDoYviddQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=St6Z2vCU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="EtFl/87r";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69539606A31A;
-	Sat, 31 Oct 2026 21:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE7F606A31A;
+	Sat, 31 Oct 2026 22:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=St6Z2vCU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596911F000C1;
-	Sat, 31 Oct 2026 21:54:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EtFl/87r
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 348F11F000C1;
+	Sat, 31 Oct 2026 22:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793483696;
-	bh=bmRh68Ilom1bhJ7ML/nGa6lB3Zj+T3YtBf/Ie36Y2BQ=;
+	s=k20260515; t=1793484339;
+	bh=kUYxDlUcQBIJfE+eurUEaEcJ7kCZ/UJLn+2IozuGLFs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=St6Z2vCUxLm/dYlm9H72MjE3acwGXK0prfIezEMckyDeqIqxZRWI1yFVf5U8J03Gq
-	 OCSGZGjAj6WVUcewH/sye0l18+8h4cRC8U4m3Ydrv446SBUO3Ed2VJ5aOcWY0p7hWS
-	 NPqO69gJ6cHFQPYBuUcfSajDiWFHpcT1i/k34j9cAPvmoM+Mbd1OaEYVngfvWT/yag
-	 G4/tS1GREC4PqVtq+gCqrjtii+Vj4juI0/bRQ4eFuHz4GkrUje924vZ5p4w7xshA8t
-	 mjRxswtCvjf4afcfkni6o1/7JFGOZ/MGc1s5OY77ovQYu+HGMKMJAxM8oLld87tynS
-	 k8OXP7sTR7qww==
-Date: Sat, 31 Oct 2026 22:54:52 +0100
+	b=EtFl/87rshWAQKJVvvE/29SDe2vv6qO6YCAMz8uIetzIXcaG+8fJW7K1e9/xy2aAS
+	 GhFdSC9n07MoyQ8UvZGt3PiyZHrDZZRQ5g3cliabBQ8YGMxJqy2bYXFmprzf3xwGFL
+	 pByV/h6DI7y9nJvO+3zNL2p/BScpNPj36wYjBL7nSVThZsdmgSvCf3YJsjD9tdljFh
+	 G6147gP0qmbRJMrrj2ToHNHk5LI6sYbELWlk70NzXUYoXapa0fuN2BWN0CZkSHeu/D
+	 d50/0O014YmKRh+aG83HqbvQ3gebVZnNXMLGO/sFOw8NqBEu+Iuad0pRBac9M05YHe
+	 1ACSjmjpj2/ag==
+Date: Sat, 31 Oct 2026 23:05:36 +0100
 From: Frederic Weisbecker <frederic@kernel.org>
 To: Stian Halseth <stian@itx.no>
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -52,7 +52,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
  after idle exit
-Message-ID: <auZjrNbfXPv_L6J7@pavilion.home>
+Message-ID: <auZmMBmheFxH5Dlz@pavilion.home>
 References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
  <20261025100202.2584654-1-stian@itx.no>
  <at-C_3rGi55L1v2X@localhost.localdomain>
@@ -61,8 +61,6 @@ References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
  <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
  <auIDNl9EUX4CzWzr@localhost.localdomain>
  <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
- <auXzIbzU9aWBD_fM@pavilion.home>
- <a4ba7e5be50ed4de4cad3d3e53355eb533587694.camel@itx.no>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -75,66 +73,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a4ba7e5be50ed4de4cad3d3e53355eb533587694.camel@itx.no>
+In-Reply-To: <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
 
-Le Sat, Oct 31, 2026 at 03:11:46PM +0100, Stian Halseth a écrit :
+Le Wed, Oct 28, 2026 at 06:37:22PM +0100, Stian Halseth a écrit :
 > Hi Frederic,
 > 
-> 
-> On Sat, 2026-10-31 at 14:54 +0100, Frederic Weisbecker wrote:
-> > > 
-> > > Here is where it goes wrong. One tick has passed in real time, but not
-> > > in ktime. The switch happened d after the last tick, jiffies never
-> > > counted that d, and the tsc only counts from the switch on, so here
-> > > ktime_get() == jiffies + TICK_NSEC - d.
+> On Wed, 2026-10-28 at 15:14 +0100, Frederic Weisbecker wrote:
 > > 
-> > So that assume that during the clocksource switch, the new clock synchronize
-> > with the old one so that ktime_get() from the new clock should start from
-> > the last value of the old clock. I'm having troubles to verify if
-> > tk_setup_internals() does exactly that. 
-> 
-> Not that one, the timekeeping_forward_now() just before it. It folds
-> the old clock into xtime_nsec, and tk_setup_internals() keeps that and
-> only resets cycle_last from the new clock. On jiffies that value is the
-> last tick.
-
-Ah yes! You got it!
-
-> 
+> > So let me depict that:
 > > 
-> > [    1.549194] old= 1352575566
-> > [    1.549930] new= 1352578748
-> > [    1.550636] clocksource: Switched to clocksource tsc-early
+> > // clocksource = jiffies ?
+> > // clockevent = lapic ?
+> > tick_setup_device()
+> >    tick_next_period = ktime_get() // jiffies_to_nsecs(jiffies)
 > > 
-> > That's 3 us, it could be the simple difference between the 2 printk.
+> > tick_periodic()
+> >    tick_next_period += TICK_NSECS
+> >    jiffies++ // ktime_get() == tick_next_period
+> > 
+> > // jiffies > tsc_early
+> > clocksource_select()
+> > 
+> > tick_periodic()
+> >    //one tick has passed, so ktime_get() == jiffies + 1
 > 
-> Look at the timestamps: 736 us passed between the two printks, but
-> ktime moved 3 us. The 3 us is tsc-early, from the read in
-> tk_setup_internals() to your second ktime_get(). The time from the
-> last tick to the first printk, plus the 733 us from there to
-> tk_setup_internals(), is never counted. That is the d. If you print
-> ktime_get() in tick_periodic() as well, old= will match the previous
-> tick exactly.
+> Here is where it goes wrong. One tick has passed in real time, but not
+> in ktime. The switch happened d after the last tick, jiffies never
+> counted that d, and the tsc only counts from the switch on, so here
+> ktime_get() == jiffies + TICK_NSEC - d.
 
-Makes sense.
+Ok now that makes sense.
 
 > 
-> > 
-> > But the switch from tsc-early to tsc is much more:
-> > 
-> > [    2.639818] old= 2445754540
-> > [    2.640172] new= 2446107950
-> > [    2.640927] clocksource: Switched to clocksource tsc
-> > 
-> > That's 353 us.
+> >    tick_next_period += TICK_NSECS
+> >    jiffies++ // ktime_get() == tick_next_period == jiffies
 > 
-> Here the printks are 354 us apart and ktime moved 353 us. Both clocks
-> run, so nothing is lost: tsc-early counts up to the switch and tsc
-> continues from there.
+> So after this, tick_next_period == ktime_get() + d.
+> 
+> The same thing as a diagram:
+> 
+> // jiffies -> tsc-early, d after the last tick
+> clocksource_select()
+>    ktime_get() == last tick          // the d is not in there
+> 
+> tick_periodic()                      // TICK_NSEC after the last tick
+>    ktime_get() == last tick + TICK_NSEC - d
+>    tick_next_period += TICK_NSEC     // == last tick + TICK_NSEC
+>    // tick_next_period == ktime_get() + d
+> 
+> From a measurement I did with a QEMU guest: at the switch both were
+> 329532326. At the next tick ktime_get() was 331212239, 1.68 ms later,
+> so d was 2.32 ms, and tick_next_period became 333532326, 2.32 ms
+> ahead.
 
-Now that's clear!
+I see now.
 
-Thanks.
+Thanks
 
 -- 
 Frederic Weisbecker
