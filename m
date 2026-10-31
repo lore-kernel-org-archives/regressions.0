@@ -1,45 +1,68 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793468434;
-	b=A0q8R7beusEZTZ0EYWz6fY84YC4QLyMrHRKOQIOmWb4ppvmmAP/QjvfxjXhdJdRrErhl
-	 KdLCJYKrEpJ9fqClX1m9UvWkYABMIYT2p+R8O5s+pA/bMTBAWJuODyai+ZcQ9i7hXUqgE
-	 rI/j6ljaoR3ls5WtgR/sJLtZtITwEID5mawQm2XkqaQvdF/Fx5fHrecpD7s6wrwpUIqIM
-	 8wmltHp40W2Qx7ckdsfVUTH4aglUIyLx46AUs3md8NtxuRWBWcxgwCL8f24qDe0SJdU3s
-	 9cX4XVlqV+CDeDGKGZygAa9frFbA2uEB68Kqdlta2+ADXnP5sN6XTgLqwn1z+DzcYEA==
+	t=1793483696;
+	b=zimw9/hCjfQZDscDriMmelY4vbv6onu2mB4P4G2EfSJ2RERRauWyx5ADd+EXhydSjX6T
+	 8xFTkAhuupSXhHhcDkEDPVCAzpIA7L0SJtngF2/J9Z0YbwcZPhuWkZXNz081MLolESVso
+	 W4C/hILyMH1Mj96HUTd/eUUcoBH1txNNgR7tjaZv4C4zwx31a+m2R6o082WEsc0nWAGcd
+	 DWiNQwPTs2d1T6rPqMyGWCNE1tp8p9qaXxZfinaEleE3lDOjvNZGS1qsrLsNpK3bDVQvQ
+	 5E9LeKwSv5b/ueA0knoAzgdym7IGfRqegB+7DFwPyXDwh0nmUqYXha/RV5vWVnAYOHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793468434;
-	h=Received:DKIM-Signature:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
-	 Date:Message-Id:X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=+7k1NaGz5TOnOiTpgvvEXdv7k27RwmSfbCON8FW0kxw=;
-	b=SxDQRZkKnpexya9mbt4/pkpJBskt459auzH+lbZI1y6SBxm1IDHUeuHA93LVfUQ0ZUI9
-	 lWr3sKRadofcSco3mz4ZWp6RiPmGh993EXYI9iZfxdsuc6AU67awZ5rpQJ+34LahvKFPi
-	 bF5B5K+YTG8WLHXSTTUObTANup+g6SgegrFZobD1kjS0qBpbaQVQmmzrPRLH4elkPcfiA
-	 sPgXWyfCQ6BLP+KPXTNztmFPiJuZIUBRz9gO2eyUCBsCtn+WhYXnuHOG4vP25+XTBU3Ky
-	 LuqEVGdpYF6CvAQcrmyg0popW46uR1gKwGNJ49tVWtikdX8mVUR5XXX4vvsFyUBwu7g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793483696;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=bmRh68Ilom1bhJ7ML/nGa6lB3Zj+T3YtBf/Ie36Y2BQ=;
+	b=eRtzlGsy7lB5AUc2Cm+Le5Ok+HE7MEVlTF/+ZEVBbC7rtpAlorMM0J8RSeJuWtky0o3x
+	 jtc60CgP4oHuidKDDks+lW6oEkNnT9+nCcv5GFRvkoEf4ARZXPZl4//XLoZjKAO36BDIO
+	 ldy8mTArU3mE6PDzY6GzXX6ZOgyrJemTcNMzyOGHEZqPSc0l4gGcsnyNdinwjkvJckezo
+	 o2I33Mjjh7msgeuu8TO4oQI0v2QnjjtkAOdyaNS6Y4WcScbgN0ovXAyMNJf1sdEmNk7al
+	 qxpPSvnGzFxks/k2tIWnC/W8QOxzbZ3DoCUg1MPPyvQID13fB9EegTZ+KWta2ybdozw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="JDN8500/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=St6Z2vCU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D359B606A31C;
-	Sat, 31 Oct 2026 17:40:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69539606A31A;
+	Sat, 31 Oct 2026 21:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JDN8500/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A38571F000C1;
-	Sat, 31 Oct 2026 17:40:26 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=St6Z2vCU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596911F000C1;
+	Sat, 31 Oct 2026 21:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793468433;
-	bh=+7k1NaGz5TOnOiTpgvvEXdv7k27RwmSfbCON8FW0kxw=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=JDN8500/3P01cYmIsV8CpwYjOiXOUz0EXUq3PVUNx3UQEgfh079uahNBYdsdnp7xd
-	 9Z0PxyBRM0ydrsTs18AviGmMAR/WZ2bgPvgHQa5LgMWMQEnJmC2s0GllDuEHOXUG5m
-	 tQG3Q7Fcz7mFT3Xm36W+WChrVIO1gvC1aERSBIc/bUjif+jXwykHli1gmykhSNXjts
-	 h0E9r/kk4a1J3B+/QyTs56S4JwipW8ZK4WahKjbdMLm4uc/L8/T6k/n7Sa/m95XGvP
-	 PTNbkjtJibfDvtEceuvAC6lbElu8kpf35yeFtzfc7hdF3//I9B5z9XYff6hIYLQle+
-	 7m4LvgHHUrtiA==
+	s=k20260515; t=1793483696;
+	bh=bmRh68Ilom1bhJ7ML/nGa6lB3Zj+T3YtBf/Ie36Y2BQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=St6Z2vCUxLm/dYlm9H72MjE3acwGXK0prfIezEMckyDeqIqxZRWI1yFVf5U8J03Gq
+	 OCSGZGjAj6WVUcewH/sye0l18+8h4cRC8U4m3Ydrv446SBUO3Ed2VJ5aOcWY0p7hWS
+	 NPqO69gJ6cHFQPYBuUcfSajDiWFHpcT1i/k34j9cAPvmoM+Mbd1OaEYVngfvWT/yag
+	 G4/tS1GREC4PqVtq+gCqrjtii+Vj4juI0/bRQ4eFuHz4GkrUje924vZ5p4w7xshA8t
+	 mjRxswtCvjf4afcfkni6o1/7JFGOZ/MGc1s5OY77ovQYu+HGMKMJAxM8oLld87tynS
+	 k8OXP7sTR7qww==
+Date: Sat, 31 Oct 2026 22:54:52 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Stian Halseth <stian@itx.no>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/cputime: Don't warn when the tick period starts
+ after idle exit
+Message-ID: <auZjrNbfXPv_L6J7@pavilion.home>
+References: <bfe9b14a-6e65-41c5-b638-26f6e033788b@molgen.mpg.de>
+ <20261025100202.2584654-1-stian@itx.no>
+ <at-C_3rGi55L1v2X@localhost.localdomain>
+ <1e00b909b81c6195b3ad5aeda207d20cbedc3971.camel@itx.no>
+ <auDaMdhD2zGBLhDE@localhost.localdomain>
+ <bd9b6592bce4b8f2e802518bf2cad561af61e78e.camel@itx.no>
+ <auIDNl9EUX4CzWzr@localhost.localdomain>
+ <68f0450d47577dc4f83d32e5b0211c97ee8d24bd.camel@itx.no>
+ <auXzIbzU9aWBD_fM@pavilion.home>
+ <a4ba7e5be50ed4de4cad3d3e53355eb533587694.camel@itx.no>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -49,87 +72,70 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] Revert "phy: qcom: qmp-pcie: Skip PHY reset if already
- up"
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Michael Burch <me@michaelburch.net>
-Cc: Vinod Koul <vkoul@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Qiang Yu <qiang.yu@oss.qualcomm.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Abel Vesa <abel.vesa@oss.qualcomm.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Hans de Goede <johannes.goede@oss.qualcomm.com>, 
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- regressions@lists.linux.dev
-In-Reply-To: <20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net>
-References: <20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net>
-Date: Sat, 31 Oct 2026 23:10:21 +0530
-Message-Id: <179346842169.7309.953613001579327741.b4-reply@b4>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2212; i=mani@kernel.org;
- h=from:subject:message-id; bh=MIzTd1itZPpW7FCl5YwWGtQIeJPAAhpsZ38f5D6eUQU=;
- b=owGbwMvMwMUYOl/w2b+J574ynlZLYsh6psGZ4fnkq2XWt7t1x7msGUP7WBYY5yqy6uRa+v+1D
- dVMnDalk9GYhYGRi0FWTJElfamzVqPH6RtLItSnwwxiZQKZwsDFKQATCZrBwTBj5WLWvc4VcisS
- HaoYj84p8Iyq+C3byiB894p1mfriqZVXfiSpSQv7X9OdwHvsn51Je96ctn+a0XcktNxffSgp4l4
- o45OS6VmeX/3vQPGjvXY2bJKbMn4fzQuZlvHaxnEzy5ffMQlx84S/JStMvHohTDugymCnh/raSF
- 9fg2522fs8+5mtn3n9Uwq7dWvBU5kdDxccYJ+0u7lO9a2NuUZm4vP2D2+Y1n223Tmhf1HMLDvXm
- Plz1Z6wPWMV08l5fOLU0fi4f3/DZBQPmp/mTA8oLw9I1nvQoVq0Uvx6lK6OVzXfid5phXsvu3us
- U7RMbcjQ4g6dNGcdy1XedSyldpKPyyTP7hRZclvV418VAA==
-X-Developer-Key: i=mani@kernel.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a4ba7e5be50ed4de4cad3d3e53355eb533587694.camel@itx.no>
 
-On 2026-10-13 09:22 -0500, Michael Burch wrote:
-> This reverts commit 910b828b22b7b91054b3bd4be676a017444b0e00.
+Le Sat, Oct 31, 2026 at 03:11:46PM +0100, Stian Halseth a écrit :
+> Hi Frederic,
 > 
-> That commit skips the no-csr reset assert/deassert (and the 200-300us
-> settle) whenever the bootloader already brought the PCIe QMP PHY up:
 > 
->   skip_reset = qmp->skip_init &&
->                !qphy_checkbits(pcs, cfg->regs[QPHY_PCS_STATUS],
->                                cfg->phy_status);
+> On Sat, 2026-10-31 at 14:54 +0100, Frederic Weisbecker wrote:
+> > > 
+> > > Here is where it goes wrong. One tick has passed in real time, but not
+> > > in ktime. The switch happened d after the last tick, jiffies never
+> > > counted that d, and the tsc only counts from the switch on, so here
+> > > ktime_get() == jiffies + TICK_NSEC - d.
+> > 
+> > So that assume that during the clocksource switch, the new clock synchronize
+> > with the old one so that ktime_get() from the new clock should start from
+> > the last value of the old clock. I'm having troubles to verify if
+> > tk_setup_internals() does exactly that. 
 > 
-> and states its own assumption explicitly: "This relies on the assumption
-> that when skip_init is enabled and the PHY is reported as up, the
-> bootloader has already configured the PHY correctly and the link is in a
-> usable state."
-> 
-> That assumption does not hold on the Dell XPS 13 9345 (X1E80100).  UEFI
-> boots from the NVMe behind pcie6a, so the PHY is always already started
-> when Linux takes over, skip_init is true, and the reset is skipped.  The
-> link then never retrains and the root port comes up with no endpoint:
-> 
->   qcom-pcie 1bf8000.pcie: Device found, but not active
->   pci 0006:00:00.0: [17cb:0111] type 01 class 0x060400 PCIe Root Port
->   (no 0006:01:00.0, no nvme at all)
-> 
-> "Device found, but not active" is dw_pcie_wait_for_link() reporting LTSSM
-> stuck in POLL.Active/POLL.Compliance -- receiver detected, training never
-> completes -- so the machine cannot find its root filesystem and drops to
-> a dracut emergency shell.  v7.2 is unaffected because it always performed
-> the reset.
-> 
-> The commit was applied on its own as patch 1/4 of "PCI: qcom: Add link
-> retention support"; 2/4-4/4 have not landed. Without them,
-> qcom_pcie_host_init() still asserts PERST# and resets the controller
-> before qcom_pcie_phy_power_on(), so the link is down while
-> QPHY_PCS_STATUS still reports the bootloader's state, and the skip's
-> precondition never holds. Revert it until the rest of the series lands.
-> 
+> Not that one, the timekeeping_forward_now() just before it. It folds
+> the old clock into xtime_nsec, and tk_setup_internals() keeps that and
+> only resets cycle_last from the new clock. On jiffies that value is the
+> last tick.
 
-Ouch. This dependency should've been mentioned in the cover letter of the
-offending series :/
+Ah yes! You got it!
 
-> Fixes: 910b828b22b7 ("phy: qcom: qmp-pcie: Skip PHY reset if already up")
-> Signed-off-by: Michael Burch <me@michaelburch.net>
+> 
+> > 
+> > [    1.549194] old= 1352575566
+> > [    1.549930] new= 1352578748
+> > [    1.550636] clocksource: Switched to clocksource tsc-early
+> > 
+> > That's 3 us, it could be the simple difference between the 2 printk.
+> 
+> Look at the timestamps: 736 us passed between the two printks, but
+> ktime moved 3 us. The 3 us is tsc-early, from the read in
+> tk_setup_internals() to your second ktime_get(). The time from the
+> last tick to the first printk, plus the 733 us from there to
+> tk_setup_internals(), is never counted. That is the d. If you print
+> ktime_get() in tick_periodic() as well, old= will match the previous
+> tick exactly.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Makes sense.
 
-- Mani
+> 
+> > 
+> > But the switch from tsc-early to tsc is much more:
+> > 
+> > [    2.639818] old= 2445754540
+> > [    2.640172] new= 2446107950
+> > [    2.640927] clocksource: Switched to clocksource tsc
+> > 
+> > That's 353 us.
+> 
+> Here the printks are 354 us apart and ktime moved 353 us. Both clocks
+> run, so nothing is lost: tsc-early counts up to the switch and tsc
+> continues from there.
 
+Now that's clear!
 
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
