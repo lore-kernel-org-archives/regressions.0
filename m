@@ -1,103 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793521779;
-	b=TXkK0uVpShBPkf75t9R0T3eFsi5HmJCI6LbpQ2nc3wXbfyZgl1FECJhOihTlF74InU+O
-	 tH5tjE6aEQw2pYKbGLpMxo4flA/qat8ALnEp2YkbLP2Uyf3phfy8NoNa2aD01rSt8MoyW
-	 lTw4f9vPZCHSpKYoFMtFudEJe5Yqnvsw9xQ0WhQxNhB4HBvfy2XEJhtTRlZQxTOUZE9Vg
-	 bKncywKXxDny0CfUyK3Q7eDe8O7xnmDmaehnxRn/Zcv2b2kvNp/ax3RDWKpzedftkZxt3
-	 0O/FOwhCNGpz2WKH0EumcdJLfG8kWKTa3hqppcvU4vyWKvDBVsyDZk0Bu29dt+Pc+CA==
+	t=1793535039;
+	b=1gED/VvhlTim+K1GgAndvR2PbvGYsBnzjG+tpoUy2iq0CvOCcqMGPgNRvFA3Hoeq1Gb7
+	 SieDzbm36bfcQTjShWMxB4txxa9bgk/KfNYJt7siKpIPwE3JYkShZ/MX7BW+NtG+B2WhH
+	 NHfEiTP7+8HiTZBZjPX5EI2iy2ElYaddHE+dz7rWj689Cro+2rTimh9Sa85kH0cKUGoZo
+	 8DR+LS4A8e9EtN53O9+jtMFNr0T/FYdIYROB3Of/+FyzdtEPeIMYtyPpsFt4cbj6riOXB
+	 aSMLoGBIs9gERbFB3hwZ3Vbejnql2Rs3BXZ+TAp9hvkoKzfdFhQ3pVufggnvKYyl6ew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793521779;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=CrY4G42DWgUQkrodiQ6Nsohi3rTiSwswU6zN9JB0NB0=;
-	b=jB/8GvjnUhWoAf4tcG7iL3aPf3nMlsPecMUWazpFWYHbWRqD0EQ5fZeeGDcADcIgCtjD
-	 bLakUuZrMxpD2bRqlLGGdYYPndMDoZDq7XJdXG9SC09GjYU7n7H7ROVCqQ+jCiNbPs3Zk
-	 s9+QnqyAmY4ozP+mN8O7Ua1wNXN2WOyLgFaNbPlRH5zibI8LnAOat4/NePEp2J8yx2CwI
-	 mb/x4P+xFnYStjhliQT7II2HaOc/snpseSUtRW9pKFFhEXIoRwGpoua986wk8TkoCUZNy
-	 yzF2OnHzoC44yjP62zAWsONOk+KlSXSHTJ5APtop1fO1Vked+N2HWIwIfYRKM5GSReA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793535039;
+	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
+	 In-Reply-To:References:X-sashiko-severity:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version;
+	bh=3CAGqxHDzH5gPKRDzvc+9sP4UxKCwz3ISyZgTHK2sZo=;
+	b=HjJmi5nVcLXPd4mbvNXTSt1DPO8lbFe4lyRkWG7ASZXECS5LnJEaVJaXRbbkl1gt0wBI
+	 oUnt5k6owRO7WSjhw8eP0k4jjFtrm10NcJCbeMe1t4HKoV/mW7H4aL36kNx+aqnHKqk9/
+	 bQzff50gngYGW6IxLV7TrRSSpANfUZmwR8fM3iU6ym0XJv9zetrZyxk1Uw7Uu/iKXUmpV
+	 GxfFHhxrbgiWKDG5u1REbZYlSVMByoA29J5yyun4EchWlzt/hoIhWQb48+BhEBJiT/sQm
+	 dN2h1+xyqB2BEoSVT36S8vQG1BqFbgApEURUcfZY+70ynjbvOu8xHmbo71lGlIojhYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c5WrkMma;
-	arc=none smtp.remote-ip=209.85.221.43
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NhB79Tip;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C8B606A327
-	for <regressions@lists.linux.dev>; Sun,  1 Nov 2026 08:29:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60C8B606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC3606A324;
+	Sun,  1 Nov 2026 12:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=c5WrkMma
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48e4831c028so1851505f8f.0
-        for <regressions@lists.linux.dev>; Sun, 01 Nov 2026 01:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793521778; x=1794126578; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=CrY4G42DWgUQkrodiQ6Nsohi3rTiSwswU6zN9JB0NB0=;
-        b=c5WrkMmaz7strf+CBOMEzWDXusEP8sn0EsFqeKuQxCWf4sUdlB5SbFAjzo2Ss+i2jl
-         2NcQGs9peShIVC6g/e8tOEf74YueLO3HPGRyQNPzmeinqgCjhgZkbBJ2YaTlU+Mwl3YF
-         F9Y+B3S8RN80Oe8Z0HVRPmwd890hnw77t4jOqWBjWa0Fzh0uQdQ8NtKDDQl2z8mOKP/E
-         j9FUifXAPYwbfOXQh7Gw7wqCeDwCcGvnloouLlCjLKwfkmWLIKJIsAiftVtpVrk7t4a9
-         KbnKwvFRvVO/p+AO+ShabaoPPIvgBHs28o31G9cOIsdPuIML6vO49OCbwH/Ue7sEN1iS
-         /uCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793521778; x=1794126578;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CrY4G42DWgUQkrodiQ6Nsohi3rTiSwswU6zN9JB0NB0=;
-        b=ENuQZgkxX3+QrwHvkYuBH7u4NjU1Dgt+Fpv+ZN/4pixdPD+9yGzdRLUxuuA02kmCn9
-         4Kum9l2KJBX2vqepo6VjvXRVdQN09NunmDbxhf5Wt7qjL+axcSPdl2tFJZwOKYtDC81m
-         ORkviY4MsH9FUzzcufVqAm4Qd//Y0zLvmaqwt7+UJR1ZdeWE8l1JjCipkD9RZTqI+/QF
-         OtBS2rSYGxznWbF217vD9pPUfVU9hjQ6t4+bQNupQIjkoCds382f/PfMtirI4qa3LOnl
-         Dtq2ZAsb7OB1ZbO5vJ7qx7MMJymFi7wmTAzngMcV123D2XeuXT8bNZAvFiBZYQNVPwxb
-         cgsA==
-X-Forwarded-Encrypted: i=1; AKwUvBxFOA09fxJF280mTQDijLlRRMtXBlyd7wT++UNdLtUxkMblhbjvyldqcLEJPTIM2Exkx6DoM+Jzgpyqpg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8jrjW06ryzeGlFr84iDxedkf67U14jMIokxHfSNPHRvLmGjDNZ
-	lu8frMzXMxl6FzG+mFeNNnlolIZViQO2L6JtkYW5D8Dn3xvHjVudHUqh
-X-Gm-Gg: AYBFou3Pfux/V3WHBan5u5oqKKAR9hfmgep93nctp9/lAkumqEF3+5zs4F9oIgd9Tal
-	DUk4mjzLcsWkpOg9MurJs6w9v3fQkhi8p+bAvA2QogjywCcgd62Ht62XrT0siUTDwreEBSYuPhd
-	A/BbDYrRvfAHjwcEVbqFWWxBHhMuLsK+nDItqMG1xhXBjIKTTqhB2ekI6NcCtDzMy/j3HuFpkBD
-	/aslLfKfUCvE+BDeNdg03Sg1o5OOS7+SpFZyFrrQo9+ggx0oj9oQDCJdF5KMAJBTPESa4P7PrFo
-	Gx0XOStkr8HQL8sA7XFqZ7ReKZP24l3fq5GQ4ru8/sRYWHe6UnVDxnNR1FYHB/mtZ8b1AIJtxMx
-	uXffG08YBbblMAWXrSFEGrt1DFY57SPkSY0KaToC8BuFJhwmUJajhs68UaIVW0wKWoj1G5txKLg
-	xe/yeojONeSS8LZ6oDbhEm+6ffFwjsOoBfWJwfvlWLKxU4eTZvm/QDXcYCNM+UgYTRnFJhZ5mxx
-	tF5z5iPjgCpvnziSz3KLObLttg67hEP0rSzE9tQyVIIATyEXY/6SeTaWBVUPUn6VUCHcFG869+8
-	uM7Fv6jz8nRJ5FZsTIbgPqSSlfCL+LORuSLJ
-X-Received: by 2002:a05:6000:46c3:b0:48e:4a8a:e17f with SMTP id ffacd0b85a97d-48e6e2bc7f2mr10289635f8f.4.1793521777564;
-        Sun, 01 Nov 2026 01:29:37 -0700 (PDT)
-Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71ba2415sm13345902f8f.50.2026.11.01.01.29.34
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 01 Nov 2026 01:29:36 -0700 (PDT)
-Date: Sun, 1 Nov 2026 09:29:30 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Dennis Wissel
- <dennis@dsine.de>, Yiyu Zhou <yiyu@yiyuzhou.io>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION] usbhid -110 timeouts and reset loop for Keychron
- M5 (3434:d068) at boot since v7.3
-Message-ID: <20261101092930.114ca454.michal.pecio@gmail.com>
-In-Reply-To: <387e9e3b-683e-474c-ba00-4b12c7c77b7c@rowland.harvard.edu>
-References: <4MjB9K-2SoiA85WbI9iEig@dsine.de>
-	<20261024203558.3181711-1-yiyu@yiyuzhou.io>
-	<SrQQcLIwRWyg9PdEIpc0eg@dsine.de>
-	<20261025111410.2c14fcef.michal.pecio@gmail.com>
-	<7082e2e7-8d05-46b8-a26b-5b888a7a0545@linux.intel.com>
-	<20261026105139.6b86cb3c.michal.pecio@gmail.com>
-	<3ddd9334-6dee-48cf-8a62-82cebbe51d7f@rowland.harvard.edu>
-	<20261030174718.1f28218a.michal.pecio@gmail.com>
-	<387e9e3b-683e-474c-ba00-4b12c7c77b7c@rowland.harvard.edu>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NhB79Tip
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2E81F000C1;
+	Sun,  1 Nov 2026 12:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793535038;
+	bh=3CAGqxHDzH5gPKRDzvc+9sP4UxKCwz3ISyZgTHK2sZo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=NhB79TipwC2CEPOKxsNWnxP3JcwDiaCmCs+jmnRZPE8MVOmTserHlpl/QchLpelw8
+	 dH904Qxjj/cz45cPF9yY4EVYipFagPJ/hKjECdgbudyaEcdKLxHNIL15RTdaF0NwOq
+	 q0AuxV9Wzmm0tCVF9AqqnSPwaJY/HWCH71eled6+XesY7LBXz1BpNMdfB9Z9ZKSvDJ
+	 /1VOE/LZMR6qvOHjlDk7tQY2b3MDwbzx3J2K2rRZ7v4UCkf/w5tQ0LCYXq+rIY/rtq
+	 Ju5jDXWGuYfEoftWWvBa5Q2746SKZ2sEjWLb61s2AhN/UTpNP3vrLkOSr0Ew2mHpy1
+	 0l55a7Wvi0kMw==
+Subject: Re: [PATCH net v2] bnxt_en: Don't keep MSI-X vectors added before FW
+ reserves them
+From: netdev-bot+sashiko@kernel.org
+To: vlad.wing@gmail.com
+Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ andrew.gospodarek@broadcom.com, tglx@kernel.org, maz@kernel.org,
+ yangjinqian1@huawei.com, apreece@meta.com, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Date: Sun, 01 Nov 2026 12:10:37 +0000
+Message-ID: <179353503740.3131.17689939110178639939@kernel.org>
+In-Reply-To: <20261028114933.256298-1-vlad.wing@gmail.com>
+References: <20261028114933.256298-1-vlad.wing@gmail.com>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -107,106 +66,228 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sat, 31 Oct 2026 12:32:38 -0400, Alan Stern wrote:
-> The USB-Persist stuff in the hub driver was originally motivated by the 
-> desire to recover from disconnections during system suspend.  For 
-> example, disconnections caused by host controllers that don't provide 
-> Vbus power while they are suspended, or users unplugging a device while 
-> the system is suspended and then plugging it back in before the system 
-> resumes.  A more detailed description, somewhat out of date by now, is 
-> given in the changelog for 8808f00c7adf ("USB: try to salvage lost power 
-> sessions").
-> 
-> Yes, this feature is very important.  Mostly it was meant for USB 
-> mass-storage devices going away and then reappearing following a system 
-> resume.  Before the USB-Persist facility was added, if the device held a 
-> mounted filesystem the result would _not_ be what users desired, to put 
-> it mildly.  The ability to handle transient disconnections was just an 
-> unintended side benefit, although there did seem to be some real cases 
-> where it helped -- USB mice or something like that.
-> 
-> To the device and driver, what happens looks like a reset, or rather, a 
-> reset-resume because the former configuration and altsettings are 
-> restored.  Naturally any ongoing operations would be expected to be cut 
-> short, but while the device is suspended this isn't an issue.
-> 
-> It seems that you're concerned about two slightly different types of 
-> thing.  In one, the disconnection happens while the device is suspended 
-> and it is discovered when we want to resume the device.  Presumably 
-> that's not a problem for you (?), because in this case we really do go 
-> through the whole reset-resume procedure.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issue(s) to consider.
 
-Suspend and USB-Persist is a thing to keep in mind to avoid breaking,
-but intended behavior change is only to drivers with URBs pending or
-submitted on a disconnected device. We would like to reject such URBs
-on devices behind disconnected root hub ports.
+Critical: 0 · High: 0 (1) · Medium: 1 (1) · Low: 1
 
-Maybe I will just say what I'm looking for to avoid XY problems: we
-need a "barrier" which separates URBs (and ideally state changes like
-deconfiguration) related to the pre-disconnection state from those
-related to the post-reconnection state, when a udev is "rescued" and
-the HCD must accept URBs to it again.
+If you believe none of the issues are legitimate, please reply to each
+issue of Medium severity or higher and explain why the AI is wrong.
+If any of them are legitimate and you plan to respin, please let patchwork
+know by including "pw-bot: cr" as a separate line at the end of your reply
+(one such reply per series is enough).
 
-A suspended device has no URBs, so the barrier only needs to be one-
-sided. I guess root hub port reset or hcd->driver->reset_device() on
-the device or any of its upstream hubs is good enough
+- [Medium] In bnxt_reserve_rings()
+  (drivers/net/ethernet/broadcom/bnxt/bnxt.c), the new recompute in the…
+- [Low] With BNXT_NEW_RM, bnxt_check_rings() now allocates the extra
+  dynamic MSI-X vectors only to test availability, then frees them at…
 
-(Current logic in 7.3 watches for individual reset_device() calls
-or RH port reconnection; the latter is clearly less than ideal for
-USB3, and Sashiko thinks there are other issues.)
+Pre-existing issues:
+- [High] bnxt_clear_int_mode() frees the vectors and sets bp->irq_tbl =
+  NULL but leaves bp->total_irqs stale.
+- [Medium] bnxt_hwrm_check_pf_rings() does not check the return value of
+  __bnxt_hwrm_reserve_pf_rings().
 
-> When a hub is reset, the logic for what happens to its children is a 
-> little tricky to follow. I think that each port with a connected
-> child ends up being handled by hub_port_connect_change(), which
-> treats it as a new connection _unless_ the child was suspended
-> beforehand, in which case we follow the reset-resume path. So yes,
-> it is possible for the child will be reused in this way.
+--
 
-Hmm, what about hub_pre_reset()? It seems to usb_disconnect() all
-children when it runs. I would expect even a suspended child to be
-permanently forgotten before the hub is reset.
+bnxt_en: Don't keep MSI-X vectors added before FW reserves them
 
-Unless the hub itself was suspended and gets reset-resumed instead,
-I suppose. But then everything is quiescent so no problem.
+When BNXT_NEW_RM is set, bnxt_check_rings() now frees the dynamically
+allocated MSI-X vectors right after the availability check.
+bnxt_reserve_rings() then allocates them after __bnxt_reserve_rings(),
+sized from bnxt_get_num_msix(). It also grows the vectors when no
+reservation is needed but FW already holds one, and clears
+irq_tbl[].vector when trimming.
 
-If core can promise that children are suspended or already deleted
-when a hub gets reset, we could use hub reset as one barrier for the
-hub and all children, without tracking this per-device.
+Closes: https://lore.kernel.org/all/20261022193620.2152038-1-vlad.wing@gmail.com/
 
-I implemented this barrier logic and it seems to work as expected,
-and ftrace shows that hub_pre_reset() runs and drops children. But
-it works != it always works != it will stay working...
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> index 0682060b048ce..55b11c7684313 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 
-> But even when the children aren't reused, unless their 
-> udev->persist_enabled flag is clear, they don't go away until well
-> after the hub has been reset.  The reason is that the hub driver has
-> to look at each one, after the hub is running again, and evaluate
-> whether the connection can be recovered.  Maybe this can be improved.
+[ ... ]
 
-That sounds like suspend and reset-resume of the hub. Considering
-hub_pre_reset(), it hopefully doesn't happen on awake hubs.
+> @@ -11701,8 +11702,23 @@ int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
+>  	int irqs_required;
+>  	int rc;
+>  
+> -	if (!bnxt_need_reserve_rings(bp))
+> +	if (!bnxt_need_reserve_rings(bp)) {
+> +		/* FW may already hold the reservation from an earlier
+> +		 * reservation that was not followed by growing the dynamic
+> +		 * MSI-X vectors, e.g. because the allocation failed.
+> +		 */
+> +		if (irq_re_init && BNXT_NEW_RM(bp) && bp->irq_tbl &&
+> +		    pci_msix_can_alloc_dyn(bp->pdev)) {
 
-> The case you mentioned, about a reset being queued but not occurring 
-> until after a transient disconnection, is a little different from the 
-> other cases.  The core basically ignores disconnections while a reset
-> is in progress (in USB-2, the electrical signalling used during a
-> reset actually makes it impossible for the upstream port to tell
-> whether the device remains connected or not). Disconnections before
-> a reset starts end up getting handled much the same way; the most
-> that happens is that the connect-change status is cleared and the
-> reset is retried.
->
-> This was all implemented before USB-3 appeared.  If we were to do it 
-> again now, we might do it differently.
+[ ... ]
 
-Thanks, good to know. It is maybe not a big deal to maintain this
-"resuscitation" of awake devices. It seems similar to recovery from
-USB3 SS.Inactive state - logical link error without disconnection,
-software may try to Warm Reset the device. (I don't have any repro
-and don't know if it's handled here).
+> @@ -11728,6 +11744,10 @@ int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
+>  			rc = bnxt_init_int_mode(bp);
+>  		bnxt_ulp_irq_restart(bp, rc);
+>  	} else if (irq_change && !rc) {
+> +		/* Size the vectors from what FW actually reserved, which
+> +		 * can be less than what was requested.
+> +		 */
+> +		irqs_required = bnxt_get_num_msix(bp);
 
-Regards,
-Michal
+[Severity: Medium]
+The comment says this sizes the vectors from what FW actually reserved.
+Under BNXT_NEW_RM, though, bnxt_get_num_msix() returns
+bnxt_nq_rings_in_use(), which is bp->cp_nr_rings +
+bnxt_get_ulp_msix_num(bp). It is not hw_resc->resv_irqs.
+
+Can this still activate unreserved MSI-X entries when the RoCE driver is
+registered?
+
+In __bnxt_reserve_rings(), the FW IRQ grant (copied into hwr.cp by
+bnxt_copy_reserved_rings()) only bounds the L2 count:
+
+	hwr.cp = min_t(int, hwr.cp, bp->cp_nr_rings);
+
+The re-clamp of the ULP vectors against resv_irqs is skipped when a ULP
+is registered:
+
+	if (!bnxt_ulp_registered(edev) && BNXT_NEW_RM(bp)) {
+		...
+		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
+		ulp_msix = min_t(int, resv_msix, ulp_msix);
+		bnxt_set_ulp_msix_num(bp, ulp_msix);
+
+Take 8 ULP vectors, 32 L2 NQs and a FW grant of resv_irqs = 34.
+bnxt_get_num_msix() returns 40, and bnxt_change_msix(bp, 40) activates
+entries 34-39 while rc stays 0.
+
+bnxt_alloc_cp_rings() maps L2 NQ i to MSI-X index ulp_msix + i. That
+puts L2 NQs 26-31 on entries FW never reserved, which is the
+lost-completion case this patch is fixing.
+
+The commit message limits this with "at least while no RoCE driver is
+registered" and says the accounting predates the patch. The in-code
+comment doesn't mention the RoCE case.
+
+Could the sizing be bounded by hw_resc->resv_irqs here? Or could the
+registered ULP vectors be counted against resv_irqs in
+__bnxt_reserve_rings()?
+
+>  		if (bnxt_change_msix(bp, irqs_required) != irqs_required)
+>  			rc = -ENOSPC;
+>  	}
+
+[Severity: High]
+This is a pre-existing issue, but can this branch call bnxt_change_msix()
+while bp->irq_tbl is NULL?
+
+bnxt_clear_int_mode() frees the table but leaves bp->total_irqs as it
+is:
+
+static void bnxt_clear_int_mode(struct bnxt *bp)
+{
+	pci_free_irq_vectors(bp->pdev);
+
+	kfree(bp->irq_tbl);
+	bp->irq_tbl = NULL;
+}
+
+It is called from bnxt_hwrm_if_change() on fw_reset or caps_change, just
+before bnxt_cancel_reservations(). It is also called from
+bnxt_io_slot_reset().
+
+The next bnxt_reserve_rings(bp, true) call comes from __bnxt_open_nic()
+or bnxt_io_resume(). At that point bnxt_need_reserve_rings() is true and
+pci_msix_can_alloc_dyn() is still true. So irq_change is set whenever
+irqs_required differs from the stale bp->total_irqs.
+
+If the count passed to bnxt_change_msix() is below the stale
+bp->total_irqs, the trim loop then runs through a NULL bp->irq_tbl:
+
+		map.virq = bp->irq_tbl[i - 1].vector;
+		pci_msix_free_irq(bp->pdev, map);
+		bp->irq_tbl[i - 1].vector = 0;
+
+This could already happen when the pre-reservation count was below the
+stale total. The recompute after __bnxt_reserve_rings() adds a new
+trigger: pre-reservation count > stale total_irqs > post-reservation
+count.
+
+Before this patch that case took the grow loop instead. There,
+pci_msix_alloc_irq_at() failed cleanly and the result was -ENOSPC.
+
+The new !bnxt_need_reserve_rings() branch above checks bp->irq_tbl.
+Should this branch check it as well?
+
+[ ... ]
+
+> @@ -15093,6 +15113,7 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
+>  			hwr.cp = min_t(int, hwr.cp, bnxt_get_max_func_irqs(bp));
+>  		}
+>  		if (hwr.cp > bp->total_irqs) {
+> +			int old_total = bp->total_irqs;
+>  			int total_msix = bnxt_change_msix(bp, hwr.cp);
+>  
+>  			if (total_msix < hwr.cp) {
+> @@ -15100,6 +15121,17 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
+>  					    hwr.cp, total_msix);
+>  				rc = -ENOSPC;
+>  			}
+> +			/* FW has not reserved the new vectors yet, and writes to
+> +			 * MSI-X table entries beyond the reserved IRQs don't
+> +			 * stick (seen on BCM57508).  Free them again;
+> +			 * bnxt_reserve_rings() allocates them after
+> +			 * __bnxt_reserve_rings().  Without the new resource
+> +			 * manager there is no IRQ reservation and
+> +			 * bnxt_reserve_rings() does not grow the vectors, so
+> +			 * keep them.
+> +			 */
+> +			if (BNXT_NEW_RM(bp))
+> +				bnxt_change_msix(bp, old_total);
+
+[Severity: Low]
+With the vectors freed again here, a 0 return from bnxt_check_rings() no
+longer means they will still be available at reopen. Callers such as
+bnxt_set_channels() act on that result:
+
+bnxt_set_channels()
+  bnxt_check_rings()          <- allocates, then frees the vectors
+  bnxt_close_nic()
+  (rx/tx ring counts updated)
+  bnxt_open_nic()
+    bnxt_reserve_rings()
+      __bnxt_reserve_rings()  <- FW reservation committed
+      bnxt_change_msix()      <- can now fail with -ENOSPC
+
+Suppose the second allocation fails, for example because IRQ descriptor
+allocation fails. Would an ethtool -L request that was already accepted
+leave the interface down with "ring reservation/IRQ init failure"?
+
+Before this patch, that failure would have come back from
+bnxt_check_rings() before the device was closed.
+
+The commit message notes that the allocation can now fail after FW has
+committed the reservation, and the next open retries it.
+
+>  		}
+>  	}
+>  	return rc;
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but bnxt_check_rings() goes
+through bnxt_hwrm_check_rings()->bnxt_hwrm_check_pf_rings(), which uses
+the request without a NULL check:
+
+	req = __bnxt_hwrm_reserve_pf_rings(bp, hwr);
+	flags = FUNC_CFG_REQ_FLAGS_TX_ASSETS_TEST;
+	...
+	req->flags = cpu_to_le32(flags);
+
+__bnxt_hwrm_reserve_pf_rings() returns NULL when
+bnxt_hwrm_func_cfg_short_req_init() fails. That happens, for example,
+when dma_pool_alloc() fails in __hwrm_req_init().
+
+Can this dereference a NULL req under memory pressure?
+bnxt_hwrm_check_vf_rings() appears to follow the same pattern.
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261028114933.256298-1-vlad.wing%40gmail.com
