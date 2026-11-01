@@ -1,62 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793535039;
-	b=1gED/VvhlTim+K1GgAndvR2PbvGYsBnzjG+tpoUy2iq0CvOCcqMGPgNRvFA3Hoeq1Gb7
-	 SieDzbm36bfcQTjShWMxB4txxa9bgk/KfNYJt7siKpIPwE3JYkShZ/MX7BW+NtG+B2WhH
-	 NHfEiTP7+8HiTZBZjPX5EI2iy2ElYaddHE+dz7rWj689Cro+2rTimh9Sa85kH0cKUGoZo
-	 8DR+LS4A8e9EtN53O9+jtMFNr0T/FYdIYROB3Of/+FyzdtEPeIMYtyPpsFt4cbj6riOXB
-	 aSMLoGBIs9gERbFB3hwZ3Vbejnql2Rs3BXZ+TAp9hvkoKzfdFhQ3pVufggnvKYyl6ew==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793535039;
-	h=Received:DKIM-Signature:Subject:From:To:Cc:Date:Message-ID:
-	 In-Reply-To:References:X-sashiko-severity:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=3CAGqxHDzH5gPKRDzvc+9sP4UxKCwz3ISyZgTHK2sZo=;
-	b=HjJmi5nVcLXPd4mbvNXTSt1DPO8lbFe4lyRkWG7ASZXECS5LnJEaVJaXRbbkl1gt0wBI
-	 oUnt5k6owRO7WSjhw8eP0k4jjFtrm10NcJCbeMe1t4HKoV/mW7H4aL36kNx+aqnHKqk9/
-	 bQzff50gngYGW6IxLV7TrRSSpANfUZmwR8fM3iU6ym0XJv9zetrZyxk1Uw7Uu/iKXUmpV
-	 GxfFHhxrbgiWKDG5u1REbZYlSVMByoA29J5yyun4EchWlzt/hoIhWQb48+BhEBJiT/sQm
-	 dN2h1+xyqB2BEoSVT36S8vQG1BqFbgApEURUcfZY+70ynjbvOu8xHmbo71lGlIojhYw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NhB79Tip;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.170
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793563546;
+	b=KjRh55hvhcOB7OyES1R5qcfA3+LqZ1wW5fa5Jr9nmqesv/LA++CBNqc5VrOfNcSLufWm
+	 VRryhhRtCvvtnDNxrvYCiFTleBI/2qAVYPOkLwwH1oKr2j8sDdc7HTSucpTQANc7udJSn
+	 MbKMt2kUmWC+MdNoybXRR3LFPuOi+B+b/urbNsvwr/OXAbeYJlmvm2YXEK2z6gxWVpMre
+	 TSeJGdXMT5Va9vUB25QbmcOn0NGoSUSl4QyQaA469cG1TZp/jjczNzbAZTS2JaNWdZ0wl
+	 r75LnaediPwHGJ+f0qBuIT3TkJruyEr6KFGsAUnNlAJi7BlAW+dqiHsyyj3p2/PH4AQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793563546;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
+	bh=krh4+OoKKCXqNnJY5U556Q+DBROKCm2TWkvzeauItoA=;
+	b=Q8DixxRTfQDCJh00XwIma9cd3N0ZGT8PqDCYYq2VVAMqL3+/DVYbGSb3v7bxAyiTYWNt
+	 Ji4BLkufZBYMk1xMsLDmx/XjaCkcHwH9HeeSqJwOONWfc1qqs2dmXoMjjsDN9GQXmpMzC
+	 HO5zs+wPvbEosaUceKBcEZNRVwrtBd6t+vdni5Y3Tufsoe+Zah46ohUjFsxBYD15chYx2
+	 ccnyp24Tq0IrinW+vLiGfglTHt2qN38oX2qFh+J4GB5IYzQMIq62UpRy9Cx/0+Al76e3G
+	 DNduAZQuGJkOZd+DTBjQF5nzgbwiPVqQn9NJtNb+o+rBhjvCTVVI0hW+lvCviapK7Wg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ST9rpMaz;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.170
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC3606A324;
-	Sun,  1 Nov 2026 12:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3878606A324
+	for <regressions@lists.linux.dev>; Sun,  1 Nov 2026 20:05:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3878606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NhB79Tip
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2E81F000C1;
-	Sun,  1 Nov 2026 12:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793535038;
-	bh=3CAGqxHDzH5gPKRDzvc+9sP4UxKCwz3ISyZgTHK2sZo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=NhB79TipwC2CEPOKxsNWnxP3JcwDiaCmCs+jmnRZPE8MVOmTserHlpl/QchLpelw8
-	 dH904Qxjj/cz45cPF9yY4EVYipFagPJ/hKjECdgbudyaEcdKLxHNIL15RTdaF0NwOq
-	 q0AuxV9Wzmm0tCVF9AqqnSPwaJY/HWCH71eled6+XesY7LBXz1BpNMdfB9Z9ZKSvDJ
-	 /1VOE/LZMR6qvOHjlDk7tQY2b3MDwbzx3J2K2rRZ7v4UCkf/w5tQ0LCYXq+rIY/rtq
-	 Ju5jDXWGuYfEoftWWvBa5Q2746SKZ2sEjWLb61s2AhN/UTpNP3vrLkOSr0Ew2mHpy1
-	 0l55a7Wvi0kMw==
-Subject: Re: [PATCH net v2] bnxt_en: Don't keep MSI-X vectors added before FW
- reserves them
-From: netdev-bot+sashiko@kernel.org
-To: vlad.wing@gmail.com
-Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
- pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- andrew.gospodarek@broadcom.com, tglx@kernel.org, maz@kernel.org,
- yangjinqian1@huawei.com, apreece@meta.com, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Sun, 01 Nov 2026 12:10:37 +0000
-Message-ID: <179353503740.3131.17689939110178639939@kernel.org>
-In-Reply-To: <20261028114933.256298-1-vlad.wing@gmail.com>
-References: <20261028114933.256298-1-vlad.wing@gmail.com>
-X-sashiko-severity: Medium
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ST9rpMaz
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3ab1bb9666aso1652091fa.3
+        for <regressions@lists.linux.dev>; Sun, 01 Nov 2026 12:05:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793563544; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Oy2Lo90Y9ss+bapXvZKC3sToyyt/sEStskmPxTq9XwvC1WCfAATI6tQzoZ/IQs6TAV
+         6b/RRKbZjP+hzCj92YCgLo9U3ab2FDVBVz61W0PtpLY7DikZRefIteTa/gqZ4rsXAfdC
+         bQJiMu8K5c4gwW+fYNcTipty7rYEZ1vuLtMHMSxGbwPCQw/vPOTHDhclK+F3B4QWQakc
+         mhKC9z/AQgf1GD+lOq0oYBEXT83iyJy5lXEJmNgPkR5yFAcen9mNNTQ+HnUD1H/XyVho
+         fyMeUQjiCQ+II/TZGH+Iv4rEq4XDX5xIA/Ee5JNQ2TVt3Wr6++K9bL+5nOtB2Qo+Xcrv
+         y6sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=krh4+OoKKCXqNnJY5U556Q+DBROKCm2TWkvzeauItoA=;
+        fh=SlT7rtRrqODLZyWKd9yBIFcXroR43G1WlaFIcNpLNTg=;
+        b=AF8raKYO4ZMUDEV0XvlCv1amKkEtJ2Qh/GJPMotGvW9K4lTFJ76LDSzzVk2Gg3uOGm
+         /MmlX54pTc/k7kpzE3ZDcNbcLlnBs50Ug6Z5TWnqf/UK5xLyF4m1t5UVIMbhGDYGhESR
+         82DYq7J5ItWTqOooQCopLi1zwiNYaBj8mZRn89sGM+GUW4L85twEzPrLDQeHuFMHu3b1
+         0gRtIZmW0Q7I6fTTaqxfqnT/iAb2PCWgwyVmhnRD87bJFc2nQt2Xz2InfEzqZ7+dSv2b
+         MU4sU72iKqrbqo/iPg2GLI85mp6h9hMGuhwC1V4uZ9cn253A1CR3TmeRxiS1NnpU/I7M
+         AEDw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793563544; x=1794168344; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=krh4+OoKKCXqNnJY5U556Q+DBROKCm2TWkvzeauItoA=;
+        b=ST9rpMazaphvUAeH+EbEwXVFYXkOmyHWIZOTlS79Hfj51W6QvVxwTlazNVPqSAcxro
+         Wvu8bvJ/s72RfKBjEy2Mz9kqMr/Xn+YJtsjxHqf+p2zqui5ulKymKP1DlzYFxM5aImDB
+         V0nXBT0Pa1lzH7m6zVkc6rBP/G/TBWmGs9Lhk41Q2sEThc3WjiV5H5iOntdesW7TsCkJ
+         VgbF34VIZpaBuLWBjt1ExsVY2PBhXNVjQnUGNT1CDs8Su4Tb8Qv5AuizTRuG74+nhCOg
+         887cFdEpt3KSR+tKY2HxYPro4ip0Tsl7CXbirc/hFyxXzlKLdRUDcleLwTRdj6kHRIBb
+         guXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793563544; x=1794168344;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=krh4+OoKKCXqNnJY5U556Q+DBROKCm2TWkvzeauItoA=;
+        b=uh0ScogabwCaQdZdqeKVYQxUxGbxv0PACID0MXm+CAgmUbey1YdKiJj9/CmaByC60L
+         nOWBwfqaJ8bqjsp0RL961Dzrm3t3AQcz/3oXqBnRr3op5NCjANVcHYpNnSrLC3FETcfp
+         0FtUNlVN2HNiPasStWsISsdzkQ5wBi30u1uIdIIHOF2/xPOY171oYWHC0VVT+KiZybjX
+         vm6PWthFVaANwuo52Iytm+55AEGkqvcuirPOBC45zM+VKpJt/GDb9H06znIRrP7u0xwU
+         QflQNE1fB6/peD6Fz1gB9++h3W8TdXf2FYlbyZYbwjwsl+TQeCIFGb8hRUKabc/9f04I
+         Msdg==
+X-Gm-Message-State: APuU4Z+2gR2riSNBftO1J3olhuHLmWuHBzun+FvW31UwlUh4HUjetd+m
+	Z/1uArEgm0nqonQCSJZqD76/C7VoYGqYGeQHGOqu71oRrESaQhS//CBJlULhXo0sFNoplo5Twt1
+	AkZH8Kl+AtkMvh5qi/KKC5lO7LBs+xIw=
+X-Gm-Gg: AYBFou3953Q7o7O2PH1t1i63wJ5kCDkcDh1p8RUB9aFk69OspsXBAdpgQdHWMOF9kvY
+	4L7Zy2Qu4ERqDlJ804V77o2P85Bca6CiYlmm6fObj7NRffqB7hFaVcdb3ItV6BqGrbfjrVX9Tnj
+	9rKeLNrqNHDzYIcw7OpXL0fxzuAcm7HO1VoOYB/M36uLDXUX6dJluFq59iVwTM28yh86jqMnQN8
+	vuUICGWIPeZSZgFm/szxrHT2ruzkAoxErW7Wb9nX1eS8/aYCrsqwSYtBjypj5nvL/UrVRn6C4WX
+	CmORh10v9rBqpWOAt5j6aMjBH7BCpkm+LJUupvAhPEXn998nUQDoyJvqWTjtqUxy4AN6rzJzzz7
+	VKh8ycCGEv2t8BF37tCwslbwao1HZ8qKuDz73YhTfDpUIE/tpThv/1rCBf/43YoaqSGf+kBPaTg
+	IiUcIKeLTqHV1f2Mbc8zpqXtzAj+w1FnZTdxqczlo=
+X-Received: by 2002:a05:651c:435a:10b0:3ac:b2df:c518 with SMTP id
+ 38308e7fff4ca-3acb788bd42mr13845031fa.0.1793563543902; Sun, 01 Nov 2026
+ 12:05:43 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -66,228 +100,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+From: Nathan Blomquist <nblomquist@gmail.com>
+Date: Sun, 1 Nov 2026 15:05:32 -0500
+X-Gm-Features: AclHuK-cGdQD9fLfRHMjBN8yhdOQqn7YylAdQSjHpyU0SL6gVHBUJ857D77rcnc
+Message-ID: <CACOV87VBmya0PKjni5xEYxUaEczk9X_UoUHXSR_HDS2kSJnM2g@mail.gmail.com>
+Subject: [REGRESSION] amdgpu: Navi 23 passthrough fails after ef5fcf2a6c32
+To: amd-gfx@lists.freedesktop.org
+Cc: regressions@lists.linux.dev, alexander.deucher@amd.com, 
+	christian.koenig@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issue(s) to consider.
+Hi,
 
-Critical: 0 · High: 0 (1) · Medium: 1 (1) · Low: 1
+I can reproduce a Navi 23 / RX 6600 (1002:73ff) passthrough failure on
+unmodified upstream Linux 7.2.10. It happens during the amdgpu-to-VFIO
+handoff, before any guest code runs.
 
-If you believe none of the issues are legitimate, please reply to each
-issue of Medium severity or higher and explain why the AI is wrong.
-If any of them are legitimate and you plan to respin, please let patchwork
-know by including "pw-bot: cr" as a separate line at the end of your reply
-(one such reply per series is enough).
+Revert/add-back tests on Proxmox kernels isolate ef5fcf2a6c32
+("drm/amdgpu: fix autosuspend cleanup during removal") as the trigger.
+Removing its added call from -20 works; adding it to working -19 fails.
 
-- [Medium] In bnxt_reserve_rings()
-  (drivers/net/ethernet/broadcom/bnxt/bnxt.c), the new recompute in the…
-- [Low] With BNXT_NEW_RM, bnxt_check_rings() now allocates the extra
-  dynamic MSI-X vectors only to test availability, then frees them at…
+Tracing shows amdgpu_device_baco_exit() returning -ENOTSUPP (-524)
+during runtime resume: the live BACO feature reports supported but
+not enabled. The exit sequence is skipped, and a later bus reset
+leaves both graphics and audio inaccessible.
 
-Pre-existing issues:
-- [High] bnxt_clear_int_mode() frees the vectors and sets bp->irq_tbl =
-  NULL but leaves bp->total_irqs stale.
-- [Medium] bnxt_hwrm_check_pf_rings() does not check the return value of
-  __bnxt_hwrm_reserve_pf_rings().
+The candidate below keeps the autosuspend cleanup and allows the exit
+based on the selected runtime mode. In two clean baseline/candidate
+build pairs on upstream 7.2.10, the baseline fails and the candidate
+restores reset recovery and guest graphics/audio initialization.
+Sustained rendering and repeated-reset stability are not yet tested.
 
---
+Is the selected runtime mode the right condition to use here?
 
-bnxt_en: Don't keep MSI-X vectors added before FW reserves them
+Full report:
+https://gitlab.freedesktop.org/drm/amd/-/work_items/6076
 
-When BNXT_NEW_RM is set, bnxt_check_rings() now frees the dynamically
-allocated MSI-X vectors right after the availability check.
-bnxt_reserve_rings() then allocates them after __bnxt_reserve_rings(),
-sized from bnxt_get_num_msix(). It also grows the vectors when no
-reservation is needed but FW already holds one, and clears
-irq_tbl[].vector when trimming.
+#regzbot introduced: ef5fcf2a6c320676bf8be2dadac93d9023b468b7
 
-Closes: https://lore.kernel.org/all/20261022193620.2152038-1-vlad.wing@gmail.com/
+Candidate patch:
 
-> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> index 0682060b048ce..55b11c7684313 100644
-> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -6412,8 +6412,16 @@
+ {
+        struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
+        int ret = 0;
+-
+-       if (!amdgpu_device_supports_baco(adev))
++       bool runtime_baco = adev->in_runpm &&
++               (adev->pm.rpm_mode == AMDGPU_RUNPM_BACO ||
++                adev->pm.rpm_mode == AMDGPU_RUNPM_BAMACO);
++
++       /*
++        * Runtime PM selected BACO while the device was active. Firmware can
++        * clear the live feature bit during D3, but the matching exit sequence
++        * must still run to restore the runtime D3 policy.
++        */
++       if (!runtime_baco && !amdgpu_device_supports_baco(adev))
+                return -ENOTSUPP;
 
-[ ... ]
+        ret = amdgpu_dpm_baco_exit(adev);
 
-> @@ -11701,8 +11702,23 @@ int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
->  	int irqs_required;
->  	int rc;
->  
-> -	if (!bnxt_need_reserve_rings(bp))
-> +	if (!bnxt_need_reserve_rings(bp)) {
-> +		/* FW may already hold the reservation from an earlier
-> +		 * reservation that was not followed by growing the dynamic
-> +		 * MSI-X vectors, e.g. because the allocation failed.
-> +		 */
-> +		if (irq_re_init && BNXT_NEW_RM(bp) && bp->irq_tbl &&
-> +		    pci_msix_can_alloc_dyn(bp->pdev)) {
-
-[ ... ]
-
-> @@ -11728,6 +11744,10 @@ int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
->  			rc = bnxt_init_int_mode(bp);
->  		bnxt_ulp_irq_restart(bp, rc);
->  	} else if (irq_change && !rc) {
-> +		/* Size the vectors from what FW actually reserved, which
-> +		 * can be less than what was requested.
-> +		 */
-> +		irqs_required = bnxt_get_num_msix(bp);
-
-[Severity: Medium]
-The comment says this sizes the vectors from what FW actually reserved.
-Under BNXT_NEW_RM, though, bnxt_get_num_msix() returns
-bnxt_nq_rings_in_use(), which is bp->cp_nr_rings +
-bnxt_get_ulp_msix_num(bp). It is not hw_resc->resv_irqs.
-
-Can this still activate unreserved MSI-X entries when the RoCE driver is
-registered?
-
-In __bnxt_reserve_rings(), the FW IRQ grant (copied into hwr.cp by
-bnxt_copy_reserved_rings()) only bounds the L2 count:
-
-	hwr.cp = min_t(int, hwr.cp, bp->cp_nr_rings);
-
-The re-clamp of the ULP vectors against resv_irqs is skipped when a ULP
-is registered:
-
-	if (!bnxt_ulp_registered(edev) && BNXT_NEW_RM(bp)) {
-		...
-		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
-		ulp_msix = min_t(int, resv_msix, ulp_msix);
-		bnxt_set_ulp_msix_num(bp, ulp_msix);
-
-Take 8 ULP vectors, 32 L2 NQs and a FW grant of resv_irqs = 34.
-bnxt_get_num_msix() returns 40, and bnxt_change_msix(bp, 40) activates
-entries 34-39 while rc stays 0.
-
-bnxt_alloc_cp_rings() maps L2 NQ i to MSI-X index ulp_msix + i. That
-puts L2 NQs 26-31 on entries FW never reserved, which is the
-lost-completion case this patch is fixing.
-
-The commit message limits this with "at least while no RoCE driver is
-registered" and says the accounting predates the patch. The in-code
-comment doesn't mention the RoCE case.
-
-Could the sizing be bounded by hw_resc->resv_irqs here? Or could the
-registered ULP vectors be counted against resv_irqs in
-__bnxt_reserve_rings()?
-
->  		if (bnxt_change_msix(bp, irqs_required) != irqs_required)
->  			rc = -ENOSPC;
->  	}
-
-[Severity: High]
-This is a pre-existing issue, but can this branch call bnxt_change_msix()
-while bp->irq_tbl is NULL?
-
-bnxt_clear_int_mode() frees the table but leaves bp->total_irqs as it
-is:
-
-static void bnxt_clear_int_mode(struct bnxt *bp)
-{
-	pci_free_irq_vectors(bp->pdev);
-
-	kfree(bp->irq_tbl);
-	bp->irq_tbl = NULL;
-}
-
-It is called from bnxt_hwrm_if_change() on fw_reset or caps_change, just
-before bnxt_cancel_reservations(). It is also called from
-bnxt_io_slot_reset().
-
-The next bnxt_reserve_rings(bp, true) call comes from __bnxt_open_nic()
-or bnxt_io_resume(). At that point bnxt_need_reserve_rings() is true and
-pci_msix_can_alloc_dyn() is still true. So irq_change is set whenever
-irqs_required differs from the stale bp->total_irqs.
-
-If the count passed to bnxt_change_msix() is below the stale
-bp->total_irqs, the trim loop then runs through a NULL bp->irq_tbl:
-
-		map.virq = bp->irq_tbl[i - 1].vector;
-		pci_msix_free_irq(bp->pdev, map);
-		bp->irq_tbl[i - 1].vector = 0;
-
-This could already happen when the pre-reservation count was below the
-stale total. The recompute after __bnxt_reserve_rings() adds a new
-trigger: pre-reservation count > stale total_irqs > post-reservation
-count.
-
-Before this patch that case took the grow loop instead. There,
-pci_msix_alloc_irq_at() failed cleanly and the result was -ENOSPC.
-
-The new !bnxt_need_reserve_rings() branch above checks bp->irq_tbl.
-Should this branch check it as well?
-
-[ ... ]
-
-> @@ -15093,6 +15113,7 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
->  			hwr.cp = min_t(int, hwr.cp, bnxt_get_max_func_irqs(bp));
->  		}
->  		if (hwr.cp > bp->total_irqs) {
-> +			int old_total = bp->total_irqs;
->  			int total_msix = bnxt_change_msix(bp, hwr.cp);
->  
->  			if (total_msix < hwr.cp) {
-> @@ -15100,6 +15121,17 @@ int bnxt_check_rings(struct bnxt *bp, int tx, int rx, bool sh, int tcs,
->  					    hwr.cp, total_msix);
->  				rc = -ENOSPC;
->  			}
-> +			/* FW has not reserved the new vectors yet, and writes to
-> +			 * MSI-X table entries beyond the reserved IRQs don't
-> +			 * stick (seen on BCM57508).  Free them again;
-> +			 * bnxt_reserve_rings() allocates them after
-> +			 * __bnxt_reserve_rings().  Without the new resource
-> +			 * manager there is no IRQ reservation and
-> +			 * bnxt_reserve_rings() does not grow the vectors, so
-> +			 * keep them.
-> +			 */
-> +			if (BNXT_NEW_RM(bp))
-> +				bnxt_change_msix(bp, old_total);
-
-[Severity: Low]
-With the vectors freed again here, a 0 return from bnxt_check_rings() no
-longer means they will still be available at reopen. Callers such as
-bnxt_set_channels() act on that result:
-
-bnxt_set_channels()
-  bnxt_check_rings()          <- allocates, then frees the vectors
-  bnxt_close_nic()
-  (rx/tx ring counts updated)
-  bnxt_open_nic()
-    bnxt_reserve_rings()
-      __bnxt_reserve_rings()  <- FW reservation committed
-      bnxt_change_msix()      <- can now fail with -ENOSPC
-
-Suppose the second allocation fails, for example because IRQ descriptor
-allocation fails. Would an ethtool -L request that was already accepted
-leave the interface down with "ring reservation/IRQ init failure"?
-
-Before this patch, that failure would have come back from
-bnxt_check_rings() before the device was closed.
-
-The commit message notes that the allocation can now fail after FW has
-committed the reservation, and the next open retries it.
-
->  		}
->  	}
->  	return rc;
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but bnxt_check_rings() goes
-through bnxt_hwrm_check_rings()->bnxt_hwrm_check_pf_rings(), which uses
-the request without a NULL check:
-
-	req = __bnxt_hwrm_reserve_pf_rings(bp, hwr);
-	flags = FUNC_CFG_REQ_FLAGS_TX_ASSETS_TEST;
-	...
-	req->flags = cpu_to_le32(flags);
-
-__bnxt_hwrm_reserve_pf_rings() returns NULL when
-bnxt_hwrm_func_cfg_short_req_init() fails. That happens, for example,
-when dma_pool_alloc() fails in __hwrm_req_init().
-
-Can this dereference a NULL req under memory pressure?
-bnxt_hwrm_check_vf_rings() appears to follow the same pattern.
-
--- 
-Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20261028114933.256298-1-vlad.wing%40gmail.com
+Thanks,
+Nathan
