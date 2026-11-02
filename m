@@ -1,95 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.66
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793632367;
-	b=QBF2Y5H77Vswnxq3uIDDdAOhMcT0u03lV9tin/VFvfIsPUf+ijc6ym+ihm3uxT/ySQcp
-	 TKW2W5HkPuyWR4i1f+JXz8msd/Z+HRpCfWEBinCISqY4LZZTteO3v7eLlYcNrK8qctrhf
-	 ycJrb4hLXYAJv7RI/DOynOPOfhrM+pLGE3DfigSJo40aDt1W7mHK+QJn2OwtzXlp+ZbjG
-	 nTHUxGN3aoqi9PShnT2yMHJW+FYdKmfHH7Zrksu83KNw2d/0uT65WfANQ8jaZTIPPBHQ3
-	 TPDabhXAqR+aOVIGmYj9aN0dbJ6cgObbjQSHAr+9QaYmknhy3d8+oRKgtiRQqm4hg8g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793632367;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:Content-Language:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=Yu6bLab8QEX0TTerorCGvWhnaA8aWHZsatmHUbW62l4=;
-	b=gAUAZ9mHOaLoBwQR4N9DhOufvocalvlaFojr1V9DUW4H4eB2H5XDp6yQOuwOwOzJKXBF
-	 M6dWiL2hopkeKx9z/bURCCiij2elwcf4mz3aiI5DJXFfbPiOB+0kNPTWiM5PKDUJwz74l
-	 kPsBsmKWkxHul1RXqxv01k4C3RFV/HXnGizxSiWnU1FWOmWCIwcqdghFqMKEIh8NZVIwx
-	 VPFKs+BmVyKAA6iXkuyAA3v5H4ToZVfcEnKmtLB6KLmaVo2rWdWuQzN/S6mkQuA8C16i/
-	 OnhRgCC2x9hfaztosZKtfJ5Y5/zxyHXfrVUX6xDZ1o+YQkREgPxvaJjlvKLXAs0XoJA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b="tkqxIU/3";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.66
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012066.outbound.protection.outlook.com [52.101.53.66])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.126.134
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793633585;
+	b=CvzNKn82hBwGgnDl2fW7g9UF/ukTgRW6STAUsM6qFCkOj4yeAfKMfZsBG1r4+4XwD7uT
+	 kiOgMOSIjUDTs4nWxAA4hkeSsMKe1mXE5seA6b6cHb41RFUnSXK7cZ5ctb4EBsE0zQAwK
+	 odcYgwz9jMu3JVo7uWxYlvlcmXTWbqYW+GYeeXVUrVgPAyU5rJVRpytHJ1iHhLwyfzcey
+	 ExHB1PL4WrLWxUzNIoH11R10fFnZSVxJZjlylL6BPFPJV6ppQMXzgTeZxr0Bq4fS9JB1q
+	 P6slyxhSNKPO1W9gQkBJv6udHq2gANYjwoeozOFUQ18TAnOFkmlPfQaPlumu83JUN5g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793633585;
+	h=DMARC-Filter:DKIM-Signature:X-UI-Sender-Class:Received:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
+	bh=P3gziTHx8CMmwlI1c6o4J2lA5lTkZqRgb1nFTn/4q7c=;
+	b=PlDPG1zElx6x3x4tdiGvfu/Dk43IHWu96ujAZraI/rZUDKZvl1O0+MaLVwdxfJlq9SJ8
+	 pck1WqBhBKrCj8Z2h+rNZjzZvjHNNfNlMcGcJxAIxet+DKyIoCUyb1yFqaVy81jDm8SX0
+	 18so/Rwa6XGL1GmkJFv5+e/avJZ/5DGZcRdMOc+4L7V2cLL4P9vpCpdXP6/dONp0TSee9
+	 1FLnrc8+AZbq9e7vD4p2N+A8jWqBm8MuOkuKstariHVosuQIMn99iA1s+cKzgBngcsMPK
+	 uwFwC6T2bh4WkqSO44GHoaroaWlZ0zLExcGs1S267zxJ32NUcWongvops5m6camvm/w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=online.de;
+	spf=pass smtp.mailfrom=online.de;
+	dkim=pass header.d=online.de header.i=cito@online.de header.a=rsa-sha256 header.s=s42582890 header.b=LqEanx5m;
+	arc=none smtp.remote-ip=212.227.126.134
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80268606D830
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 15:12:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 80268606D830
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF2F6072ED0
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 15:33:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ADF2F6072ED0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=online.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=online.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=tkqxIU/3
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w4ZT7pg3psBt8apa1djg/LdC85yeouu9Yge2e2Bxb8Lz/Dk6CBZyohTU95D00EnQ9spGdw/QSwITEBm00obdpGs8QSnE1jgK3XrXJx/t15TwNGGWttN6AlgubzhYWOpZlQCblFs26DBOGmdBbsS3oznBU0oMIhJJhJipV8kfdd96sstYTiGLSB2U8UNMk8WEvQ3Hvb+ZOSx4w6PM+jlLNUhaYDXDBXa/GY66aQz03B1WVcdCu9OBdrbYZq5jx9qflN4YDk8xot8PuPkLsfrSpPI953igFAHNqDO8u9MA8MLojf1GBtj5nBh+imLV+gLfBTQRdCfH9R4NSRCX/ZewPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yu6bLab8QEX0TTerorCGvWhnaA8aWHZsatmHUbW62l4=;
- b=l3ze3mOdlqvl6IYvou85jUClJYwlWuytK36NzhLCtN+YE6jZz+c6UJXq8hBBGO73cdexJ66myohRNO8pUNnsZph03NUQa+Id6smgNqCsTqg27pphVaAto5zqWzO2E/oc3a/X5RemlWGgOpQZyHeqeYcsTqqdAJKOqDw9ZqL9ix9wsQe2nSIYSi0YVBMPjctT/dXiC41l6fjszHO7t7U4G7KSVPchl6ua6r5t7PY2fVNDtGPMxrcTArKGwNuPrRrwKAtCI7Hz4Joo3b/ljrgDfKkf85z6RjH8C2Bglp+aPcf4XMQRfZ3CbAwFGSjLX+FIq8Q00IDEx0dD9+2eG0KqQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yu6bLab8QEX0TTerorCGvWhnaA8aWHZsatmHUbW62l4=;
- b=tkqxIU/36hEndr1zlN8AanfcryuDR3ZAr20XhvWbgnPyhRO7HRNvh7kt8qCdRaMvP5+p9UV5kv8oPUsczDCklIrqRsMUdBBjXpX3ZvvsMjdRm46v+bXIJ7rrfWMEiG9BANOV0jcNk0XNIHyyrxnOUWl3Xn2MdVDFSZ3DVZxt50U=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB9174.namprd12.prod.outlook.com (2603:10b6:510:2ed::9)
- by CH8PR12MB999205.namprd12.prod.outlook.com (2603:10b6:610:35a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
- 2026 15:12:42 +0000
-Received: from PH7PR12MB9174.namprd12.prod.outlook.com
- ([fe80::eaaa:b430:ba9:5dc]) by PH7PR12MB9174.namprd12.prod.outlook.com
- ([fe80::eaaa:b430:ba9:5dc%7]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
- 15:12:42 +0000
-Message-ID: <99c5c0cf-fdd4-4bf1-a5fa-a51a8b09db37@amd.com>
-Date: Mon, 2 Nov 2026 09:12:39 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] amdgpu: Navi 23 passthrough fails after ef5fcf2a6c32
-Content-Language: en-US
-To: Alex Deucher <alexdeucher@gmail.com>,
- Nathan Blomquist <nblomquist@gmail.com>,
- Guangshuo Li <lgs201920130244@gmail.com>
-Cc: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev,
- alexander.deucher@amd.com, christian.koenig@amd.com
-References: <CACOV87VBmya0PKjni5xEYxUaEczk9X_UoUHXSR_HDS2kSJnM2g@mail.gmail.com>
- <CADnq5_MzmNYq0WA5HFaOp6E3WO82YqTT5opCgkAbvv=9Q8AQnw@mail.gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CADnq5_MzmNYq0WA5HFaOp6E3WO82YqTT5opCgkAbvv=9Q8AQnw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1P221CA0020.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:208:2c5::7) To PH7PR12MB9174.namprd12.prod.outlook.com
- (2603:10b6:510:2ed::9)
+	dkim=pass (2048-bit key, unprotected) header.d=online.de header.i=cito@online.de header.a=rsa-sha256 header.s=s42582890 header.b=LqEanx5m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=online.de;
+	s=s42582890; t=1793633564; x=1794238364; i=cito@online.de;
+	bh=P3gziTHx8CMmwlI1c6o4J2lA5lTkZqRgb1nFTn/4q7c=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=LqEanx5mqDs4UHDsrifBWjTcv5U+VpLsvDdhDYlLkYwnYIQ/GJJab2tBUtnv1BSv
+	 LrvW6c64MeAQ7qy4Vxp9pq+if02KT3VIZsbfHqRwvkp2H/NP/Eqrmyvn4atBM3Anv
+	 qcK055fqs1ONH5AikfRaNyO1w+srsmxJz8J1tAmzsZxjwkCMP7gGpCVsad4QyGtLE
+	 HQkwmClWVST3Rbhuzgv4IAIetVDFNO8m7QCsBpPhZjMyX3E5+mPVs78078IWkcE9j
+	 3tKc3Sh270N6Hfj3rf5ovpqXHtU/FRqAUWBd9PhRWPPfhsyk9UQXVheYR4okWVJ0C
+	 V1fMQyHGZC06QHf/og==
+X-UI-Sender-Class: 6003b46c-3fee-4677-9b8b-2b628d989298
+Received: from client.hidden.invalid by mrelayeu.kundenserver.de (mreue012
+ [212.227.15.167]) with ESMTPSA (Nemesis) id 1Mxpqo-1watV402ec-00vlcx; Mon, 02
+ Nov 2026 16:32:44 +0100
+From: Christoph Zwerschke <cito@online.de>
+To: stable@vger.kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Sasha Levin <sashal@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Erik Brangs <erik.brangs@gmx.de>,
+	benh@debian.org,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	linux-bluetooth@vger.kernel.org,
+	regressions@lists.linux.dev,
+	1149377@bugs.debian.org
+Subject: [PATCH 6.12 1/2] Revert "Bluetooth: btusb: Add ASUS USB-BT600 for Realtek 8761CU"
+Date: Mon,  2 Nov 2026 16:32:42 +0100
+Message-ID: <20261102153243.373899-1-cito@online.de>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <0cf3aaf2-9911-4918-8f6f-c11d6077d39b@leemhuis.info>
+References: <0cf3aaf2-9911-4918-8f6f-c11d6077d39b@leemhuis.info>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -99,140 +78,108 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB9174:EE_|CH8PR12MB999205:EE_
-X-MS-Office365-Filtering-Correlation-Id: fad12291-7be5-41d5-0900-08df38f3bde4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|6133799003|10067099003|18002099003|22082099003|261102123227099003|56012099006|11063799006|4143699003|261022075727099003|261026140227099003|261022105027099003|261026121527099003|261009223027099003|261028144727099003|261021121427099003;
-X-Microsoft-Antispam-Message-Info:
-	TEh3/7sPVeH5uwnyF2VaHs7fXrtDuFf4slc78PWxJH1FPpfj36c4MkPUFgirXdN/edj17WGbQjK3H+cLv4Lo+UxwRZ/tHwdjtzLjU3ppWb6XKNL5Cwnk3rC+QtHEUmtx3g41B5QvdJdjaipO/2KhoG0J6C2/PyRRH8qWt220lBKucBMZdGAnW+GKKZCn4xX6P+CkhFW3vtVV09XsQz1t4hKhGB2f2BzIZX0FySJaBcOpg/1jWH5QJkKsYaeu66ALgu/oUCHlqN8kK/V+zdS85K4uN1tY6LHToVFlddY3S8Lf2GCahLmuAnDSO8eiXujRyCnCwIdV2OqIE/DVsEXOir/ynl0k7lQWcqawiL/m0Qn8L9Fa0kZsffpy7UkX/lXfxqnGNvGUCE5Q9KB0eMy+3CVK+VtX+irYmAt3CyAU/NMGuBhtOc0vXJ2aJvXIPaWuoCbYPaZB6nNvUymei2eoFANcUf35xSPxludi86P8t6Bnj+GL6aXQl0M6Gen41X5jWKzD7wSLKhXWgvfQt1ejyQr9IkOAeuQXcMdTicYYo9LgwHCdTJeT21zpMQBKJRDl/CxDsV3lv96AjIaic8V+sWH4HtXc2blsiGQNb35w6/Y=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB9174.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(6133799003)(10067099003)(18002099003)(22082099003)(261102123227099003)(56012099006)(11063799006)(4143699003)(261022075727099003)(261026140227099003)(261022105027099003)(261026121527099003)(261009223027099003)(261028144727099003)(261021121427099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YWZJa1NPc0w5aVoyVTdPang0UlE1V2tYak0zTy9LTFN6M2gzZjk2Zm92U3BT?=
- =?utf-8?B?dUxTUVN5bFI1a2ZzNmxDR3VuQnBwN2RRMEVwNmV6SEtCUnZoay8yY243bk84?=
- =?utf-8?B?R1N4L1Z5SE00SmxzNjF6Zkk1S2FCcUZuN1FJeWpBTldiT1F6UFptd3FoaTVJ?=
- =?utf-8?B?aEw0UEZzMi8zNGh0L2xXYytoZU1jS0dRZzJQeldxdXV6WHNxRlA3VllJZEFz?=
- =?utf-8?B?TVJML0gxa1lZMTNvcHMvdlU1MGFtTVR6STBnMm9QemxWd0VDRTJtRzlBUURJ?=
- =?utf-8?B?aHhYT3p2amlacHZsemM5ZEJ3Z3RPVzhyRDB5L1QveWRwajU3VmVMSHozYm50?=
- =?utf-8?B?QTZSZjhZSVU5N2RPMVlDaXZ5S05Ob0hjQTk4UjJJdEErakk3aThtbUtJclZv?=
- =?utf-8?B?Rmt0bmVlZ1d0RFlsSlQvdlduQmdza3NHemo3UjJJVjhybFB6UEg0SVc0d0xR?=
- =?utf-8?B?TlFjYndsUDVtODVGMFoxdEppS1lDTndlVEZoWGJrd2pmS3VvWWg5ZmFDRFRQ?=
- =?utf-8?B?MGJxNGxwYy9rbTdPQStzT0w4bVVYbnA1aVJFWVNqUk9RYUkybHlWTUUvU0RL?=
- =?utf-8?B?TzZ5U0RMQXZGQ3d0THRoOWRTaVU0VUxXeklNSmpDNVR3RmY5ejBBS2ZhbWNi?=
- =?utf-8?B?QlhYL0Q5RlZWSkYrR2ZoK2Q0S0ZjclhXMDF5MWxwYjRiQUlqSEZTSzI0RTl2?=
- =?utf-8?B?cS9POUZ3c3ArcVc2NlE5WTdjUnA0Yzd0eVBzcDd5anZ3RkVNd2UyaDY2UHhv?=
- =?utf-8?B?RzRpblRjVHhlTXFyanJKNFpiZnJjREd1QUZoUW9ET3ZkRndMZGVvamxZK2FB?=
- =?utf-8?B?N0JQUWFPb0NsZUdIeGo3TUhoTW83eDYyT25JLzJJVUZmTHJPZjZTVTJ1MzJG?=
- =?utf-8?B?a1RKaFV3elhhQnN4RFZrYlV1cWJ4Ujh6VURwWGpyUTZjRWRWYmt1K1o5aHRU?=
- =?utf-8?B?K3RPbE82T2REZkc5NUxhWWdxeDFGREphUTFtK3ZCYWpoUlo1TGhMdHhiVk9T?=
- =?utf-8?B?Qmw0dTNwdlc5K01HTlViV2dEVVFVZTVFaVp4ekR2ZlFGSnFFNnpUWW51TEpx?=
- =?utf-8?B?bzZkakZEZnJqODNvY2ovMUJiN0hiMnFjc2tPK2Y1cnkrNlJVS0dSY0VkQ3FV?=
- =?utf-8?B?UmZZVjU3U3BVS1Nod2FINTdrTWM2aVlhTitmV0pXSkRqVE1Hd3pwNWtsSjJw?=
- =?utf-8?B?SmYyenk4ZlJxZEl0OGRENUJqcitPU0VPNWpQdkNBRHVBdXlkUG1wQkZwWktO?=
- =?utf-8?B?dUdCWjQ3TVdvZGFROFhiWjVLbTJvMFphWVBqUzl2OGgzNmpuOEd0dHova2to?=
- =?utf-8?B?cHRyMzhsUXAvbk54YktkWVBxaXBhL2tuZk5EWTFTNDlRUlBzVXZpbHdTdlJ1?=
- =?utf-8?B?WEhId3loSWpCVGJFaDlhTUZOWjdFYzdKSzRMMU0zeXd0ek5hamhWc2FnU0J0?=
- =?utf-8?B?TkRsSnpYZXpEVjd3TWFMTFc3R05xdk5MN201Vm5YUDlwQndiaWtoVFFDdXBa?=
- =?utf-8?B?V2ZYNldyUFNQRkVLSmtxR2U4dmJTRGZhOWZLL2JwLzluZ2RpcFhVWVVxdVpn?=
- =?utf-8?B?NHowaG5rdHVTK2V2cFNZbFZzQldKYS8yaWVqUHlXSVVrajRqWjhzTlZoNCti?=
- =?utf-8?B?Q1VWbGFrekU1cXZ1YkZxTVpNa1lqd25rMFdOOVhGcklqNko1bnRrS3hhWEJS?=
- =?utf-8?B?K29JalRxTkJveWZJUWxvWllRZFlxSThZUUh1WUcxeTY2OFFvNFFvbjQ3QVdr?=
- =?utf-8?B?Z0QyMmozL20xY0FhT3dBYytuWWNqUGtGZTduT05YYXo3TGRjWjZKcGxlWGVy?=
- =?utf-8?B?SzBKSm9FYnJrK0VoaTlFdmVKdEFuZGUzM2RMMGIzY3ZCRzNCc0VsYUhmZWhE?=
- =?utf-8?B?Z3R3VUVRZTJkdmpiUDJTdUpTS1lPazJ4V29nN2pJL255MVk1bTFDeVNOSFBw?=
- =?utf-8?B?VE1naWZJNlhmM2dFL2pNWWhyNFc2VGlmMUhyY2tVK1JjM3lKRk12eWVuY21L?=
- =?utf-8?B?eWNPRjNYQVJzVnNOT0xUNzlCQTVYcCtQYU1XNFM4VzJNQlJYYUlLZy9pL2J2?=
- =?utf-8?B?U1Yxb3Y4ZDdvL0Q1UGhlMldpa1hYellKTDI5aFU3N3k2TVpYd0VTbGFLTEVz?=
- =?utf-8?B?ck5XWVF3dktUdU5paVBFdmx2bVFTL3JLK3diaWtvbm5rVUo4TnV1a2R5cyt2?=
- =?utf-8?B?K0IyQ0ZQdm9Gb3dYU2pGdDlHNlY3OVlBalpVR0tVeDFwaU13eUE4ZFp5VDBZ?=
- =?utf-8?B?R2N2NTF1Qk5YamNZelBxbGZDZytsUXhTTHVITE80REhNNzNPeW1wOXRtUnRv?=
- =?utf-8?B?Y1RKRHlkTTVOZURqMUdocklhY3BBUGliUmhrZWxuanVScUhaTUlQQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fad12291-7be5-41d5-0900-08df38f3bde4
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB9174.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 15:12:42.5545
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KPPe/VWmXkoXWV8auXK1PkvDSzgKhR9z3Q8TZw1qVsgJKrFwERTdqgP8cbOUjCqSZYwcKQ7C/9iBgIiFELHoiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB999205
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SwOeEke6jMmGJ3rFIcPIGcokqfXxSxdPALB3a+wgHSZUHS/FqrB
+ TcdanMyQFgKPEdKW2dp0UXFiwm5B3U77cHrjyHHLc64y2yEXPAEcBj2DmKzieQlaOC2Jc99
+ CZaS5iRxomJS/PPEBb1KGi+9uAe7zbcLqb+2FXFDVv1DYN3tLMVNuauDJZ9KSzTgw1oi9AE
+ bQOIVl6tB7fbfnPXy+1qw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5Pjwte9dNI0=;ndSHZ6UfCHGaI1uQ1Qfn5ll4sy7
+ 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
 
+This reverts commit 32412aff8d11d00672053cb10750869f2de94a1f which is
+commit 6f0624b4427e38c3bb63a951c536cf8adaee1238 upstream.
 
+With the device ID in the table, the adapter is handed over to btrtl,
+which in this tree, together with the backport of commit 4a23ce935f74
+("Bluetooth: btrtl: Add the support for RTL8761CUV"), now requires
+rtl_bt/rtl8761cu_fw.bin. That file is only shipped by linux-firmware
+since 20251111. On systems with older firmware packages, such as
+Debian trixie, the adapter no longer initializes. Without the ID entry
+it binds via the generic Bluetooth class and works on its ROM firmware,
+as it did before the backport.
 
-On 11/2/26 08:09, Alex Deucher wrote:
-> On Mon, Nov 2, 2026 at 3:16 AM Nathan Blomquist <nblomquist@gmail.com> wrote:
->>
->> Hi,
->>
->> I can reproduce a Navi 23 / RX 6600 (1002:73ff) passthrough failure on
->> unmodified upstream Linux 7.2.10. It happens during the amdgpu-to-VFIO
->> handoff, before any guest code runs.
->>
->> Revert/add-back tests on Proxmox kernels isolate ef5fcf2a6c32
->> ("drm/amdgpu: fix autosuspend cleanup during removal") as the trigger.
->> Removing its added call from -20 works; adding it to working -19 fails.
->>
->> Tracing shows amdgpu_device_baco_exit() returning -ENOTSUPP (-524)
->> during runtime resume: the live BACO feature reports supported but
->> not enabled. The exit sequence is skipped, and a later bus reset
->> leaves both graphics and audio inaccessible.
-> 
-> Adding a few people.  I'm not quite sure I follow what's happening.
-> Can you attach your kernel logs to the bug report?
-> 
-> Thanks,
-> 
-> Alex
-> 
+Mainline keeps the ID entry, so this revert is for 6.12.y only, as agreed
+in the regression thread.
 
-I think this need to trace a little bit deeper.  It sounds like it's 
-likely an issue in the .supports_baco() callback for the ASIC.  These 
-capabilities shouldn't be changing at runtime.
+Reported-by: Erik Brangs <erik.brangs@gmx.de>
+Closes: https://bugs.debian.org/1149377
+Link: https://lore.kernel.org/all/179104011040.2214689.5921682013387867802=
+@eldamar.lan/
+Signed-off-by: Christoph Zwerschke <cito@online.de>
+=2D--
+Not tested on 6.12.y. The same change was tested on 6.18.55 with both
+adapters and without rtl8761cu_fw.bin: with the ID entries they fail to
+initialize, with both reverts they come up on ROM firmware and A2DP works.
 
->>
->> The candidate below keeps the autosuspend cleanup and allows the exit
->> based on the selected runtime mode. In two clean baseline/candidate
->> build pairs on upstream 7.2.10, the baseline fails and the candidate
->> restores reset recovery and guest graphics/audio initialization.
->> Sustained rendering and repeated-reset stability are not yet tested.
->>
->> Is the selected runtime mode the right condition to use here?
->>
->> Full report:
->> https://gitlab.freedesktop.org/drm/amd/-/work_items/6076
->>
->> #regzbot introduced: ef5fcf2a6c320676bf8be2dadac93d9023b468b7
->>
->> Candidate patch:
->>
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> @@ -6412,8 +6412,16 @@
->>   {
->>          struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
->>          int ret = 0;
->> -
->> -       if (!amdgpu_device_supports_baco(adev))
->> +       bool runtime_baco = adev->in_runpm &&
->> +               (adev->pm.rpm_mode == AMDGPU_RUNPM_BACO ||
->> +                adev->pm.rpm_mode == AMDGPU_RUNPM_BAMACO);
->> +
->> +       /*
->> +        * Runtime PM selected BACO while the device was active. Firmware can
->> +        * clear the live feature bit during D3, but the matching exit sequence
->> +        * must still run to restore the runtime D3 policy.
->> +        */
->> +       if (!runtime_baco && !amdgpu_device_supports_baco(adev))
->>                  return -ENOTSUPP;
->>
->>          ret = amdgpu_dpm_baco_exit(adev);
->>
->> Thanks,
->> Nathan
+ drivers/bluetooth/btusb.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 00aa0fffd0c9..bb83dc0b031e 100644
+=2D-- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -820,8 +820,6 @@ static const struct usb_device_id quirks_table[] =3D {
+ 	/* Additional Realtek 8761CU Bluetooth devices */
+ 	{ USB_DEVICE(0x0b05, 0x1bef), .driver_info =3D BTUSB_REALTEK |
+ 						     BTUSB_WIDEBAND_SPEECH },
+-	{ USB_DEVICE(0x0b05, 0x1d70), .driver_info =3D BTUSB_REALTEK |
+-						     BTUSB_WIDEBAND_SPEECH },
+=20
+ 	/* Additional Realtek 8821AE Bluetooth devices */
+ 	{ USB_DEVICE(0x0b05, 0x17dc), .driver_info =3D BTUSB_REALTEK },
+=2D-=20
+2.56.0
 
