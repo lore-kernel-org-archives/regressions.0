@@ -1,74 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793610307;
-	b=irlRQVwv3/GWCwE/jr4YJeRK5YbFe7ua1Pm6KhniDvn4CQuhXIAqLlqyyHsfsTcy8/JS
-	 kKHGeQJ5CUf5tzoflt14merQKrFk5Zm0h66fbe4CVywrG02P3DflqwMRoRK4kwwPuLPbG
-	 WYqFSRw2lToEXoAldGokv9Pvftfu+l5ZBE0oSw4r6EKftxOG6WnSRk2K4nPcmn4q9ZSh8
-	 rJJNZi9OZBqURFSEBaFM/0AKN6r5HG/3o0Gpmv66rzMFsulmnLSM5qzWP++feuI1HtYF+
-	 bf250G4Kri2lGkHfLDRJ3zlvB841hA2XnTt/yj2fHZbP/QEU2tbzQ8vkvAyyLzCa2JQ==
+	t=1793612406;
+	b=mmPwRVw5zi0d8QpV5y2aVxHv6o14BkpHf3FMAYOWrdwCKIqodtpSNCm5niXPUnOpKAa2
+	 UFRjcjSM7mmj/b/NrO9FY/iAfHjSGwco74zd2QSVZBR6JCWwR+buTPEjOyTQE0xKNap8j
+	 cf000Li8Y6ddiH/E4U3BIlclFjJlwArZ2IY1z9qcJnY/kT2rNiZd9I3qN9RLf5Qr1DBAn
+	 Nft+t4ck6UB+4/3bsvWj3jIxlCHMY/oe/Dzcp4nuqfN6pUOvxZ50tDYE+M55IvBS+ktcE
+	 NujXJd6yA4SYbmnyl6VHLCZKUIflHHysOVc1t3Ec/dP928c4H5gZxGYvBJahRaa4P+Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793610307;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=RVOmnOa+Y77vnv2dFHNdbDCauBHEdgvyd8yujERyanU=;
-	b=D1ND19J3/ogtTeZNhdQo183W7hmfyO+SKf1FShF9cud70AbefqW4o7AV1xAomcxlLitb
-	 GT/4dV5fo1cSUvJe0EEc4V0BY8Rkda+BnL7eZeGshwV9GoSgW1Zyat2D5iVjV5IOicaEi
-	 Jr/gzFhmq1J6y9JCfWmmWsQGTI76D7Uml3+nqmmwAOtl5txYFFQ2wUHp2PF8rDsZFoLL6
-	 YjLGFc1MJWWO5EpYVUYY2Y5Q14H0I/igyD1c4podYhxRfaISVIvWBrJMqmvUfANkb9gzc
-	 MZjA1xyBrow9LG2M8QhMpdAB4iKMuNP5SfS3b4m0NGHp5Ddle6t7QCYhy+/78+n2A2w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793612406;
+	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc;
+	bh=koy48tw7Roi2TNVALKt7ehN7IwQ8uU25JAdoz9k07yQ=;
+	b=pyYfrea+FbuxoCQgh+/1UNJadRoZVim0vczY24/FlFUUsN18zGvIKEswON5r7NBUr/fZ
+	 gxeLyR9hulFYMxI7glY0tO60BLGPo86ROJu28cUdJFLnlOilIO7CGVrr4Uxsz5hQaMoEU
+	 P0MBc4Z2Nyaz9LXfWsme2uAmROsLBjZJbzz0LfIQJvBK/+4G95y+7mJ1/gweO5k7ouzZb
+	 VBxglBMHi3JjbEF6YHKQb+c/il5+8VllWRcSOBS+xDkUYtO6GP+n2qy1ToChPhZ1dVkHm
+	 /B6Enl3IAtDv2yV1ELeMcPE47bZZaSdvLSygC0OA+KF6IX0S7a5kXX2xK5BaWw7M8vQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Ku6c3Ftw;
-	arc=none smtp.remote-ip=188.68.63.102
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Deyve0w4;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF2E606A326
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 09:05:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ADF2E606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90FB606A338;
+	Mon,  2 Nov 2026 09:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=Ku6c3Ftw
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jJ5MF1RmBz6DBQ;
-	Mon,  2 Nov 2026 10:02:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793610169;
-	bh=Z0f88uzvUceAkXdaLKLkFc/qOuIe5LEVl2FdWzLxDu0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ku6c3FtwWaBy0SHhE2UL1GlZod/jtwj+LXXcPngs8YZ42wEqebhgb8FQQumPBp8J4
-	 hnw48hTB339NFcXcwCgdQt1KjY1jpofFP5CJeICE7RLHTPVt2H2PjZTtrnASYklyx6
-	 yaGXG1E3hbozR9UmOoHXj7/AWlAsyo351qZlcXLJh07qN2hUOTWQtuh0ufhDuqBsij
-	 95Zo9DuueGN8j1IMsR7RQ+3fh+fPb2P4filoCD7N6gXK0QoItDNIvl3h+z/B2ZvOM2
-	 vhECl6RY3WfVIvupIGXe09OTofH8d1WJEkPt2ZaQXZSTJKc2hndaNX57kvLVQ5Woh7
-	 Fn4DCOqLsQI5A==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jJ5MF0kQSz4xpF;
-	Mon,  2 Nov 2026 10:02:49 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jJ5M61DyXz8v3S;
-	Mon,  2 Nov 2026 10:02:42 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id CCD445FA02;
-	Mon,  2 Nov 2026 10:02:11 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <00da317f-ec33-4084-a48a-1a6b4e10dfc8@leemhuis.info>
-Date: Mon, 2 Nov 2026 10:01:54 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Deyve0w4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8843A1F00919;
+	Mon,  2 Nov 2026 09:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793612405;
+	bh=koy48tw7Roi2TNVALKt7ehN7IwQ8uU25JAdoz9k07yQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=Deyve0w4CNejLxWfIoQHdf8eMktTCM4micfV384QCZZEac4juxKdyq3OlzYDzcxhu
+	 KguATxwaa2wKvvvqEKvCyAgcxkrtwok1FCKHDAUkZbpl+BxNXS6UZv516oZoPgVwZe
+	 erYE+2EdQ0gCIAXrJx9gwPE7h9Vp60NKaOdGj2YvqHTOGRUtsjf1l/fVoB2FnwlXNj
+	 LuL15cYh4LUVHZNDF/rONFx2xQ7iFzAh+aSI7gq/O8sqfCVkiclpfUSbD8d00r3pTx
+	 yxyDTjW6L84tWvrRGudj/rlsRq+a2LL5C9y2Y517tuPtK7cMx8I5PnBLNTBWeH1/9T
+	 etrQDgFvjdjuw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7D2FC380821F;
+	Mon,  2 Nov 2026 09:40:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,38 +53,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] amdgpu: Navi 23 passthrough fails after ef5fcf2a6c32
-To: Nathan Blomquist <nblomquist@gmail.com>, amd-gfx@lists.freedesktop.org
-Cc: regressions@lists.linux.dev, alexander.deucher@amd.com,
- christian.koenig@amd.com
-References: 
- <CACOV87VBmya0PKjni5xEYxUaEczk9X_UoUHXSR_HDS2kSJnM2g@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CACOV87VBmya0PKjni5xEYxUaEczk9X_UoUHXSR_HDS2kSJnM2g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179361013215.938408.10260651982030849222@mxe9fb.netcup.net>
-X-NC-CID: OETRYYhrIXK7Yx/aCTIZzpcbZleKbesr95LMJ9BGrxFu0Keb3xk=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] bnxt_en: Don't keep MSI-X vectors added before FW
+ reserves them
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179361240421.3898193.10936666547810707187.git-patchwork-notify@kernel.org>
+Date: Mon, 02 Nov 2026 09:40:04 +0000
+References: <20261028114933.256298-1-vlad.wing@gmail.com>
+In-Reply-To: <20261028114933.256298-1-vlad.wing@gmail.com>
+To: Vlad Poenaru <vlad.wing@gmail.com>
+Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ andrew.gospodarek@broadcom.com, tglx@kernel.org, maz@kernel.org,
+ yangjinqian1@huawei.com, apreece@meta.com, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 
-On 11/1/26 21:05, Nathan Blomquist wrote:
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Dave Miller <davem@davem-thinkpadp1gen8.ibmlond.csb>:
+
+On Wed, 28 Oct 2026 04:49:33 -0700 you wrote:
+> When dynamic MSI-X is supported, bnxt_check_rings() grows the MSI-X
+> vectors with bnxt_change_msix() once FW says the new rings would fit,
+> and keeps them.  FW only reserves the extra IRQs later, when
+> bnxt_reserve_rings() calls __bnxt_reserve_rings().  The MSI-X table
+> entries beyond the function's reserved IRQs are not backed until then:
+> the MSI message written when the new vectors are activated is lost, and
+> the entries read back as zero.  After FW reserves them they are live but
+> still zero, so the NQ rings bound to them signal address 0 and every
+> completion on those rings is lost.  The next ring change (for example
+> ethtool -G) then times out freeing each of those rings and the TX
+> watchdog fires:
 > 
-> I can reproduce a Navi 23 / RX 6600 (1002:73ff) passthrough failure on
-> unmodified upstream Linux 7.2.10. It happens during the amdgpu-to-VFIO
-> handoff, before any guest code runs.
-> 
-> Revert/add-back tests on Proxmox kernels isolate ef5fcf2a6c32
-> ("drm/amdgpu: fix autosuspend cleanup during removal") as the trigger.
-> Removing its added call from -20 works; adding it to working -19 fails.
 > [...]
 
-ef5fcf2a6c32 is a 7.3 commit, but you only specify that 7.2.y is
-affected, which might be caused by a failed backport. And 7.2.y is EOL,
-so it won't be fixed anyway. Hence:
+Here is the summary with links:
+  - [net,v2] bnxt_en: Don't keep MSI-X vectors added before FW reserves them
+    https://git.kernel.org/netdev/net/c/af449230bd8d
 
-Have you tried if 7.3 is affected as well? You also might want to check
-if 7.4-rc1 might have fixed it.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Ciao, Thorsten
+
