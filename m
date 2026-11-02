@@ -1,62 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=141.30.67.75
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793601543;
-	b=xMOrZvHlxX8N7ittrRTrxC6bB/3b8Xfvn4+l+4FaycsXH6lYtWSdYUvOeIWzj5X87dVD
-	 cKXX3yt1tw6oApfZ54oSc70OFV5F6w1CZSCfEP3gIxM1hikPnS1S5ZsIujU6M6UHnFCLY
-	 1BLUBOdsKRswnWpzktXQN86lV/TDXvMWAxD7MYETo28X3ZxR4oyeUcJFK+Ey8KTInm3/A
-	 qqo0j89sj3dmQwW56Po17eSlqAXZnjOcE9sApSYkHCUWJntRGWTMVRc4EOfC8DNRGqwWW
-	 zP7AV36Sa7RKMk8+fhNGZDPFOxGATQ5UPYsGfDc/ZigI/+naBhziYTvBAdYrJ4MxaTw==
+	t=1793604790;
+	b=sfSz8l0iB35Bp/ETtT1XuyFzU4ezHs7Xy8/DU7Eg5bLivBMb9iy+lmT/Sw9QzGORBdZA
+	 XU5Yhu19bFYSQkYo2Nsn0Br8RBH3uuIl1pbpMYf6RMX8mDVsOkTZiMmLrJ8K+IaAuIw70
+	 Lau7U/JEBeXvRt7fOkPGuuO29+lPbUqCysD63frNKknkNDKD4+FnsHmHl3RrB7Wf0pEqu
+	 AcYMRNQZJIoQbZHksJ3Ki7frr8hYHj/Emcs+34b1hiKTO55NgZCh3ZmzH5bdE3f4G3rLy
+	 mjl43JBRMpUsawZcwEg7pXsQXUx+/DY5LVUUnUtXypDTYjl0SaTyxVV4/eKAAFL/NCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793601543;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:From:Subject:To:CC:Content-Language:
-	 Content-Type:X-ClientProxiedBy:X-TUD-Virus-Scanned;
-	bh=Z7gv3iZUTwLIWicTYmdR54ICXdcED0IqhBUuHFmfCz8=;
-	b=Wp4ncM7g5Ms7T1osj0RVM/dgZeLTDoRG3N2DVXHbmWs9Of33teTadw6FjpLhVxEq1fdL
-	 b5qY4yMxKYeJNZa227cf+BsloI+mmgEbidLd+ZS4MDacUcCl7Ws3KQWDQWyTyi0CUWQBt
-	 e7PSayRljw4GMuoRp9NCSowAsZ/6Yfb+XuTVXZMlTlubG4N+KOj/bj8Es3LhGQIe/x5G5
-	 BcKGkSCWNsP4fJB1HgY5kfZkixWbaSbkmEzs2qH5x5Ub6IQbiahWX0IB3dHHLdYCydrK5
-	 zB4TAmvHmeOGIUty0uhMS5Cwi8qZ4BzP3KeU/BtPAX7MXjgYxqY6NPyNUqP+7MsXUzg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793604790;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=uhlq7lRBnMZgN/FlVC6dxixNTQE9Qh0fbitp0y0qEhA=;
+	b=QWwd2rFDVxLCauQKCei9+gTkgAubArDlLNfGQFsjsI3iShxvfyKkq9YQOp99B1Ebk0Nl
+	 i88LUXEe9uhEo5lxNm0eLl+TMe4QeS37fCpdhlg3qadRDqovXQLPn5YGPeYLzeewTIQVQ
+	 U7eA9QJEhyodeN+aGqlcH2fAfJ3gsbk38l8s3Tcv2fOxYmoagxuQjexHKhcJHsocsPNSB
+	 +LtruqfXDwomdHx+kBlGARtc4yBJ0vvxNJrRYx6nHSsVPu4YWPplS1HfmANFwMOF/ivcT
+	 RAmfyxIFyoNDcT7PWLEXWSDfcewJadABT9V5gDZe6EPKsHMUrO1b/kcV1qvRTwRI3lA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=tu-dresden.de;
-	spf=pass smtp.mailfrom=tu-dresden.de;
-	dkim=pass header.d=tu-dresden.de header.i=@tu-dresden.de header.a=rsa-sha256 header.s=dkim2022 header.b=UQXFrvLy;
-	arc=none smtp.remote-ip=141.30.67.75
-Received: from mailout4.zih.tu-dresden.de (mailout4.zih.tu-dresden.de [141.30.67.75])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DBxHRawa;
+	arc=none smtp.remote-ip=209.85.210.175
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FBE606A32C
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 06:39:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01FBE606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-dresden.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-dresden.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EDA606A338
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 07:33:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70EDA606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=tu-dresden.de header.i=@tu-dresden.de header.a=rsa-sha256 header.s=dkim2022 header.b=UQXFrvLy
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=tu-dresden.de; s=dkim2022; h=Content-Type:CC:To:Subject:From:MIME-Version:
-	Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Z7gv3iZUTwLIWicTYmdR54ICXdcED0IqhBUuHFmfCz8=; b=UQXFrvLyAgcRJDGtfQjdRF3C+V
-	gOHUAVqFfRvbUrFCf/hGpPn+kyR7tlZJyoNaXkh7rqrrjM2ECy1bHMKwtgKtVzG7lF2ShzJlQTFcy
-	ElMbzUtpNSK8d4uEWPDAled/1RvGYl0YshDZUVDXGVmC4WhNC+1kdDuuqQB1IbnoXgaSMYyI/HS0C
-	jw7gq300tsKSf4N9KHLn2Dg+vCBSBKUD045WQdSU5O9vKjzUXv855gHk3k7uQiMuzls//MqrZgckK
-	79B7Jm4pcmivUeUm8SWYg9XZTSksmzPGpD3lj2asHuEJHokCfz6U6/Rh9pf/HZ4SRpNe9XH60rNCx
-	wRyGw/fA==;
-Received: from msx-l422.msx.ad.zih.tu-dresden.de ([172.26.34.142] helo=msx.tu-dresden.de)
-	by mailout4.zih.tu-dresden.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ulf.markwardt@tu-dresden.de>)
-	id 1xNlh1-003EOs-0N;
-	Mon, 02 Nov 2026 07:38:59 +0100
-Received: from [141.30.248.192] (141.76.13.149) by
- msx-l422.msx.ad.zih.tu-dresden.de (172.26.34.142) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Mon, 2 Nov 2026 07:38:43 +0100
-Message-ID: <aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de>
-Date: Mon, 2 Nov 2026 07:38:39 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DBxHRawa
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-8a0880a46e7so1257766b3a.1
+        for <regressions@lists.linux.dev>; Sun, 01 Nov 2026 23:33:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793604789; x=1794209589; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=uhlq7lRBnMZgN/FlVC6dxixNTQE9Qh0fbitp0y0qEhA=;
+        b=DBxHRawa6TYdvavSg3FcztrsikcMiHn/ZHdNcnepYIZjNJzCQcwvU3Q5LCEjEDfr3R
+         RugAWttzSHSJjXaqsLXGuS7VewVjTxlGkxeziAC+s1UT4maJemxsF9TKEjSIbSWgM1Nf
+         ex5s1edOZFJXyuEJgggft8LGWA78edusIkrekPfpmAi+/ismD9tiM4/RxZXAaWTlFDs7
+         iGlOqoiLAMZOznJWswJxrc8fwPFJHm76pgVeUou90MQ5hewZKEaviCcVqsnyzCE1Hs29
+         apCXjs9iBSepQxUTg0HHFFWe2gdp1F09LXgXCoPlks36oJK0xApXiXUgNEEcRib2yf8D
+         D2lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793604789; x=1794209589;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=uhlq7lRBnMZgN/FlVC6dxixNTQE9Qh0fbitp0y0qEhA=;
+        b=kgYISyyNNFg+5kYz7magUjTlncCcENbfi91iKncGS/4YjuCbYGclyB3ZQU4ndUyacM
+         mGYcnJHetWHx1Z/5hUa8bTDXwr24IoR8Di2KK+oWPPv+kgIhDEUP4dU/v6fbf4Xm0PGA
+         HMCTj6Leo+sING2cVBZ+TCP2NwT9ycdOGFY+VHasDNGIw6m3k9IUnFHVRwGD1p2Ypz0O
+         dpGUJ3Ts0p1Gb/Ef9gen5A77MKm9v5IVWqXvzfXGch7wTc5gtX2zfs7/BYc5VJ/VRKU6
+         zZSdhQXwpT19+IVugl6JoPGEnSUJamu+NlC6Lth6dLGbnZwKC3IgwC+JkrPDwl8StaE1
+         ESJQ==
+X-Forwarded-Encrypted: i=1; AKwUvBw3ucywTpSyrC/H1PI5iXBu6KIQRAaDxgc4r97QvtglkUCRSfKzOcOA+sYXfG59PSMquFEyqH3MBQ2aSw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+DweFMdk30vehd7U/ASh/zQIQjU6CzP1pnR2y+panuro9fzHTX
+	IQjWp+Xm4K9LjDXOPAYkfIXbR8X+P9gQlgeVqSyC/bMQKYfX4XNMUP46
+X-Gm-Gg: AYBFou3D3j64HkJjazyVPxT7ezYgGAb/udsWMqIjwyczybpdUhG3DySIGiPcteCgLV9
+	k2LQ6y4zR1owiZRGQR5vJ/d34LS+oxQki41caI07SAnrAV0Ab7Inoh4Un4bcHyC2TZ4VxNt/MyN
+	kuOhh7lfZ8prWTNYi+jQGqeQgHOyDWGa/LeInLwL/A18Sq+Xl+01chZ3IK7gMwVVP2+FwxmmUIR
+	EdRgjnXvIin2hLpgDBCXM8pNWvqCTHUwGR1kSKtInzoj5Dok7IXeVfmi4KLLsh9z91rmV9g7XHw
+	Eq2pQ9Vz0Q0viV7iGRxBe4wJ58lbkjgQxrLU0LMh106T5rB6EHdNF/+Ok/UR0Sey+71pTKsCexD
+	okspUm08LK/H80kbCruD/PJH91RsOwNok9ReLKMZh0KXOHdXvYJcMfyh84BBNJOP2yluF+s5bbI
+	kXrC5BldNu1YXEj95Grq8pcUZggGGTF0q2zOBTC/NRVyvcFdw83S+iSwvN/vVh8SYgDZ3MWlU6m
+	j5I2CTmPZARM7G7hynDiGSQdF/Td+Dz2ivScvFIpPfqqJxX8u4lPxOhEi2mAHX2c1uahVsClCor
+	TE/+OyWoXG6PfNxFh6r6RXCWbRHDB3QCtTgf36V8+/w=
+X-Received: by 2002:a05:6a00:340a:b0:89f:d449:7526 with SMTP id d2e1a72fcca58-8a8321b41acmr7898596b3a.21.1793604788690;
+        Sun, 01 Nov 2026 23:33:08 -0800 (PST)
+Received: from iZj6c0kydq3fvfrtx5kta5Z ([47.86.51.122])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8aada6c2c28sm1563174b3a.43.2026.11.01.23.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Nov 2026 23:33:08 -0800 (PST)
+From: Challvy Tee <challvy.tee@gmail.com>
+To: x86@kernel.org,
+	linux-coco@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	kas@kernel.org,
+	dave.hansen@linux.intel.com,
+	rick.p.edgecombe@intel.com,
+	vishal.l.verma@intel.com,
+	kai.huang@intel.com,
+	seanjc@google.com
+Subject: [PATCH v4] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module is not initialized
+Date: Mon,  2 Nov 2026 15:32:44 +0800
+Message-ID: <20261102073244.919864-1-challvy.tee@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <07cfa95a-e766-411b-8765-33352a04c0be@intel.com>
+References: <07cfa95a-e766-411b-8765-33352a04c0be@intel.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -66,191 +106,111 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ulf Markwardt <ulf.markwardt@tu-dresden.de>
-Subject: Infiniband PKEY Regression 6.12.115
-To: <stable@vger.kernel.org>
-CC: <regressions@lists.linux.dev>
-Content-Language: en-US
-Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha-512; boundary="------------ms090703080505070600000709"
-X-ClientProxiedBy: MSX-T414.msx.ad.zih.tu-dresden.de (172.26.35.134) To
- msx-l422.msx.ad.zih.tu-dresden.de (172.26.34.142)
-X-TUD-Virus-Scanned: mailout4.zih.tu-dresden.de
+Content-Transfer-Encoding: 8bit
 
---------------ms090703080505070600000709
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Commit 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and
+kdump") made native_machine_crash_shutdown() call tdx_sys_disable(),
+whose only gate is compile time (CONFIG_INTEL_TDX_HOST).  A kernel that
+never initialized the TDX module therefore still issues
+TDH.SYS.DISABLE.
 
-RGVhciBMaW51eCBEZXZlbG9wZXJzLA0Kd2UgYXJlIHJ1bm5pbmcgNi4xMi54IGtlcm5lbHMg
-d2l0aCBBbG1hTGludXggOS44IGFzIE9TIG9uIHNvbWUgSFBDIGNsdXN0ZXJzLg0KIEZyb20g
-Ni4xMi4xMTQgdG8gNi4xMi4xMTUgd2UgZXhwZXJpZW5jZSB0aGlzIHJlZ3Jlc3Npb24gb24g
-YSBjZXJ0YWluIGhvc3QgdHlwZToNCg0KVGhlIEluZmluaUJhbmQgUF9LZXkgdGFibGVzIGRv
-IG5vdCBnZXQgcG9wdWxhdGVkIGJ5IHRoZSBTTSAob3BlbnNtKSB3aGVuDQpib290aW5nIGtl
-cm5lbCA2LjEyLjExNS4gQWxsIElQb0lCIGNoaWxkIGludGVyZmFjZXMgdGhhdCByZXF1aXJl
-IGEgc3BlY2lmaWMgUF9LZXkNCihlLmcuIDB4ODAwMSwgMHg4MDAyKSBmYWlsIHdpdGggIlBf
-S2V5IG5vdCBmb3VuZCIuIFdpdGgga2VybmVsIDYuMTIuMTE0IHRoZQ0KUF9LZXkgdGFibGVz
-IGdldCBwb3B1bGF0ZWQgYW5kIGFsbCBJUG9JQiBzdWJpbnRlcmZhY2VzIGNvbWUgdXAgYXQg
-Ym9vdCB0aW1lLg0KDQogICAqIEtlcm5lbCBjb25maWcgaXMgaWRlbnRpY2FsIGJldHdlZW4g
-LjExNCBhbmQgLjExNS4NCiAgICogVGhlIHByb2JsZW0gaXMgTk9UIGRyaXZlci1yZWxhdGVk
-IChyZXByb2R1Y2VzIHdpdGggYm90aCBET0NBIE9GRUQgYW5kIGluLWtlcm5lbA0KICAgICBt
-bHg1IGRyaXZlcnMpLg0KICAgKiBPbiBhbm90aGVyIGhvc3QgaW4gdGhlIHNhbWUgSUIgZmFi
-cmljLCB3aXRoIHRoZSBzYW1lIFBfS0VZIHNldHVwLCBJIGNhbiBydW4gLjExNQ0KICAgICB3
-aXRob3V0IHByb2JsZW1zOg0KICAgICAgIG8gT0sgd2l0aCBub2RlIGk3MDEwOiAqb25seSAx
-IEhDQSogQ29ubmVjdFgtNg0KICAgICAgIG8gUHJvYmxlbSB3aXRoIG5vZGUgYzExOiAqNCBI
-Q0FzICpDb25uZWN0WC03DQogICAqIFRoZSBwcm9ibGVtIGlzIE5PVCB0aGUgU006DQogICAg
-ICAgbyBubyBwcm9ibGVtIGlmIEkgYm9vdCB0aGUgbm9kZSAoYzExKSB3aXRoIGtlcm5lbCAu
-MTE0IGluc3RlYWQgb2YgLjExNS4NCiAgICAgICAgICh3aXRob3V0IGFueSBvdGhlciBjaGFu
-Z2VzKQ0KICAgICAgIG8gcGFydGl0aW9uIHBvbGljeSBpcyBzZXQgd2l0aA0KICAgICAgICAg
-ICAgIHxwb3J0LXJlZ2V4cDogXmNbMC05XXsxLDN9fCAuLi4gYW5kDQogICAgICAgICAgICAg
-fHBvcnQtcmVnZXhwOiBeaTdbMC05XXszfXwgLi4uDQogICAqIFRoaXMgc3VnZ2VzdHMgdGhl
-IHByb2JsZW0gbWF5IGJlIHJlbGF0ZWQgdG8gTVVMVEktSENBIHN5c3RlbXM6IHdoZW4gbXVs
-dGlwbGUNCiAgICAgbWx4NSBIQ0FzIGluaXRpYWxpemUgc2ltdWx0YW5lb3VzbHkNCiAgICog
-V2l0aCB0cmlnZ2VyaW5nIGEgaGVhdnkgc3dlZWwgKHxraWxsIC1IVVAgJChwaWRvZiBvcGVu
-c20pfCkgdGhlIFBfS0VZIHRhYmxlcyBnZXQNCiAgICAgcG9wdWxhdGVkLCBhbmQgdGhlIG5v
-ZGUgYzExIHdpdGggdGhlIC4xMTUga2VybmVsIGNhbiB1c2UgdGhlIHN1YmludGVyZmFjZXMN
-CiAgICAgKHVudGlsIG5leHQgYm9vdCkuDQoNClJlbGV2YW50IGRtZXNnIGxpbmVzIChrZXJu
-ZWwgLjExNSwgYnJva2VuKToNCg0KWyAgIDI0Ljk4NzI4MV0gbWx4NV9jb3JlIDAwMDA6MjM6
-MDAuMCBtbHg1XzI6IFBvcnQ6IDEgTGluayBBQ1RJVkUNClsgICAyNS40NjUxMDZdIG1seDVf
-Y29yZSAwMDAwOjAzOjAwLjAgbWx4NV8zOiBQb3J0OiAxIExpbmsgQUNUSVZFDQpbICAgMjYu
-MDc4NTMxXSBtbHg1X2NvcmUgMDAwMDpjMzowMC4wIG1seDVfNDogUG9ydDogMSBMaW5rIEFD
-VElWRQ0KWyAgIDI2LjA3ODU3Nl0gbWx4NV9jb3JlIDAwMDA6YTM6MDAuMCBtbHg1XzU6IFBv
-cnQ6IDEgTGluayBBQ1RJVkUNCg0KWyAgIDMxLjc4NzI0Ml0gaWJwMTYzczAuODAwMjogUF9L
-ZXkgMHg4MDAyIGlzIG5vdCBmb3VuZA0KWyAgIDMxLjgwMzQwMV0gaWJwMTYzczAuMDAwMTog
-UF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDMyLjA3OTY0NF0gaWJwMTk1czAuODAw
-MjogUF9LZXkgMHg4MDAyIGlzIG5vdCBmb3VuZA0KWyAgIDMyLjA5NzgyMF0gaWJwMTk1czAu
-MDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDMyLjM3MDQzOV0gaWJwMzVz
-MC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpbICAgMzIuMzg2MTU1XSBpYnAz
-NXMwLjAwMDE6IFBfS2V5IDB4ODAwMSBpcyBub3QgZm91bmQNClsgICAzMi42NTkyMjVdIGli
-cDNzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpbICAgMzIuNjc0NjQyXSBp
-YnAzczAuMDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KDQpbICAgNDMuMDQ5Mzk3
-XSBpYnAzczAuMDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDQ1LjQ4Njgz
-NV0gaWJwM3MwLjgwMDI6IFBfS2V5IDB4ODAwMiBpcyBub3QgZm91bmQNClsgICA0Ny44OTky
-OTRdIGlicDM1czAuMDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDUwLjI4
-MjYyMV0gaWJwMzVzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpbICAgNTIu
-NDkyMTM2XSBpYnAxNjNzMC4wMDAxOiBQX0tleSAweDgwMDEgaXMgbm90IGZvdW5kDQpbICAg
-NTQuNzE2MzQ1XSBpYnAxNjNzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpb
-ICAgNTYuOTIwMTQzXSBpYnAxOTVzMC4wMDAxOiBQX0tleSAweDgwMDEgaXMgbm90IGZvdW5k
-DQpbICAgNTkuMTU3MjAwXSBpYnAxOTVzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZv
-dW5kDQpbICAgNTkuMTkzNzU5XSBpYnAxOTVzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90
-IGZvdW5kDQoNClRpbWVsaW5lIGFuYWx5c2lzIChkb25lIGJ5IEFJKToNCi0gUG9ydHMgTGlu
-ayBBQ1RJVkUgYXQgdD0yNC45LTI2LjFzIChTTSBhc3NpZ25zIExJRHMsIHBvcnQgaXMgdXAp
-DQotIElQb0lCIGNoaWxkIGludGVyZmFjZXMgY3JlYXRlZCBhdCB0PTMxLjhzIC0gNi44IHNl
-Y29uZHMgYWZ0ZXIgcG9ydC11cA0KLSBJUG9JQiByZXRyaWVzIFBfS2V5IGxvb2t1cCBmb3Ig
-MjcuNCBzZWNvbmRzICh0PTMxLjhzIC0+IDU5LjJzLCBldmVyeSB+Mi40cykNCi0gSW50ZXJm
-YWNlcyBnaXZlIHVwIGF0IHQ9NTkuMnMgLSBzdGF5IERPV04gcGVybWFuZW50bHkNCi0gVGhl
-IFNNIG5ldmVyIHdyaXRlcyBQX0tleSB0YWJsZXMgZHVyaW5nIHRoaXMgZW50aXJlIHdpbmRv
-dw0KLSBPbmx5IGEgaGVhdnkgc3dlZXAgcG9wdWxhdGVzIHRoZSBQX0tFWSB0YWJsZXMuDQoN
-CkkgY2FuIHByb3ZpZGUgYWRkaXRpb25hbCBpbmZvcm1hdGlvbiAoanVzdCB0ZWxsIG1lIHdo
-YXQgdG8gZG8pLg0KV2UgYXJlIGluIGEgcHJvZHVjdGlvbiBlbnZpcm9ubWVudCwgYnV0IGhh
-dmUgc29tZSBsZWV3YXkgZm9yIGV4cGVyaW1lbnRzLg0KSSBob3BlIHlvdSBjYW4gZml4IHRo
-aXMgcHJvYmxlbSB3aXRoIG9uZSBvZiB0aGUgbmV4dCByZWxlYXNlcy4NCg0KVGhhbmsgeW91
-IHZlcnkgbXVjaCwNClVsZg0KDQotLSANCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCkRyLiBVbGYgTWFya3dh
-cmR0DQpHcnVwcGVubGVpdGVyIEhQQyBTZXJ2aWNlcw0KDQpUZWNobmlzY2hlIFVuaXZlcnNp
-dMOkdCBEcmVzZGVuDQpaZW50cnVtIGbDvHIgSW5mb3JtYXRpb25zZGllbnN0ZSB1bmQgSG9j
-aGxlaXN0dW5nc3JlY2huZW4gKFpJSCkNCkQtMDEwNjIgIERyZXNkZW4NCg0KVGVsLjogICAr
-NDkgMzUxIDQ2My0zMzY0MA0KRS1NYWlsOnVsZi5tYXJrd2FyZHRAdHUtZHJlc2Rlbi5kZQ0K
-DQo=
+In VMX non-root operation on a SEAM-capable host, SEAMCALL causes a VM
+exit instead of a native #UD.  KVM injects #UD only since
+commit 9d7dfb95da2c ("KVM: VMX: Inject #UD if guest tries to execute
+SEAMCALL or TDCALL"), first released in v6.18.  On an older host the
+VMM gets KVM_EXIT_INTERNAL_ERROR and the vCPU never resumes, so
+machine_kexec() is never reached and no vmcore is written.  Kdump is
+thus broken only in guests on SEAM-capable hosts whose hypervisor does
+not handle the exit; plain kexec is unaffected because tdx_shutdown()
+only runs as a syscore op, registered after init_tdx_module() succeeds.
 
---------------ms090703080505070600000709
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: Kryptografische S/MIME-Signatur
+Gate the SEAMCALL on X86_FEATURE_TDX_HOST_PLATFORM before issuing it,
+the way paddr_is_tdx_private() already guards its own SEAMCALL in this
+file.  Without that feature the module is never initialized, so there
+is nothing to disable; on a TDX host the gate is a no-op.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-Dj0wggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
-CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
-HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
-QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
-NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
-ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
-7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
-yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
-QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
-5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
-S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
-LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
-wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
-Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
-yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
-v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
-HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
-dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
-bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
-MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
-ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
-BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
-lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
-gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
-KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
-otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
-KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
-G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
-XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
-lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
-3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggdPMIIFN6AD
-AgECAhEAmkSPPUwO1DXs/EDCpH/twDANBgkqhkiG9w0BAQwFADBGMQswCQYDVQQGEwJOTDEZ
-MBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0Eg
-NDAeFw0yNDEyMDkwMDAwMDBaFw0yNjEyMDkyMzU5NTlaMIHCMQswCQYDVQQGEwJERTEQMA4G
-A1UECBMHU2FjaHNlbjEoMCYGA1UEChMfVGVjaG5pc2NoZSBVbml2ZXJzaXRhZXQgRHJlc2Rl
-bjERMA8GA1UEYRMIR09WREUrU04xKjAoBgkqhkiG9w0BCQEWG3VsZi5tYXJrd2FyZHRAdHUt
-ZHJlc2Rlbi5kZTESMBAGA1UEBBMJTWFya3dhcmR0MQwwCgYDVQQqEwNVbGYxFjAUBgNVBAMT
-DVVsZiBNYXJrd2FyZHQwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDElJs+kF+T
-G6kwO6RM0QSGZ4RHl637aMMJjVrmnz00NVfHjora9wx2bjl89NHGBCBxrknlke6EhhxGupTy
-mcw7Iwj+kEbh4mEapCO5TEhKd9fZF2zEcXFtcYQyOkZjbPiqy7FOi7+WTGIuw3npJ7VxFY+Z
-lgoJLeuZManEf0kNMvlneCGVCEEQF9+Z1BybGnl2lewDKB0eD4B0Cw9oSpDBFWPgkJuVfxBW
-FXKVjHjtEo0tUQdKVaa/rZXRwVTZn/g8Z6R6JqJDqUeWAkRUUPZApYl1JlcTHr3ubybxaB9e
-LOlhNKGEgoqG0LnNeBoYacV7NrUBngwhyHXppUDvJ2tFIypiiLzZEKJZadqPyUMEPYhMel5U
-cASStvN1oe9gqBiI7jBwjT6C5IlUVCHJcc+8fo2FaWCjIFFc7KEDYmuCT8nBGSVI1n4RQn8v
-Fmhx1WNwwfljqaPLl3q2pXS/hMKZDLSgGMTgn2k9B7Z+gH0rhaSAHH3fm463zv7EPtlyOqOl
-LnKfRXhV6UM1Uv3ksiFwQBIy4AUP8gQsN8vb7A1QS+UKFh3efJkCOr6KvvC3WnB7IzfiZuIP
-h66bTzU0c9CfpX/2rUhAxAFjA+eja4NRNEyvwx0ub8Xwuc39Yy/ZD0GFkCNcn/ns+YYBmrrd
-2vPBVO5djwBiQsQpZZADk2sXGwIDAQABo4IBuTCCAbUwHwYDVR0jBBgwFoAUaQChxyFY+ODF
-GyCwCt2nUb8T2eQwHQYDVR0OBBYEFME4P5woUkdtehAmPrhDT+qQ4+7EMA4GA1UdDwEB/wQE
-AwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjBQBgNV
-HSAESTBHMDoGDCsGAQQBsjEBAgEKBDAqMCgGCCsGAQUFBwIBFhxodHRwczovL3NlY3RpZ28u
-Y29tL1NNSU1FQ1BTMAkGB2eBDAEFAwIwQgYDVR0fBDswOTA3oDWgM4YxaHR0cDovL0dFQU5U
-LmNybC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNybDB4BggrBgEFBQcBAQRsMGow
-PQYIKwYBBQUHMAKGMWh0dHA6Ly9HRUFOVC5jcnQuc2VjdGlnby5jb20vR0VBTlRQZXJzb25h
-bENBNC5jcnQwKQYIKwYBBQUHMAGGHWh0dHA6Ly9HRUFOVC5vY3NwLnNlY3RpZ28uY29tMCYG
-A1UdEQQfMB2BG3VsZi5tYXJrd2FyZHRAdHUtZHJlc2Rlbi5kZTANBgkqhkiG9w0BAQwFAAOC
-AgEAauYNnnCxU2tUY3Ad7vmEUeqJ/WG7e2exROkdXRL9UBHJS/r2SSy6ILxKd1feym4RZijq
-lf1hM40VmFiexSwiUVYa8Pa3ap6/2FJfaRvidhHozUWOvtRNEs8cGcj/HAwbn2clGv83l2nr
-Imtuaa08FYHJ5i3nu9OQoLXkm1730pusr19XEe+I0ToO39IYSjAmnUHXBFT7feofx5Y4oKDr
-EMiQAFwqAMmcS5yvvSAbCZdoVROxe/+AG7rQnII+gGcrtYNLfwC+ts4sZB65Bxr/Knl2T0SS
-5iZFzkeCymD/Mj12RVpLAbAaiZqA1MeqU//eu1V2VWj0Uw0Zz4izanLF/x2TJ4zOKTkOkEgW
-iyW1v5m8HTryuYmFtyCb87kzNU93q6sIBd9rnJKw1M7AyILn58Xa8cyyfTfv19gdwASSesr1
-IUJ9NHWpoY9Pz8IxUMwKGKNC5ZUdEucH/uNHhwbpyG3wnnja0jjrU4HpjIHBGFln8mRwRrAq
-bctMGfSb1okV4U7d2cBmWj9mxt6RdIEcTN2YxI4CgUt39VLghZRs+g1VJ3BVOe4Ar5AqO8uz
-G+wPLvAYbN/I4RXFIP5TzILWgIJ+tAU0ItFe0v3fUQFtssiX5aEX1ZxIixpFiJ8DjModLW/t
-fbQTFa/m3cgPY7fYmL7GsF1vtBrd3Etqcyx6XMYxggVIMIIFRAIBATBbMEYxCzAJBgNVBAYT
-Ak5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25h
-bCBDQSA0AhEAmkSPPUwO1DXs/EDCpH/twDANBglghkgBZQMEAgMFAKCCAr4wGAYJKoZIhvcN
-AQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYxMTAyMDYzODQxWjBPBgkqhkiG
-9w0BCQQxQgRAK8UDYDUQJ0HHdYvQ9AIqHdSAutQX4CoklIrCGCUZpMhi+PuDlpSF6vla9dM6
-1SCdrMLAdTYoZfptJaqkxgMX0jBqBgkrBgEEAYI3EAQxXTBbMEYxCzAJBgNVBAYTAk5MMRkw
-FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
-AhEAmkSPPUwO1DXs/EDCpH/twDBsBgsqhkiG9w0BCRACCzFdoFswRjELMAkGA1UEBhMCTkwx
-GTAXBgNVBAoTEEdFQU5UIFZlcmVuaWdpbmcxHDAaBgNVBAMTE0dFQU5UIFBlcnNvbmFsIENB
-IDQCEQCaRI89TA7UNez8QMKkf+3AMIIBVwYJKoZIhvcNAQkPMYIBSDCCAUQwCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzANBggqhkiG9w0DAgIBBTANBggqhkiG9w0D
-AgIBBTAHBgUrDgMCBzANBggqhkiG9w0DAgIBBTAHBgUrDgMCGjALBglghkgBZQMEAgEwCwYJ
-YIZIAWUDBAICMAsGCWCGSAFlAwQCAzALBglghkgBZQMEAgQwCwYJYIZIAWUDBAIHMAsGCWCG
-SAFlAwQCCDALBglghkgBZQMEAgkwCwYJYIZIAWUDBAIKMAsGCSqGSIb3DQEBATALBgkrgQUQ
-hkg/AAIwCAYGK4EEAQsAMAgGBiuBBAELATAIBgYrgQQBCwIwCAYGK4EEAQsDMAsGCSuBBRCG
-SD8AAzAIBgYrgQQBDgAwCAYGK4EEAQ4BMAgGBiuBBAEOAjAIBgYrgQQBDgMwDQYJKoZIhvcN
-AQEBBQAEggIAKVEEXHc+S+fh4TjEmnaYGi89/rP77UXc845OPjpOouuYyAYTWgaeSQdTr/c4
-SRCzF1gU3WfPo/JFFvBCjCo+dDLoi5jIRhLes6aAcjkU/+GcLxDSiH3QyC5cb34irsM5sJME
-rddQNefSwj575+7bEHZ1Xn9hqhxn6U0ArrcSnB4INFk8DT5wv3rVJZIlt83LKmMyuMFBLmFT
-VQfABbnWtTgG8CVFdA1fw7KUG7SA7dUMWs+UBBIcivpWm5ZPJIzrS2+hMOzHhJknuIOyaD/V
-SS/sbEaGxIZE517H1l8/420VFn0PKpQd0B43vNFWVCGKmq0fKk0YLEqhAHV7a6m56FTwWYjV
-Oegtp3s+Xdwij2kViAmkxehS2uSSSZywS03JOeiK4rxGwWvp1qcWEnMT+W0eSA7chfz9Ps+s
-11ZpLSjLFLnGMWbPmWJHxU1c6hMPEMNGuEVa8mRtiUiIDeGHlAY2XndSTWUhoz7k/0BHjcAR
-qLg+/Llu6iQuErYe8NmnLBa2KiCTjh+5yd2N+7tuodrBzDlAdizKSt+q7HrGqpaoUGutkYiK
-utPXsg8BCRQLS1AS+liVL9g+3yPbU5/tjwlOFkYY3LgMFxUoQob7ak0ayewZcXwBN0PItvKa
-JzxTvDAIGGaTby3unx4LwwQ4f2lInRHOgwUavgzl7AKsjKwAAAAAAAA=
---------------ms090703080505070600000709--
+It also decouples kdump from the host KVM version -- a guest cannot
+require its host to inject the #UD.
+
+Fixes: 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and kdump")
+Suggested-by: Kiryl Shutsemau <kas@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Challvy Tee <challvy.tee@gmail.com>
+---
+v3 -> v4:
+ - Gate on X86_FEATURE_TDX_HOST_PLATFORM instead of
+   tdx_module_state.initialized, guarding the SEAMCALL itself the way
+   paddr_is_tdx_private() already does, as suggested in review.
+ - Drop the v3 rationale about covering the syscore and future callers.
+ - Retested with this predicate: kdump produces a vmcore on the
+   Alibaba ECS Emerald Rapids guest (6.12.0-278.el10 base).
+   v3: https://lore.kernel.org/all/20261030154851.907726-1-challvy.tee@gmail.com/
+
+Hypervisor -- KVM on all five (CPUID leaf 0x40000000), across three
+clouds: Alibaba Cloud ECS, AWS EC2 and Tencent Cloud CVM.
+
+Host log -- yes, from the Alibaba ECS host of the Emerald Rapids guest:
+
+  KVM internal error. Suberror: 4
+  extra data[0]: 4c
+  extra data[1]: 2f
+  RAX=0000000000000045 RDI=0000000000000045 RIP=ffffffff855422fe
+  R12=8000020300000000 R13=8000000300000000 R14=8000020200000000
+  Code=... 4c 8b 5e 28 <66> 0f 01 cf 72 05 ...
+  check runstate transition: 'running' -> 'internal-error'
+
+Suberror 4 is KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON; the two data
+words are the exit reason (0x4c = EXIT_REASON_SEAMCALL) and
+last_vmentry_cpu, i.e. kvm_prepare_unexpected_reason_exit().
+
+RAX and RDI hold 0x45 = TDH_SYS_DISABLE and RIP is at the '66 0f 01 cf'
+SEAMCALL opcode in __seamcall.  RAX still holds the input leaf rather
+than a status code: the SEAMCALL never returned.
+
+Reproduced with 'echo c > /proc/sysrq-trigger'.  All five have
+CONFIG_INTEL_TDX_HOST=y, kexec_crash_loaded=1, a kernel changelog
+naming both backported commits, and "TDX not supported by the host
+platform" in dmesg:
+
+  Microarch          x86_vfm  Cloud          Kernel             echo c
+  Sapphire Rapids    0x68F    AWS EC2        6.12.0-278.el10    no vmcore
+  Granite Rapids     0x6AD    AWS EC2        6.12.0-278.el10    no vmcore
+  Emerald Rapids     0x6CF    Alibaba ECS    6.12.0-278.el10    no vmcore
+  Granite Rapids     0x6AD    Alibaba ECS    6.12.0-278.el10    no vmcore
+  Granite Rapids     0x6AD    Tencent CVM    6.12.0-278.el10    no vmcore
+
+That dmesg line is printed by tdx_enable() when
+X86_FEATURE_TDX_HOST_PLATFORM is clear, so the feature this patch tests
+is absent on all five.
+
+Controls, each producing a vmcore: the same platform on a kernel
+without 5b25f249be32 (tdx_sys_disable absent from kallsyms), platforms
+without SEAM support (Skylake, Cascade Lake, Ice Lake, AMD), and plain
+kexec.
+
+With the gate applied kdump produces a vmcore on the Alibaba ECS
+Emerald Rapids guest, retested with this predicate.  The Granite
+Rapids guest was verified with the v3 predicate and not re-run; the
+AWS and Tencent guests are reproduction evidence only.  No TDX host was
+available, so the no-op case is reasoned from the code, not measured.
+
+ arch/x86/virt/vmx/tdx/tdx.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 96ced0494b68..9b01131f7b7b 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -2321,6 +2321,9 @@ void tdx_sys_disable(void)
+ 	struct tdx_module_args args = {};
+ 	u64 ret;
+ 
++	if (!boot_cpu_has(X86_FEATURE_TDX_HOST_PLATFORM))
++		return;
++
+ 	/*
+ 	 * Don't loop forever.
+ 	 *
+-- 
+2.52.0
+
