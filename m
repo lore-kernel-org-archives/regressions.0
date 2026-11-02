@@ -1,115 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793630616;
-	b=5Rfi22XPsDbrIIcENO4Z188lUdbzoRYRXChXqzQ+zBWDSttU73CVK+sXHQn9+ygKZqTC
-	 1jlGN66eJ+lcTXbMy/kg0cP2ylovbwhrlGI7+9PgBHOBViHxluW97ynXEhOIw7j51C/6V
-	 9OQSWMdYKf3o15oLqXngvFGaZZsvJwHxZ2aU5eUzx9R2NGUEO2xDJwqMxpp+SAJa5E2aW
-	 rlcRqBNV3caZVm8d7uPwHW/A/cxUnPG6m+auk/KDzBGdh44/dYiMIMYwByVC1XPwmXtWJ
-	 RPBqMgVLKputEaTABdxRHOEYCj8qv8JsAejZpAiD8Q4EbcJZzcWJgE6df7tJ7wzWUWg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793630616;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Spam-Level:
-	 X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:X-Spamd-Result:
-	 X-Spam-Score;
-	bh=dqrhTQQDpv23O21fI5VeTjhzLmHKOHPLiUInUnOspmc=;
-	b=AOxfV8FbkxOp31mmySlQ6CVQeZny0aAAK2VIoS8dOeypnJLVT6E/xx/NUGw6Om27RNxY
-	 eebHRKTUFDDh409Ct6Q3oSWV4bTpHzAztFjAWZz3nnRzjo0qNw4hgT/qQkwfhbBNoyNaw
-	 sXREsBvc8zvCcRKr+n6rY4KwLoP975Fb7EYnpMoWBt/j4IP7azvWtUPwLRYQ9OFj48paq
-	 ejyBfGu917+asLWkFmTuOdn2hJ1Cap+IQIHEctWWH8LO08uxpMO6a+5qT6w8p7uB5wcWc
-	 Jk8PtjXdW9o1xrmLT6lqiFew604HpOE/k//5NGTYw2p/BJNXOPlh9E5vI2n7KgGAAIA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=VxnjuGo8;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TV5SnKzJ;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=VxnjuGo8;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TV5SnKzJ;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.66
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793632367;
+	b=QBF2Y5H77Vswnxq3uIDDdAOhMcT0u03lV9tin/VFvfIsPUf+ijc6ym+ihm3uxT/ySQcp
+	 TKW2W5HkPuyWR4i1f+JXz8msd/Z+HRpCfWEBinCISqY4LZZTteO3v7eLlYcNrK8qctrhf
+	 ycJrb4hLXYAJv7RI/DOynOPOfhrM+pLGE3DfigSJo40aDt1W7mHK+QJn2OwtzXlp+ZbjG
+	 nTHUxGN3aoqi9PShnT2yMHJW+FYdKmfHH7Zrksu83KNw2d/0uT65WfANQ8jaZTIPPBHQ3
+	 TPDabhXAqR+aOVIGmYj9aN0dbJ6cgObbjQSHAr+9QaYmknhy3d8+oRKgtiRQqm4hg8g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793632367;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:Content-Language:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=Yu6bLab8QEX0TTerorCGvWhnaA8aWHZsatmHUbW62l4=;
+	b=gAUAZ9mHOaLoBwQR4N9DhOufvocalvlaFojr1V9DUW4H4eB2H5XDp6yQOuwOwOzJKXBF
+	 M6dWiL2hopkeKx9z/bURCCiij2elwcf4mz3aiI5DJXFfbPiOB+0kNPTWiM5PKDUJwz74l
+	 kPsBsmKWkxHul1RXqxv01k4C3RFV/HXnGizxSiWnU1FWOmWCIwcqdghFqMKEIh8NZVIwx
+	 VPFKs+BmVyKAA6iXkuyAA3v5H4ToZVfcEnKmtLB6KLmaVo2rWdWuQzN/S6mkQuA8C16i/
+	 OnhRgCC2x9hfaztosZKtfJ5Y5/zxyHXfrVUX6xDZ1o+YQkREgPxvaJjlvKLXAs0XoJA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b="tkqxIU/3";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.53.66
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012066.outbound.protection.outlook.com [52.101.53.66])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52689606A5BF
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 14:43:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 52689606A5BF
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80268606D830
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 15:12:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 80268606D830
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=VxnjuGo8;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TV5SnKzJ;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=VxnjuGo8;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TV5SnKzJ
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 74E1B1F7D7;
-	Mon,  2 Nov 2026 14:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793630613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqrhTQQDpv23O21fI5VeTjhzLmHKOHPLiUInUnOspmc=;
-	b=VxnjuGo87h5jl6EdaQow8WW/Us/0xK1EpIl3sDcHoYBqeWoEa3dDKbOkEX6gZGlT/QSF1s
-	27LaeDGufghMINuVKY/bN2ysJy/1Nhm5/BbtpsV0/07Iu3jOvthTjCLsdIIxJoZgBSyD+c
-	zrCDyk9u5mGt4DHvSWwqAjxdZdfGhQk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793630613;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqrhTQQDpv23O21fI5VeTjhzLmHKOHPLiUInUnOspmc=;
-	b=TV5SnKzJT7FZD2mUi7xZCdLvXEid6zb9/7JSMijKGKdTps5OcmQnoraI46YBL1oSsh1w8v
-	WYTp9R5llo/Qo4Aw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=VxnjuGo8;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TV5SnKzJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1793630613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqrhTQQDpv23O21fI5VeTjhzLmHKOHPLiUInUnOspmc=;
-	b=VxnjuGo87h5jl6EdaQow8WW/Us/0xK1EpIl3sDcHoYBqeWoEa3dDKbOkEX6gZGlT/QSF1s
-	27LaeDGufghMINuVKY/bN2ysJy/1Nhm5/BbtpsV0/07Iu3jOvthTjCLsdIIxJoZgBSyD+c
-	zrCDyk9u5mGt4DHvSWwqAjxdZdfGhQk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1793630613;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqrhTQQDpv23O21fI5VeTjhzLmHKOHPLiUInUnOspmc=;
-	b=TV5SnKzJT7FZD2mUi7xZCdLvXEid6zb9/7JSMijKGKdTps5OcmQnoraI46YBL1oSsh1w8v
-	WYTp9R5llo/Qo4Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 227F8134B8;
-	Mon,  2 Nov 2026 14:43:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UEfROpSh6GqsSQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 02 Nov 2026 14:43:33 +0000
-Date: Mon, 02 Nov 2026 15:43:32 +0100
-Message-ID: <87se1j8faj.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Cristian Castellano <cristian.castellano@icloud.com>
-Cc: med.jebabli@gmail.com,
-	tiwai@suse.de,
-	linux-sound@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] ALSA: hda/tas2781: divide error on playback open after accepting V1 calibration data without CRC (Lenovo Yoga Pro 9 16IRP8)
-In-Reply-To: <a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com>
-References: <a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=tkqxIU/3
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=w4ZT7pg3psBt8apa1djg/LdC85yeouu9Yge2e2Bxb8Lz/Dk6CBZyohTU95D00EnQ9spGdw/QSwITEBm00obdpGs8QSnE1jgK3XrXJx/t15TwNGGWttN6AlgubzhYWOpZlQCblFs26DBOGmdBbsS3oznBU0oMIhJJhJipV8kfdd96sstYTiGLSB2U8UNMk8WEvQ3Hvb+ZOSx4w6PM+jlLNUhaYDXDBXa/GY66aQz03B1WVcdCu9OBdrbYZq5jx9qflN4YDk8xot8PuPkLsfrSpPI953igFAHNqDO8u9MA8MLojf1GBtj5nBh+imLV+gLfBTQRdCfH9R4NSRCX/ZewPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Yu6bLab8QEX0TTerorCGvWhnaA8aWHZsatmHUbW62l4=;
+ b=l3ze3mOdlqvl6IYvou85jUClJYwlWuytK36NzhLCtN+YE6jZz+c6UJXq8hBBGO73cdexJ66myohRNO8pUNnsZph03NUQa+Id6smgNqCsTqg27pphVaAto5zqWzO2E/oc3a/X5RemlWGgOpQZyHeqeYcsTqqdAJKOqDw9ZqL9ix9wsQe2nSIYSi0YVBMPjctT/dXiC41l6fjszHO7t7U4G7KSVPchl6ua6r5t7PY2fVNDtGPMxrcTArKGwNuPrRrwKAtCI7Hz4Joo3b/ljrgDfKkf85z6RjH8C2Bglp+aPcf4XMQRfZ3CbAwFGSjLX+FIq8Q00IDEx0dD9+2eG0KqQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yu6bLab8QEX0TTerorCGvWhnaA8aWHZsatmHUbW62l4=;
+ b=tkqxIU/36hEndr1zlN8AanfcryuDR3ZAr20XhvWbgnPyhRO7HRNvh7kt8qCdRaMvP5+p9UV5kv8oPUsczDCklIrqRsMUdBBjXpX3ZvvsMjdRm46v+bXIJ7rrfWMEiG9BANOV0jcNk0XNIHyyrxnOUWl3Xn2MdVDFSZ3DVZxt50U=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB9174.namprd12.prod.outlook.com (2603:10b6:510:2ed::9)
+ by CH8PR12MB999205.namprd12.prod.outlook.com (2603:10b6:610:35a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
+ 2026 15:12:42 +0000
+Received: from PH7PR12MB9174.namprd12.prod.outlook.com
+ ([fe80::eaaa:b430:ba9:5dc]) by PH7PR12MB9174.namprd12.prod.outlook.com
+ ([fe80::eaaa:b430:ba9:5dc%7]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
+ 15:12:42 +0000
+Message-ID: <99c5c0cf-fdd4-4bf1-a5fa-a51a8b09db37@amd.com>
+Date: Mon, 2 Nov 2026 09:12:39 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] amdgpu: Navi 23 passthrough fails after ef5fcf2a6c32
+Content-Language: en-US
+To: Alex Deucher <alexdeucher@gmail.com>,
+ Nathan Blomquist <nblomquist@gmail.com>,
+ Guangshuo Li <lgs201920130244@gmail.com>
+Cc: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev,
+ alexander.deucher@amd.com, christian.koenig@amd.com
+References: <CACOV87VBmya0PKjni5xEYxUaEczk9X_UoUHXSR_HDS2kSJnM2g@mail.gmail.com>
+ <CADnq5_MzmNYq0WA5HFaOp6E3WO82YqTT5opCgkAbvv=9Q8AQnw@mail.gmail.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CADnq5_MzmNYq0WA5HFaOp6E3WO82YqTT5opCgkAbvv=9Q8AQnw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1P221CA0020.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c5::7) To PH7PR12MB9174.namprd12.prod.outlook.com
+ (2603:10b6:510:2ed::9)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -118,134 +98,141 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 74E1B1F7D7
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-11.01 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[icloud.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,icloud.com];
-	FREEMAIL_CC(0.00)[gmail.com,suse.de,vger.kernel.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Spam-Score: -11.01
-
-On Tue, 27 Oct 2026 23:21:57 +0100,
-Cristian Castellano wrote:
-> 
-> Hello, since I updated to 7.2.11 (and then to 7.3), opening a playback stream on my Lenovo Yoga Pro 9
-> 16IRP8 (83BY, subsystem 17aa:3835, BIOS KVCN44WW) triggers a divide error in snd_soc_tas2781_fmwlib and audio stops working. 7.2.9 just works.
-> 
-> The only tas2781 change between the two I found is:
-> c1b708f712f5 ("ALSA: hda/tas2781: Accept V1 calibration data without CRC") (upstream 408249089c48).
-> 
-> At boot the driver now logs:
-> 
->   tas2781-hda i2c-TIAS2781:00: tas2781_apply_calib: V1 data without CRC, accepting
-> 
-> Before that commit the data was rejected and the amplifiers worked with
-> default parameters. On this machine the CALI_DATA EFI variable
-> (CALI_DATA-1f52d2a1-bb3a-457d-bc09-43a3f4310a92) contains two non-zero
-> device entries followed by zeros, with TimeStamp and CRC zeroed:
-> 
->   0000000 07 00 00 00 5c c8 20 1d 28 b5 27 23 2a 79 42 16
->   0000016 f2 07 c5 00 00 00 e0 2e 01 f7 2a 1d 72 6f 1b 23
->   0000032 2a 41 4a 16 c4 0a c3 00 00 00 e0 2e 00 00 00 00
->   0000048 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->   *
->   0000128 00 00 00 00
-> 
-> (the first 4 bytes are the EFI attributes)
-> 
-> Oops:
-> 
->   Oops: divide error: 0000 [#1] SMP NOPTI
->   CPU: 10 UID: 1000 PID: 1533 Comm: wireplumber Tainted: G        W  O        7.3.0-4-cachyos #1 PREEMPT(full)
->   Hardware name: LENOVO 83BY/LNVNB161216, BIOS KVCN44WW 03/05/2025
->   RIP: 0010:tasdevice_select_tuningprm_cfg+0x8c2/0xa90 [snd_soc_tas2781_fmwlib]
->   Code: 4c 89 f7 41 b8 04 00 00 00 2e 2e 2e 41 ff d3 85 c0 0f 88 97 01 00 00 48 8b 4c 24 10 66 0f 38 f0 01 0f b7 c0 0f af 44 24 18 99 <f7> 7c 24 24 88 21 88 41 01 c6 41 08 01 48 8b 4c 24 08 48 8b 44 24
->   RAX: 0000000000000000 RBX: 000000000000002a RCX: ffff8d36ca8af218
->   RDX: 0000000000000000 RSI: 0000000000000db8 RDI: ffff8d36ca8af21b
->   RBP: 0000000000000000 R08: 0000000000000004 R09: 000000000000000a
->   R10: 0000000000000100 R11: ffffffff87559290 R12: ffff8d3684e350df
->   R13: ffff8d36a861d9b8 R14: ffff8d3684e35038 R15: 0000000000000002
->   Call Trace:
->    <TASK>
->    tasdevice_tuning_switch+0x71/0x80 [snd_soc_tas2781_fmwlib]
->    tas2781_hda_playback_hook+0x4c/0x110 [snd_hda_scodec_tas2781_i2c]
->    hda_component_manager_playback_hook+0xb5/0x370 [snd_hda_scodec_component]
->    playback_pcm_open+0x79/0xa0 [snd_hda_codec_generic]
->    hdac_hda_dai_open+0x5c/0x90 [snd_soc_hdac_hda]
->    snd_soc_dai_startup+0x52/0x90 [snd_soc_core]
->    __soc_pcm_open+0x108/0x6c0 [snd_soc_core]
->    dpcm_be_dai_startup+0x153/0x3c0 [snd_soc_core]
->    dpcm_fe_dai_open+0x109/0xc00 [snd_soc_core]
->    snd_pcm_open_substream+0x604/0x920 [snd_pcm]
->    snd_pcm_open+0xeb/0x220 [snd_pcm]
->    snd_pcm_playback_open+0x39/0x60 [snd_pcm]
->    chrdev_open+0xbf/0x230
->    vfs_open+0x3f8/0x520
->    path_openat+0x4f4/0xc50
->    do_file_open+0xd7/0x150
->    do_syscall_64+0x8f/0x380
->    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->    </TASK>
-> 
-> The kernel is  linux-cachyos 7.3 (taint O is from the NVIDIA module);
-> CachyOS does not patch the tas2781 driver, and its LTS, 6.18.55  works. If it is needed, I can test patches.
-> 
-> #regzbot introduced: 408249089c48
-> 
-> Thank you,
-> Cristian Castellano
-
-I guess the following oneliner would prevent the zero-division.
-But I'm not sure whether the whole calibration there would make sense
-and works properly.  Could you verify it?
-
-Maybe we should make the check of V1 CRC error more restrictive.
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB9174:EE_|CH8PR12MB999205:EE_
+X-MS-Office365-Filtering-Correlation-Id: fad12291-7be5-41d5-0900-08df38f3bde4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|6133799003|10067099003|18002099003|22082099003|261102123227099003|56012099006|11063799006|4143699003|261022075727099003|261026140227099003|261022105027099003|261026121527099003|261009223027099003|261028144727099003|261021121427099003;
+X-Microsoft-Antispam-Message-Info:
+	TEh3/7sPVeH5uwnyF2VaHs7fXrtDuFf4slc78PWxJH1FPpfj36c4MkPUFgirXdN/edj17WGbQjK3H+cLv4Lo+UxwRZ/tHwdjtzLjU3ppWb6XKNL5Cwnk3rC+QtHEUmtx3g41B5QvdJdjaipO/2KhoG0J6C2/PyRRH8qWt220lBKucBMZdGAnW+GKKZCn4xX6P+CkhFW3vtVV09XsQz1t4hKhGB2f2BzIZX0FySJaBcOpg/1jWH5QJkKsYaeu66ALgu/oUCHlqN8kK/V+zdS85K4uN1tY6LHToVFlddY3S8Lf2GCahLmuAnDSO8eiXujRyCnCwIdV2OqIE/DVsEXOir/ynl0k7lQWcqawiL/m0Qn8L9Fa0kZsffpy7UkX/lXfxqnGNvGUCE5Q9KB0eMy+3CVK+VtX+irYmAt3CyAU/NMGuBhtOc0vXJ2aJvXIPaWuoCbYPaZB6nNvUymei2eoFANcUf35xSPxludi86P8t6Bnj+GL6aXQl0M6Gen41X5jWKzD7wSLKhXWgvfQt1ejyQr9IkOAeuQXcMdTicYYo9LgwHCdTJeT21zpMQBKJRDl/CxDsV3lv96AjIaic8V+sWH4HtXc2blsiGQNb35w6/Y=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB9174.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(6133799003)(10067099003)(18002099003)(22082099003)(261102123227099003)(56012099006)(11063799006)(4143699003)(261022075727099003)(261026140227099003)(261022105027099003)(261026121527099003)(261009223027099003)(261028144727099003)(261021121427099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YWZJa1NPc0w5aVoyVTdPang0UlE1V2tYak0zTy9LTFN6M2gzZjk2Zm92U3BT?=
+ =?utf-8?B?dUxTUVN5bFI1a2ZzNmxDR3VuQnBwN2RRMEVwNmV6SEtCUnZoay8yY243bk84?=
+ =?utf-8?B?R1N4L1Z5SE00SmxzNjF6Zkk1S2FCcUZuN1FJeWpBTldiT1F6UFptd3FoaTVJ?=
+ =?utf-8?B?aEw0UEZzMi8zNGh0L2xXYytoZU1jS0dRZzJQeldxdXV6WHNxRlA3VllJZEFz?=
+ =?utf-8?B?TVJML0gxa1lZMTNvcHMvdlU1MGFtTVR6STBnMm9QemxWd0VDRTJtRzlBUURJ?=
+ =?utf-8?B?aHhYT3p2amlacHZsemM5ZEJ3Z3RPVzhyRDB5L1QveWRwajU3VmVMSHozYm50?=
+ =?utf-8?B?QTZSZjhZSVU5N2RPMVlDaXZ5S05Ob0hjQTk4UjJJdEErakk3aThtbUtJclZv?=
+ =?utf-8?B?Rmt0bmVlZ1d0RFlsSlQvdlduQmdza3NHemo3UjJJVjhybFB6UEg0SVc0d0xR?=
+ =?utf-8?B?TlFjYndsUDVtODVGMFoxdEppS1lDTndlVEZoWGJrd2pmS3VvWWg5ZmFDRFRQ?=
+ =?utf-8?B?MGJxNGxwYy9rbTdPQStzT0w4bVVYbnA1aVJFWVNqUk9RYUkybHlWTUUvU0RL?=
+ =?utf-8?B?TzZ5U0RMQXZGQ3d0THRoOWRTaVU0VUxXeklNSmpDNVR3RmY5ejBBS2ZhbWNi?=
+ =?utf-8?B?QlhYL0Q5RlZWSkYrR2ZoK2Q0S0ZjclhXMDF5MWxwYjRiQUlqSEZTSzI0RTl2?=
+ =?utf-8?B?cS9POUZ3c3ArcVc2NlE5WTdjUnA0Yzd0eVBzcDd5anZ3RkVNd2UyaDY2UHhv?=
+ =?utf-8?B?RzRpblRjVHhlTXFyanJKNFpiZnJjREd1QUZoUW9ET3ZkRndMZGVvamxZK2FB?=
+ =?utf-8?B?N0JQUWFPb0NsZUdIeGo3TUhoTW83eDYyT25JLzJJVUZmTHJPZjZTVTJ1MzJG?=
+ =?utf-8?B?a1RKaFV3elhhQnN4RFZrYlV1cWJ4Ujh6VURwWGpyUTZjRWRWYmt1K1o5aHRU?=
+ =?utf-8?B?K3RPbE82T2REZkc5NUxhWWdxeDFGREphUTFtK3ZCYWpoUlo1TGhMdHhiVk9T?=
+ =?utf-8?B?Qmw0dTNwdlc5K01HTlViV2dEVVFVZTVFaVp4ekR2ZlFGSnFFNnpUWW51TEpx?=
+ =?utf-8?B?bzZkakZEZnJqODNvY2ovMUJiN0hiMnFjc2tPK2Y1cnkrNlJVS0dSY0VkQ3FV?=
+ =?utf-8?B?UmZZVjU3U3BVS1Nod2FINTdrTWM2aVlhTitmV0pXSkRqVE1Hd3pwNWtsSjJw?=
+ =?utf-8?B?SmYyenk4ZlJxZEl0OGRENUJqcitPU0VPNWpQdkNBRHVBdXlkUG1wQkZwWktO?=
+ =?utf-8?B?dUdCWjQ3TVdvZGFROFhiWjVLbTJvMFphWVBqUzl2OGgzNmpuOEd0dHova2to?=
+ =?utf-8?B?cHRyMzhsUXAvbk54YktkWVBxaXBhL2tuZk5EWTFTNDlRUlBzVXZpbHdTdlJ1?=
+ =?utf-8?B?WEhId3loSWpCVGJFaDlhTUZOWjdFYzdKSzRMMU0zeXd0ek5hamhWc2FnU0J0?=
+ =?utf-8?B?TkRsSnpYZXpEVjd3TWFMTFc3R05xdk5MN201Vm5YUDlwQndiaWtoVFFDdXBa?=
+ =?utf-8?B?V2ZYNldyUFNQRkVLSmtxR2U4dmJTRGZhOWZLL2JwLzluZ2RpcFhVWVVxdVpn?=
+ =?utf-8?B?NHowaG5rdHVTK2V2cFNZbFZzQldKYS8yaWVqUHlXSVVrajRqWjhzTlZoNCti?=
+ =?utf-8?B?Q1VWbGFrekU1cXZ1YkZxTVpNa1lqd25rMFdOOVhGcklqNko1bnRrS3hhWEJS?=
+ =?utf-8?B?K29JalRxTkJveWZJUWxvWllRZFlxSThZUUh1WUcxeTY2OFFvNFFvbjQ3QVdr?=
+ =?utf-8?B?Z0QyMmozL20xY0FhT3dBYytuWWNqUGtGZTduT05YYXo3TGRjWjZKcGxlWGVy?=
+ =?utf-8?B?SzBKSm9FYnJrK0VoaTlFdmVKdEFuZGUzM2RMMGIzY3ZCRzNCc0VsYUhmZWhE?=
+ =?utf-8?B?Z3R3VUVRZTJkdmpiUDJTdUpTS1lPazJ4V29nN2pJL255MVk1bTFDeVNOSFBw?=
+ =?utf-8?B?VE1naWZJNlhmM2dFL2pNWWhyNFc2VGlmMUhyY2tVK1JjM3lKRk12eWVuY21L?=
+ =?utf-8?B?eWNPRjNYQVJzVnNOT0xUNzlCQTVYcCtQYU1XNFM4VzJNQlJYYUlLZy9pL2J2?=
+ =?utf-8?B?U1Yxb3Y4ZDdvL0Q1UGhlMldpa1hYellKTDI5aFU3N3k2TVpYd0VTbGFLTEVz?=
+ =?utf-8?B?ck5XWVF3dktUdU5paVBFdmx2bVFTL3JLK3diaWtvbm5rVUo4TnV1a2R5cyt2?=
+ =?utf-8?B?K0IyQ0ZQdm9Gb3dYU2pGdDlHNlY3OVlBalpVR0tVeDFwaU13eUE4ZFp5VDBZ?=
+ =?utf-8?B?R2N2NTF1Qk5YamNZelBxbGZDZytsUXhTTHVITE80REhNNzNPeW1wOXRtUnRv?=
+ =?utf-8?B?Y1RKRHlkTTVOZURqMUdocklhY3BBUGliUmhrZWxuanVScUhaTUlQQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fad12291-7be5-41d5-0900-08df38f3bde4
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB9174.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 15:12:42.5545
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KPPe/VWmXkoXWV8auXK1PkvDSzgKhR9z3Q8TZw1qVsgJKrFwERTdqgP8cbOUjCqSZYwcKQ7C/9iBgIiFELHoiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB999205
 
 
-thanks,
 
-Takashi
+On 11/2/26 08:09, Alex Deucher wrote:
+> On Mon, Nov 2, 2026 at 3:16â€¯AM Nathan Blomquist <nblomquist@gmail.com> wrote:
+>>
+>> Hi,
+>>
+>> I can reproduce a Navi 23 / RX 6600 (1002:73ff) passthrough failure on
+>> unmodified upstream Linux 7.2.10. It happens during the amdgpu-to-VFIO
+>> handoff, before any guest code runs.
+>>
+>> Revert/add-back tests on Proxmox kernels isolate ef5fcf2a6c32
+>> ("drm/amdgpu: fix autosuspend cleanup during removal") as the trigger.
+>> Removing its added call from -20 works; adding it to working -19 fails.
+>>
+>> Tracing shows amdgpu_device_baco_exit() returning -ENOTSUPP (-524)
+>> during runtime resume: the live BACO feature reports supported but
+>> not enabled. The exit sequence is skipped, and a later bus reset
+>> leaves both graphics and audio inaccessible.
+> 
+> Adding a few people.  I'm not quite sure I follow what's happening.
+> Can you attach your kernel logs to the bug report?
+> 
+> Thanks,
+> 
+> Alex
+> 
 
---- a/sound/soc/codecs/tas2781-fmwlib.c
-+++ b/sound/soc/codecs/tas2781-fmwlib.c
-@@ -2579,7 +2579,7 @@ static int tas2781_cali_preproc(struct tasdevice_priv *priv, int i)
- 		 */
- 		re_org = r0_deflt[0] << 8 | r0_deflt[1];
- 		re_cal = data[k + 1] << 8 | data[k + 2];
--		if (re_org > re_cal) {
-+		if (re_cal && re_org > re_cal) {
- 			rc = tasdevice_dev_read(priv, i, TAS2781_PG_REG,
- 						 &pg_id);
- 			if (rc < 0) {
+I think this need to trace a little bit deeper.  It sounds like it's 
+likely an issue in the .supports_baco() callback for the ASIC.  These 
+capabilities shouldn't be changing at runtime.
+
+>>
+>> The candidate below keeps the autosuspend cleanup and allows the exit
+>> based on the selected runtime mode. In two clean baseline/candidate
+>> build pairs on upstream 7.2.10, the baseline fails and the candidate
+>> restores reset recovery and guest graphics/audio initialization.
+>> Sustained rendering and repeated-reset stability are not yet tested.
+>>
+>> Is the selected runtime mode the right condition to use here?
+>>
+>> Full report:
+>> https://gitlab.freedesktop.org/drm/amd/-/work_items/6076
+>>
+>> #regzbot introduced: ef5fcf2a6c320676bf8be2dadac93d9023b468b7
+>>
+>> Candidate patch:
+>>
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+>> @@ -6412,8 +6412,16 @@
+>>   {
+>>          struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
+>>          int ret = 0;
+>> -
+>> -       if (!amdgpu_device_supports_baco(adev))
+>> +       bool runtime_baco = adev->in_runpm &&
+>> +               (adev->pm.rpm_mode == AMDGPU_RUNPM_BACO ||
+>> +                adev->pm.rpm_mode == AMDGPU_RUNPM_BAMACO);
+>> +
+>> +       /*
+>> +        * Runtime PM selected BACO while the device was active. Firmware can
+>> +        * clear the live feature bit during D3, but the matching exit sequence
+>> +        * must still run to restore the runtime D3 policy.
+>> +        */
+>> +       if (!runtime_baco && !amdgpu_device_supports_baco(adev))
+>>                  return -ENOTSUPP;
+>>
+>>          ret = amdgpu_dpm_baco_exit(adev);
+>>
+>> Thanks,
+>> Nathan
+
