@@ -1,70 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793617597;
-	b=jfX3uzhCB0RCiQAtatd192TZmZVYzqQB+EzRqgvmWBQc6WGlX6ZRw+9W9tGOFs3qoJQH
-	 vqTT9mjm/mfQXVoh5DpVQEeWmc/LfhTNORXfF7INXCtSiIwGtcDERsvBVzHdGnh3BmiBZ
-	 RMi2uUhVqddiOccJlYWkeTpA/oBJv0fD7QVUAiBt+yODCK0VPNe/gwvPZVHBFbkfAEZGa
-	 Q+euZ830LxER3mgeIeqlRZxvLzl8aN5wY4TEqnNYOWyBP7HwdhLeolWMmipL0//biOzMP
-	 3VjKvkV2jQGt5ozEB439ditJZlyeNx6BmgGZjXaPeIvD3h/65rxsmtdyybLR/GvOifg==
+	t=1793617726;
+	b=pR+Lr+Y5+EZ62h5EL8TgZd7iJVd1FSoOzt3ULlw4ULKCVw8lrHigDXqaVx/9hTS9WoNC
+	 4JuiL+kGKO91HS6uZNicdgfze8KCWtF1uMBAfUupihLi4yNuzWIWtpwWG3p1CtKRi5+z5
+	 72USB5yz3xjRb+Re7HDmZkVjUmCyPUv3M/hgihlN9WZ2rDbeyJruN35F0kPrreNSAnHXv
+	 ngNz5sorbfVtATUF9x9qEHUjfQoSP6uczQgSYWksFwPtWJ3PL/lZPYoeM8NxWW4VpNJau
+	 XedFvfvHavdikWBIrIOqWwKpJRkGNFKDILIW1jTTe7parMg0z54El7oKA2G5Pia/ICA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793617597;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 Cc:References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=7uACpj18c5vSxhT04PkcvzJ4BcwC0s67cyii/fIfICg=;
-	b=Ou3PssjRjgQ1W+xpKdmkt5Rr8knRyV0vqye2Abft04OO9AxTpttTBTULCkT0NJt3R9zg
-	 WUPijVHSGFQQdRKUOkTHPsfkSCYgRMEkdhhrcX5YDNscDQX35p8af60697OtwdQHYWSme
-	 onNkP9XcAFU9tn6Ft3egqCQw3uQUzcAo4K+zACryo6mSyTqROLYLUz+JyQZrT9RlNQ5hH
-	 zI7lUHRliP7Lp2QOn/4KR9QXiL48kvhBkIF+tW6LcXyaNVolP9ZQHjX0UIUVfSffwAgcV
-	 SrockcUXrfVngFBTteiWj7woZ5GDMtO5uBtYw9SgSHkA3U1BO+Q+prSCaSyncdcb1ww==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793617726;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=K5HxYXJ9qQtyG09Ef1giggv6OFeEINzUk9fprZUwrTQ=;
+	b=qkAQqhgtl60gmaybgLWqf7d5VyYrl+0WFO6T41jMlKFuR7ZqXFWxYZ9le1qFu9JnFJwA
+	 fP6SnsRxuU+4Gf7F+sNrNDf/Az/v6Vlozhe0LoVX6gsAO0gkya1gjMNbQ1hQQv59uFLXk
+	 clrchcqPsto0Gc0SUzg8eTyAM0IFjicIMPjjn1lqA/aIYIjuhN5z6x3S70w70rCjccK2G
+	 0JUSZ09BMR1seL8jivIss7vxrnoGIky0BrIF6EPwE+vb2iRG8P2cXlBlnR72z3sCBhfQC
+	 3b+NLKiaEYAkMpytrz0WwzyPcPxgE/28SA4pQXSSDjJCxPZ6og/Y/kGf9xsXdjcT5Pw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=leemhuis.info;
 	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=hKn+VAfd;
-	arc=none smtp.remote-ip=185.244.194.184
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="e0ryX+U/";
+	arc=none smtp.remote-ip=188.68.63.102
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B145E606A326
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 11:06:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B145E606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF3F606A326
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 11:08:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BF3F606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=hKn+VAfd
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jJ85x24xwz9DYb;
-	Mon,  2 Nov 2026 12:06:29 +0100 (CET)
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=e0ryX+U/
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jJ85807Y1z63K0;
+	Mon,  2 Nov 2026 12:05:48 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793617589;
-	bh=JcpHIHPRbTHiaFAGdolcnzsT+BS2ZSoJfZD+/uv9GMk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=hKn+VAfdEPTJEAo92CKadHZv8WDHz0pIorUb1CnFEExAy23Dsf/RnoOXXFML1oht/
-	 uEYkfky0ygeLrc1+sUJxPVHpf+IsKZof1GgpEATLJRc96GAWB6bqC56Mf7Gg82Kn9f
-	 OD4MnhmvkMPic67+FFfTF+VwwRizrpdZ9rG3IdrJzlu0fw/sI8mtDNOOpi4WYM3C7b
-	 Eqjpc4+pP/e1zB8iyQtTvWDm3UENnS38bRNzIfywQkrw30fcz5gx0vX9qIAi2yWl+9
-	 Bl0JPFsc0m1P6riegrkH4SPEgsKVgQtDbLH1+Hs5XEojEiNeNBhsP/XuoyBklRQys9
-	 sUNWEo/B0FKig==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jJ85x1N37z7wLr;
-	Mon,  2 Nov 2026 12:06:29 +0100 (CET)
+	s=key2; t=1793617548;
+	bh=eUbzbZe7aNvgCJ+zMjYmKyjYTH7j5QJ2CoHI7QCmh9U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e0ryX+U/myghuIhx36dQWMRHAbgRQW3i+HnUuIiAsXWD9AM3YjvAPV8i76vq4z7zX
+	 KJ52uRJi0EH7QW9vGf5DP4KDI2RJyMUzfStdl2+vkU4ZoHihNWuWNAX1UbwWAMWdsZ
+	 9V9w/ND8qXhvx9eFEYszeqachL43lsDixPXRlX3jufwXUxt6skwVjlcILtTG0QfUZk
+	 LROIxn5qdLcs7TurctOawrHObvEmeYxqqsZoQ5jA494Qtv+pE+57Iceay/xFOHUDLW
+	 drOJiS0VMlIZ8iGWsKZYtwNtfaUjBePoyGG8nBRGUMS54ZcoqAnTBVQ3IIAPj5Veyt
+	 uj8a1Q0ExEFiw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jJ83l0VFWz501t;
+	Mon,  2 Nov 2026 12:04:35 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jJ84t2JpZz8tgf;
-	Mon,  2 Nov 2026 12:05:33 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jJ83c2VFWz8thK;
+	Mon,  2 Nov 2026 12:04:28 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AB0685F9CA;
-	Mon,  2 Nov 2026 12:05:04 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 45B495FA02;
+	Mon,  2 Nov 2026 12:04:05 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <509e17d2-ddc7-45a7-b801-08d8125869cf@leemhuis.info>
-Date: Mon, 2 Nov 2026 12:05:04 +0100
+Message-ID: <0cf3aaf2-9911-4918-8f6f-c11d6077d39b@leemhuis.info>
+Date: Mon, 2 Nov 2026 12:04:03 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,10 +82,9 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth:
  btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore working
  on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests firmware)
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Christoph Zwerschke <cito@online.de>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, Sasha Levin
- <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Salvatore Bonaccorso <carnil@debian.org>, Sasha Levin <sashal@kernel.org>
+Cc: Christoph Zwerschke <cito@online.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Marcel Holtmann <marcel@holtmann.org>,
  Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
  Erik Brangs <erik.brangs@gmx.de>, benh@debian.org, stable@vger.kernel.org,
@@ -90,36 +93,30 @@ Cc: Salvatore Bonaccorso <carnil@debian.org>, Sasha Levin
 References: <bdafa01c-f75a-41fa-a264-407400a2cd81@leemhuis.info>
  <2026-10-25-1-daily-reply-0004-bluetooth-asus-rtl8761cu-hold@kernel.org>
  <auLhWSOpMQg6cALq@eldamar.lan>
- <0cf3aaf2-9911-4918-8f6f-c11d6077d39b@leemhuis.info>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <0cf3aaf2-9911-4918-8f6f-c11d6077d39b@leemhuis.info>
+In-Reply-To: <auLhWSOpMQg6cALq@eldamar.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179361750525.1205629.14667278806776514133@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: AB0685F9CA
-X-NC-CID: tK+jJPFNB2NlJBfmjJJ24n4SWq7C3MQrDui4qUqrxrrONCFdJJ4=
+X-PPP-Message-ID: <179361744584.1205261.5857706765137688230@mxe9fb.netcup.net>
+X-NC-CID: s/TYEdNthf/+4FiD8m48E+xrSUohQGLrzlhHWBPuiSj+PddS6Rw=
 
-On 11/2/26 12:04, Thorsten Leemhuis wrote:
-> On 10/29/26 07:02, Salvatore Bonaccorso wrote:
->> On Sun, Oct 25, 2026 at 07:29:50PM -0400, Sasha Levin wrote:
->>>>> If it helps, I can send reverts of 980084de4d9b and 6f0624b4427e
->>>>> (on top of bluetooth.git master, with Cc: stable). Alternatively,
->>>>> btrtl could fall back to the ROM firmware when rtl8761cu_fw.bin
->>>>> is missing.
->>>> I didn't see any regression reports for 7.x releases about those
->>>> changes, [...] So I'm still inclined to say: leave everything as it is
->>>> in mainline to avoid any risk and revert only the backports of those
->>>> two in 6.18.y and 6.12.y.
->>>
->>> Yup, that would be appreciated.
+On 10/29/26 07:02, Salvatore Bonaccorso wrote:
+> On Sun, Oct 25, 2026 at 07:29:50PM -0400, Sasha Levin wrote:
+>>>> If it helps, I can send reverts of 980084de4d9b and 6f0624b4427e
+>>>> (on top of bluetooth.git master, with Cc: stable). Alternatively,
+>>>> btrtl could fall back to the ROM firmware when rtl8761cu_fw.bin
+>>>> is missing.
+>>> I didn't see any regression reports for 7.x releases about those
+>>> changes, [...] So I'm still inclined to say: leave everything as it is
+>>> in mainline to avoid any risk and revert only the backports of those
+>>> two in 6.18.y and 6.12.y.
 >>
->> I'm bit lost here :) Who is now going to sen the reverts for the older
->> stable series? 
->
-> Christian, you offered sending the reverts earlier, could you do this
-> please now that we all seem to be in agreement?
-s/Christian/Christoph/
+>> Yup, that would be appreciated.
+> 
+> I'm bit lost here :) Who is now going to sen the reverts for the older
+> stable series? 
+Christian, you offered sending the reverts earlier, could you do this
+please now that we all seem to be in agreement?
 
-Sorry!
+Ciao, Thorsten
