@@ -1,101 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.179
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793587334;
-	b=UKoQhk5Pw6mw75WIU+U3lul1uUNpsprVP5GUv4l+eiOWKJZkZfqAavgdpwEIVIaCJPAA
-	 P2jzmcPYru62gR6u6WkK23Xze5ohyD5soSrk+fTyHoKHq4pjRnX6+UzRj3CDQtN451u1Q
-	 KVs0r3icoQwBWmrK29lbUHnoF6b68/KLKcGtNL7m/eXD1/l0Z1GjAo5u/I+WJVKpdYoru
-	 nopavduxsXxo6P4Yv/AL1ozgLQZSd+qKpXN8oGsFb7fG8QHYD06noQNcAbis5ideTKlj6
-	 YIkSxnn0JZyheUcmstyh4fjIjR/1N7sv/ZZ2LcYbkXJHl6AkNNmaC01TqAg6p+J17GA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793587334;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.215.180
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793592432;
+	b=kg5isSUt6MIeLx293xYOj+lJ4ZNcFBcfZEr5cdusLeYtDFWyfe3ilv9vPDyWmNxxRJoc
+	 oUjLoY93pWwfv/Tvphvmv54ZVzsDjm9smC1c/lYU7dtknhWf8syyM2RI1RosVMOSSBZ0S
+	 JitXAF5Tm39QB8bU2og6bzWWnwxQZ5EfeCov9B8prI2MYCYtNaPk10Eco7CH1qUsDM8D3
+	 Xc2w/W1LZMLgin6WyVjdA0FMrbNXvDYKvlL3kFldW1Yucmq8fm5daT6QzBM5MMIAyZbwB
+	 AqoBKHrC+sHn3bMO8DLxyOOZ2184SM2z5ZTwx6PaTMA18qLH7eFiRUYp9Hc+8IwcFKQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793592432;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=j2TRRoSnT/Jv3a4iwHG1ldeVncOShjDWYYLdrAMUUEI=;
-	b=omtUrXPfdhk0p/0CXs/97pUc8PPsO8fMg+yrK9hu0MKb9H/gIM/NRzuhI2MgnvH6ur12
-	 02BgP9yFwF/AfdRI20jsm1UvoVu8W5NpZhxf9+/170krjwkvqJJrpxXs+6yQByJcPITf7
-	 mSe/gun5aJBdfU2FlFC/A0zjZb/o8cIS35sxpU4fKfqnRf8ptB4d6248sCT/YaL7vDkve
-	 lvBdUcKjxUD0oKKWN16MAHvr/j3nx9i+InDQP2bCu5N7ftDN13g2gHDw7lK3PIuauQz+W
-	 ESg0P6DguPUPDr6Km3ss/IHqTFzabsKAbiM783BH3h6Ht36rkCeGFL4WBBUZxluM/xA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rowland.harvard.edu;
-	spf=fail smtp.mailfrom=g.harvard.edu;
-	dkim=pass header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=q8zePUgb;
-	arc=none smtp.remote-ip=209.85.222.179
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
+	b=TKizTpVAqO+fBhoiaySPFuHdQrNKEhO524p6fC9sqznE0TDHcPgeNPRnnUA3ordu1ftt
+	 xYNkRszT2C5uzYS4x06JXO0bUuJ/tcxXtiNrbHG293cHGOXRqiWuKYvvZCJGAL/gxImsY
+	 7gE2tEyzkhqDNIwaYAIoZZUYse0eoo86TYtGpB49OmHP74cxAdICtdD8h15ycFXHe7yRw
+	 dLf6BrX2Ac9Y3kwAgZcQVYdOhKrWLoGdBEIXCdGttSJUk0yxVCIilxa++Gu9+V5k9A8dB
+	 cHXKwKgnxhbKEdvus1hRK0s2nz/7P1C79M8O2NESvVOt46/VbTa6cOZRrhqxoVPPxyg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hMJsALto;
+	arc=fail smtp.remote-ip=209.85.215.180
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3167606A324
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 02:42:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E3167606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5741606A324
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 04:07:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A5741606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=q8zePUgb
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-93f2f2edb19so249398785a.0
-        for <regressions@lists.linux.dev>; Sun, 01 Nov 2026 18:42:13 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hMJsALto
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cd69954c755so1817421a12.3
+        for <regressions@lists.linux.dev>; Sun, 01 Nov 2026 20:07:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793592431; cv=none;
+        d=google.com; s=arc-20260327;
+        b=BIZSC2XHKKph8QR/yIlEVqQyjoX4e22LuKa6Y36EtgDYOs5w3yRrjEPAis+s16Y7st
+         mi4hobKEgIXrbWGYPJ4fiuzI7aAz81RzWnnAFaX3yCbDhBNHM+lcUwLsQmhpUcWrJSfC
+         EoNhT6C+VwYmqXf5JKm72hPhmR9Gex//F11BJ06sBrRPXjwFiPquWNx3ZOrdYVldu/b2
+         pMALW+m/6x4cyfbJ7R+oBGRz7pvt7db9jQS1WlEoRXnRQUJFZVAg7hDiYHQLG6p4a8na
+         JR8+9cpd4hWsYzcUxmYH2OVrmXd1bD7GVyEbEyZ1lR2IPl6YoDu19PErayXBrLvFxuZ0
+         QMow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
+        fh=0ymvY+FodRk8JSLn4x2G7ryhreiGyTd8oe9ygmdr7NA=;
+        b=IIwLrBOiqP4RWOLMXJAXzZr4IoX/sZ8U3C1YPTfFPfdaY2Jic4uv9qoz0Ehg3ysxjB
+         mjULhGQMoGJELshJGg9PTXs4KczkiRR4dbEkwzrGXg9solBBM5Yg1MyZOg5v09dVpCNR
+         eOREW9AiWeoHXOWMwVE+xWBtx90hTEIJrtXGOmgPyAYgSg9F8vkTwok+pCbQWeoD42ZL
+         hqatiuQzlgwFED0DaQ/cvlC4v985yjYuNLkUnz4JFYJoCul19teQMKYrkUPJ9Ah7IXM2
+         oE9XdfDl7ceDmesRuDY3xZroCLNOAUH09WI7lQPeySBwKTuoMTZ21dhAt98+tuQplO1P
+         1bvw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1793587333; x=1794192133; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=j2TRRoSnT/Jv3a4iwHG1ldeVncOShjDWYYLdrAMUUEI=;
-        b=q8zePUgbPubU861j24avi63H9bVkDP9cWNIFckFBd4bBLo9PqwK/SS7CbgfoEXOJ7a
-         /88t7Oy0r+QYeMRTvSV53AZsNs56RUv4Z6tiPY532Qt7B+89O4Wzs7VulxLlJBBftoIs
-         SCDXJVRWKX9sNaqzLPDWgL/4b/m3NeaIuSMzH2PSOVYjasoO/MAlXznXfQlFd9eDRcV1
-         WgWdFKzMM/e4UFokBzE5mNYVr4WH1r4M/oFFEHEwUQ1x1/DcZgGyPB9dIcpMCQqp20EU
-         fb+3jwCU7UL9QXqYIkHGYn+vG2KnwH0URc1mWUG4Q8NjSAHWrO9ZzOCaNsGSvUKw2NdK
-         HpMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793587333; x=1794192133;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1793592431; x=1794197231; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=j2TRRoSnT/Jv3a4iwHG1ldeVncOShjDWYYLdrAMUUEI=;
-        b=WFcuMknTWvPBXtH4pChkNpndG4qXCUhYmbEvVe9hvg50QZ2MDEmuEk/tJEaA1/pWpB
-         u6EpjoGVuje/rJhjqG3O6X81jhoQvLVfaBW1+X9LGQrZ3XNS56mJZwqcyZuDtF91/Hjb
-         wiueTPhzsL+rhuaUtzcy9WyVyA8+PKin0INgq1qBA+DGWLFGSn+0fh3MGAMcdyLGMPRI
-         jg17F9R7gmBSPxoym4XvXGsaXZNewg7fCWz3AaJYfyYWPMZxogYM2EWD5TRCNKPB60sz
-         n0tigEFP/F1TVIc+6yi9SSf3FmP+ekIavAmy8dhAHCE1z9EQBSI8LIfTMiYLae6pCgWj
-         HOHw==
-X-Forwarded-Encrypted: i=1; AKwUvBxdlkURciBvlBbPylBuWJUiari7/wIIDjgrtsqWNfYYryKqK/H2SYNvhAzQ8Emmqdsv0+7x1rDb/Ej8sQ==@lists.linux.dev
-X-Gm-Message-State: AFq9FYKtuLunZZV+6tFb3e0ZIOx1xfktvOLVCjTfhjJP+hVaoon0pBiJ
-	K0MQGDpF4+EVhBs5IBOxifblblRqhI90OZzQ2youRLyRGZaPnj1T6Mib35SJPBziBA==
-X-Gm-Gg: AYBFou2hVDB4zyiGN5xzF5V1Cv6EWF5z+eCPNagCd/DXUDaPsV1d0VCmzbIm+yifUrL
-	635Hv1kOM3MURENklLiyTiHRQLKoicUyZK9dEbdcA0xM64dck1/MkxU2fcMtummSR9P9xhZxrX1
-	IFzJtVsnDHh3ujhoVjd+kUv1C470DjSbMP0qQq+OG7FywMP4lMGPgF2x5hdX11l65yB4QCQsWKO
-	7hWs7Hr63IJ+0IKC6lrz+TXsA3M59vvuzLU5mxJAH2gBi55AKeQ1FftEufCUX3U4BQa9QegMLH5
-	iwqFrU7BkbXPWngZy2IpIHNXAeP2ZWJML04qUYEN8fX6KU/4p7OISjgxi47k08QMibI25U8PjkH
-	0K2okO7eG0cNI+FYxkwUlOFegA5FcQrybAsjh/xcW/q8Hte3kmaKU/7Iv+i7LnbqX/l/UIx/Y5c
-	ynD+fIum+HGYTSZEsCWs3i0J8Fjx1tr5vtedvrmQ8ljD0iaX0sgqEkDNWgU9ZHV8syL1nNK9LXq
-	zzmkY5ikXRZhvE5NYVfon0FHf1oX1K7xuRmJBopfT/zZOsa9IMazZk9Q8j2zD+8q6sHGxcV/zff
-	MF2TOZAEcLB+gIuPZY9V3k4KBNSN
-X-Received: by 2002:a05:620a:3916:b0:93f:47fa:b722 with SMTP id af79cd13be357-94421618771mr1465258685a.13.1793587332748;
-        Sun, 01 Nov 2026 18:42:12 -0800 (PST)
-Received: from rowland.harvard.edu ([2601:19b:d01:d210::66b0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-94425a7195esm724633685a.27.2026.11.01.18.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Nov 2026 18:42:12 -0800 (PST)
-Date: Sun, 1 Nov 2026 21:42:09 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: James Clark <jjc@jclark.com>
-Cc: sashiko-reviews@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Johan Hovold <johan@kernel.org>, Bastien Nocera <hadess@hadess.net>,
-	Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Douglas Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v2] usb: core: add a pre_probe callback for device
- drivers that may defer
-Message-ID: <b666dc31-1dde-41c3-be0c-3ae5091b9683@rowland.harvard.edu>
-References: <20261030151919.3511106-1-jjc@jclark.com>
- <sashiko-outbox-191184@kernel.org>
- <20261031032449.3536559-1-jjc@jclark.com>
+        bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
+        b=hMJsALtofgtZFDNN5qpdvuiJsSguK3cCoFG5JDPKQyL+cD3c3jN3ikg4nvtwVOAGaX
+         YRwXXpnvcorxVeTWJtlbYC+pfYcv4+DMO/o0o2rLefNdSHpoiC3HJeCLsD0+aRCngWmd
+         UeOEmcsEVoxOIOUAaWEb7PMxB06upvw5e4riqitlLM6V2k7tpt1Vgfebv010yq04/wNB
+         SivPXUQ7wD90hOBhW2wVB5dljHZ35oJHTbv4W+Pz6S4j0HngazZqpAMBGtPgF6HgYfUO
+         42CiEWC5IHBHt9SV+fEw+28l4PjhCIzrWFcx4MtnJwjIu1dsQFWXIbzqIvx8JkyRrwv5
+         ZfrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793592431; x=1794197231;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
+        b=l5BYiQw00yBIoOYW6ZlF6QfQI3yc89WrpX+Rcm+FlUxQnlMBz0DRNF6vcqoa36s3Hc
+         BFHJsjJkTYrgLFolAZa6jPoqh8PJ/2+ApZV1nmHW/RtgT1lptFl7FTZgEkrMdo+VWAZx
+         AKXuSfH/Pk9ZqE3oFT12jkD7gYSndil7PdM0cCWZOM3SEBwxXYPGP0J4ga7bjG4sqr0S
+         ypypgop6Tvvr7ZRRJ6ni8qdhzJdwHoG+vMjmDpVlqfgh3wmcjXCLefvugvKDbwMnaXkk
+         nblINGuI9jBZoWmz+auVpSTFUSfMRlgBsMD5ooyHz2zjGe0CaqiQDrL99Y6c55yzPHrn
+         6Lrw==
+X-Forwarded-Encrypted: i=1; AKwUvBz5ctJfGlh/IxmmNYg5kkIuy9rqGfV9a2f4thHb0NH4kSHvLwJnK6xiFEzL36rqXtjHhJb40McrFYGpgg==@lists.linux.dev
+X-Gm-Message-State: AFq9FYJ0MvoHLVN/Cs0OuFgRFAdbosZ4lIU+b/R4iANri0R8rvel64dF
+	ZpfJ/hSe7Rl/kIm2kJJszM0hVdxOAwt37NjNvBi1ZszU1/PPiQxQMMIEtwg+EgS19nVwI1GNImr
+	9CtHqO9mf1y3Q/OykFgYEvu8aWg6RCxQ=
+X-Gm-Gg: AYBFou1ITu6fU/R8vh+uTvYrMe91ThdKNeZsr6RKUyq+eRzUj94Sn7BXCFl52P2Xxa9
+	LfRTTpQpuhRqv61wWLMMpYgdRGem26kcFOmBBPV1PfD7fm6p3WLolrN9srKsfdy4N5eAubJRwOT
+	+jAvCGoPAT1v0fELKKD51eAhFFAumJ6QdB8YUl4JYCDf0MZvnFn0Ocr1leBPC+sQthTGevSe5+M
+	UWgLajwPtd6WbP5SAEQEIoCwxsJe5j0lMyV3gqStliPT07Iv4FZlaHlUxbWCDJUDTJSDotYOr7Q
+	d3kOI0R2aFg6VZI5BVG/PY6fp02HnwFDe1mxkln1Fz9uRFS/lKQ/Z/71aXHR2gF9Jeo7dM1n96v
+	fTAZcnBHowMxKzBa36R58LR6YXwhzeLCQ92c2oN6/gOm49KLDpweEm/n+yQeHq60rmlEuY3sGQh
+	WDXGckr9G/NEbO0Qh5siJf9CgMBETSy2L2/hr/vBL+ugS5Q+A3
+X-Received: by 2002:a05:6a21:9cc5:b0:3e3:37ff:378d with SMTP id
+ adf61e73a8af0-3e9289d48b6mr7780763637.40.1793592430971; Sun, 01 Nov 2026
+ 20:07:10 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -105,43 +104,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261031032449.3536559-1-jjc@jclark.com>
+References: <179301363708.752130.11323881261715222213@pm.me>
+In-Reply-To: <179301363708.752130.11323881261715222213@pm.me>
+From: Bui Duc Phuc <phucduc.bui@gmail.com>
+Date: Mon, 2 Nov 2026 11:06:59 +0700
+X-Gm-Features: AclHuK-Gw2LzF3mHyz4xOxxQKV5R0e0KWfeLN-nORpS70vKs3u59r3GyDfpcj_w
+Message-ID: <CAABR9nF+HekdvUboATGc71JJcA-DgYdzQVBzqb_-wx3QbvbhjQ@mail.gmail.com>
+Subject: Re: [REGRESSION] ASoC: rt721-sdca: runtime resume fails with -ENODATA
+ since v7.3, jack PCMs cannot be opened
+To: Robin Everaars <robineveraars@pm.me>
+Cc: Egor Poderiagin <egor@crazyrussian.pro>, Oder Chiou <oder_chiou@realtek.com>, 
+	Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Matthew Schwartz <matthew.schwartz@linux.dev>, Pengpeng Hou <pengpeng@iscas.ac.cn>, 
+	linux-sound@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Oct 31, 2026 at 10:24:49AM +0700, James Clark wrote:
-> On Fri, 30 Oct 2026 15:41:34 +0000, sashiko-bot@kernel.org wrote:
-> > However, err_pre_probe only invokes udriver->disconnect(udev) and does not
-> > undo usb_generic_driver_probe(udev) or usb_autoresume_device(udev) the way
-> > usb_unbind_device() does:
-> [...]
-> > Similarly, on the -ENODEV fallback path where udev->use_generic_driver is set
-> > to 1 and usb_probe_device() returns -EPROBE_DEFER, won't leaving
-> > usb_generic_driver_probe(udev) and usb_autoresume_device(udev) in place cause
-> > the subsequent usb_generic_driver probe to call usb_generic_driver_probe() a
-> > second time and emit a duplicate USB_DEVICE_ADD notification without an
-> > intervening USB_DEVICE_REMOVE?
-> 
-> Both of Sashiko's points are correct, but both are pre-existing and this
-> patch does not change them.
-> 
-> Before the patch, a probe() failure returned straight after
-> usb_generic_driver_probe() had run, with neither the configuration nor
-> the runtime PM reference undone. That has been so since commit
-> c9d503370f24 ("USB: Make it possible to "subclass" usb_device_driver").
-> The -ENODEV fallback has re-run the generic probe under
-> usb_generic_driver since commit 88b7381a939d ("USB: Select better
-> matching USB drivers when available").
-> 
-> The patch deliberately handles a pre_probe() error other than
-> -EPROBE_DEFER exactly as it handles the same error from probe(), so that
-> the fallback keeps working. This is stated in the kerneldoc. The only
-> new code on the error path is the disconnect() call, which undoes what
-> pre_probe() set up. A complete unwind in usb_probe_device() would be a
-> separate change.
+Hi all,
 
-Since your new pre_probe() will interact with the bugs mentioned by 
-Sashiko, perhaps you could submit a patch series which implements 
-pre_probe() _and_ fixes those bugs?
+>> 7a0886826308 ("ASoC: codecs:
+>> rt721-sdca-sdw: Propagate regcache_sync() errors"), later simplified by
+>> 2df329044c61, makes the resume return that error.
 
-Alan Stern
+Thanks Egor for the detailed report, and Robin for confirming it.
+
+I wrote 2df329044c61. Besides simplifying the error path, it dropped
+the regcache_mark_dirty() calls there. The commit message calls them
+redundant, but they also set no_sync_defaults, so with them a retry
+would skip entries still at their defaults. Without them, every retry
+writes the whole cache back again, defaults included, and fails on
+PDE23 again. I still think dropping them is right: after a failed sync we can't
+assume the hardware is at its defaults, so writing everything back is
+the safe choice.
+
+Adding regcache_mark_dirty() back might make retries pass, but only
+because the rejected registers still have their default values. I
+have only looked at the code, not tested it. The first resume would
+still fail, so I don't think it fixes the cause.
+
+I think the real problem is that the sync writes registers the codec
+does not accept. This was already happening before 7a0886826308, the
+error was just ignored. regcache_reg_needs_sync() does not sync
+registers that are not writable, but rt721 has no writeable_reg, so
+regmap treats all registers as writable.
+
+Maybe rt721 should have a writeable_reg callback. But I don't have
+the datasheet, so I don't know which registers should be left out.
+In Egor's traces PDE23 REQ_POWER_STATE is rejected. Can Realtek tell
+us which registers can be written on rt721?
+
+Egor's patch looks like a good minimal fix to me in the meantime.
+
+Best regards,
+Phuc
