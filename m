@@ -1,100 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.215.180
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793592432;
-	b=kg5isSUt6MIeLx293xYOj+lJ4ZNcFBcfZEr5cdusLeYtDFWyfe3ilv9vPDyWmNxxRJoc
-	 oUjLoY93pWwfv/Tvphvmv54ZVzsDjm9smC1c/lYU7dtknhWf8syyM2RI1RosVMOSSBZ0S
-	 JitXAF5Tm39QB8bU2og6bzWWnwxQZ5EfeCov9B8prI2MYCYtNaPk10Eco7CH1qUsDM8D3
-	 Xc2w/W1LZMLgin6WyVjdA0FMrbNXvDYKvlL3kFldW1Yucmq8fm5daT6QzBM5MMIAyZbwB
-	 AqoBKHrC+sHn3bMO8DLxyOOZ2184SM2z5ZTwx6PaTMA18qLH7eFiRUYp9Hc+8IwcFKQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793592432;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
-	b=TKizTpVAqO+fBhoiaySPFuHdQrNKEhO524p6fC9sqznE0TDHcPgeNPRnnUA3ordu1ftt
-	 xYNkRszT2C5uzYS4x06JXO0bUuJ/tcxXtiNrbHG293cHGOXRqiWuKYvvZCJGAL/gxImsY
-	 7gE2tEyzkhqDNIwaYAIoZZUYse0eoo86TYtGpB49OmHP74cxAdICtdD8h15ycFXHe7yRw
-	 dLf6BrX2Ac9Y3kwAgZcQVYdOhKrWLoGdBEIXCdGttSJUk0yxVCIilxa++Gu9+V5k9A8dB
-	 cHXKwKgnxhbKEdvus1hRK0s2nz/7P1C79M8O2NESvVOt46/VbTa6cOZRrhqxoVPPxyg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hMJsALto;
-	arc=fail smtp.remote-ip=209.85.215.180
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=141.30.67.75
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793601543;
+	b=xMOrZvHlxX8N7ittrRTrxC6bB/3b8Xfvn4+l+4FaycsXH6lYtWSdYUvOeIWzj5X87dVD
+	 cKXX3yt1tw6oApfZ54oSc70OFV5F6w1CZSCfEP3gIxM1hikPnS1S5ZsIujU6M6UHnFCLY
+	 1BLUBOdsKRswnWpzktXQN86lV/TDXvMWAxD7MYETo28X3ZxR4oyeUcJFK+Ey8KTInm3/A
+	 qqo0j89sj3dmQwW56Po17eSlqAXZnjOcE9sApSYkHCUWJntRGWTMVRc4EOfC8DNRGqwWW
+	 zP7AV36Sa7RKMk8+fhNGZDPFOxGATQ5UPYsGfDc/ZigI/+naBhziYTvBAdYrJ4MxaTw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793601543;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:From:Subject:To:CC:Content-Language:
+	 Content-Type:X-ClientProxiedBy:X-TUD-Virus-Scanned;
+	bh=Z7gv3iZUTwLIWicTYmdR54ICXdcED0IqhBUuHFmfCz8=;
+	b=Wp4ncM7g5Ms7T1osj0RVM/dgZeLTDoRG3N2DVXHbmWs9Of33teTadw6FjpLhVxEq1fdL
+	 b5qY4yMxKYeJNZa227cf+BsloI+mmgEbidLd+ZS4MDacUcCl7Ws3KQWDQWyTyi0CUWQBt
+	 e7PSayRljw4GMuoRp9NCSowAsZ/6Yfb+XuTVXZMlTlubG4N+KOj/bj8Es3LhGQIe/x5G5
+	 BcKGkSCWNsP4fJB1HgY5kfZkixWbaSbkmEzs2qH5x5Ub6IQbiahWX0IB3dHHLdYCydrK5
+	 zB4TAmvHmeOGIUty0uhMS5Cwi8qZ4BzP3KeU/BtPAX7MXjgYxqY6NPyNUqP+7MsXUzg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=tu-dresden.de;
+	spf=pass smtp.mailfrom=tu-dresden.de;
+	dkim=pass header.d=tu-dresden.de header.i=@tu-dresden.de header.a=rsa-sha256 header.s=dkim2022 header.b=UQXFrvLy;
+	arc=none smtp.remote-ip=141.30.67.75
+Received: from mailout4.zih.tu-dresden.de (mailout4.zih.tu-dresden.de [141.30.67.75])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5741606A324
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 04:07:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A5741606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FBE606A32C
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 06:39:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01FBE606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-dresden.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-dresden.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hMJsALto
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cd69954c755so1817421a12.3
-        for <regressions@lists.linux.dev>; Sun, 01 Nov 2026 20:07:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793592431; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BIZSC2XHKKph8QR/yIlEVqQyjoX4e22LuKa6Y36EtgDYOs5w3yRrjEPAis+s16Y7st
-         mi4hobKEgIXrbWGYPJ4fiuzI7aAz81RzWnnAFaX3yCbDhBNHM+lcUwLsQmhpUcWrJSfC
-         EoNhT6C+VwYmqXf5JKm72hPhmR9Gex//F11BJ06sBrRPXjwFiPquWNx3ZOrdYVldu/b2
-         pMALW+m/6x4cyfbJ7R+oBGRz7pvt7db9jQS1WlEoRXnRQUJFZVAg7hDiYHQLG6p4a8na
-         JR8+9cpd4hWsYzcUxmYH2OVrmXd1bD7GVyEbEyZ1lR2IPl6YoDu19PErayXBrLvFxuZ0
-         QMow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
-        fh=0ymvY+FodRk8JSLn4x2G7ryhreiGyTd8oe9ygmdr7NA=;
-        b=IIwLrBOiqP4RWOLMXJAXzZr4IoX/sZ8U3C1YPTfFPfdaY2Jic4uv9qoz0Ehg3ysxjB
-         mjULhGQMoGJELshJGg9PTXs4KczkiRR4dbEkwzrGXg9solBBM5Yg1MyZOg5v09dVpCNR
-         eOREW9AiWeoHXOWMwVE+xWBtx90hTEIJrtXGOmgPyAYgSg9F8vkTwok+pCbQWeoD42ZL
-         hqatiuQzlgwFED0DaQ/cvlC4v985yjYuNLkUnz4JFYJoCul19teQMKYrkUPJ9Ah7IXM2
-         oE9XdfDl7ceDmesRuDY3xZroCLNOAUH09WI7lQPeySBwKTuoMTZ21dhAt98+tuQplO1P
-         1bvw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793592431; x=1794197231; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
-        b=hMJsALtofgtZFDNN5qpdvuiJsSguK3cCoFG5JDPKQyL+cD3c3jN3ikg4nvtwVOAGaX
-         YRwXXpnvcorxVeTWJtlbYC+pfYcv4+DMO/o0o2rLefNdSHpoiC3HJeCLsD0+aRCngWmd
-         UeOEmcsEVoxOIOUAaWEb7PMxB06upvw5e4riqitlLM6V2k7tpt1Vgfebv010yq04/wNB
-         SivPXUQ7wD90hOBhW2wVB5dljHZ35oJHTbv4W+Pz6S4j0HngazZqpAMBGtPgF6HgYfUO
-         42CiEWC5IHBHt9SV+fEw+28l4PjhCIzrWFcx4MtnJwjIu1dsQFWXIbzqIvx8JkyRrwv5
-         ZfrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793592431; x=1794197231;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=VEjO7c3R3X2bsEgV7r7+JsM+DEZrXYUHNQTP6ex/oYk=;
-        b=l5BYiQw00yBIoOYW6ZlF6QfQI3yc89WrpX+Rcm+FlUxQnlMBz0DRNF6vcqoa36s3Hc
-         BFHJsjJkTYrgLFolAZa6jPoqh8PJ/2+ApZV1nmHW/RtgT1lptFl7FTZgEkrMdo+VWAZx
-         AKXuSfH/Pk9ZqE3oFT12jkD7gYSndil7PdM0cCWZOM3SEBwxXYPGP0J4ga7bjG4sqr0S
-         ypypgop6Tvvr7ZRRJ6ni8qdhzJdwHoG+vMjmDpVlqfgh3wmcjXCLefvugvKDbwMnaXkk
-         nblINGuI9jBZoWmz+auVpSTFUSfMRlgBsMD5ooyHz2zjGe0CaqiQDrL99Y6c55yzPHrn
-         6Lrw==
-X-Forwarded-Encrypted: i=1; AKwUvBz5ctJfGlh/IxmmNYg5kkIuy9rqGfV9a2f4thHb0NH4kSHvLwJnK6xiFEzL36rqXtjHhJb40McrFYGpgg==@lists.linux.dev
-X-Gm-Message-State: AFq9FYJ0MvoHLVN/Cs0OuFgRFAdbosZ4lIU+b/R4iANri0R8rvel64dF
-	ZpfJ/hSe7Rl/kIm2kJJszM0hVdxOAwt37NjNvBi1ZszU1/PPiQxQMMIEtwg+EgS19nVwI1GNImr
-	9CtHqO9mf1y3Q/OykFgYEvu8aWg6RCxQ=
-X-Gm-Gg: AYBFou1ITu6fU/R8vh+uTvYrMe91ThdKNeZsr6RKUyq+eRzUj94Sn7BXCFl52P2Xxa9
-	LfRTTpQpuhRqv61wWLMMpYgdRGem26kcFOmBBPV1PfD7fm6p3WLolrN9srKsfdy4N5eAubJRwOT
-	+jAvCGoPAT1v0fELKKD51eAhFFAumJ6QdB8YUl4JYCDf0MZvnFn0Ocr1leBPC+sQthTGevSe5+M
-	UWgLajwPtd6WbP5SAEQEIoCwxsJe5j0lMyV3gqStliPT07Iv4FZlaHlUxbWCDJUDTJSDotYOr7Q
-	d3kOI0R2aFg6VZI5BVG/PY6fp02HnwFDe1mxkln1Fz9uRFS/lKQ/Z/71aXHR2gF9Jeo7dM1n96v
-	fTAZcnBHowMxKzBa36R58LR6YXwhzeLCQ92c2oN6/gOm49KLDpweEm/n+yQeHq60rmlEuY3sGQh
-	WDXGckr9G/NEbO0Qh5siJf9CgMBETSy2L2/hr/vBL+ugS5Q+A3
-X-Received: by 2002:a05:6a21:9cc5:b0:3e3:37ff:378d with SMTP id
- adf61e73a8af0-3e9289d48b6mr7780763637.40.1793592430971; Sun, 01 Nov 2026
- 20:07:10 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=tu-dresden.de header.i=@tu-dresden.de header.a=rsa-sha256 header.s=dkim2022 header.b=UQXFrvLy
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=tu-dresden.de; s=dkim2022; h=Content-Type:CC:To:Subject:From:MIME-Version:
+	Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Z7gv3iZUTwLIWicTYmdR54ICXdcED0IqhBUuHFmfCz8=; b=UQXFrvLyAgcRJDGtfQjdRF3C+V
+	gOHUAVqFfRvbUrFCf/hGpPn+kyR7tlZJyoNaXkh7rqrrjM2ECy1bHMKwtgKtVzG7lF2ShzJlQTFcy
+	ElMbzUtpNSK8d4uEWPDAled/1RvGYl0YshDZUVDXGVmC4WhNC+1kdDuuqQB1IbnoXgaSMYyI/HS0C
+	jw7gq300tsKSf4N9KHLn2Dg+vCBSBKUD045WQdSU5O9vKjzUXv855gHk3k7uQiMuzls//MqrZgckK
+	79B7Jm4pcmivUeUm8SWYg9XZTSksmzPGpD3lj2asHuEJHokCfz6U6/Rh9pf/HZ4SRpNe9XH60rNCx
+	wRyGw/fA==;
+Received: from msx-l422.msx.ad.zih.tu-dresden.de ([172.26.34.142] helo=msx.tu-dresden.de)
+	by mailout4.zih.tu-dresden.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ulf.markwardt@tu-dresden.de>)
+	id 1xNlh1-003EOs-0N;
+	Mon, 02 Nov 2026 07:38:59 +0100
+Received: from [141.30.248.192] (141.76.13.149) by
+ msx-l422.msx.ad.zih.tu-dresden.de (172.26.34.142) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56; Mon, 2 Nov 2026 07:38:43 +0100
+Message-ID: <aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de>
+Date: Mon, 2 Nov 2026 07:38:39 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,57 +66,191 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <179301363708.752130.11323881261715222213@pm.me>
-In-Reply-To: <179301363708.752130.11323881261715222213@pm.me>
-From: Bui Duc Phuc <phucduc.bui@gmail.com>
-Date: Mon, 2 Nov 2026 11:06:59 +0700
-X-Gm-Features: AclHuK-Gw2LzF3mHyz4xOxxQKV5R0e0KWfeLN-nORpS70vKs3u59r3GyDfpcj_w
-Message-ID: <CAABR9nF+HekdvUboATGc71JJcA-DgYdzQVBzqb_-wx3QbvbhjQ@mail.gmail.com>
-Subject: Re: [REGRESSION] ASoC: rt721-sdca: runtime resume fails with -ENODATA
- since v7.3, jack PCMs cannot be opened
-To: Robin Everaars <robineveraars@pm.me>
-Cc: Egor Poderiagin <egor@crazyrussian.pro>, Oder Chiou <oder_chiou@realtek.com>, 
-	Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Matthew Schwartz <matthew.schwartz@linux.dev>, Pengpeng Hou <pengpeng@iscas.ac.cn>, 
-	linux-sound@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Ulf Markwardt <ulf.markwardt@tu-dresden.de>
+Subject: Infiniband PKEY Regression 6.12.115
+To: <stable@vger.kernel.org>
+CC: <regressions@lists.linux.dev>
+Content-Language: en-US
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+	micalg=sha-512; boundary="------------ms090703080505070600000709"
+X-ClientProxiedBy: MSX-T414.msx.ad.zih.tu-dresden.de (172.26.35.134) To
+ msx-l422.msx.ad.zih.tu-dresden.de (172.26.34.142)
+X-TUD-Virus-Scanned: mailout4.zih.tu-dresden.de
 
-Hi all,
+--------------ms090703080505070600000709
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
->> 7a0886826308 ("ASoC: codecs:
->> rt721-sdca-sdw: Propagate regcache_sync() errors"), later simplified by
->> 2df329044c61, makes the resume return that error.
+RGVhciBMaW51eCBEZXZlbG9wZXJzLA0Kd2UgYXJlIHJ1bm5pbmcgNi4xMi54IGtlcm5lbHMg
+d2l0aCBBbG1hTGludXggOS44IGFzIE9TIG9uIHNvbWUgSFBDIGNsdXN0ZXJzLg0KIEZyb20g
+Ni4xMi4xMTQgdG8gNi4xMi4xMTUgd2UgZXhwZXJpZW5jZSB0aGlzIHJlZ3Jlc3Npb24gb24g
+YSBjZXJ0YWluIGhvc3QgdHlwZToNCg0KVGhlIEluZmluaUJhbmQgUF9LZXkgdGFibGVzIGRv
+IG5vdCBnZXQgcG9wdWxhdGVkIGJ5IHRoZSBTTSAob3BlbnNtKSB3aGVuDQpib290aW5nIGtl
+cm5lbCA2LjEyLjExNS4gQWxsIElQb0lCIGNoaWxkIGludGVyZmFjZXMgdGhhdCByZXF1aXJl
+IGEgc3BlY2lmaWMgUF9LZXkNCihlLmcuIDB4ODAwMSwgMHg4MDAyKSBmYWlsIHdpdGggIlBf
+S2V5IG5vdCBmb3VuZCIuIFdpdGgga2VybmVsIDYuMTIuMTE0IHRoZQ0KUF9LZXkgdGFibGVz
+IGdldCBwb3B1bGF0ZWQgYW5kIGFsbCBJUG9JQiBzdWJpbnRlcmZhY2VzIGNvbWUgdXAgYXQg
+Ym9vdCB0aW1lLg0KDQogICAqIEtlcm5lbCBjb25maWcgaXMgaWRlbnRpY2FsIGJldHdlZW4g
+LjExNCBhbmQgLjExNS4NCiAgICogVGhlIHByb2JsZW0gaXMgTk9UIGRyaXZlci1yZWxhdGVk
+IChyZXByb2R1Y2VzIHdpdGggYm90aCBET0NBIE9GRUQgYW5kIGluLWtlcm5lbA0KICAgICBt
+bHg1IGRyaXZlcnMpLg0KICAgKiBPbiBhbm90aGVyIGhvc3QgaW4gdGhlIHNhbWUgSUIgZmFi
+cmljLCB3aXRoIHRoZSBzYW1lIFBfS0VZIHNldHVwLCBJIGNhbiBydW4gLjExNQ0KICAgICB3
+aXRob3V0IHByb2JsZW1zOg0KICAgICAgIG8gT0sgd2l0aCBub2RlIGk3MDEwOiAqb25seSAx
+IEhDQSogQ29ubmVjdFgtNg0KICAgICAgIG8gUHJvYmxlbSB3aXRoIG5vZGUgYzExOiAqNCBI
+Q0FzICpDb25uZWN0WC03DQogICAqIFRoZSBwcm9ibGVtIGlzIE5PVCB0aGUgU006DQogICAg
+ICAgbyBubyBwcm9ibGVtIGlmIEkgYm9vdCB0aGUgbm9kZSAoYzExKSB3aXRoIGtlcm5lbCAu
+MTE0IGluc3RlYWQgb2YgLjExNS4NCiAgICAgICAgICh3aXRob3V0IGFueSBvdGhlciBjaGFu
+Z2VzKQ0KICAgICAgIG8gcGFydGl0aW9uIHBvbGljeSBpcyBzZXQgd2l0aA0KICAgICAgICAg
+ICAgIHxwb3J0LXJlZ2V4cDogXmNbMC05XXsxLDN9fCAuLi4gYW5kDQogICAgICAgICAgICAg
+fHBvcnQtcmVnZXhwOiBeaTdbMC05XXszfXwgLi4uDQogICAqIFRoaXMgc3VnZ2VzdHMgdGhl
+IHByb2JsZW0gbWF5IGJlIHJlbGF0ZWQgdG8gTVVMVEktSENBIHN5c3RlbXM6IHdoZW4gbXVs
+dGlwbGUNCiAgICAgbWx4NSBIQ0FzIGluaXRpYWxpemUgc2ltdWx0YW5lb3VzbHkNCiAgICog
+V2l0aCB0cmlnZ2VyaW5nIGEgaGVhdnkgc3dlZWwgKHxraWxsIC1IVVAgJChwaWRvZiBvcGVu
+c20pfCkgdGhlIFBfS0VZIHRhYmxlcyBnZXQNCiAgICAgcG9wdWxhdGVkLCBhbmQgdGhlIG5v
+ZGUgYzExIHdpdGggdGhlIC4xMTUga2VybmVsIGNhbiB1c2UgdGhlIHN1YmludGVyZmFjZXMN
+CiAgICAgKHVudGlsIG5leHQgYm9vdCkuDQoNClJlbGV2YW50IGRtZXNnIGxpbmVzIChrZXJu
+ZWwgLjExNSwgYnJva2VuKToNCg0KWyAgIDI0Ljk4NzI4MV0gbWx4NV9jb3JlIDAwMDA6MjM6
+MDAuMCBtbHg1XzI6IFBvcnQ6IDEgTGluayBBQ1RJVkUNClsgICAyNS40NjUxMDZdIG1seDVf
+Y29yZSAwMDAwOjAzOjAwLjAgbWx4NV8zOiBQb3J0OiAxIExpbmsgQUNUSVZFDQpbICAgMjYu
+MDc4NTMxXSBtbHg1X2NvcmUgMDAwMDpjMzowMC4wIG1seDVfNDogUG9ydDogMSBMaW5rIEFD
+VElWRQ0KWyAgIDI2LjA3ODU3Nl0gbWx4NV9jb3JlIDAwMDA6YTM6MDAuMCBtbHg1XzU6IFBv
+cnQ6IDEgTGluayBBQ1RJVkUNCg0KWyAgIDMxLjc4NzI0Ml0gaWJwMTYzczAuODAwMjogUF9L
+ZXkgMHg4MDAyIGlzIG5vdCBmb3VuZA0KWyAgIDMxLjgwMzQwMV0gaWJwMTYzczAuMDAwMTog
+UF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDMyLjA3OTY0NF0gaWJwMTk1czAuODAw
+MjogUF9LZXkgMHg4MDAyIGlzIG5vdCBmb3VuZA0KWyAgIDMyLjA5NzgyMF0gaWJwMTk1czAu
+MDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDMyLjM3MDQzOV0gaWJwMzVz
+MC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpbICAgMzIuMzg2MTU1XSBpYnAz
+NXMwLjAwMDE6IFBfS2V5IDB4ODAwMSBpcyBub3QgZm91bmQNClsgICAzMi42NTkyMjVdIGli
+cDNzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpbICAgMzIuNjc0NjQyXSBp
+YnAzczAuMDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KDQpbICAgNDMuMDQ5Mzk3
+XSBpYnAzczAuMDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDQ1LjQ4Njgz
+NV0gaWJwM3MwLjgwMDI6IFBfS2V5IDB4ODAwMiBpcyBub3QgZm91bmQNClsgICA0Ny44OTky
+OTRdIGlicDM1czAuMDAwMTogUF9LZXkgMHg4MDAxIGlzIG5vdCBmb3VuZA0KWyAgIDUwLjI4
+MjYyMV0gaWJwMzVzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpbICAgNTIu
+NDkyMTM2XSBpYnAxNjNzMC4wMDAxOiBQX0tleSAweDgwMDEgaXMgbm90IGZvdW5kDQpbICAg
+NTQuNzE2MzQ1XSBpYnAxNjNzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZvdW5kDQpb
+ICAgNTYuOTIwMTQzXSBpYnAxOTVzMC4wMDAxOiBQX0tleSAweDgwMDEgaXMgbm90IGZvdW5k
+DQpbICAgNTkuMTU3MjAwXSBpYnAxOTVzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90IGZv
+dW5kDQpbICAgNTkuMTkzNzU5XSBpYnAxOTVzMC44MDAyOiBQX0tleSAweDgwMDIgaXMgbm90
+IGZvdW5kDQoNClRpbWVsaW5lIGFuYWx5c2lzIChkb25lIGJ5IEFJKToNCi0gUG9ydHMgTGlu
+ayBBQ1RJVkUgYXQgdD0yNC45LTI2LjFzIChTTSBhc3NpZ25zIExJRHMsIHBvcnQgaXMgdXAp
+DQotIElQb0lCIGNoaWxkIGludGVyZmFjZXMgY3JlYXRlZCBhdCB0PTMxLjhzIC0gNi44IHNl
+Y29uZHMgYWZ0ZXIgcG9ydC11cA0KLSBJUG9JQiByZXRyaWVzIFBfS2V5IGxvb2t1cCBmb3Ig
+MjcuNCBzZWNvbmRzICh0PTMxLjhzIC0+IDU5LjJzLCBldmVyeSB+Mi40cykNCi0gSW50ZXJm
+YWNlcyBnaXZlIHVwIGF0IHQ9NTkuMnMgLSBzdGF5IERPV04gcGVybWFuZW50bHkNCi0gVGhl
+IFNNIG5ldmVyIHdyaXRlcyBQX0tleSB0YWJsZXMgZHVyaW5nIHRoaXMgZW50aXJlIHdpbmRv
+dw0KLSBPbmx5IGEgaGVhdnkgc3dlZXAgcG9wdWxhdGVzIHRoZSBQX0tFWSB0YWJsZXMuDQoN
+CkkgY2FuIHByb3ZpZGUgYWRkaXRpb25hbCBpbmZvcm1hdGlvbiAoanVzdCB0ZWxsIG1lIHdo
+YXQgdG8gZG8pLg0KV2UgYXJlIGluIGEgcHJvZHVjdGlvbiBlbnZpcm9ubWVudCwgYnV0IGhh
+dmUgc29tZSBsZWV3YXkgZm9yIGV4cGVyaW1lbnRzLg0KSSBob3BlIHlvdSBjYW4gZml4IHRo
+aXMgcHJvYmxlbSB3aXRoIG9uZSBvZiB0aGUgbmV4dCByZWxlYXNlcy4NCg0KVGhhbmsgeW91
+IHZlcnkgbXVjaCwNClVsZg0KDQotLSANCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCkRyLiBVbGYgTWFya3dh
+cmR0DQpHcnVwcGVubGVpdGVyIEhQQyBTZXJ2aWNlcw0KDQpUZWNobmlzY2hlIFVuaXZlcnNp
+dMOkdCBEcmVzZGVuDQpaZW50cnVtIGbDvHIgSW5mb3JtYXRpb25zZGllbnN0ZSB1bmQgSG9j
+aGxlaXN0dW5nc3JlY2huZW4gKFpJSCkNCkQtMDEwNjIgIERyZXNkZW4NCg0KVGVsLjogICAr
+NDkgMzUxIDQ2My0zMzY0MA0KRS1NYWlsOnVsZi5tYXJrd2FyZHRAdHUtZHJlc2Rlbi5kZQ0K
+DQo=
 
-Thanks Egor for the detailed report, and Robin for confirming it.
+--------------ms090703080505070600000709
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: Kryptografische S/MIME-Signatur
 
-I wrote 2df329044c61. Besides simplifying the error path, it dropped
-the regcache_mark_dirty() calls there. The commit message calls them
-redundant, but they also set no_sync_defaults, so with them a retry
-would skip entries still at their defaults. Without them, every retry
-writes the whole cache back again, defaults included, and fails on
-PDE23 again. I still think dropping them is right: after a failed sync we can't
-assume the hardware is at its defaults, so writing everything back is
-the safe choice.
-
-Adding regcache_mark_dirty() back might make retries pass, but only
-because the rejected registers still have their default values. I
-have only looked at the code, not tested it. The first resume would
-still fail, so I don't think it fixes the cause.
-
-I think the real problem is that the sync writes registers the codec
-does not accept. This was already happening before 7a0886826308, the
-error was just ignored. regcache_reg_needs_sync() does not sync
-registers that are not writable, but rt721 has no writeable_reg, so
-regmap treats all registers as writable.
-
-Maybe rt721 should have a writeable_reg callback. But I don't have
-the datasheet, so I don't know which registers should be left out.
-In Egor's traces PDE23 REQ_POWER_STATE is rejected. Can Realtek tell
-us which registers can be written on rt721?
-
-Egor's patch looks like a good minimal fix to me in the meantime.
-
-Best regards,
-Phuc
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
+Dj0wggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
+HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
+QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
+NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
+ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
+7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
+yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
+QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
+5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
+S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
+LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
+wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
+Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
+yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
+v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
+HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
+KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
+dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
+bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
+MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
+ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
+BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
+lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
+gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
+KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
+otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
+KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
+G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
+XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
+lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
+3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggdPMIIFN6AD
+AgECAhEAmkSPPUwO1DXs/EDCpH/twDANBgkqhkiG9w0BAQwFADBGMQswCQYDVQQGEwJOTDEZ
+MBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0Eg
+NDAeFw0yNDEyMDkwMDAwMDBaFw0yNjEyMDkyMzU5NTlaMIHCMQswCQYDVQQGEwJERTEQMA4G
+A1UECBMHU2FjaHNlbjEoMCYGA1UEChMfVGVjaG5pc2NoZSBVbml2ZXJzaXRhZXQgRHJlc2Rl
+bjERMA8GA1UEYRMIR09WREUrU04xKjAoBgkqhkiG9w0BCQEWG3VsZi5tYXJrd2FyZHRAdHUt
+ZHJlc2Rlbi5kZTESMBAGA1UEBBMJTWFya3dhcmR0MQwwCgYDVQQqEwNVbGYxFjAUBgNVBAMT
+DVVsZiBNYXJrd2FyZHQwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDElJs+kF+T
+G6kwO6RM0QSGZ4RHl637aMMJjVrmnz00NVfHjora9wx2bjl89NHGBCBxrknlke6EhhxGupTy
+mcw7Iwj+kEbh4mEapCO5TEhKd9fZF2zEcXFtcYQyOkZjbPiqy7FOi7+WTGIuw3npJ7VxFY+Z
+lgoJLeuZManEf0kNMvlneCGVCEEQF9+Z1BybGnl2lewDKB0eD4B0Cw9oSpDBFWPgkJuVfxBW
+FXKVjHjtEo0tUQdKVaa/rZXRwVTZn/g8Z6R6JqJDqUeWAkRUUPZApYl1JlcTHr3ubybxaB9e
+LOlhNKGEgoqG0LnNeBoYacV7NrUBngwhyHXppUDvJ2tFIypiiLzZEKJZadqPyUMEPYhMel5U
+cASStvN1oe9gqBiI7jBwjT6C5IlUVCHJcc+8fo2FaWCjIFFc7KEDYmuCT8nBGSVI1n4RQn8v
+Fmhx1WNwwfljqaPLl3q2pXS/hMKZDLSgGMTgn2k9B7Z+gH0rhaSAHH3fm463zv7EPtlyOqOl
+LnKfRXhV6UM1Uv3ksiFwQBIy4AUP8gQsN8vb7A1QS+UKFh3efJkCOr6KvvC3WnB7IzfiZuIP
+h66bTzU0c9CfpX/2rUhAxAFjA+eja4NRNEyvwx0ub8Xwuc39Yy/ZD0GFkCNcn/ns+YYBmrrd
+2vPBVO5djwBiQsQpZZADk2sXGwIDAQABo4IBuTCCAbUwHwYDVR0jBBgwFoAUaQChxyFY+ODF
+GyCwCt2nUb8T2eQwHQYDVR0OBBYEFME4P5woUkdtehAmPrhDT+qQ4+7EMA4GA1UdDwEB/wQE
+AwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjBQBgNV
+HSAESTBHMDoGDCsGAQQBsjEBAgEKBDAqMCgGCCsGAQUFBwIBFhxodHRwczovL3NlY3RpZ28u
+Y29tL1NNSU1FQ1BTMAkGB2eBDAEFAwIwQgYDVR0fBDswOTA3oDWgM4YxaHR0cDovL0dFQU5U
+LmNybC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNybDB4BggrBgEFBQcBAQRsMGow
+PQYIKwYBBQUHMAKGMWh0dHA6Ly9HRUFOVC5jcnQuc2VjdGlnby5jb20vR0VBTlRQZXJzb25h
+bENBNC5jcnQwKQYIKwYBBQUHMAGGHWh0dHA6Ly9HRUFOVC5vY3NwLnNlY3RpZ28uY29tMCYG
+A1UdEQQfMB2BG3VsZi5tYXJrd2FyZHRAdHUtZHJlc2Rlbi5kZTANBgkqhkiG9w0BAQwFAAOC
+AgEAauYNnnCxU2tUY3Ad7vmEUeqJ/WG7e2exROkdXRL9UBHJS/r2SSy6ILxKd1feym4RZijq
+lf1hM40VmFiexSwiUVYa8Pa3ap6/2FJfaRvidhHozUWOvtRNEs8cGcj/HAwbn2clGv83l2nr
+Imtuaa08FYHJ5i3nu9OQoLXkm1730pusr19XEe+I0ToO39IYSjAmnUHXBFT7feofx5Y4oKDr
+EMiQAFwqAMmcS5yvvSAbCZdoVROxe/+AG7rQnII+gGcrtYNLfwC+ts4sZB65Bxr/Knl2T0SS
+5iZFzkeCymD/Mj12RVpLAbAaiZqA1MeqU//eu1V2VWj0Uw0Zz4izanLF/x2TJ4zOKTkOkEgW
+iyW1v5m8HTryuYmFtyCb87kzNU93q6sIBd9rnJKw1M7AyILn58Xa8cyyfTfv19gdwASSesr1
+IUJ9NHWpoY9Pz8IxUMwKGKNC5ZUdEucH/uNHhwbpyG3wnnja0jjrU4HpjIHBGFln8mRwRrAq
+bctMGfSb1okV4U7d2cBmWj9mxt6RdIEcTN2YxI4CgUt39VLghZRs+g1VJ3BVOe4Ar5AqO8uz
+G+wPLvAYbN/I4RXFIP5TzILWgIJ+tAU0ItFe0v3fUQFtssiX5aEX1ZxIixpFiJ8DjModLW/t
+fbQTFa/m3cgPY7fYmL7GsF1vtBrd3Etqcyx6XMYxggVIMIIFRAIBATBbMEYxCzAJBgNVBAYT
+Ak5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25h
+bCBDQSA0AhEAmkSPPUwO1DXs/EDCpH/twDANBglghkgBZQMEAgMFAKCCAr4wGAYJKoZIhvcN
+AQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYxMTAyMDYzODQxWjBPBgkqhkiG
+9w0BCQQxQgRAK8UDYDUQJ0HHdYvQ9AIqHdSAutQX4CoklIrCGCUZpMhi+PuDlpSF6vla9dM6
+1SCdrMLAdTYoZfptJaqkxgMX0jBqBgkrBgEEAYI3EAQxXTBbMEYxCzAJBgNVBAYTAk5MMRkw
+FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
+AhEAmkSPPUwO1DXs/EDCpH/twDBsBgsqhkiG9w0BCRACCzFdoFswRjELMAkGA1UEBhMCTkwx
+GTAXBgNVBAoTEEdFQU5UIFZlcmVuaWdpbmcxHDAaBgNVBAMTE0dFQU5UIFBlcnNvbmFsIENB
+IDQCEQCaRI89TA7UNez8QMKkf+3AMIIBVwYJKoZIhvcNAQkPMYIBSDCCAUQwCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzANBggqhkiG9w0DAgIBBTANBggqhkiG9w0D
+AgIBBTAHBgUrDgMCBzANBggqhkiG9w0DAgIBBTAHBgUrDgMCGjALBglghkgBZQMEAgEwCwYJ
+YIZIAWUDBAICMAsGCWCGSAFlAwQCAzALBglghkgBZQMEAgQwCwYJYIZIAWUDBAIHMAsGCWCG
+SAFlAwQCCDALBglghkgBZQMEAgkwCwYJYIZIAWUDBAIKMAsGCSqGSIb3DQEBATALBgkrgQUQ
+hkg/AAIwCAYGK4EEAQsAMAgGBiuBBAELATAIBgYrgQQBCwIwCAYGK4EEAQsDMAsGCSuBBRCG
+SD8AAzAIBgYrgQQBDgAwCAYGK4EEAQ4BMAgGBiuBBAEOAjAIBgYrgQQBDgMwDQYJKoZIhvcN
+AQEBBQAEggIAKVEEXHc+S+fh4TjEmnaYGi89/rP77UXc845OPjpOouuYyAYTWgaeSQdTr/c4
+SRCzF1gU3WfPo/JFFvBCjCo+dDLoi5jIRhLes6aAcjkU/+GcLxDSiH3QyC5cb34irsM5sJME
+rddQNefSwj575+7bEHZ1Xn9hqhxn6U0ArrcSnB4INFk8DT5wv3rVJZIlt83LKmMyuMFBLmFT
+VQfABbnWtTgG8CVFdA1fw7KUG7SA7dUMWs+UBBIcivpWm5ZPJIzrS2+hMOzHhJknuIOyaD/V
+SS/sbEaGxIZE517H1l8/420VFn0PKpQd0B43vNFWVCGKmq0fKk0YLEqhAHV7a6m56FTwWYjV
+Oegtp3s+Xdwij2kViAmkxehS2uSSSZywS03JOeiK4rxGwWvp1qcWEnMT+W0eSA7chfz9Ps+s
+11ZpLSjLFLnGMWbPmWJHxU1c6hMPEMNGuEVa8mRtiUiIDeGHlAY2XndSTWUhoz7k/0BHjcAR
+qLg+/Llu6iQuErYe8NmnLBa2KiCTjh+5yd2N+7tuodrBzDlAdizKSt+q7HrGqpaoUGutkYiK
+utPXsg8BCRQLS1AS+liVL9g+3yPbU5/tjwlOFkYY3LgMFxUoQob7ak0ayewZcXwBN0PItvKa
+JzxTvDAIGGaTby3unx4LwwQ4f2lInRHOgwUavgzl7AKsjKwAAAAAAAA=
+--------------ms090703080505070600000709--
