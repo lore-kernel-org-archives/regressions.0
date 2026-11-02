@@ -1,48 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.103
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793618573;
-	b=Em7c4dAladHUDT8KyxvhSX5xBircCP2sPxITlAXFedGGMN6l1JHCjFG0/ikJBcetvyLH
-	 vjeTk8I7hJebSrQ60vYpMJ3dK0GTOocvT74ik5ze/xeKH6PMvcY2P2feoJD6F8QRSHj4u
-	 8KTTLOvJxHc1fbJHeL34p32Lg/SyjtCikXt1JB0EapJCgKlU474U6PsfooJSRACrv1TPF
-	 zZFNf3xGbvAg/MxwNukfdQeJafR2rxJ8IQzKG4qUj/GPlGmdr46l9SvCW5YPZzVFHqaiX
-	 bcatzHZCEjcHqNpSc2QX8YX858CxXDKHfM0oyG5+H2PdLhrIfXwIVfZsEBSnLyIOqUQ==
+	t=1793619378;
+	b=qhlCKMH9LiWdI0BLH3IgC/PNZprRRUpseVQG6PHDpkoMz515A2T/mI1W0cRdWuuZpgni
+	 slX4aQLhMpuQ9VukFcGcP0f5cnn/GZQx7/VwnB1BT5Fd0f9yuX220XZNlsQcZCG5HElYm
+	 EAIoAYGbt2qxgYJ9poIUxde2TAxbqAFbj/xRy44cVODGO1T2WgPtaOXRjg3eH48LmLvS2
+	 ODckOc9n9gCEugk9hzOEeWtu8sDCAnzjYdlEJETWlN/MCop5uBQ0ZfLbcGp0PypBwoewO
+	 L8ODQF84/imsLRUp4Mu7cS9WyXGfRzGUWhJsQUPmvBjlux8Cl8K19LhSnjRcOWQzL/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793618573;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=sd8pgkezC7ZcVn7+Uxgt0n5visYzPF1xvceS5f2PYO4=;
-	b=bfu+Djgn2uJYN2La/XJ4nXswO+Zo89Oy/oJBMIIcLsWQwR20fRLLA1ZyD0hXAC4IN+FI
-	 vJE+55CNiod9BdvWJrD8Ye69o6gGpnj4ja7o5pPa+pJ+tjBQPi8yzT6MlauooLgAVoDzl
-	 a2tJVC9c5yg5BSZJatLL5N+m4OMOiwKBWXmjXq1nf6/PTd9u70lYroFYWe2Cq7Z7cyecE
-	 M5ipq8Ttpd7bDihGlCeRRjae8w6kPuaT0cmZdlzQsyisVzGNMM/S+qColyyjuSSZHv91X
-	 BnqqPpni3Nt0wk/ShPX4GdGfOXw5IaJBUg/BAzDqvPBqjOwgOpgfE9u/HcmJz9mnSwA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793619378;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=AMs5lGNpxxs+yEame9hGaGR29jtnnZiG9iEQ8xGx50k=;
+	b=HQIZirWEtLU+5fIqcIPEYEzKUEOBHdFhQejRX2swKNqwUMSF3nM6xWIy4AXvEtBOMcHL
+	 vK/ByordpCbgVfdjoDkvGKE72VBH1BM0JQp3hJQO/UpRdI/PwI2Q9LLvpiW82g7TRv7MR
+	 uP9nybiTZI4Yldk46RVNbkR3VQHuZrTKyE3YuD3bN0jYpHZ65actZjAIwq/X+RDXV4vqe
+	 T2dyEDJc9u4LFrUda3PzLBTs43bHcU5y/qIqsHj3sTBseDZD6QZhhMLlYqIBU2ALTVOJB
+	 GEjXIiPZq4nALIwWvj8hefOjv35h9ksyj9DjTALlRHnDR3MAkHkezaAhz5lRaL/arcw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=pGKosGxF;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=V5+kM6Qp;
+	arc=none smtp.remote-ip=188.68.61.103
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFB5606A8B3;
-	Mon,  2 Nov 2026 11:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A519606A326
+	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 11:36:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A519606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=pGKosGxF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783D71F00A1A;
-	Mon,  2 Nov 2026 11:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1793618572;
-	bh=sd8pgkezC7ZcVn7+Uxgt0n5visYzPF1xvceS5f2PYO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=pGKosGxFrudNlcbW59RMsHe6tuTJpr4YZQiYTx5tweorjqyly2p/ZHW2n6kn+6tZ9
-	 7kOqYfdue7c5u1AI1ZTIUdDzm8Cw6QO4zpQfTBjwlPLNeBFC07SGTCC5A/M+ae5zbG
-	 EDZ0RMLAbxmgD7cepYd9aer/eI6+pzaYoGgbZSwc=
-Date: Mon, 2 Nov 2026 12:22:45 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ulf Markwardt <ulf.markwardt@tu-dresden.de>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Infiniband PKEY Regression 6.12.115
-Message-ID: <2026110214-property-unaligned-70bb@gregkh>
-References: <aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=V5+kM6Qp
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4jJ8l36jvSz8KBr;
+	Mon,  2 Nov 2026 12:35:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1793619311;
+	bh=FwhdT9DbUMYiVaSPZxWHymVeD0TBHBvHuIdw+gdl10w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V5+kM6Qp5PTYdAIeuqH0yH+NZnV1vbLY0PlWof2qY1W5oCt84fiA9aRUFzTbEYfiy
+	 Fj7ZW97vruIUILZCrZsQ0T6zdrY08QOc1Vp1m2KlGlyTtf+Z+5PoVrUTQuED4mdbV+
+	 aAUhbLbtog7sKE8cL9trM0J+YTG+AT2l6CDXbnByfOONXOk9M5zQj4aV4RbZSAiPhN
+	 IMnyzOSmScg083Zcx8nn9TUuzQqJ4sz68Cd5EcF2Dfz+nm3Z0hI4EgUvHVcqwzZGWm
+	 BVk/qgVBWHnKKZ/anb80Ix/rVk/8HkfZ75N2llMToJpvRz/7oAQqnfRMHDTRcqjzZO
+	 FS8u4ceHXWaEw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4jJ8l360qlz8KBP;
+	Mon,  2 Nov 2026 12:35:11 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jJ8l30j7Dz8tkH;
+	Mon,  2 Nov 2026 12:35:11 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4C3CB5F948;
+	Mon,  2 Nov 2026 12:35:06 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4e500063-d985-46b6-a0a1-3feaa77c4b2f@leemhuis.info>
+Date: Mon, 2 Nov 2026 12:35:04 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -52,24 +79,107 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ALSA: hda/tas2781: divide error on playback open
+ after accepting V1 calibration data without CRC (Lenovo Yoga Pro 9 16IRP8)
+To: med.jebabli@gmail.com, tiwai@suse.de
+Cc: linux-sound@vger.kernel.org,
+ Cristian Castellano <cristian.castellano@icloud.com>,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <179361930662.1245276.4844926124568559179@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 4C3CB5F948
+X-NC-CID: ye0FPkcKvoyeB+2G998DlD7CmBgL3dSm2kQpZugzaqbdCaH12Gg=
 
-On Mon, Nov 02, 2026 at 07:38:39AM +0100, Ulf Markwardt wrote:
-> Dear Linux Developers,
-> we are running 6.12.x kernels with AlmaLinux 9.8 as OS on some HPC clusters.
-> From 6.12.114 to 6.12.115 we experience this regression on a certain host type:
+On 10/27/26 23:21, Cristian Castellano wrote:
+> Hello, since I updated to 7.2.11 (and then to 7.3), opening a
+> playback stream on my Lenovo Yoga Pro 9 16IRP8 (83BY, subsystem
+> 17aa:3835, BIOS KVCN44WW) triggers a divide error in
+> snd_soc_tas2781_fmwlib and audio stops working. 7.2.9 just works.
 > 
-> The InfiniBand P_Key tables do not get populated by the SM (opensm) when
-> booting kernel 6.12.115. All IPoIB child interfaces that require a specific P_Key
-> (e.g. 0x8001, 0x8002) fail with "P_Key not found". With kernel 6.12.114 the
-> P_Key tables get populated and all IPoIB subinterfaces come up at boot time.
+> The only tas2781 change between the two I found is: c1b708f712f5
+> ("ALSA: hda/tas2781: Accept V1 calibration data without CRC")
+> (upstream 408249089c48).
 
-Any chance you can run 'git bisect' to find the offending commit?
+Mohamed Yassine Jebabli: have you seen this? It's a change of yours that
+causes this problem.
 
-And always cc: the relevant subsystem developers to please.
+Cristian: can you maybe try if reverting that patch fixes things for
+you? That we know that this is a option in case no fix comes into reach
+soon.
 
-thanks,
+Ideally please test vanilla Linux, ideally mainline? CachyOS might not
+modify this drivers code, but occasionally changes in lower levels an
+cause trouble (but I doubt that is the case here).
 
-greg k-h
+Ciao, Thorsten
+
+
+> At boot the driver now logs:
+> 
+> tas2781-hda i2c-TIAS2781:00: tas2781_apply_calib: V1 data without
+> CRC, accepting
+> 
+> Before that commit the data was rejected and the amplifiers worked
+> with default parameters. On this machine the CALI_DATA EFI variable 
+> (CALI_DATA-1f52d2a1-bb3a-457d-bc09-43a3f4310a92) contains two non-zero
+> device entries followed by zeros, with TimeStamp and CRC zeroed:
+> 
+>   0000000 07 00 00 00 5c c8 20 1d 28 b5 27 23 2a 79 42 16
+>   0000016 f2 07 c5 00 00 00 e0 2e 01 f7 2a 1d 72 6f 1b 23
+>   0000032 2a 41 4a 16 c4 0a c3 00 00 00 e0 2e 00 00 00 00
+>   0000048 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>   *
+>   0000128 00 00 00 00
+> 
+> (the first 4 bytes are the EFI attributes)
+> 
+> Oops:
+> 
+>   Oops: divide error: 0000 [#1] SMP NOPTI
+>   CPU: 10 UID: 1000 PID: 1533 Comm: wireplumber Tainted: G        W  O        7.3.0-4-cachyos #1 PREEMPT(full)
+>   Hardware name: LENOVO 83BY/LNVNB161216, BIOS KVCN44WW 03/05/2025
+>   RIP: 0010:tasdevice_select_tuningprm_cfg+0x8c2/0xa90 [snd_soc_tas2781_fmwlib]
+>   Code: 4c 89 f7 41 b8 04 00 00 00 2e 2e 2e 41 ff d3 85 c0 0f 88 97 01 00 00 48 8b 4c 24 10 66 0f 38 f0 01 0f b7 c0 0f af 44 24 18 99 <f7> 7c 24 24 88 21 88 41 01 c6 41 08 01 48 8b 4c 24 08 48 8b 44 24
+>   RAX: 0000000000000000 RBX: 000000000000002a RCX: ffff8d36ca8af218
+>   RDX: 0000000000000000 RSI: 0000000000000db8 RDI: ffff8d36ca8af21b
+>   RBP: 0000000000000000 R08: 0000000000000004 R09: 000000000000000a
+>   R10: 0000000000000100 R11: ffffffff87559290 R12: ffff8d3684e350df
+>   R13: ffff8d36a861d9b8 R14: ffff8d3684e35038 R15: 0000000000000002
+>   Call Trace:
+>    <TASK>
+>    tasdevice_tuning_switch+0x71/0x80 [snd_soc_tas2781_fmwlib]
+>    tas2781_hda_playback_hook+0x4c/0x110 [snd_hda_scodec_tas2781_i2c]
+>    hda_component_manager_playback_hook+0xb5/0x370 [snd_hda_scodec_component]
+>    playback_pcm_open+0x79/0xa0 [snd_hda_codec_generic]
+>    hdac_hda_dai_open+0x5c/0x90 [snd_soc_hdac_hda]
+>    snd_soc_dai_startup+0x52/0x90 [snd_soc_core]
+>    __soc_pcm_open+0x108/0x6c0 [snd_soc_core]
+>    dpcm_be_dai_startup+0x153/0x3c0 [snd_soc_core]
+>    dpcm_fe_dai_open+0x109/0xc00 [snd_soc_core]
+>    snd_pcm_open_substream+0x604/0x920 [snd_pcm]
+>    snd_pcm_open+0xeb/0x220 [snd_pcm]
+>    snd_pcm_playback_open+0x39/0x60 [snd_pcm]
+>    chrdev_open+0xbf/0x230
+>    vfs_open+0x3f8/0x520
+>    path_openat+0x4f4/0xc50
+>    do_file_open+0xd7/0x150
+>    do_syscall_64+0x8f/0x380
+>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>    </TASK>
+> 
+> The kernel is  linux-cachyos 7.3 (taint O is from the NVIDIA module); 
+> CachyOS does not patch the tas2781 driver, and its LTS, 6.18.55
+> works. If it is needed, I can test patches.
+> 
+> #regzbot introduced: 408249089c48
+> 
+> Thank you,
+> Cristian Castellano
+
