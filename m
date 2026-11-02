@@ -1,74 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793617726;
-	b=pR+Lr+Y5+EZ62h5EL8TgZd7iJVd1FSoOzt3ULlw4ULKCVw8lrHigDXqaVx/9hTS9WoNC
-	 4JuiL+kGKO91HS6uZNicdgfze8KCWtF1uMBAfUupihLi4yNuzWIWtpwWG3p1CtKRi5+z5
-	 72USB5yz3xjRb+Re7HDmZkVjUmCyPUv3M/hgihlN9WZ2rDbeyJruN35F0kPrreNSAnHXv
-	 ngNz5sorbfVtATUF9x9qEHUjfQoSP6uczQgSYWksFwPtWJ3PL/lZPYoeM8NxWW4VpNJau
-	 XedFvfvHavdikWBIrIOqWwKpJRkGNFKDILIW1jTTe7parMg0z54El7oKA2G5Pia/ICA==
+	t=1793618573;
+	b=Em7c4dAladHUDT8KyxvhSX5xBircCP2sPxITlAXFedGGMN6l1JHCjFG0/ikJBcetvyLH
+	 vjeTk8I7hJebSrQ60vYpMJ3dK0GTOocvT74ik5ze/xeKH6PMvcY2P2feoJD6F8QRSHj4u
+	 8KTTLOvJxHc1fbJHeL34p32Lg/SyjtCikXt1JB0EapJCgKlU474U6PsfooJSRACrv1TPF
+	 zZFNf3xGbvAg/MxwNukfdQeJafR2rxJ8IQzKG4qUj/GPlGmdr46l9SvCW5YPZzVFHqaiX
+	 bcatzHZCEjcHqNpSc2QX8YX858CxXDKHfM0oyG5+H2PdLhrIfXwIVfZsEBSnLyIOqUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793617726;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=K5HxYXJ9qQtyG09Ef1giggv6OFeEINzUk9fprZUwrTQ=;
-	b=qkAQqhgtl60gmaybgLWqf7d5VyYrl+0WFO6T41jMlKFuR7ZqXFWxYZ9le1qFu9JnFJwA
-	 fP6SnsRxuU+4Gf7F+sNrNDf/Az/v6Vlozhe0LoVX6gsAO0gkya1gjMNbQ1hQQv59uFLXk
-	 clrchcqPsto0Gc0SUzg8eTyAM0IFjicIMPjjn1lqA/aIYIjuhN5z6x3S70w70rCjccK2G
-	 0JUSZ09BMR1seL8jivIss7vxrnoGIky0BrIF6EPwE+vb2iRG8P2cXlBlnR72z3sCBhfQC
-	 3b+NLKiaEYAkMpytrz0WwzyPcPxgE/28SA4pQXSSDjJCxPZ6og/Y/kGf9xsXdjcT5Pw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793618573;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=sd8pgkezC7ZcVn7+Uxgt0n5visYzPF1xvceS5f2PYO4=;
+	b=bfu+Djgn2uJYN2La/XJ4nXswO+Zo89Oy/oJBMIIcLsWQwR20fRLLA1ZyD0hXAC4IN+FI
+	 vJE+55CNiod9BdvWJrD8Ye69o6gGpnj4ja7o5pPa+pJ+tjBQPi8yzT6MlauooLgAVoDzl
+	 a2tJVC9c5yg5BSZJatLL5N+m4OMOiwKBWXmjXq1nf6/PTd9u70lYroFYWe2Cq7Z7cyecE
+	 M5ipq8Ttpd7bDihGlCeRRjae8w6kPuaT0cmZdlzQsyisVzGNMM/S+qColyyjuSSZHv91X
+	 BnqqPpni3Nt0wk/ShPX4GdGfOXw5IaJBUg/BAzDqvPBqjOwgOpgfE9u/HcmJz9mnSwA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="e0ryX+U/";
-	arc=none smtp.remote-ip=188.68.63.102
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=pGKosGxF;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF3F606A326
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 11:08:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BF3F606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFB5606A8B3;
+	Mon,  2 Nov 2026 11:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=e0ryX+U/
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jJ85807Y1z63K0;
-	Mon,  2 Nov 2026 12:05:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793617548;
-	bh=eUbzbZe7aNvgCJ+zMjYmKyjYTH7j5QJ2CoHI7QCmh9U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e0ryX+U/myghuIhx36dQWMRHAbgRQW3i+HnUuIiAsXWD9AM3YjvAPV8i76vq4z7zX
-	 KJ52uRJi0EH7QW9vGf5DP4KDI2RJyMUzfStdl2+vkU4ZoHihNWuWNAX1UbwWAMWdsZ
-	 9V9w/ND8qXhvx9eFEYszeqachL43lsDixPXRlX3jufwXUxt6skwVjlcILtTG0QfUZk
-	 LROIxn5qdLcs7TurctOawrHObvEmeYxqqsZoQ5jA494Qtv+pE+57Iceay/xFOHUDLW
-	 drOJiS0VMlIZ8iGWsKZYtwNtfaUjBePoyGG8nBRGUMS54ZcoqAnTBVQ3IIAPj5Veyt
-	 uj8a1Q0ExEFiw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jJ83l0VFWz501t;
-	Mon,  2 Nov 2026 12:04:35 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jJ83c2VFWz8thK;
-	Mon,  2 Nov 2026 12:04:28 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 45B495FA02;
-	Mon,  2 Nov 2026 12:04:05 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <0cf3aaf2-9911-4918-8f6f-c11d6077d39b@leemhuis.info>
-Date: Mon, 2 Nov 2026 12:04:03 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=pGKosGxF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783D71F00A1A;
+	Mon,  2 Nov 2026 11:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1793618572;
+	bh=sd8pgkezC7ZcVn7+Uxgt0n5visYzPF1xvceS5f2PYO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=pGKosGxFrudNlcbW59RMsHe6tuTJpr4YZQiYTx5tweorjqyly2p/ZHW2n6kn+6tZ9
+	 7kOqYfdue7c5u1AI1ZTIUdDzm8Cw6QO4zpQfTBjwlPLNeBFC07SGTCC5A/M+ae5zbG
+	 EDZ0RMLAbxmgD7cepYd9aer/eI6+pzaYoGgbZSwc=
+Date: Mon, 2 Nov 2026 12:22:45 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ulf Markwardt <ulf.markwardt@tu-dresden.de>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Infiniband PKEY Regression 6.12.115
+Message-ID: <2026110214-property-unaligned-70bb@gregkh>
+References: <aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,45 +52,24 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [regression 6.12.y] After backport of 980084de4d9b ("Bluetooth:
- btusb: Add ASUS USB-BT540 for Realtek 8761CU") bluethooth not anymore working
- on 0b05:1bef ASUSTek Computer, Inc. Bluetooth Controller (requests firmware)
-To: Salvatore Bonaccorso <carnil@debian.org>, Sasha Levin <sashal@kernel.org>
-Cc: Christoph Zwerschke <cito@online.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Erik Brangs <erik.brangs@gmx.de>, benh@debian.org, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-bluetooth@vger.kernel.org,
- 1149377@bugs.debian.org
-References: <bdafa01c-f75a-41fa-a264-407400a2cd81@leemhuis.info>
- <2026-10-25-1-daily-reply-0004-bluetooth-asus-rtl8761cu-hold@kernel.org>
- <auLhWSOpMQg6cALq@eldamar.lan>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <auLhWSOpMQg6cALq@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179361744584.1205261.5857706765137688230@mxe9fb.netcup.net>
-X-NC-CID: s/TYEdNthf/+4FiD8m48E+xrSUohQGLrzlhHWBPuiSj+PddS6Rw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de>
 
-On 10/29/26 07:02, Salvatore Bonaccorso wrote:
-> On Sun, Oct 25, 2026 at 07:29:50PM -0400, Sasha Levin wrote:
->>>> If it helps, I can send reverts of 980084de4d9b and 6f0624b4427e
->>>> (on top of bluetooth.git master, with Cc: stable). Alternatively,
->>>> btrtl could fall back to the ROM firmware when rtl8761cu_fw.bin
->>>> is missing.
->>> I didn't see any regression reports for 7.x releases about those
->>> changes, [...] So I'm still inclined to say: leave everything as it is
->>> in mainline to avoid any risk and revert only the backports of those
->>> two in 6.18.y and 6.12.y.
->>
->> Yup, that would be appreciated.
+On Mon, Nov 02, 2026 at 07:38:39AM +0100, Ulf Markwardt wrote:
+> Dear Linux Developers,
+> we are running 6.12.x kernels with AlmaLinux 9.8 as OS on some HPC clusters.
+> From 6.12.114 to 6.12.115 we experience this regression on a certain host type:
 > 
-> I'm bit lost here :) Who is now going to sen the reverts for the older
-> stable series? 
-Christian, you offered sending the reverts earlier, could you do this
-please now that we all seem to be in agreement?
+> The InfiniBand P_Key tables do not get populated by the SM (opensm) when
+> booting kernel 6.12.115. All IPoIB child interfaces that require a specific P_Key
+> (e.g. 0x8001, 0x8002) fail with "P_Key not found". With kernel 6.12.114 the
+> P_Key tables get populated and all IPoIB subinterfaces come up at boot time.
 
-Ciao, Thorsten
+Any chance you can run 'git bisect' to find the offending commit?
+
+And always cc: the relevant subsystem developers to please.
+
+thanks,
+
+greg k-h
