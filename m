@@ -1,70 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793635423;
-	b=3MPp9Fy7lw3rk8eUJy2nHKsVEPi93RuoKcxaLAiIJVrBVL5kv2XenorjYh2VcZQSRp1/
-	 jZLM/tpGrVF4gPZSO8ZiGu1FhO0+Vijc3QURjMy7TPZjAtpfogOmmzSe2/1t6OFCw1/jN
-	 8VGIG8W6H0sR/Tnhk2lzwpUDs4YcanRLThn0HzvLjj7ah8v4PgMjouyy579ZtWp5JvXSU
-	 6E7/8eOWbndUV5QlW2hPvB1oILdvgKpc4rH1IXzZzxV8xVMAiw+ZzNqAwNhpHycXalOWH
-	 XxmAgvA8dGbIEijqNeEWmr66v+5pys7vPBijJ3HDT4t7WjuydwIgkEZ+X+wIyJonlpQ==
+	t=1793640172;
+	b=skeG7PD4Eh9Hogp+jZZ0c427nI86n4Yml5595uGxPeanUFwZV2a1RUrpwgNgFS5VaPCP
+	 aUnqv2X5p94DKEoZDhD7MPoiRUA9Rj98c6mCqGcG6PJLnCvEKulzCyTtl/NBjldsTyaKh
+	 SwjvuHW3m4ueTFsnYJv3Dx8p0+PyflzMNmu7bG36apaapHFwHfGtDBAAGX4FmwssJiMvF
+	 3JBb4m7v/+CArX/TrPIxwAgyS91uYUGuOOXMv/4zB2iCyAOpCMhjobm5CgAFsvZsVksin
+	 QuoP2XMebHV1NlQJCcG/LKY5AqmWlccaXAdJfykzWlry1iZUxr7Twheyv00HsAy2ncg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793635423;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=aZyfwc7JAJDfrzIEX/TlaqegknI2hoWXkqg1iidkgnk=;
-	b=3ZeroG0n3oFg8RCwBOBSJGmmLZH5IBxiyWsB4uG0xeajIgYJCnfAfJbpP+gjwS3uyGun
-	 RY9zRUilr1CBd7NTgbnetBaD83Yv3yrLUIlHdZZ5ExJfPnBzsOw4Sya4zkB9b/vObVFqH
-	 DC8Hrw//TKr59KDyJLrmpIHbdHgayC1Jjzk5QftwRA5e/20HQ3CAYhEbDcFOoWXcZzIFO
-	 UGU4KqOkgQ5GEuRqr8VcCbkw6PwO5a/6iBAhWouXVAUlXyX0NB+FNzahDZMmBpshtqVuZ
-	 qVG8J5X4FnKMZB+QaZlp6BqcthZKOHX9H2k++lRohimn6M43OievIwJDIyMsKG5OTdA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793640172;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-Spam-Status:X-Spam-Checker-Version;
+	bh=GemoAJ3Z9yvwRRBlFGwLRVr4LorqE6trrN/CR7hKuuw=;
+	b=P6JNZSJxCguo8cerT7MsSPXmrucBl9S9rl90X/YbQBjpspvK8CKvCK60Qzt10Z6FQM+V
+	 MF38Drb+Cr2BxYGm8dw8RU6aGXaqe76NVuclPkmYBty/iUajZtexEOhZeJgTJ4ubSE++r
+	 1Wh24V4PYy8q2fb4xvm/MpYSpcbarlujE/Rw+N1tsi0DD8aJ8Iqut3Sqcqw0iSgzm8gIG
+	 ooiqzDZi5q2/u96mfmLSs+w9JrH0CXUrT4mNc5CWJ6jjLOYXZ1IHId1yknS6x5ARuoPSI
+	 xvREnVZzSc0wtTwRbFN+QFxV+ZQjlsRlKGbsRBMCrRFQIbdn7FWXFp3Znb/wsbDOJOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="RFG2z/2v";
-	arc=none smtp.remote-ip=46.38.247.119
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B51606FB63
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 16:03:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61B51606FB63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	dmarc=pass header.from=linux.microsoft.com;
+	spf=pass smtp.mailfrom=linux.microsoft.com;
+	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=r3Ai1HxN;
+	arc=none smtp.remote-ip=13.77.154.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61F8606B0E7;
+	Mon,  2 Nov 2026 17:22:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E61F8606B0E7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=RFG2z/2v
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jJGgy58xRz8J8Z
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 17:02:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793635374;
-	bh=aZyfwc7JAJDfrzIEX/TlaqegknI2hoWXkqg1iidkgnk=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=RFG2z/2vkWE2jFFlVORwRQMrfW90X6sf/31R4Dr+hhClwcj0Fis5f1d8JCKCXXT7N
-	 AgqIpuiGIfsr+Cu10OxWjjNybu4tGbYIav/aKA9SDiXYNpbragdqaJzPhFfq9/sNgt
-	 ygQSwTCZraN/H6WFOQ46nlT/KJEU7XL1DZfwBERK7BHO/wSooo8rTKd6UlD3isymki
-	 M9e5aQyQY4edyVF77854VI1RwXAu9oX2A1XvJwAEPuC61fVOvTV6z3nXdRzVeBSHzI
-	 dglXJzk/CW9wk9n4E2/hypRyaqcCi29dRZnY1s6cJ05SG/ilAvQHJS1cLBhw0Peay/
-	 YQpSrSmmQ/9lQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jJGgN3j3Jz506g
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 17:02:24 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jJGgN173Nz8tH6
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 17:02:24 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 55F205FA02
-	for <regressions@lists.linux.dev>; Mon,  2 Nov 2026 17:02:19 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <4523baf7-a228-4c22-9821-821f77d96b7c@leemhuis.info>
-Date: Mon, 2 Nov 2026 17:02:19 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=r3Ai1HxN
+Received: from CPC-namja-026ON.localdomain (unknown [4.213.232.21])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6A3FA20B7167;
+	Mon,  2 Nov 2026 09:22:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6A3FA20B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1793640157;
+	bh=GemoAJ3Z9yvwRRBlFGwLRVr4LorqE6trrN/CR7hKuuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r3Ai1HxNbWb3kZc4YpHHnwyB78qJED3cJGIzV/bToDtYwEpr98VNzVmUp9+1kiLWk
+	 dZcZ1liJefSKJgjTKMNKZvng1Jrqiw+a/ND3e5GT88xYQf+jjuLbmRWiC7/acABq6w
+	 q4+yOeght4ytzHjxfCRDYA3BTCwYDa3KhniGNwvk=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: elliotjb@elliotjb.com
+Cc: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	sashal@kernel.org,
+	willy@infradead.org,
+	almaz.alexandrovich@paragon-software.com,
+	gregkh@linuxfoundation.org,
+	jack@suse.cz,
+	sunyongjian1@huawei.com,
+	tomberek@gmail.com,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev
+Subject: Re: [PATCH 6.1.y 0/2] Fix NULL folio dereferences from IS_ERR() checks in 6.1.191
+Date: Mon,  2 Nov 2026 17:22:43 +0000
+Message-ID: <20261102172243.2183638-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261102-ext4-ntfs3-null-folio-v1-0-4fd91ee23a4a@elliotjb.com>
+References: <20261102-ext4-ntfs3-null-folio-v1-0-4fd91ee23a4a@elliotjb.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,44 +72,39 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179363533952.3206141.15911361451630059220@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 55F205FA02
-X-NC-CID: 15xPiHR/oDRoQ9lcNaZjVA61kc0tIISvBiOOE8XxI3qU4CJMVuk=
+Content-Transfer-Encoding: 8bit
 
+> Elliot Berman <elliotjb@elliotjb.com>
+>
+> We hit a kernel oops in 6.1.191 in ext4_mb_regular_allocator(), When
+> ext4's s_buddy_cache pages are evicted, the next block allocation
+> dereferences a NULL folio.
+> The cause is a mismatch in these backports first released in 6.1.191:
+>     d34e4fd4e73f ("ext4: convert bd_bitmap_page to bd_bitmap_folio")
+>     862483175d3d ("ext4: convert bd_buddy_page to bd_buddy_folio")
+>
+> The ext4 mballoc folio conversions were written for v6.4 and later,
+> where __filemap_get_folio() returns ERR_PTR() on failure. 6.1 does
+> not have commit 66dabbb65d67 ("mm: return an ERR_PTR from
+> __filemap_get_folio") and returns NULL instead. The backports should
+> check for NULL and not IS_ERR.
+> Since the same mistake could exist elsewhere, I ran a Coccinelle script
+> over the tree to flag similar missed backports. Besides ext4, I found
+> one more case in ntfs3:
+>     95b917a14b15 ("ntfs: Do not overwrite uptodate pages")
+>
+> That one needs a folio allocation failure while reading a compressed
+> file, so it required crafting a fault injection in
+> __filemap_add_folio to reproduce. I've fixed this one as well.
 
+I actually sent a similar patch a little later to fix the same issue :)
+We can now ignore that. For ntfs3, there is already a patch fixing the
+same issue:
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+https://lore.kernel.org/all/20261029031815.2783998-1-cmllamas@google.com/
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5996
-#regzbot introduced: 7e1b4bdb0e05a7f65fd2a5ee43bae39c9ecefbef
-#regzbot title: drm/amd/display: MCLK does not track load
+For the series:
+Reviewed-by: Naman Jain <namjain@linux.microsoft.com>
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/6079
-#regzbot introduced: b76a5b7bee2255
-#regzbot title: drm/amd/display: screen stuttering when using amdgpu and VRR
-
-#regzbot report:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=763aacf86f1b
-#regzbot fix: f322d7f7ae56
-
-#regzbot report:
-https://lore.kernel.org/lkml/00cb01dd3099%24c82b66c0%2458823440%24@zadarastorage.com/
-#regzbot fix: 620cfc7a664278a55d068e
-
-
+Regards,
+Naman Jain
