@@ -1,49 +1,85 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793612406;
-	b=mmPwRVw5zi0d8QpV5y2aVxHv6o14BkpHf3FMAYOWrdwCKIqodtpSNCm5niXPUnOpKAa2
-	 UFRjcjSM7mmj/b/NrO9FY/iAfHjSGwco74zd2QSVZBR6JCWwR+buTPEjOyTQE0xKNap8j
-	 cf000Li8Y6ddiH/E4U3BIlclFjJlwArZ2IY1z9qcJnY/kT2rNiZd9I3qN9RLf5Qr1DBAn
-	 Nft+t4ck6UB+4/3bsvWj3jIxlCHMY/oe/Dzcp4nuqfN6pUOvxZ50tDYE+M55IvBS+ktcE
-	 NujXJd6yA4SYbmnyl6VHLCZKUIflHHysOVc1t3Ec/dP928c4H5gZxGYvBJahRaa4P+Q==
+	t=1793612578;
+	b=GMRKYxdN/dTnWqEURoaFflMshtEytDjqVeB2TfEu0jk8Qr/ltsc6UHcPbqxXDffLDd2W
+	 YzuomcDOugtm67+GXwUDsYE4svTftae96PNEXN1s8LxmVNqgmtDLTrcn2/5sCEYQ8EzIU
+	 bFuNaeKNqaRENrKBEKmCZUWK63xWT7pMnpKDANa2Tvh+/yDDFho12N1xno5RGCuYT8XOr
+	 Wdangh2NoyMnjDEnKvkRVfc3pVRSg++tUEaXTjPVoefEj31pCOvGSwjK9QpGbmEqFbXwG
+	 eFKk1ibZdL3bg8b72Q4/lKUSaaQ6cT5gSIO/JkKkJJCI22arY/3jlc40+m2Yhshl78Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793612406;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=koy48tw7Roi2TNVALKt7ehN7IwQ8uU25JAdoz9k07yQ=;
-	b=pyYfrea+FbuxoCQgh+/1UNJadRoZVim0vczY24/FlFUUsN18zGvIKEswON5r7NBUr/fZ
-	 gxeLyR9hulFYMxI7glY0tO60BLGPo86ROJu28cUdJFLnlOilIO7CGVrr4Uxsz5hQaMoEU
-	 P0MBc4Z2Nyaz9LXfWsme2uAmROsLBjZJbzz0LfIQJvBK/+4G95y+7mJ1/gweO5k7ouzZb
-	 VBxglBMHi3JjbEF6YHKQb+c/il5+8VllWRcSOBS+xDkUYtO6GP+n2qy1ToChPhZ1dVkHm
-	 /B6Enl3IAtDv2yV1ELeMcPE47bZZaSdvLSygC0OA+KF6IX0S7a5kXX2xK5BaWw7M8vQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793612578;
+	h=Received:DKIM-Signature:Received:Received:X-ME-Sender:X-ME-Received:
+	 X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=s7UqG3TpVMZULsSsKNu6N4cz1DW5BOeuUtIPS6QDAis=;
+	b=PJ9b9m3v5uKjJi3wjFR9euIfryQ+vgzWD0s8lbEW8hpAvZ6VJ7JoMwtAMVpSMahE8+lj
+	 hV4CYaqqFo+TxReG4ypmbiyCRxa9rCr2lsHTEnB6AwPdJtS+9YBh/0E3qNg7MHtLV1Mk7
+	 Gb4de8lyaStxPc2cpK0Ic2PVPuVNHYIOGUbdXnjBmMOHti1pIyyknH5rUi2biKiWPeR+L
+	 itygxCyA0gEmjcrGAckIN09aR3KOqB0yShDSy83T2MOW1V+2GwIZE4N+/U45vUpstWN4o
+	 1S2trQfygvfj+/pz2d68zP1OMvONyBe2piXsRjF00afIrbCxGrss2oNIRjb6CX6KfCg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Deyve0w4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HewBOeCl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90FB606A338;
-	Mon,  2 Nov 2026 09:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C9C606A331;
+	Mon,  2 Nov 2026 09:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Deyve0w4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8843A1F00919;
-	Mon,  2 Nov 2026 09:40:05 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HewBOeCl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3806B1F00919;
+	Mon,  2 Nov 2026 09:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793612405;
-	bh=koy48tw7Roi2TNVALKt7ehN7IwQ8uU25JAdoz9k07yQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=Deyve0w4CNejLxWfIoQHdf8eMktTCM4micfV384QCZZEac4juxKdyq3OlzYDzcxhu
-	 KguATxwaa2wKvvvqEKvCyAgcxkrtwok1FCKHDAUkZbpl+BxNXS6UZv516oZoPgVwZe
-	 erYE+2EdQ0gCIAXrJx9gwPE7h9Vp60NKaOdGj2YvqHTOGRUtsjf1l/fVoB2FnwlXNj
-	 LuL15cYh4LUVHZNDF/rONFx2xQ7iFzAh+aSI7gq/O8sqfCVkiclpfUSbD8d00r3pTx
-	 yxyDTjW6L84tWvrRGudj/rlsRq+a2LL5C9y2Y517tuPtK7cMx8I5PnBLNTBWeH1/9T
-	 etrQDgFvjdjuw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7D2FC380821F;
-	Mon,  2 Nov 2026 09:40:05 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20260515; t=1793612577;
+	bh=s7UqG3TpVMZULsSsKNu6N4cz1DW5BOeuUtIPS6QDAis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HewBOeCl5pz79CSpkijwZTiI4ct1J5rEbJ6byoh4SHSvMl1udzw0FO1BHpGwylJBV
+	 uQE3hkho4oZ6QlQocfKIuuc8l394gcmQ8wuHAeCL2XgV1A9KugxD/fiEpaSFNYpKqU
+	 uUTElwPtEawTRD3xI+Otjo3vn6ED47Idnim/MdJJrqU7Jp7OR8txfJtiFhj67yaeXQ
+	 jlD6EpdAJ3lxJ1cVqN9b1vnREtkrDzgTWh1fgCZ9mvEuzYIW1kgtmGhtVD/zjFYPEQ
+	 IS6teisJNdU3jtV1ZP0D8IJWyItQrRzS7exF6tsDig8VLw6ZDt7G5QZprDG0UAoZ5V
+	 26oGGOnjookOg==
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfauth.ams.internal (Postfix) with ESMTP id B5D5F198004A;
+	Mon,  2 Nov 2026 04:42:52 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Mon, 02 Nov 2026 04:42:54 -0500
+X-ME-Sender: <xms:G1voajdT0_ST4aQr5srb36ML8tbnQydvXNDb1Wa0pglc3-bl__0YRw>
+    <xme:G1voamoeTNZ_tLBRDKp4twtHfohRjjLY4Xdgxca7BPM58xswyriI0uPrLDxUcPrGJ
+    Ezolv1sTUcr7-5o0NIrPwaOZweizPE15Oa4Gu575E_BOCfeZSmZZDJm>
+X-ME-Received: <xmr:G1voasfqxLXbh9XEw9fIfqRJKKZl5m2OFKwZnoCvtkwLsethhHA1tzFqAMI>
+X-ME-Proxy-Cause: dmFkZTGUOybRtx7YsTcBd5eNLK4m3Fkm/Ey/0xNm/0ciR+HWLydMlnFcbPmj41D+Y1M07r
+    Sge36pJQ3Qh+uHPDZOt/Z0sw/zsNNy1zqLH6KQvtPBB7yRjuoI07tRUvZSKeBRtG7B1sD0
+    uAMxb5LPpw1ft4DgUZO3C8U4DLm5LSGomrKiANeik8BfMUm7H1eDcnAULVGAG4HLh4jZMz
+    ngg87BfUvwo2om0W0IDhfELBej4BrrIUZDHHWL61OWFhiKNr8MV2yCZ9saruXg5vczc+sN
+    56+11nmDJ3E6+gjErvQq7eGSpVe+dO5PhqG3Qe7j+bLHcDRWh4Xh7mITAz11RYl23v9FNE
+    9WySUbJ+jWj8Ngudc6sIePDxuGI+T/pG7YC5TIoUgGstZcw1h8NKcrBTIvaG3VWxSW1vmw
+    fgHGNcQRfeqJVryEov4ON6A5qd73Jtl3FkZhFcF8E0cJSOOaXI9bg8it/xzDBUw9aSRrWv
+    OnaDSuZ4s2b7vbpy8V2NHpB0dML1teWBFvRl5gk63Z8q8FbTPFM2KWPijasMF0zidFe8bK
+    08j54SKtHXyfp4NXSnpoIp949Lvt1fzxEg4CxmQCL/Z0ChfLObP0gnAmQqc8O3pdmwrrKZ
+    r+seW0vgXh4jOQejglUudMHx7CMpM2RrChQF3ctdHz/9mo0qPfwkJ8aIjPFA
+X-ME-Proxy: <xmx:G1voamlZf7s0DTyUWpxwvlxGs6f2Q_7BgepitSo_USDSMTdr-ErkkQ>
+    <xmx:G1voavu_HeXJX7iywt4AiOTqV54DB5KKlTYfIjCXVCp-mJCzZgf7QQ>
+    <xmx:G1voapxx6N7ltWYBSw6C5B7w4IbKrl_5MbI5rXH-QcW7rx_qsUlclA>
+    <xmx:G1voaqzwqwzR_zITWWZaT7wJMmOSAzFgKSFAW3C2pdC4o69fl8QrtA>
+    <xmx:HFvoan5gDyq0b69Nhm1DONlarQjnMvSSx45oTUCz0rkzanScX9i30Ews>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 2 Nov 2026 04:42:51 -0500 (EST)
+Date: Mon, 2 Nov 2026 09:42:50 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Challvy Tee <challvy.tee@gmail.com>
+Cc: x86@kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com, 
+	vishal.l.verma@intel.com, kai.huang@intel.com, seanjc@google.com
+Subject: Re: [PATCH v4] x86/virt/tdx: Skip TDH.SYS.DISABLE if the TDX module
+ is not initialized
+Message-ID: <auhbCeeG-hX6tLZ_@thinkstation>
+References: <07cfa95a-e766-411b-8765-33352a04c0be@intel.com>
+ <20261102073244.919864-1-challvy.tee@gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -53,50 +89,41 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] bnxt_en: Don't keep MSI-X vectors added before FW
- reserves them
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179361240421.3898193.10936666547810707187.git-patchwork-notify@kernel.org>
-Date: Mon, 02 Nov 2026 09:40:04 +0000
-References: <20261028114933.256298-1-vlad.wing@gmail.com>
-In-Reply-To: <20261028114933.256298-1-vlad.wing@gmail.com>
-To: Vlad Poenaru <vlad.wing@gmail.com>
-Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
- pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- andrew.gospodarek@broadcom.com, tglx@kernel.org, maz@kernel.org,
- yangjinqian1@huawei.com, apreece@meta.com, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261102073244.919864-1-challvy.tee@gmail.com>
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Dave Miller <davem@davem-thinkpadp1gen8.ibmlond.csb>:
-
-On Wed, 28 Oct 2026 04:49:33 -0700 you wrote:
-> When dynamic MSI-X is supported, bnxt_check_rings() grows the MSI-X
-> vectors with bnxt_change_msix() once FW says the new rings would fit,
-> and keeps them.  FW only reserves the extra IRQs later, when
-> bnxt_reserve_rings() calls __bnxt_reserve_rings().  The MSI-X table
-> entries beyond the function's reserved IRQs are not backed until then:
-> the MSI message written when the new vectors are activated is lost, and
-> the entries read back as zero.  After FW reserves them they are live but
-> still zero, so the NQ rings bound to them signal address 0 and every
-> completion on those rings is lost.  The next ring change (for example
-> ethtool -G) then times out freeing each of those rings and the TX
-> watchdog fires:
+On Mon, Nov 02, 2026 at 03:32:44PM +0800, Challvy Tee wrote:
+> Commit 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and
+> kdump") made native_machine_crash_shutdown() call tdx_sys_disable(),
+> whose only gate is compile time (CONFIG_INTEL_TDX_HOST).  A kernel that
+> never initialized the TDX module therefore still issues
+> TDH.SYS.DISABLE.
 > 
-> [...]
+> In VMX non-root operation on a SEAM-capable host, SEAMCALL causes a VM
+> exit instead of a native #UD.  KVM injects #UD only since
+> commit 9d7dfb95da2c ("KVM: VMX: Inject #UD if guest tries to execute
+> SEAMCALL or TDCALL"), first released in v6.18.  On an older host the
+> VMM gets KVM_EXIT_INTERNAL_ERROR and the vCPU never resumes, so
+> machine_kexec() is never reached and no vmcore is written.  Kdump is
+> thus broken only in guests on SEAM-capable hosts whose hypervisor does
+> not handle the exit; plain kexec is unaffected because tdx_shutdown()
+> only runs as a syscore op, registered after init_tdx_module() succeeds.
+> 
+> Gate the SEAMCALL on X86_FEATURE_TDX_HOST_PLATFORM before issuing it,
+> the way paddr_is_tdx_private() already guards its own SEAMCALL in this
+> file.  Without that feature the module is never initialized, so there
+> is nothing to disable; on a TDX host the gate is a no-op.
+> 
+> It also decouples kdump from the host KVM version -- a guest cannot
+> require its host to inject the #UD.
+> 
+> Fixes: 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and kdump")
+> Suggested-by: Kiryl Shutsemau <kas@kernel.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Challvy Tee <challvy.tee@gmail.com>
 
-Here is the summary with links:
-  - [net,v2] bnxt_en: Don't keep MSI-X vectors added before FW reserves them
-    https://git.kernel.org/netdev/net/c/af449230bd8d
+Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+  Kiryl Shutsemau / Kirill A. Shutemov
