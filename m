@@ -1,82 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793683699;
-	b=X0PV0hg3QIFVkqbZyd+TBVNj3/vhL/3U2LvBMVxgVWCRX08PJTEtVqJRJZ7Zq2HjLbWc
-	 /TFjJQHUrLsckPokvqcQbLotbjjEgFiXQcXic6bG37RH7Ky4sy9/HXqN+sybCQcEd+gxO
-	 LqzCFQtltpxzjdRBI+wntpfbpX8fHxy7UkvB8gRR2OKBrtBMxTXpbzgRARqTc4zlYeIZX
-	 SexPgBtBpXXpoWb7c24C4LZn9bp+iezWUlBr7undOaM1eVa19h/8RWZkgP27Pw/KC/dai
-	 to1bdclI62c3m6a9pqfamWIL/457q/dfF8pKF3+e5QaUX5OYU1VLM/o/sbDxjMTD9hg==
+	t=1793684406;
+	b=4tuwKGfeTJwtK26k1WZqA6MlGCflI4b2o/9H5z4gFoKw5FUldMiYaZVL72eyjSZUl+nZ
+	 pdZdpRXk/i1aOyPiXuILnjU5YcUXmu7Dmpw3KjuOa3Nf1OgH9oyaz0i3CD1D8l2wC/t/Q
+	 iAF/eT9F60afdfxBD7qMMhR/YP8RIsXUMViH1LrjcAgGbRKOyk10xYo34aMMkSZTXRcmI
+	 6c3XwmtGpfXHw3Vz4qd6KsXZxXcaQNwoRm3hdjdSwkjfqBGPMKIVUzefj41mSSlTWj3ZB
+	 wiXipU6vcPr8XTvtduOMV6cUU7rSU3KKfF6gAgdv5vL3nXOrwRoTD5KKVz7bhtHbBcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793683699;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-TM-AS-GCONF:
-	 X-Proofpoint-Reinject:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=7lFZR5opUMXLmMJF3wLCID2BYE9mwlTi8gWcDog8rJw=;
-	b=jepBOflpY4JV5s4NhXDLagKqkuxi2CLSHX1kRBBjq/MYtIhVhlOh6eG7AMjKrtZTSG39
-	 kOvzhFm5Mo7ViCSmLhNjTn6JfIvsnW5fEldPSGCAUxmh+gYH08sDaXiTvLjOgNkcmWOQo
-	 NzB2TYTo40ZMrXTsF+19WDOUx/3z3lwx65nHcHva2uGqtvurjlm+NJjF/pIVmy0qxa0nv
-	 Zq6pEj9CELpvd3fm1Jn486XDtTrmEvgN8obL/LrAILNRT/Xr2wEnDrZ2IsC8CgC5PpVkC
-	 Bse7bLXtoYYC3PVAG3OrTJxgiUPl76tyx+6tX7D3Jg4tn/z0l/sHFJcZ8tab5y0UB8w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793684406;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=SNfcSVIGEmINCcVw+uB8DPAiuuIIPUqBYgGuYhjglr0=;
+	b=t2R9JMC+Ga8bxYcV/Zsq04F/zp9dUWuno89/osBDIgstjhGq9u9LU1VXPDS5oeHWJ5aR
+	 MNbVHzYA6KI85vA5jLHTLkQI2HkT2PNNnN2zmVQtjrcJIHm9Y+CiDa6LW8XEyL6+ZgKE5
+	 g7V+Qrc6/sq/M2lBF++myeoyYrP1eNTo2KBbWwLzdP36TSNq+sGvJpErJt07WkI+Exv67
+	 9GCLZznYEzDm5wgbhPH9H92+w6Rs05LTa1l46Az+Tzvzhj4UKnalJFaiuy20rDGtEtzjQ
+	 fET9/kBF62qDXDO1bQsx+aMy0C9z4O9njQtcTLv5UQAk7ilw1iJhqXXZ+kL/g98Sebg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=odozQj1Z;
-	arc=none smtp.remote-ip=148.163.156.1
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=none header.from=jclark.com;
+	spf=pass smtp.mailfrom=jclark.com;
+	dkim=pass header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=oT6tciyU;
+	arc=none smtp.remote-ip=209.85.214.170
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7300E606A324
-	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 05:28:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7300E606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB40B606A32E
+	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 05:40:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB40B606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jclark.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jclark.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=odozQj1Z
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A31jM2X528445;
-	Tue, 3 Nov 2026 05:28:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=7lFZR5
-	opUMXLmMJF3wLCID2BYE9mwlTi8gWcDog8rJw=; b=odozQj1ZMHLW5E3/uXq5nC
-	GC10RZSBql01724o5EMR8UYyWrFE81hTf7s7Viz3WH4ZczRN8H9/QLz8rvf8IAEl
-	SGEyuT4uIBAal6xUidu6ncEjQ6YRTJzVLS9yRQ/MIxbpNFjgWqUV+CYyFPJYfHL1
-	3ve7eKwlSi5nAVdKuNG1WMEmkxHqOq+8u8uF4V09wg5XwzL78nisUC+/OKKol/ls
-	zMOG8OE1CVQTKj4bgy3arN1d6S5FPZnaR0uNn3w9B1jqX8MmRAoozbFj7s8pk7Yy
-	onG83hDXpuisfEP73Imc6TgifgqvKuuxwg4bl/4ARFm7ijXL4+Y0Q8K0fRq9y6QA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hn7u3c126-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 03 Nov 2026 05:28:08 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6A324rNZ1827064;
-	Tue, 3 Nov 2026 05:28:07 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4hnu1vh1bq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Nov 2026 05:28:07 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6A35S6i11508058
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Nov 2026 05:28:07 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA1FB58061;
-	Tue,  3 Nov 2026 05:28:06 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D88158057;
-	Tue,  3 Nov 2026 05:28:01 +0000 (GMT)
-Received: from [9.61.129.51] (unknown [9.61.129.51])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  3 Nov 2026 05:28:00 +0000 (GMT)
-Message-ID: <0d071b1f-82c2-41a5-8b0a-7ea67706b4eb@linux.ibm.com>
-Date: Tue, 3 Nov 2026 10:57:58 +0530
+	dkim=pass (2048-bit key, unprotected) header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=oT6tciyU
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2eb5251724bso8805845ad.3
+        for <regressions@lists.linux.dev>; Mon, 02 Nov 2026 21:40:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jclark-com.20260707.gappssmtp.com; s=20260707; t=1793684400; x=1794289200; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=SNfcSVIGEmINCcVw+uB8DPAiuuIIPUqBYgGuYhjglr0=;
+        b=oT6tciyUpa8ne0OSwZyzbQk3QhrexPpLPOPRSqNaS0V+dxp1C8QfefpQzhtbEjnDke
+         93B26auj9ZejAPq9KKnvquTjcaAPszI+aYdZ0EBNmHsT72bbCC2gkDNmnCnumF+6+Epv
+         9RQZKVOPwqgY5y9zQ8cQjUvjd/Klwzoc01IAqpoZQa+x4WqgXjk0bwicDtiBblozfd5u
+         j7EdIFTwo0bxWLXYEStlyGPn38AfKHhqdY01CSsnfOlYHVxirXPWTQxX73206vRWBL+b
+         polTmzvcaS6QZ1bu+Q8j3E2eOrMRJA81448PuysbwAEPbxao+JjTdlmmg9LsVNy+8H6+
+         32XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793684400; x=1794289200;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=SNfcSVIGEmINCcVw+uB8DPAiuuIIPUqBYgGuYhjglr0=;
+        b=04pC6B63LnEj0XkAK6RrF5kpfJbzFhn7F0YsQYmzymBvbqcQnBCOMOH2RAFw3WJ2y9
+         XVuUCoSdKJLnDZZmW+BtZV14HaGEA7tlC3D9y7gBThcmKVt/B5u9JSq788lbYBquE55e
+         FNuC2lU8zgW4ygMAHudPLqkICNLZDGjNOpzHTUX5j0NGGGjR+r7VI2N3KHd3ceSuNiQZ
+         0ggYMbJ+P+PMGCb9JetRTfsPRlmyBbVbySRhIvitPFN3QmSEZMkB8zZXr1d5fLo5X127
+         5l9Ff1rqfMmIqRtpyPHuHvy/+DLi+UH1FgpQoO/smfdeeiEPpVaD2al9wg33IFhv4Bcg
+         1OLQ==
+X-Forwarded-Encrypted: i=1; AKwUvByoEVLeERIHYguP6xsF0NZbO8Y1Lq45tJ1mdwVlyIcoZqWrUetOT2viCKfhSSEcr+ZQ7zN1BcDgyU40tg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+sU/C/bYJJCk4MMK5t9MyHwZ2hF9kT5XbYIB0LxhBr6mF5Vbpb
+	As7b/vDURHtSWA9s4cWF3rKXBD0q2RcplHfNhMtYxVN3SjAOQ70m1p4biX4bBG0zQ1DYaXVoSHL
+	sNXI9hZRU
+X-Gm-Gg: AYBFou0HjrtezOaX5dM31NW2CUMp+3hmvIcayekmOpL+Q9nXQrQg9DMDMf4lZgaATp2
+	gZ9BQJ4NeJZxrfCEXbb+K4KMlrw7W4v/HK3UNyvdwzALupOb+kY/cPwT/P8gWDUHa0mG/MR28i+
+	OBYK743KWBqBMZanC8ux+TWsKqHJrv+GB87+L4aSMuddrGpGCCdU7w1TQXI0BeVzi2Z/ixAltxW
+	uMaFUz4QVIsK5Zd0EmwDHu63SPBIsBRVu137NhxVse0nyWdp+vmwrAxc1FroWTDTE2GN1TQXkDR
+	GSWBtD+SeY0niFkQ9iwAVyfkdO5v8NZKBfTc+mBO70s+mBBUKQCvKqAuafHfqEPGZADJQ2Z8WZx
+	CXGbLz7nQR1mt5FWQg1EV4W9AsRqQzV3UU8YTJ2JsOoUUxTcIPZ3nCtmAzShkf6rLiUKPL1qiai
+	gjQP7QI5h3jT96m8Q/YyZQStZRcmuKBtL3xpQBaQ6PcTeJHHfeVqhZqk3jaZlTULyS1WzrwOmky
+	t4+qPwtRn9nxU8tbDuEe2lZwUM8SkrosAR5kLPa/XoeWpfel5/PeBD64QgxcL9lXrf9wOhv23I4
+	pA1uJogyErQzWgRZi2djwVwzZAZ5z7EKrAIO1JK/uJhiEZ0hYSRFHztvTNG417leJkaHwiTqwjJ
+	STRku2gPIoRuieMXDHg==
+X-Received: by 2002:a17:902:ce05:b0:2dd:ad73:5b6f with SMTP id d9443c01a7336-2eb364b55camr111236385ad.31.1793684400160;
+        Mon, 02 Nov 2026 21:40:00 -0800 (PST)
+Received: from cantal.lan ([58.136.77.237])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb392494edsm35154505ad.31.2026.11.02.21.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2026 21:39:58 -0800 (PST)
+From: James Clark <jjc@jclark.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Johan Hovold <johan@kernel.org>,
+	Bastien Nocera <hadess@hadess.net>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Robert Nelson <robertcnelson@gmail.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] usb: core: add a pre_probe callback for device drivers that may defer
+Date: Tue,  3 Nov 2026 12:39:52 +0700
+Message-ID: <20261103053952.1138398-1-jjc@jclark.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <sashiko-outbox-194542@kernel.org>
+References: <cover.1793669297.git.jjc@jclark.com> <e96b91c85945237ca455869bf4d5a1e177358b54.1793669297.git.jjc@jclark.com> <sashiko-outbox-194542@kernel.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -86,84 +110,64 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] block: only serialize elevator switches of the same
- queue
-To: Laveesh Bansal <laveeshb@laveeshbansal.com>, Jens Axboe <axboe@kernel.dk>
-Cc: "Shin'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>,
-        Ming Lei <tom.leiming@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Yu Kuai <yukuai@fygo.io>, Reindl Harald <h.reindl@thelounge.net>,
-        regressions@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20261031044141.5569-1-laveeshb@laveeshbansal.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20261031044141.5569-1-laveeshb@laveeshbansal.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=Zsp4uN7G c=1 sm=1 tr=0 ts=6ae970e8 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=7Tlg7tASAAAA:8 a=VnNF1IyMAAAA:8 a=QfggKeMjAAAA:8 a=XSM4xmzmucexushq6JAA:9
- a=QEXdDO2ut3YA:10 a=hkvjNyikX2LPLlzviPNC:22 a=KawSF8pKvnAe-OBSxQn-:22
-X-Proofpoint-ORIG-GUID: l8LyX_yC9Hdn3b9gmAIVXaG_2CiwPXWC
-X-Proofpoint-GUID: mii11LsbumAXKBaGSGkVNS9JZhj-yP9I
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTAzMDAyMCBTYWx0ZWRfX4htgYT9zM3FA
- ww0ScYVrJT4XN+TmXVl5kNxUcpDfG2/+8FVYmZug1Cj1MdJRJA1/7LmRM+Y79DSOh2t//n5mNRp
- V9Rnx7+L2RRFasnJGwCFnOZBT4dcjFded0WW2l7yjnL4dzDEPWC0FCLG9jN+vAwlEID8lkZnpp3
- /Ogg1KyYTRFWNDDh2V4YcB7EZoBUo8nKQxKXxAOHcMaKG/ZPkKetKb06pjGnrxJZxU6Focf1wVU
- uugvYLoimEVY9NSbRpLOyNcPG7pwA1JNA/6HfJrVqX0X+tU2TRGRVg6BuiTe1BHzD1W/e0Rm2dM
- 89lbbCpupXRwxMZ2HM1ZqKgm75G9LRhD4BZcmvr2GmAPJbZPgGbISVP8kp7ZT+fSFUS27XBfOj9
- vKa2p9oH6bK2mtdZFz6kRi8XH+YTDX+364Gd9lHRuAj9b5z4udwgodQOHU0eXZzdyWDEHrZv8D5
- Ocas7/cTU8pNfxVY5lA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTAzMDAyMCBTYWx0ZWRfX78fjvqFHEmYh
- WGlTsKzudUFiYuZWUMLInPVpvC4k4UdKDhHXf7sG2eP6ZjRnP7l1vSKdgq9Gbl+L1H03PRfb+IM
- fiZFoyeqNt8WCby1KphdkH9teakbng4=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-03_01,2026-11-02_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1011
- impostorscore=0 spamscore=0 malwarescore=0 suspectscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610300000 definitions=main-2611030020
+Content-Transfer-Encoding: 8bit
 
-On 10/31/26 10:11 AM, Laveesh Bansal wrote:
-> Since commit 4ff58d6bc9dd ("block: serialize elevator changes for the
-> same queue using a writer lock"), a write to queue/scheduler fails with
-> -EBUSY whenever something else holds set->update_nr_hwq_lock. That
-> commit takes the lock for write, and it has to be a trylock because of
-> commit ce8ee8583ed8 ("block: use trylock to avoid lockdep circular
-> dependency in sysfs").
-> 
-> The lock covers the whole tag set, so it is easy to hit. A scheduler
-> write fails while another queue of the set is switching, or while a
-> sibling disk of the same SCSI host or NVMe controller is added or
-> removed. This matches the udev failures reported on 7.2.
-> 
-> Go back to taking the lock for read. The write lock was there to keep
-> two switches of one queue from overlapping in elevator_change_done(),
-> which touches the elevator sysfs and debugfs entries outside of
-> q->elevator_lock. Use QUEUE_FLAG_NO_ELV_SWITCH for that instead: a
-> write sets it before elevator_change() and clears it afterwards, and a
-> write that finds it set returns -EBUSY. Disk removal already sets the
-> flag under the write lock, so no switch can start once it has run.
-> 
-> Writes to the same queue, and writes that race with an nr_hw_queues
-> update, an nr_requests write or disk removal, can still get -EBUSY, as
-> with 4ff58d6bc9dd. A write to a disk that is being removed now gets
-> -EBUSY instead of -ENOENT.
-> 
-> Fixes: 4ff58d6bc9dd ("block: serialize elevator changes for the same queue using a writer lock")
-> Cc:stable@vger.kernel.org # v7.2+
-> Reported-by: Reindl Harald<h.reindl@thelounge.net>
-> Closes:https://lore.kernel.org/r/077dd42e-cbc9-4c23-a5ef-3d20e4fc7757@thelounge.net
-> Suggested-by: Nilay Shroff<nilay@linux.ibm.com>
-> Assisted-by: LLM
-> Signed-off-by: Laveesh Bansal<laveeshb@laveeshbansal.com>
+On Tue, 03 Nov 2026 03:51:41 +0000, sashiko-bot@kernel.org wrote:
+> First, when udriver->pre_probe(udev) returns -ENODEV (for example from
+> onboard_dev_usbdev_pre_probe() -> _find_onboard_dev()), usb_probe_device()
+> still calls usb_autoresume_device(udev) and usb_generic_driver_probe(udev)
+> to configure the device, bind all child interface drivers (triggering
+> deferred probing), and emit USB_DEVICE_ADD, only to immediately tear them
+> all down a few lines later in the error == -ENODEV block via
+> usb_generic_driver_disconnect(udev) and usb_autosuspend_device(udev).
 
-Looks good to me:
-Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
+This is deliberate, and documented in the @pre_probe kerneldoc. An
+error from pre_probe() other than -EPROBE_DEFER is handled as if
+probe() had returned it, after the generic probe has run. This keeps
+the -ENODEV fallback to the generic driver working as it does for
+probe(). For onboard_usb_dev nothing changes: its -ENODEV used to come
+from probe().
+
+> Second, if udriver->pre_probe(udev) or udriver->probe(udev) fails with any
+> other error (such as -EINVAL or -ENOMEM), usb_probe_device() jumps to
+> err_pre_probe, which only calls udriver->disconnect(udev) and does not call
+> usb_generic_driver_disconnect(udev) or usb_autosuspend_device(udev) to
+> unwind the generic probe and runtime PM state. Because really_probe()
+> clears udev->dev.driver to NULL when usb_probe_device() fails:
+>
+> - When udev is later unplugged, usb_disconnect() -> device_del() skips
+>   usb_unbind_device() because udev->dev.driver is NULL, so
+>   usb_notify_remove_device() (USB_DEVICE_REMOVE) is never sent. Subscribers
+>   such as usbport_trig_notify() in drivers/usb/core/ledtrig-usbport.c never
+>   remove the port entries added on USB_DEVICE_ADD, leaking struct
+>   usbport_trig_port objects and sysfs attributes with a dangling port->hub
+>   pointer to the freed struct usb_device, and usbdev_notify() in
+>   drivers/usb/core/devio.c never runs usbdev_remove().
+
+This was raised in Sashiko's review of v2. I missed that it can be fixed
+when the device is unplugged. I will attempt to fix this in v4. I think
+it can be fixed by recording in struct usb_device that USB_DEVICE_ADD
+has been sent, and having usb_disconnect() send USB_DEVICE_REMOVE for a
+device that has no driver.
+
+> - For drivers with supports_autosuspend = 1 (such as
+>   onboard_dev_usbdev_driver), usb_probe_device() does not take a runtime PM
+>   reference, and hub_configure() enables autosuspend on hub devices; once
+>   the device suspends, usb_resume_device() fails with -ENOTCONN because
+>   udev->dev.driver is NULL.
+
+This is a pre-existing bug that is new in this review.
+usb_suspend_device() does a generic suspend for a device without a
+driver, but usb_resume_device() refuses to resume one. I don't know
+why resume is refused. If a generic resume is safe there, that would
+fix it.
+
+> Third, if udriver->pre_probe(udev) succeeds and udriver->probe(udev) then
+> returns -ENODEV, the error == -ENODEV block runs
+> usb_generic_driver_disconnect(udev) and usb_autosuspend_device(udev) before
+> err_pre_probe calls udriver->disconnect(udev), reversing the teardown order
+> used in usb_unbind_device():
+
+I will fix this in v4.
+
+James
