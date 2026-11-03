@@ -1,74 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.38.247.119
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793693080;
-	b=4gzY70zKSJK3saLKfk9hjoCoeX3G1XLKqQS3wIfQHH8m3ANA8GvNZi5j+yU/SykClurC
-	 5xEVIHl1odM7IVq2lxViI+Q/eDY4WxqxtkgcDVWZqTPdaUNwj9suZwmW3L4NnzSXw5Hj6
-	 H8ig51/luevBgmR4n7eFwRBFkarDSV7Rx50bCY9wicUIWYBa1wmy12r7Xpgt9rzr+1aPF
-	 uEF2CUYIB169qWu3jLobM3+mhGPqc/RQMwRT4M/xI5j5Uod1eGh0Rdt1fxUY74sy6NhBv
-	 tL3VliSHg/D2DRBrmK8N+YR9RYYPaZ7U7pOwBR2PQQQtIgKfKpCHqIUVN8OTSAEZdUQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793693080;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=L4EcRlcPTyEkbIxRjhXJq9ZXvdXvVbjjYlySVR1wKYI=;
-	b=JzI/FWHQQjSCvX+hgV4fjRsgbpyGj9LyO/4FaIxBjE+HjJTRid+Ux7MzcwK4JyZcF6ys
-	 3NY8n+lScdiMLw9u3FeD52rxjG9CAU+cGxpM2SWho9L4dxNNSl8BpI1/D/2ervHjXqWoS
-	 hdWKz5COjuDIvY8mEd7Ib07IrZfoISNo+aLrlgWjkJjQ3yFExYxXtQQ94GNE9f2HTBRlE
-	 RShq7QRlmMoAi/wNoHZTtrdRYH8kC8xXPCC2HrOintq8IZF5wcI8Tynm/3tQsNtBljdb4
-	 u4zBKfA+B52jJLBafhUlzho5rxmHuTFaVu7VfPBTOymjImlBsiKMwrNBvA8wVCEIXJA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=aYIqX3pq;
-	arc=none smtp.remote-ip=46.38.247.119
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793698035;
+	b=rznZS1+wGxVE4UwvpVrY4exIYmZZ62sJQO1M/OjlT9lxl/v4dWl5wCsf832g/GAYImA5
+	 HUIyMn41d4rwGoB40uCPFk7eUwfgBoqBoHybuzG72SR6omelKJh3V75zfEDtxE8B2/v99
+	 7TS7e1RD/pMP9cPX6PsaqnKMtx1IC9thDYl7piBfK7TsPRkf1MLt/thm4ABhObFDr/0pX
+	 WitAgIy/eEoqugFP3ND1j9HZ+hHD6ICSGAtt/LwuBR+9gfamIezDo21yxNtgjWjDpuR1p
+	 8Sj2Tr7OiwaiBLeO4j9FjTT2uazmWekb7IH06wAg9ly1T3GkmZ2Z3SB6StPPNb2cmew==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793698035;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=wOrq6+f3nxtWdT5oOXG5uqpLCZ4DOyK+a6T74j8bTiM=;
+	b=p5dFkcuoQF8IBFs+RU+miqrRKL+lG40Y4jmzmUT3iIC5xiltAe8bjqY6Jpnew/WBuRRe
+	 jQCvT7+KkouCEVMoXzCEw7hs79avhyqaWh6yAFmyYNDBi1G6h1gJBkt4Zj4jQMSbki+o6
+	 KLjG21tu292j0EOJDsufMK2mVmEuM3MOBBs7I6zX0ZgksJvtam2V3qbO8krEY+YXp8PQp
+	 rCRVGgCamKyjsTghwWYwkgLeVILDI0vpAc/eOxW/xwsStGCDuQrFco9SYq6oxJDlxg9ei
+	 lsLXGl/itxGOgZAiLMzE4cfxShWHMFkTKkYUYGzwzyLgTgF8smvKSnc4vcRxWP7wYJQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a/KZ5mZ+";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E77C606A324;
+	Tue,  3 Nov 2026 09:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a/KZ5mZ+
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1793698034;
+	b=1dWpOTW1u2rkin/onU0UozSiMmjo2ROXtxfg3gS2b3MTdXqs9LNae5hbpndyC8smgJmx
+	 XavkX9jmhYCEDsP3kY4xiCFDzosyoAT9Q9y1fFvhYMHBVD3wW8D3D4prsCMEr+V/8U0xU
+	 Rk8yZfLRvUavPQX9rI+HsQ33ql496Duiz7wNe7zRNyt4a62Zkl4xoWOKi/m1anlW5FrxC
+	 gDM7M18pThIVIPWHZo/BJr6e7gFdXZIWZEwhdUrH/hg7kJjnSQClp7Pcky7ZyL/S4lDcU
+	 ALqWkR46cJ/3Xbx1T/BFaROA/WuCjgDk9Vf45DLCyCjwZdYkDmC5hvozlKwj2dhClQQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1793698034;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=wOrq6+f3nxtWdT5oOXG5uqpLCZ4DOyK+a6T74j8bTiM=;
+	b=OOQvSZ2XqefWZ3NpDbCI2VRZoZVZfxuBRDy1Hp++wKfxHGJ04Kl1TSi1BmEKq1lfhamE
+	 0EKJz19XCsMFV32I5yc6Vcp13CK25+y7sg4Pf30L2nxru8vS/bQzSTuXHwpZ45fRlYRHc
+	 d4LoJhc7GbTJH9IK0ivGKPl2JFrsomffcOyIpW61fc5PZ4jm7HzEEHSzDMislvOSs0okm
+	 Klhy84pSphTILaePzeXU6Wc92t2/dLX7E3y6TKxdjYDPTSNeX/XrHK/MCOKFMh975zY36
+	 32QGUJu4CgM/X+CCTJXNHa6ZJm6puiXMHa+J670BibJuIk+C0LXOrUQhXccSFtKxXYA==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D39606D806
-	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 08:04:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5D39606D806
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=aYIqX3pq
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jJh1W0RNxz8RZt;
-	Tue,  3 Nov 2026 09:04:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793693071;
-	bh=yDjkuQhj8wqQW7sNON4Yy0/wXIldLBtFl12mMAzBTUA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aYIqX3pqZYRHgMXt1cl5PXhWOkl92PXD2HC6hwfkeTj6/5x0BIS58eaWF5pxMqatX
-	 TVnSDqeCxgty+xcfflRxnG1ulNDV9QNGlCz226C+cE4OTYTa6w5FTdhjnKiaV0s8vB
-	 9qt0yQ9MUlmKrBP3iyKHnGos5cN2NXvHDWS00056tenzilh0S+eC1VDxPrRBaP4ZT9
-	 4vch9kdtN0QLp1ainTkmtSOM5Pc9msZAPwhv6ZCLIkdA4P6YpHC3nuwMOV7jlX8tA2
-	 Wc3UVSBu6somilMB5IHRejzUz4jbtp0robDXbjk5Nohm8zHx37er5dizXinX/r8D1B
-	 9n7yKqY4L8Vaw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4jJh1V6qskz4xJ2;
-	Tue,  3 Nov 2026 09:04:30 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jJh1S5T0Mz8tgr;
-	Tue,  3 Nov 2026 09:04:28 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 5889D5FA02;
-	Tue,  3 Nov 2026 09:04:17 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7a1cb587-7640-4da5-92d8-57553fd00ca4@leemhuis.info>
-Date: Tue, 3 Nov 2026 09:04:16 +0100
+	by smtp.kernel.org (Postfix) with ESMTPS id 3B0D71F000C1;
+	Tue,  3 Nov 2026 09:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793698034;
+	bh=wOrq6+f3nxtWdT5oOXG5uqpLCZ4DOyK+a6T74j8bTiM=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=a/KZ5mZ+XlWDYSEseVKREeTESPObYpQ421LigSXu75rNVAoWn6Hr0ZkbZsuFjmclm
+	 vWPqocHZvygVeXzWCUjtpHtS8jghLxCotazy1XP+ICM0Pf4Pb9vRO3YAHIBzWJBCcb
+	 0fsjtO+st8XkgrgJCZz/18AzTD1c6rPMjIdJKms8E8ot7TWwtSQKpvcHmJnEuzISao
+	 vjv/7bEuOwxHOAnMCnn1iDJxOd97ArjLBQebIqEGQ9yA+m88rNGaFnTjNmJYuRY7cZ
+	 sIi1qiycTt3822JG6RGYZmhpTt4zt+ARUNJSEsAvVSfrTKIirzPbhAtR6S4mG2AI5h
+	 IcKaFW/XUcEGQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id BA48546682;
+	Tue,  3 Nov 2026 09:27:13 +0000 (UTC)
+From: Mohamed Yassine Jebabli via B4 Relay <devnull+med.jebabli.gmail.com@kernel.org>
+Date: Tue, 03 Nov 2026 10:27:12 +0100
+Subject: [PATCH] ALSA: hda/tas2781: Only accept CRC-less V1 data if all
+ entries are valid
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,69 +83,128 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/gem-shmem: Install writable PTEs for write faults
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Sergio Lopez Pascual <slp@redhat.com>
-Cc: Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Konstantin Fastov <kfastov@gmail.com>, David Hildenbrand <david@kernel.org>,
- dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Boris Brezillon <boris.brezillon@collabora.com>
-References: <20260804140403.16337-1-kfastov@gmail.com>
- <20260804162924.0268f80a@fedora-21.home>
- <CABWhNekebS6dt=Ft+74iG4YpCq-5ZcV1EvvERNxT612VUOC9Ww@mail.gmail.com>
- <18f0bae1-5cdb-460c-a147-33cd1fa2acdf@leemhuis.info>
- <CAAiTLFXd=LK93e=f3PE1f6y5m15yVknqqVNBei5rLz2AnSJ4pQ@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAAiTLFXd=LK93e=f3PE1f6y5m15yVknqqVNBei5rLz2AnSJ4pQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <179369305797.899839.5052632304350013051@mxe9fb.netcup.net>
-X-NC-CID: 7sMBmLbKDQp9r384H0I/4YWHJCS0kWyZfxMwgublF8WzQF9lEXo=
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2MQQqAMAzAviI9W7Ab6PAr4mF2VXuZsokIsr87P
+ CaQvJAlqWQYmxeS3Jr1iBWobYB3HzdBDZXBdKYn6ixePpvBEd6E8eDEuOqDLLxYG0S8W6GmZ5K
+ q/+00l/IB3FbO/2YAAAA=
+X-Change-ID: 20261103-tas2781-v1-nocrc-fix-cecb33deea8f
+To: regressions@lists.linux.dev
+Cc: Cristian Castellano <cristian.castellano@icloud.com>, 
+ stable@vger.kernel.org, Mohamed Yassine Jebabli <med.jebabli@gmail.com>, 
+ Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thorsten Leemhuis <regressions@leemhuis.info>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Sen Wang <sen@ti.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1793698033; l=3393;
+ i=med.jebabli@gmail.com; s=20261001; h=from:subject:message-id;
+ bh=hTyxP5z+2ryyUf7OXKh4MV/62ueN7NmrvIPpkkLjUsk=;
+ b=iqDefFOg+eZPbjNKMezCK9hU3xHZ+lZ5tA03/M4+zN2zOYt9hQ4xHeg563in2/UVpA/9/cm9a
+ 0pN7usuwo9uCnar8LD+9UrnBw3lGPrWP1yA5S3hirRbu0GzxMHMPhQZ
+X-Developer-Key: i=med.jebabli@gmail.com; a=ed25519;
+ pk=DrcY8DXRRRL44W1NDZ4mXZmW9PRCASf9qYo1sm0KFYE=
+X-Endpoint-Received: by B4 Relay for med.jebabli@gmail.com/20261001 with
+ auth_id=1095
+X-Original-From: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
+Reply-To: med.jebabli@gmail.com
+Content-Transfer-Encoding: 7bit
 
-On 10/29/26 17:55, Sergio Lopez Pascual wrote:
-> Thorsten Leemhuis <regressions@leemhuis.info> writes:
->> [CCing Paolo and Sergio]
->> On 8/4/26 16:57, Konstantin Fastov wrote:
->>> вт, 4 авг. 2026 г. в 17:29, Boris Brezillon <boris.brezillon@collabora.com>:
->>>> On Tue,  4 Aug 2026 17:04:03 +0300
->>>> Konstantin Fastov <kfastov@gmail.com> wrote:
->>>>
->>>>> Since the introduction of dirty tracking, drm_gem_shmem_vm_ops has a
->>>>> .pfn_mkwrite handler.  Its presence makes vma_wants_writenotify() true,
->>>>> so vma_set_page_prot() removes the write bit from vm_page_prot of
->>>>> shared mappings, and the vmf_insert_pfn() call in the fault handler now
->>>>> installs read-only PTEs even when serving a write fault.
->>>> [...]
->>>> The same issue is being discussed here [1].
->>>> [...]
->>>> [1]https://lore.kernel.org/dri-devel/20260804120529.1730187-1-pbonzini@redhat.com/
-> [...]>> FWIW, it seems that series takes a while to get polished and
-mainlined:
->> https://lore.kernel.org/all/CABgObfYgZ87%3DW%2B6E%3DN%3DWwTuyYkaoKU3hqd84JDTSAvT3_9dh6w@mail.gmail.com/
->>
->> To quote: "It ballooned a bit and getting acks from everyone involved is
->> hard... Either I or Sergio will get back to it."
->>
->> Is that something you/AsahiLinux/the world can live with?
-> 
-> Asahi still ships their own kernel with downstream patches, and have
-> backported Paolo's series. But for the rest of the world this is pretty
-> bad, as it means anything that requires virtio-gpu with blob mappings
-> (venus, native context, etc..) is broken.
+From: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
 
-Thx for this assessment, helped a lot!
-> Since the proper fix is going to take a while, I think having some form
-> of interim solution could be a good idea.
+Commit 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data
+without CRC") only checked the first device entry. On machines where
+the BIOS populates fewer entries than p->ndev, the remaining all-zero
+entries are applied and tas2781_cali_preproc() divides by zero on
+playback open.
 
-Sounds like it. Is there one that is in reach? Is reverting the culprit
-from Thomas and anything that depends on it an option? Boris patch this
-thread is about would not do the trick I assume?
+Accept CRC-less V1 data only if every expected entry is non-zero and
+self-consistent (R0 * 1/R0 close to 1.0), otherwise reject it as
+before.
 
-Ciao, Thorsten
+Fixes: 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data without CRC")
+Reported-by: Cristian Castellano <cristian.castellano@icloud.com>
+Closes: https://lore.kernel.org/all/4e500063-d985-46b6-a0a1-3feaa77c4b2f@leemhuis.info/
+Cc: stable@vger.kernel.org
+Signed-off-by: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
+---
+Cristian, could you test this on the Yoga Pro 9 16IRP8? With the fix,
+the driver should log "V1 CRC error" again and fall back to default
+parameters, as it did before 408249089c48. If it still logs
+"accepting", p->ndev is 2 on your machine and the root cause is
+elsewhere, so please send the full "dmesg | grep -i tas2781".
+
+Takashi's re_cal check in tas2781_cali_preproc() is complementary
+and still worth applying as a safeguard.
+
+To: Takashi Iwai <tiwai@suse.com>
+To: Jaroslav Kysela <perex@perex.cz>
+Cc: regressions@lists.linux.dev
+Cc: linux-sound@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Cristian Castellano <cristian.castellano@icloud.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Shenghao Ding <shenghao-ding@ti.com>
+Cc: Kevin Lu <kevin-lu@ti.com>
+Cc: Baojun Xu <baojun.xu@ti.com>
+Cc: Sen Wang <sen@ti.com> 
+---
+ sound/hda/codecs/side-codecs/tas2781_hda.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/sound/hda/codecs/side-codecs/tas2781_hda.c b/sound/hda/codecs/side-codecs/tas2781_hda.c
+index e0da299df780..9162173ccb10 100644
+--- a/sound/hda/codecs/side-codecs/tas2781_hda.c
++++ b/sound/hda/codecs/side-codecs/tas2781_hda.c
+@@ -50,6 +50,31 @@ static void cali_cnv(unsigned char *data, unsigned int base, int offset)
+ 		(u32 *)&reg_data, TASDEV_CALIB_N);
+ }
+ 
++/*
++ * V1 data without CRC is only trusted if every expected device has a
++ * populated, self-consistent entry: R0 (Q27) * 1/R0 (Q31) must be
++ * close to 1.0 in Q58.
++ */
++static bool tas2781_v1_nocrc_valid(const unsigned int *v, int ndev)
++{
++	const u64 one = 1ULL << 58;
++	int i;
++
++	if (ndev <= 0 || ndev > 4)
++		return false;
++
++	for (i = 0; i < ndev; i++) {
++		const unsigned int *e = &v[i * 5];
++		u64 prod = (u64)e[0] * e[1];
++
++		if (!e[0] || !e[1] ||
++		    prod < one - one / 10 || prod > one + one / 10)
++			return false;
++	}
++
++	return true;
++}
++
+ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ {
+ 	struct calidata *cali_data = &p->cali_data;
+@@ -145,7 +170,7 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 			 * but leave TimeStamp and CRC zeroed.
+ 			 */
+ 			if (!tmp_val[20] && !tmp_val[21] &&
+-			    tmp_val[0] && tmp_val[1]) {
++			    tas2781_v1_nocrc_valid(tmp_val, p->ndev)) {
+ 				dev_warn(p->dev,
+ 					 "%s: V1 data without CRC, accepting\n",
+ 					 __func__);
+
+---
+base-commit: d73cab4a427f924efd5b5d8769c80e0ca5bdcadf
+change-id: 20261103-tas2781-v1-nocrc-fix-cecb33deea8f
+
+Best regards,
+-- 
+Mohamed Yassine Jebabli <med.jebabli@gmail.com>
+
+
