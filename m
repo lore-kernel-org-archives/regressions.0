@@ -1,102 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793672221;
-	b=hk6nAOY4eLlSe04ctyBOOFcpptc4N3bl9ljVtfJNk53j1kg15IF0AgrxfP7GFHKfs4sV
-	 e8le6On4C9w/4MCftmJwt35TYkBAJQ/DUuab8tFySH8uDvGbOJ5/nb2Rg2kUmHd1kqQP+
-	 dX9LztAbHG3YdCf0q/k/CwqbwH/WIDZULEwpVxExRjojB3UCS3TKwDKD3v12ZpbtkyCbN
-	 Htdwgpt7681YZwbkcaFP0zmvqSX/tbu5C7okDVDyz+NATz/kA6vG21QlGpPLvYiHRAZFW
-	 rN1ubL02xm5ZSAKdqNnBmqjff/e7O8AnBo2kP0jj6OjPJ/doEA91kn+UeTlb4QYarVg==
+	t=1793676864;
+	b=RKpE9OgILI4+wqxR5PhkGTa3HpJTQbA9a60y++FnvP+a+9nCRLVs0gBdxmkTWN8+RE+k
+	 AMooG82+rM5C3JNR/FTURVWu2UDl+k05/jG/7UwAamrknTOBWf3oJdpFr3OmLfvNzLSwD
+	 slPoPl32jJR5VMpiYdixEjgqupKCf1pFmeVcUI+LJiZj218+sVSuur3TkswOl0R9l4YQV
+	 WcRL/jl1J6IRivSWHqoZPmbxbGXmZwtdI0WLdwC6D3I4esFDpUl/P21+lWSwCk7uwIHPs
+	 kzkTpVnvHH0wmJMoFgH9gKhB0c7KGdOW5zjNL3ZVjiNqYWhdEQXf4VzCx8iyz2fTOHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793672221;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793676864;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=IOGgt4lAkAMwt4N6sT0llhti/KNul9J7tc5dogJ2lwc=;
-	b=GvWhR+NNQxn1VilbufvorZ5ea6oKM2Yi9AgJEwRDSDZNsh8MVHEiqHpeGgU5Ib3GfOG0
-	 B+UoGmwRYxvcOfp5A0nvdvFf9mMIK3lXFmVEuAmtux2VZrsi2A2F0LJHCLepzEOpoHUQJ
-	 MKuA6KCNGE5kNc7e096NfVdRWi4OQshV802J5CLApAZ/Di2XVQhS2ZWgTMzHoSseycL+r
-	 2OX7KypJXreCtsdRRr3Cd0wyxr7EIh7gfdjFE3IOXRlu8WbvkjcAaVvXIgaG+froymU1U
-	 AKo9hFqky4DfAL5MWsxb1G8xg/+8Svq/pQZQpBpwQvDXq8yvDcMhqYCjpkCE/C+bDfQ==
+	bh=mwU+A6308ip2iXwKodsHaokt6SloRiTa7TXQScnGfWM=;
+	b=YEGb5AdF+1t62jvJGQIkcHRPNO7UeGSxP1HfPr/0krpVPf9+jUBTAAbt5KPwzL2Ld7RS
+	 +JFVBnHKGYuHOkwmblBVDwpPPUPrE6qeO4l04raVT3MENnKZcLN+h1QU+vKwa/aG3/8CH
+	 +g/PdWy1AXSGEuYqHgBfURyAw8Oln6TmN1BVuKKmaPkXSg4OkpVZmJcKOIWjqsfhL4n4H
+	 gXipP+ndcdpcAMJ8MQXSXrb/AN0h2xexKmwGemxJeSJOmrcPv50E5zYrAcGrWHXOe8NVE
+	 BUHX8ygKPrRcZx9kjvCNPXxNDXQte5G/nFzLJtIeNJmq1CJXWPPgS9mTfKXpd+C1RBg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=jtv1XhB6;
-	arc=none smtp.remote-ip=209.85.210.179
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	dmarc=none header.from=jclark.com;
+	spf=pass smtp.mailfrom=jclark.com;
+	dkim=pass header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b="TU9v/aEz";
+	arc=none smtp.remote-ip=209.85.216.48
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766D4606A32C
-	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 02:17:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 766D4606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF1D606D809
+	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 03:34:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CF1D606D809
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jclark.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jclark.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=jtv1XhB6
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8a06c60065fso2544673b3a.1
-        for <regressions@lists.linux.dev>; Mon, 02 Nov 2026 18:17:01 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=TU9v/aEz
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3acb512a7a0so2308294a91.1
+        for <regressions@lists.linux.dev>; Mon, 02 Nov 2026 19:34:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793672221; x=1794277021; darn=lists.linux.dev;
+        d=jclark-com.20260707.gappssmtp.com; s=20260707; t=1793676863; x=1794281663; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=IOGgt4lAkAMwt4N6sT0llhti/KNul9J7tc5dogJ2lwc=;
-        b=jtv1XhB6Mtiedz+uSY+B7vauO+un5UHrrC75CMpD16Eh+J5wsX3jq7Z8V3uzplreht
-         JYBYdfaN1SAGAPOZcXqHwe7Qnj6+nSHGz3yf/IqF+RWrcl9S7Aaa+s34B1VPoiuhtj1z
-         kpIaIaOww4mfnEH8kpJe5L+BeDd7f5Za8B5a7EYyzgQXNxMAwdpUHt107y6C1surZpLG
-         nG9/wsySr6zxeTzxlOr/A933+29aPlVTqi83fPr2z5higDqAGPv4Tzsi+EgQdBd/8lNE
-         yDKCu7aQvedsWfx5p94P3YIFmgOE1UznWjvRWKhED4uXllrOOclAK7DWYx4PJbOGXRd7
-         kijA==
+        bh=mwU+A6308ip2iXwKodsHaokt6SloRiTa7TXQScnGfWM=;
+        b=TU9v/aEzLlUhtr+F85tCFFFSPJCZtOJvvkyXuQ213tcdvObHvNG4Q2fuwOIM8zPDOj
+         eh401zEgsNYJJMaAUZcgngV4ss0m042o1ln4adYDsGRzwB9it6LVpL5ikmV3O4OHAiys
+         uqhxuZl63rsU3GKwAjg5enTc9cJamtTpEDAKl/NmPT+F4juFnpZ7salZj3gqZutmJGpL
+         YNcMTPw3QXBNrt18aDHnW/3ZhFV/tiWH+UbsA4h+nzCLvYxaTnRwqZgjCuxZmuFipAJE
+         5OxlEs/r3HX3BxTCvKKEn96pzQYL7MEqKPRZPVS+kyw4z/XCs0GCvZNMc9TmAYOnLsAO
+         fq6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793672221; x=1794277021;
+        d=1e100.net; s=20260707; t=1793676863; x=1794281663;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=IOGgt4lAkAMwt4N6sT0llhti/KNul9J7tc5dogJ2lwc=;
-        b=LTxTyYCNftemb/nwZPaVimuhygtYD6ArFVtOhtblsp2U28mNz6101JSmWyGf44Btzx
-         Iccy9pGk48MzctwLnngIAJ5lVfGrmuFAjdHgdLkrncmNPvnFpNf78kIfs3TflXKrfglb
-         5nPVgDoYsGt76Mb65ZqgVhMubQr5FFWEOZ/iaxDdWgYLAnv0v6jNU9fmcIwEnRJwBIhb
-         zzjRsn/ZT7tylqGSTOqlHWA4XFOhjFGK9uaURCXfcfU1Zpd3oO7cqHF9Ey20fAcOHGkO
-         binztB3UTQywLmiTASxZhLCaicZ8+IJbphij0kzYwm33O0iLVm9h3CVncEo+5jBVCp/k
-         zJsg==
-X-Forwarded-Encrypted: i=1; AKwUvBz2jyS025XCn4Se2nSCt61hfrRzr5XQB/r/5T1zqEfl8df6HaX1ucde889+Fagzh0tLS5BopyiBJlK+oA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9o3Ozbnbin6D1c+SG55u+j65+Dz+bwhdVd7p8TReswikQV5tZB
-	OBYdrapgT2YqGygL1dL3ih8/LweIjhc6AvP7NDpniiYuhEguiOTWvZLM
-X-Gm-Gg: AYBFou27NSTAf0n/cFvv+eN9907ykFXjC1q9TCrRGjlcQ77F5Otk4GFd2mq1ftaTnAu
-	nvt5w4HbfZcll1gO8OIelVkAQ66UhSO/3S9GTWAg7OYv4NNWtdkpyCB6GJIl3VOqMi/yfZS2aXY
-	eNQmyIVaWnuMtoVp1CBZnbr+qaYdg5OhN+dST2tEmVn+Arla1AdzbmiLtgvjTVz8f2FZD3XZYaS
-	a+QSor0EkYxXGnewJG9AC6FSCt6+Lf49oZSSwhdjH9xY6/8HJ6qZ0IuH1sT/YlBBIxNQ7DKN77S
-	AQOJMnWrRb0QYDsTOrMEGPvGjLpD0WucSCUxnbYjStwKlNtCzkybpuouEq3Qd4TjuwlMi+5+4G/
-	Fo7donZg3LXzx3l5P2xUEIRkAt0GqugmofSnGGb0y6nrNheHmftEmV374ZiRobu0cm02DuKFzvl
-	70UlNQkjxigd2EOmagTkz7UkkvpG3eUuunUQgAYcIFYVhEHZjQTpMCjDM3DNpsCC53gRpEyvmGR
-	BTZeSOy0rDkNsRd2EOUAoRZSNGhrLYJiTfvManlA0PYlVek/XI2zSZ/5ozhYujhTs2s6fjrx3b+
-	ToX+ry4dh6z+HiTVulHWI1KqYDp5+U97gEmmI3Y8Ync=
-X-Received: by 2002:a05:6a21:3b49:b0:3e1:d379:f3b3 with SMTP id adf61e73a8af0-3e928fe8569mr7948733637.77.1793672220726;
-        Mon, 02 Nov 2026 18:17:00 -0800 (PST)
-Received: from iZj6c0kydq3fvfrtx5kta5Z ([47.86.51.122])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdb36448182sm490457a12.6.2026.11.02.18.16.57
+        bh=mwU+A6308ip2iXwKodsHaokt6SloRiTa7TXQScnGfWM=;
+        b=Fq2+DUUXag8D7hEw267dxKn3vHhDWlVnAWe94Dr85mBxz0ekWVr97h2DpebML2sUnJ
+         uvznmZFDJgVgnf9MiaDeZnywODHMA36F3ayFMqH9ZMw6qNz47eebXpKman3OFTd+9cmp
+         mbqiibhpuJzeWuTJQi5MTpHWWWf5C1fYIotIrjgAZLyXeGltgB8RaBBIiB4CEDm1PW8X
+         NtgrkMlTwhpr4olYBK90nFH4R3ufbFPfKAFEqiUF+2Xyycw1Ns/PqRzbtXznPyrdWyvi
+         44HgxRfe9/qRXpKbIazHOz8azdappc1p7nZ0us0vwLguMFxCmlTm9gEpTFWLtNDS7QiL
+         j1rQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxrLU88XqWERe/F4+i17UX27kJCoxMb76QYahfDof2mFfUcMjKGzx1+gHDs0ZHGCwH220dP7mAuHF92vg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+36MA5Lj+90432kkFKVVm7iscoZRI5EXMMwAa/85OYkjP0xE+l
+	2QGaZE6Wzdtcv/jBIToCQFs6NEIOgxaKuFDaWUs2+lGw9mb3Uh3/burjAAr59L8saw==
+X-Gm-Gg: AYBFou2vMifQlyIjg7qcZ30vLXdY72+aYoDaGZlUx41O6HCy00SemOMDjWmOFc5y2nl
+	adks+MoT+TRoLo42DrsMWB8PlkYVlAUmEs1uy5WApEuztfICk3b0V5DYTN81LIgNbTEYvJCF3Kl
+	loeB/6TfMENpwl4DQmFBwztRl7dHGMh5Xf0nTJf+t8CAIzDCI+UzkQNogeIbOkXZKAzRp9g8f4J
+	7NK4t9CCceYkIhft3jj7q6CTBbyn7lXN2wIyIlMKBp2dODzHLjbY/GlJ/e/PKr+ZfPB3KF7new6
+	ZW2b92oJ/Sv11F++/yq1ugBhQBklSj2H8YPKtO4QBkV8+yzIk8WMIXW79JroiNLCls1SM5kZOYQ
+	mKL9g0jMo1nG29YsiMHUzW8OVzKsqC0kC3eLaETGif5FcDrZa5EK6ybAPHlAMfEcK/P2b8dQQUK
+	os65Fb1gmolX+c3kVWd21CeZtxUYDeP81uLLqDblwfc9SFFPtZq/iZPoTaHRq5MKaMTl8A4zYJ1
+	Mn6B0ZkvHQ4PTx7M5GsdRJ4He8P29YZTVoEOnYDR4SPgyg1tflbhNO/uKyidgjwA+aT8mK8GTFo
+	17LmPJ6sEB7c1Sx1ki5ZTEwEkITP4oIDI7k63tJvrACO/Dj1PBSH5bSmN7zZ3UzQF9trxcZRQFY
+	eiJGXJPrqegrjZ5ynTw==
+X-Received: by 2002:a17:90b:518c:b0:3ae:2961:14d5 with SMTP id 98e67ed59e1d1-3ae8979807emr9012242a91.42.1793676863114;
+        Mon, 02 Nov 2026 19:34:23 -0800 (PST)
+Received: from cantal.lan ([58.136.77.237])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c29e619sm1965566a91.0.2026.11.02.19.34.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 18:17:00 -0800 (PST)
-From: Challvy Tee <challvy.tee@gmail.com>
-To: x86@kernel.org,
-	linux-coco@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org,
-	kas@kernel.org,
-	dave.hansen@linux.intel.com,
-	rick.p.edgecombe@intel.com,
-	vishal.l.verma@intel.com,
-	kai.huang@intel.com,
-	seanjc@google.com
-Subject: [PATCH v5] x86/virt/tdx: Gate TDH.SYS.DISABLE on X86_FEATURE_TDX_HOST_PLATFORM
-Date: Tue,  3 Nov 2026 10:16:50 +0800
-Message-ID: <20261103021650.924302-1-challvy.tee@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <09c311c6aae214c04a9a55ff6456d7abfe82c319.camel@intel.com>
-References: <09c311c6aae214c04a9a55ff6456d7abfe82c319.camel@intel.com>
+        Mon, 02 Nov 2026 19:34:22 -0800 (PST)
+From: James Clark <jjc@jclark.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Stern <stern@rowland.harvard.edu>
+Cc: Johan Hovold <johan@kernel.org>,
+	Bastien Nocera <hadess@hadess.net>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Robert Nelson <robertcnelson@gmail.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH v3 1/2] usb: core: clean up before handing a device to the generic driver
+Date: Tue,  3 Nov 2026 10:34:12 +0700
+Message-ID: <74b3f919f214a8ece24161a2c904d8a5744b703e.1793669297.git.jjc@jclark.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <cover.1793669297.git.jjc@jclark.com>
+References: <cover.1793669297.git.jjc@jclark.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -108,63 +110,58 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and
-kdump") made native_machine_crash_shutdown() call tdx_sys_disable(),
-whose only gate is compile time (CONFIG_INTEL_TDX_HOST).  A kernel that
-never initialized the TDX module therefore still issues
-TDH.SYS.DISABLE.
+When a USB device driver's probe returns -ENODEV, usb_probe_device()
+hands the device to the generic driver. It does not first undo what it
+did before calling the probe. This causes two problems.
 
-In VMX non-root operation on a SEAM-capable host, SEAMCALL causes a VM
-exit instead of a native #UD.  KVM injects #UD only since
-commit 9d7dfb95da2c ("KVM: VMX: Inject #UD if guest tries to execute
-SEAMCALL or TDCALL"), first released in v6.18.  On an older host the
-VMM gets KVM_EXIT_INTERNAL_ERROR and the vCPU never resumes, so
-machine_kexec() is never reached and no vmcore is written.  Kdump is
-thus broken only in guests on SEAM-capable hosts whose hypervisor does
-not handle the exit; plain kexec is unaffected because tdx_shutdown()
-only runs as a syscore op, registered after init_tdx_module() succeeds.
+First, if the driver sets generic_subclass, the generic probe has
+already run. It configured the device and sent a USB_DEVICE_ADD
+notification. The generic driver then does both again. Notifier users
+such as the usbport LED trigger see two USB_DEVICE_ADDs with no
+USB_DEVICE_REMOVE in between.
 
-Gate the SEAMCALL on X86_FEATURE_TDX_HOST_PLATFORM before issuing it,
-the way paddr_is_tdx_private() already guards its own SEAMCALL in this
-file.  Without that feature the module is never initialized, so there
-is nothing to disable; on a TDX host the gate is a no-op.
+Second, if the driver does not set supports_autosuspend, a runtime PM
+reference was taken before the probe. Nothing drops it, so the device
+can never be runtime suspended.
 
-It also decouples kdump from the host KVM version -- a guest cannot
-require its host to inject the #UD.
+Clean up before handing the device over, in the same way as
+usb_unbind_device() does when a driver is unbound: first, for a driver
+that sets generic_subclass, call usb_generic_driver_disconnect();
+second, for a driver that does not set supports_autosuspend, drop the
+runtime PM reference with usb_autosuspend_device().
 
-Fixes: 5b25f249be32 ("x86/tdx: Disable the TDX module during kexec and kdump")
-Suggested-by: Kiryl Shutsemau <kas@kernel.org>
-Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Challvy Tee <challvy.tee@gmail.com>
+This leaves one limitation. Until the generic driver binds, the device
+has no driver. If it is runtime suspended in that time, it can't be
+resumed. This is transient: the generic driver resumes the device when
+it binds.
+
+This change does not alter what happens when the probe fails with any
+other error. The device stays configured, so its interfaces keep
+working. It keeps the runtime PM reference, because a device without a
+driver can't be resumed. Its USB_DEVICE_ADD stays unpaired, because
+sending USB_DEVICE_REMOVE would mean unconfiguring the device.
+
+Fixes: 88b7381a939d ("USB: Select better matching USB drivers when available")
+Signed-off-by: James Clark <jjc@jclark.com>
 ---
-v4 -> v5:
- - Update the subject to name the X86_FEATURE_TDX_HOST_PLATFORM check,
-   as requested in review.  No code change.
- - Add the Reviewed-by tags collected on v4.
+ drivers/usb/core/driver.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The reproduction data and the host-side KVM log are unchanged from v4:
-https://lore.kernel.org/all/20261102073244.919864-1-challvy.tee@gmail.com/
-
- arch/x86/virt/vmx/tdx/tdx.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 96ced0494b68..9b01131f7b7b 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -2321,6 +2321,9 @@ void tdx_sys_disable(void)
- 	struct tdx_module_args args = {};
- 	u64 ret;
- 
-+	if (!boot_cpu_has(X86_FEATURE_TDX_HOST_PLATFORM))
-+		return;
-+
- 	/*
- 	 * Don't loop forever.
- 	 *
+diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
+index d3a61ebc6afb..9b8cd0e4219e 100644
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -295,6 +295,10 @@ static int usb_probe_device(struct device *dev)
+ 		error = -EINVAL;
+ 	if (error == -ENODEV && udriver != &usb_generic_driver &&
+ 	    (udriver->id_table || udriver->match)) {
++		if (udriver->generic_subclass)
++			usb_generic_driver_disconnect(udev);
++		if (!udriver->supports_autosuspend)
++			usb_autosuspend_device(udev);
+ 		udev->use_generic_driver = 1;
+ 		return -EPROBE_DEFER;
+ 	}
 -- 
-2.52.0
+2.56.0
 
