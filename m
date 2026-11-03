@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793676864;
-	b=RKpE9OgILI4+wqxR5PhkGTa3HpJTQbA9a60y++FnvP+a+9nCRLVs0gBdxmkTWN8+RE+k
-	 AMooG82+rM5C3JNR/FTURVWu2UDl+k05/jG/7UwAamrknTOBWf3oJdpFr3OmLfvNzLSwD
-	 slPoPl32jJR5VMpiYdixEjgqupKCf1pFmeVcUI+LJiZj218+sVSuur3TkswOl0R9l4YQV
-	 WcRL/jl1J6IRivSWHqoZPmbxbGXmZwtdI0WLdwC6D3I4esFDpUl/P21+lWSwCk7uwIHPs
-	 kzkTpVnvHH0wmJMoFgH9gKhB0c7KGdOW5zjNL3ZVjiNqYWhdEQXf4VzCx8iyz2fTOHA==
+	t=1793676865;
+	b=2FGMHd2zSv42++uHKsDplo5gwRaZp9KMrNGs0GL1W9yJ+t+1qDgTGHUk3NBwNUKdWBi1
+	 KJkruWfv8aA9SZw1OnVGaHIq6VgesTyixFlvBi9DyFoyBHNsBqeUp43tgGjQXO1P46dcQ
+	 /RBlJJKZD3MwYY8EF7edOFTOjaY9Odk/guefYLoxrzWS2NyOVAkB3e7+t04kte4mS9OhK
+	 74B5yNbfeY3bT+5BY3BjC6cLhDMxv1hnUCfVVQZhCl31NzyskQmywOsG2cwVsNqzGjczd
+	 LPOL9cDgADqo6fwSHcwQ2tVtG7C2RSpCwuAmvkLlrN+USZ1kA8WcATUZMUwyqiO6ADQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793676864;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793676865;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=mwU+A6308ip2iXwKodsHaokt6SloRiTa7TXQScnGfWM=;
-	b=YEGb5AdF+1t62jvJGQIkcHRPNO7UeGSxP1HfPr/0krpVPf9+jUBTAAbt5KPwzL2Ld7RS
-	 +JFVBnHKGYuHOkwmblBVDwpPPUPrE6qeO4l04raVT3MENnKZcLN+h1QU+vKwa/aG3/8CH
-	 +g/PdWy1AXSGEuYqHgBfURyAw8Oln6TmN1BVuKKmaPkXSg4OkpVZmJcKOIWjqsfhL4n4H
-	 gXipP+ndcdpcAMJ8MQXSXrb/AN0h2xexKmwGemxJeSJOmrcPv50E5zYrAcGrWHXOe8NVE
-	 BUHX8ygKPrRcZx9kjvCNPXxNDXQte5G/nFzLJtIeNJmq1CJXWPPgS9mTfKXpd+C1RBg==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=b1Rw55oWDrh7Qrrp6JFBlhT1fM/bU2NaiuzfyjKKcU8=;
+	b=ARpLntNKdjfRZ9hDRSL6YgSa/wSQXGwM4BD3Ze8BL/LhE3doAfoXUJDLHoLSE9catIkB
+	 K7VkFwfKabX7V6yJ8D4vaVyQYIB/QEwJcFzy91TBEx2zPQaywc6+9+385YPe0g7aB6GBZ
+	 gC5nYtmyl46n9/hCiv/v9KLK9rqsDZ3uJl8mAD0vCC3dBWjIRpvtt6lBTi3eWF9+vYyi3
+	 C7mQc3UYOJ1X4935ERZjFsPN5h7sT9YVgeiT19b/Dqr9yNXQkop0k7pKHzFnZmgiHJiJI
+	 PmuiWCnAz1/tkkDzhZvgWEzV1iV2L1VddoI2zJ8awL8ZxWqkoJhcUzebVtVpjZBcFTw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=jclark.com;
 	spf=pass smtp.mailfrom=jclark.com;
-	dkim=pass header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b="TU9v/aEz";
-	arc=none smtp.remote-ip=209.85.216.48
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	dkim=pass header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=nnDSdkz7;
+	arc=none smtp.remote-ip=209.85.214.179
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF1D606D809
-	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 03:34:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CF1D606D809
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6FE606A32E
+	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 03:34:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9B6FE606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jclark.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jclark.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=TU9v/aEz
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3acb512a7a0so2308294a91.1
-        for <regressions@lists.linux.dev>; Mon, 02 Nov 2026 19:34:23 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=nnDSdkz7
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2e8b20a899fso25215905ad.1
+        for <regressions@lists.linux.dev>; Mon, 02 Nov 2026 19:34:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jclark-com.20260707.gappssmtp.com; s=20260707; t=1793676863; x=1794281663; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mwU+A6308ip2iXwKodsHaokt6SloRiTa7TXQScnGfWM=;
-        b=TU9v/aEzLlUhtr+F85tCFFFSPJCZtOJvvkyXuQ213tcdvObHvNG4Q2fuwOIM8zPDOj
-         eh401zEgsNYJJMaAUZcgngV4ss0m042o1ln4adYDsGRzwB9it6LVpL5ikmV3O4OHAiys
-         uqhxuZl63rsU3GKwAjg5enTc9cJamtTpEDAKl/NmPT+F4juFnpZ7salZj3gqZutmJGpL
-         YNcMTPw3QXBNrt18aDHnW/3ZhFV/tiWH+UbsA4h+nzCLvYxaTnRwqZgjCuxZmuFipAJE
-         5OxlEs/r3HX3BxTCvKKEn96pzQYL7MEqKPRZPVS+kyw4z/XCs0GCvZNMc9TmAYOnLsAO
-         fq6Q==
+        d=jclark-com.20260707.gappssmtp.com; s=20260707; t=1793676859; x=1794281659; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=b1Rw55oWDrh7Qrrp6JFBlhT1fM/bU2NaiuzfyjKKcU8=;
+        b=nnDSdkz7B3KIyMdRBmzg0uf+Htm4j5Y4X0bDc30u37pfr1S0sEq8/5E4tLsZkME8v3
+         g4rxQ4T+1hnOo1+1OzIIVjoG3s4HrCgZDW+pp86uxsEb/F7H8cOLuSSqVSGbadOIvVYq
+         uwvxeWLc5z3Rwepi5aearoAfoYoxCWenSA9ZFHKLhQDuxDf3pPPCT2Xf4cc1BCLtesUt
+         XlgEHjOfKlc2I2vkCcC3QSuD4COIjVbrSL4OugF5urFNjjQnwtYdenQPTjoHk0Xx6QD0
+         umHtJouTZXY07N7dWFf6314x+SxpUDvR7h4pX4nttoWS6Cqz/c7jatv2xnbFcMXVgOr/
+         XxMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793676863; x=1794281663;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mwU+A6308ip2iXwKodsHaokt6SloRiTa7TXQScnGfWM=;
-        b=Fq2+DUUXag8D7hEw267dxKn3vHhDWlVnAWe94Dr85mBxz0ekWVr97h2DpebML2sUnJ
-         uvznmZFDJgVgnf9MiaDeZnywODHMA36F3ayFMqH9ZMw6qNz47eebXpKman3OFTd+9cmp
-         mbqiibhpuJzeWuTJQi5MTpHWWWf5C1fYIotIrjgAZLyXeGltgB8RaBBIiB4CEDm1PW8X
-         NtgrkMlTwhpr4olYBK90nFH4R3ufbFPfKAFEqiUF+2Xyycw1Ns/PqRzbtXznPyrdWyvi
-         44HgxRfe9/qRXpKbIazHOz8azdappc1p7nZ0us0vwLguMFxCmlTm9gEpTFWLtNDS7QiL
-         j1rQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxrLU88XqWERe/F4+i17UX27kJCoxMb76QYahfDof2mFfUcMjKGzx1+gHDs0ZHGCwH220dP7mAuHF92vg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+36MA5Lj+90432kkFKVVm7iscoZRI5EXMMwAa/85OYkjP0xE+l
-	2QGaZE6Wzdtcv/jBIToCQFs6NEIOgxaKuFDaWUs2+lGw9mb3Uh3/burjAAr59L8saw==
-X-Gm-Gg: AYBFou2vMifQlyIjg7qcZ30vLXdY72+aYoDaGZlUx41O6HCy00SemOMDjWmOFc5y2nl
-	adks+MoT+TRoLo42DrsMWB8PlkYVlAUmEs1uy5WApEuztfICk3b0V5DYTN81LIgNbTEYvJCF3Kl
-	loeB/6TfMENpwl4DQmFBwztRl7dHGMh5Xf0nTJf+t8CAIzDCI+UzkQNogeIbOkXZKAzRp9g8f4J
-	7NK4t9CCceYkIhft3jj7q6CTBbyn7lXN2wIyIlMKBp2dODzHLjbY/GlJ/e/PKr+ZfPB3KF7new6
-	ZW2b92oJ/Sv11F++/yq1ugBhQBklSj2H8YPKtO4QBkV8+yzIk8WMIXW79JroiNLCls1SM5kZOYQ
-	mKL9g0jMo1nG29YsiMHUzW8OVzKsqC0kC3eLaETGif5FcDrZa5EK6ybAPHlAMfEcK/P2b8dQQUK
-	os65Fb1gmolX+c3kVWd21CeZtxUYDeP81uLLqDblwfc9SFFPtZq/iZPoTaHRq5MKaMTl8A4zYJ1
-	Mn6B0ZkvHQ4PTx7M5GsdRJ4He8P29YZTVoEOnYDR4SPgyg1tflbhNO/uKyidgjwA+aT8mK8GTFo
-	17LmPJ6sEB7c1Sx1ki5ZTEwEkITP4oIDI7k63tJvrACO/Dj1PBSH5bSmN7zZ3UzQF9trxcZRQFY
-	eiJGXJPrqegrjZ5ynTw==
-X-Received: by 2002:a17:90b:518c:b0:3ae:2961:14d5 with SMTP id 98e67ed59e1d1-3ae8979807emr9012242a91.42.1793676863114;
-        Mon, 02 Nov 2026 19:34:23 -0800 (PST)
+        d=1e100.net; s=20260707; t=1793676859; x=1794281659;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=b1Rw55oWDrh7Qrrp6JFBlhT1fM/bU2NaiuzfyjKKcU8=;
+        b=noJYgWF57j0OWwbim9UWX+fN8GNsFMDzKPe5E879qQHti7JW5oaEzlgB5Afvz48Gmv
+         RTgvXuhajaDO26Bbi4C1hd8/EI6PwJR6Fs4Ny6GulaoeJLSLYnGCJy7yi06X9OVUTuqW
+         cFDGoMZwXqxIMxJMUo+y/g2L92mpB2eHYmhsdTsM0t4J1wxxJ+vhgq9hoZ436ampmeIi
+         5kNy4QT42zDP0DRK//6Gbt6oiLmXaNH1u9+pgkjK7XZvb4/zEG8mgjB9stN6jLFktUsp
+         zLREL4dRClANxTSLkU4/uy4Vo7awfE+dKCq/F0y7y5H1Vt5cntocqf2QWHFfoggqIoUP
+         wXWA==
+X-Forwarded-Encrypted: i=1; AKwUvBxX7ghIaFTtIddLbxNMN5RPPa+yn+yibXTDe0M5ri55w5zuue8B5aA3CDtmGRhrBUEFYOwkUDS5421d5w==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+m7HleW6a9/fD9ScE1joA4R0q30I5ML6cq6dXC1vWWsRdIe7wO
+	lPjfeJGuA4+1xiv45O1e7rZ/47QBWuTINURb6erfO3KeOGKd4C2yZSzOcvmQcJ7E3A==
+X-Gm-Gg: AYBFou1sdirkjQzKjCFyBWdVJWuUur/YiyCq7hp+QZTI2DFa/alpExXcTODhZrzqAZe
+	jMyr3nkVTf16Nq7JKmgPM2wNBJwJYACx8Y05iyJQV9k7/TsJuIallpZXjQhdCwv1A1ahLANaQUX
+	knBwaZRgfEQDT005eZdLbEOpRzS0H4LXKP5tY1Fp2sNAy8Ub7yJCsohwKa+O0FJWBtoXIA1vg51
+	w5nYRy1daRORQqOvuV5QQbdYqWbYyiVrt2g/mNDiod/1bPrBpa4rJhQ3kYhnfH0ltQHllTlVf43
+	8UgABXWxe5+zpGLWkdGqtWgetk4Ijr5y6zR9GnUnKd65t+/ycMXOyPnEKu065mnaA9T/RjHkaNL
+	1DfdL3rOQNs6/c4Tc+YBpkVqD39xa+Z/XUABfAd7nFMI6cSMppdJBtplCAeYWd1AwQhpNxIfblR
+	DE0FArYJ7zfHeIEYjh6uIiJbQKskD0d2wmmM6GEdKRY1Do7KrX4X+8aYmsUX7zdwZcLkYeO+T2E
+	hrSC6VbVd//arfqq1Dhh6joRlsKrDUAh1N6XF9za5LjhV1PSuWNJ/xaofEyUfxm5BT62n5KynC6
+	vZbYrCysaPSbmJSNxKx3Qwnig0U4EVuCed2X/xYENKVfL/cezDJVZDUSKQCgimQgmZDqFjvMdAD
+	PPd7FyDjJECyavAs35w==
+X-Received: by 2002:a17:90b:2d0c:b0:3ad:d29c:5e64 with SMTP id 98e67ed59e1d1-3ae897e30c8mr9894127a91.65.1793676858713;
+        Mon, 02 Nov 2026 19:34:18 -0800 (PST)
 Received: from cantal.lan ([58.136.77.237])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c29e619sm1965566a91.0.2026.11.02.19.34.19
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c29e619sm1965566a91.0.2026.11.02.19.34.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 19:34:22 -0800 (PST)
+        Mon, 02 Nov 2026 19:34:18 -0800 (PST)
 From: James Clark <jjc@jclark.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Alan Stern <stern@rowland.harvard.edu>
@@ -93,12 +92,10 @@ Cc: Johan Hovold <johan@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	regressions@lists.linux.dev
-Subject: [PATCH v3 1/2] usb: core: clean up before handing a device to the generic driver
-Date: Tue,  3 Nov 2026 10:34:12 +0700
-Message-ID: <74b3f919f214a8ece24161a2c904d8a5744b703e.1793669297.git.jjc@jclark.com>
+Subject: [PATCH v3 0/2] usb: core: fix failed device driver probes, add pre_probe
+Date: Tue,  3 Nov 2026 10:34:11 +0700
+Message-ID: <cover.1793669297.git.jjc@jclark.com>
 X-Mailer: git-send-email 2.56.0
-In-Reply-To: <cover.1793669297.git.jjc@jclark.com>
-References: <cover.1793669297.git.jjc@jclark.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -110,58 +107,43 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a USB device driver's probe returns -ENODEV, usb_probe_device()
-hands the device to the generic driver. It does not first undo what it
-did before calling the probe. This causes two problems.
+On a BeagleY-AI with BeagleBoard's device tree, kernels since commit
+f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64 platforms")
+no longer boot to a usable system: the on-board USB hub is re-probed in
+a loop. Patch 2 fixes this as Johan Hovold suggested, with a pre_probe
+callback that lets onboard_usb_dev defer before the hub is configured.
 
-First, if the driver sets generic_subclass, the generic probe has
-already run. It configured the device and sent a USB_DEVICE_ADD
-notification. The generic driver then does both again. Notifier users
-such as the usbport LED trigger see two USB_DEVICE_ADDs with no
-USB_DEVICE_REMOVE in between.
+Patch 1 fixes two pre-existing bugs found by a Sashiko review of v2.
 
-Second, if the driver does not set supports_autosuspend, a runtime PM
-reference was taken before the probe. Nothing drops it, so the device
-can never be runtime suspended.
+Tested on the BeagleY-AI on top of v7.4-rc1: the board boots normally.
+The -ENODEV fallback that patch 1 changes is not reached on this board.
 
-Clean up before handing the device over, in the same way as
-usb_unbind_device() does when a driver is unbound: first, for a driver
-that sets generic_subclass, call usb_generic_driver_disconnect();
-second, for a driver that does not set supports_autosuspend, drop the
-runtime PM reference with usb_autosuspend_device().
+I found this by booting commit 85b4bc79dde7 (net/main during the 7.4
+merge window) on a BeagleY-AI with BeagleBoard's device tree. A coding
+agent identified the problem, explained it to me and proposed an initial
+fix, which was revised numerous times on the basis of comments on v1 and
+v2, my feedback and local Sashiko reviews. I verified that the series
+fixes the problem on top of v7.4-rc1.
 
-This leaves one limitation. Until the generic driver binds, the device
-has no driver. If it is runtime suspended in that time, it can't be
-resumed. This is transient: the generic driver resumes the device when
-it binds.
+v3:
+- Add a patch to fix existing problems, as requested by Alan Stern.
+- Patch 2: rebased on it, no other change.
+v2: https://lore.kernel.org/all/20261030151919.3511106-1-jjc@jclark.com/
+v1: https://lore.kernel.org/all/20261030114705.3159093-1-jjc@jclark.com/
 
-This change does not alter what happens when the probe fails with any
-other error. The device stays configured, so its interfaces keep
-working. It keeps the runtime PM reference, because a device without a
-driver can't be resumed. Its USB_DEVICE_ADD stays unpaired, because
-sending USB_DEVICE_REMOVE would mean unconfiguring the device.
+#regzbot introduced: f918e3804498
 
-Fixes: 88b7381a939d ("USB: Select better matching USB drivers when available")
-Signed-off-by: James Clark <jjc@jclark.com>
----
- drivers/usb/core/driver.c | 4 ++++
- 1 file changed, 4 insertions(+)
+James Clark (2):
+  usb: core: clean up before handing a device to the generic driver
+  usb: core: add a pre_probe callback for device drivers that may defer
 
-diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-index d3a61ebc6afb..9b8cd0e4219e 100644
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -295,6 +295,10 @@ static int usb_probe_device(struct device *dev)
- 		error = -EINVAL;
- 	if (error == -ENODEV && udriver != &usb_generic_driver &&
- 	    (udriver->id_table || udriver->match)) {
-+		if (udriver->generic_subclass)
-+			usb_generic_driver_disconnect(udev);
-+		if (!udriver->supports_autosuspend)
-+			usb_autosuspend_device(udev);
- 		udev->use_generic_driver = 1;
- 		return -EPROBE_DEFER;
- 	}
+ drivers/usb/core/driver.c          | 42 ++++++++++++++++++++++++++----
+ drivers/usb/misc/onboard_usb_dev.c | 15 ++++++-----
+ include/linux/usb.h                | 14 ++++++++++
+ 3 files changed, 59 insertions(+), 12 deletions(-)
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
 -- 
 2.56.0
 
