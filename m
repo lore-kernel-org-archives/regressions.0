@@ -1,65 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793717543;
-	b=HarV9i71gD1EOBhksVC17rYrE2PbmXZiGyf8GV3LvZtsUlV8MbNk7EcLYX6pVxD7UbXb
-	 ccJz0TBlJu0kac5UwQ1sDEz4ScS2xAuL/AoMgnnzxEcYYs9fCkQPKJarBqnkGSp1h0vfa
-	 U6uBv0oZt3m0u2fXZuGU15zrr4LqOGiZiwws2R1y2HISt253mMVl5o3yPMvAb0OLe0/0K
-	 gWqBfiot0HeLOPlTATs7+LgzjGUhRfcvkRIXEy912F3A/E5yAdozmr4YZgXzCiqWZKT8D
-	 XCoRibLM3gZj3496Iyahtyyh/VJVYR257KiLiiI1rZAswjvta+5R6GNSlVaMZqaq4iw==
+	t=1793718644;
+	b=M/JhQ3yoIihKrHFX+lOKeAJv83G/QdqQuuOS0k0EiviFUTNr/U/1RGjH5SoBlGW4ewOH
+	 DheKd9yjZsEaA8zVrjQUmwnGH6VJrzL2i+qs7biLTIlZFyEZGwn8c+TUDGwMk7Z7baqEs
+	 MZlgNuSAIab/RNIVTQysxYh+bB1G1qEUNc8rdOsEOKG0lZDdKQ4Fbj/Cm8/u2Ud6G/YIO
+	 CMmCx0rO+ayoJeQ2uPitu6jVUlfS87biiXjttwLTffVdF1a6A2MTO3pIUl3j23p/g6yyA
+	 XJL/IYYAnlr3B96II29jn7qzdwirY+qL1hhEedAGF4sFtSJgzd8pjpLUfleF0Wupmkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793717543;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=BTQhXryiFz6WNhtO/2cBLI/E9BKh5fzSCgT17OC2isQ=;
-	b=svBHdNlchtg5WsVbdtmavTVYCUZx6/W/6oRdCEWRsyKeoYcH3u2nUQ3qgG0sUU3mQ0iw
-	 Z/S7fQzfburmVk++YvZvJL0kcmCJGWxDBzckPUH2owRNtYL5hG/xqstJ+WC6cbDBsI200
-	 2/SQfYmLCSsafCxdbsfl91qGSyQIf24d4ey4xwpoyOvjCm6fjG+GCnBpRQ5Ux5mAwKSwI
-	 VajnsgsjM2S6eYBAvhYCCpM+iQp4+LdtMf2aw2TpFlStBazQ7NRDfYoaojEJIJlbyyQvL
-	 qbs4nNccRKKbWsHe1BU6DruxCQaR26wJl1Xd3vcU1VGZGluDGc3A7GTKA2I7yo7UePg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793718644;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
+	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=ESkAEuuc6yy51dqWmu+sKhO9bwkMv1/8Gydhfy53QWQ=;
+	b=vEGoA1ynol2jq7YjUFXQPVk+oPvAvZraE3Sqc1ftv1Pgizwt6slkKhgU4MGdKNpbqfqG
+	 l12ONBaLMOKraqDb96TMM1HE07YGb10W1nAEGXK7L2nAJud+VfDHfld00MGdGqMjWPX/R
+	 81/Qh+fyqqLIHjjedXLxvDb9S9A9WkrlyExyklJSi2rpBXT9qG5Fv+m8ARyeUICc1wsEE
+	 zR2xqQyNKOcV899W2Xu0Mg4QjY3TvY4w/dAiJqNjHqHx27PiK0q5Cr/Klfg6+v4oWtKy+
+	 GZqUwc7+f//9nl5SiiR/VemXdshdkvh+eHRig64iPQP6P1BhI3ZaiTh4CqYkXyUO2Rw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YULUcOln;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=vgIXlRYX;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D5260A2624;
-	Tue,  3 Nov 2026 14:52:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1673C606D2E4
+	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 15:10:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1673C606D2E4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YULUcOln
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C1B1F00919;
-	Tue,  3 Nov 2026 14:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717543;
-	bh=BTQhXryiFz6WNhtO/2cBLI/E9BKh5fzSCgT17OC2isQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YULUcOlnU5estLQZ4jpKMFl1ZUufGXrceg4QR9QBHrz+KUXwTw5DarbaN4Sc24PtL
-	 HD4NcxARddyrligJZ3EJ9NEpKUS/qyW2S+PZHSAOX4Nj0gQWUkELPABhufTZYCoj8m
-	 L2n7AsCkjpMqXUjts2F/rlD6YbdxhC101ijSm/Y6yHsCIi6PaSX0JZJdBVG8zKsZ8H
-	 4pVXOP/I7bY9uvJbjewxTMmgVsRJKwUb2BMiiIBBdMUltfAZ5yf3Dn/MoixNUj+KaI
-	 9ReJ+RcCaxrkT1vR1SGJtOYZ9ldi3aC9jBpq38EDwdiEwELgjmCQCOubApelLUfMQP
-	 58erdJ+VLWzSA==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Erik Brangs <erik.brangs@gmx.de>,
-	benh@debian.org,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	linux-bluetooth@vger.kernel.org,
-	regressions@lists.linux.dev,
-	1149377@bugs.debian.org,
-	Christoph Zwerschke <cito@online.de>
-Subject: Re: [PATCH 6.12 1/2] Revert "Bluetooth: btusb: Add ASUS USB-BT600 for Realtek 8761CU"
-Date: Tue,  3 Nov 2026 09:51:57 -0500
-Message-ID: <2026-11-03-1-daily-reply-0009-re-revert-asus-bt-rtl8761cu-6-12@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261102153243.373899-1-cito@online.de>
-References: <20261102153243.373899-1-cito@online.de>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=vgIXlRYX
+Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id BB1FFA047C;
+	Tue,  3 Nov 2026 15:10:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 80A5B30;
+	Tue,  3 Nov 2026 15:10:35 +0000 (UTC)
+Date: Tue, 3 Nov 2026 10:10:34 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Paolo Bertinetti <paolobertinetti200f4@proton.me>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
+ Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, Leo
+ Yan <leo.yan@arm.com>, Francesco Nigro <nigro.fra@gmail.com>, Sumanth
+ Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: [PATCH 0/2] perf: Fix PERF_EVENT_IOC_REFRESH for tracepoints
+ and breakpoints
+Message-ID: <20261103101034.75f5bb0f@gandalf.local.home>
+In-Reply-To: <20261103131138.765683-1-paolobertinetti200f4@proton.me>
+References: <20261103131138.765683-1-paolobertinetti200f4@proton.me>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -69,16 +70,28 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 80A5B30
+X-Stat-Signature: u1mhwxim99k5uhjipj1oif11qk1hhbbm
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/lxSyrX1gU2HgudnYaeKf4tSHeqyO5JcE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ESkAEuuc6yy51dqWmu+sKhO9bwkMv1/8Gydhfy53QWQ=; b=vgIXlRYXqd26A4OEK4CWvjySd7mR6lI47OqAj87iJoNj70UOViW1elyhCSjbgQQnEO1CuspSC+iHNvDmcmJRzm5HSh3fwxB0vGIT7HwuToBu+KPox/tKzHpjrELtSR9+vthP8XlPmWE23fYkTTjcrZ1PIdNkKCbMjEyg0Ln3r0M=
+X-HE-Tag: 1793718635-427110
+X-HE-Meta: U2FsdGVkX18rKnbTyAE96elUkva/DyDa9fDxY7tpAh+us0eWVDzJjLuxGjRVgLMUvOr+Q/i5hSU6zMPLOQXf1Vxw46bdrSPgXIWjS6SI0MVjJAu6U2yQewrYzIOr8nDavVBYKXhNBSBWvR9jtpr7NbYgpK2/tkE2HUIQIYHtEaR2cLT1OnoR8EB2/gtCXHVo2jq9i9B4m7q3rsJDMDBdi2BDE5xUNppHfFx6wdtasXMZZPBmL4wY8BTpn+ZjKFG1vfFT5vQGQHKUAqa0nMrXREBjuFQ2J/MkYBDCl5+swRuuizqwPgV2Xmve1P1JUGUlUQm2oeawvLDC6ohtV7DvBkIjgFDUGOr+X3tuOI8wxkJMJlarIKwLzQ==
 
-> This reverts the ASUS USB-BT540/BT600 Realtek 8761CU ID backport.
->
-> Mainline keeps the ID entry, so this revert is for 6.12.y only, as agreed
-> in the regression thread.
+On Tue, 03 Nov 2026 13:11:41 +0000
+Paolo Bertinetti <paolobertinetti200f4@proton.me> wrote:
 
-Queued the series for 6.12, thanks.
+> This series went out twice by mistake. Please ignore this copy and
+> reply to the first one:
+> 
+> https://lore.kernel.org/r/20261103130732.764081-1-paolobertinetti200f4@proton.me/
+> 
+> Sorry for the noise.
 
--- 
-Thanks,
-Sasha
+Yet this one has the cover letter whereas the other one does not :-/
+
+-- Steve
+
