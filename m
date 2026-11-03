@@ -1,57 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.26
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.171.202.116
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793704231;
-	b=WRrUking5x2VZfpnJQixAJ82Dgt0DMqC7V9aMzmq8wAPi8rJNQu+hnBv5QNnTFbqXc3K
-	 +qkyL33cM3usLNogOqnk/zF6URgHmdnt9EXPk7f13D6/6WTQsQdCRmHU8BJ+57SAcKi1K
-	 n+C6dBTHAK/2+Hcrg1jNMtigV+J+XOgltTDHE2P136NT8aAHfgWrmjgqfJkFvz5K2B02x
-	 S8tfmmvnweYjyNM1Mtd7jm1J/dBm1OMYCs0AQA96QPpS+Hfkq8VexE5HxVzosePuW9cV0
-	 fhVYWTDo4rZA564WxK/CxwMSeI7GKWL57bH8Gm4ceNzvdAMb6epQx2pIPILyOXzarTA==
+	t=1793706218;
+	b=4s7mi5nRlq3GnaVXUQFIT+7X6hftynvbUu6o463m1+Wq4YgXot0ELJJiI2bVmC9nJcN9
+	 rqGKgb9Bxum5J9SJ5rxxkUFBtbXhxP6FLHgCh/ZFjXDV8EhxgnVbrdP1MWhW7VvT3vnny
+	 cUuStqGz7cjqgNwlz/FjtrQQ5p2VPS3ToiZU/lAA5vw2nlrPOQbm7kdUGq9kIG1nLj5fx
+	 0Q+3XAJ5Gnau5pL1T9BdhIIZdy30HFv/N2JQfFDFmKkQLSSTrcoT8zrnE7CAA8C4v4CkB
+	 +Z5LpU2Dz6L0TrkLlulGmVR5BMrGjVrkkFAP5Hcrd9zNOCXr3zt5Bm769ToIyF9EBPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793704231;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=4spENJpTJoN6PqGNme59Kcu9FsiMIbrrjIOpJLLgsEw=;
-	b=XjUlgDJ+BWbk3HO7Lk+i4SfnxF+vezuQ74aaHZ5Q6ZTtkZXCw9PMCcJULLcCBMQ/Sk+n
-	 uk+4lmcxeG7YDwcBhDsm4ih7EGhQ9v2y0+1FYSB1PAIaUxBkzJt+DCpyP1QyK5B6tWVFq
-	 kx6TNYvpYC+h2iRHPpuzuDgqjDMbsMa2pma2aZnMfAvNpfW0ULq7VKhY+AmQK1G4MKTrn
-	 5KmnX33evZMPZlnQH/LXdxxnsPiGPZPGrH/3idtpLUgsbl0RxgP5juuN0Rlg1gPPezgJO
-	 iQOhh1LnNzA/iNTYwwwUMa4wGhUsx5+G/DTHXsj9EMt7dlhO2/6rd8khpwoxoKavOkg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793706218;
+	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:Date:From:To:
+	 Cc:Subject:Message-ID:In-Reply-To:References:Organization:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Last-TLS-Session-Version;
+	bh=ke2iiy+5bPFA2Qh7Wbg/X9FR3jHVJljstab3aXxJ3pk=;
+	b=p4ZjzY5ZcqtdMVgqUMA/95GhkCRg3t4vCwXm16Gxghe35aPGxd4BhBPyUGxTuHjUlA42
+	 LRG6LEj2jJq0oBNV1lhm39FNOlf0Wnikc7IVervE5wX+BvJUPxO2q8azVu+NlsF8UxKUA
+	 GKnmKJfm5a/HM4AFLwE1so0KwYTQTp1oC4mGF1KhIdM1Jfwey86OZgJw3OttCSkEjYlBA
+	 qRhDrAOnZFlC6WAr56SVMai1xedghVKRnO4cPjSRL81uktvaXzrQ7GCAkFC8/D/euf3gc
+	 ZxA2CgLjYbFBgiYUIIS+6sqhaE8Nk+2JFjU7c3G8zftRORT9lBr5scbQnoCXj8NYD9Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=XV3wv71V;
-	arc=none smtp.remote-ip=109.224.244.26
-Received: from mail-24426.protonmail.ch (mail-24426.protonmail.ch [109.224.244.26])
+	dmarc=pass header.from=bootlin.com;
+	spf=pass smtp.mailfrom=bootlin.com;
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=JjYBD9rD;
+	arc=none smtp.remote-ip=185.171.202.116
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1F6606D815
-	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 11:10:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA1F6606D815
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793D5606A330
+	for <regressions@lists.linux.dev>; Tue,  3 Nov 2026 11:43:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 793D5606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=XV3wv71V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1793704228; x=1793963428;
-	bh=4spENJpTJoN6PqGNme59Kcu9FsiMIbrrjIOpJLLgsEw=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=XV3wv71VpWsMwVtDTDJ33Ez5tGMQI2nbZspwWg9Bl4k+SyHF/DThAUBpeWc32vDKD
-	 MPTQPdNuWkG48xXUcM30FBs5NAlChKFU/iqKqMEElfAx38EQVnADBXbTWSDwHLua5d
-	 F41SrcqlUJxIt8Q/sihgaPzbz2rU/pjbVSNX9b2PNQuOyaD8YQoof/1Ht+XPKxSjPM
-	 KvgyDp+5Dt74SQ3d23Gyu2qhH/OKAAXcgMWWaHp5yJTxX1WbtN0BiYHBdllBLmel0N
-	 2/hJv1Z6nsdPCWx7bgYh7K02xAsLnXv4gUWKjGolsoSIMhCdcPLqvb/9v76bP4tXWh
-	 zQr2FgRxr0sxQ==
-Date: Tue, 03 Nov 2026 11:10:24 +0000
-To: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-From: Tor-Arne Forsmo <torarneforsmo@proton.me>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [REGRESSION] rtw88_8822bu: RTL8822BU unstable/disconnects on USB3 with newer kernels
-Message-ID: <1ZyN-kxUvoIDfNiCh2Ro6EooWLDGuN7Jwm8yKK8c1ZAeNrcmCia0aYwIDZs77lZtpppfBohrqEI6q4dwxAfcQRJa0JkjcQBO7mDZ7ACyAKM=@proton.me>
-Feedback-ID: 154127122:user:proton
-X-Pm-Message-ID: 8f1a2d66ca0581014f75837943e922ad17c20fda
+	dkim=pass (2048-bit key, unprotected) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=JjYBD9rD
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 26FCBC8F45C;
+	Tue,  3 Nov 2026 11:44:39 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 9BD936046C;
+	Tue,  3 Nov 2026 11:43:34 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 57C35103291E2;
+	Tue,  3 Nov 2026 12:43:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1793706209; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ke2iiy+5bPFA2Qh7Wbg/X9FR3jHVJljstab3aXxJ3pk=;
+	b=JjYBD9rD0vsN/BIRrCSyjvM0/rLF7ga7LoE78CJtvmkvkA3NI9ACU6hCK9+SA+iGlzm2rz
+	uUGYJfvkH5Hd+zYkXRqJU2SmYGldH8R8uq49DCw/022mPwZKa2aMnZiU/qgMx95QMjMmOL
+	47emcUh+0g8jJFFw7wFTMQu2Wz+j46egu1+W01OR8oSRf08if6LL3Yigrgv4hqZtoA6WuG
+	PO7czrEGk5nmRibJMIvFudAIwYMDiVyge3qTAE6lLQd75nGpzV03JAzpDZ7K/fwlJIIomd
+	s5MRy6aa3zOjxWePs4OmSm1Rdi60bdsFLg5gk0MGxyrtU4AaAunTtjeBuzy8Tg==
+Date: Tue, 3 Nov 2026 12:43:23 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Angel J <iamanaws@httpd.dev>, linux-pci@vger.kernel.org,
+ bhelgaas@google.com, robh@kernel.org, lizhi.hou@amd.com,
+ andrea.porta@suse.com, florian.fainelli@broadcom.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] PCI: of_property: Omit bus properties without a
+ subordinate bus
+Message-ID: <20261103124323.0f8b1071@bootlin.com>
+In-Reply-To: <20260918202045.GA1191948@bhelgaas>
+References: <20260918195540.GA1187209@bhelgaas>
+	<20260918202045.GA1191948@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -61,181 +76,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-I've experienced new issues with a=C2=A0TP-Link Archer T4U. I've used this =
-the past half a year without issues on a ubuntu server install, but recentl=
-y I started experiencing disconnects on three different linux devices with =
-two different Archer T4U (I bought a new one). The final fix was to revert =
-back to a 6.18 kernel. I have never reported a bug before, I hope I'm writi=
-ng to the correct e-mail addresses (I've gotten some help by AI). I've inst=
-ructed ChatGPT to write a report of my findings, I hope this is helpful.
+Hi Bjorn,
 
-From ChatGPT:
+On Fri, 18 Sep 2026 15:20:45 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
+> On Fri, Sep 18, 2026 at 02:55:40PM -0500, Bjorn Helgaas wrote:
+> > Author: Angel J <iamanaws@httpd.dev>
+> > 
+> > PCI: of_property: Omit bus properties without a subordinate bus
+> > 
+> > A bridge (a device with a Type 1 header) may not have a secondary bus
+> > allocated (pdev->subordinate), e.g., if there are no available bus numbers
+> > or the bridge secondary/subordinate bus numbers are not writable.
+> > 
+> > The dynamic OF helpers of_pci_prop_bus_range() and of_pci_prop_intr_map()
+> > dereference pdev->subordinate without checking it.  When
+> > CONFIG_PCI_DYNAMIC_OF_NODES is enabled, this can cause a NULL pointer
+> > dereference and early boot hang.
+> > 
+> > Generate 'bus-range' and 'interrupt-map' properties only when a subordinate
+> > bus exists.  Keep the node and its remaining properties for bridges without
+> > one.
+> > 
+> > The problem was latent since 407d1a51921e ("PCI: Create device tree node
+> > for bridge"), but wasn't reachable until 1f340724419e ("PCI: of: Create
+> > device tree PCI host bridge node"), which appeared in v6.15.  Before
+> > 1f340724419e, of_pci_make_dev_node() returned early because the parent OF
+> > node was missing.
+> > 
+> > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> > Signed-off-by: Angel J <iamanaws@httpd.dev>
+> > [bhelgaas: move pdev->subordinate test to callees, commit log]
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: stable@vger.kernel.org	# v6.6+
+> > Link: https://patch.msgid.link/20260912043106.10715-1-iamanaws@httpd.dev  
+> 
+> I put this on pci/for-linus, planning to be in v7.3, but I would love
+> to have testing reports to make sure it still works as the v2 does.
 
-I believe I have encountered a regression affecting the rtw88_8822bu driver=
- / RTL8822BU when operating over USB 3.0.
+I know it's too late to add a tag but well, just to mention my test somewhere:
 
-The problem is reproducible on a Raspberry Pi 4 with a TP-Link Archer T4U v=
-3 (USB ID 2357:0115).
+It works for the LAN966x use case. Tested with v7.4-rc1.
 
-The important result is:
+Tested-by: Herve Codina <herve.codina@bootlin.com>
 
-    6.12.62+rpt-rpi-v8 =C2=A0- GOOD
-    6.18.50+rpt-rpi-v8 =C2=A0- BAD
-
-These are Raspberry Pi OS kernels rather than vanilla upstream kernels, so =
-I have not established the exact upstream regression range.
-
-Hardware:
-
--   Raspberry Pi 4
-   =20
--   TP-Link Archer T4U v3
-   =20
--   USB ID: 2357:0115
-   =20
--   Realtek RTL8822BU
-   =20
--   Driver: rtw88_8822bu / rtw88_usb
-   =20
--   Raspberry Pi OS / Debian 13 (trixie)
-   =20
--   Adapter connected directly to a USB 3.0 port
-   =20
-
-With 6.18.50+rpt-rpi-v8, the adapter repeatedly disconnects and re-enumerat=
-es when used directly on USB 3.0. After reaching the SuperSpeed bus, it fal=
-ls off USB again and this repeats approximately every few seconds.
-
-I observed the device numbers continuously increasing as it re-enumerated. =
-The pattern was essentially:
-
-    rtw88_8822bu: Firmware version 30.20.0, H2C version 14
-    usb ...: USB disconnect
-    rtw88_8822bu: Firmware version 30.20.0, H2C version 14
-    usb ...: USB disconnect
-    ...
-
-This continued for minutes.
-
-There are also -EPROTO (-71) errors associated with the USB2 -> USB3 transi=
-tion. I understand that a single -71 during this transition may be expected=
- for this device/driver. The problem I am reporting is not that initial mes=
-sage itself, but the subsequent repeated disconnect/re-enumeration loop aft=
-er the adapter has reached SuperSpeed.
-
-The adapter works when limited to USB 2.0.
-
-I then installed 6.12.62+rpt-rpi-v8 on exactly the same Raspberry Pi withou=
-t otherwise changing the system.
-
-With 6.12.62:
-
-    $ uname -r
-    6.12.62+rpt-rpi-v8
-   =20
-    $ sudo modinfo rtw88_8822bu | grep -E 'filename|vermagic'
-    filename: /lib/modules/6.12.62+rpt-rpi-v8/kernel/drivers/net/wireless/r=
-ealtek/rtw88/rtw88_8822bu.ko.xz
-    vermagic: 6.12.62+rpt-rpi-v8 SMP preempt mod_unload modversions aarch64
-
-The same Archer T4U then enumerates successfully at SuperSpeed and remains =
-there:
-
-    $ lsusb
-    Bus 002 Device 005: ID 2357:0115 TP-Link Archer T4U ver.3
-   =20
-    $ lsusb -t
-    /: =C2=A0Bus 002.Port 001: Dev 001, Class=3Droot_hub, Driver=3Dxhci_hcd=
-/4p, 5000M
-    =C2=A0 =C2=A0 |__ Port 001: Dev 005, If 0, Class=3DVendor Specific Clas=
-s, Driver=3Drtw_8822bu, 5000M
-    =C2=A0 =C2=A0 |__ Port 002: Dev 006, If 0, Class=3DMass Storage, Driver=
-=3Duas, 5000M
-
-The JMicron USB 3.0 disk dock shown above is simultaneously attached and op=
-erating at 5000M.
-
-I then connected the Wi-Fi network through the Archer rather than merely le=
-aving the interface idle:
-
-    $ nmcli device
-    DEVICE =C2=A0TYPE =C2=A0STATE =C2=A0 =C2=A0 =C2=A0 =C2=A0 CONNECTION
-    wlan1 =C2=A0 wifi =C2=A0connected =C2=A0 =C2=A0 netplan-wlan0-Rasktnedi=
-kanten
-    wlan0 =C2=A0 wifi =C2=A0disconnected =C2=A0--
-   =20
-    $ ip addr show wlan1
-    wlan1: <BROADCAST,MULTICAST,UP,LOWER_UP> ...
-    =C2=A0 =C2=A0 link/ether d8:44:89:03:3e:29
-    =C2=A0 =C2=A0 inet 192.168.10.71/24 ...
-
-The Pi is therefore actually carrying its network connection over the Arche=
-r at USB 3.0 speed under 6.12.62, rather than the adapter simply surviving =
-enumeration.
-
-So far I have seen no USB errors or disconnects with 6.12.62.
-
-For comparison, under 6.18.50 the same adapter, Pi and direct USB 3.0 conne=
-ction entered the disconnect/re-enumeration loop within seconds.
-
-I also have two physical Archer T4U v3 adapters. Both exhibited the direct-=
-USB3 problem on the Pi with 6.18.50, so the Raspberry Pi result does not ap=
-pear to be specific to one defective dongle.
-
-There are some additional observations from x86 systems which may or may no=
-t be related:
-
--   One older Archer T4U v3 has worked reliably for a long period on an x86=
- Debian machine in the past.
-   =20
--   The same older adapter works on another current x86 Linux machine over =
-USB 3.0.
-   =20
--   On a different x86 Kubuntu machine with a newer kernel, the older adapt=
-er failed during/after USB3 enumeration with rtw88 errors including -71 and=
- -110, register access failures, "failed to read hw feature report", "faile=
-d to setup chip efuse info", and a USB SuperSpeed reset.
-   =20
--   A newer physical Archer T4U v3 works on that particular x86 machine.
-   =20
-
-Because of these additional results, there may also be some host/device sen=
-sitivity involved. However, the Raspberry Pi test is the controlled compari=
-son I consider significant: same Pi, same adapter, same USB3 port, with 6.1=
-2.62 working and 6.18.50 failing very quickly.
-
-On the bad Raspberry Pi kernel, the relevant modules were:
-
-    kernel: 6.18.50+rpt-rpi-v8
-   =20
-    rtw88_8822bu:
-    srcversion: 594B4CB53E28BF8F6458E02
-    vermagic: 6.18.50+rpt-rpi-v8 SMP preempt mod_unload modversions aarch64
-   =20
-    rtw88_usb:
-    srcversion: C08071F92A5EA09279ABA16
-    vermagic: 6.18.50+rpt-rpi-v8 SMP preempt mod_unload modversions aarch64
-
-For reference, two Ubuntu x86 kernels I checked used:
-
-    rtw88_8822bu srcversion: C04D1014EBE0F8F11E65854
-    rtw88_usb =C2=A0 =C2=A0srcversion: B5E531378AC65924BDEA496
-
-I have not bisected the regression or tested intermediate kernels. The Rasp=
-berry Pi is now being used as a working system, so I would prefer not to re=
-peatedly change its kernel unless further testing is particularly important=
-.
-
-I can provide the complete dmesg from the failing 6.18.50 test if useful. I=
-t contains the repeated disconnect/re-enumeration sequence.
-
-Please let me know if there is any other diagnostic information I can colle=
-ct from the currently working 6.12.62 system without changing its kernel.
-
-
-
-Best regards, Tor-Arne Forsmo
+Best regards,
+Hervé
