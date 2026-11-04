@@ -1,103 +1,117 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793776883;
-	b=WLWzt87ru8m2eQ/vuQbIJACFV/23m66X5Q4IBfhlbhjrBR8xuiklAarRiXRpdi42J4cF
-	 /szz53RsTbyxBaBNJDSJfn2uHGQtzYUbGzgBnwk70e9uXcU5aTh1y2ZTbihFUcssVnfmV
-	 HMsrcHNRMcwm5WKr2YOsLfHKuuPTzsunQHqQu4fwcA3QfVRTeZVFnRzesdFTX9pKYJbte
-	 5kQDZWGiKjH7ZnSsq9VMAjE88KJTaVK8fQSTm8FAm33+YafzAlltIQNhybYXe6/CF3fdw
-	 2VmehRBC38D47wMQZR5EmH4KESPHBM5CRQOdv40P1CSBLml2n7Ps5F7m2mVVJmQlOTA==
+	t=1793776940;
+	b=sMOCLxbvghnv7ycLAyyaTS1C3BiwcHKFnGdOLCv+wnKSoJ55bQPyx0JtVQB+9dVgII+i
+	 W5tKmylxZYUaY36C8lbbaTDOWjwsAUVv8MquHYKmUqo0cCFKqHESUzIs+WYSKNu5TSb35
+	 Z4VFPSkHRlLQFTqEL3jc4+BGwY6TIFGj3KjAQSz0ewRghcD5rEXjO1Fmr8ll9543yXfhS
+	 +Db53PtsdnU3LvIujlPA3naIlykokPUMrXiQGGJKxKpZ4EptL0U+YGvx3OZF8QX/ArSuB
+	 QKeNzUN6FFyPlu9e8U212QWNs9roqoE1NLRLvn6MvncliE+p/dXwMp0KGW2ITfxbM+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793776883;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=DWUgScfm6w4+IrfkuhBQdFNaFEhNCbHPUn0mlOI8xXo=;
-	b=xKU5Yc2eZ8njbTiPhT3cACT5GDvafNy/IIN558+kQ/gm+OvP4/MyPG5V1gq7wOnDBjxZ
-	 0w+2pfQQIF1Vqfy8xarhdoWbgGb3QC8pwVT6JpdD6mq2RrEN3q7Gd7N/1VsVuUOBmO9o1
-	 Hc5NcNF30/xjZKivuA9rQIzOa1X5ivtRCEWnWO4TD6V0BChQF94n/G0Ha+faj5TXkiODk
-	 wuZ8Odkr352iKgFzXnPZ145UKguUsydB9Co9G2XKkY0k+JbPISN+PTGnpqPRgnPGDBkXG
-	 gjF4bEse2BTapi01atKqzLpZhnBr6LjBOPv9xsvmSt/lEm+VMj7OaA4PbRyf4oOpJxQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793776940;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-Rspamd-Queue-Id:X-Spam-Level:X-Rspamd-Server:X-Rspamd-Action:
+	 X-Spam-Flag:X-Spamd-Result:X-Spam-Score;
+	bh=+H1Cs3HEyvTi0DffUo23ljDUGdJ2HE+qMvgJ+s00WfY=;
+	b=crtySXdhwyPL1Sh8XOqC0bb1NpPdMvgbp3+gRp9IQ2h5cE1DlLFInEYj3E818ePAWJIN
+	 1Jvgga6BueVdf0IwBdWE7nftJ5W8GwYobC4z/mTWreyP3zWpswjblRMreJNMXJDGGy5T+
+	 IFQDRNYxIuJoLh27y3E09h2CBT58SGsgXkbZTkz7Oku/Pyhub96xAexQ8SV0vZQbocHUx
+	 ZHpj+18g6SUdRoVfvTXCluQO6Q1c0ciTVJ4+RiqpOO+BIarfXK6p6pRkl055U3wKFDLQG
+	 nuAIn8da4a0mOkfy3LmynYdn9ZeRCjux3Z0itSCOTBy1OISmwfxIk5Tt7ofG/RJdL2Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xCEDLckO;
-	arc=none smtp.remote-ip=209.85.214.170
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=aVIeYbJr;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=RyR2Wjy7;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=SCvLAOdw;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=LXTAZYF8;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E97606D813
-	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 07:21:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 83E97606D813
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5040606EE8C
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 07:22:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5040606EE8C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xCEDLckO
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2e942864693so2120825ad.1
-        for <regressions@lists.linux.dev>; Tue, 03 Nov 2026 23:21:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793776883; x=1794381683; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=DWUgScfm6w4+IrfkuhBQdFNaFEhNCbHPUn0mlOI8xXo=;
-        b=xCEDLckOMTYHkUgtC2eVsShtFDwLp/0lvMTcM952CoMZ/lJLqbKJe/CsN8f/4WqigL
-         uPuenLTr1nZbX3cOMR+4NlKblqcj+lUX1gBehg+7HvhiBKUhPmfn5bH0r9Xmv7gk8I+X
-         UKkRC0Ekg7NzWJGaJPkXhBrMB70jXarfoIfvbojoIx/5RW1tUgAPvceBmRXUo7nw5HuS
-         vFz+Vj5ullPGTkjnDnQLdaLL+cg3FfCYKUvU6rh1ZNMfh0WszFK30Uq/Yz7DtRvYe6mB
-         /TY2Bc+pFMlO/0DbwA7pnZf8nu+GsIC2YhvQjFOKZ0k30rKyk49ZDtz8F0nf6mQ3nSrQ
-         lRGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793776883; x=1794381683;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=DWUgScfm6w4+IrfkuhBQdFNaFEhNCbHPUn0mlOI8xXo=;
-        b=BYccU1voYAf9iTy3PEsmlQQ7JdvgIOGMvyJhpTwud3fBeD6liUOtLKRu0+vczBsVjV
-         gla65HQw8RldE/rYahZHsG1qnrEidloIFkzuocl/cn6yo2RACQ+qlla8wmsIiOnuNGgf
-         WTaEQU+hDwcRAyFxc4iE3eXDzQpLscqP46Qkx+Njq+FIWaw4p0GZHXJmnqu4CpAHRAiR
-         7ebYH1SLLcAcaw6DAgKDrARJe2lrAZTg7dWxRH/trXywTCKH6EhlpoghHvrPVWJc3cBA
-         sSgUNFXnzyff4RZUp0dFfaKIgPYd75kWU8+5TeE07PqelMS+cH3aLWpztHoqZ6LRLpoi
-         P0Yw==
-X-Forwarded-Encrypted: i=1; AKwUvBwc3SKrzLS0vR8lWQxG31zszsSg92TR63bBXyMvnbiNRkxT9qmaRYjIIXQwt+QJ6XxmTwr9YyAgP/S82Q==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8TyRpxzImHA1CMCgTQnFwCExT3M6B3GFI/Tpf7wpeNJUQeDj3F
-	+QrLEZNdNFIPY9qM8nJyMrTrkeAiA99IFRxMQct6STwImSjT5xg9mC4=
-X-Gm-Gg: AYBFou2S2o8CwudrvT5RnZbaaAGl5lslywP8oIBs+6S/S01I28HzOWc+/srPqBAon0x
-	MSycCv4lCRm99WhHj0/B2znDtgd877AhWSytSqGQS85IAp0x0AYT1szcEaOAUjqmNDQNIpHs7cR
-	oqJx28nP0kJuDdkdObS6S0mDRZmcf1AKzwbNnIpORN0U3aryrTs1cy/mR4cK2BA4xXu/KF9RMxH
-	48l77Xlgu58878RjBVwEyw9vEEjmbuRQCG3f8yhjU9e90HLfMeAOTmd5K5hSy2/ACtt1dB96t61
-	hGfy/OJUENj8uzDkfSGfgN/5rUJN7HwKm0w7RZUjk3CO/6pNBb/7dc6YsfWSlW7VbdkHBNsVofW
-	Ea8bDRrv/t5ti4PhZ42h7vfLF7qkFE0r0DxGoYPiz+oeHLPayzxOxeNHOc1LrhCvyd8GTaysZDT
-	ff3ln/+vxVwjLvze7iHPrIazbXp40PzA+ZyU7jQY+b8r3aptnvIC5eBPxy1l5wYHfHTEeF4yuaS
-	Mfn6ZQnqq5kTyF6D52ckyi+60rryIVpSh34ReRj3rZVUTYAkFoGiEDKHluHwV2OrvH292yx764p
-	CkfOeKtFvuTmbbYxW504RCMm1wKgJwFXyor3AAc/H0JfOwZwTGYCUUziG42s4DhVLk2F
-X-Received: by 2002:a17:902:d2cd:b0:2e9:5b4e:b8a7 with SMTP id d9443c01a7336-2eb364f8fe2mr149925825ad.51.1793776882756;
-        Tue, 03 Nov 2026 23:21:22 -0800 (PST)
-Received: from freddie-kane.lan ([71.212.222.246])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ed0906c514sm3950345ad.29.2026.11.03.23.21.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 23:21:22 -0800 (PST)
-From: Burke Cates <burke.cates@gmail.com>
-To: robin.clark@oss.qualcomm.com,
-	Dmitry Baryshkov <lumag@kernel.org>
-Cc: Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Yongxing Mou <yongxing.mou@oss.qualcomm.com>,
-	Jessica Zhang <jesszhan0024@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Xilin Wu <sophon@radxa.com>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
+	dkim=pass (1024-bit key, unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=aVIeYbJr;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=RyR2Wjy7;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=SCvLAOdw;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=LXTAZYF8
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B65481F7A7;
+	Wed,  4 Nov 2026 07:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1793776937; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+H1Cs3HEyvTi0DffUo23ljDUGdJ2HE+qMvgJ+s00WfY=;
+	b=aVIeYbJrplvCL5G6I/2q8kHt3LGCWu8wmC+u0EaWRLuOTuk+Hfna/vv2a9h3T4L6Mup8Dg
+	+Mm2g8SvyGVcFxB+plgOYZP9btw34qvmj9d+I80h5NmKU+AJ5Un/GOYTDILubpxSXTRM+x
+	5sN1jblXblTXl/jyEyYtR0AiDVXKDHo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1793776937;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+H1Cs3HEyvTi0DffUo23ljDUGdJ2HE+qMvgJ+s00WfY=;
+	b=RyR2Wjy7SWm0bZMtg7L98LfqYJ4PkxNMIFIqktPNjN2N5eVf8Qhs7GEVP1ueK4tA5ze7Z/
+	dOCsG4kdCiuHnZAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=SCvLAOdw;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=LXTAZYF8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1793776936; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+H1Cs3HEyvTi0DffUo23ljDUGdJ2HE+qMvgJ+s00WfY=;
+	b=SCvLAOdwIhb+0Jj74xa6aMeE6P7C9VY9wVcjf2Pai/IvonOVTa/qJrfDKupdy7NEgSN7yJ
+	KDCQIiOGdsy2IG49u3k3AXz1ufppdH+eZQ92dx/jzVMsser69IAort/VTXg8P+q14DkYgI
+	JBhGk7KEAwzWHCs2TbjRFrMJst9Lpww=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1793776936;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+H1Cs3HEyvTi0DffUo23ljDUGdJ2HE+qMvgJ+s00WfY=;
+	b=LXTAZYF8b+NWDtflu8zU1wbKqEVy7QpLhTCB12urZ7gWrEm7XAVsW5UOQ3RrJpro6ACwJW
+	XL0m6n5hJwsDQQAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4BC6A134A5;
+	Wed,  4 Nov 2026 07:22:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OHNwCSjd6mpeMwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 04 Nov 2026 07:22:16 +0000
+Date: Wed, 04 Nov 2026 08:22:15 +0100
+Message-ID: <87pkwlukm0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: med.jebabli@gmail.com
+Cc: regressions@lists.linux.dev,
+	Cristian Castellano <cristian.castellano@icloud.com>,
+	stable@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH] drm/msm/dp: skip the link teardown after a failed enable
-Date: Tue,  3 Nov 2026 23:20:48 -0800
-Message-ID: <20261104072048.3486286-1-burke.cates@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>,
+	Sen Wang <sen@ti.com>
+Subject: Re: [PATCH] ALSA: hda/tas2781: Only accept CRC-less V1 data if all entries are valid
+In-Reply-To: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
+References: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -106,79 +120,82 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: B65481F7A7
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-11.01 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FREEMAIL_TO(0.00)[gmail.com];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,icloud.com:email];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,icloud.com];
+	FREEMAIL_CC(0.00)[lists.linux.dev,icloud.com,vger.kernel.org,suse.com,perex.cz,leemhuis.info,ti.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
+X-Spam-Score: -11.01
 
-Commit 1bda647ce61b ("drm/msm/dp: move link-level teardown from
-display_disable to display_unprepare") moved msm_dp_ctrl_off_link() and
-the PHY exit into msm_dp_display_unprepare(). Unlike
-msm_dp_display_disable(), that function does not check power_on.
+On Tue, 03 Nov 2026 10:27:12 +0100,
+Mohamed Yassine Jebabli via B4 Relay wrote:
+> 
+> From: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
+> 
+> Commit 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data
+> without CRC") only checked the first device entry. On machines where
+> the BIOS populates fewer entries than p->ndev, the remaining all-zero
+> entries are applied and tas2781_cali_preproc() divides by zero on
+> playback open.
+> 
+> Accept CRC-less V1 data only if every expected entry is non-zero and
+> self-consistent (R0 * 1/R0 close to 1.0), otherwise reject it as
+> before.
+> 
+> Fixes: 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data without CRC")
+> Reported-by: Cristian Castellano <cristian.castellano@icloud.com>
+> Closes: https://lore.kernel.org/all/4e500063-d985-46b6-a0a1-3feaa77c4b2f@leemhuis.info/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
+> ---
+> Cristian, could you test this on the Yoga Pro 9 16IRP8? With the fix,
+> the driver should log "V1 CRC error" again and fall back to default
+> parameters, as it did before 408249089c48. If it still logs
+> "accepting", p->ndev is 2 on your machine and the root cause is
+> elsewhere, so please send the full "dmesg | grep -i tas2781".
+> 
+> Takashi's re_cal check in tas2781_cali_preproc() is complementary
+> and still worth applying as a safeguard.
 
-When link training fails, msm_dp_ctrl_on_link() has already turned the
-link clocks and the PHY off, and .atomic_enable() returns with power_on
-still false. The next disable now runs msm_dp_ctrl_off_link() anyway,
-which writes REG_DP_MAINLINK_CTRL and pulses DP_SW_RESET with the link
-clocks off. On an ASUS Zenbook A16 (Glymur, eDP) the SoC then resets.
+As the code looks safe enough, I applied now.
+Let me know if the problem still happens.
 
-Skip the link teardown when power_on is false, as before that commit,
-but still drop the runtime PM reference.
+I'm going to submit my zero-check patch as a further hardening, too.
 
-Tested on the A16 by forcing link training to fail and then blanking
-the display: the SoC reset 2/2 times without this patch and 0/3 with
-it.
 
-Fixes: 1bda647ce61b ("drm/msm/dp: move link-level teardown from display_disable to display_unprepare")
-Signed-off-by: Burke Cates <burke.cates@gmail.com>
----
+thanks,
 
-Notes:
-    Test base: v7.4-rc1 with out-of-tree Glymur platform, board and eDP
-    PHY patches; drivers/gpu/drm/msm/dp as in v7.4-rc1 plus a local
-    knob that fails every training attempt. The reset is silent (no
-    pstore), so which of the two accesses triggers it is not known.
-    
-    As before 1bda647ce61b, a failure after successful training still
-    leaves the link up. Xilin Wu's hdr10 v2 09/20 handles these paths
-    more generally; this is the minimal fix for -rc. Happy to test his
-    approach instead.
-    https://lore.kernel.org/all/20261009-msm-dp-hdr10-v2-9-1835d4966da3@radxa.com/
-    
-    The bug was found and this patch drafted with an AI coding
-    assistant (Claude Code, Claude Opus 5.5); I reviewed it and ran the
-    tests.
-
- drivers/gpu/drm/msm/dp/dp_display.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 9299ce616fdb..76784cc45228 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -1528,6 +1528,14 @@ static void msm_dp_display_unprepare(struct msm_dp_display_private *dp)
- {
- 	struct msm_dp *msm_dp_display = &dp->msm_dp_display;
- 
-+	/*
-+	 * Failed link training leaves the link clocks off. Avoid accessing
-+	 * link registers after a failed enable, but still release the
-+	 * runtime-PM reference below.
-+	 */
-+	if (!msm_dp_display->power_on)
-+		goto out;
-+
- 	/* dongle is still connected but sinks are disconnected */
- 	if (dp->link->sink_count == 0)
- 		msm_dp_link_psm_config(dp->link, &dp->panel->link_info, true);
-@@ -1542,6 +1550,7 @@ static void msm_dp_display_unprepare(struct msm_dp_display_private *dp)
- 
- 	msm_dp_display->power_on = false;
- 
-+out:
- 	pm_runtime_put_sync(&msm_dp_display->pdev->dev);
- 
- 	drm_dbg_dp(dp->drm_dev, "type=%d Done\n", msm_dp_display->connector_type);
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
--- 
-2.54.0
-
+Takashi
