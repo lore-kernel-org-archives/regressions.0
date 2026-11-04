@@ -1,100 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.48
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793802015;
-	b=Bxm3SKPiv6LKK+IDFg0u58xrpXB70dzMq/jYEe8hRsaS7bc09ZpQ+SZWUSrcb9JOjgqi
-	 89Ovv5//IkteWxHz0cXR/T0xpKamhTEPSZ4xi/VwtwaVH2UPgncnVXw787N44XrTIqbOP
-	 OSQiI3JzeBDOUzpiTbjbKtoHU3W5OItXKtMrofvd0+GpYP56ROA5N+ZgAonG/h+SQS/rF
-	 GJewCsW/zzAeUcMQivE6Ch/cv2oUzHWISYJGoQ15T9CvgqCs4Hdjvy131YO/r6d4T+Z+o
-	 I73/SwMF82FuZ48yF1dHL/H9V+Bvv0ozxUTOT+htyVzWlmVHbZjPMFBMIZzZCnhnIAw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793802015;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=cTFlIKCtY2beSm3M+7wixuQ4NtEsFsbXStwjOBxwJrc=;
-	b=QPFRv8+yYFsz1cCURTsm44Hpprb69p5bhX7k88d1ZXACucQS+Qs2O0K5OjL7BsWYEJlR
-	 DKLLgD4cIfyXXyAn7O22SHRoJAeXgwuXyXcXTAVr9gTAnQnCYMfRHCz3Q7w7eOxtYpymO
-	 962TauBje4WCsG6qmadZcP81NG26FroRQaVdUbW5BGJ4P/fwdhph2yU8K89R2L/lubwWL
-	 ofbzJMliF/HBRuB29zCFnrfI7GAEorucUK/jBUzVdm58aPi/XHEiX9mr19gjVSj4jtQ2Y
-	 LVIeNxI5wwWUUL41zTYiQ3Gblkpmg3xCuIl+pJzwFwieY5YZJscEOcYdMf1qjySzEZQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=wetterwald.eu;
-	spf=pass smtp.mailfrom=wetterwald.eu;
-	dkim=pass header.d=wetterwald.eu header.i=@wetterwald.eu header.a=rsa-sha256 header.s=wetter header.b="VMKQ/7RR";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.48
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.166
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793804143;
+	b=DEb0IvY47NMGW86PHuU0F9LbEJkUWNDgLEg5hnDMCd5gnxRqlooyW5cQ3GvR7K7DHWXf
+	 /J2a2AHhSysCCAcp/Z5BuDHGuI0vC7/Ak7qaI2mi0uB5px2+j12ykdu+CEhP82NMbhM1D
+	 4pHwBBX2xYP1UZuc3zuqp+CKQN+3uwzt1Bg97daJqqIF2VfyYLTxFU5fzhxOICgqYcek9
+	 k7W8qfAbFSrlPM8SYfR85CX63OitBDYQyIuFoSUqCyJwkNNH53U7Rghh/bhHIMzLh57a0
+	 PdVHjo7dxvtOb1xsfd4sIlyvHUCjduEeYzLP79QsHQoOr3o7TZAk52BPlRn9YuXms2Q==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793804143;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=RVqjXrKnuRpooyNlRjkd3vig/YxXqqffC2KjHFQKyXE=;
+	b=boz3rXC0ICc6ai7Ahjx8fL4KscuaENXCpbnlsJGApDKtYAyEJaH2scDZ2h10LGL8PANm
+	 V3yTLsWU/vH0Bc5q6hRApPmsO56QhYRZYX0Jph6UorxmTRa0vdyDnjU/22z7sjPOx014T
+	 GyhHQoD9JzwgDFZfiZwfg8GI2ejfiiUP0YKOtcljpsgwGq8Yv3eJawAqpXVktU2YjJnrg
+	 9QIOgiyeb0+lc+rh6+b5al6vgkBmlLe7AJ2/X5eaUeY6rJljDi2n8BGyEadYs/AsCy8y2
+	 GZlYyUnQl90pUKwYZBgj65znDSLWU10EunryYEnOjo1MQLKf0TXFsHjhI3qxP5z7hrw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=QImqVZ9A;
+	arc=none smtp.remote-ip=188.68.63.166
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0B7606A326
-	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 14:20:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F0B7606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wetterwald.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wetterwald.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D85606A32D
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 14:55:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10D85606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=wetterwald.eu header.i=@wetterwald.eu header.a=rsa-sha256 header.s=wetter header.b=VMKQ/7RR
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5be3ed646a5so911485e87.1
-        for <regressions@lists.linux.dev>; Wed, 04 Nov 2026 06:20:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793802012; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ZI+OQWzgVk2fborVIIQpq/oULopozcmV3XnZilYPC3BJEXd+qnH5DZCB8yEKHzqkzJ
-         dAOiAbivURe+FY6u3FfC5jDn7y71IN18qZ7XARbFRVRyR8xO8iNaKDfzDzTf59ci/6P1
-         qv7hmgORWcQVqK1Q+fHoUyh5OGy+06nCxoZxtWQiFEcsmDFSrhQr8mrfayP+7sItfcux
-         MS6igh5inh2TfXhl/O8009iGT1swOe9FCUCjDqjngBYZbE/0fZ9Hmi+QC9816PmgIrI6
-         RTufnO490imbwYBBUEWeIYxrtl8GDfGiEKsnkzNIAuVcNlvPhhkF1m6fPEDB7CKYEvaW
-         mjpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=cTFlIKCtY2beSm3M+7wixuQ4NtEsFsbXStwjOBxwJrc=;
-        fh=kKCgC+M5RNQUfyWMS92cnto1nbN3r0P0pZ9u+t77fFw=;
-        b=QnrB3RCg2iXYnhUmci9naFjksd7XK0RBJ+c6sqr7BdId9/LvFTH+LR6+N71L0WrrYS
-         gTfK/ETUEL8nVf8S73S1WwPSyw2tcAXAp5SDMLXJNq8rk/blVccPER7lonVIRznmfEr0
-         bNG9fen17F2CV29DrFaPBWozUMWdONJuSZd78ZG75FbHnmKuLo8oA8iz4PikIC5Rg6n+
-         g+cfwcjImdnId0AAb9jv9MXXL94zwY4JBGwytI6Yn7Hw7BmhGSR7vUee4reBiN39RR2f
-         C7XF5ZqlRQvtt7X+KPSygCn4NfkANfpIB9kB81vInBzaV3gOqK7Geg2OFfFipGzmrHEO
-         +l4A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wetterwald.eu; s=wetter; t=1793802012; x=1794406812; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=cTFlIKCtY2beSm3M+7wixuQ4NtEsFsbXStwjOBxwJrc=;
-        b=VMKQ/7RRy1X3ZpA3dyVt4DYJTjddjl40qxqwOGB0ngcmtxeuwTgXx6+KAWn+5OnquE
-         zOOYX5p3JjErFbeilCuB2BinZiMTQ+88o4cby2aHFAeGZ46qvN1x5bNA06+0upUvcqu5
-         tZI7iSxc2T2GERoeVk+XBckGkpILqWWPJLNtKOcPuQu4jz6YkJaqPQB6qEg6uQ2kxURN
-         3/5OILQWYlL2vfQ9ui1pH8lYnb30dkyEpeuU2oLXUVkIxAAxmio7TCl8ZbrkICVcF/yF
-         IiMbUtuh3qADncEnl9+O2QSsVPldItd+QPCSNYpgHc5ZbtctRuJa4It/8Ssg8IOJYp7k
-         8cLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793802012; x=1794406812;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cTFlIKCtY2beSm3M+7wixuQ4NtEsFsbXStwjOBxwJrc=;
-        b=eE1P57/OOtRVdYPS0iqBRcIFHiO7H4We1f9tAPowuQMb0MEWSngkhurWvx5jfzaHrD
-         /jB3NtjQED22BFPmx3zn90+q+QG+Fb++Gv6JQrcFXhkEf3lMPCTG/8dGLm3wxlv8C3aU
-         9gVmaw3Fa9pde0UzshfV09TMV3qIuL7rkyXEqpLPJ20qROfsFht+FGoutwLhB+u2Cvoc
-         F2aS0TUgpQkyrG7w8u61Xnyu3FNurQmKkjQJNc3CxsviBH8qSbDOY4vuS4uqura3w/fP
-         LD9C1d1/nYe7ghN1wbq+NOKz/ZUO1CUuPnres0T1cLz0TxcL7r0DWXOauPOrwc20dZ23
-         3g4w==
-X-Forwarded-Encrypted: i=1; AKwUvBySf4/DZIUPFZn9YGTJdsF0XnRFg54P2PXineKVs7qxwG6ZjKcBoZ+B4kPdkKkGZsP9fVrwtqhbAkZnDA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/jCRvZgcrjiA3f2wIcDX4N401+yfZE9HRIfCczOb3uOEX/NZZv
-	Jv6G+hWJWwUN4+ry/u/sqCk4HXPryowWXmZgJo+EWV681EYjkkb2fhFwbLZcW4F4//ZnDzPrr1H
-	TJtUbMg7AO4DoP/mLdmHypDA4c8rDHf7sJmg5fPOo2g==
-X-Gm-Gg: AYBFou2isTl9CWQ7oyRgJf+xWVBHBuEmoXNJpfNiEc4oDjL6qqII2h6N3TU5+xX+u45
-	xZg2VG3nKljwHH8d86sXCHbhVYah1S2dtTf3m+7nQyBLk+NPNK72z7XrCoPTiY8oA025tWTmuG+
-	OOWHr4blLfs1dDBrBbmjpL/vqqPWlbDktAsyhxiXfQNuUsHB8+aRiFwTxLCBAxwvkTtZL8vq0Rt
-	jtrcrzD2FJnkEK11jSn9GaeHSXwHEfQVvjv1S7kWSZ6me8IMjaJh/pklhG6lyf94V7GMI8fr6Wx
-	t8qPvIwb64tmlikKzS8Icegx0JrI2e22dSnKnLKJA29pfyOorj5WWnw9xNwrkBL/fwJXbPbySfz
-	F4Ep5YpbYF/El1sY7RFqWhvkgn9VCOA450dOocFX6Y11kFwfqu3UL7jtM2jDhh0n/kKSP
-X-Received: by 2002:a05:6512:1394:b0:5bf:d1e5:6533 with SMTP id
- 2adb3069b0e04-5bfd951f9a1mr5985954e87.4.1793802012004; Wed, 04 Nov 2026
- 06:20:12 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=QImqVZ9A
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4jKT4m2dsrz4TV0
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 15:55:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1793804104;
+	bh=RVqjXrKnuRpooyNlRjkd3vig/YxXqqffC2KjHFQKyXE=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=QImqVZ9A2etmqXiJ7VwioeXckB1x1ypn3wQjuVZuL+v3pWmBMxOvatsfLwsLBo6bp
+	 u9gh1AG96OuH/+0D7o4MRvxxfjQM4R7pPiG8WejnLAmx/nbtpYcQnAXvJboWAREp6j
+	 CeM2jvHhbnIR9AuZye6/u6zSpd+a6h73I/Cq1hUzcBR81TwSb/nFTuTofAejWizzEF
+	 xuCy+x4X2lQHOZ8n9qpzw1JDexR3OmeRnDrAkFSN8aQCfN8Sah+M5EOjbL6Q3eqH/h
+	 9XmkzdbF7UB06hnSaZYaKLJXxaXawJwwUonqCQtJEk1hyLXosI0KzmWwu+9a9U3HZI
+	 S2tfOQs+UVg7g==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4jKT3S4TbFz3tRn
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 15:53:56 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jKT3S1tVsz8tk4
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 15:53:56 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 63E0B5F8B3
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 15:53:47 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <481ec417-d2b9-4032-8249-04ff889eab21@leemhuis.info>
+Date: Wed, 4 Nov 2026 15:53:45 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,47 +78,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com>
- <20261022082927.59030-1-martin@wetterwald.eu> <2026102218-vowel-plutonium-629e@gregkh>
-In-Reply-To: <2026102218-vowel-plutonium-629e@gregkh>
-From: Martin Wetterwald <martin@wetterwald.eu>
-Date: Wed, 4 Nov 2026 15:20:00 +0100
-X-Gm-Features: AclHuK_I0DmQgyoOW_ayNCdieQ-bUqhZ24CNIegOfCwJ565mihqQwxeJ6QVlwrY
-Message-ID: <CAFERDQ1GeAwFGBQ09eu8p69c_b3_CzAeEfTwiEaVCG_22RQdtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/raspberrypi: vchiq: register bus at subsys_initcall
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jai Luthra <jai.luthra@ideasonboard.com>, 
-	Gaston Gonzalez <gascoar@gmail.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, 
-	Phil Elwell <phil@raspberrypi.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Umang Jain <uajain@igalia.com>, Kees Cook <kees@kernel.org>, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179380402772.2615307.9660564686306993814@mxe9fb.netcup.net>
+X-NC-CID: dqHeRF9DpZ9eEtcofK5UuUFC9+WfnrMxcFA9O8JUcnDP3bFDxcA=
 
-On Thu, Oct 22, 2026 at 3:31=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Oct 22, 2026 at 10:29:24AM +0200, Martin Wetterwald wrote:
-> > Hi Greg,
-> > this is a regression introduced by aa125180c673 (via your tree) in
-> > 6.19-rc1 and present in 6.19.y through 7.3.y. If the staging pull for
-> > 7.4-rc1 has not been sent yet, could you take it there? Otherwise,
-> > staging-linus would be great. Thanks!
->
-> This is not a staging driver anymore, please route it through the proper
-> tree after -rc1 is out.
->
-> thanks,
->
-> greg k-h
 
-Hi Florian,
-Now that -rc1 is out, could you take the patch?
 
-I've checked 7.4-rc1 and I confirm the issue is still present.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks!
-Martin
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/6083
+#regzbot introduced: e6c5d36756e7
+#regzbot title: drm/amd/pm/si: SI DPM stuck at lowest level on AC
+
+#regzbot report:
+https://lore.kernel.org/all/aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de/
+#regzbot introduced: v6.12.114..v6.12.115
+#regzbot title: InfiniBand P_Key tables do not get populated by the SM
