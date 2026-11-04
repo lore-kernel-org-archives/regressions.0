@@ -1,67 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793804612;
-	b=AhcIyhAVJCPlFQ+uGhu2t2NSK0v0vwxwKOzVeMst+A9jkKd104td64ZRa6CnSJPVUflS
-	 6chd/QS1GhQyJ7In6yuZXYFhYdZDuHRQWENQbx9A+J6ztV7AXK8i9GeSDKPQAublLZc7l
-	 S8eJfWVxyvWcO5kCpPDUngm/SEcy6Zs6UBRVOr3atkQd+Si8pV5hXwRJyhwhUvRp2YGHG
-	 6yJxfTX1y7AK2Knr8UiXD1GCbrlrRqR75Sb/yp9IlCMW9VKVi9Tck970Y+M/yKW5d/oyY
-	 qUa6tVJ+jnScQTqqGdHD3Y8y7WDBQavovNRm8KUO7BCF3whjsAMoKkPhsaCW4N1elRg==
+	t=1793804613;
+	b=aY5AfOqaTsftxSxhXu2fcKdbLp1qFQSG3nwLmbMRwGuI10/b3cE85N8f9hwAiP6MhW8Q
+	 L07TQcrhdANQKoVBnf5zpkp0FkLh7MhE2GLDkBNimoXZJNyA4n7sxzJWP/clUcJCMbxR3
+	 yOhlahI/SlCacIj4b5+X3lt2S+tq3yQjrHui0PKsI+Ifmoa0i/Ca9zYBuT3fQur6MDqwb
+	 By2nBCJoYFYYEN7niR1Uwv+EeELvRJv3fJdRiiC9kOYnv5AnwrOa5bgS09LmMFSQICPZx
+	 nFeoa3bEfxqW3nAIrZ6ShDeYIYAv/xoefZ5qui4ccwxgjS5qZxNa6oJ0dItS9CeYfPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793804612;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793804613;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=jcuK5iLQbBpoNUcGNqmSkFEid/wes9Tw0xAICnEgk2I=;
-	b=luth+v9R9WxmFeNCi0R6TfFeJKFj1M0/2FW3IiSMLEbkm4fESPjIsmA2UawVNNZgr10e
-	 xWVKljxxbA95nZkAE6NNXJbghKXq0JXgTrH0ScFpPoZXSj8sxdIa2FFhJ68I+u52sXpw5
-	 JKqZhK8uZyqkaNarftvpNI5vqi64TufGAiqZqWv5NZis1bAuppb6V3tbcdFHX6GNctZNS
-	 Ek9fcIsnegXoNPpJJwgxnd0tIIQrJ1G5J89R8Xs+78cJsX6cwNNDK4mQjws07/7SmkdiH
-	 3AIA1I8EIE1G1Fn2uyJ5PGpEskwV3rRzyQVBxjy7Db1uKKIdRNrgET8GvktOhOB6fmA==
+	bh=zQQ1Vc06LqUongm1/zFlceNM7/HAgOD/NIGM2scTpfs=;
+	b=h5XX8uceuNGSK232nLQkSk8Yfn5JXFB69+6ChvD4fpgNidHOPqfD2o1f2GSLZyJWOESo
+	 dCtBFTiYkjN2SCA5ghZclD7EKxzK+3FeLIaJ4DlrZAsGzmEKxL2B0rmkD/iTqHepFwnH4
+	 t9bKYj0ozNVF77AWisF7y32Qz0ZCwVPETXi18V6iuYtWp75gFCx6Iz2f7zHsgbk/UxZ5/
+	 cGcExzI7fPK+jhgSIHknKv70zaJBmYENWPCTljh50sWY7JpvjVDP348VhzEPj4+bY37Vo
+	 T1F+0mm0b4BSlmBbnHzAm32J6T9zV70orjTQx5L0wen8bQOZ6eKjEXfZ4oDEFFzRvMA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eIrCEFfS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DmZgKazM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EDB606A329;
-	Wed,  4 Nov 2026 15:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE23606A32C;
+	Wed,  4 Nov 2026 15:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eIrCEFfS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751941F0093A;
-	Wed,  4 Nov 2026 15:03:30 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DmZgKazM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481AE1F00A02;
+	Wed,  4 Nov 2026 15:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793804612;
-	bh=jcuK5iLQbBpoNUcGNqmSkFEid/wes9Tw0xAICnEgk2I=;
+	s=k20260515; t=1793804613;
+	bh=zQQ1Vc06LqUongm1/zFlceNM7/HAgOD/NIGM2scTpfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eIrCEFfSSC3DJJemsJ1SUXjXY8yUkE4yg9cD/telo2KbgxpiuDRXdHES6CKYP1E79
-	 iVzm9jNzHBGXubcKZHtPPq3+0UbMb9HicYLdCLN5dA/fF7fYOGvcgvdZ/mUgv1sorK
-	 i4EJUXUfvu3hJaqXkiZR8SW7sRmW3WJ9Xtwt1JEb1EaN2jQ6VWDWqTF28DXjfN5i6e
-	 V0x0BoN1I7nS4jbhkT/jqTbJXghxAOLpUse0KcuWvNTg+2faSp1rlhEo8Qnj9EaWUG
-	 VetEJVD0KvQ3LwCux4vlvTa0efI+5NV1N4UwCJmAcFghukrCbNvlGIYP6LXkfhSG3K
-	 pPGzzumzC24+Q==
+	b=DmZgKazMQ4hvjav9DVy3LjZ+gfRayHBSgYW6SCZvIIg5jatZ8wFVYUbyQj/qKyRxx
+	 ZcV9/8x0O7iYqYJEGJe6hB0MhbstCxIS6cD+R7rFVyz20JTD9VQrTV1OrDf/+OMVnp
+	 74gsuYzbx0JJl9oKY+BInF+pit6xH2LnW1qq9Ge5BVVAAMprp/32v8dLMdcQ38AVM0
+	 XEPTe3DqKULFClLoIc+lL5UbBxt+4Llt6LYHT+BCjCKdK3utD2XsSzqesoPTC9gh4/
+	 nvCFuJ8E/CgPjxeqOb2XLOosW4LJZpk43KE4qPzbQjQecNY2GKgYOXpRKpZyzatEaf
+	 cV9r6McySGdVg==
 From: Sasha Levin <sashal@kernel.org>
-To: Elliot Berman <elliotjb@elliotjb.com>
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
 Cc: Sasha Levin <sashal@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yongjian Sun <sunyongjian1@huawei.com>,
-	Jan Kara <jack@suse.cz>,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	Tom Bereknyei <tomberek@gmail.com>,
-	Kevin Fernandez <kevin@findhost.org>
-Subject: Re: [PATCH 6.1.y 0/2] Fix NULL folio dereferences from IS_ERR() checks in 6.1.191
-Date: Wed,  4 Nov 2026 10:03:13 -0500
-Message-ID: <2026-11-04-1-daily-reply-0004-re-ext4-null-folio-61@kernel.org>
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"eadavis@qq.com" <eadavis@qq.com>,
+	"tiwai@suse.de" <tiwai@suse.de>,
+	The Darkbird <thedarkbird@protonmail.com>
+Subject: Re: [REGRESSION 6.12.y] Please backport 70b4db7d2581 ("ALSA: usb-audio: Use the right limit for PCM OOB check")
+Date: Wed,  4 Nov 2026 10:03:14 -0500
+Message-ID: <2026-11-04-1-daily-reply-0005-re-usb-audio-oob-612@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <auk775zR0FCl4L0X@hebergement-securise.com>
-References: <auk775zR0FCl4L0X@hebergement-securise.com>
+In-Reply-To: <shfaXkZCI7FtyNr5tS4kCC_d5E4uQFhc0MtwJa2CQFXpNMfSw7Ub6urwWpGrcoRnHuoneJEi9mLwtnvVImMhz1Hb25iwNJxx8GZZsDCV_HE=@protonmail.com>
+References: <shfaXkZCI7FtyNr5tS4kCC_d5E4uQFhc0MtwJa2CQFXpNMfSw7Ub6urwWpGrcoRnHuoneJEi9mLwtnvVImMhz1Hb25iwNJxx8GZZsDCV_HE=@protonmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,11 +64,12 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On 2026-11-03, Kevin Fernandez <kevin@findhost.org> wrote:
-> Is the series needed on 6.1.y at all?
+On 2026-11-03, The Darkbird <thedarkbird@protonmail.com> wrote:
+> Please backport the following upstream commit to 6.12.y:
+>
+>   70b4db7d2581 ("ALSA: usb-audio: Use the right limit for PCM OOB check")
 
-Yes. Elliot's two patches are queued for 6.1 and fix this oops, so it will be
-fixed in the next 6.1.y release.
+Queued for 6.12, thanks.
 
 -- 
 Thanks,
