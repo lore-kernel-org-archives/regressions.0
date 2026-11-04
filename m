@@ -1,58 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.85.9.111
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793804613;
-	b=aY5AfOqaTsftxSxhXu2fcKdbLp1qFQSG3nwLmbMRwGuI10/b3cE85N8f9hwAiP6MhW8Q
-	 L07TQcrhdANQKoVBnf5zpkp0FkLh7MhE2GLDkBNimoXZJNyA4n7sxzJWP/clUcJCMbxR3
-	 yOhlahI/SlCacIj4b5+X3lt2S+tq3yQjrHui0PKsI+Ifmoa0i/Ca9zYBuT3fQur6MDqwb
-	 By2nBCJoYFYYEN7niR1Uwv+EeELvRJv3fJdRiiC9kOYnv5AnwrOa5bgS09LmMFSQICPZx
-	 nFeoa3bEfxqW3nAIrZ6ShDeYIYAv/xoefZ5qui4ccwxgjS5qZxNa6oJ0dItS9CeYfPw==
+	t=1793807756;
+	b=Uke7hPf4SIBt5iRKABQ/DcWAhbZSGHvPangcfZIoiitJXYyMAtTNzeO4biKWxwMNxYVZ
+	 HyEL9xLJswk2PvQKOb5eVtITpcKLhigjxom2M6RV+RjsEtqO+yng3IFQZG+zgi57grbDR
+	 L4lSySDi+SOuR/1lN+A2ayUm5fSwHaGUvJEJBzhaXQXHucbe+0eKXV041pDZpyt3pFIG/
+	 dEEsdmDOMCuxpQ98V0rtl8n5s3nRScoZTYWx5O2+OKeaQqKD4JgwJcrvyYvS/epqReKZa
+	 kiiroFJCq73dx2dnfF0qDzqPmvCfEKcCDfzGtLK8t0BnHVRe8X1HcUQzt65t3s9lpmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793804613;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=zQQ1Vc06LqUongm1/zFlceNM7/HAgOD/NIGM2scTpfs=;
-	b=h5XX8uceuNGSK232nLQkSk8Yfn5JXFB69+6ChvD4fpgNidHOPqfD2o1f2GSLZyJWOESo
-	 dCtBFTiYkjN2SCA5ghZclD7EKxzK+3FeLIaJ4DlrZAsGzmEKxL2B0rmkD/iTqHepFwnH4
-	 t9bKYj0ozNVF77AWisF7y32Qz0ZCwVPETXi18V6iuYtWp75gFCx6Iz2f7zHsgbk/UxZ5/
-	 cGcExzI7fPK+jhgSIHknKv70zaJBmYENWPCTljh50sWY7JpvjVDP348VhzEPj4+bY37Vo
-	 T1F+0mm0b4BSlmBbnHzAm32J6T9zV70orjTQx5L0wen8bQOZ6eKjEXfZ4oDEFFzRvMA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793807756;
+	h=DMARC-Filter:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
+	 MIME-Version;
+	bh=p0dbpZxKDZjwc5Ue6sP7ZQyfRddfvPs1oTGO/ZNaY0k=;
+	b=FQnp293ipu9bGgy8OvJUQb6B/ZF1atNM5sjV0TbAPvB5EaQVxZz6hDtyAC2jOxfZcOGG
+	 L7omao6c/gaBiUZovQQ3Tlo8ZYGrEIsrxfqFN4INXdyYmpxxG2VdIzu/HmZuYhlI24mOx
+	 SSDKjZDb4MnQWa9zf+pnZ9iPX3PSxeB4NHB0Kf8JW1DHOKPOIUmVUPPFw1LYd3GReE4g2
+	 ePywN6gmqg9d5QPEkeJuIxkNCtsjSlcBG5wBt+CtOcIcvNuPUKakg7R1tP5xwpCp1oxsW
+	 oTeowC6ErjePvK0Ks+iBOps3rL2OtwKFJtC+c+7OT5j+KOi8tDheMCszA1gvsDs4Tlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DmZgKazM;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=irl.hu;
+	spf=pass smtp.mailfrom=irl.hu;
+	arc=none smtp.remote-ip=95.85.9.111
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE23606A32C;
-	Wed,  4 Nov 2026 15:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DmZgKazM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481AE1F00A02;
-	Wed,  4 Nov 2026 15:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793804613;
-	bh=zQQ1Vc06LqUongm1/zFlceNM7/HAgOD/NIGM2scTpfs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DmZgKazMQ4hvjav9DVy3LjZ+gfRayHBSgYW6SCZvIIg5jatZ8wFVYUbyQj/qKyRxx
-	 ZcV9/8x0O7iYqYJEGJe6hB0MhbstCxIS6cD+R7rFVyz20JTD9VQrTV1OrDf/+OMVnp
-	 74gsuYzbx0JJl9oKY+BInF+pit6xH2LnW1qq9Ge5BVVAAMprp/32v8dLMdcQ38AVM0
-	 XEPTe3DqKULFClLoIc+lL5UbBxt+4Llt6LYHT+BCjCKdK3utD2XsSzqesoPTC9gh4/
-	 nvCFuJ8E/CgPjxeqOb2XLOosW4LJZpk43KE4qPzbQjQecNY2GKgYOXpRKpZyzatEaf
-	 cV9r6McySGdVg==
-From: Sasha Levin <sashal@kernel.org>
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-	"eadavis@qq.com" <eadavis@qq.com>,
-	"tiwai@suse.de" <tiwai@suse.de>,
-	The Darkbird <thedarkbird@protonmail.com>
-Subject: Re: [REGRESSION 6.12.y] Please backport 70b4db7d2581 ("ALSA: usb-audio: Use the right limit for PCM OOB check")
-Date: Wed,  4 Nov 2026 10:03:14 -0500
-Message-ID: <2026-11-04-1-daily-reply-0005-re-usb-audio-oob-612@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <shfaXkZCI7FtyNr5tS4kCC_d5E4uQFhc0MtwJa2CQFXpNMfSw7Ub6urwWpGrcoRnHuoneJEi9mLwtnvVImMhz1Hb25iwNJxx8GZZsDCV_HE=@protonmail.com>
-References: <shfaXkZCI7FtyNr5tS4kCC_d5E4uQFhc0MtwJa2CQFXpNMfSw7Ub6urwWpGrcoRnHuoneJEi9mLwtnvVImMhz1Hb25iwNJxx8GZZsDCV_HE=@protonmail.com>
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id D2D13606A31B
+	for <regressions@lists.linux.dev>; Wed,  4 Nov 2026 15:55:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2D13606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.4] (51b69268.dsl.pool.telekom.hu [::ffff:81.182.146.104])
+  (AUTH: CRAM-MD5 soyer@irl.hu, SSL: TLS1.3,256bits,ECDHE_RSA_AES_256_GCM_SHA384)
+  by irl.hu with ESMTPSA
+  id 00000000000A0070.000000006AEB5583.0010455E; Wed, 04 Nov 2026 16:55:47 +0100
+Message-ID: <7cd4c010f13ee085e3aa4396705b6b06ed58f7e1.camel@irl.hu>
+Subject: Re: [PATCH] ALSA: hda/tas2781: Only accept CRC-less V1 data if all
+ entries are valid
+From: Gergo Koteles <soyer@irl.hu>
+To: med.jebabli@gmail.com, regressions@lists.linux.dev
+Cc: Cristian Castellano <cristian.castellano@icloud.com>,
+  stable@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+  Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org,
+  linux-kernel@vger.kernel.org,
+  Thorsten Leemhuis <regressions@leemhuis.info>,
+  Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+  Baojun Xu <baojun.xu@ti.com>, Sen Wang <sen@ti.com>
+Date: Wed, 04 Nov 2026 16:55:36 +0100
+In-Reply-To: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
+References: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -62,15 +61,35 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On 2026-11-03, The Darkbird <thedarkbird@protonmail.com> wrote:
-> Please backport the following upstream commit to 6.12.y:
->
->   70b4db7d2581 ("ALSA: usb-audio: Use the right limit for PCM OOB check")
+Hi Mohamed,
 
-Queued for 6.12, thanks.
+On Tue, 2026-11-03 at 10:27 +0100, Mohamed Yassine Jebabli via B4 Relay
+wrote:
+> From: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
+>=20
+> Commit 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data
+> without CRC") only checked the first device entry. On machines where
+> the BIOS populates fewer entries than p->ndev, the remaining all-zero
+> entries are applied and tas2781_cali_preproc() divides by zero on
+> playback open.
+>=20
+> Accept CRC-less V1 data only if every expected entry is non-zero and
+> self-consistent (R0 * 1/R0 close to 1.0), otherwise reject it as
+> before.
+>=20
 
--- 
+...
+
+> =20
+> +/*
+> + * V1 data without CRC is only trusted if every expected device has a
+> + * populated, self-consistent entry: R0 (Q27) * 1/R0 (Q31) must be
+> + * close to 1.0 in Q58.
+> + */
+
+Just out of curiosity, where do Q27, Q31, Q58 come from?
+I couldn't find anything about these.
+
 Thanks,
-Sasha
+Gergo
