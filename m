@@ -1,50 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=95.168.196.40
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793919725;
-	b=wLoDbyCvRXMzjsIyo7rlMSpXFqHUyLqjgWHSO5rzQ265Cc4JHDyCeDYHgAsQuuQv0hnO
-	 EsWEE/0JRCSVM2C+39G3opBG8NNVFnizcXh+7O+5jxsClPG6y1qX4/bkH/vUz86vArqjn
-	 aDymX090MxliqF43FSnxBMwI6k3lppHPyDWegCOKn5MdE2SzS/HARXg8upwYV0zxWgfNn
-	 xAf2Q/EznC1Gwe2/R2OYVIk6bmprO8JZCmqqZcVzr62HUO3pd2qMlmnX/j3+ng4G79+4H
-	 7XVfqpNG5IsjuWgLKFvHVLzezWRZgpgKtMW/gTyYmvrNZ493h/S9zrY/MqEHesIAYoQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793919725;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:To:Content-Language:Cc:From:Subject:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=nFHu/TlZZs1BneDlNj6NXiK+WB40Jp5wWfhWo/Vu9Ag=;
-	b=YHYZwreWfbvrroIHJjTYO5sq09/XwycfeRQZ35TGZbq12kthCDm70vOumh0ZEg+0j+YM
-	 pbEQCvwsUytPFzVZ+OWq+0F69YV6Hz+cmVKx1HXbQ+sfChS8rmJeEUXhkVDxgB7Ngz2uj
-	 mzDudhPhHNgoPdvGRdUBAL0lEMh1S9xGg+gIsthE5Y3O+H4GnsK6ox5zq/ZrOpy3EzBTg
-	 FL2iYlhX/P9CHrnBNPqA8cqj8vfNy50bwTfn4TqLo9r51l2czhEgjdqTfpe86Tx6kGzVB
-	 K8kO3DXnoQftnCVE4BjirEin3AgY1KGu1m7vohRCOSQk4axxSsNI6ETcC0CWQwM4JiQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=sh.cz;
-	spf=pass smtp.mailfrom=sh.cz;
-	dkim=pass header.d=sh.cz header.i=@sh.cz header.a=rsa-sha256 header.s=mail header.b=23kIa+JQ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=95.168.196.40
-Received: from mail-internal.sh.cz (mail-internal.sh.cz [95.168.196.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.99
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793923168;
+	b=Tit4Ep1Tsg61IQzLbfU9DxZBtfB7zgPbYcpaShYWRj9tHgoHATCqeA0VB8A02JoNIA7k
+	 j9NoXMBHJF55JnvAjRT/lvCmr1f1JdFwwwZbVp0SwgwrsznHFGZ/F6lu7Zkw+NSJ3MEpK
+	 6kJb09OS8fImpPlcbR0PucP7Zoh9rJM6Z5D+HQq0kVBCRlbSCYiTrAro1BDI+VMmDm19b
+	 FKcQiBmQWdwR7gLbK5ebjykLNjj3q0WvDGXzQuobMgp3l/M0gyjl/yQSYOTy/l7TpcbgC
+	 YlVaCptWM/YOHCq3CRy0ldCa6UINQFdIwmS6IHc//LNpzB0ZzIlZJ6azs2mKXWM2yAQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793923168;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
+	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Received:X-Received:Received:From:X-Google-Original-From:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:Autocrypt:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-DetectorID-Processed;
+	bh=b3EJWAyP/KgN/GqYocveH6uI/meUdW4z3waTDv9EBRc=;
+	b=xWlO1qRhc8h7UjrFdtmcwMlLhcZ2DFkhFTyIJ7jbbcnkJaBVXFVlzEYYmkUHcIjtla3P
+	 KUfveTHsx1w50VwP9rwA1mDBnFLqk2C6GUJFiItEBMtiSVoUyZxc457ndZjHy2Q8x9tHR
+	 m/fK8pOvOqcemS4wJfoINJLQXXNeZMLpSMoUqJrFFGAV8XTiEfb1rxltEhEiIF24iIa8O
+	 6JWbiV+XrXKDtm4D9UYX20Dv7yZTO//80zGQ4qy8jyKTdV/97WSFhiOi0V/tUCyHL7oAy
+	 L/bNB/7xtJCRj+UL2ettfj00OjK1uMnoM11VHJFZuEbX7XhSero0ZPspwNKMNUjTUvA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=broadcom.com;
+	spf=fail smtp.mailfrom=broadcom.com;
+	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=CVQP7vk7;
+	arc=none smtp.remote-ip=209.85.216.99
+Received: from mail-pj1-f99.google.com (mail-pj1-f99.google.com [209.85.216.99])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FB6606A328
-	for <regressions@lists.linux.dev>; Thu,  5 Nov 2026 23:02:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C7FB6606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sh.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sh.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77719606A329
+	for <regressions@lists.linux.dev>; Thu,  5 Nov 2026 23:59:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 77719606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=sh.cz header.i=@sh.cz header.a=rsa-sha256 header.s=mail header.b=23kIa+JQ
-ARC-Seal: i=1; a=rsa-sha256; t=1793919711; cv=none; d=sh.cz; s=mail;
-   b=CwyM6VqHLuYGWvslljOb3cbJ4FgeT4I0kKhPYvN932eW07uoHJe+7J0cQaKUMsXTDDb+rRv4ndOAbq4Y+f0KWg9r+Z8vk/lddkUYoJ+z3XXqvpvkMM4ZIHWv3jWyV719CwaE5OCB7nR/WVgXVCsYervSUJNNWVsdbQfY0RjF+OKrsnuRIFGM0ZNp7J8Do69gqoGKaSLe+llsVwdvq8wn14QxFluPBhndUENpROatxytYVQpccpgMcG3Ju0ZuAnpu6k/p6nBVXK9vj7vyL2RzJH5abYfTlzQXrwFC5zZAR5rDNrvB31SgR2G/g9ZNnfLWOJk+G3qG+ceVBpOO7P5i7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; s=mail; d=sh.cz; c=relaxed/relaxed; bh=nFHu/TlZZs1BneDlNj6NXiK+WB40Jp5wWfhWo/Vu9Ag=; h=to:from:subject:message-id:date:mime-version:dkim-signature;
-   b=9Y/xOOTsfWKMAuy1mKlQCDlcRscnPvtXOPVlY1dF8XMCr8lujm2sNCxHpY36p12zaglinrbZ8Xfwv4GZ9ISHfZY7yh/wNVttyBKU4Rb4+MFQzfYr9/tznK/dLmmSHJOWWceGC2LGrDExqPgC6UgIEdLl4jhf8TJ+h1sdHpZNHbesW5p8bsUMLKBN6W4eyyaPia+WmFWLsvDGlNovGPNnFXhhj72dJ4RP/vlpN2W1Cqlfr2gUSVUKuKjfHxZcVqL/U10v5lKHemDYsJUFNo3G2JirtrRSq4nB0psrCn3dFSml3uWunI+h7nWQbUj435KBAZs67Fb0Yff1iu85jNfL/A==
-ARC-Authentication-Results: i=1; mail.sh.cz; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; t=1793919711; x=1794524511; s=mail; d=sh.cz; c=relaxed/relaxed; bh=nFHu/TlZZs1BneDlNj6NXiK+WB40Jp5wWfhWo/Vu9Ag=; h=From:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding;
-   b=23kIa+JQRcND47wJGvFW0KMQ3JEfRpHq7cCXnjUMdSdynEGX5psS0ePiXljCDQrxo5As7Ym+tGyO41OAnZhNnLoZ3bWVCAMtXalNdsGs85fW8y5Zs66DEkvXZZ5xUP/6nj+qzIZ6QtKvlchCwniMpx/GOM57GRgPDptgaPNf9gziKpG64cyJswwYNaLlheNtrKi+TE8IArdNrDhny1XRO6Wu4SFEAit7CHqluJfyHthasJVukz3LDyhi1iIqfUCcNPv5tI7hYCELblUqcKUO4RSXF59d0PjQt9VvTZQ9eYBFxfSR405P4VHCaXa8r+jpL49wY60xQRhGXX/wH1FdVA==
-Received: from [10.18.2.106] ([80.250.18.198])
-        by mail.sh.cz (14.3.0 build 12 ) with ASMTP (SSL) id 202611060001508662;
-        Fri, 06 Nov 2026 00:01:50 +0100
-Message-ID: <3af016db-ce2d-4ed6-8f9a-13f31eb3ea9d@sh.cz>
-Date: Fri, 6 Nov 2026 00:01:50 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=CVQP7vk7
+Received: by mail-pj1-f99.google.com with SMTP id 98e67ed59e1d1-3ac91ac8924so34971a91.1
+        for <regressions@lists.linux.dev>; Thu, 05 Nov 2026 15:59:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793923167; x=1794527967;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:dkim-signature:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=b3EJWAyP/KgN/GqYocveH6uI/meUdW4z3waTDv9EBRc=;
+        b=WsaiL0jciUJCFC/O8JGz+8VbwgFyKCE1MQdtaByBMBemMCK3QlE4JT8xxxZQUarGxt
+         SWLUDq7gFobL4xgDpCAPLQLFxb4HZ20ivP6J5/BBx9bMIGbKwcn7VHpbHzDSGpW1qtDN
+         xeq0nClbqK+J41TFn8spXdlS80xpt8FY3vLdfBzHXB0iLnv++7J3R+7WLlNaQJw8Jbmn
+         JHPHW6q3GNTIlCBg9/52mdzz2Oz5bXViKtF4DQecPKakOo4GERcVjDuc1XSUv9TGInb+
+         0ekjTpI4I1MSHQeuD95+2Wro+rGjiMx32/qosfaSxwz6DZAQjUDVUrik7z8o1fA36i44
+         Q84g==
+X-Forwarded-Encrypted: i=1; AKwUvBx/A7lcxGIhL1HDdKwQuZoEX5icGP/iny/NXNaoliNjqBJxe8opMHU9qpK9xL5mzfnaWBmTYWgp6t3IHw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+z75w872ZBdbNStx/0jZrudiIGp0Co1AUIgaKSlW80L3FCotn+
+	jx5iYafQN/TshrjXjgWJQZU3fhkyY+B890MGH61Iu4VneQBLT0Qpc/PV4cc8Wat71HPRQwsAFR/
+	VP54MovvWJTuuxmQv4+yxoYdcu2OvjdNHk+I0KRThOPu/k7kwiwVyaQTGC2jSJh1LmDz7vqnpsR
+	YYegM/lGmUPfOgtr+tfsMnUdKG4OiGiHYvmTzKKRAjSEtI4QuqjjUEDBL808w09RJb2aTy+Pmfu
+	IyVbGvV8H2y3AR8OEJjJJk=
+X-Gm-Gg: AYBFou3tVsWE0htlfxkeXMazsEtkBbEqJWuYM56KHtVWi1m+zkSy9AQLvfVWsvpjM6e
+	U8ACZYTMSCYJNbaaUw/aQrye8YXTLNELElvTH6TwMjuKkm5Mp8HoBtgXTpRrO82V0h1t7/dTqE0
+	a/WuGGUSXgn+t3TdH//EWaL05qDaXh+FSQdb+8JYgz+eIHtHq1OfmazAYEZDb3uTL9fncA0PP7S
+	K43VIZDzHYKdzCECNg5GclVRZIboVf/19dvxpeSNUUs/Fh3RfmapydeUD+8LHlTN2sAE4K7EAxG
+	KeVQPdv45FMaF+3BeCVH2YuesrohCl+pRTvtAzcFk95F371jyOWLvLVWI9bh0Gbk9KrcxhtS3cZ
+	uapwsW7xfiKE5uECUf2TIqGTbPluOeTdIsld0NYlT+lp9J6YB5vDmFjPO5nslUuy2O4PJ2ydINJ
+	hGUeyxLiinlyGKTuceT4qdzoGBwThGVYJdTomDAmrj
+X-Received: by 2002:a17:90b:5410:b0:3b0:d365:f8ed with SMTP id 98e67ed59e1d1-3b0db6c9cb3mr685583a91.21.1793923166770;
+        Thu, 05 Nov 2026 15:59:26 -0800 (PST)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-13.dlp.protect.broadcom.com. [144.49.247.13])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3b0d7c9e095sm671262a91.2.2026.11.05.15.59.26
+        for <regressions@lists.linux.dev>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Nov 2026 15:59:26 -0800 (PST)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-91c817b56adso1450926d6.1
+        for <regressions@lists.linux.dev>; Thu, 05 Nov 2026 15:59:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1793923166; x=1794527966; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=b3EJWAyP/KgN/GqYocveH6uI/meUdW4z3waTDv9EBRc=;
+        b=CVQP7vk786Ui4gGdl+KK91HyHUJEywlYabOd4BWDNokrlWLXEuxzBjvWqYfwpZIXWC
+         gOd0eqzGd13m9u5ZdOc/BgMt3I9CyoAuN08TbOP4fkqWFWeTviot1pNwtlXVkISo3oBJ
+         QdAz5GIPHu3pZvvFlmQQnjE1L0LCz7PsAtKlw=
+X-Forwarded-Encrypted: i=1; AKwUvBzqcQe/pLAERV03RG4elXZLetY6JNBbPXjIbeWiPJ/VwUJ4gJL7KXGMi86NjwcIuON8r8PZjvSJ22M1gQ==@lists.linux.dev
+X-Received: by 2002:ad4:5e87:0:b0:91e:8d68:564b with SMTP id 6a1803df08f44-91ea961d91emr9255346d6.16.1793923165531;
+        Thu, 05 Nov 2026 15:59:25 -0800 (PST)
+X-Received: by 2002:ad4:5e87:0:b0:91e:8d68:564b with SMTP id 6a1803df08f44-91ea961d91emr9255166d6.16.1793923165088;
+        Thu, 05 Nov 2026 15:59:25 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91ea6a4f9bdsm7260506d6.16.2026.11.05.15.59.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Nov 2026 15:59:24 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+X-Google-Original-From: Florian Fainelli <fainelli@broadcom.com>
+Message-ID: <097f4855-eca1-414a-932c-107d9eee5088@broadcom.com>
+Date: Thu, 5 Nov 2026 15:59:21 -0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -55,129 +109,90 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: stable@vger.kernel.org
-Content-Language: en-GB
-Cc: regressions@lists.linux.dev
-From: Marek Becka <marek.becka@sh.cz>
-Subject: [REGRESSION] NULL pointer dereference in ext4_mb_load_buddy_gfp
+Subject: Re: [PATCH] sched/idle: Stop the tick when no cpuidle driver is
+ available
+To: Christian Loehle <christian.loehle@arm.com>,
+ Joseph Salisbury <joseph.salisbury@oracle.com>,
+ "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: rafael.j.wysocki@intel.com, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, frederic@kernel.org,
+ linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com>
+ <CAJZ5v0g+SkTxuP5fqUMisQAh19v-JzpmRZHiKtYzJH1sVt656g@mail.gmail.com>
+ <5f5cb821-92ae-4539-ae81-a43e33a7ded5@arm.com>
+ <f5946a8a-43be-49d4-a827-25149112b21f@oracle.com>
+ <774c3a68-6a6b-4e2e-a347-03e36953b750@arm.com>
+ <0b9b9c3d-8ba0-4329-9504-b9d33c627649@arm.com>
+Content-Language: en-US, fr-FR
+Autocrypt: addr=fainelli@broadcom.com; keydata=
+ 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
+In-Reply-To: <0b9b9c3d-8ba0-4329-9504-b9d33c627649@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-After updating from 6.1.190 to 6.1.191 we are expecting an NULL pointer 
-dereference in function ext4_mb_load_buddy_gfp on multiple servers. It 
-looks like folio_test_uptodate is called with NULL folio pointer in 
-fs/ext4/mballoc.c:1536 .
+On 7/28/26 09:37, Christian Loehle wrote:
+> Commit f4c31b07b136 ("sched: idle: Consolidate the handling of two
+> special cases") changed the no-cpuidle-driver path to use the previous
+> tick wakeup heuristic.
+> 
+> Oracle reported a substantial sysbench regression on small OCI VM shapes
+> with no cpuidle driver available. Reverting the commit recovered the lost
+> performance.
+> 
+> Restore the previous tick handling for the no-driver case while retaining
+> the heuristic for the single-state cpuidle case.
+> 
+> Fixes: f4c31b07b136 ("sched: idle: Consolidate the handling of two special cases")
+> Reported-by: Joseph Salisbury <joseph.salisbury@oracle.com>
+> Closes: https://lore.kernel.org/all/096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com/
+> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
 
+FWIW:
 
-There is an example of this crash:
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-[ 1678.841763] BUG: kernel NULL pointer dereference, address: 
-0000000000000000
-[ 1678.841821] #PF: supervisor read access in kernel mode
-[ 1678.841854] #PF: error_code(0x0000) - not-present page
-[ 1678.841877] PGD 0 P4D 0
-[ 1678.841896] Oops: 0000 [#1] PREEMPT SMP PTI
-[ 1678.841918] CPU: 11 PID: 10142 Comm: kworker/u82:2 Not tainted 6.1.191 #1
-[ 1678.841946] Hardware name: Supermicro Super Server/X10DRW-E, BIOS 
-2.0b 07/26/2016
-[ 1678.841973] Workqueue: writeback wb_workfn (flush-253:4)
-[ 1678.842006] RIP: 0010:ext4_mb_load_buddy_gfp+0xb5/0x370 [ext4]
-[ 1678.842105] Code: c9 89 e8 99 f7 3c 24 4c 63 e8 89 54 24 0c ba 01 00 
-00 00 4c 89 ee e8 4a e3 0d cf 49 89 c6 48 3d 00 f0 ff ff 0f 87 1f 01 00 
-00 <48> 8b 00 a8 04 0f 84 09 01 00 00 49 8b 06 a8 01 0f 85 fe 00 00 00
-[ 1678.842160] RSP: 0018:ffffd28d64597620 EFLAGS: 00010207
-[ 1678.842184] RAX: 0000000000000000 RBX: ffffd28d64597700 RCX: 
-0001a00330001005
-[ 1678.842210] RDX: ffff8e100065f908 RSI: 0001a00330001005 RDI: 
-ffff8e10208a6600
-[ 1678.842236] RBP: 0000000000000064 R08: 0000000000000001 R09: 
-ffff8e104df781a0
-[ 1678.842261] R10: ffff8e100065f908 R11: 0000000000000090 R12: 
-ffff8e008cde8800
-[ 1678.842287] R13: 0000000000000064 R14: 0000000000000000 R15: 
-ffff8e0094e062f0
-[ 1678.842311] FS:  0000000000000000(0000) GS:ffff8e1fbf840000(0000) 
-knlGS:0000000000000000
-[ 1678.842340] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1678.842362] CR2: 0000000000000000 CR3: 0000000154c10001 CR4: 
-00000000003706e0
-[ 1678.842387] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
-0000000000000000
-[ 1678.842413] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
-0000000000000400
-[ 1678.842438] Call Trace:
-[ 1678.842454]  <TASK>
-[ 1678.842471]  ext4_mb_find_by_goal+0x91/0x260 [ext4]
-[ 1678.842551]  ? __ext4_handle_dirty_metadata+0x5c/0x1b0 [ext4]
-[ 1678.842620]  ext4_mb_regular_allocator+0x93/0xcc0 [ext4]
-[ 1678.842705]  ext4_mb_new_blocks+0x7ba/0x1060 [ext4]
-[ 1678.842792]  ? ext4_find_extent+0x18e/0x480 [ext4]
-[ 1678.842864]  ext4_ext_map_blocks+0x951/0x18d0 [ext4]
-[ 1678.842938]  ? release_pages+0x15a/0x490
-[ 1678.842967]  ? __pagevec_release+0x1b/0x60
-[ 1678.842992]  ext4_map_blocks+0x1b1/0x5c0 [ext4]
-[ 1678.843073]  ext4_writepages+0x87e/0x1150 [ext4]
-[ 1678.843162]  do_writepages+0x6e/0x1d0
-[ 1678.843186]  __writeback_single_inode+0x41/0x350
-[ 1678.843213]  writeback_sb_inodes+0x1ed/0x4c0
-[ 1678.843239]  __writeback_inodes_wb+0x4c/0xf0
-[ 1678.843263]  wb_writeback+0x172/0x2f0
-[ 1678.843286]  wb_workfn+0x2b1/0x510
-[ 1678.843310]  process_one_work+0x1d1/0x3a0
-[ 1678.843334]  worker_thread+0x4d/0x380
-[ 1678.843354]  ? process_one_work+0x3a0/0x3a0
-[ 1678.843374]  kthread+0xda/0x100
-[ 1678.843396]  ? kthread_complete_and_exit+0x20/0x20
-[ 1678.844048]  ret_from_fork+0x22/0x30
-[ 1678.844673]  </TASK>
-[ 1678.845285] Modules linked in: netconsole binfmt_misc tcp_diag 
-inet_diag 8021q garp stp mrp llc ipt_REJECT nf_reject_ipv4 xt_multiport 
-xt_comment xt_tcpudp xt_u32 nft_compat nf_tables nfnetlink xfs 
-intel_rapl_msr intel_rapl_common intel_uncore_frequency 
-intel_uncore_frequency_common sb_edac x86_pkg_temp_thermal 
-intel_powerclamp coretemp ipmi_ssif kvm_intel bfq kvm irqbypass 
-ghash_clmulni_intel sha512_ssse3 sha512_generic sha256_ssse3 sha1_ssse3 
-ast drm_vram_helper aesni_intel crypto_simd cryptd snd_pcm mei_me 
-snd_timer drm_ttm_helper iTCO_wdt intel_pmc_bxt snd sg ttm 
-iTCO_vendor_support joydev evdev rapl soundcore intel_cstate 
-drm_kms_helper pcspkr ioatdma watchdog intel_uncore mei acpi_ipmi 
-ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_meter button 
-mii bonding tls drm configfs fuse ip_tables x_tables autofs4 ext4 crc16 
-mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy async_pq 
-async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid0 multipath 
-linear
-[ 1678.845432]  hid_generic usbhid hid dm_mod raid1 md_mod sd_mod t10_pi 
-crc64_rocksoft crc64 crc_t10dif crct10dif_generic ahci libahci xhci_pci 
-xhci_hcd libata ehci_pci ehci_hcd crct10dif_pclmul crct10dif_common 
-crc32_pclmul crc32c_intel usbcore scsi_mod igb i2c_i801 lpc_ich 
-i2c_smbus i2c_algo_bit scsi_common usb_common dca wmi
-[ 1678.853096] CR2: 0000000000000000
-[ 1678.853796] ---[ end trace 0000000000000000 ]---
-[ 1678.911623] RIP: 0010:ext4_mb_load_buddy_gfp+0xb5/0x370 [ext4]
-[ 1678.912558] Code: c9 89 e8 99 f7 3c 24 4c 63 e8 89 54 24 0c ba 01 00 
-00 00 4c 89 ee e8 4a e3 0d cf 49 89 c6 48 3d 00 f0 ff ff 0f 87 1f 01 00 
-00 <48> 8b 00 a8 04 0f 84 09 01 00 00 49 8b 06 a8 01 0f 85 fe 00 00 00
-[ 1678.913921] RSP: 0018:ffffd28d64597620 EFLAGS: 00010207
-[ 1678.914622] RAX: 0000000000000000 RBX: ffffd28d64597700 RCX: 
-0001a00330001005
-[ 1678.915341] RDX: ffff8e100065f908 RSI: 0001a00330001005 RDI: 
-ffff8e10208a6600
-[ 1678.916048] RBP: 0000000000000064 R08: 0000000000000001 R09: 
-ffff8e104df781a0
-[ 1678.916747] R10: ffff8e100065f908 R11: 0000000000000090 R12: 
-ffff8e008cde8800
-[ 1678.917449] R13: 0000000000000064 R14: 0000000000000000 R15: 
-ffff8e0094e062f0
-[ 1678.918153] FS:  0000000000000000(0000) GS:ffff8e1fbf840000(0000) 
-knlGS:0000000000000000
-[ 1678.918860] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1678.919574] CR2: 0000000000000000 CR3: 0000000154c10001 CR4: 
-00000000003706e0
-[ 1678.920297] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
-0000000000000000
-[ 1678.921018] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
-0000000000000400
-[ 1678.921736] note: kworker/u82:2[10142] exited with irqs disabled
-[ 1678.922508] ------------[ cut here ]------------
+We also hit this issue after it got back ported into stable trees (5.15, 
+6.1, etc.) and this is seen during a network throughput test. This is on 
+an ARM 32-bit platform with:
 
+# CONFIG_ARM_CPUIDLE is not set
+# CONFIG_ARM_PSCI_CPUIDLE is not set
 
+Not that we could not fix that, but this platform really only has WFI 
+has the idle state and it looks like other people are impacted anyway.
+-- 
+Florian
