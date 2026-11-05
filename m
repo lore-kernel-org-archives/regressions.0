@@ -1,88 +1,89 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793910628;
-	b=HzJsh+xZkMlZ8FocpCIMapoO13RAotCmTkcLEof0dbhRJw6Ww0t+N9IYR0xWHQInk26N
-	 xye+NqPF8ce49K7nGxWha/xdr5Bq1xlyi3GXEv81dWAQ29hpbiSoo62de2e5us5mWb6KB
-	 YqQ+Hyv0C+A4PBD+CknCaWKaJcaBhDmMbRLbTaXFEeos4KjD9nMxhQfXszAx0XufMgoNt
-	 kOXQPjkGoyJUdVMiDmYa4eMB5qzGTa9MvEhTbHjkfz9Nur76O9utKs1/pUivVdKz8eoRL
-	 JXUf5uIKsTNfm0Bluh34BTeMjUkhB3MinR06KpOg2z71cpQoGjQpGfcmoybYPNRKg8Q==
+	t=1793910721;
+	b=bdhy3WbR0KE8puIh+DqLHclGcnvC1NdMYEQkdi2HxwePnD5enWYMLATygHWlnt1gPoQ0
+	 CSHtrEX3VK0kgyNTUHDxsIN8IKMkMGmsj2dpK+PBXF7SnzZugczewBO7TcSRI8BUB2G+s
+	 CpyR598n1qbVEBh1iifxJIRStv2sCBAK88ZqVuxQcE1Po17lGpGKUXzL6hr6Uij+arJAZ
+	 uyfPVxZRp4z2guF+izaeGuy+AirFlwbr37CtlTwqkqRfsbq3yXBsVvnwwPn6USbWBT3kT
+	 dllemN2omabEXPSiHOe2hjZLqc99BBLLoEXy5u/OFyvYfTeuS4M8dwdtmJmtx7tsE+A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793910628;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793910721;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=8iFcpvnEbr8OqpJfN5Lh96ASE9g3Jpc4XYATrN5TARs=;
-	b=TXAf2wHSykbyeRRu59VPqD8+E36md/PmyVHqX5hTvaS7b1lGj5UQigNwbgRmBGPt4UwT
-	 EbzXgJXkciY6O4MSTo0UEp1lvoA/CCqGFQMlM0mNkZ12Z1zi2ULiQuyczGl/BJK98h4w4
-	 eaFrUiWB3EqzXsli3eKGOsnIRbPmu0l1R9bSBtgfoaQNtDFF/twQ5LrK7cEAW+JUvRwer
-	 OgbRPfvJ6xzDYz+/hpyYjlLbVQ0X6Zdp0xcfhzmv/Fr0jJww0VjNkz5ebEVuLYuPcaYkZ
-	 ududJbOvJWcvX97XqzcBN7Lsrxdh4Q96muTm7Zp+S+vU7fhpKTdLCfi8H5kAkYqApWA==
+	bh=naL9ZYlGHpjK154MUN/eO3m7g6+A6qo1lAhYSkBJyWI=;
+	b=AcIr0sbEAPN+7T9iQGMoQWgj5AEKJp9ndGetBaM4IZHoOU6RMztwOabo7ZfUhvQTf/ZO
+	 8z9pGSMAMLX9ucSyDgIVUr7702T3A/j6bOSdpm9QaOr9VH3tYW3oCpjWlFPcbZOuZNDKJ
+	 5bwzl4ki9k0UKEeVe90lxh1QBhRAcFKnd73gP/o6UfBX8dCHUe0QrYsB2SqsRzxU9ISfd
+	 FSul4mGajADddaJttSR8pywMIFYVkQ0u90TuTPRSW8rgFerPlaZv8baK+D7h8xp50RUZ+
+	 uXoRsFmQDe7Pi48o8P3Y4U7MTWrqF8y7hemypc1ya7CTokjNkFDcpCopjOGSydFStpA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=rowland.harvard.edu;
 	spf=fail smtp.mailfrom=g.harvard.edu;
-	dkim=pass header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=q36Dd9bx;
+	dkim=pass header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=ddgdhJSf;
 	arc=none smtp.remote-ip=209.85.160.169
 Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0F2606A328
-	for <regressions@lists.linux.dev>; Thu,  5 Nov 2026 20:30:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF0F2606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8D4606A32F
+	for <regressions@lists.linux.dev>; Thu,  5 Nov 2026 20:32:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB8D4606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=q36Dd9bx
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-54cf9f1a7fdso8320341cf.0
-        for <regressions@lists.linux.dev>; Thu, 05 Nov 2026 12:30:27 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=ddgdhJSf
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-53381e53b80so24528821cf.1
+        for <regressions@lists.linux.dev>; Thu, 05 Nov 2026 12:32:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1793910627; x=1794515427; darn=lists.linux.dev;
+        d=rowland.harvard.edu; s=google; t=1793910720; x=1794515520; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=8iFcpvnEbr8OqpJfN5Lh96ASE9g3Jpc4XYATrN5TARs=;
-        b=q36Dd9bxq/2Jm/H4aUtWX9swGRQ/kt/Rtc9sFneKd5Nw4cFmt/clLU64a53+cZx+3q
-         BStCaV8lx1foPQ2qNVpQ3hTziEHQ+OwZ2n5t4qbKwtNZc4r7EEy+Tb2MPuwTnrOAAFsT
-         ixOEAfsI47xjeS74x+6miOc2AbPnIi12bW9WfSANw4k8gzpwbrtL0UrNl4ZBAZoEWRAz
-         v0c/UH2JJnBGhtWT/or924wnH+QXkeGv5BkbxV/+P3TYEQBa2hzNWecyXjQZ//7R02BY
-         fDws7fxE0d/j6+726uK1TPmoKricrgnDzeR6L+zYcVddTanXGecorATGHob5zkNf8HOm
-         68aQ==
+        bh=naL9ZYlGHpjK154MUN/eO3m7g6+A6qo1lAhYSkBJyWI=;
+        b=ddgdhJSfMJ3k6FN+WajeMxUgJEqq9iCq25ctKuLeZ9dn91x4SeI7rRgQAME/jDy/ja
+         OnX2Iu/3fNCSEHrIHE8YfZMgmxuQk/SIrYTdLIFPs+eMFBZHGIhGs9+6syvzPlqNa+Xm
+         reUPyuTICDU8yfcV5MtB5YyMRicsK5n/3slsj0yL40bL/LAFgpUI4KaPV7Lo1fAxdpAS
+         LwTqvAr36iBm7UOvyhUmySYY4SLZoQ6w828n4tm0pNbfEd4BuANaxrSn9zqLoTuuS4in
+         AYnyBmsmwjV/GhGrppnQvAWelW3bQ6t7UivZbirTrdOPYfaau552llqUx4A2vnZDxcuW
+         t7fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793910627; x=1794515427;
+        d=1e100.net; s=20260707; t=1793910720; x=1794515520;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=8iFcpvnEbr8OqpJfN5Lh96ASE9g3Jpc4XYATrN5TARs=;
-        b=ZrXWW7CHUAICSYbq+KjjwV8ZiRjTXC4YT2XcArm9VCdui0HUwINMb9j3xOhrJOndOG
-         pQco2CLA/sCCmjnAao6bYIq5rbguO7sXYZgAYwoyFLaJWEWtW+tkz0IQd0FEZ+gkWCDa
-         bFctMAdjbnc0+Q+f6joOrr3QzBFuH2QHKNblMNUrrf+i+xJrQUzEs+nvkx0HhqCd3vnw
-         2T1Br32X37TFpYAXUearuq2diw+w2r4Pf9fl86Zewd4cVFAJQ8QXK5D91v7rNyTI9JzP
-         nmpNd5n1ovv47hlnVPTi2fdsv7dMIgXTbepeQhavLac2XLtvs1+fLuR0Ebt1mBN7ZEOr
-         R7aA==
-X-Forwarded-Encrypted: i=1; AKwUvBxNuAqlDxz3dLX7ylOhoBCshVjJpnz6PNmIeApDDLGZTIE5MkAjaYGlMPoqw3zk2r+KUPCWiryynzJuGQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8w9niITLBUglQNNCBr2Wh4B0Dix1PYpGH1ckzlDPpsjktF327m
-	1iAuKaL8+9PkxoQXZWCBAy50wSyLzwl/2poa5o1GEfteEx/maNCibl7r/e/t9GmRVg==
-X-Gm-Gg: AYBFou0yTfNXA4L+Gaulye6HZeHh0jXDN/BC/67xgfgXpnS9kqWU2MFt/LuCAn4n2ll
-	CCljyj5aRx61AaYR+KRbLJELICiGi+vKKZoOoDhAOluhH9eL6A89GU3Ve0VwpyMqZp3LNQ89ef9
-	k2ptq1WxGR+tGXqU6WFTx4Uuf/rXVnPSrVNy0Yaqk/YeGu9bHBSCkNVvZDEX50Quxpi8iNYLmB5
-	UArQaJJiBMdFGMmCrK3tUu3FAVm6/EDOYaMtkQDfHm6p4rw8JHXohMWm5DvSrwrrcG3hIqo2H8z
-	9/ewlcYeVjIcrBHnoht8l8BrY++Gqw338CpQzO513XOKMCXPOncTM9xyl9T1Z65aZkxVz+73Gz5
-	kIQDddoYAxJ43vZdMzAiyanR1ZIc0gxQu82LdMLEphK/7aESVkXVIBYwDacgEkHHyTlI09EKsel
-	0O3GqNm5Q2Jy4vrC6Tg/v2XHiub2r+CsWHsVq40ABjNfCMOAjRuutfhoTvkdgjbpCGCcZZToFg9
-	fMZXJQ3LwXt3JWGzw+qjAAVpBTXLrdv+6P1C9xK3Vsx/bxNR3BuFvhhyABCKUPKnd1cqBx/EBBs
-	w5vyWzkA41TzBWjntrcueELJh/iM
-X-Received: by 2002:a05:622a:2308:b0:532:cad2:539f with SMTP id d75a77b69052e-54e1576ccbamr6840201cf.53.1793910626495;
-        Thu, 05 Nov 2026 12:30:26 -0800 (PST)
+        bh=naL9ZYlGHpjK154MUN/eO3m7g6+A6qo1lAhYSkBJyWI=;
+        b=xl8PYFLT+nxKLChxhKdTbD8x0MBiwbOdO6eRAWsbMVMs9BeHruXTUjSoCAY+h/Xak/
+         K/8KcPRItxeSnHdgJtCQo5Kl2SgARwHc75NjLnKNnm23k7n8danapogfYaYucd5q7cOR
+         iUi8QWZJ6FckiG0GIwkPZiLktlnfpirWcvSpYSkyn8rJpNrNHUsYloDbK5yT8dq2eR/n
+         DdWjRNyMYCERSjj7yLh7glDc8KPNDS8mzixCHrMQGsqspimm3DFeA9J9wGGrYcfoNpbo
+         NQw41u/u/Kn6z8GTKDQo2NbcW1rHwhNGtR+x95gX71w8Zo8RptYDzzrzyzIDz0lp/A7P
+         2UAQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxhVPXKcj7ca9T1ZWhMeO35mXOajstmSFxFiIabZoA0qkeqV9n4sr10Yx0UPNhwMNouB/2GkPwMK2+EuA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/BqN6im89bn+VXMmuQRL12VFCDIfWne+jD8+1Kccuz+JNnF5q9
+	bZiw475cXK/91Tjf0vtM5ekTEvu3bVpLileCAnUC99U4IJE0pI6jSOhotYgfYjxqww==
+X-Gm-Gg: AYBFou0tmjTYLXQBY/Ew/xWJVjtblPmbBMRRtJZ0ZF23GNYh60rwb/BkZXTFKvfIB88
+	di6Yd5dZHYaiGOWmZVr+yT6/BrdBfRtcFj1qpRPU1S5gIYB4RNG7uVj2VJyXpKtmDevK1FFFlxY
+	k8Wnwl7nOwjNDzUr8CxpKFIYUe14o5CB2Me+nNz8UntVyI18WM1xJX4POgi6ar0r1uMO4LNPPfU
+	JUhqyoPR1c28IcWun0tMxwqPsHjPVR7vRLum5t5iJxp/gz5dDA707ZQglG6Kk0MTdc9oyztS+kq
+	0aGG/FVYJSRaoHLSxVmeeCO6ZyiYkEO3EQ0vdB4mnBiQHxwNlLdmsiWtUFrrbq2Gf85aZGBBbzp
+	L5HxzbBQFbb3n5dbb7ja8YiNr3p+/LDuacjuG4REW9twBTArD9HSq52XkaQEApmGxP819UyEayF
+	Dt+I6E0GFQtmvfXN8qF9ICsu6w+c0KUL/MaQp6YgqIZj9XR+U1i+wthjt47PgqDxpNsn/0zabg2
+	nXN8vMug6FxYuQv0LBLZdg+9/igAKNcX3kqmoR+iJH29yUyilgEPD4IpgyTXjP0bW60pDuZwUzq
+	rt/0haTZCBpn73GLJS45ijdk+CQU
+X-Received: by 2002:a05:622a:5a18:b0:535:85c0:fda2 with SMTP id d75a77b69052e-54e100e5826mr8821511cf.11.1793910719615;
+        Thu, 05 Nov 2026 12:31:59 -0800 (PST)
 Received: from rowland.harvard.edu ([2601:19b:d01:d210::66b0])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-54e25d65a9csm2142601cf.11.2026.11.05.12.30.25
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91ea6a870dcsm3921886d6.30.2026.11.05.12.31.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 12:30:25 -0800 (PST)
-Date: Thu, 5 Nov 2026 15:30:23 -0500
+        Thu, 05 Nov 2026 12:31:58 -0800 (PST)
+Date: Thu, 5 Nov 2026 15:31:56 -0500
 From: Alan Stern <stern@rowland.harvard.edu>
 To: James Clark <jjc@jclark.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: sashiko-reviews@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Johan Hovold <johan@kernel.org>, Bastien Nocera <hadess@hadess.net>,
 	Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
@@ -90,11 +91,13 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Robert Nelson <robertcnelson@gmail.com>, linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
 	regressions@lists.linux.dev
-Subject: Re: [PATCH v3 1/2] usb: core: clean up before handing a device to
- the generic driver
-Message-ID: <9372664c-a8d4-4098-ade2-b73ec214960c@rowland.harvard.edu>
+Subject: Re: [PATCH v3 2/2] usb: core: add a pre_probe callback for device
+ drivers that may defer
+Message-ID: <a0918852-57e6-42b3-9321-38d766a20025@rowland.harvard.edu>
 References: <cover.1793669297.git.jjc@jclark.com>
- <74b3f919f214a8ece24161a2c904d8a5744b703e.1793669297.git.jjc@jclark.com>
+ <e96b91c85945237ca455869bf4d5a1e177358b54.1793669297.git.jjc@jclark.com>
+ <sashiko-outbox-194542@kernel.org>
+ <20261103053952.1138398-1-jjc@jclark.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -106,66 +109,68 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <74b3f919f214a8ece24161a2c904d8a5744b703e.1793669297.git.jjc@jclark.com>
+In-Reply-To: <20261103053952.1138398-1-jjc@jclark.com>
 
-On Tue, Nov 03, 2026 at 10:34:12AM +0700, James Clark wrote:
-> When a USB device driver's probe returns -ENODEV, usb_probe_device()
-> hands the device to the generic driver. It does not first undo what it
-> did before calling the probe. This causes two problems.
+On Tue, Nov 03, 2026 at 12:39:52PM +0700, James Clark wrote:
+> On Tue, 03 Nov 2026 03:51:41 +0000, sashiko-bot@kernel.org wrote:
+> > First, when udriver->pre_probe(udev) returns -ENODEV (for example from
+> > onboard_dev_usbdev_pre_probe() -> _find_onboard_dev()), usb_probe_device()
+> > still calls usb_autoresume_device(udev) and usb_generic_driver_probe(udev)
+> > to configure the device, bind all child interface drivers (triggering
+> > deferred probing), and emit USB_DEVICE_ADD, only to immediately tear them
+> > all down a few lines later in the error == -ENODEV block via
+> > usb_generic_driver_disconnect(udev) and usb_autosuspend_device(udev).
 > 
-> First, if the driver sets generic_subclass, the generic probe has
-> already run. It configured the device and sent a USB_DEVICE_ADD
-> notification. The generic driver then does both again. Notifier users
-> such as the usbport LED trigger see two USB_DEVICE_ADDs with no
-> USB_DEVICE_REMOVE in between.
+> This is deliberate, and documented in the @pre_probe kerneldoc. An
+> error from pre_probe() other than -EPROBE_DEFER is handled as if
+> probe() had returned it, after the generic probe has run. This keeps
+> the -ENODEV fallback to the generic driver working as it does for
+> probe(). For onboard_usb_dev nothing changes: its -ENODEV used to come
+> from probe().
 > 
-> Second, if the driver does not set supports_autosuspend, a runtime PM
-> reference was taken before the probe. Nothing drops it, so the device
-> can never be runtime suspended.
+> > Second, if udriver->pre_probe(udev) or udriver->probe(udev) fails with any
+> > other error (such as -EINVAL or -ENOMEM), usb_probe_device() jumps to
+> > err_pre_probe, which only calls udriver->disconnect(udev) and does not call
+> > usb_generic_driver_disconnect(udev) or usb_autosuspend_device(udev) to
+> > unwind the generic probe and runtime PM state. Because really_probe()
+> > clears udev->dev.driver to NULL when usb_probe_device() fails:
+> >
+> > - When udev is later unplugged, usb_disconnect() -> device_del() skips
+> >   usb_unbind_device() because udev->dev.driver is NULL, so
+> >   usb_notify_remove_device() (USB_DEVICE_REMOVE) is never sent. Subscribers
+> >   such as usbport_trig_notify() in drivers/usb/core/ledtrig-usbport.c never
+> >   remove the port entries added on USB_DEVICE_ADD, leaking struct
+> >   usbport_trig_port objects and sysfs attributes with a dangling port->hub
+> >   pointer to the freed struct usb_device, and usbdev_notify() in
+> >   drivers/usb/core/devio.c never runs usbdev_remove().
 > 
-> Clean up before handing the device over, in the same way as
-> usb_unbind_device() does when a driver is unbound: first, for a driver
-> that sets generic_subclass, call usb_generic_driver_disconnect();
-> second, for a driver that does not set supports_autosuspend, drop the
-> runtime PM reference with usb_autosuspend_device().
+> This was raised in Sashiko's review of v2. I missed that it can be fixed
+> when the device is unplugged. I will attempt to fix this in v4. I think
+> it can be fixed by recording in struct usb_device that USB_DEVICE_ADD
+> has been sent, and having usb_disconnect() send USB_DEVICE_REMOVE for a
+> device that has no driver.
 > 
-> This leaves one limitation. Until the generic driver binds, the device
-> has no driver. If it is runtime suspended in that time, it can't be
-> resumed. This is transient: the generic driver resumes the device when
-> it binds.
+> > - For drivers with supports_autosuspend = 1 (such as
+> >   onboard_dev_usbdev_driver), usb_probe_device() does not take a runtime PM
+> >   reference, and hub_configure() enables autosuspend on hub devices; once
+> >   the device suspends, usb_resume_device() fails with -ENOTCONN because
+> >   udev->dev.driver is NULL.
 > 
-> This change does not alter what happens when the probe fails with any
-> other error. The device stays configured, so its interfaces keep
-> working. It keeps the runtime PM reference, because a device without a
-> driver can't be resumed. Its USB_DEVICE_ADD stays unpaired, because
-> sending USB_DEVICE_REMOVE would mean unconfiguring the device.
+> This is a pre-existing bug that is new in this review.
+> usb_suspend_device() does a generic suspend for a device without a
+> driver, but usb_resume_device() refuses to resume one. I don't know
+> why resume is refused. If a generic resume is safe there, that would
+> fix it.
 > 
-> Fixes: 88b7381a939d ("USB: Select better matching USB drivers when available")
-> Signed-off-by: James Clark <jjc@jclark.com>
-> ---
->  drivers/usb/core/driver.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> > Third, if udriver->pre_probe(udev) succeeds and udriver->probe(udev) then
+> > returns -ENODEV, the error == -ENODEV block runs
+> > usb_generic_driver_disconnect(udev) and usb_autosuspend_device(udev) before
+> > err_pre_probe calls udriver->disconnect(udev), reversing the teardown order
+> > used in usb_unbind_device():
 > 
-> diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-> index d3a61ebc6afb..9b8cd0e4219e 100644
-> --- a/drivers/usb/core/driver.c
-> +++ b/drivers/usb/core/driver.c
-> @@ -295,6 +295,10 @@ static int usb_probe_device(struct device *dev)
->  		error = -EINVAL;
->  	if (error == -ENODEV && udriver != &usb_generic_driver &&
->  	    (udriver->id_table || udriver->match)) {
-> +		if (udriver->generic_subclass)
-> +			usb_generic_driver_disconnect(udev);
-> +		if (!udriver->supports_autosuspend)
-> +			usb_autosuspend_device(udev);
->  		udev->use_generic_driver = 1;
->  		return -EPROBE_DEFER;
->  	}
+> I will fix this in v4.
 
-I was talking about more than just this part.  What happens if 
-usb_generic_driver_probe() (near the start of the function) returns an 
-error?  (And shouldn't the lines that test the return value and do the 
-early return be part of the same conditional block as the function 
-call?)
+This is all starting to sound very complicated and fragile.  Isn't there 
+any way to simplify it?
 
 Alan Stern
