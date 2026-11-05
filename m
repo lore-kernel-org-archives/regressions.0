@@ -1,74 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793893932;
-	b=XsNamOf/P6NGuK/lSZUME5eR+fFTKH72ZvpSZ/hYGNEoQWopKYANOwAm19Lu+SnH+sc9
-	 uUJq7UxucXhslg1AKi4Gn/+1txvWv/jMSdlByB9hc2JdWABeYBORWFkLoBsc6wXIzNhxW
-	 7B3M+VPkPxfkctDUXx++xumhYd+ZzdyzroLYgS/NHwsskfTWW8EUqbgU32nKidRMhiSu8
-	 XEg3W4dbbplZU7ylQ4ZnXvqj3FxOn8DqTNxAQieW8kyhoQiVfg6kPt4GbwMOOv0cJGmRI
-	 zzN3rrZo324Obv4sc9O09Ugorg7tuF8Ib0VdxfUJSHLyVXSK3PusBtpLePqbl6SqxRA==
+	t=1793896382;
+	b=Q49J8cKetz5peD11LRtwIo8E8leA9Sgjil5ZksDxl9nvuTizLTAZ8nNwMXXB9Dgum8CB
+	 09wSTbCAW32h+eWzJeZ8D/PC3jdj4lmCjlOfTAC3WZTsjcztWlcHD3lySVVpyTFL+wYQy
+	 TKzz8ZRGpwcs06InHvCBXqOQ3iJvQuNA0Wqjv3iNQEBprVr2ywAkVzUynlctD2Lra9OfR
+	 pn3ZqxuMDIGwe7sIvNtG4FBxj14s3FuUIaQIA07biiz1jddYI7L4dvsTcai1m+x3UE5co
+	 FYlrtUb4TZi9x5uJ1UzU0XnDnJY7JXVLx65KMPw4+EG6iRhAPTsm0/sDcRhhsMbHl8g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793893932;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=TUQcClPI7vNCOz94yatdti54zFRw1+hNyJbi7mrM6A4=;
-	b=ezZbXxk6RBI2vD7QQY8Qw5OeVCHy5XgBnb1fosBMbFCodhUP89tRgjOknHNtO/19C3P+
-	 vRlcOuICX+irYO77OyKrwtX1CSQt3X1eCc3W7U1feKgNsu3K56xPzaLrMuLxagLk/vT6t
-	 cVL8K8ePZjihgohjAd9GvZjUFqAyiXxI4PNXE+4NW/O09w1F8cGYaMFSIaraXMRIEgRRT
-	 BoqA3h7kE7CeUYpX56tXbtDWQ4nj3T9+A0NV9zsK2y6ryrnCV+lYSf+76pckgWWJAuiTW
-	 SODZfrkiZQG25Fa1LAuTgcIOPwJBa+KdLBF+S/hcniBF1DBQQIHAUHpErI4nnzBvRbg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793896382;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Sender:Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=XUXEvm+x/520Y7mG6qCOQoTpy/YNPEI1fZRb82iDonQ=;
+	b=hNsTlTMVJJ3Rg+jSvSYgPkRMdEFPqnnJwffaf0wCWcVg1NMSj2qi/wmYlbv3FnsBrral
+	 ArFcZymoL4Gsoclcfw+W3Uq4g1gZtU6j473HlaR1MRb9th3NlgEdFugLbXjRJOBb2x6Ia
+	 OclHxG0+i6mgWqHhU6LZfEztIFWfFMTTEgY9Wr9YYJ/Y4Hd9emP/2Fkotu/tVnPLrtosv
+	 qOzK31SbjVwKeLa15UdAPCD/9THULeSK/a7QDppzw2Of7GV/HBgimafynsSxnrLw+FUq7
+	 LNW3IfkxwJfaJjeRIvoZl1/wIyVKcagEHk+Ac9wUYQGsY4ZvBEmiXSVkPhTi/zJBeTg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="fB0PL/4d";
-	arc=none smtp.remote-ip=188.68.63.98
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=fail header.from=debian.org;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="x/baAa4G";
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0868A606A333
-	for <regressions@lists.linux.dev>; Thu,  5 Nov 2026 15:52:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0868A606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DB260A262F
+	for <regressions@lists.linux.dev>; Thu,  5 Nov 2026 16:33:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0DB260A262F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=fB0PL/4d
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jL6J23Nxxz6YSd;
-	Thu,  5 Nov 2026 16:52:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793893922;
-	bh=kheHXymN8hP5CCxtHtz32PhpI9/kZxAXJ7JMIdcD7zI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fB0PL/4doNJqL322sTR03Zlnv2F/3DMCShIRRtfXN40m+AO1rurgvGbsTCOzqhiSW
-	 r3WX/eBSrv2VzgJCrhwVorgYAL8/diDgaQa6U0LU2DhXTNTzVfjMzQz9ztXqfEEtl6
-	 ++sJ1O223ceKCTbRt+mZAh+eTeNqS0H+jP38V49cWA/p5YS7ML6DX50WRIn40OADwg
-	 AqrKMiqbVjv8KU5L6lLcZUVELOljqaFglDWNBV0M1G6xLNsbhxThUcsr5NkAtM98Tq
-	 tycRR8EO8oBx8G2ttr/POPSPLrz2ZU+iwBJa+Tt8r3OCag3kRPVyhZ5bvH0OtWl5Wm
-	 iB+tAVxd48AEA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jL6J22fhyz4xc6;
-	Thu,  5 Nov 2026 16:52:02 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jL6J11JmTz8tkQ;
-	Thu,  5 Nov 2026 16:52:01 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A9A375FA54;
-	Thu,  5 Nov 2026 16:51:51 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <79bc006d-1c60-419b-a6f1-c4c4ce329168@leemhuis.info>
-Date: Thu, 5 Nov 2026 16:51:50 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x/baAa4G
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4a210470b49so16109425e9.2
+        for <regressions@lists.linux.dev>; Thu, 05 Nov 2026 08:33:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793896380; x=1794501180; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XUXEvm+x/520Y7mG6qCOQoTpy/YNPEI1fZRb82iDonQ=;
+        b=x/baAa4G3CxTcD5dB7gEEZSj0ygXLSIvlQDBNahqBUUcSD44OoiiNpA8jTt3EQ2LRr
+         487+GXeXooXPmxLyj7f1k+iTi0/RyCse/sJcVkb0QtJ+5LV6/3E+XaoiUpZlPIY/hx1C
+         0b9DuSBXiZj2/qPluVOOj+0B1daYIXVNAhCDnT//g7GNwFtX2Bi8azJdoJ/42kibq+d5
+         rmQECrruYehZA3/oayfO9lywVauj3JIcvIZYHH+r75LFZJZnkZVGH1Kn48L9wGi8hYqm
+         wGKYJkJtaMOulX22jyPaVPEGWPimsXM85TAaxeU7WHEcVNz7IFo2Rw7OEN4J5ewJG2HE
+         n0UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793896380; x=1794501180;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XUXEvm+x/520Y7mG6qCOQoTpy/YNPEI1fZRb82iDonQ=;
+        b=1kJew6qtNIeOgNwKLij3aQ+GpDIJhZLsmMZ6ck5xg1y/BIFIby9lOgNOi0Yr7laCzx
+         7tXyHD9qdqee6Z8bpNR5RAoSIe+z6Ezrxas7eibCE5cKfSCCC6W7L2MU/3NdecCcKXmr
+         FdAJdPHmUC/cDE0Ddx7+xm9VHHziULDPanEMsL7mgoq0T6IUAHLIejhojerKNGq5uwp1
+         sfL5HOXwXpnRur1v33qL98mJ8Xdqz/Tjirs3xJNq9TDl4FqXHrB77AmXhwZ7QuQ357Gc
+         bsiOoDDOk99XGc5l7knJSy/RjcnCysBEIO8zD7cMPZG23FkdknODeMMubFIedVBV7Ksj
+         Hbvg==
+X-Forwarded-Encrypted: i=1; AKwUvBwiPRU/KJCyuzoJCGw5oTMQ0B3/vSrrh+xMT/LtzWIsx2TqBtGijFKSIo7E9UKkTwkU4GYN65AmZmH6IA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/e6pER2PeccN4jcEHtTnJTPGkfFItGZnPfR7DRKx8tj5XCVHP6
+	8mdC1Gf8nAtIzlfEuruh8erDCIFnEvxSzESgsNBqCnMZy+LRl3pZ+BLU
+X-Gm-Gg: AYBFou0pHlyISlH9O7mNwtpUbe3GD7tAOrkPyWouPl4p2JVUVoVYLN7+rpihuWzIv/H
+	qT5qi90sKOHsZqohXaehFG1n9AqtS32kgeX3OTgbW9RQloSLoyhvwTv7+LUwte62cx6MDWcCQrX
+	dKN1QwQokG3TQpZpAAXC5E7bZi2oeGfAG7IX+9zeVKv0zMTPR9JztAnxeoFCzPP3oiVC1O/uMeu
+	kyE3rw+ZsxGbef9gF5sKO+FJgz7vlFdj511lttQPsYU61VV2UBKw3Luga/p8KSo4AAoDyLTdbct
+	goojy/2x9oZpIawRTkgfTI5mp9qBnwbYrb3uypOBTMEQ5BFRaR04UQlU4iGjoHTMQFhtVFa8yzM
+	yrnVFEnvhyTiJnwNIqXSsnv0omVCXdvtcQwAl7bFUPui3Q4Z+7TtKf+FlQ8T4/6bN2/ZnhRavvO
+	VyPgYmj/6ROF0wBj4LH3c5qnLh+8j08UdBj5pv9wJ1AgmZffVOppihBa8MCiO9utoOl2psxV5lg
+	0kviamtWLH/pbTxdoK3Iw3UWfJwXn6S0Dh6z3PS0TE/yqEeGBMtyQfD4u5EDxmqE5kv1lPUWFdD
+	30LXjxOfDAn9mQvYfbmMmRU0w2ndIx8iNeMbjnUM+9ywDlSVMESuviHfhNBXaTA=
+X-Received: by 2002:a05:600c:a41:b0:4a0:1c0e:b057 with SMTP id 5b1f17b1804b1-4ac150b2136mr409947835e9.4.1793896379969;
+        Thu, 05 Nov 2026 08:32:59 -0800 (PST)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b56fca22f4sm125983355e9.13.2026.11.05.08.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2026 08:32:58 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id F032ADC02C5; Thu, 05 Nov 2026 17:32:57 +0100 (CET)
+Date: Thu, 5 Nov 2026 17:32:57 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"eadavis@qq.com" <eadavis@qq.com>, "tiwai@suse.de" <tiwai@suse.de>,
+	The Darkbird <thedarkbird@protonmail.com>, benh@debian.org
+Subject: Re: [REGRESSION 6.12.y] Please backport 70b4db7d2581 ("ALSA:
+ usb-audio: Use the right limit for PCM OOB check")
+Message-ID: <auyvuXTfDDGcCTZN@eldamar.lan>
+References: <shfaXkZCI7FtyNr5tS4kCC_d5E4uQFhc0MtwJa2CQFXpNMfSw7Ub6urwWpGrcoRnHuoneJEi9mLwtnvVImMhz1Hb25iwNJxx8GZZsDCV_HE=@protonmail.com>
+ <2026-11-04-1-daily-reply-0005-re-usb-audio-oob-612@kernel.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,89 +104,26 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] rt721-sdca: PCM open fails with -ENODATA on 7.3 (AMD
- ACP SoundWire, ASUS ProArt PX13)
-To: Krzysztof Wasiucionek <kwasiek@gmail.com>, oder_chiou@realtek.com,
- Vijendar.Mukunda@amd.com
-Cc: broonie@kernel.org, linux-sound@vger.kernel.org,
- regressions@lists.linux.dev
-References: 
- <CAMODhBLTBPb5DG_kfjsF2Pj_8F+KFmG6N4vd=8MJM6n07nCC9A@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAMODhBLTBPb5DG_kfjsF2Pj_8F+KFmG6N4vd=8MJM6n07nCC9A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179389391204.3067274.2964442021918174871@mxe9fb.netcup.net>
-X-NC-CID: 6V1O+4+Bia4ft1/KZobX+OW+hak4xtl0LNFbvTD858h1/QP/gJ4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026-11-04-1-daily-reply-0005-re-usb-audio-oob-612@kernel.org>
 
-On 11/5/26 16:17, Krzysztof Wasiucionek wrote:
-> 
-> after updating from 7.2 to the 7.3 series, the rt721-sdca jack codec on
-> my laptop can no longer be opened at all. Speakers (TAS2783 on the same
-> link) keep working at the ALSA level, but userspace loses the UCM HiFi
-> profile because of the rt721 failure.
+Hi Sasha,
 
-Not my area of expertise, but is this maybe the same problem that is
-discussed here:
-https://lore.kernel.org/all/8a12a2d9-1b56-4e00-8ccc-cf31325f8366@crazyrussian.pro/
-See also the other two msgs linked near the bottom.
+On Wed, Nov 04, 2026 at 10:03:14AM -0500, Sasha Levin wrote:
+> On 2026-11-03, The Darkbird <thedarkbird@protonmail.com> wrote:
+> > Please backport the following upstream commit to 6.12.y:
+> >
+> >   70b4db7d2581 ("ALSA: usb-audio: Use the right limit for PCM OOB check")
+> 
+> Queued for 6.12, thanks.
 
-A fix for that is here:
-https://lore.kernel.org/all/20261027-rt721fix-v1-1-42cd4b1711d2@realtek.com/
+The commit ef5749ef8b30 ("ALSA: usb-audio: Prevent excessive number
+of frames") introducing the issue was as well backported down to
+6.1.191 and 6.6.160 additionall yto the found 6.12.114.
 
-Ciao, Thorsten
-> Hardware
-> --------
-> Machine : ASUS ProArt PX13 HN7306EAC (Ryzen AI Max, "Strix Halo")
-> Card : 1 [amdsoundwire]: amd-soundwire
-> ASUSTeKCOMPUTERINC.-ProArtPX13HN7306EAC-1.0-HN7306EAC
-> Link 1 : rt721-sdca (sdw:0:1:025d:0721:01)
-> 2x TAS2783 (sdw:0:1:0102:0000:01:8 / :01:b)
-> 
-> Kernels (CachyOS builds)
-> ------------------------
-> Good: 7.2.7 - UCM HiFi profile available, jack and speakers work,
-> no rt721 errors
-> Bad : 7.3.1 - see below (7.3.0 was installed in between, not tested
-> separately)
-> 
-> Symptoms on 7.3.1
-> -----------------
-> From boot, every open of the rt721 PCMs (hw:1,0 SimpleJack playback,
-> hw:1,1 SimpleJack capture) fails:
-> 
-> rt721-sdca sdw:0:1:025d:0721:01: ASoC error (-61): at
-> snd_soc_pcm_component_pm_runtime_get() on sdw:0:1:025d:0721:01
-> SDW1-PIN0-PLAYBACK-SimpleJack: ASoC error (-61): at __soc_pcm_open()
-> on SDW1-PIN0-PLAYBACK-SimpleJack
-> 
-> $ speaker-test -D hw:1,0 -c 2 -r 48000 -F S16_LE -t wav -l 1
-> Playback open error: -61,No data available
-> 
-> The peripheral is enumerated and attached:
-> 
-> /sys/bus/soundwire/devices/sdw:0:1:025d:0721:01/status Attached
-> /sys/bus/soundwire/devices/sdw:0:1:025d:0721:01/device_number 3
-> /sys/bus/soundwire/devices/sdw:0:1:025d:0721:01/power/runtime_status suspended
-> 
-> Writing "on" to power/control does not help; open still returns -61.
-> 
-> TAS2783 playback on hw:1,2 works on 7.3.1 (speaker-test plays both
-> channels).
-> 
-> Userspace impact: PipeWire 1.6.10 / ACP rejects the whole UCM HiFi verb
-> ("Profile 'HiFi' mapping 'HiFi: Headphones: sink': output PCM open
-> failed"), leaving only the pro-audio profile, so the internal speakers
-> are not usable in a normal desktop setup. Same userspace on 7.2.7
-> gives a working HiFi profile.
-> 
-> I can test patches or provide full dmesg / additional debug output.
-> 
-> #regzbot introduced: v7.2..v7.3
-> 
-> Thanks,
-> Krzysztof Wasiucionek
+Should thus 70b4db7d2581 ("ALSA: usb-audio: Use the right limit for
+PCM OOB check") be queued as well for 6.6.y and 6.1.y?
 
+Regards,
+Salvatore
