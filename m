@@ -1,100 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.50
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793984550;
-	b=zZEsm43v3SvbxzUWXizWCj7oMSbvgmwZyKHWNyXwGleC0rb/8KaVZW8Plys20F2D2LHv
-	 j1+2sYgNLkpg2AS5pXkoapQF0ONdCmuVQIA0tQeKKLxeALv6VK8kBrvLYTVf8nx0ARcaY
-	 l4W/GHWmgE+KExmavtTfCR5liVlusKqUBsIpwtq+j7tMjn4u8nteyvmighHTZJ7xqb1dU
-	 VMfr2lRFC6BCK0v/VsvQL445MKS10FHJJskkOdeQoP57unpFV1VDfMzU+rJxpRgpJxH/h
-	 EYlPtFVs0dvCV/wQf6bYGCt/vtvUTX+v7Wtj4QV/3YCZ9CrA0z7/UAxBVlBtBuAJ1BA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793984550;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.177
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794005619;
+	b=XnnBBltj9AZ0iNV+Nf1eYEuaGQVcTQZBHqZf7/rQNjCsv3LHHuKpTDpOLfy57+tSZ/UO
+	 7jqKMk19eI0zgxhVyoIgZktIcxhH8eXYoqpmMzG5a6jqH/xq7BsnAj1HvX90Ykqnbiklh
+	 VkFUKJeodOflPdY36d3GgWUEzDhLM6v/L9s+Se9pZwuo1VgiaEkBqIlISIKnNol7yDSqX
+	 DtzZ9haaeznz9kB3RS72MLdt4fI3jDiuFh29G97Jkwj8lQSUo30r9i04VPkh4BRAQKa62
+	 8e+JCwX/jcuSH2PeroWrFw5VU3ESPXSoOYQEopGa2oiOragZUZWcJxmPwn3b4FqDmJw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794005619;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=/qZTKeMtYLlan9SFU3DlCAiu7yexd3IDtiotPT8o4LQ=;
-	b=3fJrvAa7hFyiEiLrshT1od9+Dg39HwLNfCUcUBpUzCDNogjniNEgsnlBvR18hmqMcMK4
-	 chlxF1CUdXG/7AJqzzr9hrtiFBCmgiQYsfOaosJHPDS1PqhQI/lnnseev4wEk1/MnrGoD
-	 C31uT2b4AtIQ38U6LAeUrc1/rkS61/BkuN9d8p/duzkb1er56S1L1DXqLxuMsvxAMO8pt
-	 9rUTu0YdAjj4/OOwz7IwcZoN6tUfjwuSkBsxFUH92fyQfN+JRcuMDdnhrLVaVyVN8qC51
-	 gzgxb17DzdEB78Yako2hzfiQq4lU1wTYhyxVLf1NXUfmEy7JDDAluQAGm4Wnd1pdOHw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rowland.harvard.edu;
-	spf=fail smtp.mailfrom=g.harvard.edu;
-	dkim=pass header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=jasoeHTc;
-	arc=none smtp.remote-ip=209.85.219.50
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=Ajm8sLkLzuE5Epa/6nTv9uoiRj/UyFkuhiq7gPfP9qc=;
+	b=iyK8d2ftoRBJEWFIOXesj3UkeGffpn3BHoVfyAfS8xfvCNlInBqLbidZ31rFkyoltzya
+	 RggoYR6+U5pW7p5vlFFYHSvtOaTokCnDOPp+Kw/cORdqep9hOjbbu+UYfSYTlDxOUD5A4
+	 coeFq1PsLHgmr+CgnoYzsA8sScY7zp2ZNG+9LVyy6cIZUSolrT7aVDEHv3/MfL/77hERH
+	 QJfxuSr1RwLNzK0rb4kOd28AGmL/JxZQY8iG/3LJA/Dk1eq4m3OrLWyjG3q+Lw/QkDuld
+	 rBOPL5hDOqenfUuNzzaRFkJC7aQxKQSja4E3dQZHf7yFqRNb0hrIq8QiSVLq9xp8GRA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gEoxJens;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.177
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32455606A337
-	for <regressions@lists.linux.dev>; Fri,  6 Nov 2026 17:02:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32455606A337
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71120606A32E
+	for <regressions@lists.linux.dev>; Fri,  6 Nov 2026 22:53:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 71120606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.a=rsa-sha256 header.s=google header.b=jasoeHTc
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-91eb46044c4so6466226d6.1
-        for <regressions@lists.linux.dev>; Fri, 06 Nov 2026 09:02:29 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gEoxJens
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5ead32bc7d8so763364e0c.1
+        for <regressions@lists.linux.dev>; Fri, 06 Nov 2026 14:53:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794005618; cv=none;
+        d=google.com; s=arc-20260327;
+        b=GnHB7IrqJmtaTNbWGiMUGmQZg7hRN2USKYyzLdN3XuXFScosQWT+JYfztkirzk1oMd
+         euH1JmYrjKRcGoraDQq09rO555Inp2HSdeOjqAiMA3HnUu+71QvBzY4CpU+eJHhF6Bm/
+         cjS7RnMrCsclrw7YO6EpAJ8w5ctR+JKu6WnA0F+qi/73X+KXWd+GgfVuc2Uhz1ekDkQj
+         FQ7qZdL9bI4EKegTNr4xmi3xFD1osD3OJ6lQZy/1TVmVygDEbi4q5uGP+sLgpJcAwgLn
+         g32vkn6CCWzFwRQoa8oEqbZ8woiWh3htTj1wJuef+RQWWWVZTBZCfo9eCfbJoxT/nCiS
+         WvKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=Ajm8sLkLzuE5Epa/6nTv9uoiRj/UyFkuhiq7gPfP9qc=;
+        fh=P715bXDl92c1rdAru04uzG+KekgxbE4BrGaGnTZZbw0=;
+        b=OCFFgkbgfpNRHCq4TFM2qT1u+gWBRqlsDSHv0yTzkxDeNEl+Y+jUyY4ElSrpcML3tT
+         GeGgqS3DWIzr/uyNGfXnqq6RzJIeJsMv8lCpTYDIuT7/S4NmRmzw2K15SW5bohfyFbMN
+         iWceArjpgDlJ918D9ecnY3WZ8qc5GRrCkKgr7HzM0cCwtVvhy13sc6XWl8o8zlmGcBkZ
+         nBPpenaAI43DdaoGW439Gdnt2S3omcTDCDa+lEwtAmB3/wVKsBglxRiIzig3IKReyrtj
+         Y50xgux9HGLHXCWZ0hUARxjn0s06CxmoS0dOntbywsVsBizpMIIQgCfP9nC4h0sB2AvS
+         iGfA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1793984549; x=1794589349; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/qZTKeMtYLlan9SFU3DlCAiu7yexd3IDtiotPT8o4LQ=;
-        b=jasoeHTcIyOa7pIdx6WJ5JZD0xdiE6e/B0Nq40updWzB1QsKhDdFakZISBhmK/9VOr
-         9JtRj0mFi/dPErI1wL3utrE5/X+zHF3nKz64UUEdxhoIOduTnuoEcR3bnWuSzjgiz5uC
-         jsSUuPMfw5aznNwh9PAZIyReNaxIvgmkMxrd07yOMMG1s7zfSbYyuU9jDaBox/5itMJn
-         Oi/vOexPuBc8dSfBas4RyT1s3sWiuXp1DKk7r+UtJG7J/NVR8zNRt9d7lBKFV1g1v3IB
-         M3e6S/Ao9wSD2wPEcl7Tqr+nnKSXyvwvvgS7ctEcBG2tLpaS0RUkXQZ3TJJL/LHq/6ko
-         H5RQ==
+        d=gmail.com; s=20260707; t=1794005618; x=1794610418; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Ajm8sLkLzuE5Epa/6nTv9uoiRj/UyFkuhiq7gPfP9qc=;
+        b=gEoxJensFCIx1xEqTrBeJ6APdzriUS60zTlSkjsfcbR1Yl1j4eas4lV2QFmRjvUQnj
+         A4tnWDJgRA/RNAd+aNjRIK6QWzNDXU+LGwadvl9C+ZQzsyJnzYmpk83TsBUxrc6sZGxx
+         +aBy60dPhWasIgYe844weFmNXaPL5ySKDtNX8UY1TSNlM9jQ9UGCkSy0L3rUllEIg41S
+         Lh2dT+NlxbBblIx1BU+QrqPKUhIRhk5XD2DAhh7ZS2/fH3fjqu4LVg6ancZjFlOKMR/v
+         eRlVWr1YUgwWeOsoM20d1fqqXpfHZ6ho18X94sEGlhnMn9pjD7ThJ2cW2A5vNVDrkfRh
+         ZwtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793984549; x=1794589349;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/qZTKeMtYLlan9SFU3DlCAiu7yexd3IDtiotPT8o4LQ=;
-        b=ouo6zNegJ05tiOEUC04KZseIWEZqg4JwtiKGEkB1RRU8pEpcmEg2bylWqHKHQbaje0
-         0UrY9OuhL4zK+sGf6ktDEdNHAcpqvt7d76le99TIVKZQ21hG4RWX9FKSGGrbwAbwPsgL
-         p8HF3sD8lYzqTbWF8A5COiSTU0DfEiN4k1zNivBtquLaQmpN/Z0Xnc9aMHGAMDQwR4Dk
-         DND39x6wprjLWndjA2ehpU7vvMgwHNGiXQUJF/MIYoxIORjmEHO97QFUSNxNfb1ixz7S
-         eBHibo+SYbgDPt37H5BP1vphyNaaDxAbA6yqv25IdlOInJj5mfhNRo06aqg3+tYPiUpy
-         lU6g==
-X-Forwarded-Encrypted: i=1; AL+hErHOiH9yMOmAv7Jt97OHyfoHrnPuHfwGSTskouLDfpsKxI1Qh1PUAY8IRd3YjbdOo/D/oLPxUP6z5ZUecw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/zu4AWH52oT1swySegZCuhaPvKfpcxHZtUbUXzsxbcd5ZHs/pT
-	XB04uV+sly2m8RO8qECDmCwd8hL4F0cgw/POiPMC1ua3he18weFUO+et+RcqSl5TCQ==
-X-Gm-Gg: AYBFou2dcq8+kybfoTtmCVKddxFF5Lz8VHw+DLO47VHwS1HYukQT3cyrbnRfIWxCpGo
-	6RazFRTdOghvPpVf0Lbe3y6C7aWnYrBvA/00So4s5WmMXgY6fi4isokH68+XJ1tb743IbsbpBns
-	IreJjtMSDLJIHhtsibqBAKlj9/MnCPdc9mHmLnT0H+GQS0QpcsDrmlDkA+qKpFa2lIsDIFZfMHH
-	wJONK8WoxADxvV2pKbXVrxF9l0+Jcl01OeTtHQYlUHa5bXpdWwW1+n56lV3ZTCUPTIsqiJ0+bFC
-	xKqAkGvts5cQ0LyAAYzZp2B187YGX0/ycPmin9JIjnMhchpvkPz1k4n5MjJaOhmSYQFzR4rSMGV
-	tq0B9/qA0Y7XnQWXvs/X4MfIi1gL4/Mwn+NrAKfzvmduHKJT4XEHyusV9rMMGqPbS+GOE0GV4uM
-	XuZ6tpIug5dwmYfmgSxl0ahVNQF/v7sLrPE3nna1+3IDzH1prVSEAXGHYYerQCuAdnJLoI3GlrK
-	JEaa1BIzvDfi38GCRoisqwOdLJ3jjBqn7SqXN8CvAWtYh/vxaTNrDSYxTECjczIiLEh+JHaDYD0
-	zrce9IFxRzOfhrrrO5vSZdGrVwm5
-X-Received: by 2002:ad4:5dc8:0:b0:91e:9463:7194 with SMTP id 6a1803df08f44-91ea96643b4mr48110016d6.24.1793984548922;
-        Fri, 06 Nov 2026 09:02:28 -0800 (PST)
-Received: from rowland.harvard.edu ([2601:19b:d01:d210::66b0])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91ea6aa7a97sm24230156d6.35.2026.11.06.09.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Nov 2026 09:02:28 -0800 (PST)
-Date: Fri, 6 Nov 2026 12:02:25 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: James Clark <jjc@jclark.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Johan Hovold <johan@kernel.org>, Bastien Nocera <hadess@hadess.net>,
-	Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Robert Nelson <robertcnelson@gmail.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v4 1/2] usb: core: export the generic device driver's
- operations
-Message-ID: <c267f8af-78eb-43b5-b6f8-98af6749db22@rowland.harvard.edu>
-References: <cover.1793941292.git.jjc@jclark.com>
- <c1fdf2ed4c508b08734c7a9de002336f60d3b865.1793941292.git.jjc@jclark.com>
+        d=1e100.net; s=20260707; t=1794005618; x=1794610418;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Ajm8sLkLzuE5Epa/6nTv9uoiRj/UyFkuhiq7gPfP9qc=;
+        b=Vhwi7eY1zA9w7AlyxaKClwu3UsSXbfMd5iSq79JSlDAh1U1/SS5tosrOL/1jq4WSJS
+         ZTd3xsyIsugNzPj53FN8Uf0zpwlLBajQ/gbIxsr6ojUkD/ZY3xcZiwFHbBZrITSwUWMX
+         BLR5jeo7ANtAr6FHBK45ksFpERFkXesMM9isbS4qT9R27Y4LNXW3j2xvJkAd5oDBoqta
+         cphav4EanoDF4p9NSmCoJcQMxEaB1+4zEqazxNTdjw6A+Xhj9aCqWa3Biv2meSzcyuav
+         6WjWmnbvlsWoRr140Ch9J79whEsuHR8cL1DvF23FAR/JRA2IiFGaGtBwbeaFl5y59Znx
+         fqZw==
+X-Forwarded-Encrypted: i=1; AL+hErEt2Ez4r1Vvrrzr5EBf+vOIum3s6IuYLfwZc/3LO754KckwRTch7FIjDviSd1C9YcbbZICWH6RlpFa08Q==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9eKQhsBKQuQO/PStuQi+477/gYw31ww2ThI/pim9qx95y2PXzF
+	XovQlC547iTketmHQCseuHhLqTE3K+WmJAr9LTuYm+EZTUW9WjaASzkFkz9T3D+I16cHWrErV0c
+	dwjcBAE9NarsJ31Z22EVUvg8ocQEpuE0=
+X-Gm-Gg: AYBFou119UkF5hBu6936EV48e3BBwGAA7Yw8vQ5VYI8XB+ZesLFdU7SMHVUFzapG5eS
+	C15KEFahIaweqDpTWcupT0kmjXoVqaKnuwOig0n/vsY9Gmn06klzpjhphqq5jLnolT9n854cs3o
+	GBL+s2RiWU9c4eA4IHv5iHPhzUJh4OPbdN3DYzK/YN8edSHcI/Cm6GkbNzv4bEU3z+BTi0kbS2y
+	vvnzd74w/9uJFE8qfkKMux5AOdk/k9VvDhutGKvu+xoVe4a/UUdVXlmPbMWJpaatqmsREZDQLUV
+	iHh5QhpdPDYZ+ncKDSmorsXbW37cQw6MDEIZnn6eZ1NrJazpxn3N4hmKmZVd5YNCOraRoPrew3I
+	CsjwrkbCKuyEtF27LpDC6aR3QftTkRb2Vf/qR8OYzem6/cOR7rFWzV+lOimGCYWuo8OU=
+X-Received: by 2002:a05:6122:414d:b0:5c9:a60b:e5a2 with SMTP id
+ 71dfb90a1353d-5ecc43e92b9mr2123325e0c.13.1794005618292; Fri, 06 Nov 2026
+ 14:53:38 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,31 +101,75 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1fdf2ed4c508b08734c7a9de002336f60d3b865.1793941292.git.jjc@jclark.com>
+From: Simone Colombo <colombo.simone@gmail.com>
+Date: Fri, 6 Nov 2026 23:53:27 +0100
+X-Gm-Features: AclHuK84MI38ZArBzdnoV44X2oKuSHS27JZC_ylfinDrucJDKKjxSJ7q9SXKu8w
+Message-ID: <CAEVL6QtFUCs66EtLFj6dO8DQq9YE0Corvy3BTj-9HEvPkTP7xg@mail.gmail.com>
+Subject: [REGRESSION] 6.1.191: NULL pointer dereference in ext4_mb_load_buddy_gfp()
+To: stable@vger.kernel.org
+Cc: linux-ext4@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 06, 2026 at 01:12:50PM +0700, James Clark wrote:
-> Export usb_generic_driver_probe(), usb_generic_driver_disconnect(),
-> usb_generic_driver_suspend() and usb_generic_driver_resume(), and move
-> their declarations to include/linux/usb.h. This lets a driver whose
-> probe may return -EPROBE_DEFER leave generic_subclass unset and call
-> them itself, so that it can defer before the device is configured.
-> 
-> Say in the generic_subclass kerneldoc not to set it in that case.
-> 
-> Signed-off-by: James Clark <jjc@jclark.com>
-> ---
+Hi,
 
-It's ironic that the generic_subclass thing was added to support 
-onboard_usb_dev, after some debate about whether it would be better just 
-to export the generic callbacks.  Now you're going to implement the 
-alternative solution for onboard_usb_dev, while other drivers continue 
-to use generic_subclass.
+Since 6.1.191, mkdir() on ext4 can oops with a NULL pointer dereference in
+ext4_mb_load_buddy_gfp(). 6.1.190 does not, in the same test.
 
-Oh well, I guess there's nothing wrong with having two ways to do it.
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  CPU: 0 PID: 60 Comm: mkdir Not tainted 6.1.191 #1
+  RIP: 0010:folio_test_uptodate+0x0/0xc
+  Call Trace:
+   ext4_mb_load_buddy_gfp+0xcb/0x351
+   ext4_mb_regular_allocator+0x3bb/0x82d
+   ext4_mb_new_blocks+0x392/0x93f
+   ext4_ext_map_blocks+0xd5a/0xecd
+   ext4_map_blocks+0x26b/0x47b
+   ext4_getblk+0xca/0x243
+   ext4_bread+0x6/0x45
+   ext4_append+0xc2/0x158
+   ext4_init_new_dir+0x5d/0x103
+   ext4_mkdir+0xfa/0x249
+   vfs_mkdir+0x74/0x8c
+   do_mkdirat+0x81/0xc1
+   __x64_sys_mkdir+0x1d/0x21
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+(This trace is from a test build of v6.1.191 with KALLSYMS; our production
+build of 6.1.191 oopses at the same instruction.)
 
-Alan Stern
+6.1.191 picked up these two as prerequisites of "ext4: fix e4b bitmap
+inconsistency reports" (Stable-dep-of: bdc56a9c46b2):
 
+  99b150d84e49 ("ext4: convert bd_bitmap_page to bd_bitmap_folio")
+  5eea586b47f0 ("ext4: convert bd_buddy_page to bd_buddy_folio")
+
+They check __filemap_get_folio() only with IS_ERR(), which relies on
+"mm: return an ERR_PTR from __filemap_get_folio" (6.4). In 6.1,
+__filemap_get_folio() still returns NULL when the folio isn't cached, so
+a buddy cache miss in ext4_mb_load_buddy_gfp() ends up in
+folio_test_uptodate(NULL).
+
+We first hit it on first boot right after growing a mounted ext4 with
+resize2fs, but it only needs memory pressure. Reproducer in QEMU
+(x86_64, 320 MiB guest, NVMe disk):
+
+  mkfs.ext4 -b 4096 disk.img 244224   # on a 4 GiB image
+  # in the guest:
+  mount /dev/nvme0n1 /mnt
+  resize2fs /dev/nvme0n1              # optional, makes it more likely
+  # fill a 200 MiB tmpfs, write and delete 300 MiB on /mnt, then:
+  for i in $(seq 40); do mkdir /mnt/d$i; dd if=/dev/zero of=/mnt/d$i/f
+bs=64k count=4; done
+
+6.1.191 oopses within the first few mkdir calls, with or without the
+resize. 6.1.190 completes the same test both ways. Without memory
+pressure it doesn't reproduce here.
+
+Locally we work around it by turning a NULL return into ERR_PTR(-ENOENT),
+or ERR_PTR(-ENOMEM) with FGP_CREAT, at the six __filemap_get_folio()
+calls in mballoc.c; with that, 6.1.191 passes the test. I can send that
+patch if it helps, but you may prefer to fix the backport itself.
+
+#regzbot introduced: v6.1.190..v6.1.191
+
+Thanks,
+Simone Colombo
