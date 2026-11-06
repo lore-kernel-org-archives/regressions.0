@@ -1,104 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.176
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793945587;
-	b=ZqfXfaHDZzr/S5RRSdE96D4wpYaWe2NldaZ9tUGTUedncv8C43YGhhXaW4CMo4I4Five
-	 o44Aey+4eiyfPq6fZE5VCVmAC5Qvw35NaOKagqqxnJpPw6wPAllkUdYDYxXR4iiVdyHvh
-	 LBtTOtUWlXQPxZ/71/F8/AhzbV/kCq3KBw+rf1XZ/0K0CBT2fA7I8nbsmFV955UrHBwm2
-	 h0ba0jI8frGbZEv7JK6SHKMsyBSqwS/bJke+8qFVdZJDGmMFui7nJ+RPu/C1TxZNuE99b
-	 eV7Fq2qdRcQlcz6y5Tx2gUcAF0kx2li3Ib7ViiLL+ysNYjZTYb76zIvuf9PTyy9ZVCw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793945587;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.217.49
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793959398;
+	b=3E0KWEvq9FM4MLRZpZp4gk+3I7VUxjwhkOQe2ZDvjh9cMcAmGtuzcCkRZAfTj75XhvdF
+	 83HehF4P2VySgnN/00n6C3wqDfj0QWofHVe3/z42Nr6u9SMZdfPqkyQRaBh2cOEZJ2V61
+	 E4tNSJR/qkNxy+dVMe337dkqebuzyrLUU9LbnR2GC4Aady6kBFHOsYZyZJHu+WlPBnOxI
+	 SNLANKLqrSWq8QhQ4q7z/gB43zAInSBN4YuC0Hn9+G2I43uxnbzon8SKagiGoycG1TCeS
+	 tfsLCEOthVGAp6g9wrJxEKq5sh3tbMHXhP5qU0SRR0iy+yl+X7NzfrG0c1Rzs2MWYuQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793959398;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=ydVqyV0aRoJDaWfDPtWBdic6N/4Yozo7V/PmjjVO7QY=;
-	b=QJ0mOK3LqcaGIR+dxlEd3qvX2fPJXZlwLHVLON4ZqEhqUyrpbeM9iqc/68dOeTEC9cA9
-	 aHMtGKaooCIUm3U9jZx5RVhbxb1si28ULGEQcLDJMpIiI6Mbeso2lqRZcrmFBV4hv/Qjg
-	 kN8dOijZmU6H256Je4Vm8LqCjdYQ/U/dgZnAL/bZJY2D1IzFs4xQsn07pagwzmX6SGF2J
-	 wsfAcFULgX50wqjKffrpkRTVpr/8pgDE0rWDnY992+twPl8GmZktkBa49IiwCiN80F8hG
-	 pCVFScWrktcEJrrLlyaWplIjoRm43wYmLb4InisTSrWWi7VkstJjYMXkTUExO3ZXf2A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=jclark.com;
-	spf=pass smtp.mailfrom=jclark.com;
-	dkim=pass header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=hPPEDhmX;
-	arc=none smtp.remote-ip=74.125.82.176
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=vSZkFkCCDBNxOw/NDUgxZCgowYX4MpqRsB6nquU31yw=;
+	b=ZYlap3rh4Gz3fdrkQsTCW7WPhQaEJV/YyhdDQqliNjrd2IlLSs9jm0mKHdy2JNjRNzxQ
+	 G+ZmEA+Y7e/x2NhHffJJRSItqMTzFlbtffHLE6f27+FhobyMxpc/5JpyRvAWzuKWwgMyI
+	 U4Sp4QhxGzRYftXPyCaFqmAdRYajtYjD8VBtnHZ+Ipo6lbgJOS9Mq/50UQWqwX+9cIFfV
+	 rCcUu3opjYhGMwrsksfxOgjpjocPsjo5u0VKQHsMXYjirhiYZH9o+DvwTiXQlaqV5djiY
+	 NoqIpvBnQV0zEkfHXjOsXRg9My9pq8IJeCTwYvaFBRHKiQC7bdnxbP5d6ECf3RCcOTw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EDMp0Lr8;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.217.49
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F141606A334
-	for <regressions@lists.linux.dev>; Fri,  6 Nov 2026 06:13:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F141606A334
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jclark.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jclark.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D1606A329
+	for <regressions@lists.linux.dev>; Fri,  6 Nov 2026 10:03:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 764D1606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=hPPEDhmX
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-36eb1cb7aabso424155eec.0
-        for <regressions@lists.linux.dev>; Thu, 05 Nov 2026 22:13:06 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EDMp0Lr8
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-7cc1cf48a39so165669137.1
+        for <regressions@lists.linux.dev>; Fri, 06 Nov 2026 02:03:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793959397; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jsedDOuEoIu1pbhEEsPqbgkNxVO3wGcoTryTaoU896b3atOcMOQv92hdW5ZtiSYVSn
+         BaAuvUeRmpyjBQ665Q1xJogEvkC1eexoII8wgI47WLLw+efd1boYDeO0fQXkA7ANy1i2
+         9gshXEJwshuMBScV48xiHBc0ocxWQl05fBJxHkLp22F+qn6b6Asb6L8qdg2UYzIeqEK8
+         NC/4BXDHjHqK2Kotu5VDoxY1gIFRPHZl6IjPVCU9SMnN+61KKncsnAgrq72qt+5ufiht
+         K1t6VwbQB1LQufXgE0xWh4G31oGj3+5WcqGRbe3H2mEzIR4eVEqWkJww9FWTz3jXhNJR
+         LYHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=vSZkFkCCDBNxOw/NDUgxZCgowYX4MpqRsB6nquU31yw=;
+        fh=N8U+y8yN5veyRwS/l1GYV00D9O7DFGDBMVEkPuPuEkg=;
+        b=VPiP2yVmOBUzK8UUVeiwcc0CY/gptVRwJQeijOGr6PuJKqaoBBURj68sq+0+NLWLKA
+         ETiz7yIKVjzkTSP7TUfLoCrvxjf9kpNh4GZMMjqGIHAfMoFRUiEAg7Z9Ky3My4XzkkxJ
+         toryMbe6N+90SoINCg6B/T6JrY94+OW1jilseAFUlGJsDxBU9ZT0iNqqumWGmPKA0HS5
+         Ng22DANSfD4ALMFju4Fs43emVh5AdO1kCEUsmeco6d/aS99F/VG1gXi+c7o+Mof9+8yp
+         JTdDR9nf5fUezU1pjQySZ7zttaKYJ3KhZUyyR6zD9VDb3VQY7+gk+0T9CBa0hdxsIssT
+         TB3g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jclark-com.20260707.gappssmtp.com; s=20260707; t=1793945586; x=1794550386; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ydVqyV0aRoJDaWfDPtWBdic6N/4Yozo7V/PmjjVO7QY=;
-        b=hPPEDhmXd5DsMtXHxCxGF6KaZwFpXUc+MNu66dHQMOD0KtKx9IbtRA8PksksHJpVPi
-         S43yLBdYB7dJ6j951lEEeobB59ImSzE2fiWuKdh3o8M0IzgsZI6EcY7kcNhcMysCoICi
-         SQEV2ypko2Rdp73gNEJ4EH1JbpDqP0dtpIuoZhF3t/AtHaeNUOaNMPTNelK5EX12uYuX
-         psSQVtWSdmzg5NUzybAA6Q6Hx6iVErNWPU/Ts7s7Mog68Rz1JLyEhcjeT1CKf9PhtF83
-         xfeWvqAZmSPWCmIH0Ez0ni6fnMW4pXEd7ccrtLgvxiGJqb3M32MtHT3NkVF6AcjDV9UJ
-         8o7w==
+        d=gmail.com; s=20260707; t=1793959397; x=1794564197; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vSZkFkCCDBNxOw/NDUgxZCgowYX4MpqRsB6nquU31yw=;
+        b=EDMp0Lr848SRqrjZQulel/kmYyMyI7niomyDpGKzKhqwLhimBh7OYkw93Lg3ZansbB
+         9mnyujRxGu+iX9c4bWGDIUKRueGumP3E4Tu48oM+zHDdd3Y8N9KNr2pRWMdiAw7C48+i
+         r+yX8eNSiRVr1oBdxfs8j0vTrW4u6e5CvYQkMoPMyFjauGteqmxXw+Fo1Q3kb5mM8CLo
+         7Kl7qZndgym7lgVoAKliS9T53j8hbiXhBwJ3fmNqJykrgktNvk5TNWE5MZ40BsKjD0DM
+         xWrX/FqkIujbHVOdaTEifvw70G7Ql5IfX/yT2ZrCYmbEIKfTY/E1XCuFPXvmAY1ekIt8
+         5O4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793945586; x=1794550386;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ydVqyV0aRoJDaWfDPtWBdic6N/4Yozo7V/PmjjVO7QY=;
-        b=vTXlWTKi85W9DEltMaOodxZyYJ4i+/x7wS4WieqeJDGajMMBKMcd0xZNiTYnaF0KXC
-         r7o7nKwNIIp0jpVpotwhzlzF67zbHQYWywDwm5PiFS6JfVxqPAOeBcALq43OHzAijcKA
-         yH1bD7Pk1gazQCk4MQuAtGwlPSL04N+aC6gZA9i1UyPjZXmC1m1UH5Wd6ZDgq/GJ652L
-         7cR8vW78jdW1432CWt7XG0q0I4PUrfcxvHr7nr8qNW2Y6Vkte57opD0i0VjMxklY9spz
-         9fuanlYHC8cX6FWcb0hSSv2IqVjiNf6A3BlNQ54Nt0j7HJzXDBGg+bkMutfmZtBk4+x6
-         cHAA==
-X-Forwarded-Encrypted: i=1; AKwUvBzsRttk3UxryNmaOuC6HZRbFUVklt0HpiRqbky5D7hAPeGaokpRAkkGL8MGpTfiQH+RTaRErzfJD19ijg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+YJHEeQkO+nV45F6jZmrRnoN9E+jhJEMX6EWoJ5Z3eDHUT69qL
-	noWK0Hd3k9+fD1V5Aw+2hpj5zChHZpC9Xxo4vAiV37ae2M+Cf1GR2ILm/1f9Fop5Sg==
-X-Gm-Gg: AYBFou0AoUhJnW9/jf4K2Uevy7Pv0+44YW8+NLgkQWzolZf4DtfyoSAJmBzPFUdgZka
-	OEst8bwe6iZ6rsot1jvMVQLacXXTPA0g6J3HR5IWTJJmRtFJnLOoe6O8Zk9FisHcUl3cSMDa1+1
-	HAG5Cmyo78vs08O9VVLVjXoyk8uFTooFK3iNGL4Kq5xydwVbpHhAu7JY1ZouDeszuw7Rg2io1VQ
-	WdcF4qms7bKcAnCXrX9B3w2P6SDxw49e/dhZrcD1JXjJaF+0ECs3I7/NIsfZxVK+7dGOdVKi5Qv
-	LCDzJnYgxzrLmqUGbtCt0N889XaVnkRRXtlxesZQHaZc6uMEEiavlAM9ktAObAb4qohkpLEeHV1
-	ARj0+YFp8KWWY/mk03dxWIIOwKkXdLCjn2IWs2GRVSMUChNCtlwNxRBpnVOq4U5bleb2K0do7Pt
-	xf0IfpeV2hUv2/s89ZoIrBo8bfiDFhunXGzErclYqTW55+t5tYnQANTQRzZ9nE3OlUGlPKwZhHe
-	WyjAP8em/QOXdmWXK7sdULRNlM9IY2qxBeUMsc5en6KsbRbyWTLcojT2b/B6ZQ9+UIB21++l2nG
-	2WR2UnJ3q8V6mjfnhLs0XIlWQYRKzmAUTpN/kD9JIGSj1EuYaNkDVYHGLi3iQ8Y2SHxf/JMd8bn
-	1RGRXLu40LSvk91sPJQ==
-X-Received: by 2002:a05:693c:8843:b0:36f:6d81:3fa6 with SMTP id 5a478bee46e88-36f75443270mr2213138eec.6.1793945585471;
-        Thu, 05 Nov 2026 22:13:05 -0800 (PST)
-Received: from cantal.lan ([58.136.77.237])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36fa922c6c7sm3755879eec.10.2026.11.05.22.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 22:13:05 -0800 (PST)
-From: James Clark <jjc@jclark.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Stern <stern@rowland.harvard.edu>
-Cc: Johan Hovold <johan@kernel.org>,
-	Bastien Nocera <hadess@hadess.net>,
-	Matthias Kaehlcke <mka@chromium.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Robert Nelson <robertcnelson@gmail.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH v4 2/2] usb: misc: onboard_usb_dev: don't defer probing after the device is configured
-Date: Fri,  6 Nov 2026 13:12:51 +0700
-Message-ID: <f24b025cde0c3af37a958042d9deb96ae4494994.1793941292.git.jjc@jclark.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <cover.1793941292.git.jjc@jclark.com>
-References: <cover.1793941292.git.jjc@jclark.com>
+        d=1e100.net; s=20260707; t=1793959397; x=1794564197;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vSZkFkCCDBNxOw/NDUgxZCgowYX4MpqRsB6nquU31yw=;
+        b=ORiQ51R5d5q7R8PgO68MjroMCjG9GCLKoeguL+CBkDjBmrkg2ig/2K1kxjamHxXceS
+         jzidzP9FVMmac2g6Ez3IcqeJDDyscpPb49py/a7jg+rnhZfjh+LiYYK8efUBiqxOq9U8
+         lKsu5qgk6WH44C3oZl25FoCS1AB+6+Tro28I5w88DmGr3P63SAzRVxqLV4Xrl4MCXSzu
+         01kx4sdThHqFdmDheyQDC1t8nVUJgPuWZqBvH4A1q70cjkcOX69UuvrBn+5YAU3Kkh48
+         9Km3RmVF7tnR8ZzEIy6x/dDVMZeKErz2jraiojS2yQZkxvT6HLr7kHAHYBnkpa1Fsgz9
+         ck0g==
+X-Forwarded-Encrypted: i=1; AKwUvBzp+8VioXvBhJ0ukPTJnfV9PB+aP9aoLHS6f6nju+hCE/dUx4H9KM+Hkn4rz8RYGSsfGrvQcPln4D4lJA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z95rAKEZuPMAfIFd4wV+miNMs0kyLcryPvLuEd3Tc0pm/i9LJFz
+	bLx16MsEMp50PGJxNA7ne6yWLWifQPWPTONi6Py9E3UfU+/vSCXexvgfKmbfoatcvaGhISusQPW
+	/aI777xrz1CtyCZO0uZc0OtmYBhscsKk=
+X-Gm-Gg: AYBFou0x52JijbN0TwMgRxDMAmMBgx3zneTiQsaTXw4wpho/Kvt7922I/exRhUZ+JNt
+	JtLcGEEDR5lICrGmWSfpeWDvVFHD5ksR0jJXebwJVmumHqx2lblgNBNLtc2HEMTS2qbElg+JFw5
+	Nvy/1fw06obPaETFsdAN0oJXUMW1jaxxyuZo+u7yW/hhbAjXZZoQGG37Pcocz8C3ZW0P2I0PcNk
+	MJhutb+tfqZNQlugo9W7Hz7vi8xRAHlZEbl6mwFky/0hmjut9xmBOLnWplu+jn3vy58f+lcrljF
+	7FSqyJE6WWJz2YrqBMagBUgVAuh8ZJ0DTCKN08/n5nYteIPEeThSK4IA6yrQUkBONy9KvSKogyv
+	fBUJ3DQgyoj0Sst8QY3Dg3dNZHm5QmucfNw+U3LDp0CBDcnHfmoF/fy0t1V0zPB+bbnRU+4eO7i
+	Y17bojsEuiVU3N
+X-Received: by 2002:a05:6102:160c:b0:7cc:118e:7bfe with SMTP id
+ ada2fe7eead31-7d2a15b09a8mr1034594137.19.1793959397444; Fri, 06 Nov 2026
+ 02:03:17 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -108,80 +105,128 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAMODhBLTBPb5DG_kfjsF2Pj_8F+KFmG6N4vd=8MJM6n07nCC9A@mail.gmail.com>
+ <79bc006d-1c60-419b-a6f1-c4c4ce329168@leemhuis.info>
+In-Reply-To: <79bc006d-1c60-419b-a6f1-c4c4ce329168@leemhuis.info>
+From: Krzysztof Wasiucionek <kwasiek@gmail.com>
+Date: Fri, 6 Nov 2026 11:03:04 +0100
+X-Gm-Features: AclHuK9N5f5DzNykhnDvMUju9NTrbwfTrY_AKgKY7637i8vSoWcML1HoZeYqmYw
+Message-ID: <CAMODhBLCdFXpkC1RCJdu5HBbW8TOFy4W7E1P0o5x8kwpPq_YMA@mail.gmail.com>
+Subject: Re: [REGRESSION] rt721-sdca: PCM open fails with -ENODATA on 7.3 (AMD
+ ACP SoundWire, ASUS ProArt PX13)
+To: regressions@leemhuis.info, oder_chiou@realtek.com, 
+	Vijendar.Mukunda@amd.com
+Cc: broonie@kernel.org, linux-sound@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-onboard_usb_dev breaks the rule that a driver must not return
--EPROBE_DEFER from its probe after it has registered child devices,
-because that causes a probe loop (see commit fbc35b45f9f6 ("Add
-documentation on meaning of -EPROBE_DEFER")). Its USB device driver
-sets generic_subclass, so the generic probe runs first and registers
-the device's interfaces. onboard_dev_usbdev_probe() then returns
--EPROBE_DEFER until the platform device for the onboard device has
-probed. On a BeagleY-AI, the resulting loop has broken booting since
-commit f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64
-platforms").
+On 11/5/26 16:52, Thorsten Leemhuis wrote:
+> Not my area of expertise, but is this maybe the same problem that is
+> discussed here:
+> https://www.google.com/url?q=3Dhttps://lore.kernel.org/all/8a12a2d9-1b56-=
+4e00-8ccc-cf31325f8366@crazyrussian.pro/&source=3Dgmail&ust=3D1794045716621=
+000&sa=3DE
+> [...]
+> A fix for that is here:
+> https://www.google.com/url?q=3Dhttps://lore.kernel.org/all/20261027-rt721=
+fix-v1-1-42cd4b1711d2@realtek.com/&source=3Dgmail&ust=3D1794045716621000&sa=
+=3DE
 
-Call the generic driver's operations from the driver itself instead of
-relying on generic_subclass.
+Thanks Thorsten, yes, that is the same problem.
 
-When the device's node has neither a platform device nor a peer hub,
-return -ENODEV instead of -EINVAL, so that the device is still
-configured. The device now stays unconfigured while the probe is
-deferred.
+The patch does not apply as-is to v7.3.1 (context differs in
+rt721-sdca-sdw.c/.h), so I applied the same six line removals by hand
+on top of v7.3.1 (PDE23 REQ_POWER_STATE default, MBQ defaults
+0x2000046/0x6100006, 0x2000046 in the MBQ readable/volatile lists) and
+built rt721-sdca as an out-of-tree module for a 7.3.1 kernel.
 
-Fixes: 8bc063641ceb ("usb: misc: Add onboard_usb_hub driver")
-Suggested-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: James Clark <jjc@jclark.com>
----
- drivers/usb/misc/onboard_usb_dev.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Result on the ASUS ProArt PX13 HN7306EAC:
+- no more "ASoC error (-61) at snd_soc_pcm_component_pm_runtime_get()"
+from rt721 after boot (count 0, previously on every PCM open)
+- PipeWire/UCM HiFi profile is available and active again
+- internal speakers work in normal desktop use
 
-diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-index c60406240416..51985e3473ad 100644
---- a/drivers/usb/misc/onboard_usb_dev.c
-+++ b/drivers/usb/misc/onboard_usb_dev.c
-@@ -591,7 +591,7 @@ static struct onboard_dev *_find_onboard_dev(struct device *dev)
- 		np = of_parse_phandle(dev->of_node, "peer-hub", 0);
- 		if (!np) {
- 			dev_err(dev, "failed to find device node for peer hub\n");
--			return ERR_PTR(-EINVAL);
-+			return ERR_PTR(-ENODEV);
- 		}
- 
- 		pdev = of_find_device_by_node(np);
-@@ -639,7 +639,11 @@ static int onboard_dev_usbdev_probe(struct usb_device *udev)
- 	if (err)
- 		return err;
- 
--	return 0;
-+	err = usb_generic_driver_probe(udev);
-+	if (err)
-+		onboard_dev_remove_usbdev(onboard_dev, udev);
-+
-+	return err;
- }
- 
- static void onboard_dev_usbdev_disconnect(struct usb_device *udev)
-@@ -647,6 +651,7 @@ static void onboard_dev_usbdev_disconnect(struct usb_device *udev)
- 	struct onboard_dev *onboard_dev = dev_get_drvdata(&udev->dev);
- 
- 	onboard_dev_remove_usbdev(onboard_dev, udev);
-+	usb_generic_driver_disconnect(udev);
- }
- 
- static const struct usb_device_id onboard_dev_id_table[] = {
-@@ -697,7 +702,10 @@ static struct usb_device_driver onboard_dev_usbdev_driver = {
- 	.match = onboard_dev_usbdev_match,
- 	.probe = onboard_dev_usbdev_probe,
- 	.disconnect = onboard_dev_usbdev_disconnect,
--	.generic_subclass = 1,
-+#ifdef CONFIG_PM
-+	.suspend = usb_generic_driver_suspend,
-+	.resume = usb_generic_driver_resume,
-+#endif
- 	.supports_autosuspend =	1,
- 	.id_table = onboard_dev_id_table,
- };
--- 
-2.56.0
+Tested-by: Krzysztof Wasiucionek <kwasiek@gmail.com>
 
+It would be great to have this in 7.3.y stable as well, since the
+Fixes: commit is in 7.3.
+
+Thanks,
+Krzysztof
+
+
+czw., 5 lis 2026 o 16:52 Thorsten Leemhuis <regressions@leemhuis.info>
+napisa=C5=82(a):
+>
+> On 11/5/26 16:17, Krzysztof Wasiucionek wrote:
+> >
+> > after updating from 7.2 to the 7.3 series, the rt721-sdca jack codec on
+> > my laptop can no longer be opened at all. Speakers (TAS2783 on the same
+> > link) keep working at the ALSA level, but userspace loses the UCM HiFi
+> > profile because of the rt721 failure.
+>
+> Not my area of expertise, but is this maybe the same problem that is
+> discussed here:
+> https://lore.kernel.org/all/8a12a2d9-1b56-4e00-8ccc-cf31325f8366@crazyrus=
+sian.pro/
+> See also the other two msgs linked near the bottom.
+>
+> A fix for that is here:
+> https://lore.kernel.org/all/20261027-rt721fix-v1-1-42cd4b1711d2@realtek.c=
+om/
+>
+> Ciao, Thorsten
+> > Hardware
+> > --------
+> > Machine : ASUS ProArt PX13 HN7306EAC (Ryzen AI Max, "Strix Halo")
+> > Card : 1 [amdsoundwire]: amd-soundwire
+> > ASUSTeKCOMPUTERINC.-ProArtPX13HN7306EAC-1.0-HN7306EAC
+> > Link 1 : rt721-sdca (sdw:0:1:025d:0721:01)
+> > 2x TAS2783 (sdw:0:1:0102:0000:01:8 / :01:b)
+> >
+> > Kernels (CachyOS builds)
+> > ------------------------
+> > Good: 7.2.7 - UCM HiFi profile available, jack and speakers work,
+> > no rt721 errors
+> > Bad : 7.3.1 - see below (7.3.0 was installed in between, not tested
+> > separately)
+> >
+> > Symptoms on 7.3.1
+> > -----------------
+> > From boot, every open of the rt721 PCMs (hw:1,0 SimpleJack playback,
+> > hw:1,1 SimpleJack capture) fails:
+> >
+> > rt721-sdca sdw:0:1:025d:0721:01: ASoC error (-61): at
+> > snd_soc_pcm_component_pm_runtime_get() on sdw:0:1:025d:0721:01
+> > SDW1-PIN0-PLAYBACK-SimpleJack: ASoC error (-61): at __soc_pcm_open()
+> > on SDW1-PIN0-PLAYBACK-SimpleJack
+> >
+> > $ speaker-test -D hw:1,0 -c 2 -r 48000 -F S16_LE -t wav -l 1
+> > Playback open error: -61,No data available
+> >
+> > The peripheral is enumerated and attached:
+> >
+> > /sys/bus/soundwire/devices/sdw:0:1:025d:0721:01/status Attached
+> > /sys/bus/soundwire/devices/sdw:0:1:025d:0721:01/device_number 3
+> > /sys/bus/soundwire/devices/sdw:0:1:025d:0721:01/power/runtime_status su=
+spended
+> >
+> > Writing "on" to power/control does not help; open still returns -61.
+> >
+> > TAS2783 playback on hw:1,2 works on 7.3.1 (speaker-test plays both
+> > channels).
+> >
+> > Userspace impact: PipeWire 1.6.10 / ACP rejects the whole UCM HiFi verb
+> > ("Profile 'HiFi' mapping 'HiFi: Headphones: sink': output PCM open
+> > failed"), leaving only the pro-audio profile, so the internal speakers
+> > are not usable in a normal desktop setup. Same userspace on 7.2.7
+> > gives a working HiFi profile.
+> >
+> > I can test patches or provide full dmesg / additional debug output.
+> >
+> > #regzbot introduced: v7.2..v7.3
+> >
+> > Thanks,
+> > Krzysztof Wasiucionek
+>
