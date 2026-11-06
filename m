@@ -1,70 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793941312;
-	b=OHoj3nIhOzPdmKUA44nODDJeaHtYjGA7y+wAQET4pUFJgvW1y2J0AUhWF6ED299PbrX9
-	 FTmMoS2h7b+DyN8yx7MA09tXSzHbliUs2DZXXyK6YRBFsvwk+ZuFGgrFRQ7jlUDrz9eiR
-	 beI2BgBSqiZfahk/5EycXjPQRHvA8qZdNjYljsU/rbRuC+G4+hV6gTXdW/Qw/iStKR+JU
-	 txHDmsyiGyQxN+AtxFlsPodGrmokvjgRtF+4x19ZclV6mnVLdU5/fbmtfH4hBTQutaDGI
-	 t6tS9daOIDcERX+P7MdpYWWM+aAIPTVY7tv7RwGKvrU2uJr+qgOIwrxdC2cnX8UPJmQ==
+	t=1793945230;
+	b=CEbPcF5G3QLqy4FZXxhcD/NdvtK+TlMlgMUe4jhZvw7V/Gt7rcWqElhlg29N8KJqRerA
+	 NNCM/I3sKUAnw9/s+45AgNxK5JAsorGAT1NWvEt+ulkOys2D2wAukL3nUXX0YApK6Ei4h
+	 k9TeH7hGh4XZVmmFA9UdAVppT+wwhFjE53H8cBdFmtz6zh9zU/9Iixi9By+eUqbksXDyd
+	 XrDofpDmrIwh9CB7psKctnoQWk/G3d5PxCT49mXYNWPv2tvLUviD4qusp390HjHS71kY2
+	 1LTnJjI98D8rqGScjqy01/lPOan5a8hH8ly773j59Gn20Beu6oc15Ey4+CVA7sEvvJQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793941312;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793945230;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
 	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
 	 References:From:Content-Language:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
 	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=Y0AUU5E7/+rCxN0vdJ7as9H6oMmR7pe5wklE24oi3Ww=;
-	b=eeq+cTffmM/mcnSEZo0YVfM6kIs4PgohyUu12vfsOn+//zvFdhfVubpnwun8WZPw0/2O
-	 FlIelngXdYsAtx75vra6c2R3Fh7JLbUy73xcQpyBJL0r4w4tcGM6hn1yuNpit21BAIImu
-	 AaRP4vU5lhaB/hWgHoww6yr0dUDuxouIiZyWhM2/YCqe5WkraaMLYWQHw46ToH9m2PWjV
-	 XlAEd+kfjTBXAx9X9gQPTEIyJxJhDXKcBuS8/rTa5HXVKMc2lDhndNEO/ijJkE943SKNF
-	 gBOI4WsX3ZVL+fre/qWeftL2yCynWfrgDUtzcRFkxHa6VDunF0PQ2PMd3xWVo2xtwTw==
+	bh=PpzXraTFdyRxNfl8GcJ8XJ94FDh9H10NIgMltOxLU+k=;
+	b=PaWUoH6/5tx2fNpCTpoBpCe+ax3D4e09gJBJUIrY6dE8Zd3FgtQSqQflM/qvCQXinAD0
+	 JPq0IXhJR1KCFCMdS1Lrbz9kIFgt//Xpn++ryYZ6Idtj2bHDA943ZMGXWBRiugXmXyLIK
+	 OEyv0BX9w+vYME2BoliuYVylI91rf+f9QOFmydvbaEQ536M1iUWbOuJQHnlvDydSVgXL+
+	 vVn637ORc2DM15C2CNrb22qkphbW7QQlfC/oVPEN0fsF2F0/Gw+Jj1PKzF8SvPUjp20yQ
+	 QE1AQelOI8nXUw8Q4mLOcAfMpfKTiSttjw8m5pgLaEX52Mg3G94+hvtJ7TrzySWxzAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=leemhuis.info;
 	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=RLrzxMft;
-	arc=none smtp.remote-ip=188.68.63.102
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=CH7XbPI4;
+	arc=none smtp.remote-ip=188.68.63.162
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F1F606A32D
-	for <regressions@lists.linux.dev>; Fri,  6 Nov 2026 05:01:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75F1F606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C089606A330
+	for <regressions@lists.linux.dev>; Fri,  6 Nov 2026 06:07:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C089606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=RLrzxMft
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jLRqB2Ngtz6J7C;
-	Fri,  6 Nov 2026 06:01:42 +0100 (CET)
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=CH7XbPI4
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jLTGG3g1gz4VWL;
+	Fri,  6 Nov 2026 07:06:46 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1793941302;
-	bh=7qQnouvD+JAdZNOi6Kwdiln3omcULuDZkHSCg1KBGu4=;
+	s=key2; t=1793945206;
+	bh=U1P4pKnmVurL3i3GyV3nk4vKog5jxB64C210aaIiFYM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RLrzxMftgd0UUqqTRx6cTwLfp5Vzry9TWyQSMrYwKszSReiHRGi2fTuR5CTTjvDZM
-	 9j9nB6hh02TQkZRZnDy1hwdBcxSBlFZYbL64VVAxwx6uHxYBGM9xpzEr8Uw6cyYY9i
-	 hlBaEqebkrT8l1NCl3xLwOvR4opzA0Wef7v8Ji1TluuOkCqfJCAzCB2llx9TH+ErNi
-	 JICmrUtvD+lLlqBnWGaNAVBgHlbA7SU9v3QsWJfquW7VKF7qczcTJq1SgsXXQAH0vg
-	 ACDN5q65y5iYRqCY40sDKPlpVM36So3ipddE8VuoBtU0vafqlGc1fmE6FkzCwDeGm4
-	 tLJT1HgzIhvLA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jLRqB1fkvz4xXG;
-	Fri,  6 Nov 2026 06:01:42 +0100 (CET)
+	b=CH7XbPI4AwC0QPZEFpWbp73vcR1zBzoIQuE1LXfXJW0rqD47ptWTWYpUJek1FOSwv
+	 9x+1/B1u/3yJ8D+n15DVaXXCmmGC6vw3QU9TDNrG8cjNZdYbmZZjplyLR9MpmGTlmc
+	 Oa0hP/TLfcdPnuKsT8JbHqvWUAohvO6S487/qU43XKdBOdqNTJjmni6LqwvZpcSLqh
+	 I+3/wu7DtTH/rTDR1Pm1G+DI3/wjRjOIxclOtGW6b2bjF14EzveJhSXXpZa56FIrpH
+	 5gNgkeyG+1Wyad/cHbSh7v4qNVCbJWhcSvgVkIb7qytdzYPwR4YTvJuJVCYznH1qat
+	 KfDTurMp0dhuQ==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jLTGG2xZCz4VVL;
+	Fri,  6 Nov 2026 07:06:46 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jLRq959rbz8sgW;
-	Fri,  6 Nov 2026 06:01:41 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jLTGF0vLtz8v3y;
+	Fri,  6 Nov 2026 07:06:45 +0100 (CET)
 Received: from [192.168.44.188] (unknown [185.238.219.126])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 792215FA05;
-	Fri,  6 Nov 2026 06:01:32 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BD31D5FA2A;
+	Fri,  6 Nov 2026 07:06:39 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 185.238.219.126) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[192.168.44.188]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <afd31f34-5669-4d65-ad74-caaca5b7c176@leemhuis.info>
-Date: Fri, 6 Nov 2026 06:01:31 +0100
+Message-ID: <771d0a88-fc41-45b1-9792-2086f36c7618@leemhuis.info>
+Date: Fri, 6 Nov 2026 07:06:38 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -75,145 +80,99 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] NULL pointer dereference in ext4_mb_load_buddy_gfp
-To: Marek Becka <marek.becka@sh.cz>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <3af016db-ce2d-4ed6-8f9a-13f31eb3ea9d@sh.cz>
+Subject: Re: [REGRESSION] media: em28xx: list_del corruption on dual-TS
+ disconnect
+To: Shantanu Sarkar <shantanu.connect58@gmail.com>,
+ "Jiangong.Han" <jiangong.han@windriver.com>,
+ Hans Verkuil <hverkuil+cisco@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Greg Sikorski <sikorski.grzegorz@gmail.com>
+References: 
+ <CAK8Z4SCRhWcbL5i6NgwiLWDCX48YbMfcJ_+nFrGxKMZiN1vG3w@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <3af016db-ce2d-4ed6-8f9a-13f31eb3ea9d@sh.cz>
+In-Reply-To: 
+ <CAK8Z4SCRhWcbL5i6NgwiLWDCX48YbMfcJ_+nFrGxKMZiN1vG3w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <179394129276.378571.17530318651233681891@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179394520047.537139.23515709434205249@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 792215FA05
-X-NC-CID: c7kBoASD3dW7g/tci+B1BH5TOUJ/UWmpALO/uSnIhftwEBMlGkY=
+X-Rspamd-Queue-Id: BD31D5FA2A
+X-NC-CID: Y6bQm04KuOl6PVdPAYNUggXJVzsqyXOuFRAcdEHdp5T3VYDm0Qs=
 
-On 11/6/26 00:01, Marek Becka wrote:
-> After updating from 6.1.190 to 6.1.191 we are expecting an NULL pointer
-> dereference in function ext4_mb_load_buddy_gfp on multiple servers. It
-> looks like folio_test_uptodate is called with NULL folio pointer in fs/
-> ext4/mballoc.c:1536 .
+On 11/6/26 05:59, Shantanu Sarkar wrote:
+
+> Commit 826915b6b65e ("media: em28xx: fix use-after-free of
+> dev_next->devlist on disconnect"), merged for v7.3 and backported to
+> stable, makes em28xx_close_extension() unconditionally do
+> 
+> if (dev->dev_next)
+> list_del(&dev->dev_next->devlist);
 
 From a very quick look this seems to be the problem that was reported
-here earlier:
-https://lore.kernel.org/linux-ext4/20261102-ext4-ntfs3-null-folio-v1-0-4fd91ee23a4a@elliotjb.com/
+earlier; a fix is discussed here:
 
-A fix for that is queued.
+[PATCH] media: em28xx: fix NULL pointer dereference on disconnect of
+dual-TS devices
+https://lore.kernel.org/all/20261104052800.44551-1-sikorski.grzegorz@gmail.com/
 
 If it's a different problem, please speak up.
 
 Ciao, Thorsten
 
-> There is an example of this crash:
+> On a dual-TS board whose secondary device is not audio-only (the
+> normal DVB case), dev_next->devlist was never added to em28xx_devlist.
+> em28xx_duplicate_dev() kmemdup()s the zero-allocated primary in
+> em28xx_usb_probe() before request_modules() links the primary, so
+> dev_next->devlist is {NULL, NULL}, and the list_del() on disconnect
+> crashes. On current mainline (7.4.0-rc1, 05441d697f7f), with
+> CONFIG_DEBUG_LIST=y:
 > 
-> [ 1678.841763] BUG: kernel NULL pointer dereference, address:
-> 0000000000000000
-> [ 1678.841821] #PF: supervisor read access in kernel mode
-> [ 1678.841854] #PF: error_code(0x0000) - not-present page
-> [ 1678.841877] PGD 0 P4D 0
-> [ 1678.841896] Oops: 0000 [#1] PREEMPT SMP PTI
-> [ 1678.841918] CPU: 11 PID: 10142 Comm: kworker/u82:2 Not tainted
-> 6.1.191 #1
-> [ 1678.841946] Hardware name: Supermicro Super Server/X10DRW-E, BIOS
-> 2.0b 07/26/2016
-> [ 1678.841973] Workqueue: writeback wb_workfn (flush-253:4)
-> [ 1678.842006] RIP: 0010:ext4_mb_load_buddy_gfp+0xb5/0x370 [ext4]
-> [ 1678.842105] Code: c9 89 e8 99 f7 3c 24 4c 63 e8 89 54 24 0c ba 01 00
-> 00 00 4c 89 ee e8 4a e3 0d cf 49 89 c6 48 3d 00 f0 ff ff 0f 87 1f 01 00
-> 00 <48> 8b 00 a8 04 0f 84 09 01 00 00 49 8b 06 a8 01 0f 85 fe 00 00 00
-> [ 1678.842160] RSP: 0018:ffffd28d64597620 EFLAGS: 00010207
-> [ 1678.842184] RAX: 0000000000000000 RBX: ffffd28d64597700 RCX:
-> 0001a00330001005
-> [ 1678.842210] RDX: ffff8e100065f908 RSI: 0001a00330001005 RDI:
-> ffff8e10208a6600
-> [ 1678.842236] RBP: 0000000000000064 R08: 0000000000000001 R09:
-> ffff8e104df781a0
-> [ 1678.842261] R10: ffff8e100065f908 R11: 0000000000000090 R12:
-> ffff8e008cde8800
-> [ 1678.842287] R13: 0000000000000064 R14: 0000000000000000 R15:
-> ffff8e0094e062f0
-> [ 1678.842311] FS:  0000000000000000(0000) GS:ffff8e1fbf840000(0000)
-> knlGS:0000000000000000
-> [ 1678.842340] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1678.842362] CR2: 0000000000000000 CR3: 0000000154c10001 CR4:
-> 00000000003706e0
-> [ 1678.842387] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [ 1678.842413] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [ 1678.842438] Call Trace:
-> [ 1678.842454]  <TASK>
-> [ 1678.842471]  ext4_mb_find_by_goal+0x91/0x260 [ext4]
-> [ 1678.842551]  ? __ext4_handle_dirty_metadata+0x5c/0x1b0 [ext4]
-> [ 1678.842620]  ext4_mb_regular_allocator+0x93/0xcc0 [ext4]
-> [ 1678.842705]  ext4_mb_new_blocks+0x7ba/0x1060 [ext4]
-> [ 1678.842792]  ? ext4_find_extent+0x18e/0x480 [ext4]
-> [ 1678.842864]  ext4_ext_map_blocks+0x951/0x18d0 [ext4]
-> [ 1678.842938]  ? release_pages+0x15a/0x490
-> [ 1678.842967]  ? __pagevec_release+0x1b/0x60
-> [ 1678.842992]  ext4_map_blocks+0x1b1/0x5c0 [ext4]
-> [ 1678.843073]  ext4_writepages+0x87e/0x1150 [ext4]
-> [ 1678.843162]  do_writepages+0x6e/0x1d0
-> [ 1678.843186]  __writeback_single_inode+0x41/0x350
-> [ 1678.843213]  writeback_sb_inodes+0x1ed/0x4c0
-> [ 1678.843239]  __writeback_inodes_wb+0x4c/0xf0
-> [ 1678.843263]  wb_writeback+0x172/0x2f0
-> [ 1678.843286]  wb_workfn+0x2b1/0x510
-> [ 1678.843310]  process_one_work+0x1d1/0x3a0
-> [ 1678.843334]  worker_thread+0x4d/0x380
-> [ 1678.843354]  ? process_one_work+0x3a0/0x3a0
-> [ 1678.843374]  kthread+0xda/0x100
-> [ 1678.843396]  ? kthread_complete_and_exit+0x20/0x20
-> [ 1678.844048]  ret_from_fork+0x22/0x30
-> [ 1678.844673]  </TASK>
-> [ 1678.845285] Modules linked in: netconsole binfmt_misc tcp_diag
-> inet_diag 8021q garp stp mrp llc ipt_REJECT nf_reject_ipv4 xt_multiport
-> xt_comment xt_tcpudp xt_u32 nft_compat nf_tables nfnetlink xfs
-> intel_rapl_msr intel_rapl_common intel_uncore_frequency
-> intel_uncore_frequency_common sb_edac x86_pkg_temp_thermal
-> intel_powerclamp coretemp ipmi_ssif kvm_intel bfq kvm irqbypass
-> ghash_clmulni_intel sha512_ssse3 sha512_generic sha256_ssse3 sha1_ssse3
-> ast drm_vram_helper aesni_intel crypto_simd cryptd snd_pcm mei_me
-> snd_timer drm_ttm_helper iTCO_wdt intel_pmc_bxt snd sg ttm
-> iTCO_vendor_support joydev evdev rapl soundcore intel_cstate
-> drm_kms_helper pcspkr ioatdma watchdog intel_uncore mei acpi_ipmi
-> ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_meter button
-> mii bonding tls drm configfs fuse ip_tables x_tables autofs4 ext4 crc16
-> mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy async_pq
-> async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid0 multipath
-> linear
-> [ 1678.845432]  hid_generic usbhid hid dm_mod raid1 md_mod sd_mod t10_pi
-> crc64_rocksoft crc64 crc_t10dif crct10dif_generic ahci libahci xhci_pci
-> xhci_hcd libata ehci_pci ehci_hcd crct10dif_pclmul crct10dif_common
-> crc32_pclmul crc32c_intel usbcore scsi_mod igb i2c_i801 lpc_ich
-> i2c_smbus i2c_algo_bit scsi_common usb_common dca wmi
-> [ 1678.853096] CR2: 0000000000000000
-> [ 1678.853796] ---[ end trace 0000000000000000 ]---
-> [ 1678.911623] RIP: 0010:ext4_mb_load_buddy_gfp+0xb5/0x370 [ext4]
-> [ 1678.912558] Code: c9 89 e8 99 f7 3c 24 4c 63 e8 89 54 24 0c ba 01 00
-> 00 00 4c 89 ee e8 4a e3 0d cf 49 89 c6 48 3d 00 f0 ff ff 0f 87 1f 01 00
-> 00 <48> 8b 00 a8 04 0f 84 09 01 00 00 49 8b 06 a8 01 0f 85 fe 00 00 00
-> [ 1678.913921] RSP: 0018:ffffd28d64597620 EFLAGS: 00010207
-> [ 1678.914622] RAX: 0000000000000000 RBX: ffffd28d64597700 RCX:
-> 0001a00330001005
-> [ 1678.915341] RDX: ffff8e100065f908 RSI: 0001a00330001005 RDI:
-> ffff8e10208a6600
-> [ 1678.916048] RBP: 0000000000000064 R08: 0000000000000001 R09:
-> ffff8e104df781a0
-> [ 1678.916747] R10: ffff8e100065f908 R11: 0000000000000090 R12:
-> ffff8e008cde8800
-> [ 1678.917449] R13: 0000000000000064 R14: 0000000000000000 R15:
-> ffff8e0094e062f0
-> [ 1678.918153] FS:  0000000000000000(0000) GS:ffff8e1fbf840000(0000)
-> knlGS:0000000000000000
-> [ 1678.918860] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1678.919574] CR2: 0000000000000000 CR3: 0000000154c10001 CR4:
-> 00000000003706e0
-> [ 1678.920297] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [ 1678.921018] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [ 1678.921736] note: kworker/u82:2[10142] exited with irqs disabled
-> [ 1678.922508] ------------[ cut here ]------------
+>   em28xx 5-1:0.244: Closing input extension
+>   list_del corruption, ffff88810de88250->next is NULL
+>   ------------[ cut here ]------------
+>   kernel BUG at lib/list_debug.c:53!
+>   Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+>   CPU: 1 UID: 0 PID: 32 Comm: kworker/1:1 Not tainted 7.4.0-rc1 #1 PREEMPT(full)
+>   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)
+>   Workqueue: usb_hub_wq hub_event
+>   Call Trace:
+>    em28xx_close_extension+0x15a/0x390
+>    em28xx_usb_disconnect+0x16b/0x2f0
+>    usb_unbind_interface+0x295/0x9c0
+>    device_release_driver_internal+0x48d/0x7d0
+>    bus_remove_device+0x444/0x560
+>    device_del+0x523/0x8f0
+>    usb_disable_device+0x3d4/0x8d0
+>    usb_disconnect+0x346/0x9a0
+>    hub_event+0x1bd6/0x4d10
+> 
+> Reproducer: syzbot's C reproducer for the bug the commit fixes
+> (https://syzkaller.appspot.com/bug?extid=99d6c66dbbc484f50e1c), with
+> one byte changed so the emulated 2040:026d device (WinTV-dualHD
+> 01595) exposes a DVB isoc endpoint 0x84 instead of the audio endpoint
+> 0x83, i.e. in the memcpy of the extra endpoint descriptor:
+> 
+> -"\x83\x99\x35\x19\x1f"
+> +"\x84\x99\x35\x19\x1f"
+> 
+> Results in QEMU (x86_64, syzbot's upstream config, 5 min per boot):
+>   - tree at 826915b6b65e^ (before the commit):  no crash (3 of 3 boots)
+>   - same tree with 826915b6b65e applied:         crash above (3 of 3)
+>   - mainline 05441d697f7f (7.4.0-rc1):           crash above (2 of 2)
+> The unmodified syzbot reproducer (audio-only secondary) is fixed by
+> the commit, as intended. I have not tested real hardware or the stable
+> backports (6.12.y, 6.18.y, 7.2.y, 7.3.y carry the same change).
+> 
+> How this was found: we were testing AI coding agents on old syzbot
+> bugs, and an AI-assisted review of the candidate patches flagged this
+> path; I then confirmed it with the reproducer above. No AI-written
+> patch is included.
+> 
+> #regzbot introduced: 826915b6b65e
+> 
+> Thanks,
+> Shantanu
 
