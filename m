@@ -1,67 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.59.206.189
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794034415;
-	b=ukZTLFvISYs+xm7Vzv6nB+0VLJMySus04KxrKVp8RpJwvjszqnuBxucT74nn4Drwyd+z
-	 bUdBnEx3hPjpbQ3s8eW+wBBQOSiKc6eUp27114n9MZ3BO1nPSq9GqgRSdVYlqXfvwdVfE
-	 f417uwp2BQu5KXEXeP8fTP2odVt9HOONmRYtDuUbirPwMWEIGyOgREG4o3KE11uTSYoOY
-	 U0IszoSZgNO/4R0vJrIiGt2mdlZZaYurXnQ2/KNUiCRfZ9ed3HUb2pDOBYVGoLsqpi/rG
-	 N7dJ6hy//cybrIcTo3bh+CXF8Lv9ZR1Cv3HP1JK51NMJFOQgpOA3l2TopccsXs14EvQ==
+	t=1794048982;
+	b=uQ8u6+OperbMDic2qUasIghxWhT/7gjI3xVJ0EglL0ayJjzrlRBUNeTMj7cPsQXvAVdr
+	 I+MDfcNDrIlu7ysGcMO+HsCKeifPZBDafiI5alccU9pfGk3PkT5yhoSs1SEQBg1jcqCgi
+	 hB6KU3gXIAyd7MQoEA1amn5qNnndQ7o3T/xiDVOC3xGBe7LJ70iEy9EZMijpCMZZUsYk6
+	 9lwLjdqAMN54YNL1yNzR2wFpvBvixYSLqq2h+BpuiZ4zB10zz8ByywrH6cTJ5h5+XEdhj
+	 raQ/AhwKMMcQJCUUKAfCMIukwHJW2pdA9EaedS4FHqWqHzrZmxhQ66RMumuepcCIa2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794034415;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=sgjFvW4wEENdKL/320svk5+ImV/LvW07zU9oF/dDyws=;
-	b=C+aEwhU06k+yMu0SgObw31fsJ+/N1Mf+eGfrerINg8f14E0YNEm9cUMlmd14fuT6r/88
-	 2eFLCiBhbDmYqDdQtHnfPMsKhJztZGVZL/cgngKNQeryTzcGQAskmIcSM2FsgxPdLHD37
-	 WrryUn8HSt4IC7xYnoWF0jaGCDachWKMwWnvfHhL/XYlyG5sKcq/aJxKFprsztyTsg01g
-	 +IqPCFmDwO3bas7/0/cFCh2IlgzU0OHR6l+Wfz/O1ouJc7muWw8gKTeDF2zc0Rnr5cyQI
-	 3izJMfzLBADyahBxgA1W4BKXafGXXfTfiPIryp8egcgaTyVlzlMhqKPWiALFW3ZrHuw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794048982;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=w/gaTN6W/a49lhECTOr1GuWoMta3S3bcbB4BZOhpBco=;
+	b=aK9VuB1ACozahHsmUG50K1gMPVUYA+wvDvUOwVp/GIgCJBO2Pfb+cncUHNlSy6Q9MPDu
+	 r8GXy1sT2c8jkYGh751PQfPQ+NricokLtl/EqIZjARudhhHv/T575G8cbNNbmFHiQU3VR
+	 f6OUg0QbrXNVeqfXMc7mJFvkfkswXCtrOtZO8vh7tQwSWMFcDen9STXDovpeVLySqAXdA
+	 Mo+HbN7ZsgDaipR6xH7td37G49K79o4YuHrn1bUR6jV/m6f8foJl2vS1AbV2bobtAtOJy
+	 ugT3iGmQZ/T+TFn9qwj5Eon36/8bnJ/ecoybK+9O6GqSXLzWhtGzkl5MJosdS16kQBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=leemhuis.info;
 	spf=pass smtp.mailfrom=leemhuis.info;
-	arc=none smtp.remote-ip=188.68.63.98
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=g1sOqOLw;
+	arc=none smtp.remote-ip=194.59.206.189
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99DC606A32F
-	for <regressions@lists.linux.dev>; Sat,  7 Nov 2026 06:53:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A99DC606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF3D606A326
+	for <regressions@lists.linux.dev>; Sat,  7 Nov 2026 10:56:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9CF3D606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jM6Dn363Vz6CMg;
-	Sat,  7 Nov 2026 07:52:41 +0100 (CET)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=g1sOqOLw
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jMCdm45p2z4VJ0
+	for <regressions@lists.linux.dev>; Sat,  7 Nov 2026 11:56:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1794034361;
-	bh=W4I87TQG2Scg90wu2d+/OtsosugT18Ycf+G0ZMsoPdU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bWceHprmzPdDuOSWyaiV2A1lJWko/B9eKOvjrjyBsa1JQf9sjeb06jroqtYWIMb9C
-	 Wcpn0pzKehCp5i3Hr+GPl8p++5DVZ+duvMx/3umEKKnD805DUyIAxW4sb1bVt1ccRi
-	 4eBYPuh+5qjkGkwA9kY9nsA0uQ8dLE8H2AwDj4SB9jONgEppdP4J8Hwu43LIoIsYS2
-	 4Zpk3qLxRrf9OSbTgFRZyTOuRMLnf84Tm4LglX5L9cIltXFZp6A4wmbzDhWRFthATn
-	 GsKmwRw8c9r+wpIkN/xJ0rcCCVD5fF9WcK8GTWid7jqRoAuWY9Q3LBXjLf7u0kmiXc
-	 B6KApkGgRrwIw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jM6Dn2N8Qz4xlH;
-	Sat,  7 Nov 2026 07:52:41 +0100 (CET)
+	s=key2; t=1794048972;
+	bh=w/gaTN6W/a49lhECTOr1GuWoMta3S3bcbB4BZOhpBco=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=g1sOqOLwBkdjODxOE18xfLCrTqGSIN/V3QmvIWcyzp40FalXVHAKOheaVNTY2rrz3
+	 2EdnHMCuOhtXQHh5+9vAjrA3kcaH7+aq1irRew15tiaVqTk9M2M02CzjtGZ4qaDrDg
+	 fE99yHGhbB1t3dGgSFarINJKNKXFhq6HjWN+LBIpt8FRhBj0KOLamvfexg5mo210c8
+	 ElFCp+4Nle0wj4RTA4sDjl50cN4Fx0JYUPbn/dhtts2YUmLXfSiUBTKwhlg4mqrcEo
+	 1DpAP72HGUcWLgY3FwAvSw/RXLgbs2QuH4mSUsyArVg6vJ2AIbYGDJXAyHaVUZQP4y
+	 dwKla315v5Ykg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jMCdm3Qjnz80Wp
+	for <regressions@lists.linux.dev>; Sat,  7 Nov 2026 11:56:12 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jM6Dm10GYz8sbs;
-	Sat,  7 Nov 2026 07:52:40 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jMCdl49QFz8tj8
+	for <regressions@lists.linux.dev>; Sat,  7 Nov 2026 11:56:11 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 79B805F987;
-	Sat,  7 Nov 2026 07:52:30 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EF3BC5F985
+	for <regressions@lists.linux.dev>; Sat,  7 Nov 2026 11:56:02 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <c34778fd-e5c7-4547-b958-e5a9fb75e5c5@leemhuis.info>
-Date: Sat, 7 Nov 2026 07:52:29 +0100
+Message-ID: <811a4751-40f1-41e1-8cd4-f41040dd8e16@leemhuis.info>
+Date: Sat, 7 Nov 2026 11:56:01 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -72,94 +79,66 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.1.191: NULL pointer dereference in
- ext4_mb_load_buddy_gfp()
-To: Simone Colombo <colombo.simone@gmail.com>, stable@vger.kernel.org
-Cc: linux-ext4@vger.kernel.org, regressions@lists.linux.dev
-References: 
- <CAEVL6QtFUCs66EtLFj6dO8DQq9YE0Corvy3BTj-9HEvPkTP7xg@mail.gmail.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAEVL6QtFUCs66EtLFj6dO8DQq9YE0Corvy3BTj-9HEvPkTP7xg@mail.gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179403435076.636600.361162975346760712@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 79B805F987
-X-NC-CID: pbMQNuX6ZdkhT5QdWWCDeStPtfzWYZy+2Uy6pjZ44bP/TZg3pck=
+X-PPP-Message-ID: <179404896317.1065209.7727813723292322278@mxe9fb.netcup.net>
+X-NC-CID: +cAuCB7s23Xu+5v9vTsvLO7Lh2JPRN5E3sjGReo3qHC2f0rdw4s=
 
-On 11/6/26 23:53, Simone Colombo wrote:
-> 
-> Since 6.1.191, mkdir() on ext4 can oops with a NULL pointer dereference in
-> ext4_mb_load_buddy_gfp(). 6.1.190 does not, in the same test.
 
-Not my area of expertise, but from a very quick look this seems to be
-the problem that was reported here earlier:
 
-https://lore.kernel.org/linux-ext4/20261102-ext4-ntfs3-null-folio-v1-0-4fd91ee23a4a@elliotjb.com/
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-A fix for that is queued. Please report back if that seems to be a
-different issue.
+#regzbot report:
+https://lore.kernel.org/stable/aaa3241b-4dc7-47da-8703-067ffc4ce252@tu-dresden.de/
+#regzbot resolve: invalid: turns out to be a OpenSM problem, not a
+kernel problem
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/CAMODhBLCdFXpkC1RCJdu5HBbW8TOFy4W7E1P0o5x8kwpPq_YMA@mail.gmail.com/
+#regzbot introduced: 7a0886826308
+#regzbot dup:
+https://lore.kernel.org/all/8a12a2d9-1b56-4e00-8ccc-cf31325f8366@crazyrussian.pro/
 
->   BUG: kernel NULL pointer dereference, address: 0000000000000000
->   CPU: 0 PID: 60 Comm: mkdir Not tainted 6.1.191 #1
->   RIP: 0010:folio_test_uptodate+0x0/0xc
->   Call Trace:
->    ext4_mb_load_buddy_gfp+0xcb/0x351
->    ext4_mb_regular_allocator+0x3bb/0x82d
->    ext4_mb_new_blocks+0x392/0x93f
->    ext4_ext_map_blocks+0xd5a/0xecd
->    ext4_map_blocks+0x26b/0x47b
->    ext4_getblk+0xca/0x243
->    ext4_bread+0x6/0x45
->    ext4_append+0xc2/0x158
->    ext4_init_new_dir+0x5d/0x103
->    ext4_mkdir+0xfa/0x249
->    vfs_mkdir+0x74/0x8c
->    do_mkdirat+0x81/0xc1
->    __x64_sys_mkdir+0x1d/0x21
-> 
-> (This trace is from a test build of v6.1.191 with KALLSYMS; our production
-> build of 6.1.191 oopses at the same instruction.)
-> 
-> 6.1.191 picked up these two as prerequisites of "ext4: fix e4b bitmap
-> inconsistency reports" (Stable-dep-of: bdc56a9c46b2):
-> 
->   99b150d84e49 ("ext4: convert bd_bitmap_page to bd_bitmap_folio")
->   5eea586b47f0 ("ext4: convert bd_buddy_page to bd_buddy_folio")
-> 
-> They check __filemap_get_folio() only with IS_ERR(), which relies on
-> "mm: return an ERR_PTR from __filemap_get_folio" (6.4). In 6.1,
-> __filemap_get_folio() still returns NULL when the folio isn't cached, so
-> a buddy cache miss in ext4_mb_load_buddy_gfp() ends up in
-> folio_test_uptodate(NULL).
-> 
-> We first hit it on first boot right after growing a mounted ext4 with
-> resize2fs, but it only needs memory pressure. Reproducer in QEMU
-> (x86_64, 320 MiB guest, NVMe disk):
-> 
->   mkfs.ext4 -b 4096 disk.img 244224   # on a 4 GiB image
->   # in the guest:
->   mount /dev/nvme0n1 /mnt
->   resize2fs /dev/nvme0n1              # optional, makes it more likely
->   # fill a 200 MiB tmpfs, write and delete 300 MiB on /mnt, then:
->   for i in $(seq 40); do mkdir /mnt/d$i; dd if=/dev/zero of=/mnt/d$i/f
-> bs=64k count=4; done
-> 
-> 6.1.191 oopses within the first few mkdir calls, with or without the
-> resize. 6.1.190 completes the same test both ways. Without memory
-> pressure it doesn't reproduce here.
-> 
-> Locally we work around it by turning a NULL return into ERR_PTR(-ENOENT),
-> or ERR_PTR(-ENOMEM) with FGP_CREAT, at the six __filemap_get_folio()
-> calls in mballoc.c; with that, 6.1.191 passes the test. I can send that
-> patch if it helps, but you may prefer to fix the backport itself.
-> 
-> #regzbot introduced: v6.1.190..v6.1.191
-> 
-> Thanks,
-> Simone Colombo
+#regzbot report:
+https://lore.kernel.org/stable/shfaXkZCI7FtyNr5tS4kCC_d5E4uQFhc0MtwJa2CQFXpNMfSw7Ub6urwWpGrcoRnHuoneJEi9mLwtnvVImMhz1Hb25iwNJxx8GZZsDCV_HE=@protonmail.com/
+#regzbot fix: ALSA: usb-audio: Use the right limit for PCM OOB check
 
+#regzbot report:
+https://lore.kernel.org/stable/CAEVL6QtFUCs66EtLFj6dO8DQq9YE0Corvy3BTj-9HEvPkTP7xg@mail.gmail.com/
+#regzbot introduced: a3a7d360252c0d
+#regzbot fix: ext4: fix NULL folio dereference in mballoc
+
+#regzbot report:
+https://lore.kernel.org/stable/20261105192503.228363-1-tracekotae@gmail.com/
+#regzbot fix: drm/amdgpu: drop retry loop in amdgpu_hmm_range_get_pages
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/6011
+#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/issues/5714
+
+#regzbot report:
+https://lore.kernel.org/stable/a84fe7b5-ba90-4e51-afcc-548f8b30180b@icloud.com/
+#regzbot fix: ALSA: hda/tas2781: Only accept CRC-less V1 data if all
+entries are valid
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221675
+#regzbot introduced:
+
+#regzbot report:
+https://lore.kernel.org/lkml/20261010065509.72916-1-kmehltretter@gmail.com/
+#regzbot fix: f322d7f7ae56bce
+
+#regzbot report:
+https://lore.kernel.org/regressions/CAMODhBLTBPb5DG_kfjsF2Pj_8F+KFmG6N4vd=8MJM6n07nCC9A@mail.gmail.com/
+#regzbot introduced: 7a0886826308
+#regzbot fix: ASoC: rt721: Remove invalid register defaults
