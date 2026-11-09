@@ -1,88 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.241.220.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794258587;
-	b=IL1lwmQCRQJ+NBjIci3RIpBHr8rzyE6NIoaxb42NF5G1NMI1Ekybye80Rl4SDN9yb4HD
-	 pvIQhoN9ubBPngVZNNxt7Kx/3sS8Nnfej46/l6+0E1e9+PCEwvV5/dR89OB5XVx83raeE
-	 cpDqiz6eNAROIgJJXepmMyj+GgvF5fMEcAdcsyq3puRi6upQg5U1c0tgw/bIYNPjOzL1Y
-	 norhPNzKNRMOYOXU7zTVBjpnZ4pLTGpGPC9EZptlF/mILs3gXTQ0VZvpoAVeas0vtSeIe
-	 yYsN0b00xr9OQ4BYIlSnxHMYP5oOHoCnW2s5U/tPi9l1vz5VIVpr25FP7lYJRjrGpWg==
+	t=1794259625;
+	b=ffIEds/keaGRNHJSLhl0l6y4oPxOc2M03V2QLJQnkNy/vpYhzIu4VIKB+sTadmFG9+ba
+	 f4LhDfb93yj5nDWuU9odjh+xQAp5ZPy+IuLGhHI6BLgHuBBRe816Pqcl6TVzhAEm1sWAB
+	 D285VMUWv2jaQ46ekBuEHZtDcEfBhiN/bHj10K9uwTB2PAkvq9g1bU90fZROWrNTt3L/T
+	 Xv4Hs9qk2wD2TYlifzP5SwLN5u6/JZpYhecEdM9GDuuhvam6ERRBsTPRyGvVvXXyDg5HT
+	 qPHT4DgTrYDATJM7gBweBulYdx3aPtzO41aIoQWFRTrvoGGEPdPuJs5vYpKXo7BOASw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794258587;
-	h=DMARC-Filter:X-KumoRef:DKIM-Signature:DKIM-Signature:Received:
-	 Message-ID:Date:Content-Type:References:X-CSA-Complaints:From:Cc:
-	 Content-Transfer-Encoding:Feedback-ID:X-Maileroo-Ref-Id:
-	 DKIM-Signature:To:Subject:In-Reply-To:MIME-Version:X-Tenant-Id;
-	bh=0xeYOXy87vRk1HG34LnslJREtedPrEqOahPX4I7WggQ=;
-	b=GG7rbGEDGHiKXp5Rd2Fm62KvhWarsI4iOvaFNy3Okarf8ptTBP7d+ZruZHlmG5RlDtOK
-	 CmqNbRoD2J/Wn64AGNaqel9tRNtGyD0PMOJBsP+cYYjsHTPAFtSZSlb3NSaSNLuE/s5ky
-	 qfdse/e0x+qzzhLxcpa50Eyp3YMRtNI7F0M2Tav2+4AWALxwQhFteinP/3Y5gBHKbGKKA
-	 OxyBVlGyUyV7Ppn/wZbi/deHWECvYQpOEXkKMdWuHcC3d06c5c3xhQ06HSOAFtyPnhJzY
-	 /OdaLl3aM07E2FPRluTOAp1JNr/3q9+Q9iXu/hmBhCvtujGkY9MR3dI8G5KOmWfQCzw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794259625;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=TWfUart03l56VPYm6PEOMJTSBMEYCU2q173Onlmc8KE=;
+	b=K4vo/r9FoXcncNeK2c5OsaWJwA7uIpfVXvaO+J2L+xbcbwhdovPKNxgUJ2IAO+tUSuNx
+	 PZGJAWyZSRnEGEsWK1nKfNSEQ+//eo/rA8jcAkYnRTgySDJYcpG/g/tcWv2alKEy3bKAW
+	 h8PgpSK4WejuwfdP1gHqAEcMfTsHsihFo9qBJKdLVPKIskWXJIydYWW54krQp2srjlMMB
+	 N11D7vkkap0FWVdPATvqbumGrZwlLJnGOD65Ts81mKbSdf1J6oxY8cHGWuKgLyBuUxZvl
+	 GKG6859IF6lHVoGFxnMJEQ+twvsfTgrBhxN1nfvpRAJ93vTOP0Dvn4ejNN0hCj9f3PQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=darioackermann.ch;
-	spf=pass smtp.mailfrom=darioackermann.ch;
-	dkim=pass header.d=maileroo.info header.i=@maileroo.info header.a=rsa-sha256 header.s=mta header.b=G7tx7aiN;
-	dkim=pass header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=mta header.b=JR4E78rj;
-	dkim=fail reason="signature verification failed" header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=v1-rsa-20261020 header.b="AyxSA4/w";
-	arc=none smtp.remote-ip=188.241.220.1
-Received: from mta3-5.maileroo.com (mta3-5.maileroo.com [188.241.220.1])
+	dmarc=pass header.from=protonmail.com;
+	spf=pass smtp.mailfrom=protonmail.com;
+	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=UPjFd2rU;
+	arc=none smtp.remote-ip=79.135.106.102
+Received: from mail-106102.protonmail.ch (mail-106102.protonmail.ch [79.135.106.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65348606A31C
-	for <regressions@lists.linux.dev>; Mon,  9 Nov 2026 21:09:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65348606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=darioackermann.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darioackermann.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FA4606A326
+	for <regressions@lists.linux.dev>; Mon,  9 Nov 2026 21:27:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34FA4606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maileroo.info header.i=@maileroo.info header.a=rsa-sha256 header.s=mta header.b=G7tx7aiN;
-	dkim=pass (2048-bit key) header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=mta header.b=JR4E78rj;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=v1-rsa-20261020 header.b=AyxSA4/w
-X-KumoRef: eyJfQF8iOiJcXF8vIiwicmVjaXBpZW50IjoicmVncmVzc2lvbnNAbGlzdHMubGludXguZGV2In0=
-DKIM-Signature: v=1; a=rsa-sha256; d=maileroo.info; s=mta; c=relaxed/relaxed;
-	bh=0xeYOXy87vRk1HG34LnslJREtedPrEqOahPX4I7WggQ=;
-	h=from:sender:reply-to:subject:date:message-id:to:cc:mime-version:
-		content-type:content-transfer-encoding:content-id:content-description:
-		resent-date:resent-from:resent-sender:resent-to:resent-cc:
-		resent-message-id:in-reply-to:references:list-id:list-help:
-		list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:
-		list-unsubscribe-post:feedback-id:x-csa-complaints; t=1794258578;
-	b=G7tx7aiNp5ELlQdci/BDKS86S50hv/xrdxk5YLy0aOWq9YvyUY7B2WIIsnl/KywcNc+6h231q
-	YN4Rz+Ud+bRhU+uLXFG4tqquHUd3xUHyU8+S26ZH40+SMNH2qUtTObVGkxYRU65dmhlEX7lwKSu
-	PlBW2ydaplUFAvKYjcTAtW2Sh6O0u4k/rq9LZSrdKzt/dFJpn6dkqk4EEns55ez9kdxinbWzbKX
-	F0MhjVEZX0CH/HYwGiievlqKNhk8WoCt7nY6nnGEyMLGHrt9LwEcSIyp/Ojfch1TCxIGcS0zPSJ
-	iI7cfjNqvKawXa6vnWpgKc6jSweX6UGNcSGCvL2reeHA==;
-DKIM-Signature: v=1; a=rsa-sha256; d=darioackermann.ch; s=mta; c=relaxed/relaxed;
-	bh=0xeYOXy87vRk1HG34LnslJREtedPrEqOahPX4I7WggQ=;
-	h=from:sender:reply-to:subject:date:message-id:to:cc:mime-version:
-		content-type:content-transfer-encoding:content-id:content-description:
-		resent-date:resent-from:resent-sender:resent-to:resent-cc:
-		resent-message-id:in-reply-to:references:list-id:list-help:
-		list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:
-		list-unsubscribe-post:feedback-id:x-csa-complaints; t=1794258578;
-	b=JR4E78rjsdo/LyzO28ZaXeRDRYbjG6EDpxim0C+C4XXIRWQ8qPvajnSGvvLKte+xRv23kgNUS
-	xHiAHGoLMRs0zEx1edi6zTJdOTgu1fgdpDxMss7/bWckZRcWYXkyCvREF3VlZ81FaYxvhP37f4f
-	BzS8ENJnM23bVHlzDArepS4e726GJhyH45+5kzA0BeZvdM5IWp+wFOUJIN98mX6hSpaAZeze1tY
-	aJLOWKzFyXavvZkT01/IR6Pb6xP/z0uL2NybjIfbOm/w3YxHLbBqVJZ6jkXJY86GVAAjNgg+0e+
-	EzuaixRgVlrO76Cq+Be9cRlIWXB83gWd3ot/3S7PhYKA==;
-Received: from localhost (127.0.0.1)
-  by mta3 (KumoMTA 127.0.0.1) 
-  with ESMTP id df77f3e2dc8111f1a92b92000677b433 for <regressions@lists.linux.dev>;
-  Mon, 9 Nov 2026 21:09:38 +0000
-Message-ID: <630330232567670562275469.6204.202611921938@darioackermann.ch>
-Date: Mon, 9 Nov 2026 21:09:32 +0000
-Content-Type: text/plain; charset="utf-8"
-References: <mw9nsyuj.70b4b79c-e987-49da-abe1-0164defd8d5a@darioackermann.ch>
-X-CSA-Complaints: csa-complaints@eco.de
-From: "Dario Ackermann" <dario@darioackermann.ch>
-Cc: <x86@kernel.org>, <bp@alien8.de>, <tglx@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Feedback-ID: u56201:maileroo
-X-Maileroo-Ref-Id: 4f4cd805c44985a0c1e09e10
-DKIM-Signature: v=1; a=rsa-sha256; s=v1-rsa-20261020; d=darioackermann.ch; c=relaxed/relaxed; r=y; h=Date:Message-ID:Subject:To:From; t=1794258575; bh=0xeYOXy87vRk1HG34LnslJR EtedPrEqOahPX4I7WggQ=; b=AyxSA4/wfkPTIZ+eB4B7aN2uzxfg+ZVMPO7XoNwObNYLmlvlF7 QMJFW6/I9B9f+sUANWuIE0+O2mkiz6M75hcoDMQUUv7Px7TUyegj6ZuZpf5XvJ5dea+cvFDOkXz ecqxbllVZHrZnTbTP/pH15s/AyjXl0OrRtZybOrQhys0zas26NkZ/gFCEwugQjVyVCVu1ztduC8 sVoZ7viG3bZU5BGOCHsS0f8j+tdMXrBvv3/ogDQ6UbYVSvr1g6E3bN+SOdWLl3FsBCWGsqbO6Yv OtUDduh+z1sJ5hFXp782D9No2qusVxT1vSBm5xP6nibgA1JUA/OVKyyg+xY2Tk61EpA==;
-To: <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: =?us-ascii?Q?AW:_[REGRESSION]_x86/microcode:_boot_hangs_bringing_?= =?us-ascii?Q?up_first_secondary_CPU_on_i7-6700HQ,_avoided_by_dis=5Fucode?= =?us-ascii?Q?=5Fldr?=
-In-Reply-To: <mw9nsyuj.70b4b79c-e987-49da-abe1-0164defd8d5a@darioackermann.ch>
+	dkim=pass (2048-bit key, unprotected) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=UPjFd2rU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1794259621; x=1794518821;
+	bh=TWfUart03l56VPYm6PEOMJTSBMEYCU2q173Onlmc8KE=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=UPjFd2rUHS2ISPEyx5ZIiXMUo3P14IW1yHuo8ARGT7LdLOj5sPtnF2RuHWZK7nelh
+	 M3NPjSjaqqU2CiQGTM/S3x23/eNsY3IZQdWRnJITkuJyBW+eU2fWhs4VOoiLxQy83u
+	 3vhvs7QcUta3qmZEZ2kCHvP0ELszgv92QpYMJDaZWWxmhhDCb/ozE3QbVGrGqNrRHi
+	 XR56Dbggfga3h75gWMPUURLxJyVK+w2mqQhq9Rivc5N8kmoyo+38UuzkJJYEABTZGE
+	 LANyVGuLxIBW7pc1T11ionNTT0TRgt03Zq6LRI3HGTICxu1d27qKwWDRAg9pFdx2x1
+	 LIRDIFEBdEo7Q==
+Date: Mon, 09 Nov 2026 21:26:55 +0000
+To: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>
+From: John <shffr@protonmail.com>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>, "coreteam@netfilter.org" <coreteam@netfilter.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to 00:00:00:00:00:00 once the next hop's neighbour entry is gone
+Message-ID: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
+Feedback-ID: 9232920:user:proton
+X-Pm-Message-ID: 89aa4064441d68e5335e520866a766b6fe40e168
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -92,28 +61,229 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-Tenant-Id: u56201
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I found two similar reports on ASUS N552V-series laptops with an Intel i7-6=
-700HQ:
+Hi,
 
-Ubuntu N552VW: the reporter tested upstream 6.4.0 as working and 6.5.0 as f=
-ailing. Boot stopped at "smpboot: x86: Booting SMP configuration:", and dis=
-_ucode_ldr allowed booting.
-https://askubuntu.com/questions/1512327/ubuntu-freezes-during-boot-when-usi=
-ng-linux-kernel-6-5-0
+Since commit b5964aac51e0 ("netfilter: flowtable:
+consolidate xmit path"), a flow offloaded with
+FLOW_OFFLOAD_XMIT_NEIGH keeps being forwarded with
+destination MAC 00:00:00:00:00:00 after the next hop's
+neighbour entry has been removed. Nothing resolves the next
+hop again, so the flow stays black-holed for as long as it
+keeps sending.
 
-openSUSE N552V: the reporter says 6.1 works, newer kernels hang when Intel =
-microcode is present, and dis_ucode_ldr allows booting.
-https://forums.opensuse.org/t/opensuse-tw-wont-boot-without-the-dis_ucode_l=
-dr-parameter/175229
+Before that commit the XMIT_NEIGH case called neigh_xmit(),
+which creates the entry if needed, sends a solicitation and
+queues the packet. Now nf_flow_offload_ipv6_hook() does
 
-Commit 0c7ffa32dbd6 ("x86/smpboot/64: Implement arch_cpuhp_init_parallel_br=
-ingup() and enable it"), merged for 6.5, moved AP microcode loading from af=
-ter the AP startup handshake to before it. This is a candidate cause, not y=
-et confirmed by a bisect or patched-kernel boot test on my N552VX.
-https://git.kernel.org/linus/0c7ffa32dbd6b09a87fea4ad1de8b27145dfd9a6
+=09neigh =3D ip_neigh_gw6(rt->dst.dev, rt6_nexthop(...));
+=09if (IS_ERR(neigh)) { ... }
+=09xmit.dest =3D neigh->ha;
 
-I am preparing two upstream 6.18.55 boot images, one unmodified and one wit=
-h the AP microcode call moved after the handshake, for a direct comparison =
-and to work on a potential fix
+and passes the skb to dev_queue_xmit() through
+nf_flow_queue_xmit(), without looking at neigh->nud_state.
+When ip_neigh_gw6() has just created the entry, ha is all
+zeros, and since the neighbour output path is never used, no
+solicitation goes out and the entry stays unresolved. The
+IPv4 branch has the same construction with ip_neigh_gw4().
+In v7.4-rc2 the code has moved into the per-family xmit
+functions but is otherwise unchanged.
+
+This hit a router here running 6.18.60, which has
+b5964aac51e0 as a stable backport. A WireGuard endpoint
+behind the router talks to nothing else through it, so its
+neighbour entry on the router aged out while the tunnel's
+flow was offloaded, and the endpoint's handshake retries
+every 5 s kept the flow alive. On the router's egress
+interface every forwarded packet of the flow then looked
+like this (addresses replaced):
+
+  02:0e:bd:92:63:28 > 00:00:00:00:00:00,
+  ethertype IPv6 (0x86dd), length 154:
+  2001:db8:1::51.60161 > 2001:db8:2::1f.59320:
+  UDP, length 92
+
+"ip -6 neigh" had no entry for the destination, conntrack
+showed the flow as [OFFLOAD], and deleting the conntrack
+entry restored the tunnel until the next time the entry aged
+out, a few minutes later. Going back to 6.12.115 on the same
+router fixed it.
+
+The script below reproduces it with three network namespaces
+and no special hardware (IPv6 only, needs iproute2, nft and
+python3). The server has a permanent entry for the router,
+so the router only knows the server from its own resolution.
+The flow is offloaded while the router has no valid entry
+for the server, which gives XMIT_NEIGH, and once it is
+offloaded the script removes the router's entry again, which
+is what neighbour GC does to an idle STALE entry.
+
+6.18.60:
+
+  flow: [OFFLOAD]
+  entry: fd00:2::2 lladdr a2:5b:b4:93:86:a9 REACHABLE
+  entry removed, flow offloaded
+  2 s later:
+  echoes: 7 ok, 11 lost
+  destination MAC of echoes to the server:
+       10 00:00:00:00:00:00
+        7 a2:5b:b4:93:86:a9
+
+6.12.116 (Debian 6.12.116+deb13):
+
+  flow: [OFFLOAD]
+  entry: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+  entry removed, flow offloaded
+  2 s later: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+  echoes: 17 ok, 1 lost
+  destination MAC of echoes to the server:
+       18 de:9b:d1:db:19:4c
+
+(Datagram 0 is lost on both kernels, during start-up.)
+
+I have not run the reproducer on mainline. I compared the
+code in v7.4-rc2 instead, and the IPv4 path is untested.
+
+I don't know this code well enough to say which fix you
+would want. Handing the packet to neigh_xmit() when the
+entry is not NUD_VALID would restore the old behaviour for
+that case, and tearing the flow down would also work, since
+the next packet would then take the classic path and resolve
+the neighbour. I can test a patch on the router or with the
+script.
+
+#regzbot introduced: b5964aac51e0
+
+--- reproducer ---
+
+#!/bin/bash
+# Flowtable XMIT_NEIGH flow forwarded to 00:00:00:00:00:00
+# after the next hop's neighbour entry goes away. Needs
+# root, iproute2, nft and python3.
+#
+# Namespaces c (client), r (router with a flowtable) and s
+# (server). The server has a permanent entry for the
+# router, so it never solicits and the router only knows
+# the server from its own resolution. The flow is set up
+# before the flow-add rule exists, the router's entry for
+# the server is removed, and only then is the rule added:
+# the flow is offloaded while the next hop has no valid
+# entry, which gives XMIT_NEIGH. Once it is offloaded the
+# entry is removed again, as neighbour GC does with an
+# idle STALE entry.
+set -u
+P=3Dftrepro
+W=3D$(mktemp -d)
+E() { local ns=3D$1; shift; ip netns exec "$P-$ns" "$@"; }
+cleanup() {
+  for j in $(jobs -p); do kill "$j" 2>/dev/null; done
+  for n in c r s; do ip netns del "$P-$n" 2>/dev/null; done
+  rm -rf "$W"
+}
+trap cleanup EXIT
+trap 'exit 1' INT TERM
+
+for n in c r s; do ip netns add "$P-$n"; done
+ip link add rc netns "$P-r" type veth \
+  peer name c0 netns "$P-c"
+ip link add rs netns "$P-r" type veth \
+  peer name s0 netns "$P-s"
+for n in c r s; do E $n ip link set lo up; done
+E c ip link set c0 up
+E r ip link set rc up
+E r ip link set rs up
+E s ip link set s0 up
+E c ip -6 addr add fd00:1::2/64 dev c0 nodad
+E r ip -6 addr add fd00:1::1/64 dev rc nodad
+E r ip -6 addr add fd00:2::1/64 dev rs nodad
+E s ip -6 addr add fd00:2::2/64 dev s0 nodad
+E c ip -6 route add default via fd00:1::1
+E s ip -6 route add default via fd00:2::1
+RMAC=3D$(E r cat /sys/class/net/rs/address)
+E s ip -6 neigh replace fd00:2::1 lladdr "$RMAC" \
+  dev s0 nud permanent
+E r sysctl -qw net.ipv6.conf.all.forwarding=3D1
+E r nft -f - <<'NFT'
+table inet t {
+  flowtable f {
+    hook ingress priority 0; devices =3D { rc, rs };
+  }
+  chain fw {
+    type filter hook forward priority 0; policy accept;
+  }
+}
+NFT
+
+# Client: UDP echo on port 6000.
+E c python3 -c '
+import socket
+s =3D socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+s.bind(("fd00:1::2", 6000))
+while True:
+    d, a =3D s.recvfrom(100)
+    s.sendto(d, a)
+' >/dev/null 2>&1 &
+
+# Server side of the wire: destination MAC of every echo
+# coming back to the server.
+E s python3 -c '
+import socket, sys
+r =3D socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
+                  socket.htons(3))
+r.bind(("s0", 0))
+f =3D open(sys.argv[1], "w")
+port =3D (5000).to_bytes(2, "big")
+while True:
+    p =3D r.recv(2048)
+    # IPv6, next header UDP, destination port 5000
+    if p[12:14] =3D=3D b"\x86\xdd" and p[20] =3D=3D 17 \
+            and p[56:58] =3D=3D port:
+        f.write(p[0:6].hex(":") + "\n")
+        f.flush()
+' "$W/wire.log" >/dev/null 2>&1 &
+sleep 1
+
+# Server: one datagram a second to the client, port 5000.
+E s python3 -c '
+import socket, time, sys
+c =3D socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+c.bind(("fd00:2::2", 5000))
+c.settimeout(0.8)
+f =3D open(sys.argv[1], "w")
+for i in range(18):
+    t =3D time.time()
+    c.sendto(str(i).encode(), ("fd00:1::2", 6000))
+    try:
+        c.recvfrom(100)
+        f.write("%d ok\n" % i)
+    except socket.timeout:
+        f.write("%d lost\n" % i)
+    f.flush()
+    time.sleep(max(0, 1.0 - (time.time() - t)))
+' "$W/server.log" >/dev/null 2>&1 &
+SV=3D$!
+
+sleep 4
+E r ip -6 neigh del fd00:2::2 dev rs
+E r nft add rule inet t fw ct state established \
+  meta l4proto udp flow add @f
+sleep 3
+FLOW=3D$(E r grep -o '\[OFFLOAD\]' /proc/net/nf_conntrack |
+  head -1)
+echo "flow: $FLOW"
+echo "entry: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+E r ip -6 neigh del fd00:2::2 dev rs &&
+  echo "entry removed, flow offloaded"
+sleep 2
+echo "2 s later: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+wait $SV
+echo "echoes: $(grep -c ok "$W/server.log") ok," \
+  "$(grep -c lost "$W/server.log") lost"
+echo "destination MAC of echoes to the server:"
+sort "$W/wire.log" | uniq -c
+
+Thanks,
+John
+
