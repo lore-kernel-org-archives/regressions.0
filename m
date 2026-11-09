@@ -1,99 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.52
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794238465;
-	b=LCDqKXRprsH9i8upgtOb1ODf4PXZp+IpfWBWMPmuUQPytmxHUMghK7V2bPCgV5NcsH0G
-	 gFx380hazrsF82upDUnKtArXMsZXROfbofg0dGBaIGDtzNj4RcoeSN6DYeoYll4nWMizQ
-	 K48NPuai/O6MmhL8aJLqyuz7VSy/G+2r9nHr0iPPBGVaJnvpYKjQPLwLubSO7TAY3eS7y
-	 eIOs28uTli9APPCNXmwn9uHzl9pg9X8IGYtL2Kl8uu9VmVTAJtKcxk/CiBTCU/uC59OWz
-	 XV45lYABH3zt2QSG3DCmF/RgB3AZVVXp38R9PYD8je9Oec5BQJD4+g6nJAjx7Bm1HGw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794238465;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.46
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794242063;
+	b=NX6biaL3luALl3yf5Hpf11IhrgP1JpvE8dHECAGc2csNHARRDNxCx2c7dSVDCdbiCAnw
+	 LqWRwFfQQmheHi+3TrAytpxxBOjmwHQHKklAPSmF8lBtgNzDDxy9yMCv0EFJ+YgnwwmQp
+	 Xjg2KxxLgcvdNmrFGuNv96kfflgCQDcFYROm3IN0QANOcuPqfXHiAmfe8orJBC1sk8rvi
+	 rHGzUhToGWceHd2UTR7tiBovtzksQ6I9E2j5Txsuy3QeUtBuDgcP1WbClPnTzjDx+DbFo
+	 0i20Z1JbxYguQPzFlxwhxvbo72m87IG4zYonh0Eb39qVLHMVFs6/a0NJ6iEjW8WnjOQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794242063;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
-	b=272NoP53No8gZ+P8fmt6QzhckDZOznL7nTfwxGhSjOK3PtAxj+3osWprCw61PNwXmOKI
-	 jWLjFsfYMJfXNxwr6J/Ta/ZPzFQSzVgqjwIj/UCMC0HAc1KW00f/kvpDrZ47vVvuOEA8B
-	 oxPvmRJw02NbncUwbiIbEXAFTVrNa6KCs8P3F1hDY60WzRlvkJVENw0IzD1zSPGy1kXeS
-	 aJg+3iJOrBDvQB1S4g/UzCSEXFnPGiFuJYALpWm6rJQbu9N7GRNFaDY+EihSeBE6VumnG
-	 3KjHhtWNSNpygISu8oige7LbEiQZCmp0eSPUhM8gzDWYC+OCnVp00lqZVqwUX4/0BAQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=RbYLKZJReBRYNMnQD9Gq9gm7nUierN4cjniygw/hBYA=;
+	b=B2JGYibL2fPDIYM6RqWJpCa+5Kcs5wsfJW7CcDCc32M2GbhNLzLzjfwRby8Jm5g7TUc1
+	 Yn7vw4+yrnm6lBKRxgSdZ6ShghpCTRtNHU27Tk++2+jSGyaJVmygzBAbZpNZZwM/RaVE+
+	 KD0UyoZOrESlKvJ/tC8ki71Eg14nhvHra3Tfft24HeGF35YPPxDaFsH23SQcX8llEgVMx
+	 nRSp/lQ94zfRQAz7+428ALBtWLtWqPNxDcCnHQQc9QZpTGEsP67vweI4jJ5oOOGh5rwRZ
+	 rJ+ioyUg5kFSjioV+W/OfLhHvdifwgR3jUzlHTn4weIVYQ2H7MX/uHldO3Jr71E4Oxw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SyZv6cOA;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="0PQXf7F/";
+	arc=none smtp.remote-ip=209.85.221.46
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F911606A31C
-	for <regressions@lists.linux.dev>; Mon,  9 Nov 2026 15:34:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F911606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66716606A331
+	for <regressions@lists.linux.dev>; Mon,  9 Nov 2026 16:34:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66716606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SyZv6cOA
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1a2761c69fbso808973c88.0
-        for <regressions@lists.linux.dev>; Mon, 09 Nov 2026 07:34:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794238465; cv=none;
-        d=google.com; s=arc-20260327;
-        b=sbXM4m4/czgvoQ+1R3RaRluBcx76bBdvEVkhexkwgZNjVxnRUMRWAV88TQ4LF4X3i9
-         Ff0ajfH+yVY7cmdVRJkz/kWEpcFnURppffz5Caq9x2pxFQcMmH+RvJU74W9D+hWuECFH
-         mwmJPSSm8RQp54f7R25w7H27RTd/849RLRlGatucHj9nYTKqMI0o5EKrqiBFuvbFcscz
-         h3GQSRcUgqU1Ysk5A43yAGW993mq86sIu9Z/ToIAtm2HRoHO+4XVdcVQeLitEcWkek+w
-         ylppD5gyxPcZcVYpUIUD7/4Lktq9UHKXhO1p6R39UXp403uf1E00Ac9v2DWAGK+IlkzY
-         U5/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
-        fh=pD5JxETt4WOW0jf0ZcjVv5pLAtZ5+EYnCp3X2Zh589c=;
-        b=i6wSJc7N8PpQtGlOf5YXwnOU8a124z5MBBpk+NFRWWVMhdOBwU/Vr37sleAUjGoC4E
-         RvmrpjnmDYYLW+2bfLi0h6aIOVasVwjBroRshH/m5R5lfBjAReu1QscTOpZf5EJbKJWQ
-         sSGe1JELzOo/UJNfZhZ5w0vj3uWlAXqASY7KMB2EsK2J3eBPw447tv1mRg85GemhUn0a
-         Wpibn/cWaH0rbU0c2+Mv+3wLvAGkWWzQRP5CeqboW0HIlh9BLjc0lYGUgpOUFK+h/38R
-         HMPrNfN2e56DMc3rHmwdWvpjYV6122pHAHn0jj4/SPE1slTuaG2uR8ZTAvugNDMQ0TQV
-         qoSQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0PQXf7F/
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-490c1d337d8so785108f8f.2
+        for <regressions@lists.linux.dev>; Mon, 09 Nov 2026 08:34:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794238465; x=1794843265; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
-        b=SyZv6cOAttS4+iarOaMV2CSW2KNasl2/nElVQi3H1BOkhM0WPizdeBaQUcvSqR32Us
-         bitIw6YfNLJf/+q953GfLxCT1fJfsmCNWSboNuehd7oX2aZcO0x2P5mkTcoSC0M51BKT
-         uVAc8ouelTY2ntD3W94HC6phoKtWU19+SyC4F54F/aNjZvZ94SfDWecVr3yVr73eyE3W
-         E78XLOd5qwBvW3Vio7MGUGSLf8eagghOQKvQ5wpF/rGjFkwIGHYuMlaFhnTFENQRp6TW
-         t68VJWOn+ydTx6JratFAhvAP1dG/QEeUusMu4MtixLIR1T9MthETWgz3Uy0fcfNAsEWS
-         H+OA==
+        d=gmail.com; s=20260707; t=1794242062; x=1794846862; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=RbYLKZJReBRYNMnQD9Gq9gm7nUierN4cjniygw/hBYA=;
+        b=0PQXf7F/yGxEKNBeDhD+wnQ6h3qIPbypFVnP/iW8dtMQnTqp04GSW6fwcxzp9eCZfU
+         4OjUjzm8WWR30waVWvxWMTsc1spvFDTZC52ca6vn+SV/EnH2XTOQTIDXKuhUbNSn+Ytl
+         Fp9QXVCNy3qPwAl9+kEUPxkyxcaYPB7hRFgDhu1K9shmkz6RgFfMRSp2zzlMkns+aGgg
+         rlh2eOQfEYpBc6lFr/2YCEy6iqYJfe1fdxna8L1d3z8N8ViLwDfLNxpJU7WSBKqNQ+Kr
+         /BQ5iSRh0DZGBdi+Y5K9NfvpEExyhC5LufetBsDqBCxwgs1Hzk8rb9FcTBVKCd8b0YXU
+         uEiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794238465; x=1794843265;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WVukrYsPbFF473s2K9zf2mkSZNUUvvxXMXskigLhwhY=;
-        b=TYRUf/3ViLngMXyNzUWKpyaxJfwf2wapG/NuIVXmVOc3rccWXDnS2b32GBEGVvESTl
-         UvAg//hVmqPUZYS7o4hBwmw00H5OyAp2hFNamULiT5v1I9UGZV9PARMj3y3obWRpjN/4
-         EqqS9vld6Z5bn6Ec8B6xNh23TPjCPj99ueiTYQGgXVtCy/dAEu0WYRTLNUPf5Exh1oCD
-         x5sBnq06IycfMbpZYO+lGI7l4OwbV+/sQY8/XcpWF1Txfml4/3Vix3JbgthwO0Ul1UwU
-         /CfvPa6NUMwcYnyATZhmvWvhLNOcVzKDl1hSrA45gRWCt//U164uv+CxdtO/SdXivqAY
-         As0A==
-X-Forwarded-Encrypted: i=1; AL+hErHZuSRZ6T66/6p2cobVa1KhqInMc7qskCTr7fyNE2IsYg9Cws40ywj5U76B1hZhgYmEah7hZABC4A6wbA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8rLKq0IiAlfNgQMnIWdGLB2FGtB+tPfOiAtKWdbNZkb0bO1MiQ
-	6ut/Dsx8zP8GlGYx34rMB66bEcq8Gv2nBe0EXoKjSxUA6fusmj8jtQFWn5K3vhim6SxdX16SKRu
-	HoUpJnwt9jq0io7KtChiPAw7kdpywT7g=
-X-Gm-Gg: AYBFou2mXlZDrqmEQ2CLRdZSDXHkaEk/os80vEk411I6cQbP/Pe1/rL1nDWO99Fkn1G
-	7Jg9kJr2Xxqv0/JcwlOO/bOe93Qoe3538gDXHdendZsszAAPl7uaFeqvMSaLQW46hfLQz9fcidv
-	A1x6RUzbSRzfde8mr6XNdnZXOLu46AiNaEy2JCV3p1X4LZ7kWoGReJXdXfvSeRReR7GMP8dLCf0
-	ZF/J5YWr3bfk1OMZlS91eJfA5ruHXs3AHlDXD5Gl+mAo+pgECfnl88Ezm0M0g2jgs5fDV53wsEV
-	RsCU61bumfEa/ax5ZYxz7mJIOeMxDP+RHrNZ0Q7VaUZpOeuKnW3V++t1Dau7Gib9OB60YwlIAwL
-	iJ5JN2CL1EBtgGRNml4BLsyanE9zDshHTkMJAKA==
-X-Received: by 2002:a05:7022:4388:b0:1ae:e0f5:2cdd with SMTP id
- a92af1059eb24-1b39feaebacmr8289891c88.28.1794238464457; Mon, 09 Nov 2026
- 07:34:24 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794242062; x=1794846862;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=RbYLKZJReBRYNMnQD9Gq9gm7nUierN4cjniygw/hBYA=;
+        b=bb1UZuh7hVtZ3TA/TIW0wxj3/9Ys0fLkg6ZGWdwG4cy+2gnHo37RlrDAN8yPIc7cvW
+         tkriP+IdW7DL652+cc8O+ozq2TQ9PW0EHgnTtIxRaMuDeqbSLyDZMnROAP27zqdmQUX1
+         pnRr3FCPHoBd+Axj8siMuQXJO2Hi7OxcWT4bpH11zAyB6XwREV+0mTULwNpUtSFSiy5U
+         Iylkzj5z+N6ctZ1UWQ0ZFbaRkeD7dFF/oUj7Z26EXsLXKmmzzD1fYU3nsCgn3jJ24hSJ
+         j9NMUlm9kGcTLDSQsOQnN39Pzfb+QKGykSxdvSyEvI09zmVTUQ1SP4tMnMsIiHKLAIIo
+         gNEw==
+X-Forwarded-Encrypted: i=1; AL+hErFHerYkLRIjZSg6UAF0N9in/DEqr5KPWTd75v8hAphtfRrYlQc1MO7zTCFJ1y41N86ayzPTbKdLLnFw4w==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+PbQ8TsTw8Nb+JzgPtMcP/0JRf7axdhh837D/JugSkKWTv6yYN
+	HGhGAwWKOhw2tsUlqJPjBT21/FfNxfpiUB9pdnX2OsytFrChBHkjFY4=
+X-Gm-Gg: AYBFou0Q9RKRluBEs0OB9JOooqzWGFGU7NtAThwB2plxYreYbbVuYFJxtqKd6g2Z8vz
+	vY0GqqD/UOs82GAmsRIzIJC/3KYzFUA/W/J5bAo1bCXCstXTE3Qax5qxakL9nNYmXRPchkVYqbc
+	fgbXpNLeuWs7MDjeqtSjPPHKbWCM/NBC947j7vVmd/3anhpXQSnRFEEhJMHqzfaE/qh5T/bYjff
+	4iqNKaVzCFPuKTuQvaUBt7IYWao8knrpgNM6L1ixqz2aA7XYhdy/QSXY/OMx9ts4OLnbT8l+SHI
+	v8Ca8T/lmg6soCeJJk4yX6L79/t7TFDLP5v0TROTQ5+loT/flMMtwVAIgmUqF4hIb86VRicvseg
+	M8JSibC8H4bS18IdhPBi4cqxUDASdm8coWBR4gzw8fxqEC+Dj5k38sHHMGMCr68Uh6OZwp3z47x
+	GQIIDIr+I5SfIAgvDpiJP1PZ9Ph7xSRbyEVtfIdp2kyD2Xan77Us2eftEqkSvM0htKMkmdJtKQG
+	PUp+wq/3VII2CLXgq6505hFItJ/vnnVfNSQb42SOMk1zcA5xRBmfNq4VqnXUNQto47ApSo5QpsV
+	Ok9WUrXxGffCY0ueGzOuoz1eX5awzFbgGadxd9Xcp6vB6hOhIO02ijnEYKhy/a1Nvso8ORjPyP2
+	Wmkux49gEzzn8rgJ1d3d8qBa8uFwSMdYy/UgjYJjNZ7OOiwhcBNcZ7sA9AeJPLpbE9b3V9q5aFg
+	==
+X-Received: by 2002:a05:6000:288d:b0:48e:25e1:5eb8 with SMTP id ffacd0b85a97d-4982b28aa42mr46827f8f.3.1794242061567;
+        Mon, 09 Nov 2026 08:34:21 -0800 (PST)
+Received: from chateau ([194.65.85.67])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49597ef6db0sm11269050f8f.59.2026.11.09.08.34.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2026 08:34:21 -0800 (PST)
+From: Sergey Zagursky <gvozdoder@gmail.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Sergey Zagursky <gvozdoder@gmail.com>,
+	Jake Steinman <j@metarealtyinc.ca>,
+	Dan Scally <dan.scally@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Lixu Zhang <lixu.zhang@intel.com>,
+	Antti Laakso <antti.laakso@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] ipu-bridge: HM1092 entry hides IVSC-attached OV02C10 on Dell XPS 16 9640
+Date: Mon,  9 Nov 2026 16:30:02 +0000
+Message-ID: <20261109142140.ov02c10-hm1092-regression.e938253b8516@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -103,116 +104,72 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CA+Kibh6FHk-QgmPsi4spmQ5MHGvt05xYHuRiiMMQdPP+31Z70A@mail.gmail.com>
- <f718e7cd-24f1-428b-b9f7-28bb1a923a11@gmail.com> <CA+Kibh6T9tPKwhSF2X5Jwoo8OUoieypuAyM4GBKVujUDWgpr-g@mail.gmail.com>
- <08e0f238-4330-418b-ae3b-fa7ce0f6ef62@gmail.com>
-In-Reply-To: <08e0f238-4330-418b-ae3b-fa7ce0f6ef62@gmail.com>
-From: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-Date: Mon, 9 Nov 2026 18:34:11 +0300
-X-Gm-Features: AclHuK-BoccA8Cm9Huf8OBdFW57iTUEi1LolooeDp5MbFnpce5HgXJGPyHYeVk8
-Message-ID: <CA+Kibh5hpfyLHFb=z=rPjCOsRp=a_9eVpj6HF9E9rXx3oHg7oQ@mail.gmail.com>
-Subject: Re: [REGRESSION] platform/x86: bitland-mifs-wmi: platform profiles
- cannot be changed on USB-C-only RedmiBook Pro 15 (TM2017)
-To: Mingyou Chen <qby140326@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
-	regressions@leemhuis.info, regressions@lists.linux.dev, shlyapugin@gmail.com
-Content-Type: multipart/mixed; boundary="000000000000516e31065fd9b2da"
+Content-Transfer-Encoding: 8bit
 
---000000000000516e31065fd9b2da
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Mon, Nov 9, 2026 at 2:28=E2=80=AFPM Mingyou Chen <qby140326@gmail.com> w=
-rote:
-> Hi,
->
-> Here's your quirk (inside the email attachments).
->
-> Please apply it on top of my patch series in this email:
-> https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
+Since v7.3 the built-in camera of my Dell XPS 16 9640 (Meteor Lake
+IPU6, OV02C10 behind the Intel IVSC, plus a Himax HM1092 IR sensor in
+ACPI as HIMX1092:00) is no longer found by libcamera. It works with
+v7.2.8.
 
-Tested your quirk on top of v15, built out-of-tree against 7.2.15.
+The cause is commit 4fdb0342f05e ("media: ipu-bridge: Add Himax HM1092
+IR sensor"). ipu-bridge now adds an async connection for the HM1092,
+which has no driver in the kernel, so the IPU6 ISYS notifier never
+completes. The OV02C10 binds to the IVSC CSI sub-notifier, and its
+sub-device node is only created from the ISYS .complete() callback, so
+it never appears. The sensor driver probes and the entity is in the
+media graph without a device node, and libcamera skips it:
 
-Three problems:
+  ERROR V4L2 v4l2_device.cpp:92 'ov02c10 20-0036': Failed to open V4L2 device '': No such file or directory
+  ERROR SimplePipeline simple.cpp:1930 No valid pipeline for sensor 'ov02c10 20-0036', skipping
 
-1. The DMI entry does not match here:
-DMI_SYS_VENDOR   =3D "XIAOMI"
-DMI_BOARD_NAME   =3D "TM2209"
-DMI_PRODUCT_NAME =3D "Redmi Book Pro 15 2023"
-TM2209 is the board name, not the product name. As sent, the driver
-falls back to default_quirks - four entries in
-platform_profile_choices instead of three.
+This is the same problem that commit 7456b40bc992 ("media: i2c: cvs:
+Add sensor node in bound callback") fixed for CVS in v7.4-rc1. The
+IVSC path still has it.
 
-2. .return_code_at_end =3D true is needed. A WMI_FN_SYSTEM_PER_MODE call re=
-turns:
+I can see two possible fixes, and I'm not sure which you would prefer:
 
-00000000: 00 08 02 00 00 00 00 00 00 00 00 00 00 00 00 00
-00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80
+- Revert 4fdb0342f05e. The comment above the ipu-bridge sensor table
+  says not to add sensors that are not supported, and I found no
+  HM1092 driver in mainline or linux-next.
+- Do for IVSC what 7456b40bc992 did for CVS. I'll reply to this mail
+  with that patch.
 
-function echo 0x0800 at offset 0, mode value at offset 2,
-0x8000 at offsets 30..31. Head-first parsing reads the function
-echo as the return code, so every call ends in -EIO and
-profile_get always fails.
+The second one only covers sensor nodes. As far as I can tell from
+the code (not tested, my sensor has no VCM), a VCM instantiated by
+ipu-bridge still gets its node only from .complete(), so with an
+HM1092 in the tree a camera with a lens would lose focus control
+regardless of IVSC.
 
-3. .skip_ac_type_check =3D true is needed; USB-C only board, AC type is
-never CIRCULARHOLE.
+Testing, all on CachyOS kernels. Their ipu-bridge and ivsc-csi
+modules have the same srcversion as modules built from kernel.org
+v7.2.8, and the test modules were built from kernel.org v7.2.8 sources
+with clang 23.1.4 (the kernel itself was built with clang 22.1.8) and
+loaded unsigned, so the kernel was tainted (E):
 
-Your profile values are correct - Fn+K emits hotkey events whose
-value_low cycles 1 -> 3 -> 2.
+- 7.3.1: camera missing as described.
+- 7.2.8: camera works.
+- 7.2.8 with only the HM1092 entry from 4fdb0342f05e added to
+  ipu-bridge: camera missing, same libcamera errors.
+- Same, plus the patch applied to ivsc-csi: the sensor gets its
+  sub-device node, libcamera lists the camera, PipeWire exposes it,
+  and "cam -c1 --capture=10" streams at 30 fps. No kernel warnings.
+- 7.2.8 with only the patch applied (no HM1092 entry, so .complete()
+  runs after .bound() has already created the node): the sensor has
+  exactly one sub-device node and streams at 30 fps. No kernel
+  warnings.
 
-Corrected quirk attached. With it, from a clean boot all
-three profiles set and stay set through power-profiles-daemon, no
-reverts and no -EOPNOTSUPP.
+I have not booted v7.4-rc2 itself. The patch is against v7.4-rc2 and
+builds without warnings with W=1 under GCC and clang.
 
-Two further observations.
+Hardware: Dell XPS 16 9640, BIOS 1.4.1. libcamera 0.7.2.
 
-Fn+K emits WMI_EVENT_PERFORMANCE_PLAN_ALT (22), not
-WMI_EVENT_PERFORMANCE_PLAN (15); only the latter is handled, so
-platform_profile_notify() is never called here. value_low carries
-the resulting mode. Possibly relevant to the question in your v15
-cover letter.
+#regzbot introduced: 4fdb0342f05e
 
-The platform profile does not affect the power budget. Writes are
-accepted and read back, but package power does not change.
-stress -c 16 at both ends of the Fn+K range:
+This report and the patch were prepared with the help of an AI
+assistant (Claude); I reviewed them and ran the tests above on my
+machine.
 
-Fn+K high low-power 4391 balanced 4348 performance 4217 MHz
-Fn+K low low-power 1726 balanced 1825 performance 1953 MHz
-
-Varying the order of the profiles gave no consistent effect. The same
-sweep with --block-driver=3Dplatform_profile, amd_pstate only, gives
-1464 / 3550 / 3519, so the drop under power-saver comes from
-amd_pstate.
-
-Correction to my first mail: ~35 W is not one of the three Fn+K
-steps, it is the EC power-on state. The steps are 15 W, 54-60 W
-and 54-65 W; the first Fn+K press leaves the power-on state and it
-does not return until the next boot.
-
---000000000000516e31065fd9b2da
-Content-Type: text/x-patch; charset="US-ASCII"; name="TM2209-quirk-fixed.patch"
-Content-Disposition: attachment; filename="TM2209-quirk-fixed.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mw9f5r7t0>
-X-Attachment-Id: f_mw9f5r7t0
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2JpdGxhbmQtbWlmcy13bWkuYyBiL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2JpdGxhbmQtbWlmcy13bWkuYwppbmRleCBhNDMxZDNmZWYuLmM2
-ODAxMDdjMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYml0bGFuZC1taWZzLXdt
-aS5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2JpdGxhbmQtbWlmcy13bWkuYwpAQCAtMTEz
-LDcgKzExMywyNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGJpdGxhbmRfbWlmc19xdWlya3MgZGVm
-YXVsdF9xdWlya3MgPSB7CiAJLm51bV9wcm9maWxlX2VudHJpZXMgPSBBUlJBWV9TSVpFKGRlZmF1
-bHRfcHJvZmlsZV9lbnRyaWVzKSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYml0bGFuZF9w
-cm9maWxlX2VudHJ5IHRtMjIwOV9wcm9maWxlX2VudHJpZXNbXSA9IHsKKwl7IFBMQVRGT1JNX1BS
-T0ZJTEVfTE9XX1BPV0VSLCAgIDIgfSwKKwl7IFBMQVRGT1JNX1BST0ZJTEVfQkFMQU5DRUQsICAg
-IDEgfSwKKwl7IFBMQVRGT1JNX1BST0ZJTEVfUEVSRk9STUFOQ0UsIDMgfSwKK307CisKK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgYml0bGFuZF9taWZzX3F1aXJrcyB0bTIyMDlfcXVpcmtzID0geworCS5w
-cm9maWxlX2VudHJpZXMgPSB0bTIyMDlfcHJvZmlsZV9lbnRyaWVzLAorCS5udW1fcHJvZmlsZV9l
-bnRyaWVzID0gQVJSQVlfU0laRSh0bTIyMDlfcHJvZmlsZV9lbnRyaWVzKSwKKwkucmV0dXJuX2Nv
-ZGVfYXRfZW5kID0gdHJ1ZSwKKwkuc2tpcF9hY190eXBlX2NoZWNrID0gdHJ1ZSwKK307CisKIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBiaXRsYW5kX21pZnNfZG1pX3RhYmxlW10g
-PSB7CisJeworCQkubWF0Y2hlcyA9IHsKKwkJCURNSV9FWEFDVF9NQVRDSChETUlfU1lTX1ZFTkRP
-UiwgIlhJQU9NSSIpLAorCQkJRE1JX0VYQUNUX01BVENIKERNSV9CT0FSRF9OQU1FLCAiVE0yMjA5
-IiksCisJCX0sCisJCS5kcml2ZXJfZGF0YSA9ICh2b2lkKikmdG0yMjA5X3F1aXJrcywKKwl9LAog
-CXt9CiB9OwogCg==
---000000000000516e31065fd9b2da--
+Thanks,
+Sergey
