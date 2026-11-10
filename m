@@ -1,105 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794314283;
-	b=iQdTwjVr1JBKEHJa0oS1lsyjXR2PyHM/HTiKPgIFnjqITraAM2jq7JU8Zd8fwtinMrdu
-	 g1drOnyhM/FJNPdXBzGigE9bDlDbzy1k5BQ53vAaeGiPux5FHOGMQfinIoQF3Ic0C+rBd
-	 W7plbXrj/J1WT13y6PF7USWhQ8qcQJINOjFMPdgA/wgV/AioH2sZEPH6/9TJ+Z4AHTuwr
-	 zz+EzfVQBkiN2swDkpSTFU5EnAUN/Xr11eLWzCXDDVS7v90beSjZTMXXQ+Ao2iAPyRsR+
-	 uDxvgt7t/nARyIbVjT2aupzrKHjPNzWk7IXxN5a7Nr5ZWW+BtDh3sUKZwn6PmiG0Rbg==
+	t=1794317351;
+	b=MTtNMgp+u61SXoSdy7SbdEm6sFDvdlEyBK408xd0m78BgC5deBcO9GTtO+t6Sth+7UAy
+	 hm+R0lK2C5OfphN3vB+GClbsZt5rFg5JaN0kH84cFQsHXbhW88RN+/d7FDnGdZR9cPsTJ
+	 1D74Uw4GtB4MEjhr/b9tbOPB1A8YAjh+nhi8CAOGD1q81axv+KHa2dk3AM+KLNYr059BQ
+	 5j8Jvshwa71skhN31FDM8Feh7uS/TOrOZEaCkKheMbxlR/H6fbli8+Wqcb6hpYIDbI6+d
+	 1K6Lt27XisSfWVPE0rp8+9mEt8eZ88La6wyBj6PAl+etYuTRBdGl0QhbSlpTZ+Wavqw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794314283;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=LIqybWUTQzegIEfoVn3a6+qxGy8XVtvbVV2ymuSqRgc=;
-	b=AvkTaW98h1PvKutuSY3/ACUyBog42geGstVqtvuTZdPdUqOCkhHEZiFvy4xLQYo4L5WY
-	 uTfSUNIVd6lwAqO4t43qqiMIeeY9dINU3mR+OK9AXeul62U55IM7FStYEVDSVaBF33eF5
-	 D88Pcz7XMmLF7EFYoFTMBseUM3HFpc1xJrP9yuoIzutJqvWjnb089ptsanc6yMiRCExgU
-	 ChiykojsofMvh2rUlb9mtUNfNu2QhFPZvcgv4s9mZfOTgxvWmhUM2n9L8hCeU7aII2VVF
-	 tpfxeIr/5U9Sin42LpQIeI4H0nDjJO6csL/T/ZiIDV6A23T+ou3WcLeS6skbhyeXmFg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794317351;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type;
+	bh=Tm9ik6SmFveJObzddD7RvCN+mOXxxypXf1joHKK0Mw8=;
+	b=14Ijgc/ZUqjHJl628F9HWyhRw2FhL7nvyz7u7vHUnRXUZ8o8xxXz/ZJjfGO1ZYMxnUVz
+	 1C64/dLjk+RL9mErQeGyntt8O2mcBh5i365dL3iZTlDbxAIYfTkRvbnhfeow9T3OqQ0GD
+	 szX6yt7KmzgvzPsEw3hPcqMoykh1MlhlJhALn6ucN7vbydWGwYFGFk0+CBVwD8b0LDlqI
+	 FV+WeqWSTxolB85zdnrS9fh5uw2JMMqB9VuInFw6AhuzQPkYSkDnybNAlpi9KxALVk+wd
+	 X+vGyg3/Vt8gSNLsORBtBKn/qFpTO2pPTDrg/dE0W4M5mWypGsyvJFjakp3Za91jIcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=metarealtyinc.ca;
-	spf=pass smtp.mailfrom=metarealtyinc.ca;
-	dkim=pass header.d=metarealtyinc.ca header.i=@metarealtyinc.ca header.a=rsa-sha256 header.s=google header.b=AF9GdpaR;
-	arc=none smtp.remote-ip=209.85.217.44
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=feldt.systems;
+	spf=pass smtp.mailfrom=feldt.systems;
+	dkim=pass header.d=feldt.systems header.i=@feldt.systems header.a=rsa-sha256 header.s=protonmail2 header.b=YdRU7kuM;
+	arc=none smtp.remote-ip=109.224.244.119
+Received: from mail-244119.protonmail.ch (mail-244119.protonmail.ch [109.224.244.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E004E606A325
-	for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 12:38:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E004E606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metarealtyinc.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=metarealtyinc.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6579E606A757
+	for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 13:29:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6579E606A757
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=feldt.systems
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=feldt.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metarealtyinc.ca header.i=@metarealtyinc.ca header.a=rsa-sha256 header.s=google header.b=AF9GdpaR
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-7d2ee9e7093so628003137.1
-        for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 04:38:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metarealtyinc.ca; s=google; t=1794314281; x=1794919081; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=LIqybWUTQzegIEfoVn3a6+qxGy8XVtvbVV2ymuSqRgc=;
-        b=AF9GdpaRwtUAmWAa+HjW3eM7G1DxuyjIwo/JUaUNp/D3M7xjpSZim64VtT6jqijl3m
-         JYFHk64O50oKqrXX/ua1AeMAFaCDQ/o11efc42d6RBAdZ9RgfPp1UdSVUB83RzaNphD6
-         Dtq2lYcobbxL8/4O2gecr4iMF5qbkiZ6/Iynv7uw7z2YIRzb0mLtTvLnU63YI79D4bYk
-         BRrre7qj9oJ750oSeecUkRPh20UOM3jVGjWzN4UF/YYFk4KsRtRxmlq28cAqFTRXJoIT
-         hOpY4XCc1PtU6R83ntBhwR4W1HRMiokKp+i5tBBc+ZnS0ftK2jZVXWw58M9TaLeZG0wg
-         hKzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794314281; x=1794919081;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=LIqybWUTQzegIEfoVn3a6+qxGy8XVtvbVV2ymuSqRgc=;
-        b=BsdkfAVWQJ81tmKw90yxcOeA1C5PJ/AjSZzTXySHTDkzgSGnIkYQBjGiHtRlLv2fRl
-         rwyOdh7YEBILvR4nUfA/HHVv+2suRecsNFbwGdHEFqZQ+xpPqMzVfuP3VUIqEwFRtq5/
-         9juKffbeeeI6kTTG6zvOKUTda4gR2XnZ12nlKLcyo9kNRlm6O5E3BoUOpjuCpNG0MxzR
-         wdD84CS5wSkCRGDBrNveywpamnFSCQp7O+e02H9v7R8c+YuD58FLPSJ9SuOUH8lL8VnN
-         h7jaz+YSyS0P8vUSVAsnG/QDxTz7V3ZuLBQ26ic2lfND5tVT7fj0OphfFfjqrbXuBYCR
-         B4+g==
-X-Forwarded-Encrypted: i=1; AL+hErFB55U0kLE0/CFJK9TJJpNA+oLpyRhfOq8qIbCeiyyCvoaulyAiC9zV2jZArNLSHMKQHUpqAAzbueGHCg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z92lAHgGlPu1AFm16k3RH29lMjXRe7r33RweAMoj2JqeQ81cf3n
-	3Coemt9hO/r73k4lo7+Hf9+5We1x8G7ZdnRrU3yuQO691FV6pQGQpHjKQtjXflgplrQ=
-X-Gm-Gg: AYBFou1QwUTaTS1L9ovP50J9DI2uFeWyx283ryXfgn2ZWgOkrUm2v9Oi4A/6Ix9kY3X
-	7NT47HG6N3rgwMuMfPw/K51KZPODE1GbCAcj8kxojaZkyslRe8B9A9gtQQ8OFtEc98auMNILlaS
-	sGAkAN/SKDjwd4X5CzBpSGxKZYpkmfCe/3HDkgzT8QLmt38a6ZtD3YluoBiVTb9aHoYUqk4Z1EC
-	WkEFQWTM4QS06vPXP7HI3+YyEk0NStTqgujHwOs5ZsUs5Gvt7oAjNB4fbufvF7zZo6+asKLHbsI
-	nfd7hHNjuzik6EDkqJM/kYC9J6YfAq5I1YlmHNSOabWydTkgSIOzFyp0Z2Ke/TS13XXny+xBlpz
-	qzOQ80PKwd1GBOpCBn3FvQ6I6E6bJL0W1DbzTuCmQB+sD/lsUjC6aQzdbTpE9DZubn4KuciBYnE
-	qc7yxw0MVjzMqtsD+izJjw+Oo3UH8Hakq9rvnmujMroRr1doDeWMm4PIiSgn6a5tcZYyRJyee9C
-	kwkQLIGXdBLjI9su+Tr1RHH2gMnZnps43grfrazZV47vMSyLGUYWg/cv2bkQs37I3gowCAlxbz+
-	/GW7CGkd4po1igds8pSb1+0QpD7xStTtc27Loc3SHsutQCFyVXYMmJygUAALKhA8VKUJsNtGXrf
-	hbhqpDGDAtMnc/24bKR8nnDYBEpRqtISJgl2BScmFbgaqqkyy6Ji2sXy3kogc8DdH2DDq5zoavi
-	b0BGtSeH5Ob5Roj4F4AZiZIovMIzzdR0vClIBFmrYEAXASrbUII5rD1+I7bIkTkoj1
-X-Received: by 2002:a05:6102:94c:b0:7c3:9b8d:5124 with SMTP id ada2fe7eead31-7d301ba5407mr716189137.18.1794314280680;
-        Tue, 10 Nov 2026 04:38:00 -0800 (PST)
-Received: from jake-laptop ([2607:fea8:c6:a700::879a])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d30209ff97sm1658194137.0.2026.11.10.04.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 04:37:59 -0800 (PST)
-From: Jake Steinman <j@metarealtyinc.ca>
-To: arpith99@gmail.com
-Cc: sakari.ailus@linux.intel.com,
-	gvozdoder@gmail.com,
-	lixu.zhang@intel.com,
-	mchehab@kernel.org,
-	antti.laakso@linux.intel.com,
-	mehdi.djait@linux.intel.com,
-	dan.scally@ideasonboard.com,
-	hansg@kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] media: ivsc: csi: Add sensor node in bound callback
-Date: Tue, 10 Nov 2026 07:37:57 -0500
-Message-ID: <20261110123757.730188-1-j@metarealtyinc.ca>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261103200226.100989-1-arpith99@gmail.com>
-References: <20261103200226.100989-1-arpith99@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=feldt.systems header.i=@feldt.systems header.a=rsa-sha256 header.s=protonmail2 header.b=YdRU7kuM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=feldt.systems;
+	s=protonmail2; t=1794317347; x=1794576547;
+	bh=Tm9ik6SmFveJObzddD7RvCN+mOXxxypXf1joHKK0Mw8=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=YdRU7kuMCNHT+dX/aNW42vwTfCdXk0BBc7nyBQMGlE3NSAU6XwgkYpgPjtxwF5/eG
+	 HqgnBw3lZLhJyW/JqMVV+BwO+UMLEi9/5Gfv+eViwuHOBC2//rs2esM1hLaPatS1Kv
+	 UKwXfrSxcIzB1DIRG/Zm8HpmsfVyyhlZHmw0MYqgCuJ4pcxcTLytLsq+3grcR/wDTD
+	 qvWQ7t0zs5PW9AdtNoPAyKj0e/AEARZfplX12QAW8J/XdR0dcPCxC+f3E/cTGmSp/2
+	 SAD3p/SlSRP/RC3EO4gWX5QUIQlE+niEgO76jCNN4g+8+LP1SCzhcjH/rAJWkUqem7
+	 8KOtNf43pOVzA==
+Date: Tue, 10 Nov 2026 13:29:02 +0000
+To: Shakeel Butt <shakeel.butt@linux.dev>
+From: Noah Feldt <noah@feldt.systems>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, Karl Erik Hofseth <karl.e.hofseth@opoint.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION] mm/memcg: list_del corruption on memcg LRU on 7.2.11 despite bf4ade7dbd76 (single NUMA node machines)
+Message-ID: <20261110132853.71228-1-noah@feldt.systems>
+Feedback-ID: 113045274:user:proton
+X-Pm-Message-ID: 1b093913891b0d2bc6fb796bb6c6aa31983b626a
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -109,18 +60,236 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------b18b6120c6030061e1225a42a0132a3263a9c01fa07275d24bf39956cce819ce"; charset=utf-8
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------b18b6120c6030061e1225a42a0132a3263a9c01fa07275d24bf39956cce819ce
+Content-Type: multipart/mixed;
+ boundary=e7b0ba2e7c37b4766ae18e46f2318176cce4015ea32e8a4d02671084f264
+From: Noah Feldt <noah@feldt.systems>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Karl Erik Hofseth <karl.e.hofseth@opoint.com>,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] mm/memcg: list_del corruption on memcg LRU on 7.2.11 despite bf4ade7dbd76 (single NUMA node machines)
+Date: Tue, 10 Nov 2026 14:28:48 +0100
+Message-ID: <20261110132853.71228-1-noah@feldt.systems>
+X-Mailer: git-send-email 2.54.0
+MIME-Version: 1.0
+
+--e7b0ba2e7c37b4766ae18e46f2318176cce4015ea32e8a4d02671084f264
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-(Resending, my first copy had a broken Cc list.)
+Hi,
 
-Sorry about this, the HM1092 ipu-bridge entry went in ahead of the
-driver. The change matches the CVS fix and looks right to me.
+we are hitting list_del corruption on memcg LRU lists on 7.2.11. The
+signature is the same as in Karl's report [1], but 7.2.11 already
+contains both fixes from that thread:
 
-Reviewed-by: Jake Steinman <j@metarealtyinc.ca>
+  bf4ade7dbd76 ("memcg: keep folio's objcg same as its node")
+               -> 7.2.y as 6165478eaa, in v7.2.5
+  0e0ac326c511 ("memcg: move LRU size accounting on reparenting
+                instead of copying it")
+               -> 7.2.y as 007bc18423, in v7.2.6
 
-Sergey's VCM point probably still holds: a VCM instantiated by
-ipu-bridge only gets its node from .complete(). Sakari, if you'd rather
-not rely on per-bridge fixes until the hm1092 driver lands, I'm fine
-with reverting 4fdb0342f05e.
+All three affected machines are single-socket with a single NUMA node
+(AMD EPYC 9655 and EPYC 7702P, "NUMA node(s): 1"). So cross-node
+migration, the trigger fixed by bf4ade7dbd76 and a requirement for
+Karl's reproducer, cannot be involved. This looks like a different race
+in the reparenting/LRU code.
 
-Jake
+We saw three panics in eight days on one cluster, on hardware from two
+vendors. Nothing in v7.2.12..v7.2.15, v7.3.3, v7.4-rc2 or the
+mm-unstable/mm-hotfixes-unstable branches looks like it addresses this.
+
+Kernel:   Debian 7.2.11-
+1 (7.2.11+deb14+1-amd64), PREEMPT(lazy), MGLRU on,
+          cgroup v2
+Workload: Kubernetes nodes (CRI-O) with high pod and cgroup churn:
+          constant pod start/stop, frequent XFS mount/umount of zvols,
+          memcg OOM kills with memory.oom.group, and memory.high
+          reclaim. Every crash was preceded by memcg OOM kills and/or
+          heavy mount/umount churn minutes to hours before.
+
+In all three cases the corrupted pointer is an LRU list head inside a
+mem_cgroup_per_node (slab start + offset == the bad pointer):
+
+  #1: next == head, but head->prev == head (head list is empty)
+  #2: prev == head, but head->next == head (head list is empty)
+  #3: prev == head (different list, offset 368), but head->next points
+      to another folio
+
+So in #1 and #2 a folio still points at a lruvec list head that is
+already empty, which looks like a folio stranded on the LRU of a memcg
+whose lists have already been spliced to the parent. #3 may or may not
+be the same
+ event.
+
+The entry paths differ (memory.high reclaim via lru_gen_look_around,
+and compaction from an XFS mount), which suggests that the list is
+already corrupted and the next LRU operation trips over it. Both
+signatures match Karl's in-vivo cases #1 (lru_activate) and #2
+(isolate_migratepages_block) in [1].
+
+#1: 2026-11-02 08:19:59 UTC, Giga Computing R163-ZG2 (1 socket, 1 NUMA node)
+-------------------------------------------------------------------------------
+[1165000.986266]  slab mem_cgroup_per_node start ff31bfa36a3c9e00 pointer offset 528 size 1920
+[1165000.995872] list_del corruption. next->prev should be ffacf881ccc70e08, but was ff31bfa36a3ca010. (next=ff31bfa36a3ca010)
+[1165001.014102] kernel BUG at lib/list_debug.c:65!
+[1165001.019464] Oops: invalid opcode: 0000 [#1] SMP NOPTI
+[1165001.048442] Hardware name: Giga Computing R163-ZG2-AAJ2-000/MZG3-GU0-000, BIOS R20_F18 10/23/2025
+[1165001.058744] RIP: 0010:__list_del_entry_valid_or_report+0xd2/0xf0
+Call Trace
+:
+ lru_gen_del_folio.constprop.0+0x194/0x390
+ lru_activate+0x80/0x380
+ folio_batch_move_lru+0xb5/0x280
+ __folio_batch_add_and_move+0x7c/0x100
+ lru_gen_look_around+0x3ea/0x6b0
+ folio_referenced_one+0x262/0x4e0
+ __rmap_walk_file+0xb4/0x1a0
+ folio_referenced+0x109/0x130
+ shrink_folio_list+0x910/0xfd0
+ evict_folios+0x126/0x5b0
+ try_to_shrink_lruvec+0xb4/0x200
+ shrink_lruvec+0x119/0xfe0
+ shrink_node+0x22f/0xd00
+ do_try_to_free_pages+0xb3/0x4d0
+ try_to_free_mem_cgroup_pages+0xf0/0x210
+ reclaim_high+0x83/0xd0
+ __mem_cgroup_handle_over_high+0xf1/0x2c0
+ exit_to_user_mode_loop+0x1c4/0x560
+ do_syscall_64+0x263/0x640
+[1165001.906773] Kernel panic - not syncing: Fatal exception
+
+#2: 2026-11-08 ~04:58 UTC, Giga Computing R163-ZG2 (1 socket, 1 NUMA node)
+-------------------------------------------------------------------------------
+[1670289.398643]  slab mem_cgroup_per_node start ff16459986b32580 pointer offset 528 size 1920
+[1670289.408376] list_del corruption. prev->next s
+hould be ffc1e319d5020a08, but was ff16459986b32790. (prev=ff16459986b32790)
+[1670289.426642] kernel BUG at lib/list_debug.c:62!
+[1670289.431977] Oops: invalid opcode: 0000 [#1] SMP NOPTI
+[1670289.461060] Hardware name: Giga Computing R163-ZG2-AAJ2-000/MZG3-GU0-000, BIOS R20_F18 10/23/2025
+[1670289.471224] RIP: 0010:__list_del_entry_valid_or_report+0xb2/0xf0
+Call Trace:
+ isolate_migratepages_block+0x9d1/0x1720
+ compact_zone+0x6da/0x10f0
+ compact_zone_order+0xa1/0xd0
+ try_to_compact_pages+0x124/0x290
+ __alloc_pages_slowpath.constprop.0+0x70b/0x1400
+ __alloc_frozen_pages_noprof+0x2e9/0x330
+ alloc_pages_mpol+0xa6/0x180
+ ___kmalloc_large_node+0xbc/0xf0
+ __kvmalloc_node_noprof+0x4b5/0x730
+ xlog_find_verify_log_record+0x43/0x210 [xfs]
+ xlog_find_zeroed+0x19c/0x1f0 [xfs]
+ xlog_find_head+0x52/0x370 [xfs]
+ xlog_find_tail+0x53/0x380 [xfs]
+ xlog_recover+0x3d/0x190 [xfs]
+ xfs_log_mount+0xb5/0x1f0 [xfs]
+ xfs_mountfs+0x439/0xad0 [xfs]
+ xfs_fs_fill_super+0x756/0xa00 [xfs]
+ get_
+tree_bdev_flags+0x132/0x1d0
+ vfs_get_tree+0x29/0xd0
+ fc_mount+0x13/0x90
+ path_mount+0x34a/0xc40
+ __x64_sys_mount+0x121/0x150
+ do_syscall_64+0xea/0x640
+[1670290.504046] Kernel panic - not syncing: Fatal exception
+
+#3: 2026-11-10 09:53:55 UTC, Supermicro H11SSL-i (1 socket, 1 NUMA node)
+-------------------------------------------------------------------------------
+[585952.686020]  slab mem_cgroup_per_node start ffff8af9df25e180 pointer offset 368 size 1920
+[585952.695593] list_del corruption. prev->next should be fffff38a68aff788, but was fffff38a202f8808. (prev=ffff8af9df25e2f0)
+[585952.713751] kernel BUG at lib/list_debug.c:62!
+[585952.719475] Oops: invalid opcode: 0000 [#1] SMP NOPTI
+[585952.748716] Hardware name: Supermicro Super Server/H11SSL-i, BIOS 3.2 01/24/2025
+[585952.757460] RIP: 0010:__list_del_entry_valid_or_report+0xb2/0xf0
+Call Trace:
+ lru_gen_del_folio.constprop.0+0x194/0x390
+ lru_activate+0x80/0x380
+ folio_batch_move_lru+0xb5/0x280
+ __folio_batch_add
+_and_move+0x7c/0x100
+ lru_gen_look_around+0x3ea/0x6b0
+ folio_referenced_one+0x262/0x4e0
+ __rmap_walk_file+0xb4/0x1a0
+ folio_referenced+0x109/0x130
+ shrink_folio_list+0x910/0xfd0
+ evict_folios+0x126/0x5b0
+ try_to_shrink_lruvec+0xb4/0x200
+ shrink_lruvec+0x119/0xfe0
+ shrink_node+0x22f/0xd00
+ do_try_to_free_pages+0xb3/0x4d0
+ try_to_free_mem_cgroup_pages+0xf0/0x210
+ reclaim_high+0x83/0xd0
+ __mem_cgroup_handle_over_high+0xf1/0x2c0
+ try_charge_memcg+0x4e3/0x650
+ charge_memcg+0x55/0xc0
+ __mem_cgroup_charge+0x2c/0x80
+ filemap_add_folio+0x61/0x210
+ page_cache_ra_unbounded+0x13e/0x250
+ do_page_cache_ra+0x5e/0x80
+ filemap_fault+0x7e0/0x12b0
+ ...
+ asm_exc_page_fault+0x26/0x30
+[585953.604861] Kernel panic - not syncing: Fatal exception
+
+We are happy to test patches or debug options on affected nodes.
+
+[1] https://lore.kernel.org/all/anMmd1ADrDVwMO6v@work/
+
+
+Thanks,
+Noah Feldt
+mittwald
+
+--e7b0ba2e7c37b4766ae18e46f2318176cce4015ea32e8a4d02671084f264
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - noah@feldt.systems -
+ 0x9B02BBB4.asc"; name="publickey - noah@feldt.systems - 0x9B02BBB4.asc"
+Content-Type: application/pgp-keys; filename="publickey - noah@feldt.systems
+ - 0x9B02BBB4.asc"; name="publickey - noah@feldt.systems - 0x9B02BBB4.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCkNvbW1lbnQ6IGh0dHBzOi8vZ29w
+ZW5wZ3Aub3JnClZlcnNpb246IEdvcGVuUEdQIDIuMTAuMAoKeGpNRVpuV2ZveFlKS3dZQkJBSGFS
+dzhCQVFkQWpjOWlieHJoOExkN2E3YjdBM1hXUnZSdGt6V2cwcEZUaUpDTgoza3J1ZnM3TkoyNXZZ
+V2hBWm1Wc1pIUXVjM2x6ZEdWdGN5QThibTloYUVCbVpXeGtkQzV6ZVhOMFpXMXpQc0tNCkJCQVdD
+Z0ErQllKbWRaK2pCQXNKQndnSmtFQlN1OWFxLzJDcUF4VUlDZ1FXQUFJQkFoa0JBcHNEQWg0QkZp
+RUUKbXdLN3RGM0s0QUt5ZXdZWVFGSzcxcXIvWUtvQUFFSjdBUURaRlZLOGpTa3FDSk9oS1NsTVp6
+T01Ibk4vQjhyYwpHZzlXei9UdW1lejVwQUQvV2l6V2xGem4xT3NibzBzV0U3L25FLzRMaXRKS2k0
+bjlObUVGczRob01BVE9PQVJtCmRaK2pFZ29yQmdFRUFaZFZBUVVCQVFkQTc4U0JLZkc1Ymd6SjQw
+bVZxTmNGUnhqc0lTT0ovVW4rZU1TaC83MkQKVUVJREFRZ0h3bmdFR0JZS0FDb0ZnbVoxbjZNSmtF
+QlN1OWFxLzJDcUFwc01GaUVFbXdLN3RGM0s0QUt5ZXdZWQpRRks3MXFyL1lLb0FBTWJHQVA0anZ3
+YlBacnFSY3dzRk5VdWI3aSthSFVTY2pwQTJIazFUdTBKTG5HWTlMQUVBCjRBOGQrWGNsdEVhUEtp
+Vi9sbzh2RFdPaFBBQVBhbTFuQi8wQWhlenh1UTA9Cj1jQkVoCi0tLS0tRU5EIFBHUCBQVUJMSUMg
+S0VZIEJMT0NLLS0tLS0=
+--e7b0ba2e7c37b4766ae18e46f2318176cce4015ea32e8a4d02671084f264--
+
+--------b18b6120c6030061e1225a42a0132a3263a9c01fa07275d24bf39956cce819ce
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wqsEARYIAF0FgmrzHB0JEEBSu9aq/2CqNRQAAAAAABwAEHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmfnJcwfO31tZ+MWKQGfT0VaFiEEmwK7tF3K4AKy
+ewYYQFK71qr/YKoAADIiAP4hPFGvdIURoIulfVBiYSOJB0RwaBpDuJN9WsaT
+yFp3nQD8C2mtr7uf4piZueGYChdmuMxyk+O7CsX/NWoHdvTvwAc=
+=qEeq
+-----END PGP SIGNATURE-----
+
+
+--------b18b6120c6030061e1225a42a0132a3263a9c01fa07275d24bf39956cce819ce--
+
