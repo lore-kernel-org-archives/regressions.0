@@ -1,79 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794294535;
-	b=Cs+z9PQlQm1RwipqomHuAtfmK2dGeekmseB9/Ai8j+W/N7XmOBPeGR0JB70tkXltVE8h
-	 UKQE0POa9NyLvB4MFQQzv/UJBd0oE5r/c5GOTlPHgXXkQIattrdMN70E7NU7YDdEKP3lz
-	 VlxZVElnfaY2MrLWEHsihotCzecC9jmszmm7FZ0sSQoDrtBR6/ELquU2gv+VO8xdyoKhY
-	 vAHisP2iqlOhQXgUGgh6ehYTqe9OqR7Lj20sAu/w4XxC5NAnQdKhqao/Qij5RBpWTSEI6
-	 0AvnOoXN92QAYR2W6Izc4DSb7CqqKJTJ0ng1zkYjcokXvaIbncjyzSU09/Zp+aI1RCg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794294535;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=OpLzfSX/nDS/byczFTKxU2z4XNzaXDseodN60rHL/Gc=;
-	b=VFCjLcDi85Hrai/2TSDJoDhZ7Itn7o8kUigA5WVd3+C55+ZD5vQ+n0YJDQ5A6TgGbeJi
-	 hdbKun3OkIcvClZkFjtwAPLAtuupuBurb2/zEUcHulT9ftzWgwHVKGfwQxAB3JvjLipHW
-	 qY6oKJ+aF7Uc92lWhM+oZ/umEdHspGYxCre+cnGPEVYMonDcPm4ODYHQCeHoTxqjVuSx+
-	 n5tKVzm6VlDcowmz2nWbIsSRom1A8sCYNQ+A1xYB0IcTL9EIG5n7QQECKooFF1uOHTCzo
-	 4wnRkOH626VF2xIbdjDvliKN3NdyTbNG/VIZHFmR5FKlKMIR8fGonPI8NO2u/zRat1A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BasFEmq0;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E36606A325;
-	Tue, 10 Nov 2026 07:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BasFEmq0
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794294534;
-	b=sS+dAVsvf/9la6pyNZG3Tdf0x2GyHOg3mRSBPvHWoiAd4Y/8wcpEfmXTEVlxZThRrpzd
-	 2mO8CtaL6mbJsk8rb5q/9AfHRX+oHZrimucSAXgbPwdClT6879eOV+IJMI3dwg9Oies9k
-	 82y4boc5FKHgOHaoy4+OIKmFKLmh/IxveEM0gLO6sYHZcY45MlTt20SSHBDyPCme1/LD2
-	 7S2+Jd0AfzFa7K+shDvV7Nis3Y0gZpd3bU93MRXjczZymViwwqhk3A6xeSvzTJKaE2PZM
-	 Eo0HZqjN9Cno7e1NPp4DFkyiu8tc3E98r2Ke75+Jh2H0M4ggAtQObF9u6wk8iRvY7NA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794294534;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=OpLzfSX/nDS/byczFTKxU2z4XNzaXDseodN60rHL/Gc=;
-	b=fLEOwh9i5CW96GXwIkgvRkSxzyEBU8LsOkzgs4A3rOocnrCHvOgSWrPfpDDatIdK11zy
-	 XDTuEtpbw+sr7r9NCOuiacczQrSoD2sWM0YMwYSxYXan2DpKdzNPFOCOr9xgGQSOxW/vM
-	 5j2l0JVW86MBMlg764V/w6YtHGEpXtHv3KNVj8mtvfi93/vtN0/AgOc71IyrpSjc93pK6
-	 7HVcv1Lbn2jxtQplByVRdtbvabuZVKarp3E6s9kLMMzblGwUit3tbMWs13y46iFMw5rIE
-	 0GjWPq8DHq4QELoanfFNaF2K/XvTrF0PT3+sV7MUlWNP+MIIJZuvAV3mo9T8jZbJbPA==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.244.194.184
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794301973;
+	b=2f8M94V5VtvreHIWpIMyLjrp8wrIGgp41ogYEtKP6einzlXbBNfcD2KFw2yiEa8pfH3t
+	 Cs8OSpVlHa5Xb2TlTZ0T4+c5W9Smks4YfN+X7dnqDf7WC+KLE8kRfUk0ahok0KsN/FGuU
+	 UT3vehx2U0UqdkvxJss7qlPGiLNMS8Cnki5eX1umR1LB7xeQPBFZYrPE40T31ZiarHzkA
+	 G34jrNbC3D2QeVsK1gNsmvO8DhwVz1OnS+SoM0dzJ5wfkLZ0ET430F1qpS7te3fyt0xlh
+	 bDiDwC3bFpgN373RoQd70AhoVHZwrSz219hjzhpKvmvwPjiBmmdBOoWz9HhzsnQwinA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794301973;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=P6SoTY/qPxSRsFVfVmHV701Duq3Pn8mi7sps2ssRpo0=;
+	b=OcKQ0MdQ5l8rhYbpHetZubYU46N144U4YeLdeAX8fxZo0KzUwkqdU2ktxjFt594/gtzh
+	 /GUk3wYWPGSb2ZXStqErUIRxjhkeqi/wzZbktjmWkYXF7MAiReEVv9DEKOCdGr1GVuG97
+	 q0UGon60/TpScyhT5OD3LPm/2YQUZbiVukoqRL6qYFrQWLp3hQSlsWmpXNHykjr5n3hO3
+	 TdmslhG/MhrqiFzR/CHbgVxp3FNWJI9hQT1lGqJ26aIwGxAg1CZI6DSEq+bMdLITxG9La
+	 8Tj1gZsprpufE5t99st0z+przghbKI0cCKvOOtr0LqAJx8xoXn3vwXZ/iQcbDR3NINg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=YOpMKtm7;
+	arc=none smtp.remote-ip=185.244.194.184
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 1D8811F008A4;
-	Tue, 10 Nov 2026 07:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794294534;
-	bh=OpLzfSX/nDS/byczFTKxU2z4XNzaXDseodN60rHL/Gc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=BasFEmq0ArC5FnE8VgQsvxfn85Z10Ix3YyHrZBndlRDUbLZ1XsRQrbqzw1DS0sP3N
-	 2mV/QK+Iihzto+OkSoJFBWCKyglEORxe90rfVw7UiCjJ4JvvgjdZFCIZOx205YY7i2
-	 nyAw4k1xAzIqOxuFgPzWiW3fFNLORtxG98PIxhXzpTBWVgi498VgqQ22IX1vf3wjXZ
-	 5xH1GZolcKCrK6Ei8ccp3VnK8DYX9Lv8udeFlVNue10AGCMil9NlQBrry/puTuHUWp
-	 PbtuS40cwwzfb7oy1bFdMrH4SpQqMGPI15Xft19aA9OA0tta9Rk+FMK7qldkvCAgKV
-	 Yx5gUGsP9bFaQ==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id A35364891E;
-	Tue, 10 Nov 2026 07:08:52 +0000 (UTC)
-From: Rajan Yadav via B4 Relay <devnull+rajanyadav0307.gmail.com@kernel.org>
-Date: Tue, 10 Nov 2026 01:08:53 -0600
-Subject: [PATCH 2/2] usb: musb: sunxi: Unregister the extcon notifier in
- sunxi_musb_exit()
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98B7606A321;
+	Tue, 10 Nov 2026 09:12:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E98B7606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=YOpMKtm7
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jP1B65cV4z9VR8;
+	Tue, 10 Nov 2026 10:11:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1794301918;
+	bh=Uxfq+9SLLu4IfxwcONSpQNLgnskcylSEYAOSXGskFCU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YOpMKtm7JwzGGfCu+MECFEV5sDtNm1BEiN+bHejH1gjrgt3h9oH5ZSmFAILGWzzJ9
+	 gvPRfPduHW6So2e0/PFgsZpunVb0DOB6Nxp7+bmJpOnoVIlBH2szvnEXV2olYK7iDU
+	 nfde6UVbD/PRqh+BD66cQ3Tar2rjvMXpBcB/dI3JnsNKky1sdLTxr2FI7vYCwCP1I/
+	 xb224RNw4kAXhSd7rPIBA83vLAtHpaagfisnl9hKwTB94f0i1hyEhDCWQ5DLXYA8z/
+	 BcovTzac3iLgylZazUzngZtDl/J1Xk6z1+BZN962esa16W5Iiu6XYu59rhnKOc190r
+	 m5A+ylD9rSs/A==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jP1B64vK8z8129;
+	Tue, 10 Nov 2026 10:11:58 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jP1B35ZP6z8tgk;
+	Tue, 10 Nov 2026 10:11:55 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3321B5FA5B;
+	Tue, 10 Nov 2026 10:11:34 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f5ddf27a-9771-4967-a9d0-13c09f588402@leemhuis.info>
+Date: Tue, 10 Nov 2026 10:11:31 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -83,132 +78,63 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261110-musb-sunxi-unbind-v1-2-d821584fc4a4@gmail.com>
-References: <20261110-musb-sunxi-unbind-v1-0-d821584fc4a4@gmail.com>
-In-Reply-To: <20261110-musb-sunxi-unbind-v1-0-d821584fc4a4@gmail.com>
-To: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: regressions@lists.linux.dev, Zijun Hu <zijun.hu@oss.qualcomm.com>, 
- linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Rajan Yadav <rajanyadav0307@gmail.com>, stable@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794294532; l=4095;
- i=rajanyadav0307@gmail.com; s=20261103; h=from:subject:message-id;
- bh=bZWjWO4qmuHUgam6/ZPpcz8gwogqcCZCYDKe6vCCA9A=;
- b=wKfVzErbcdvcU83jM0aWxFQUbpAvri86BapqOpv41VUu7uUe2s3QOfZlTfgzIOIHtY4aGTvN9
- fQaPbIuNbO1DVwzeAdvDg8JvZAjYrwKGdVNw7Ac2JDL2HNhsMSVU0G4
-X-Developer-Key: i=rajanyadav0307@gmail.com; a=ed25519;
- pk=4ZPeiP5qrv2b44q/Obxi2koUS70Q6npbttJnpUoTlgg=
-X-Endpoint-Received: by B4 Relay for rajanyadav0307@gmail.com/20261103 with
- auth_id=1391
-X-Original-From: Rajan Yadav <rajanyadav0307@gmail.com>
-Reply-To: rajanyadav0307@gmail.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] cpuidle: psci: boot stall/hang on i.MX8MP
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ Ulf Hansson <ulfh@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Sudeep Holla <sudeep.holla@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Christian Loehle <christian.loehle@arm.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
+ James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+ Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org,
+ coresight@lists.linaro.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20261030171910.2822677-1-dario.binacchi@amarulasolutions.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20261030171910.2822677-1-dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179430189496.738146.16548204213021020966@mxe9fb.netcup.net>
+X-NC-CID: nXaVOhT/l03j0ELJaOTQF9RW2is43Eqb5I+9yhoMdtaYrpVBfhs=
 
-From: Rajan Yadav <rajanyadav0307@gmail.com>
+On 10/30/26 18:19, Dario Binacchi wrote:
+> Hi Ulf,
+> 
+> on an i.MX8M Plus Dual board (Engicam i.Core MX8M Plus), mainline
+> c339f4010dea sometimes stalls for ~0.9 s at boot, or hangs until the
+> watchdog resets the board, right after:
+> 
+>   [    0.806123] ledtrig-cpu: registered to indicate activity on CPUs
+> 
+> On a good boot the next message comes ~11 ms later.
+> 
+> About 1 boot out of 3 stalls or hangs. With cpuidle.off=1, or
+> with commit 65705b18162b ("cpuidle: psci: Move initialization a bit
+> earlier in the boot sequence") reverted, 10 out of 10 boots are fine.
 
-Binding the musb-hdrc child again after it was unbound fails on v7.4-rc1
-(KickPi K5C, Allwinner A133):
+Hmmm, nothing happened here. Might have fallen through the cracks, so
+maybe this mail will get thing rolling. If not, I'd suggest you submit a
+revert.
 
-  # echo musb-hdrc.1.auto > /sys/bus/platform/drivers/musb-hdrc/unbind
-  # echo musb-hdrc.1.auto > /sys/bus/platform/drivers/musb-hdrc/bind
-  notifier callback sunxi_musb_host_notifier already registered
-  WARNING: kernel/notifier.c:24 at notifier_chain_register+0x98/0xf8, CPU#1: sh/312
-  ...
-   notifier_chain_register+0x98/0xf8 (P)
-   raw_notifier_chain_register+0x14/0x20
-   extcon_register_notifier+0xa4/0xe0
-   devm_extcon_register_notifier+0x64/0xe0
-   sunxi_musb_init+0x170/0x280
-   musb_probe+0x330/0x125c
-  ...
-  musb-hdrc musb-hdrc.1.auto: error -EEXIST: musb_init_controller failed
-  musb-hdrc musb-hdrc.1.auto: probe with driver musb-hdrc failed with error -17
+Or was there progress or even a fix and I just missed it?
 
-sunxi_musb_init() runs each time the child is probed, but it registers
-the extcon notifier with devm_extcon_register_notifier() on the glue
-device. The notifier stays registered after the child is unbound, and
-the next sunxi_musb_init() registers the same notifier_block again. It
-also stays registered while no musb exists, so an extcon event can
-still queue glue->work after sunxi_musb_exit() cancelled it.
+Ciao, Thorsten
 
-Commit bb1d1ce8c74e ("usb: musb: sunxi: Uses the resource-managed
-extcon API when registering extcon notifier") introduced this; before
-it, the notifier was unregistered in sunxi_musb_exit() and on the
-sunxi_musb_init() error path. Restore that, and unregister it before
-cancel_work_sync() so that the notifier cannot queue the work again.
-
-Tested on the K5C with v7.4-rc1 and KASAN. The bind failed as above
-both without and with the previous patch. With both patches, three
-unbind/bind cycles of musb-hdrc bring back the UDC each time, without
-warnings or KASAN reports, and unbinding the glue device afterwards is
-clean as well. This patch was not tested without the previous one, and
-the sunxi_musb_init() error path was not exercised.
-
-Claude Code (Anthropic) found the cause, wrote this fix and the commit
-message, and helped with the tests; I reviewed the fix and ran the
-tests on the board.
-
-Fixes: bb1d1ce8c74e ("usb: musb: sunxi: Uses the resource-managed extcon API when registering extcon notifier")
-Cc: stable@vger.kernel.org
-Signed-off-by: Rajan Yadav <rajanyadav0307@gmail.com>
----
- drivers/usb/musb/sunxi.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
-index d880c3758c9..e9107ae9d34 100644
---- a/drivers/usb/musb/sunxi.c
-+++ b/drivers/usb/musb/sunxi.c
-@@ -246,15 +246,19 @@ static int sunxi_musb_init(struct musb *musb)
- 
- 	writeb(SUNXI_MUSB_VEND0_PIO_MODE, musb->mregs + SUNXI_MUSB_VEND0);
- 
--	/* Register notifier before calling phy_init() */
--	ret = devm_extcon_register_notifier(glue->dev, glue->extcon,
--					EXTCON_USB_HOST, &glue->host_nb);
-+	/*
-+	 * Register notifier before calling phy_init(). It is unregistered in
-+	 * sunxi_musb_exit(), as this runs again each time the musb-hdrc child
-+	 * is bound.
-+	 */
-+	ret = extcon_register_notifier(glue->extcon, EXTCON_USB_HOST,
-+				       &glue->host_nb);
- 	if (ret)
- 		goto error_reset_assert;
- 
- 	ret = phy_init(glue->phy);
- 	if (ret)
--		goto error_reset_assert;
-+		goto error_unregister_notifier;
- 
- 	musb->isr = sunxi_musb_interrupt;
- 
-@@ -263,6 +267,9 @@ static int sunxi_musb_init(struct musb *musb)
- 
- 	return 0;
- 
-+error_unregister_notifier:
-+	extcon_unregister_notifier(glue->extcon, EXTCON_USB_HOST,
-+				   &glue->host_nb);
- error_reset_assert:
- 	if (test_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags))
- 		reset_control_assert(glue->rst);
-@@ -280,6 +287,9 @@ static int sunxi_musb_exit(struct musb *musb)
- 
- 	pm_runtime_put(musb->controller);
- 
-+	/* Before cancel_work_sync(), so the notifier cannot requeue the work */
-+	extcon_unregister_notifier(glue->extcon, EXTCON_USB_HOST,
-+				   &glue->host_nb);
- 	cancel_work_sync(&glue->work);
- 	if (test_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags))
- 		phy_power_off(glue->phy);
-
--- 
-2.34.1
-
+> I haven't dug into it much. The stall seems to be in
+> pl330_driver_init(), so my guess is that it is related to the AMBA bus
+> reading the ID registers of the CoreSight ETMs while a CPU is already
+> in cpu_pd_wait, but I may well be wrong.
+> 
+> Any idea?
+> 
+> #regzbot introduced: 65705b18162b
+> 
+> Thanks,
+> Dario
 
