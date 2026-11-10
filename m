@@ -1,79 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1794294534;
-	b=a5xs+UjfvyrS1pKLAXru89JE2uZNOqvQ/o/iprKDNgAri3Wb8zSZOJBgVKDiCFg5F4AB
-	 hWmdoxdy5cHocjMvdmFVSwQeAVF4gx0N3XSsP9nEIvtmyIK1tR7OjQvphpWwvpjGLEyKS
-	 VkcKPE3MW5C4Lqc5hU+2V5xMEB9zjFDWX8Dlg98VN1Ck53z0rKaZL4Al7cJp3xpCYMLJz
-	 PGcy/6vJL/bA5rozlu4JBxCRpmN06Tcbhtyzrfxw+n8CMtc4GUbyvTLC09GOOpBtAgjyd
-	 nyy1Uu+Pjq/3s3N0mFjqttIaEiOEae/tu7dS0AfLWRVxiMsSGZpHwafrJKpw+iZfprg==
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794294535;
+	b=Cs+z9PQlQm1RwipqomHuAtfmK2dGeekmseB9/Ai8j+W/N7XmOBPeGR0JB70tkXltVE8h
+	 UKQE0POa9NyLvB4MFQQzv/UJBd0oE5r/c5GOTlPHgXXkQIattrdMN70E7NU7YDdEKP3lz
+	 VlxZVElnfaY2MrLWEHsihotCzecC9jmszmm7FZ0sSQoDrtBR6/ELquU2gv+VO8xdyoKhY
+	 vAHisP2iqlOhQXgUGgh6ehYTqe9OqR7Lj20sAu/w4XxC5NAnQdKhqao/Qij5RBpWTSEI6
+	 0AvnOoXN92QAYR2W6Izc4DSb7CqqKJTJ0ng1zkYjcokXvaIbncjyzSU09/Zp+aI1RCg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794294534;
-	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To;
-	bh=1zci30K6XDnk6LwA+I1Lc3l3JUyNgpA+En7a0rv3or0=;
-	b=DsihNkq8o+k8TBjGkTfew7cwZCVPNh/8eU6zk8QLts5CI6IJVQAYTWNfTSAINK84DBio
-	 IU7QalyJjYDiDfeCRqAQ/lotk8IwfaxVPQome6LkT8MCju4KHIAJRTTTNf+Q2cT+Z1xor
-	 ztEJiLE2RCh1m+iLFZFB3Wku5N7OhdK58+7QyN+PCNAo3IQN4QksuKccK0VwttT6+N2EG
-	 kK3oNPNpAjm4waDBWE0QbooBCTuH9b7Niy4muB/1j32zLTXjlAIfu+v1QyyZE6PYBrKWl
-	 1664T5goOywIPVl81vnva0Vyv7uece7Q0xPOMUYrlsI7hveEO3naDA1Gkx5l+/2PqIw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794294535;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=OpLzfSX/nDS/byczFTKxU2z4XNzaXDseodN60rHL/Gc=;
+	b=VFCjLcDi85Hrai/2TSDJoDhZ7Itn7o8kUigA5WVd3+C55+ZD5vQ+n0YJDQ5A6TgGbeJi
+	 hdbKun3OkIcvClZkFjtwAPLAtuupuBurb2/zEUcHulT9ftzWgwHVKGfwQxAB3JvjLipHW
+	 qY6oKJ+aF7Uc92lWhM+oZ/umEdHspGYxCre+cnGPEVYMonDcPm4ODYHQCeHoTxqjVuSx+
+	 n5tKVzm6VlDcowmz2nWbIsSRom1A8sCYNQ+A1xYB0IcTL9EIG5n7QQECKooFF1uOHTCzo
+	 4wnRkOH626VF2xIbdjDvliKN3NdyTbNG/VIZHFmR5FKlKMIR8fGonPI8NO2u/zRat1A==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lK1FHumx;
-	arc=fail smtp.remote-ip=100.103.45.18
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BasFEmq0;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFAA606A31C;
-	Tue, 10 Nov 2026 07:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E36606A325;
+	Tue, 10 Nov 2026 07:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lK1FHumx
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BasFEmq0
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794294533;
-	b=jXSbsFhtEM1cXGe2NwhKVxQcjhgtUwt2/ZDxKClCp62K2Y96k0SnJlmFWUvHQ+FJoKBj
-	 w5lZB8MWUQdA7BfeHotwnG5TdqentG8iEkQ1Lk55tyooXxdihX5op/Gv/obmj+l7kqxZE
-	 4t0eY4GVCzsUamCErj3XUHadO9OFtfonRjVbczbA3CnaJ8IoTRFjGl4XrdBjyftXvpQI/
-	 cXUGcqeXqR6FJKvvDkuWSSWnFPldWK8bORr6VNPzYEpIPuRMrrRMdNXG99SokMaM740RX
-	 cv/v8NFSsyhRb4WL01kSVjIvwYUP/S9DGEvX+TfVVRcLxsP9X+0ZtYQ1FP3jzWwmbZg==
+	t=1794294534;
+	b=sS+dAVsvf/9la6pyNZG3Tdf0x2GyHOg3mRSBPvHWoiAd4Y/8wcpEfmXTEVlxZThRrpzd
+	 2mO8CtaL6mbJsk8rb5q/9AfHRX+oHZrimucSAXgbPwdClT6879eOV+IJMI3dwg9Oies9k
+	 82y4boc5FKHgOHaoy4+OIKmFKLmh/IxveEM0gLO6sYHZcY45MlTt20SSHBDyPCme1/LD2
+	 7S2+Jd0AfzFa7K+shDvV7Nis3Y0gZpd3bU93MRXjczZymViwwqhk3A6xeSvzTJKaE2PZM
+	 Eo0HZqjN9Cno7e1NPp4DFkyiu8tc3E98r2Ke75+Jh2H0M4ggAtQObF9u6wk8iRvY7NA==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794294533;
-	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
-	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To;
-	bh=1zci30K6XDnk6LwA+I1Lc3l3JUyNgpA+En7a0rv3or0=;
-	b=xbgzStDbXSoSVHiOHIBvnqrSaaz8o6E+wVYUzWR0cH5trHv6v8FLlTFNj/lgMnecI+sq
-	 kcjs8jeLGrS0/rKYwvy6AbdvTmHApVNTV97a/LE7tYpZoarouAGpi/bd8iBXFP8gvdN4y
-	 jXRjGV5gA3qbh3/h2v754snU6PlCVdR1zWtGaoQ33B/9VlHWD2wZjgmTETTE7r718hrS+
-	 GCYwcXdqnMSBzfbiY9+mj0BINDyKQhL9zAxTlbX+VUSBO/clzdHiBwrKpOMBpO34ceFjM
-	 J8+EF5q++8ZchHEO3zKeNOcvyIOkCMI42PK7OafCuZpbO/U6miWtK7bcbQt2A8ndDnw==
+	c=relaxed/relaxed; t=1794294534;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=OpLzfSX/nDS/byczFTKxU2z4XNzaXDseodN60rHL/Gc=;
+	b=fLEOwh9i5CW96GXwIkgvRkSxzyEBU8LsOkzgs4A3rOocnrCHvOgSWrPfpDDatIdK11zy
+	 XDTuEtpbw+sr7r9NCOuiacczQrSoD2sWM0YMwYSxYXan2DpKdzNPFOCOr9xgGQSOxW/vM
+	 5j2l0JVW86MBMlg764V/w6YtHGEpXtHv3KNVj8mtvfi93/vtN0/AgOc71IyrpSjc93pK6
+	 7HVcv1Lbn2jxtQplByVRdtbvabuZVKarp3E6s9kLMMzblGwUit3tbMWs13y46iFMw5rIE
+	 0GjWPq8DHq4QELoanfFNaF2K/XvTrF0PT3+sV7MUlWNP+MIIJZuvAV3mo9T8jZbJbPA==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id D94791F008A2;
-	Tue, 10 Nov 2026 07:08:52 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id 1D8811F008A4;
+	Tue, 10 Nov 2026 07:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794294533;
-	bh=1zci30K6XDnk6LwA+I1Lc3l3JUyNgpA+En7a0rv3or0=;
-	h=From:Subject:Date:To:Cc:Reply-To;
-	b=lK1FHumxoGl9QnROk4S3uSWekbUoI4VYyVWXofmCb4hSVq+fpewUBkkRix0DwZ7B3
-	 iPEH5HzT3rDfx11OtVydtifwHy0e7Zw7AEidFfvufBsr9xhzLVPTQnSE2oR5LV8bqS
-	 7zot5Rj+wiBtd19YVzVkYNWYcwI2TWAgIR/p6NDQhzLS7kw1tOpI7+jUXDhpHAvQD7
-	 BKf7aSWVMD+2mkGbfrsDm+DXbG2Hc+Hlep779wFjpKUf4GicxOfGd5bX/2pcvR/BmL
-	 UHby3Qchv64EFewvjIy2jifdtER2OHuLd5SpftwteD9VVjjN8aeVlI8UkCmN1fiLjB
-	 0uX7GpgoVgTXA==
+	s=k20260515; t=1794294534;
+	bh=OpLzfSX/nDS/byczFTKxU2z4XNzaXDseodN60rHL/Gc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=BasFEmq0ArC5FnE8VgQsvxfn85Z10Ix3YyHrZBndlRDUbLZ1XsRQrbqzw1DS0sP3N
+	 2mV/QK+Iihzto+OkSoJFBWCKyglEORxe90rfVw7UiCjJ4JvvgjdZFCIZOx205YY7i2
+	 nyAw4k1xAzIqOxuFgPzWiW3fFNLORtxG98PIxhXzpTBWVgi498VgqQ22IX1vf3wjXZ
+	 5xH1GZolcKCrK6Ei8ccp3VnK8DYX9Lv8udeFlVNue10AGCMil9NlQBrry/puTuHUWp
+	 PbtuS40cwwzfb7oy1bFdMrH4SpQqMGPI15Xft19aA9OA0tta9Rk+FMK7qldkvCAgKV
+	 Yx5gUGsP9bFaQ==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 634864891A;
+	by lkml.kernel.org (Postfix) with ESMTP id A35364891E;
 	Tue, 10 Nov 2026 07:08:52 +0000 (UTC)
 From: Rajan Yadav via B4 Relay <devnull+rajanyadav0307.gmail.com@kernel.org>
-Subject: [PATCH 0/2] usb: musb: sunxi: Fix unbinding and rebinding
-Date: Tue, 10 Nov 2026 01:08:51 -0600
-Message-Id: <20261110-musb-sunxi-unbind-v1-0-d821584fc4a4@gmail.com>
+Date: Tue, 10 Nov 2026 01:08:53 -0600
+Subject: [PATCH 2/2] usb: musb: sunxi: Unregister the extcon notifier in
+ sunxi_musb_exit()
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -84,11 +84,9 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAPD8moC/yXMwQqDMAyA4VeRnBdoi1TYq8gOps1mBmajWUUQ3
- 91uO36H/9/BuAgbXLsdCq9i8tIGf+kgzZM+GCU3Q3Aheu8dLtUIreomWJVEM4aJ+uxypDREaN2
- 78F2233O8/W2Vnpw+3xEcxwmkW2RHdQAAAA==
-X-Change-ID: 20261110-musb-sunxi-unbind-2ab4d0d6bc76
+Message-Id: <20261110-musb-sunxi-unbind-v1-2-d821584fc4a4@gmail.com>
+References: <20261110-musb-sunxi-unbind-v1-0-d821584fc4a4@gmail.com>
+In-Reply-To: <20261110-musb-sunxi-unbind-v1-0-d821584fc4a4@gmail.com>
 To: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
  Samuel Holland <samuel@sholland.org>
@@ -97,59 +95,120 @@ Cc: regressions@lists.linux.dev, Zijun Hu <zijun.hu@oss.qualcomm.com>,
  linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
  Rajan Yadav <rajanyadav0307@gmail.com>, stable@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794294532; l=1975;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794294532; l=4095;
  i=rajanyadav0307@gmail.com; s=20261103; h=from:subject:message-id;
- bh=ldGUp6lz3WZtjMz69tdwqzZtvWjZqidFlVH8uvgeKIc=;
- b=MCB2MXQIdsbIGlvQgYsC0+8HOab+meeL5xETwA9UXFgrRetKIiqDkp3ZBmxw5ibeaoItFqvdY
- SxhZe4UzrdbBNjvD868U2pKK9n2EYB1vzSaSz86Lk+g/UQm2F+QdMzd
+ bh=bZWjWO4qmuHUgam6/ZPpcz8gwogqcCZCYDKe6vCCA9A=;
+ b=wKfVzErbcdvcU83jM0aWxFQUbpAvri86BapqOpv41VUu7uUe2s3QOfZlTfgzIOIHtY4aGTvN9
+ fQaPbIuNbO1DVwzeAdvDg8JvZAjYrwKGdVNw7Ac2JDL2HNhsMSVU0G4
 X-Developer-Key: i=rajanyadav0307@gmail.com; a=ed25519;
  pk=4ZPeiP5qrv2b44q/Obxi2koUS70Q6npbttJnpUoTlgg=
 X-Endpoint-Received: by B4 Relay for rajanyadav0307@gmail.com/20261103 with
  auth_id=1391
 X-Original-From: Rajan Yadav <rajanyadav0307@gmail.com>
 Reply-To: rajanyadav0307@gmail.com
+Content-Transfer-Encoding: 7bit
 
-Unbinding musb-sunxi crashes on current mainline: KASAN reports a
-use-after-free in devm_usb_phy_release(), followed by a NULL pointer
-dereference. This came back in v6.12 with commit 498dbd9aea20 ("usb:
-musb: sunxi: Fix accessing an released usb phy"), which removed the 2017
-fix for the same oops. Patch 1 lets devres unregister the generic PHY
-after the PHY reference has been dropped.
+From: Rajan Yadav <rajanyadav0307@gmail.com>
 
-While testing it, binding the musb-hdrc child again, the case that
-498dbd9aea20 was about, turned out to fail with -EEXIST: since 2017 the
-extcon notifier is registered with devm on the glue device, so it is
-never unregistered when the child goes away. Patch 2 pairs the
-registration with sunxi_musb_init() and sunxi_musb_exit() again.
+Binding the musb-hdrc child again after it was unbound fails on v7.4-rc1
+(KickPi K5C, Allwinner A133):
 
-The two patches are independent. Both were tested on a KickPi K5C
-(Allwinner A133) with v7.4-rc1 and KASAN, without out-of-tree modules,
-using the board's device tree, which is not in mainline yet. The
-details, and what was not tested, are in each patch.
+  # echo musb-hdrc.1.auto > /sys/bus/platform/drivers/musb-hdrc/unbind
+  # echo musb-hdrc.1.auto > /sys/bus/platform/drivers/musb-hdrc/bind
+  notifier callback sunxi_musb_host_notifier already registered
+  WARNING: kernel/notifier.c:24 at notifier_chain_register+0x98/0xf8, CPU#1: sh/312
+  ...
+   notifier_chain_register+0x98/0xf8 (P)
+   raw_notifier_chain_register+0x14/0x20
+   extcon_register_notifier+0xa4/0xe0
+   devm_extcon_register_notifier+0x64/0xe0
+   sunxi_musb_init+0x170/0x280
+   musb_probe+0x330/0x125c
+  ...
+  musb-hdrc musb-hdrc.1.auto: error -EEXIST: musb_init_controller failed
+  musb-hdrc musb-hdrc.1.auto: probe with driver musb-hdrc failed with error -17
 
-From reading the code only, drivers/usb/musb/mediatek.c seems to have
-the same problem as patch 1: mtk_musb_remove() unregisters the generic
-PHY while devm_usb_get_phy() still holds a reference to it. I have no
-hardware to test it.
+sunxi_musb_init() runs each time the child is probed, but it registers
+the extcon notifier with devm_extcon_register_notifier() on the glue
+device. The notifier stays registered after the child is unbound, and
+the next sunxi_musb_init() registers the same notifier_block again. It
+also stays registered while no musb exists, so an extcon event can
+still queue glue->work after sunxi_musb_exit() cancelled it.
 
-As in the patches, I used Claude Code (Anthropic) to find the causes,
-write the fixes and the commit messages, and help with the tests; I
-reviewed everything and ran the tests on the board.
+Commit bb1d1ce8c74e ("usb: musb: sunxi: Uses the resource-managed
+extcon API when registering extcon notifier") introduced this; before
+it, the notifier was unregistered in sunxi_musb_exit() and on the
+sunxi_musb_init() error path. Restore that, and unregister it before
+cancel_work_sync() so that the notifier cannot queue the work again.
 
+Tested on the K5C with v7.4-rc1 and KASAN. The bind failed as above
+both without and with the previous patch. With both patches, three
+unbind/bind cycles of musb-hdrc bring back the UDC each time, without
+warnings or KASAN reports, and unbinding the glue device afterwards is
+clean as well. This patch was not tested without the previous one, and
+the sunxi_musb_init() error path was not exercised.
+
+Claude Code (Anthropic) found the cause, wrote this fix and the commit
+message, and helped with the tests; I reviewed the fix and ran the
+tests on the board.
+
+Fixes: bb1d1ce8c74e ("usb: musb: sunxi: Uses the resource-managed extcon API when registering extcon notifier")
+Cc: stable@vger.kernel.org
 Signed-off-by: Rajan Yadav <rajanyadav0307@gmail.com>
 ---
-Rajan Yadav (2):
-      usb: musb: sunxi: Unregister the generic PHY after dropping its reference
-      usb: musb: sunxi: Unregister the extcon notifier in sunxi_musb_exit()
+ drivers/usb/musb/sunxi.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
- drivers/usb/musb/sunxi.c | 43 +++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
----
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-change-id: 20261110-musb-sunxi-unbind-2ab4d0d6bc76
+diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
+index d880c3758c9..e9107ae9d34 100644
+--- a/drivers/usb/musb/sunxi.c
++++ b/drivers/usb/musb/sunxi.c
+@@ -246,15 +246,19 @@ static int sunxi_musb_init(struct musb *musb)
+ 
+ 	writeb(SUNXI_MUSB_VEND0_PIO_MODE, musb->mregs + SUNXI_MUSB_VEND0);
+ 
+-	/* Register notifier before calling phy_init() */
+-	ret = devm_extcon_register_notifier(glue->dev, glue->extcon,
+-					EXTCON_USB_HOST, &glue->host_nb);
++	/*
++	 * Register notifier before calling phy_init(). It is unregistered in
++	 * sunxi_musb_exit(), as this runs again each time the musb-hdrc child
++	 * is bound.
++	 */
++	ret = extcon_register_notifier(glue->extcon, EXTCON_USB_HOST,
++				       &glue->host_nb);
+ 	if (ret)
+ 		goto error_reset_assert;
+ 
+ 	ret = phy_init(glue->phy);
+ 	if (ret)
+-		goto error_reset_assert;
++		goto error_unregister_notifier;
+ 
+ 	musb->isr = sunxi_musb_interrupt;
+ 
+@@ -263,6 +267,9 @@ static int sunxi_musb_init(struct musb *musb)
+ 
+ 	return 0;
+ 
++error_unregister_notifier:
++	extcon_unregister_notifier(glue->extcon, EXTCON_USB_HOST,
++				   &glue->host_nb);
+ error_reset_assert:
+ 	if (test_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags))
+ 		reset_control_assert(glue->rst);
+@@ -280,6 +287,9 @@ static int sunxi_musb_exit(struct musb *musb)
+ 
+ 	pm_runtime_put(musb->controller);
+ 
++	/* Before cancel_work_sync(), so the notifier cannot requeue the work */
++	extcon_unregister_notifier(glue->extcon, EXTCON_USB_HOST,
++				   &glue->host_nb);
+ 	cancel_work_sync(&glue->work);
+ 	if (test_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags))
+ 		phy_power_off(glue->phy);
 
-Best regards,
---  
-Rajan Yadav <rajanyadav0307@gmail.com>
+-- 
+2.34.1
 
 
