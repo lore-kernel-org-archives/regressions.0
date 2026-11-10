@@ -1,74 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794309773;
-	b=wWusyCyixDzKOciPdY2zaiaWGJTdFWO8KWbpVUf9D0XLV26mJ6Kmn69NnuQH/ASfP9nU
-	 CKv2ucuuwzZ55C+kprhf5YLojM8AahCJNdhOP6xsMCkl0nbWQoHg3WqbF0r0huNfp+R1J
-	 glY/TbhGo6gtBWE4QtxEv1jRVGGs39Bg2r05mVcECOFgc5PqN82NUs9p7BF/iot5rvAQh
-	 bDn3JuqGP5LX3JxVyz67fl9YVYpmYUV3xHtvlDxb4moNwqIQr0HCqHaKNanVYzTmu6gw8
-	 g2XEdwNGyvKJ3CllxzHvVFM9xz9h+uOFMvz4ZjbxsgAfQEgnRdcMX7wV78V+7BbhGLw==
+	t=1794311478;
+	b=fAkQUEYWflkwYB55dnQClsGBqcEcgrXAe1Dj7yEkj7Upwj3BjuMI/QlKaNkXDMJqr3Ji
+	 sD8rzpnRZS3nCwS5UaFUeXQDNZkT/Cn5QdRjQxc66utYmBTAQsU+YD6XfNbpuRcBCM10S
+	 Sb1mA/Gppah+kB8yxB9cAGf9S5ym5PEwZp+P3c7ZnWk3hH/lSx+mN8+phUH7TBE9S1PzE
+	 KxgV395DqpNybkuQfEikgxqoqlCpPXvY70leBE4u3i+RYUigtf1W+soRQyPfNoiLGB+QI
+	 XK5s8MhzKxM7QuhJve9J10iuSODFiFAajcYsp+Iw6naUe9EGiXhBnn/EbgrP31eSvng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794309773;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=r5BObBbZgUS5+tPHOoP4WnX3Q1F+kMLyB8Eo871CKgM=;
-	b=XML81fiNPBAKy6rKtVByu8jif9p1C0HrTBFbvyULRzDQZnGJ2kpUS2id6UnZQSs7sIgX
-	 lBq+PJWABVRGEedZSbJlyei9FKHp2i3o9/xlDQWNroPR+B0waemjMd9iuFLUH1CqWZIGB
-	 2sBEqXhoMBV+/f8JK+6tAHESCqyMbEp4xeArZLRcitD0S7MbABN3vaITgVcimXY8WsHN1
-	 M0uw3qTHz1n8zDPgv2dRl7dzYeN01L3eAXiRB2aiB0oURkl6LGEU+wHATJazcwrTAvyQR
-	 74PWXqBpeHopvrzziTiNDWOG7rcJ4DAbM8H9qhJAMxyaJkkWUmuMsRBUHrlGababiFw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794311478;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=CMqiiywlLSX/magk1AgnOQL9lgKVlf5mAM1veg6/n8A=;
+	b=Zlr6ST+bUpHu99pmezvpJxaB7guK0g9h3YJ8hU3a5UgP8upkPd7dWZ/8Qm7mD7dRBoiB
+	 hJE+U3H3aP3v+/RbKkk4/E2UnbykJBW8Xk1S7cd/8NMvVfV6Bg6OIlr8j5lsYz67VuP4a
+	 AxE6PpFfNKEWuaYswKq0mTujVgBGznQYiC9yFOtKksmyyQWXzc/rGds3FWHzPGkSmYAUw
+	 0L91s6wUbGlYBNS3bWX3BxUTISvcifs3mrWJC1gKeTQHrq3GE/nK3Za7oBV/JaBkTb48y
+	 SiIwiAo9Z6YSoiWTVNiBToPj65dmUK0LTNWbEyB2fDpZ4rOiKBgL2QmV4Dg77NdcD1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XmQ0Cx0W;
-	arc=none smtp.remote-ip=198.175.65.16
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=r8oVmyin;
+	arc=none smtp.remote-ip=209.85.128.53
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98988606A326
-	for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 11:22:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98988606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3278160A260D
+	for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 11:51:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3278160A260D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XmQ0Cx0W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794309773; x=1825845773;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=zUxil3M4apIBoPLoUunAgoPPqe4wYpmHDM6G4Iocbn4=;
-  b=XmQ0Cx0W3o+4ZDTsTbu7clndXaHBqN2kD5qGq800gnD8ldHmDQZbXLO2
-   lOSKhla5g9uK4dzf+nxBiK18mHieTrUEGWXmfkTLnguLJOWQK5XznGzTZ
-   9zDsTFGK4bwxmhUcEuiYgmpcJ4TZw+A9E+MzYXdQTel7aAp/qkugF2Q4R
-   zySS489dBgVAvVbDkairmmkbXasecXHWc1QBTV2squvc47oWFZkDyiuGR
-   /Yf+zLnVRmDV5I/eTJ/ODIChfDK3I5xVQqilXgvpKx9TU8H9fxcL0dveG
-   UtZgp8vz6lloJxGZ5tUOQAq9sL/PJsMFL44l2cN7ASM1CwCiNRy8D6HvZ
-   g==;
-X-CSE-ConnectionGUID: jbzI/rMNSgqj1J0bwisWsQ==
-X-CSE-MsgGUID: cVnS7c39QNSCGEZeYiVf+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="3041819"
-X-IronPort-AV: E=Sophos;i="6.27,205,1787036400"; 
-   d="scan'208";a="3041819"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 03:22:51 -0800
-X-CSE-ConnectionGUID: lo2+23a8T+elsMMG2QX3dQ==
-X-CSE-MsgGUID: HONsXu23Tf2Cvc1+NLVxuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,205,1787036400"; 
-   d="scan'208";a="8453251"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 03:22:48 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Nov 2026 13:22:44 +0200 (EET)
-To: kameron.markham@gmail.com
-cc: Bjorn Helgaas <bhelgaas@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] PCI: Don't add failed disabled ROM BARs to fail_head
-In-Reply-To: <20261109-r730-disabled-rom-fail-head-v1-1-88ef813d125e@gmail.com>
-Message-ID: <7b7f0266-693d-7a9e-88f6-e3c60ec5c3fa@linux.intel.com>
-References: <20261109-r730-disabled-rom-fail-head-v1-1-88ef813d125e@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=r8oVmyin
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a4d7ae1ae9so16966875e9.1
+        for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 03:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794311476; x=1794916276; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CMqiiywlLSX/magk1AgnOQL9lgKVlf5mAM1veg6/n8A=;
+        b=r8oVmyinIud3QrTu5shhq6jTxQhvX2N6/66VS0m5Ds1WZQyGdinY66wreFdSlH7rQS
+         AwGlRmhBFsGlnnKEdRTieaWfqhKyScDbSwMFPA94cmrdumxRNfYrgR9/ZLR4Jqt9RBk3
+         XA9jnsKcYZBAOaBzTK0nv4+0uJ5fV6w6zW6UP4NSF22SDnDmQ3Oa+bRtWH9Yf0LCaBAE
+         rSVb1e7o51cuwVhKmmbKEVAg2JDzEV3jMkD7yWfV35mRqN0ET7zpGK2B9padI43cUwzO
+         nL8KSMt6DROPx9r24fi0Y6nVIZmgmw/CWUajZi3fksG0sXBpYL7c1QqB6ToMmVfyIgFR
+         J89A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794311476; x=1794916276;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CMqiiywlLSX/magk1AgnOQL9lgKVlf5mAM1veg6/n8A=;
+        b=H5XiqE55W9TouiXexR3k0VOEbLKermOcnWGVKOGnnkq0GepdM/8toIVRy6QgWsABLn
+         jS+9+j9s5hPH4A40Fc0lAAqfpfuAeOvgmvNIG4DFeVMXJhDOJB7kFrpI81bPfmgTJoZ0
+         VHQgaWFJoncbLWkYLobojip4q915JWGwRKk0hYejAa2wNBir/5HqI4EF1hxQjWPFpcp3
+         hGyNTefh2N8gUH7seiGBiOmo6JP38BkVSWhXrjD0yEwHEfXppOG3hZve+0Ievklo3Q0q
+         59rzKPuHfd+IaeFPXFf8rK5dax7/TPaCSEpnq4AbZ3s54tfjlhSUFBLklkcGiHo37oHk
+         sluQ==
+X-Forwarded-Encrypted: i=1; AL+hErEZLR9Xgw5WdukxkZSqB7o6DaA03rBmfd4pULwPjGaVAgvZWou13XuX9TTfS6DJl6m+16rQmNF7NqP4mw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+83VEnPNmzCpdOJzq4EGDYAlSG8qrw3CYDT9TSXKhvKLQDdczo
+	Lc95W2U9n69ysIsR9aFR3fk4cZwG7la0QbAZdx9gDUqOXYYgWGA67ejH
+X-Gm-Gg: AYBFou0cnGyhYyFwVTsyypSAxaSn/uAYzKgZe4ZcDhrrdA9GG4WrCt0JUhj2Ee0kxR6
+	NOUXFx6j19udZQc2RMIhdv/Gh4jRzHRnMUFOLggDkUDLXWKkEX0p+07VaFymJ15+VqCeKrmE/Dw
+	DGwOOh5Ua0szMWbQlkX6ugUjWDYW+uKrVAVkIVzzBEC045uRmzbUlKM14E2tu7odawePwfyud/i
+	BioZWLQUqB8k1F4b1sljNIGVLmHxlV4yfn0YAqpFp03hw4N4iYDxoC/ww08e2S+dd+Oi2Acx0FI
+	Ff5KljXDfZ3cngH+qaf/WS8yA+sF8xiU1g6oM8cCYjfa0aBsiAi5bz/0O9B/ltu6JxgvVJ7aL6q
+	G2wYWp7fwn6td7yZ932fdw5TIezgjwCdSdnwaoTQWPyaKK31u/3JCrHxUc/bL3x/Yk1MR2zS880
+	EtkTHWRdo0Q43jQsWgBgbRbeJK7FNLP3uEa1ZTRlBxrFkpuBqmjdumsQ3Je7O89gd0U2/b91UfY
+	gEvr0DdXT0KS8WjO2dVh+TKyPLae1CeXSaQWSywiJIg7C2QBZFag02Z2cp0csFkIK/qix20WeGa
+	8JKGWlbkb07GXZ2QvA6YkeiqwW96QUrhriC6yGV4jJRUWIoHCF0+qQEgfB6wqu9IhcVJWaRdeRr
+	5r8gks6c=
+X-Received: by 2002:a05:600c:3b11:b0:4a2:677:ad8e with SMTP id 5b1f17b1804b1-4ba02357922mr35599775e9.34.1794311476364;
+        Tue, 10 Nov 2026 03:51:16 -0800 (PST)
+Received: from [192.168.68.73] (host-87-4-46-207.retail.telecomitalia.it. [87.4.46.207])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba01feee1asm76370685e9.12.2026.11.10.03.51.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Nov 2026 03:51:15 -0800 (PST)
+Message-ID: <59c8fa03-3ff1-4dd6-887b-d3c9044f2052@gmail.com>
+Date: Tue, 10 Nov 2026 12:51:15 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,190 +93,86 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Linux 7.4-rc2: Intel Meteor Lake SOF/HDA audio fails
+ with ASoC route errors (-19)
+To: Rujbin <rujbin@proton.me>, Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>,
+ Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Alain Cousinie <alain.cousinie@laposte.net>,
+ Linux Sound System <linux-sound@vger.kernel.org>,
+ regressions@lists.linux.dev, Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+References: <mAZY9HZuXAXUf7zv8tqXquMtquf7iW2CIZB7WhU-SnwWp-Rpr0e8yixTsb3lAeQsO64PwwWlOao8aMjQ4hTKOQ6grCiNmaWZmFRXMdPICD8=@proton.me>
+ <318f1745-acd7-430f-818b-c961987fe108@laposte.net>
+ <1c28b5e3-7ddb-4e3d-a61b-a96aedd6eb50@leemhuis.info>
+ <A2lXWpWj7wjBwPNTvCOh2-bCqRbX0Pb7od1dICr4c6SegAilwp8dERHk6riu7tj1b3XUMgcLnDDSP_8AoZAyj9VHm3NUkBB1NW2YPQfZLYY=@proton.me>
+ <mSuMDKuVQS8ZjTjivGVr3SMDUYuxZDrlG8aM0vLajVxIN8eq7OJTwAtWLWgMGypqzNolhoAsat_-nBy0wAq09eap6nIDkUvCES32gFvZ7ng=@proton.me>
+ <bC5e1B4L-OemXflaxyhu6hZVqEyiiGQ9_Q3cejRNYI2EMBnD6LC7sgT6bskk8FjeIwsbZviJBOmIGiz5t9xgfwAm9czm8ihYLGsqyVLHyjk=@proton.me>
+Content-Language: en-US
+From: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+In-Reply-To: <bC5e1B4L-OemXflaxyhu6hZVqEyiiGQ9_Q3cejRNYI2EMBnD6LC7sgT6bskk8FjeIwsbZviJBOmIGiz5t9xgfwAm9czm8ihYLGsqyVLHyjk=@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 9 Nov 2026, Kameron Markham via B4 Relay wrote:
 
-> From: Kameron Markham <kameron.markham@gmail.com>
+
+On 11/9/26 23:02, Rujbin wrote:
+> Hi all,
 > 
-> On Dell PowerEdge R730 servers with "SR-IOV Global Enable" disabled in
-> the BIOS setup, kernels since v6.15 hard-reset while igb probes the
-> on-board Intel I350 NIC. The iDRAC logs PWR2262 ("The Intel Management
-> Engine has reported an internal system error"), CPU0000 (IERR) and a
-> CPU machine check, and the BIOS sometimes halts in POST afterwards
-> (PST0208). v6.14 boots fine on the same machine.
+> Short update: the num_components explanation is now confirmed on
+> hardware.
 > 
-> With SR-IOV Global Enable disabled, the firmware does not assign the VF
-> BARs of the on-board 82599 NIC, so pci_realloc_detect() enables
-> resource reallocation automatically. On the first assignment pass the
-> disabled Expansion ROM BARs of three devices cannot be assigned:
+> 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the
+> devm_kmalloc_obj() family") switched soc_new_pcm_runtime() to
+> devm_kzalloc_flex(). __set_flex_counter() then sets the __counted_by()
+> counter rtd->num_components to the allocated array size, but ASoC uses
+> it as the number of populated components. With GCC >= 15 it therefore
+> starts at 3 for "Analog Playback and Capture" instead of 0:
+> snd_soc_rtd_add_component() writes past the array and
+> for_each_rtd_components() stops at the first empty entry, so the routes
+> fail with -ENODEV and no card is registered.
 > 
->   pci 0000:02:00.0: ROM [mem size 0x00100000 pref]: can't assign; no space
->   pci 0000:01:00.1: ROM [mem size 0x00080000 pref]: can't assign; no space
->   pci 0000:07:00.1: ROM [mem size 0x00080000 pref]: can't assign; no space
->
-> Before commit 96336ec70264 ("PCI: Perform reset_resource() and build
-> fail list in sync"), __assign_resources_sorted() did not put a failed
-> disabled ROM BAR on fail_head ("If the failed resource is a ROM BAR and
-> it will be enabled later, don't add it to the list."). That commit moved
-> the check into the new loop at the end of the function, but passes an
-> idx that is not computed for the resource being checked, so the check
-> no longer recognizes ROM BARs. Commit 2499f5348431 ("PCI: Rewor  
-> optional resource handling") then removed the check.
-
-As you can see, it was very much an intentional change.
-
-Please don't justify changes with what is required for keeping things 
-bisectable through a series (which I apparently failed to do by not 
-recalculating the idx variable properly but that code is gone by now, so 
-that omission is largely irrelevant at this point).
-
-> The failed disabled ROM BARs therefore end up on fail_head, and
-> pci_assign_unassigned_root_bus_resources() starts another round that
-> releases and reassigns bridge windows the firmware set up, including
-
-This is the intended behavior!
-
-> the window of the PCH root port 00:1c.4 and the I350 behind it:
+> The fix is one line right after the allocation:
 > 
->   PCI: No. 2 try to assign unassigned res
->   pci 0000:00:1c.4: resource 14 [mem 0x91a00000-0x91bfffff] released
->   pci 0000:00:1c.4: bridge window [mem 0x92200000-0x924fffff]: assigned
->   pci 0000:07:00.0: BAR 0 [mem 0x92200000-0x9227ffff]: assigned
+>     rtd->num_components = 0;
 > 
-> The machine resets when igb then accesses the I350 at the new address.
-> Why the platform does not tolerate the move is not known.
-
-So all resources that were assigned prior to starting were assigned 
-succesfully? Which would mean there was nothing wrong with the fail_list & 
-ROM resource handling.
-
-So far, all looks to be working as intended so the changelog surely needs 
-a major revision to actually explain what the real problem here is if it 
-comes down to the resource assignment algorithm having a problem. You only 
-describe intermediate state related errors, and those are very much 
-expected even when the algorithm works as intended.
-
-
-This might be more a quirk territory if the resources were assigned just 
-fine but some device fails / crashes when given a valid address for its 
-BAR(s).
-
-> Restore the old behavior: add pci_resource_is_disabled_rom(), the
-> helper the first of these commits already called, and don't put a
-> failed disabled ROM BAR on fail_head. Such a BAR is still reset as before.
-> Other failed resources, including optional SR-IOV BARs, are still added
-> to fail_head, so reallocation can still make room for them.
+> A separate [PATCH] follows with the Fixes: tag.
 > 
-> Tested on a Dell PowerEdge R730 (BIOS 2.19.0, SR-IOV Global Enable
-> disabled): v6.17 and v7.4-rc2 hard-reset on every boot without this
-> patch and boot normally with it; no second assignment round happens and
-> the I350 keeps its firmware-assigned window. Enabling SR-IOV Global
-> Enable in the BIOS, or booting with pci=realloc=off, also avoids the
-> problem.
+> Verified on v7.4-rc2 (commit 7475ea8b58616), same kernel build and
+> machine, with only snd-soc-core.ko replaced:
 > 
-> The bisection, the analysis, this patch and this changelog were done
-> with the help of an AI coding assistant (Claude, by Anthropic). All
-> testing was done on the hardware described above.
-
-This kind of paragraph belongs below --- line.
-
-> Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=222253
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kameron Markham <kameron.markham@gmail.com>
-> ---
-> Notes for reviewers (not part of the changelog):
+>                                unpatched     patched
+>     ASoC: Failed to add route       18           0
+>     fail to add hda routes           1           0
+>     aplay -l                   no cards    sof-hda-dsp, card 0
 > 
-> - Bisected between v6.14 (good) and v6.17 (bad) on the affected machine
->   with test kernels booted from RAM over PXE. 96336ec70264 does not
->   build on its own (pci_resource_is_disabled_rom() is not defined by any
->   commit), so for the bisect it was built with a one-line definition
->   identical to the open-coded check it replaced. Its parent e89df6d2beae
->   boots; 96336ec70264 resets.
+> card0 is registered, SOF firmware 2.14.1.1 boots, and there is no
+> UBSAN, KASAN, oops or WARN in that boot. The loaded module's GNU
+> build-id (ccb6a039...) is the rebuilt one, not the original
+> (daa875d8...).
 > 
-> - Only the SR-IOV Global Enable BIOS switch matters: stock v6.17 boots
->   with only that switch enabled, and still resets with X2APIC and I/OAT
->   enabled but SR-IOV disabled. (User reports often recommend all three.)
+> Caveats: the module was built as an external module, so the test kernel
+> is tainted 0x3000 (OOT + unsigned); Secure Boot is off and
+> CONFIG_MODULE_SIG_FORCE is not set, so this did not affect loading.
+> CONFIG_KASAN was not enabled, so the out-of-bounds write itself remains
+> a static finding. Tested on one machine (ThinkPad L16 Gen1,
+> Meteor Lake-P, Conexant SN6140).
 > 
-> - Alternative considered: make pci_assign_unassigned_root_bus_resources()
->   retry only when a required resource failed. That would also change how
->   failed optional SR-IOV BARs drive reallocation, so this patch restores
->   the pre-v6.15 behavior for disabled ROM BARs only.
+> Thanks,
+> Rujbin Nassereslam / zerox80
+> rujbin@proton.me
 
-...So the LLM says but I don't take it for granted. ;-)
+Hi Rujbin, all,
 
-There's also another level which actual does categorize the failures 
-below pci_assign_unassigned_root_bus_resources().
+I ran into the same issue and sent a fix here:
+https://lore.kernel.org/all/20261109102536.357134-1-ghidoliemanuele@gmail.com/
 
-If you think there's something wrong with SR-IOV behavior, fix that also 
-but don't justify wrong level change with it.
+I only noticed your report after posting it. Could you reply with your Tested-by?
 
-But you need to explain what is wrong with the end state of the resource 
-assignment algorithm, not the intermediate problems it shows while it's 
-still running because those are expected and are there to help issue 
-diagnosis (we could print just the end result but then who would be able 
-to debug that?).
+Thanks,
+Emanuele
 
-> - Serial console logs of good and bad boots, the bisect log, the BIOS
->   switch matrix and the test scripts are attached to the bugzilla entry
->   in the Closes: tag.
-
-Sadly bugzilla is not working at the moment so I cannot check these but 
-I'll get back to them later.
-
-> - Tool use, per Documentation/process/generated-content.rst: Claude
->   (Anthropic) running in Claude Code, driven by the submitter, ran the
->   automated bisection on the hardware, read the PCI resource assignment
->   code, proposed this change and drafted this message. The submitter
->   reviewed the change and the analysis.
-> ---
->  drivers/pci/setup-bus.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index ed16ef7c26..6506e44866 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -377,6 +377,17 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
->  	}
->  }
->  
-> +/*
-> + * A disabled Expansion ROM BAR is only enabled later if it is needed, so
-> + * failing to assign it does not leave the device unusable.
-> + */
-> +static bool pci_resource_is_disabled_rom(const struct pci_dev *dev,
-> +					 const struct resource *res)
-> +{
-> +	return pci_resource_num(dev, res) == PCI_ROM_RESOURCE &&
-> +	       !(res->flags & IORESOURCE_ROM_ENABLE);
-> +}
-> +
->  bool pci_resource_is_optional(const struct pci_dev *dev, int resno)
->  {
->  	const struct resource *res = pci_resource_n(dev, resno);
-> @@ -743,7 +754,12 @@ static void __assign_resources_sorted(struct list_head *head,
->  		if (resource_assigned(res))
->  			continue;
->  
-> -		if (fail_head) {
-> +		/*
-> +		 * Don't put a disabled ROM BAR on fail_head: failing to
-> +		 * assign it must not trigger the release and reassignment
-> +		 * of bridge windows that are already in use.
-> +		 */
-> +		if (fail_head && !pci_resource_is_disabled_rom(dev, res)) {
-
-This isn't the right place for this. All failed resources should be 
-returned for the algorithm retry / window resizing to work properly. 
-Period.
-
-This has been proposed earlier and it hasn't turned correct approach 
-since then:
-
-https://lore.kernel.org/linux-pci/20260717180029.1829888-1-anthony.pighin@nokia.com/
-
--- 
- i.
 
