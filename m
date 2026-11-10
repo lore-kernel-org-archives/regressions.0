@@ -1,109 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.241.220.24
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794318802;
-	b=x+RHli+6qkDlTNoOm+QrvbIcrLpWlQk4w0X7l4dMpSSRkcv+8Qov9N90hDM+LMKF6GLm
-	 vLwwC5pCCuBp4bY6NXvn/K+4xeM04mX9tWEleyONRYwHpDbPIETPKvFQA52NBx3BWxBcf
-	 s2WSZ2ZYLHPXG/OQnXUW+HxXIggyhuPBaMRAAPW4QBBuOCmGW+0kdhuqV4aqQcj8+adrx
-	 5WcJUSThW/KehvjsxLS7dQ+hpWXYZzQ2Q+8beFcIE3KIM9aVU8BAjue7IW8tC/0eG/cW6
-	 RehaJ90nY+TBx7IJb2qk2dNG3KmwQDMh0YgC3VRUP5Tbu/GnjdvKonAWfhzolM3bZOQ==
+	t=1794326909;
+	b=tTkTcCmCpWztZxq2StMWsxAujwxQ5xPX28b7UZ0MfcT3ZWK3IPcKee2WNr3ja10hkR8b
+	 bb9e4wWIkHX2i3p9pM0FkpNe811L33U1t9janN12ALLx7Xh+sl0Jy9/6PwoJ5vPMUYWdg
+	 Cb8GKsUgD09Wn6VizcE9UX9B+qkFcBkl4mnDvxKlZd8Mq0rFm4Qrprwwa5PEEgO8IPLiK
+	 ylnZJA/c9f40olGW52yig6OBaKIBzEE4CA3MVfryZWQiRdBakJpvWWvpUjG/atO/MaRCy
+	 c0TmU3pJI7W348yGxK4vShn+K4ykLdNFoP8o657fJkAUh8ZPmorw30UwPrhFgtyBwkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794318802;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Spam-Flag:X-Spam-Level:X-Spamd-Result:X-Spam-Score;
-	bh=jcmj2mRiryRprIj9Gr9aUDtuxY0NQ+ycYiPJC0rulso=;
-	b=Jquwlj6aV9KLNFLXcZYbZwp2fTeiU6DwDQySIgiS1Q/HBS0PlhJrMX9+HAWV2xDjV2Nr
-	 9YcNGhAeZgf49YTBA+GItQwAhAOb8cP4hfUl15gnY5xZmIbXzOQJ7GFTgUlnYpMRXT0S4
-	 qfWsmXF3qFM2gphht6Kz1qRjywXuPf8cp4uQFFiwDEvAxebGvhJUSnCWFOJyAO3RBqRoL
-	 biNapQUtCVZIqX6G1JHllVMbY54kA7a4YaTjymhefOQvJd2mTLR1vxHuffTaT4MaGL4C7
-	 SfrNYyXk2K7ORE20oEpO7lHXL7uiVi+20zDo9az1APEYGlyhFjBfGGNdLxc2G418PSg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794326909;
+	h=DMARC-Filter:X-KumoRef:DKIM-Signature:DKIM-Signature:Received:
+	 X-Maileroo-Ref-Id:DKIM-Signature:From:In-Reply-To:To:Subject:
+	 MIME-Version:Content-Type:Cc:Message-ID:Content-Transfer-Encoding:
+	 Feedback-ID:X-CSA-Complaints:References:Date:X-Tenant-Id;
+	bh=YBGGeMD4iFIEU2mWym3FhOdzZclJ1seq6HyWVVamaw8=;
+	b=iT3EuVSw3PchSujRYc5jPmK/PM4cFHF3evTHtkSCnOh2glD9i+zOHgeyOLptuPDbdV0E
+	 lg55niiqg4T3KHHlgzlTdi2wXX+GkS+bGCwYkCXja6z959AmllajJFNbUMRVXuAV21+cW
+	 qyziTKpAUJXRFERfyImzSaX4w1KsbJ0pCSeAnAaIXOuIpCD+9eS7qsxomUj/1am5874OW
+	 YKyt5Dc/R5bNKndHLo8paq0+w+L7TSbvBhRvDYLwRG/kT8Ayg7IsmtF7TX/EdLBGkrTiq
+	 +fsCZ0O1JPRJYsTuYY6Qsqg7TJw3t2U2DFtHYN7rXvAxTRdS1xV4TlBrtXspZWGHm6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=suse.cz;
-	spf=pass smtp.mailfrom=suse.cz;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=QgUUViqV;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=DTFvvSvR;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=swYBA4Ja;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ujMwJ2Ho;
-	arc=none smtp.remote-ip=195.135.223.130
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	dmarc=pass header.from=darioackermann.ch;
+	spf=pass smtp.mailfrom=darioackermann.ch;
+	dkim=pass header.d=maileroo.info header.i=@maileroo.info header.a=rsa-sha256 header.s=mta header.b=YL+92aF2;
+	dkim=pass header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=mta header.b="XLm/cI9r";
+	dkim=fail reason="signature verification failed" header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=v1-rsa-20261020 header.b=l98FGin5;
+	arc=none smtp.remote-ip=188.241.220.24
+Received: from mta200.maileroo.com (mta200.maileroo.com [188.241.220.24])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DA2606A33D
-	for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 13:53:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2DA2606A33D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917E9606A31C
+	for <regressions@lists.linux.dev>; Tue, 10 Nov 2026 16:08:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 917E9606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=darioackermann.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darioackermann.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=QgUUViqV;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=DTFvvSvR;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=swYBA4Ja;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ujMwJ2Ho
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C461021E68;
-	Tue, 10 Nov 2026 13:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1794318799; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jcmj2mRiryRprIj9Gr9aUDtuxY0NQ+ycYiPJC0rulso=;
-	b=QgUUViqViWCMY15ugNChFv3abQjhR0uVHD/mNm2xAI6hXizLOON7KbCxBRMn+Q7qx1Zd/+
-	3qxHP6EzoKtTueeVE9Z+gQRnx96xpDn8BlwYqAfVSUVpXc54rN+klU8AqSHZo+OnsWxvLa
-	R6W4nNqX/hdq9yBvnn5xvzixKZK6QVk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1794318799;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jcmj2mRiryRprIj9Gr9aUDtuxY0NQ+ycYiPJC0rulso=;
-	b=DTFvvSvRIVl0YFEtqQr5KB4edvgx8y6PdCUR48rHCmH2cDjd82wBkfA7lpwefWONspUH4N
-	JjMCaDYCoX/xCrCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1794318798; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jcmj2mRiryRprIj9Gr9aUDtuxY0NQ+ycYiPJC0rulso=;
-	b=swYBA4JaEWYZe6/pZZCl2ZydZAx+XJLdjEntlW7iIabs9RFjPiEcIup8fyTHn71UupdCxf
-	AxUIfuYOX3Q3MPmzP2tAirCTHRiPS++/CKbUkf3LPJQcmKL1/7kcUUd+vG0W/bEDBh60Bv
-	SeQXZBeVzjMSLyPtYg0APXwT/UW/npg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1794318798;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jcmj2mRiryRprIj9Gr9aUDtuxY0NQ+ycYiPJC0rulso=;
-	b=ujMwJ2HoR7JnVj9DpENaei73/ZLgzQaEOocb2UseRJBKNMbQEP5DWJzT2SBTtRDVGi8sYH
-	cIp78rA38DQHsrCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A68713479;
-	Tue, 10 Nov 2026 13:53:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LOSuGc4h82oXfgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 10 Nov 2026 13:53:18 +0000
-Received: by quack.suse.cz (Postfix, from userid 1000)
-	id 1ED802251E; Tue, 10 Nov 2026 14:53:14 +0100 (CET)
-Date: Tue, 10 Nov 2026 14:53:14 +0100
-From: Jan Kara <jack@suse.cz>
-To: Gopal Malaviya <gopalmalaviya53@gmail.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev, fujunjie1@qq.com, vishal.moola@gmail.com, 
-	roman.gushchin@linux.dev, Trace <tracekotae@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] mm/filemap: restart mmap readahead on sequential faults
- after many misses
-Message-ID: <jwg2p4bjzkacnx6fkifkb5jbe7ah6btuecpcpulbkym6e23v6x@mh35p6yafmqi>
-References: <20261105192517.228523-1-tracekotae@gmail.com>
- <20261109091444.128521-1-gopalmalaviya53@gmail.com>
+	dkim=pass (2048-bit key) header.d=maileroo.info header.i=@maileroo.info header.a=rsa-sha256 header.s=mta header.b=YL+92aF2;
+	dkim=pass (2048-bit key) header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=mta header.b=XLm/cI9r;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=darioackermann.ch header.i=@darioackermann.ch header.a=rsa-sha256 header.s=v1-rsa-20261020 header.b=l98FGin5
+X-KumoRef: eyJfQF8iOiJcXF8vIiwicmVjaXBpZW50IjoicmVncmVzc2lvbnNAbGlzdHMubGludXguZGV2In0
+	=
+DKIM-Signature: v=1; a=rsa-sha256; d=maileroo.info; s=mta; c=relaxed/relaxed;
+	bh=YBGGeMD4iFIEU2mWym3FhOdzZclJ1seq6HyWVVamaw8=;
+	h=from:sender:reply-to:subject:date:message-id:to:cc:mime-version:
+		content-type:content-transfer-encoding:content-id:content-description:
+		resent-date:resent-from:resent-sender:resent-to:resent-cc:
+		resent-message-id:in-reply-to:references:list-id:list-help:
+		list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:
+		list-unsubscribe-post:feedback-id:x-csa-complaints; t=1794326901;
+	b=YL+92aF2NqGur609tKD46UhmQRs/cGrOkJOr9bufx67QLNhs+4MmR8MiYmE1QI1tL3Q4XND4y
+	PdvKB+KwAeXN0soOH7FgWcrM8Nb+L84a0lO8HJ0LaPb+S9lq4Axtc/VBzDm/JLUQkgjz+gZycXR
+	E2YrnhlKCBQYh3UDhXuZjCM23Z5eiyIqiHhdnoRgR4Q9dsCrcCcSDcOSToeU+ItKi2ruwwlTtXA
+	FSKschLCZrr1YopKlNbjmQV2Z57/kMH6mTdC83lQJxs6fysYt5303R29i5LsRGv3baS7ISL94A8
+	cu7k26plGET5bpl/4hGOzLFLN1bu1R85Sp4xYipywEgA==;
+DKIM-Signature: v=1; a=rsa-sha256; d=darioackermann.ch; s=mta; c=relaxed/relaxed;
+	bh=YBGGeMD4iFIEU2mWym3FhOdzZclJ1seq6HyWVVamaw8=;
+	h=from:sender:reply-to:subject:date:message-id:to:cc:mime-version:
+		content-type:content-transfer-encoding:content-id:content-description:
+		resent-date:resent-from:resent-sender:resent-to:resent-cc:
+		resent-message-id:in-reply-to:references:list-id:list-help:
+		list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:
+		list-unsubscribe-post:feedback-id:x-csa-complaints; t=1794326901;
+	b=XLm/cI9rqDbe+C0+jrBakfr6bmyXxCj8OueprWBrDtxRUNu84umC09AahXSluGHOonNulU3lM
+	BlBI43MwgCIxIu9Ln2oSHT+C3MLYfFtbboLo5G/T9NlLpBFzCkO09qQJ/HBVso+ZEestj2iTvc1
+	sEfmrdEe3QYgZfNkZlsjNRL4555749V6AkyWvdk2IaYkvaGSZ9xC54rYZ39LcguNLfYtySwJRhf
+	c/OZlB4i/l2opMpTF/Jq785YDr/2fED5pYzK2I7izMhiw5mAPofkWWXbnYmAOkOfxGxPj/pgsJO
+	g5u0Lc36eH20h5B3FotCdyocLRzoe3fXSRoQ4GdRKN3A==;
+Received: from localhost (127.0.0.1)
+  by mta3 (KumoMTA 127.0.0.1) 
+  with ESMTP id f30e21eedd2011f1bfcc92000677b433 for <regressions@lists.linux.dev>;
+  Tue, 10 Nov 2026 16:08:21 +0000
+X-Maileroo-Ref-Id: ad04e3d67e7c60a2398b8375
+DKIM-Signature: v=1; a=rsa-sha256; s=v1-rsa-20261020; d=darioackermann.ch; c=relaxed/relaxed; r=y; h=Date:Message-ID:Subject:To:From; t=1794326899; bh=YBGGeMD4iFIEU2mWym3FhOd zZclJ1seq6HyWVVamaw8=; b=l98FGin5/GesXHr4arpF77GeWGAlIy6ZFWCnTHsrTwuCDR3yAJ 4aYkwUl5JVnaMiaQWhnamA0OldYALQB910b7n6YqFN20zE5ql5F1DNfsWG+lv2aTv6zlfmFEppp baJf1JQkGWmAqnUI2NvN2MtwHrmU1UjJaUTR+NkINQ43wPr9mkNW4u0jdXq5C6xoxLLx6D4zBhL T8/foHme0fPO/haT96hc/u+q4mUDwDh8qWY6aQNZREQzbtNYa+B8s2Q1ZuhL0HGmyyPrenhW/NL H4akRFkMTk+jfIyWie1xfYhNY4m5WXrm25nPW+1YknAcegqvrLr8d3kwbqSK3OU6YxA==;
+From: "Dario Ackermann" <dario@darioackermann.ch>
+In-Reply-To: <8a0a9e63-54c2-4e5d-9479-1e39946328c4@leemhuis.info>
+To: "Thorsten Leemhuis" <regressions@leemhuis.info>, <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: =?us-ascii?Q?AW:_[REGRESSION]_x86/microcode:_boot_hangs_bringing_?= =?us-ascii?Q?up_first_secondary_CPU_on_i7-6700HQ,_avoided_by_dis=5Fucode?= =?us-ascii?Q?=5Fldr?=
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -113,99 +85,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261109091444.128521-1-gopalmalaviya53@gmail.com>
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spamd-Result: default: False [-11.30 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,infradead.org,suse.cz,kvack.org,vger.kernel.org,lists.linux.dev,qq.com,gmail.com,linux.dev];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Score: -11.30
+Content-Type: text/plain; charset="utf-8"
+Cc: <x86@kernel.org>, <bp@alien8.de>, <tglx@kernel.org>
+Message-ID: <882295593122258449212538.5447.2026111016821@darioackermann.ch>
+Content-Transfer-Encoding: quoted-printable
+Feedback-ID: u56201:maileroo
+X-CSA-Complaints: csa-complaints@eco.de
+References: <mw9nsyuj.70b4b79c-e987-49da-abe1-0164defd8d5a@darioackermann.ch> <630330232567670562275469.6204.202611921938@darioackermann.ch> <8a0a9e63-54c2-4e5d-9479-1e39946328c4@leemhuis.info>
+Date: Tue, 10 Nov 2026 16:08:17 +0000
+X-Tenant-Id: u56201
 
-On Mon 09-11-26 09:14:44, Gopal Malaviya wrote:
-> Since commit 9b0fcac3cfe7 ("mm/filemap: do not count FAULT_FLAG_TRIED
-> retries as mmap hits"), about a hundred sparse mmap faults push
-> mmap_miss over MMAP_LOTSAMISS and turn off mmap read-around, as
-> intended. But mmap_miss only comes down on hits on pages that
-> read-around brought in, and with read-around off there are none. A file
-> that is then read sequentially gets a synchronous single-page read for
-> every page until it is opened again.
-> 
-> When a miss above the limit is on the page right after the previous
-> miss, start readahead the way a sequential read() miss does, with
-> page_cache_sync_ra(), and keep mmap_miss at its cap so that hits on
-> that small first window do not bring back full read-around for random
-> access.
-> 
-> Tested in a KVM guest (x86_64, 2 vCPUs, 3 GiB) with ext4 on virtio-blk.
-> "base" is mm-hotfixes-unstable. "95b8e" is commit 95b8e432265f ("mm: use
-> zone lock guard in __offline_isolated_pages()"), the last one before the
-> series of 9b0fcac3cfe7. Commit 0b9c0aeba938 ("mm/filemap: count only the
-> faulting address as a mmap hit"), the first of that series, gives the
-> same results as 95b8e for the reproducer.
-> 
-> Reproducer from the report, read_ahead_kb 128, major faults:
-> 
->                                          95b8e    base  patched
->   sequential only                            1       1        1
->   sparse pass, then sequential               1   16384        2
->   sparse, MADV_SEQUENTIAL, sequential      512     512      512
->   sparse, close and reopen, sequential       1       1        1
-> 
-> Touching 1% of the pages of a cold 20 GiB file, larger than memory,
-> MiB read from disk:
-> 
->                        read_ahead_kb 128        read_ahead_kb 8192
->                       95b8e  base patched     95b8e   base patched
->   random               5656   215     215    344731   1032    1032
->   stride 2053 pages    6545   216     216    419003    992     992
->   random 2-page runs   2992   215     528    173093   1099    2248
->   random 4-page runs   1570   216     594     86797   1266    2301
-> 
-> After the sparse pass, reading 32 regions of 2 MiB in turn takes 512
-> major faults per region on base and 2 with this patch.
-> 
-> Not tested: NFS, the GPU workload from the report, and other
-> architectures and page sizes.
-> 
-> An AI assistant (Claude) helped with the analysis and the approach, and
-> wrote the test programs and drafts of the comment and this changelog.
-> I reviewed, implemented, built and tested the change.
-> 
-> Fixes: 9b0fcac3cfe7 ("mm/filemap: do not count FAULT_FLAG_TRIED retries as mmap hits")
-> Reported-by: Trace <tracekotae@gmail.com>
-> Closes: https://lore.kernel.org/all/20261105192517.228523-1-tracekotae@gmail.com/
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gopal Malaviya <gopalmalaviya53@gmail.com>
+Sorry for the thread-mixup.
 
-I think this [1] looks like a nicer solution to your problem.
+I tested v7.4-rc2 (7475ea8b5861). It still hangs while bringing up CPU1,
+with both default AP bringup and cpuhp.parallel=3D0.
 
-[1] https://lore.kernel.org/all/20261109-mmap-miss-v1-1-8b44b33f3358@it.uu.se/
+On upstream 6.18.55, I compared four images with the same config and boot
+arguments (cpuhp.parallel=3D0, only intel-ucode.img as initrd):
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+  unmodified kernel                              hangs at CPU1
+  skip Intel AP microcode loading               passes SMP
+  skip the AP's MSR 0x79 write                  passes SMP
+  do the write, skip the following revision read hangs at CPU1
+
+The passing images reach the expected root-mount failure because the initrd
+has no NVMe driver. This implicates the AP microcode write or its immediate
+effect, rather than the following revision read (?) Moving load_ucode_ap() =
+after
+cpuhp_ap_sync_alive() or cpu_init() still hung.
+
+With the unmodified image, microcode revisions 0xdc (one boot) and 0xd6 (tw=
+o
+boots) hung too. A first-parent bisect of v6.4..v6.5 tentatively points to
+the smp-core-2023-06-26 merge (9244724f): its parent passed SMP in 4/5 boot=
+s
+and the merge in 0/5. Earlier kernels occasionally hang too, and tests with=
+in
+the merged branch were inconclusive.
+
+Any suggestions for what to instrument next? I am new to kernel debugging,
+but happy to take pointers.
+
+Dario
