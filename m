@@ -1,110 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=130.238.7.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794383530;
-	b=3U0tAS1UHuG4phwq4fATac1JnlQ7hhMSVdRQERb4kjfHfZzuNo51fIFMximwSo1BX6ya
-	 k7uHbjPkf81B/l5OiFNHfkECP5codG/+18D5XX7x1PUvhOqBRGQC7K/CvIczS6amESNmm
-	 eNCoGX+QUvtJZQulzldCL/JvT95gIDFqYl9ZYnOAabx9X64LqfOLmoZUP+Q/FSF3OJ5+7
-	 ms0fNgmYkKZ5dCO6L+BqycUDhSbbhZ5mKAmE8CDzBRbzschQmTu7SNh+VE76hqXAym3dp
-	 YKfgpcYnQAV7Yux+6y9NDi1gSCH+jTasJkaQV9SAYQgvrjVu/3Foakudnui5J/3f9QA==
+	t=1794387091;
+	b=iJUA4NC0W1dYRM78KIS7tRX8bXtxGZEQFJ7R7wzeRB+nvvhBPjdAhrom/o2lwg3Y9X60
+	 FfB/2F8oZpTi5DIPGI4a2wpKRGWCt5UaPa6OxACQQTsC624LlUiDqD9Jrt5lu4LEz5T1s
+	 4ly4FocvzeLggf9LbCelt+tLvwKESGfxoEeH7mWmp7UpW+soQu+VftF/cvwLQ7xWlrvXR
+	 ZajKg/pNe6t2MiAsB+xV6b+lzWyaU9xomL0N5vCC05+YuS704in000bupkFBz5BwowccE
+	 bpsC/S2ZFFh8GaBNLo2Xh4hShmLw8eJAmZk80kjZYcN4a0zcgLd0sXDj10XcGLJMoRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794383530;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:X-Halon-ID:
-	 Received:Received:Received:Received:From:To:CC:Subject:Thread-Topic:
-	 Thread-Index:Date:Message-ID:References:In-Reply-To:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-originating-ip:x-uu-exchange-origin:Content-Type:Content-ID:
-	 Content-Transfer-Encoding:MIME-Version;
-	bh=lAdLzm0lC6RteZTIgPAPr9QVhABezDfRESoAcyYKOqc=;
-	b=So55G9IxMUACLj0tRAzixKaew/3Lq+VzZVb7vdRzQh4/HZQRGLylzB6VuKv9I0dbUPos
-	 FeTMB0EVmsS5Z5Yi9NVXXNIS70Kgk81rzKc/2r9BzNKbTEVrW9oohmKBRLHOhsctv+t4T
-	 rtLYulVfTjU28VQYRWvaoPjWkrkyKKd8faqc8gsh9w+uitYhLJm2+KP+SyANelDXVdh9H
-	 Iw5Eq8niAreExH84OEnWIA8wJYNXi9yO/imRBPA3ME7Q8BKXCF4jdk2YyFxMKSSSoLtw9
-	 XYlcE5g9m1dU+2YrfxLRLH9dPjG0a8+RDSOuUCG/YJe0cLpc2i66WhmUHU247VV8gmQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794387091;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=/cXvrjxaxtiLwCTSR70YQw6p3gSt0zzRCwkzyB4NNMQ=;
+	b=HiKXmLxTr9wGA74lWBOCKzOcaN30FK4Q7Er1PioCXFN6doa9rHpVDOaWvXgDVknc9a+R
+	 riyxKC5NlJWjnpay52B/gS94ecinI6fgUcBXND0z7ZlZC0zFVd7EIw17OSfxPPjDE5JIs
+	 bPJ6CengmkGKAmxYZ3vdheqmr+IEPm+zNl/0yKkPlih8zSwMSt2j9a+2RcYgwOXp8C3el
+	 9Zlp/hVfIniPFFruXqiW/SqTNPP6fTAzncibRB5HNlYJdtjGpY1OwrSyZ8CwXtN/60fCM
+	 bKu2QDMAADOD7clisvbrhJ+1lJCjVvUxENp/ioIC1xs/Mi9Hsaszum65DpuNsb2JnKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=it.uu.se;
-	spf=pass smtp.mailfrom=it.uu.se;
-	dkim=pass header.d=uu.se header.i=@uu.se header.a=rsa-sha256 header.s=centralsmtp2 header.b=X0fzAzJB;
-	dkim=pass header.d=it.uu.se header.i=@it.uu.se header.a=rsa-sha256 header.s=halon header.b=Qq5BqxLJ;
-	arc=none smtp.remote-ip=130.238.7.173
-Received: from smtp-out2.uu.se (smtp-out2.uu.se [130.238.7.173])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=e6fA9fyt;
+	arc=none smtp.remote-ip=188.68.63.174
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B29260A2609
-	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 07:52:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3B29260A2609
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=it.uu.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it.uu.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C10606A324
+	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 08:51:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5C10606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uu.se header.i=@uu.se header.a=rsa-sha256 header.s=centralsmtp2 header.b=X0fzAzJB;
-	dkim=pass (2048-bit key, unprotected) header.d=it.uu.se header.i=@it.uu.se header.a=rsa-sha256 header.s=halon header.b=Qq5BqxLJ
-Received: from mailfilter-ng-3.sunet.se (mailfilter-ng-3.sunet.se [192.36.171.200])
-	by cursor.its.uu.se (Postfix) with ESMTP id 2BCB6680359
-	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 08:43:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uu.se;
-	s=centralsmtp2; t=1794383038;
-	bh=lAdLzm0lC6RteZTIgPAPr9QVhABezDfRESoAcyYKOqc=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=X0fzAzJBxqmCcUWUW107VD4jNm2DEjgqwA/gfIoTMmfIb0Ig9bP4C65WSTohrXzRZ
-	 GrdJPf5Bkh0ojEp18Nf8ytBBpx4hCNrisLz+Hx8v/BxIJvD/TyXHksHCY79GYA15fU
-	 34nhygh0wRqDzx2SQcry5O2a4QHK34qgzoSYNhHz8zzwtCfo6kQrtaHy5f/PX/BQGK
-	 AUE/qcr7thBH0JIfkT/MUZzCLEpVi1qnvLCiLASjdmEKMotjLrQObTz2Rjrv4FVDaQ
-	 iKQW9FmFMenowBFQU0rAr6nHR+T6Oi0ZjnVYkILNuf8R0CYcnLhe/KGcFeyeEOCrm2
-	 eKo+tyM53aQzA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=it.uu.se; s=halon;
-	h=mime-version:content-transfer-encoding:content-id:content-type:in-reply-to:
-	 references:message-id:date:subject:cc:to:from:from;
-	bh=lAdLzm0lC6RteZTIgPAPr9QVhABezDfRESoAcyYKOqc=;
-	b=Qq5BqxLJ4oAo00iMNlrHTOpc9HvjRubpjClAEe5L3t+l2IozLY455YfG9pN9eHB5WO2RSNeUZ927l
-	 ODci0EOU9b3Nd/DbKkSRhAhErAihDZxMg3Lhq+AdjG0MU9Hbp8r7I0GBYk9LeAdTOWIYuImLeLcluL
-	 37j/LfZd1I8HaOXVQIXN1N2Xjj9LpFOrIMzJRcXHz226+VHP2fvZMJJ5IKwdMZ2jJMTlwYMsCyPkRi
-	 re0nJPjknrXj5GpwEWyfSZiCQLgosSuMOsD3V510XmS06H++eryZDC4QyhuL24WRYi5N7F0jYgXVGa
-	 0oxoLONhHEkhuwGJvT5DjsLbvZU4CIg==
-X-Halon-ID: a67b696e-dda3-11f1-95df-0050569a1168
-Received: from lyra.its.uu.se (lyra.its.uu.se [130.238.7.73])
-	by mailfilter-ng-3.sunet.se (Halon) with ESMTPS
-	id a67b696e-dda3-11f1-95df-0050569a1168;
-	Wed, 11 Nov 2026 07:43:56 +0000 (UTC)
-Received: from smtp.user.uu.se (uuc-epost016.user.uu.se [130.238.3.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=e6fA9fyt
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4jPcgS60xgz8ktM;
+	Wed, 11 Nov 2026 08:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1794387060;
+	bh=+m6MXRy6xcls6uK9v/6CjaI8XNi4BpSqrQa6quN16Rw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e6fA9fyt8iR8tgyKP4noOtnHdIJCj/Ea+ZN9oHoxVgF8b+4T/iYqjfbOuoxcZEtIe
+	 izsMiZdwP13HKLENGJRW6h6WT139/XPzoc/wdVJjLJ5dxMUViobfUUCEhht8oIAXIN
+	 ybfMPyO0SrvyO8rTmAoMn+ss+9pvXfcjKjCKcYZWPVXRzC7Qa+UzpwpgsNI7ULX5a4
+	 +M2nrY2TYwqQLSVYypfXPdf5JduXCxj/xg0eberVdjwUun9RNPCwjlX52MbYKpjVCA
+	 9CZ1rxYeRvp54BbIurLG/6+1lTDv7Bou7xi3cbp9ltv1qG9NpCodi7qJLk57r433Q4
+	 wA3rP/RgZ3eXQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4jPcfK1NqYz8gtl;
+	Wed, 11 Nov 2026 08:50:01 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lyra.its.uu.se (Postfix) with ESMTPS id B1301600088;
-	Wed, 11 Nov 2026 08:43:54 +0100 (CET)
-Received: from UUC-EPOST014.user.uu.se (130.238.3.24) by
- UUC-EPOST016.user.uu.se (130.238.3.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Wed, 11 Nov 2026 08:43:54 +0100
-Received: from UUC-EPOST014.user.uu.se ([130.238.3.24]) by
- UUC-EPOST014.user.uu.se ([130.238.3.24]) with mapi id 15.02.2562.056; Wed, 11
- Nov 2026 08:43:54 +0100
-From: Alireza Haddadi <alireza.haddadi@it.uu.se>
-To: Gopal Malaviya <gopalmalaviya53@gmail.com>
-CC: "jack@suse.cz" <jack@suse.cz>, "willy@infradead.org"
-	<willy@infradead.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "vishal.moola@gmail.com"
-	<vishal.moola@gmail.com>, "fujunjie1@qq.com" <fujunjie1@qq.com>,
-	"roman.gushchin@linux.dev" <roman.gushchin@linux.dev>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "tracekotae@gmail.com" <tracekotae@gmail.com>
-Subject: Re: [PATCH] mm/filemap: let sequential faults restart mmap readahead
-Thread-Topic: [PATCH] mm/filemap: let sequential faults restart mmap readahead
-Thread-Index: AQHdcFXobp3vto+/eEuuawUN31FcZrcoN0gAgAA4CQA=
-Date: Wed, 11 Nov 2026 07:43:54 +0000
-Message-ID: <26E03EC6-F37C-4350-B2A9-1F354217F469@it.uu.se>
-References: <20261109-mmap-miss-v1-1-8b44b33f3358@it.uu.se>
- <20261111042310.191979-1-gopalmalaviya53@gmail.com>
-In-Reply-To: <20261111042310.191979-1-gopalmalaviya53@gmail.com>
-Accept-Language: en-GB, sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-uu-exchange-origin: Internal
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <00E735D1736E5D4697FA838A52C10B56@user.uu.se>
-Content-Transfer-Encoding: base64
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jPcfJ2QgLz8svZ;
+	Wed, 11 Nov 2026 09:50:00 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6B7E65FA05;
+	Wed, 11 Nov 2026 09:49:48 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f58b7e7c-1160-4728-bade-e73bd794940f@leemhuis.info>
+Date: Wed, 11 Nov 2026 09:49:46 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -114,71 +73,264 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to
+ 00:00:00:00:00:00 once the next hop's neighbour entry is gone
+To: John <shffr@protonmail.com>,
+ "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal <fw@strlen.de>,
+ Phil Sutter <phil@nwl.cc>, "coreteam@netfilter.org"
+ <coreteam@netfilter.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: 
+ <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179438698886.595945.14822771298955473457@mxe9fb.netcup.net>
+X-NC-CID: awbssBF2p47zCo4FOS8C6qe2DLm+TCwf/FyGvLCghZdvGQKIvdM=
 
-DQoNCj4gT24gMTEgTm92IDIwMjYsIGF0IDA1OjIzLCBHb3BhbCBNYWxhdml5YSA8Z29wYWxtYWxh
-dml5YTUzQGdtYWlsLmNvbT4gd3JvdGU6DQo+DQpIaSBHb3BhbCwNCg0KVGhhbmtzIGZvciB0ZXN0
-aW5nIHRoaXMgc28gdGhvcm91Z2hseSwNCmFuZCBmb3IgcG9pbnRpbmcgbWUgdG8gVHJhY2XigJlz
-IHJlcG9ydC4NCg0KPiBIaSBBbGlyZXphLA0KPg0KPiBJIGhhZCBzZW50IGEgZGlmZmVyZW50IGZp
-eCBmb3IgdGhlIHNhbWUgcmVncmVzc2lvbiBbMV0sIHJlcG9ydGVkIGJ5DQo+IFRyYWNlIGluIFsy
-XS4gSmFuIHByZWZlcnMgeW91cnMsIHNvIEkgaGF2ZSBkcm9wcGVkIG1pbmUuIEkgcmFuIHlvdXIN
-Cj4gcGF0Y2gsIGFsc28gd2l0aCB0aGUgdjIgY2hhbmdlIHlvdSBkZXNjcmliZSB0byBKYW4sIHRo
-cm91Z2ggdGhlIHRlc3RzDQo+IEkgaGFkOiBhIEtWTSBndWVzdCAoeDg2XzY0LCAyIHZDUFVzLCAz
-IEdpQiksIG1tLWhvdGZpeGVzLXVuc3RhYmxlIGFzDQo+IG9mIDIwMjYtMTEtMDgsIGV4dDQgYW5k
-IFhGUyB3aXRoIDE2IEtpQiBibG9ja3Mgb24gdmlydGlvLWJsaywNCj4gcmVhZF9haGVhZF9rYiAx
-MjggdW5sZXNzIG5vdGVkLg0KPg0KPiBUaGUgcmVwcm9kdWNlciBmcm9tIFsyXSAoMjAwMCBzaW5n
-bGUtcGFnZSBmYXVsdHMgMSBNaUIgYXBhcnQsIHRoZW4gYQ0KPiA2NCBNaUIgc2VxdWVudGlhbCBy
-ZWFkKSwgbWFqb3IgZmF1bHRzIGluIHRoZSBzZXF1ZW50aWFsIHBhcnQ6DQo+DQo+ICAgICAgICAg
-ICAgICAgICAgICAgICBiYXNlICAgYXMgcG9zdGVkICAgd2l0aCB2MiBjaGFuZ2UNCj4gIGV4dDQg
-ICAgICAgICAgICAgICAgMTYzODQgICAgICAgICAgIDIgICAgICAgICAgICAgICAgMg0KPiAgWEZT
-LCAxNiBLaUIgYmxvY2tzICAgNDA5NiAgICAgICAgNDA5NiAgICAgICAgICAgICAgICAyDQo+DQpU
-aGF0IG1hdGNoZXMgd2hhdCBJIHNlZSBoZXJlOiBvbiBtbS1uZXcgd2l0aG91dCB0aGUgcGF0Y2gs
-IFhGUyB3aXRoDQoxNmsgYmxvY2tzIHRha2Ugb25lIGZhdWx0IHBlciAxNiBLaUIgZm9saW8gaW4g
-dGhlIGluLW9yZGVyIHJlYWQuDQo+IFRvdWNoaW5nIDElIG9mIHRoZSBwYWdlcyBvZiBhIGNvbGQg
-MjAgR2lCIGZpbGUsIGxhcmdlciB0aGFuIG1lbW9yeSwgaW4NCj4gcmFuZG9tIHJ1bnMgb2YgMSwg
-MiBvciA0IGFkamFjZW50IHBhZ2VzLCBNaUIgcmVhZCBmcm9tIGRpc2sgd2l0aCB0aGUNCj4gdjIg
-Y2hhbmdlIChmaXJzdCBvZiB0d28gcnVuczsgdGhlIHNlY29uZCB3YXMgd2l0aGluIDEwJSk6DQo+
-DQo+ICAgICAgICAgICAgICAgICAgICAgICByZWFkX2FoZWFkX2tiIDEyOCAgICAgcmVhZF9haGVh
-ZF9rYiA4MTkyDQo+ICAgICAgICAgICAgICAgICAgICAgICAgYmFzZSAgIHdpdGggdjIgICAgICAg
-IGJhc2UgICB3aXRoIHYyDQo+ICByYW5kb20gNC1wYWdlIHJ1bnMgICAgIDI0MCAgICAgIDExNDYg
-ICAgICAgIDEyMDAgICAgIDU3NzQ4DQo+DQoNCj4gVGhlIDQtcGFnZSBydW5zIGF0IHJlYWRfYWhl
-YWRfa2IgODE5Miwgd2hpY2ggaXMgd2hhdCB0aGlzIGd1ZXN0J3MNCj4gdmlydGlvLWJsayBkaXNr
-IGdldHMgYnkgZGVmYXVsdCwgcmVhZCBhYm91dCA0OCB0aW1lcyBtb3JlLiBBcyBmYXIgYXMgSQ0K
-PiBjYW4gdGVsbCwgZWFjaCBydW4gbm93IGhhcyB0d28gbWlzc2VzIGFuZCB1cCB0byB0d28gaGl0
-cyBvbiB0aGUgbmV3DQo+IHdpbmRvdywgc28gbW1hcF9taXNzIHN0YXlzIGFyb3VuZCBNTUFQX0xP
-VFNBTUlTUywgYW5kIGVhY2ggdGltZSBpdCBpcw0KPiBiYWNrIGF0IHRoZSBsaW1pdCB0aGUgbmV4
-dCByYW5kb20gbWlzcyBnZXRzIHRoZSBmdWxsIDggTWlCDQo+IHJlYWQtYXJvdW5kLiBNeSBwYXRj
-aCByYW4gaW50byB0aGUgc2FtZSBhbmQga2VwdCBtbWFwX21pc3MgYXQgaXRzIGNhcA0KPiBvbiB0
-aGF0IHBhdGg7IHNvbWV0aGluZyBsaWtlIHRoYXQgbWF5IGhlbHAgaGVyZSwgYnV0IHlvdSBhbmQg
-SmFuIGtub3cNCj4gdGhpcyBiZXR0ZXIuDQoNClRoaXMgaXMgYSByZWFsIHByb2JsZW0sIHRoYW5r
-cyBmb3IgY2F0Y2hpbmcgaXQuIE5vbmUgb2YgbXkgdGVzdHMgaGFkDQpzaG9ydCBzZXF1ZW50aWFs
-IHJ1bnMgYXQgcmFuZG9tIHBsYWNlcywgc28gSSBtaXNzZWQgaXQuIEnigJlsbCByZXByb2R1Y2UN
-Cml0IGhlcmUgYW5kIHJld29yayB0aGUgcGF0Y2ggYmVmb3JlIHNlbmRpbmcgdjIuIEkgd2FudCB0
-byBjb21wYXJlDQprZWVwaW5nIG1tYXBfbWlzcyBoaWdoIG9uIHRoYXQgcGF0aCwgYXMgeW91IGRp
-ZCwgd2l0aCBvbmx5IHJlc3RhcnRpbmcNCnJlYWRhaGVhZCBvbmNlIHRoZSBmYXVsdCBjb250aW51
-ZXMgYSBsb25nZXIgcnVuIG9mIGNhY2hlZCBwYWdlcy4NCg0KSmFuIHRoYW5rcyBmb3IgYmVpbmcg
-T0sgd2l0aCB0aGUgbWluLW9yZGVyIGNoYW5nZS4gR2l2ZW4gdGhpcywgdjINCndpbGwgY2hhbmdl
-IG1vcmUgdGhhbiwgc28gSSB3b27igJl0IGNhcnJ5IHlvdXIgUmV2aWV3ZWQtYnkgb3Zlci4NCkni
-gJlkIGJlIGdsYWQgaWYgeW91IGNvdWxkIHRha2UgYW5vdGhlciBsb29rIGF0IHYyLg0KPg0KPiBP
-biB0aGUgRml4ZXMgdGFnOiB3aXRoIHRoZSBjb21taXRzIG9mIHRoZSBzZXJpZXMgYnVpbHQgb25l
-IGJ5IG9uZSwNCj4gY29tbWl0IDBiOWMwYWViYTkzOCAoIm1tL2ZpbGVtYXA6IGNvdW50IG9ubHkg
-dGhlIGZhdWx0aW5nIGFkZHJlc3MgYXMNCj4gYSBtbWFwIGhpdCIpIGFsb25lIGRvZXMgbm90IHNo
-b3cgdGhlIHByb2JsZW0gKDEgbWFqb3IgZmF1bHQgd2l0aCB0aGUNCj4gcmVwcm9kdWNlciksIGFu
-ZCBjb21taXQgOWIwZmNhYzNjZmU3ICgibW0vZmlsZW1hcDogZG8gbm90IGNvdW50DQo+IEZBVUxU
-X0ZMQUdfVFJJRUQgcmV0cmllcyBhcyBtbWFwIGhpdHMiKSBkb2VzICgxNjM4NCkuIFsyXSBpcyB0
-aGUgc2FtZQ0KPiByZWdyZXNzaW9uLCBpbiBjYXNlIHlvdSB3YW50IHRvIGFkZCBSZXBvcnRlZC1i
-eSBhbmQgQ2xvc2VzIHRhZ3MgZm9yDQo+IHJlZ3pib3QuDQo+DQpJIG9ubHkgdGVzdGVkIHJldmVy
-dGluZyBib3RoIGNvbW1pdHMgdG9nZXRoZXIsIHNvIEnigJlsbCBjaGVjayB0aGlzIGFuZCBmaXgg
-dGhlDQp0YWcgaW4gdjIsIGFuZCBhZGQgUmVwb3J0ZWQtYnkgYW5kIENsb3NlcyBmb3IgVHJhY2Xi
-gJlzIHJlcG9ydC4NCg0KPiBJIGFtIGhhcHB5IHRvIHJ1biB0aGVzZSBhZ2FpbiBvbiB5b3VyIHYy
-LiBUaGUgdGVzdHMgd2VyZSBzZXQgdXAgd2l0aA0KPiB0aGUgaGVscCBvZiBhbiBBSSBhc3Npc3Rh
-bnQuDQoNClRoYXQgd291bGQgYmUgZ3JlYXQsIHRoYW5rIHlvdS4gQ291bGQgeW91IHNoYXJlIHRo
-ZSBzaG9ydC1ydW4gdGVzdCwNClNvIEkgY2FuIHJ1biB0aGUgc2FtZSBoZXJlIHdoaWxlIHdvcmtp
-bmcgb24gaXQ/DQoNCkJlc3QgUmVnYXJkcywNCkFsaXJlemENCg0KDQoNCg0KDQoNCg0KDQoNCk7D
-pHIgZHUgaGFyIGtvbnRha3QgbWVkIG9zcyBww6UgVXBwc2FsYSB1bml2ZXJzaXRldCBtZWQgZS1w
-b3N0IHPDpSBpbm5lYsOkciBkZXQgYXR0IHZpIGJlaGFuZGxhciBkaW5hIHBlcnNvbnVwcGdpZnRl
-ci4gRsO2ciBhdHQgbMOkc2EgbWVyIG9tIGh1ciB2aSBnw7ZyIGRldCBrYW4gZHUgbMOkc2EgaMOk
-cjogaHR0cDovL3d3dy51dS5zZS9vbS11dS9kYXRhc2t5ZGQtcGVyc29udXBwZ2lmdGVyLw0KDQpF
-LW1haWxpbmcgVXBwc2FsYSBVbml2ZXJzaXR5IG1lYW5zIHRoYXQgd2Ugd2lsbCBwcm9jZXNzIHlv
-dXIgcGVyc29uYWwgZGF0YS4gRm9yIG1vcmUgaW5mb3JtYXRpb24gb24gaG93IHRoaXMgaXMgcGVy
-Zm9ybWVkLCBwbGVhc2UgcmVhZCBoZXJlOiBodHRwOi8vd3d3LnV1LnNlL2VuL2Fib3V0LXV1L2Rh
-dGEtcHJvdGVjdGlvbi1wb2xpY3kNCg==
+On 11/9/26 22:26, John wrote:
+> 
+> Since commit b5964aac51e0 ("netfilter: flowtable:
+> consolidate xmit path"),
+
+This is a 6.19 commit, but you later talk about 6.18 and only briefly
+mention 7.4-rc. So where do you actually see this bug? If 6.18.y, please
+also state if 7.4-rc2 or later has the same problem (everything needs to
+be fixed in mainline first, so focusing on it is usually best).
+
+And is this maybe the same issue as this:
+
+network flow offloading broken in 6.18.45+
+https://lore.kernel.org/all/7dfa42f6-64c1-4084-bfea-d57500c245cf@hauke-m.de/t/#u
+
+If not: that was just one of the hits I found when searching for the
+commit id, you might want to check if the others provide something
+helpful: https://lore.kernel.org/all/?q=b5964aac5*
+
+Ciao, Thorsten
+
+> a flow offloaded with
+> FLOW_OFFLOAD_XMIT_NEIGH keeps being forwarded with
+> destination MAC 00:00:00:00:00:00 after the next hop's
+> neighbour entry has been removed. Nothing resolves the next
+> hop again, so the flow stays black-holed for as long as it
+> keeps sending.
+> 
+> Before that commit the XMIT_NEIGH case called neigh_xmit(),
+> which creates the entry if needed, sends a solicitation and
+> queues the packet. Now nf_flow_offload_ipv6_hook() does
+> 
+> 	neigh = ip_neigh_gw6(rt->dst.dev, rt6_nexthop(...));
+> 	if (IS_ERR(neigh)) { ... }
+> 	xmit.dest = neigh->ha;
+> 
+> and passes the skb to dev_queue_xmit() through
+> nf_flow_queue_xmit(), without looking at neigh->nud_state.
+> When ip_neigh_gw6() has just created the entry, ha is all
+> zeros, and since the neighbour output path is never used, no
+> solicitation goes out and the entry stays unresolved. The
+> IPv4 branch has the same construction with ip_neigh_gw4().
+> In v7.4-rc2 the code has moved into the per-family xmit
+> functions but is otherwise unchanged.
+> 
+> This hit a router here running 6.18.60, which has
+> b5964aac51e0 as a stable backport. A WireGuard endpoint
+> behind the router talks to nothing else through it, so its
+> neighbour entry on the router aged out while the tunnel's
+> flow was offloaded, and the endpoint's handshake retries
+> every 5 s kept the flow alive. On the router's egress
+> interface every forwarded packet of the flow then looked
+> like this (addresses replaced):
+> 
+>   02:0e:bd:92:63:28 > 00:00:00:00:00:00,
+>   ethertype IPv6 (0x86dd), length 154:
+>   2001:db8:1::51.60161 > 2001:db8:2::1f.59320:
+>   UDP, length 92
+> 
+> "ip -6 neigh" had no entry for the destination, conntrack
+> showed the flow as [OFFLOAD], and deleting the conntrack
+> entry restored the tunnel until the next time the entry aged
+> out, a few minutes later. Going back to 6.12.115 on the same
+> router fixed it.
+> 
+> The script below reproduces it with three network namespaces
+> and no special hardware (IPv6 only, needs iproute2, nft and
+> python3). The server has a permanent entry for the router,
+> so the router only knows the server from its own resolution.
+> The flow is offloaded while the router has no valid entry
+> for the server, which gives XMIT_NEIGH, and once it is
+> offloaded the script removes the router's entry again, which
+> is what neighbour GC does to an idle STALE entry.
+> 
+> 6.18.60:
+> 
+>   flow: [OFFLOAD]
+>   entry: fd00:2::2 lladdr a2:5b:b4:93:86:a9 REACHABLE
+>   entry removed, flow offloaded
+>   2 s later:
+>   echoes: 7 ok, 11 lost
+>   destination MAC of echoes to the server:
+>        10 00:00:00:00:00:00
+>         7 a2:5b:b4:93:86:a9
+> 
+> 6.12.116 (Debian 6.12.116+deb13):
+> 
+>   flow: [OFFLOAD]
+>   entry: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+>   entry removed, flow offloaded
+>   2 s later: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+>   echoes: 17 ok, 1 lost
+>   destination MAC of echoes to the server:
+>        18 de:9b:d1:db:19:4c
+> 
+> (Datagram 0 is lost on both kernels, during start-up.)
+> 
+> I have not run the reproducer on mainline. I compared the
+> code in v7.4-rc2 instead, and the IPv4 path is untested.
+> 
+> I don't know this code well enough to say which fix you
+> would want. Handing the packet to neigh_xmit() when the
+> entry is not NUD_VALID would restore the old behaviour for
+> that case, and tearing the flow down would also work, since
+> the next packet would then take the classic path and resolve
+> the neighbour. I can test a patch on the router or with the
+> script.
+> 
+> #regzbot introduced: b5964aac51e0
+> 
+> --- reproducer ---
+> 
+> #!/bin/bash
+> # Flowtable XMIT_NEIGH flow forwarded to 00:00:00:00:00:00
+> # after the next hop's neighbour entry goes away. Needs
+> # root, iproute2, nft and python3.
+> #
+> # Namespaces c (client), r (router with a flowtable) and s
+> # (server). The server has a permanent entry for the
+> # router, so it never solicits and the router only knows
+> # the server from its own resolution. The flow is set up
+> # before the flow-add rule exists, the router's entry for
+> # the server is removed, and only then is the rule added:
+> # the flow is offloaded while the next hop has no valid
+> # entry, which gives XMIT_NEIGH. Once it is offloaded the
+> # entry is removed again, as neighbour GC does with an
+> # idle STALE entry.
+> set -u
+> P=ftrepro
+> W=$(mktemp -d)
+> E() { local ns=$1; shift; ip netns exec "$P-$ns" "$@"; }
+> cleanup() {
+>   for j in $(jobs -p); do kill "$j" 2>/dev/null; done
+>   for n in c r s; do ip netns del "$P-$n" 2>/dev/null; done
+>   rm -rf "$W"
+> }
+> trap cleanup EXIT
+> trap 'exit 1' INT TERM
+> 
+> for n in c r s; do ip netns add "$P-$n"; done
+> ip link add rc netns "$P-r" type veth \
+>   peer name c0 netns "$P-c"
+> ip link add rs netns "$P-r" type veth \
+>   peer name s0 netns "$P-s"
+> for n in c r s; do E $n ip link set lo up; done
+> E c ip link set c0 up
+> E r ip link set rc up
+> E r ip link set rs up
+> E s ip link set s0 up
+> E c ip -6 addr add fd00:1::2/64 dev c0 nodad
+> E r ip -6 addr add fd00:1::1/64 dev rc nodad
+> E r ip -6 addr add fd00:2::1/64 dev rs nodad
+> E s ip -6 addr add fd00:2::2/64 dev s0 nodad
+> E c ip -6 route add default via fd00:1::1
+> E s ip -6 route add default via fd00:2::1
+> RMAC=$(E r cat /sys/class/net/rs/address)
+> E s ip -6 neigh replace fd00:2::1 lladdr "$RMAC" \
+>   dev s0 nud permanent
+> E r sysctl -qw net.ipv6.conf.all.forwarding=1
+> E r nft -f - <<'NFT'
+> table inet t {
+>   flowtable f {
+>     hook ingress priority 0; devices = { rc, rs };
+>   }
+>   chain fw {
+>     type filter hook forward priority 0; policy accept;
+>   }
+> }
+> NFT
+> 
+> # Client: UDP echo on port 6000.
+> E c python3 -c '
+> import socket
+> s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+> s.bind(("fd00:1::2", 6000))
+> while True:
+>     d, a = s.recvfrom(100)
+>     s.sendto(d, a)
+> ' >/dev/null 2>&1 &
+> 
+> # Server side of the wire: destination MAC of every echo
+> # coming back to the server.
+> E s python3 -c '
+> import socket, sys
+> r = socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
+>                   socket.htons(3))
+> r.bind(("s0", 0))
+> f = open(sys.argv[1], "w")
+> port = (5000).to_bytes(2, "big")
+> while True:
+>     p = r.recv(2048)
+>     # IPv6, next header UDP, destination port 5000
+>     if p[12:14] == b"\x86\xdd" and p[20] == 17 \
+>             and p[56:58] == port:
+>         f.write(p[0:6].hex(":") + "\n")
+>         f.flush()
+> ' "$W/wire.log" >/dev/null 2>&1 &
+> sleep 1
+> 
+> # Server: one datagram a second to the client, port 5000.
+> E s python3 -c '
+> import socket, time, sys
+> c = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+> c.bind(("fd00:2::2", 5000))
+> c.settimeout(0.8)
+> f = open(sys.argv[1], "w")
+> for i in range(18):
+>     t = time.time()
+>     c.sendto(str(i).encode(), ("fd00:1::2", 6000))
+>     try:
+>         c.recvfrom(100)
+>         f.write("%d ok\n" % i)
+>     except socket.timeout:
+>         f.write("%d lost\n" % i)
+>     f.flush()
+>     time.sleep(max(0, 1.0 - (time.time() - t)))
+> ' "$W/server.log" >/dev/null 2>&1 &
+> SV=$!
+> 
+> sleep 4
+> E r ip -6 neigh del fd00:2::2 dev rs
+> E r nft add rule inet t fw ct state established \
+>   meta l4proto udp flow add @f
+> sleep 3
+> FLOW=$(E r grep -o '\[OFFLOAD\]' /proc/net/nf_conntrack |
+>   head -1)
+> echo "flow: $FLOW"
+> echo "entry: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+> E r ip -6 neigh del fd00:2::2 dev rs &&
+>   echo "entry removed, flow offloaded"
+> sleep 2
+> echo "2 s later: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+> wait $SV
+> echo "echoes: $(grep -c ok "$W/server.log") ok," \
+>   "$(grep -c lost "$W/server.log") lost"
+> echo "destination MAC of echoes to the server:"
+> sort "$W/wire.log" | uniq -c
+> 
+> Thanks,
+> John
+
