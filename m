@@ -1,88 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.70.190.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794427639;
-	b=2n+iPnHFstfGU2fQFYWzJICBfyO0voPT9tt9KtTppc8U0BtYyLjioZ+b+z8beufZYlj0
-	 NDUVxOr4S3KAbkiHFI1/YVc0rnRbWGQc4+k2/GGSMTStm8GSBEC100LKItRI5CZNY9Azn
-	 9fOJCh0E0x/jug68d1ypR2eSaOx9XNyUjFzv17hMejjZ4zx2kEgOj/30V1QIGIKwvdoTE
-	 PuzH9LwQFQDkV+/xpEMToqPziGjTDc/THmaepbHiFO408qFdKxEYy+uFvBADlzJ4eloM4
-	 Ssv8xVwOoB9iCx7mka6I+BSqQ2VOwwDxt8twDqOHIyYh+L24yFN4qiO9cVYOiewiD9A==
+	t=1794434952;
+	b=vNpqB51ieI1n/EjVAMsaYZ8a32UPJU3hI1VUy29xmyZYFVOd6ncuXCHsX+PyOKoN0K4Z
+	 DvBL+l9ePkMui2IJhPXsxBVUhZIll2F1Xw5WjeTN6deZDYBuXnShfNSrDf83uCR7rXlMM
+	 VJTsvoklNJ12DlIcQKUF29smkKNpuQT4IJ3dQHwvGKtR048mcejkgEJBWKtaPtn9zSMyg
+	 6s5kbt/ZTn/9YCwWdjjieYEw1fgWzkjl8t6IdMWKoN9Ab0xd45ZK/36VWlnWGcgexBGpH
+	 /xeJJzJCunQZqI1fDd7QwFeyyy6yYTHX0BTT+g2qARltHo3NLjf2axkMHuj48ulbywQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794427639;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=sVQ0Je+7TVtBihMq71F3r/qets7jTV4f1jmnI7R96Eo=;
-	b=IZKNU3Xb2Cdx4hHYq6/qmlpetCJZzEqlwMmDh00LUAmCzAoUW7NJG5ef6cMQD8nxUBuv
-	 czwyt/5ehrVHn10Ts6eOOewROnxiEZpHRKTs0RbVGTfKrfwfctql/nn8jLb1DKNJPILHZ
-	 z+v2Z36nI2itzaNS+5tUEe2eIUqoOQ5g9o9kgbuKZO80l2GWJsb/yO17IG+2YTT9UyjMR
-	 IUuKkhr9fWtKw0tAHNk7RYU682bQ3eXAWzwEekCzWwvYxEYOYefson27VU0EFYEpo+zHw
-	 wTVH74mtJr0CMY1WQtrvaQDsDOXYjJtcU9Gcc673aVvXswsFuxFLQOne1o9k/3P+6kQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794434952;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
+	bh=am6gB5NdWXXZW/etXsOg3KYf+73ebZ11VyaFMSvoC9Y=;
+	b=fvJP+L2XZoQYrsH9Mg9Pt2zTM3u2jUxldX8W2/Lo6WhWYJfSd10pfC2uNi40ujqXjv+2
+	 I6yvcQ0KWgpaprc/abOLpX7irzY7FhOHUeP+UEQfbKSofEkZ8o4LlyyE17OKf1TciURto
+	 JHl5K0fOa8qNc5waV24E84ppQgTBPzb9ruJCx5waQtJsvJpz0A7uPnGRVuaHCHKdNAzh/
+	 sxfmlhuu6mn+aCAqgpIEAf1DNXi+d1LygW4Bt09Kaj5aLZx51/VP+YD1eOoFDSBvWocfP
+	 d8ogM5onA3WH4T96xdPIYtJ9LprW+Ns0gf8VfFiuV1YxpiQmvRWhZYCYGzuDywDxRGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WJJXgDdM;
-	arc=none smtp.remote-ip=209.85.128.54
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=netfilter.org;
+	spf=pass smtp.mailfrom=netfilter.org;
+	dkim=pass header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=ga1RZDqB;
+	arc=none smtp.remote-ip=217.70.190.124
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B278D606A330
-	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 20:07:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B278D606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id B609B606A324
+	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 22:09:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B609B606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WJJXgDdM
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a59100fa83so31381835e9.0
-        for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 12:07:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794427637; x=1795032437; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sVQ0Je+7TVtBihMq71F3r/qets7jTV4f1jmnI7R96Eo=;
-        b=WJJXgDdM+YD2JL5IwwtbROUUQQmPcuJ6yGtSuiSPgqtyV1BJu+0rSpsA7UwlqtN9El
-         j8a5WpxBI5V5O3Rt6jSe5R3BB3byMcMN9fW4KJI0V1oU5O9NTJvRsY0vXhEUbBO22ZIZ
-         f0DfpaxWH1LnZBUbJjeNZ4zZ9uvFKM+62sEyRI+zirJRDjKbVQ/js9qPNyTX/nxzOL5Y
-         C3fd/E/NMrhF+5qwvPoQ2DKkEI+y5etJRtB7IhHr8SgQtQ5Z2GdSi9E4cPSk9Vr+vB2k
-         hlDtIS6wa4XH9dg+VBpnPdodUN+5jTHaawO6B2zmSc7Q+tFGJE4XVf8DGRrpCkcOKnbq
-         rd0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794427637; x=1795032437;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sVQ0Je+7TVtBihMq71F3r/qets7jTV4f1jmnI7R96Eo=;
-        b=Kb39QXgsDQBucr3+4mTLbDMyeW8VqlYsMl61VY6VaC/BoVX4+edaVdxzSyQiz5vPB/
-         4VG+wcNiXiP+CeNxpnZW+3KXjLCR7tErPnKytnrjARzgXQ032XvhpT76J36qGEyLOggC
-         qQdzWQJQMoMVHrDuZt9wYyF96vtg8unTaEl3HHC+weEk0yKwm35OS8oLVmJ4om6PKCuO
-         hY+aGe4A7sNWbs973N3mAkwJqI1+NSqcnrZHu1HI1A2KLQde6n3bpVWwR+VQ4AVvBZFR
-         SGrnYWZ+ACl9TdDI9d3UvLGA6qvdZCws/nYu3jtJjzRCUejeph5IJEEe4q/y6Tm7jEMo
-         AMuQ==
-X-Forwarded-Encrypted: i=1; AL+hErFADlP9QN9cjXwpbXPfrQLHhAyI9BtDijGL01y7TDqfDl/i3vnTPNzRQt0P2OY54xglSTsLI5SvvQ60ew==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9mmCxQaagfqpw7HHslyX7+O+TgK9IMUF8r2pa9FxYdodptDFWb
-	z/E9niNJLcGEFnRfcuSJlinC0a7c+2c/1mc1SXw/gKYjQhrD4nWOQXyL
-X-Gm-Gg: AYBFou36ccZG6OdAG5ZEUa4g7pjmooEKpCE9sFJk27KJSHUQifuOC/BUjjIk0Fm1YTl
-	ojtHAD6JSR4Re9Kc5J7lgZ58D6dI8p/ACaU3RNTqIkD7qW7QZZWYj56Rt9tgWmHncRVW4FtEtVT
-	b4Uk5jG3hT6tGk1NvT3W31Dox/inExvrwoiMYPRQI+dys4dyLAvQVBVYoqYGVxz3CecE/mLZ9lm
-	UXwTqeyNl9lGyEt7MsXjvS0v/ScdzxVnDSE8pgbfhJHdVy7pKUfUc0xh5JQJDxsZCyZ3aAPwEN/
-	n7uFZwvwhs0q5X9JNTNZx2OJTxsU2KqfaNYiTcAKS0ubkiluvok9H23GmhkCoWkW9Wsxg3LuMlt
-	SMP5AJBVM7cBM74FyI6A/2ZfnZuFeFUsh+QU7gNjGzJMzwI//FZjieWVJ8KpAD05QoTeJsUrXfe
-	r4LjYd+GhnPVPxG98gDONSQPzcVegP7rEXRhBk3J6kihO7tSrBsOt1Z8oeszyv7FKSIpQaQ1VO5
-	w8JO3pkMOeDVfRyFiI81tsaGMhjDex9w5TwzVPuEqeq82HpBhcPYuBcWe0ervxfpXJdm5QlzTc+
-	8TowUeWCSlXru4isAibdT18XTfsKIKrpwySEl4E=
-X-Received: by 2002:a05:600c:19c6:b0:4af:83ad:8f70 with SMTP id 5b1f17b1804b1-4ba093b1bb8mr61724445e9.35.1794427636860;
-        Wed, 11 Nov 2026 12:07:16 -0800 (PST)
-Received: from [192.168.1.50] ([188.27.124.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba08ddbe68sm134278805e9.0.2026.11.11.12.07.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Nov 2026 12:07:16 -0800 (PST)
-Message-ID: <1b548cb5-f83f-4bb0-b275-a42112c9e354@gmail.com>
-Date: Wed, 11 Nov 2026 22:07:14 +0200
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=ga1RZDqB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1794434948;
+	bh=am6gB5NdWXXZW/etXsOg3KYf+73ebZ11VyaFMSvoC9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ga1RZDqBCfh9F7lsHrh434WKtLNlqDdE3hiw7ReTJ7O6x6pbJWZP7eo9tPad4fOSH
+	 cqoKF07i0Vfm/9sJ+jGyC/HxBDIekJ9F3w52TrHEQ/f07sQxJACnEPFK1uTIcWBJCt
+	 pI+Z0z0mWQIFlqmZGVgtLrhduQLggrPcEdtPa3X6wEBmFPz+FMpj7hnYNK1K6Du3EY
+	 V7d7MIYbyGhyfHxhzK+cyGjEi0pwWAU0TlEBlFKZOJ8OCVnRmZf/xcRyLZyFw0i36l
+	 IfKT7xkqpT2Xln3qfSIh2C4v4htWYQWlLPOFBk3ZSr5NDqLXuQbXpil6TOxGyUUlg+
+	 kJz4WrbtylJfQ==
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with UTF8SMTPSA id 85CC060074;
+	Wed, 11 Nov 2026 23:09:08 +0100 (CET)
+Date: Wed, 11 Nov 2026 23:09:05 +0100
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: John <shffr@protonmail.com>
+Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+	"coreteam@netfilter.org" <coreteam@netfilter.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to
+ 00:00:00:00:00:00 once the next hop's neighbour entry is gone
+Message-ID: <avTngTkNKE5ApQW8@chamomile>
+References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
+ <avSIBUcLH4kZyISX@chamomile>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -92,127 +68,269 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] rtw89_8851be: 5 GHz link drops after association and
- re-auth times out on 7.3.0-4 and 7.3.3-1 (7.2.11 works)
-To: Colin C <ccharm480@gmail.com>, pkshih@realtek.com
-Cc: linux-wireless@vger.kernel.org, regressions@lists.linux.dev
-References: <CAOy1aSioNmBOPjLTsR3q_A8z2qF=7AC13TSvr=mig_XrgbVXKw@mail.gmail.com>
-Content-Language: en-US
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-In-Reply-To: <CAOy1aSioNmBOPjLTsR3q_A8z2qF=7AC13TSvr=mig_XrgbVXKw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <avSIBUcLH4kZyISX@chamomile>
 
-On 11/11/2026 20:51, Colin C wrote:
-> Hardware: Realtek RTL8851BE (PCI 0000:04:00.0, 10ec:b851,
-> rtw89_8851be); Bluetooth
->           is the same module (rtl8851bu firmware loaded by btusb)
-> Distro/kernel: CachyOS (clang build)
->   linux-cachyos 7.2.11-1  = GOOD
->   linux-cachyos 7.3.0-4   = BAD
->   linux-cachyos 7.3.3-1   = BAD (re-tested 2026-11-11)
-> Firmware: rtw89/rtw8851b_fw-1.bin, version 0.29.41.5 (4bd6ebac) on all
-> three kernels
-> linux-firmware-realtek: 1:20261019-1 on all three (firmware is not the variable)
-> AP: UniFi U6 Extender (Wi-Fi 6, 802.11ax), WPA2 CCMP, 5 GHz ch153/80 MHz,
->     several BSSIDs of one SSID, -43 dBm. On 7.2.11 the link ran at
-> 600/540 Mbit/s;
->     I did not capture HE vs VHT on the 5 GHz link during the failing boots (the
->     2.4 GHz fallback link, a GL.iNet router, negotiates HE-MCS 10 on 7.3.3-1).
-> Taint: /proc/sys/kernel/tainted = 4096 (O, out-of-tree module: nvidia-open).
->     The WLAN problem is independent of the GPU driver as far as I can tell.
+On Wed, Nov 11, 2026 at 04:21:44PM +0100, Pablo Neira Ayuso wrote:
+> Hi,
 > 
-> Summary
-> The adapter has worked on every earlier kernel (7.2.x and before).On
-> 7.3.0-4 and again on 7.3.3-1, 5 GHz association is either dropped
-> shortly
-> after the 4-way handshake or never gets going again: every authentication
-> attempt then times out ("send auth (try 3/3)", "authentication with <bssid>
-> timed out"), across several BSSIDs, until the card falls back to a 2.4 GHz
-> network. Booting 7.2.11-1 with identical firmware and userspace restores normal
-> operation (one boot of ~7.7 h on 5 GHz at 600/540 Mbit/s; a single AP-initiated
-> reason=34 disassoc, reconnected in 4 s).
-> 
-> Failing boots on 7.3.0-4, 2026-10-26:
->   07:48:30 wpa_supplicant: Key negotiation completed with ba:8b:a9:d1:28:25
->   07:49:04 CTRL-EVENT-DISCONNECTED reason=4 locally_generated=1
->   07:49:08-07:50:35 kernel: "authenticate with <bssid>" / "send auth
-> (try 1/3..3/3)"
->                      / "authentication with <bssid> timed out", for three
->                      different BSSIDs, repeated; SSID-TEMP-DISABLED CONN_FAILED
->   12:28:29 Key negotiation completed; 12:28:50 DISCONNECTED reason=4
-> locally_generated=1
->            then the same auth-timeout loop until ~12:31
-> 
-> Failing boot on 7.3.3-1, 2026-11-11 (boot 12:12):
->   12:13:00 associated with ba:8b:a9:d1:28:25 (5 GHz), aid=3
->   12:13:07 onwards: auth to 2a:e8:29:52:c6:9c, ba:8b:a9:d1:28:25 and
->            9e:05:d6:d1:6d:d4 all time out (3/3 tries each), repeated until the
->            card gave up and joined a 2.4 GHz network (GL-MT3000, ch7).
->   A manual `nmcli con up` for the 5 GHz SSID later failed with "The Wi-Fi
->   network could not be found" although the BSSes are listed at full signal.
-> No rtw89 error lines appear in dmesg around the drops (only the wlan0 auth
-> timeouts above).
-> 
-> Caveat on the 7.2.11 baseline: it is not perfectly clean. Over the 10-day
-> 7.2.11 boot (2026-11-01 to 11-11) the journal has 8 wlan0 authentication
-> timeouts and 36 "rtw89_8851be 0000:04:00.0: timed out to flush queues"
-> messages (Nov 4-10). Some auth timeouts overlap with a hidden-SSID issue on
-> my side that I fixed on Nov 9. In all cases on 7.2.11 the link stayed up or
-> recovered by itself; it never got stuck in the endless auth-timeout loop seen
-> on 7.3.0-4 and 7.3.3-1. Filtered logs (UFW lines removed) are available for
-> both boots.
-> 
-> Bluetooth coexistence lead (7.3.3-1, one run each, so not conclusive):
->   With Bluetooth blocked (rfkill block bluetooth): `nmcli con up` joined the
->   5 GHz BSS ba:8b:a9:d1:28:25 (5765 MHz) on the first try, auth/assoc clean.
->   After rfkill unblock, the link was on 2.4 GHz again at the next check (about
->   3 minutes later; I did not see when it dropped), and a repeat `nmcli con up`
->   for the 5 GHz SSID failed as above.
->   The card shares the module with Bluetooth, and an LE keyboard and an LE mouse
->   were connected during the failing cases. I am not claiming a cause: the
->   Wi-Fi/Bluetooth coexistence code is shared and has been changing (e.g. the
->   July 2026 rtw-next coex patches for the 8922D, which are not in 7.3.x), so
->   it seemed worth mentioning. The first 7.3.3-1 boot did associate once on
->   5 GHz with Bluetooth active, so timing may also matter. A repeat of each
->   case (3+) is still to do.
-> 
-> Things tried that did not help on 7.3.0-4:
->   - /etc/modprobe.d/rtw89.conf, exact options (still active, and confirmed
->     in /sys/module/rtw89_pci/parameters/ on 7.3.3-1, so the 7.3.3-1 failure
->     above happened with them set):
->       options rtw89_pci disable_aspm_l1=Y disable_aspm_l1ss=Y disable_clkreq=Y
->       options rtw89_core disable_ps_mode=Y
->   - reloading rtw89 modules (briefly restores 2.4 GHz only)
->   - firmware 20261019-1 vs earlier (ruled out: 7.2.11 works with 20261019-1)
-> Also not the cause: the SSID is no longer hidden and the extender BSSes are
-> visible at full signal; ch153 worked on 7.2.11.
-> 
-> Package history (pacman.log): linux-cachyos 7.2.11-1 -> 7.3.0-4 on 2026-10-24
-> 23:41; first failure observed the next boot. Updated to 7.3.3-1 on 2026-11-11;
-> same failure.
-> 
-> Searched lore.kernel.org (all lists) for "8851BE" on 2026-11-11: no report of
-> this problem. Possibly related, not read in full: "[PATCH] Bluetooth: Add
-> HCI_QUIRK_NO_SCAN_WHILE_CONNECTED for combo chips" (April 2026). The symbol is
-> not present in the installed 7.2.11-1 or 7.3.3-1 headers, so it cannot explain
-> the difference between those two kernels.
-> 
-> Related, not duplicates (found by web search):
->   - [regression] rtw89_8852be: silent RX stalls since v7.1; reverting
->     bda294ed0ed0 appears to fix it (https://lkml.iu.edu/2607.2/04572.html)
->   - RTL8852BE can't connect on high 5Ghz channels
->     (https://bugs.launchpad.net/bugs/2059170)
-> 
-> Expected: link stays up on 5 GHz as on 7.2.11.
-> Not tested: vanilla mainline (CachyOS patches may be a factor); a bisect; a
-> boot with nvidia-open not loaded (to rule the taint out completely).
-> Happy to test patches or bisect between v7.2.11 and v7.3.0 if pointed
-> at a range.
+> Would you give a try to this attached patch?
 
-Sounds like the same problem reported here:
+I forgot you provided a reproducer, I can see one packet is lost after
+this patch, then the follow up packets don't get blockholed.
 
-https://lore.kernel.org/linux-wireless/0A58E3B7800E469B+179421939016.46230.883154851683340495@guwolf.com/
+Let me revisit this again.
 
-There is a patch in that thread.
+> Thanks.
+> 
+> On Mon, Nov 09, 2026 at 09:26:55PM +0000, John wrote:
+> > Hi,
+> > 
+> > Since commit b5964aac51e0 ("netfilter: flowtable:
+> > consolidate xmit path"), a flow offloaded with
+> > FLOW_OFFLOAD_XMIT_NEIGH keeps being forwarded with
+> > destination MAC 00:00:00:00:00:00 after the next hop's
+> > neighbour entry has been removed. Nothing resolves the next
+> > hop again, so the flow stays black-holed for as long as it
+> > keeps sending.
+> > 
+> > Before that commit the XMIT_NEIGH case called neigh_xmit(),
+> > which creates the entry if needed, sends a solicitation and
+> > queues the packet. Now nf_flow_offload_ipv6_hook() does
+> > 
+> > 	neigh = ip_neigh_gw6(rt->dst.dev, rt6_nexthop(...));
+> > 	if (IS_ERR(neigh)) { ... }
+> > 	xmit.dest = neigh->ha;
+> > 
+> > and passes the skb to dev_queue_xmit() through
+> > nf_flow_queue_xmit(), without looking at neigh->nud_state.
+> > When ip_neigh_gw6() has just created the entry, ha is all
+> > zeros, and since the neighbour output path is never used, no
+> > solicitation goes out and the entry stays unresolved. The
+> > IPv4 branch has the same construction with ip_neigh_gw4().
+> > In v7.4-rc2 the code has moved into the per-family xmit
+> > functions but is otherwise unchanged.
+> > 
+> > This hit a router here running 6.18.60, which has
+> > b5964aac51e0 as a stable backport. A WireGuard endpoint
+> > behind the router talks to nothing else through it, so its
+> > neighbour entry on the router aged out while the tunnel's
+> > flow was offloaded, and the endpoint's handshake retries
+> > every 5 s kept the flow alive. On the router's egress
+> > interface every forwarded packet of the flow then looked
+> > like this (addresses replaced):
+> > 
+> >   02:0e:bd:92:63:28 > 00:00:00:00:00:00,
+> >   ethertype IPv6 (0x86dd), length 154:
+> >   2001:db8:1::51.60161 > 2001:db8:2::1f.59320:
+> >   UDP, length 92
+> > 
+> > "ip -6 neigh" had no entry for the destination, conntrack
+> > showed the flow as [OFFLOAD], and deleting the conntrack
+> > entry restored the tunnel until the next time the entry aged
+> > out, a few minutes later. Going back to 6.12.115 on the same
+> > router fixed it.
+> > 
+> > The script below reproduces it with three network namespaces
+> > and no special hardware (IPv6 only, needs iproute2, nft and
+> > python3). The server has a permanent entry for the router,
+> > so the router only knows the server from its own resolution.
+> > The flow is offloaded while the router has no valid entry
+> > for the server, which gives XMIT_NEIGH, and once it is
+> > offloaded the script removes the router's entry again, which
+> > is what neighbour GC does to an idle STALE entry.
+> > 
+> > 6.18.60:
+> > 
+> >   flow: [OFFLOAD]
+> >   entry: fd00:2::2 lladdr a2:5b:b4:93:86:a9 REACHABLE
+> >   entry removed, flow offloaded
+> >   2 s later:
+> >   echoes: 7 ok, 11 lost
+> >   destination MAC of echoes to the server:
+> >        10 00:00:00:00:00:00
+> >         7 a2:5b:b4:93:86:a9
+> > 
+> > 6.12.116 (Debian 6.12.116+deb13):
+> > 
+> >   flow: [OFFLOAD]
+> >   entry: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+> >   entry removed, flow offloaded
+> >   2 s later: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+> >   echoes: 17 ok, 1 lost
+> >   destination MAC of echoes to the server:
+> >        18 de:9b:d1:db:19:4c
+> > 
+> > (Datagram 0 is lost on both kernels, during start-up.)
+> > 
+> > I have not run the reproducer on mainline. I compared the
+> > code in v7.4-rc2 instead, and the IPv4 path is untested.
+> > 
+> > I don't know this code well enough to say which fix you
+> > would want. Handing the packet to neigh_xmit() when the
+> > entry is not NUD_VALID would restore the old behaviour for
+> > that case, and tearing the flow down would also work, since
+> > the next packet would then take the classic path and resolve
+> > the neighbour. I can test a patch on the router or with the
+> > script.
+> > 
+> > #regzbot introduced: b5964aac51e0
+> > 
+> > --- reproducer ---
+> > 
+> > #!/bin/bash
+> > # Flowtable XMIT_NEIGH flow forwarded to 00:00:00:00:00:00
+> > # after the next hop's neighbour entry goes away. Needs
+> > # root, iproute2, nft and python3.
+> > #
+> > # Namespaces c (client), r (router with a flowtable) and s
+> > # (server). The server has a permanent entry for the
+> > # router, so it never solicits and the router only knows
+> > # the server from its own resolution. The flow is set up
+> > # before the flow-add rule exists, the router's entry for
+> > # the server is removed, and only then is the rule added:
+> > # the flow is offloaded while the next hop has no valid
+> > # entry, which gives XMIT_NEIGH. Once it is offloaded the
+> > # entry is removed again, as neighbour GC does with an
+> > # idle STALE entry.
+> > set -u
+> > P=ftrepro
+> > W=$(mktemp -d)
+> > E() { local ns=$1; shift; ip netns exec "$P-$ns" "$@"; }
+> > cleanup() {
+> >   for j in $(jobs -p); do kill "$j" 2>/dev/null; done
+> >   for n in c r s; do ip netns del "$P-$n" 2>/dev/null; done
+> >   rm -rf "$W"
+> > }
+> > trap cleanup EXIT
+> > trap 'exit 1' INT TERM
+> > 
+> > for n in c r s; do ip netns add "$P-$n"; done
+> > ip link add rc netns "$P-r" type veth \
+> >   peer name c0 netns "$P-c"
+> > ip link add rs netns "$P-r" type veth \
+> >   peer name s0 netns "$P-s"
+> > for n in c r s; do E $n ip link set lo up; done
+> > E c ip link set c0 up
+> > E r ip link set rc up
+> > E r ip link set rs up
+> > E s ip link set s0 up
+> > E c ip -6 addr add fd00:1::2/64 dev c0 nodad
+> > E r ip -6 addr add fd00:1::1/64 dev rc nodad
+> > E r ip -6 addr add fd00:2::1/64 dev rs nodad
+> > E s ip -6 addr add fd00:2::2/64 dev s0 nodad
+> > E c ip -6 route add default via fd00:1::1
+> > E s ip -6 route add default via fd00:2::1
+> > RMAC=$(E r cat /sys/class/net/rs/address)
+> > E s ip -6 neigh replace fd00:2::1 lladdr "$RMAC" \
+> >   dev s0 nud permanent
+> > E r sysctl -qw net.ipv6.conf.all.forwarding=1
+> > E r nft -f - <<'NFT'
+> > table inet t {
+> >   flowtable f {
+> >     hook ingress priority 0; devices = { rc, rs };
+> >   }
+> >   chain fw {
+> >     type filter hook forward priority 0; policy accept;
+> >   }
+> > }
+> > NFT
+> > 
+> > # Client: UDP echo on port 6000.
+> > E c python3 -c '
+> > import socket
+> > s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+> > s.bind(("fd00:1::2", 6000))
+> > while True:
+> >     d, a = s.recvfrom(100)
+> >     s.sendto(d, a)
+> > ' >/dev/null 2>&1 &
+> > 
+> > # Server side of the wire: destination MAC of every echo
+> > # coming back to the server.
+> > E s python3 -c '
+> > import socket, sys
+> > r = socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
+> >                   socket.htons(3))
+> > r.bind(("s0", 0))
+> > f = open(sys.argv[1], "w")
+> > port = (5000).to_bytes(2, "big")
+> > while True:
+> >     p = r.recv(2048)
+> >     # IPv6, next header UDP, destination port 5000
+> >     if p[12:14] == b"\x86\xdd" and p[20] == 17 \
+> >             and p[56:58] == port:
+> >         f.write(p[0:6].hex(":") + "\n")
+> >         f.flush()
+> > ' "$W/wire.log" >/dev/null 2>&1 &
+> > sleep 1
+> > 
+> > # Server: one datagram a second to the client, port 5000.
+> > E s python3 -c '
+> > import socket, time, sys
+> > c = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+> > c.bind(("fd00:2::2", 5000))
+> > c.settimeout(0.8)
+> > f = open(sys.argv[1], "w")
+> > for i in range(18):
+> >     t = time.time()
+> >     c.sendto(str(i).encode(), ("fd00:1::2", 6000))
+> >     try:
+> >         c.recvfrom(100)
+> >         f.write("%d ok\n" % i)
+> >     except socket.timeout:
+> >         f.write("%d lost\n" % i)
+> >     f.flush()
+> >     time.sleep(max(0, 1.0 - (time.time() - t)))
+> > ' "$W/server.log" >/dev/null 2>&1 &
+> > SV=$!
+> > 
+> > sleep 4
+> > E r ip -6 neigh del fd00:2::2 dev rs
+> > E r nft add rule inet t fw ct state established \
+> >   meta l4proto udp flow add @f
+> > sleep 3
+> > FLOW=$(E r grep -o '\[OFFLOAD\]' /proc/net/nf_conntrack |
+> >   head -1)
+> > echo "flow: $FLOW"
+> > echo "entry: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+> > E r ip -6 neigh del fd00:2::2 dev rs &&
+> >   echo "entry removed, flow offloaded"
+> > sleep 2
+> > echo "2 s later: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+> > wait $SV
+> > echo "echoes: $(grep -c ok "$W/server.log") ok," \
+> >   "$(grep -c lost "$W/server.log") lost"
+> > echo "destination MAC of echoes to the server:"
+> > sort "$W/wire.log" | uniq -c
+> > 
+> > Thanks,
+> > John
+> > 
+
+> diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
+> index 19cafae748ab..73f49dc41157 100644
+> --- a/net/netfilter/nf_flow_table_ip.c
+> +++ b/net/netfilter/nf_flow_table_ip.c
+> @@ -873,7 +873,8 @@ static int nf_flow_queue_xmit4(struct sk_buff *skb,
+>  			return NF_DROP;
+>  		}
+>  		neigh = ip_neigh_gw4(rt->dst.dev, rt_nexthop(rt, ip_addr->ip));
+> -		if (IS_ERR(neigh)) {
+> +		if (IS_ERR(neigh) ||
+> +		    !(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
+>  			flow_offload_teardown(flow);
+>  			return NF_DROP;
+>  		}
+> @@ -1202,7 +1203,8 @@ static int nf_flow_queue_xmit6(struct sk_buff *skb,
+>  			return NF_DROP;
+>  		}
+>  		neigh = ip_neigh_gw6(rt->dst.dev, rt6_nexthop(rt, &ip_addr->in6));
+> -		if (IS_ERR(neigh)) {
+> +		if (IS_ERR(neigh) ||
+> +		    !(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
+>  			flow_offload_teardown(flow);
+>  			return NF_DROP;
+>  		}
+
