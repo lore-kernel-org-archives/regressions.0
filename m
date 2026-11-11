@@ -1,98 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.70.190.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794401470;
-	b=wPzAbiFvO/xjtJKdmH7DJ9kPszPn6AWZVQuZwu5/BejqYsmXGCSLpt57OdtgApfVK2w5
-	 pvZvUehF73+nzC+RbeSShjkBkVnCvEvxnO774caHysJlozfRavWnQ5BKJUSGj8LPuUGGD
-	 RF1YkhBIfzqr9jR9g/42yAX40Jdqh8+3qHWJw1vyuaxA7Z7/M2p6aYw5hTerBTg6YiC3t
-	 EiTZQvadaZuttqHq/LLOqP5VVd31a0gxgfMrCqV1iW70r6DvyBi8Z79uxNVxve2ga3E+6
-	 azJLoQT4N8L5EvXGk3iRGo6kKsWezLNTjkOm4iDCNda3KxHCwzW29TLA+aC7uObS7qw==
+	t=1794410514;
+	b=elgJ+R3fJGvu1TbYdIMQKAOSFWi6ga+0ScnRavIx9wDNCskYsoMZku6Tss+t3uvNUrdM
+	 NxqvBk0OeP1a6mr8gAztQyatbH3Wp1nUCOn/6C5ASa0pg0Iragr3VLr0TZK9+PQ+yK0Gi
+	 oNKv6EFIwaIS4e11B3QuXWSRg/L0qFKfu/GfJRO4JQs7GCxwJRavcCSZMVh2Ju3P5E5q5
+	 rY4AsNn2iE0GOy/am/q8OStnYpHU8Z2SCwpHy6BGxQdjtCarj4Hses98saXFadoxOj9nO
+	 AL2HaB9lKjf7CqpLJyWyvxyz96PKtr90Z+3IXv8OoUlq0li+EwkPM0a9Kz1q2oAVvTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794401470;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=Uapr75yZLj7Tv4B9SqUwtXKVvOOX4yQmtXhP7eAjMSc=;
-	b=FbYqSg8bgUrJ/oaxraIXrTvPg/bnZgbGojRA6++iOgKanVa/2ZNRZBWDSbRDhzpLPkEb
-	 0jcpkIRlSbhbTYfCcH3Vwa3EVVI5YnN+Omav6BJY+PFGkkPXy0Gj0Tj+E+07svYtnhyH9
-	 uI4LAJwfyPJUiN9wIBKY1dAhnOSOlGmK6JPACKmmVDwBvKC3N8TlaUIA6aCdgYk7zZGJA
-	 Fww1Ro2pfUvImFzjOGj9FQ1/AprIOaXPHgF5w4ujnUILelrZPW1dekluzzh5YzACAlVAj
-	 hAgsL7mF3RQqGT3teAufVvtt330pSU9N40fPlD2tgJ2oyktnjohB/Xjn7sxBJJ1K3wg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794410514;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
+	bh=81ZdOZI8AFzoY6Wjc1ZAc89k6QICeJEkg2KfANGYI3I=;
+	b=IKaVTr3dvQ8+KcPZMVaGuzJINNvLh3rYtY4aMjtWrB1yjWAFKgIqtSQjGOzsShaMkSL4
+	 Tg/eojJ7mJuod9fox5S3JouwbfqSb0bymdGcXTGsoc1uU+Fuo2JMgyyD3chbgwXufz/ji
+	 +5QyIi+z1Y4n99cmpW/l7Tm9y/XYmi4fsiuJSuPI2MFhRKknxTOLyqdw0jf2sgv8v9mZY
+	 2PiMT+320X/OIfnWJZpLWpeZb0TZDttmxKckYYxE+avrIYkpoOsDsGLq0GsVpYeXCNeRT
+	 8WGJNycMXNV60hImcxD7WEbNBwhhoOcGekbnL8gmwJDSpqyI8zFu6nSCbuwfvf9hjWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tvgECdGD;
-	arc=none smtp.remote-ip=209.85.128.44
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=netfilter.org;
+	spf=pass smtp.mailfrom=netfilter.org;
+	dkim=pass header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=YsCD+kcs;
+	arc=none smtp.remote-ip=217.70.190.124
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC29606A327
-	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 12:51:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9BC29606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 1F1C2606A32A
+	for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 15:21:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F1C2606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tvgECdGD
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so23235395e9.2
-        for <regressions@lists.linux.dev>; Wed, 11 Nov 2026 04:51:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794401468; x=1795006268; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Uapr75yZLj7Tv4B9SqUwtXKVvOOX4yQmtXhP7eAjMSc=;
-        b=tvgECdGDYnU2vCFi9g4Fzs98/Z0VgDevVDIH9g3EnMPPsrXlFCS9ElV4unJvShO5rP
-         bmV3mxX36cunVvvthq+qAHu9VMUjPr7zu5h5dD6vf62nAwJadnBXXGXrXDJWlbMPUbQh
-         CF55n3j22wIpB2eMYrTxeEamx+DAbQMRq/shqJl6W7fg7b9t+aGhwtZGcJTlORSt1VX7
-         o0ASIuV0MDfdwtGNCiHiqC6357OQcNpoTgoGVb32jq1PaLpjv07nSubdFaIbMjfYY+rd
-         HFasgsjTBomj/EgvEzEb1KiCiZW/86VeEvA+engVZUXOdACk6JzzUxTMstgI3i5QAkXo
-         Vgaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794401468; x=1795006268;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Uapr75yZLj7Tv4B9SqUwtXKVvOOX4yQmtXhP7eAjMSc=;
-        b=ZEamOf4wW07Yg/pdxgCxOiE0km176OacKkdS6Z/7VI5fY2koIOdlLjmE1DdVdSVnGM
-         t3Xi7lsfQ1jf55+mSuvqPL84V0q3b0bDFtvoGXsAttHHPWKspv0cxKhnCqND4TdrGQe0
-         iKfNxrawN+1h/zol5KTBEppSuvH58eHOY7S9pQD5/LikTiYF01ONGwJ/FTYCP8NOL26m
-         WjBPfVMU9KlUbq4SPYUdCOJhwYOu2bmxeCIYbtiCLQlIx2dAamcqmZbHYVTtC/uP53fj
-         QgNluNq5b2u0vcOshcoiLe7Zui5qzaKVVNPApHcaUCGSszk7cNMSHJWaRqR0Kw4zqjPR
-         RupQ==
-X-Forwarded-Encrypted: i=1; AL+hErHqRUtpEUujgxJMGLtqIw/bhdjBH6lX/WspjTLVkcHc/36BxZbFiv4UhEZ/ysg4FOx77lT4+zPdg+0t8g==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+hw13hejUYThTeSeLU7T6fhO9IBDJpTtXBif8PXJ0iSmFHSh5K
-	jtNCE27c8GZnjXYNSdUZR7suo1czLFUHx0YqTw04OXpYkRtAtwO8tL9X
-X-Gm-Gg: AYBFou1nHrXfOB7YRp3O09klFVO7agIAHzfzd+eh8tyb3EnJMnPCYqFqmZomc21XCZQ
-	bMsqQQMfe6CdTNdNlc2OlGB7dbwE/GC0o9e8pd6MCV3hKoE7WFlValLqINa2ONJPenl0JWJNyU5
-	c+KHkOQc139DPoJlgTpuTjy0H+vdN77k4HRGxnT1ZLWOa0YBcNRsxxSuQisxAYD6DVnMrO+q9OJ
-	jhE/4cZVZ3edlX6ds22WB5LcoKkSAp6iwInD1s6G0z1B+JNNKv7VyVVFtBL2PHr76owPOGsQr8O
-	F+JzdFQK4vwPgPB3MRykhhBXORL6WFQmqrv0WKImKMu6QTpofNAkebNRz6c7bYfWoT6dS1/0Hiu
-	iUz9icMOZ+oUggUEnRkTIz8PKv6WF3flfT3jla5xRwq+RUvnMKdAC3EHc1P/OoQ85GnBeP+K+25
-	UZaURG2ShmOlSyI3s/mLLoIVD28LSMHVK93yeqZ5wq7zUVt8dcEWeUpW8s8G9H7hk/HA/QzM8G4
-	W9trxqjcduOYV3uql2UVAM9nM9kec039KRHQw7g5MxIP1nzdhDAphsCNA/7QnNz36woF2NxJki2
-	oGFx1xIE5fO8C4YvNaNSigkz83Pl9VSowdc=
-X-Received: by 2002:a05:600c:3f08:b0:49e:7c8c:361d with SMTP id 5b1f17b1804b1-4ba0937820cmr39696135e9.22.1794401467873;
-        Wed, 11 Nov 2026 04:51:07 -0800 (PST)
-Received: from redmibook ([143.246.42.147])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba09517bc7sm39028095e9.3.2026.11.11.04.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 04:51:05 -0800 (PST)
-From: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-To: qby140326@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	shlyapugin@gmail.com,
-	Musaev Ibragim <atomicus.xyz@gmail.com>,
-	Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-Subject: [RFC PATCH] platform/x86: bitland-mifs-wmi: Add Redmi Book Pro 15 2023 (TM2209) quirk
-Date: Wed, 11 Nov 2026 15:48:49 +0300
-Message-ID: <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
-References: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=YsCD+kcs
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1794410504;
+	bh=81ZdOZI8AFzoY6Wjc1ZAc89k6QICeJEkg2KfANGYI3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YsCD+kcsxHtTV4zP34F7vLZ/ekCoGHlQC9NpKuHz10dcYsogCDKyCqf91wjZ/QUEv
+	 hpwVjxcXbT1BtRZJpBp9HE1eLMWRQrm/wqNVrLQTWJ2IvGv9SlQp6YlS+vHhq+d2AY
+	 LvEFaZrhBAizhh21XETNKqcXLIWY0UcFPLJHk7hFijuoAZkkf0eML9djQ7xPUteaOX
+	 WNyUPw3gATGFPlxghW2yUsrOAi1duAzB0wQsyri+hWQ/2UlVKljrHP8EPtxUvSN4ec
+	 AGOSuiz6z02GqVOUIrmOxb9X1lp6J9PQdQ4mNOnboRwGJ9PdeSY+/PKujwtQtc0RHK
+	 FIC8aJq+C3CoQ==
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with UTF8SMTPSA id 0BD8660055;
+	Wed, 11 Nov 2026 16:21:44 +0100 (CET)
+Date: Wed, 11 Nov 2026 16:21:41 +0100
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: John <shffr@protonmail.com>
+Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+	"coreteam@netfilter.org" <coreteam@netfilter.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to
+ 00:00:00:00:00:00 once the next hop's neighbour entry is gone
+Message-ID: <avSIBUcLH4kZyISX@chamomile>
+References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -102,168 +67,273 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="AFckwEBk/Xj85OWv"
+Content-Disposition: inline
+In-Reply-To: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
 
-On TM2209 the power mode is the STNM byte in EC RAM. Fn+K rotates it
-in EV20 and the EC0._Q24 handler then applies the matching SoC limits
-with HPTC. SystemPerMode does not affect STNM, so changing the platform
-profile had no effect on power.
 
-Read the mode from STNM and, on set, write STNM and evaluate EC0.HPTC
-as the Fn+K handler does. HPTC returns AE_AML_BUFFER_LIMIT because SVRP
-declares its ALIB buffer one byte longer than its data; the limits are
-already sent at that point, so treat it as success.
+--AFckwEBk/Xj85OWv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-The board reports DMI_SYS_VENDOR "XIAOMI" with TM2209 in
-DMI_BOARD_NAME, returns the WMI return code at the end of the buffer
-and charges over USB-C only.
+Hi,
 
-Signed-off-by: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
----
-Based on v15 of "Merge redmi-wmi into bitland-mifs-wmi":
-https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
+Would you give a try to this attached patch?
 
-Tested on BIOS RMAPH5B0P0909 only.
+Thanks.
 
- drivers/platform/x86/bitland-mifs-wmi.c | 83 ++++++++++++++++++++++++-
- 1 file changed, 81 insertions(+), 2 deletions(-)
+On Mon, Nov 09, 2026 at 09:26:55PM +0000, John wrote:
+> Hi,
+> 
+> Since commit b5964aac51e0 ("netfilter: flowtable:
+> consolidate xmit path"), a flow offloaded with
+> FLOW_OFFLOAD_XMIT_NEIGH keeps being forwarded with
+> destination MAC 00:00:00:00:00:00 after the next hop's
+> neighbour entry has been removed. Nothing resolves the next
+> hop again, so the flow stays black-holed for as long as it
+> keeps sending.
+> 
+> Before that commit the XMIT_NEIGH case called neigh_xmit(),
+> which creates the entry if needed, sends a solicitation and
+> queues the packet. Now nf_flow_offload_ipv6_hook() does
+> 
+> 	neigh = ip_neigh_gw6(rt->dst.dev, rt6_nexthop(...));
+> 	if (IS_ERR(neigh)) { ... }
+> 	xmit.dest = neigh->ha;
+> 
+> and passes the skb to dev_queue_xmit() through
+> nf_flow_queue_xmit(), without looking at neigh->nud_state.
+> When ip_neigh_gw6() has just created the entry, ha is all
+> zeros, and since the neighbour output path is never used, no
+> solicitation goes out and the entry stays unresolved. The
+> IPv4 branch has the same construction with ip_neigh_gw4().
+> In v7.4-rc2 the code has moved into the per-family xmit
+> functions but is otherwise unchanged.
+> 
+> This hit a router here running 6.18.60, which has
+> b5964aac51e0 as a stable backport. A WireGuard endpoint
+> behind the router talks to nothing else through it, so its
+> neighbour entry on the router aged out while the tunnel's
+> flow was offloaded, and the endpoint's handshake retries
+> every 5 s kept the flow alive. On the router's egress
+> interface every forwarded packet of the flow then looked
+> like this (addresses replaced):
+> 
+>   02:0e:bd:92:63:28 > 00:00:00:00:00:00,
+>   ethertype IPv6 (0x86dd), length 154:
+>   2001:db8:1::51.60161 > 2001:db8:2::1f.59320:
+>   UDP, length 92
+> 
+> "ip -6 neigh" had no entry for the destination, conntrack
+> showed the flow as [OFFLOAD], and deleting the conntrack
+> entry restored the tunnel until the next time the entry aged
+> out, a few minutes later. Going back to 6.12.115 on the same
+> router fixed it.
+> 
+> The script below reproduces it with three network namespaces
+> and no special hardware (IPv6 only, needs iproute2, nft and
+> python3). The server has a permanent entry for the router,
+> so the router only knows the server from its own resolution.
+> The flow is offloaded while the router has no valid entry
+> for the server, which gives XMIT_NEIGH, and once it is
+> offloaded the script removes the router's entry again, which
+> is what neighbour GC does to an idle STALE entry.
+> 
+> 6.18.60:
+> 
+>   flow: [OFFLOAD]
+>   entry: fd00:2::2 lladdr a2:5b:b4:93:86:a9 REACHABLE
+>   entry removed, flow offloaded
+>   2 s later:
+>   echoes: 7 ok, 11 lost
+>   destination MAC of echoes to the server:
+>        10 00:00:00:00:00:00
+>         7 a2:5b:b4:93:86:a9
+> 
+> 6.12.116 (Debian 6.12.116+deb13):
+> 
+>   flow: [OFFLOAD]
+>   entry: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+>   entry removed, flow offloaded
+>   2 s later: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
+>   echoes: 17 ok, 1 lost
+>   destination MAC of echoes to the server:
+>        18 de:9b:d1:db:19:4c
+> 
+> (Datagram 0 is lost on both kernels, during start-up.)
+> 
+> I have not run the reproducer on mainline. I compared the
+> code in v7.4-rc2 instead, and the IPv4 path is untested.
+> 
+> I don't know this code well enough to say which fix you
+> would want. Handing the packet to neigh_xmit() when the
+> entry is not NUD_VALID would restore the old behaviour for
+> that case, and tearing the flow down would also work, since
+> the next packet would then take the classic path and resolve
+> the neighbour. I can test a patch on the router or with the
+> script.
+> 
+> #regzbot introduced: b5964aac51e0
+> 
+> --- reproducer ---
+> 
+> #!/bin/bash
+> # Flowtable XMIT_NEIGH flow forwarded to 00:00:00:00:00:00
+> # after the next hop's neighbour entry goes away. Needs
+> # root, iproute2, nft and python3.
+> #
+> # Namespaces c (client), r (router with a flowtable) and s
+> # (server). The server has a permanent entry for the
+> # router, so it never solicits and the router only knows
+> # the server from its own resolution. The flow is set up
+> # before the flow-add rule exists, the router's entry for
+> # the server is removed, and only then is the rule added:
+> # the flow is offloaded while the next hop has no valid
+> # entry, which gives XMIT_NEIGH. Once it is offloaded the
+> # entry is removed again, as neighbour GC does with an
+> # idle STALE entry.
+> set -u
+> P=ftrepro
+> W=$(mktemp -d)
+> E() { local ns=$1; shift; ip netns exec "$P-$ns" "$@"; }
+> cleanup() {
+>   for j in $(jobs -p); do kill "$j" 2>/dev/null; done
+>   for n in c r s; do ip netns del "$P-$n" 2>/dev/null; done
+>   rm -rf "$W"
+> }
+> trap cleanup EXIT
+> trap 'exit 1' INT TERM
+> 
+> for n in c r s; do ip netns add "$P-$n"; done
+> ip link add rc netns "$P-r" type veth \
+>   peer name c0 netns "$P-c"
+> ip link add rs netns "$P-r" type veth \
+>   peer name s0 netns "$P-s"
+> for n in c r s; do E $n ip link set lo up; done
+> E c ip link set c0 up
+> E r ip link set rc up
+> E r ip link set rs up
+> E s ip link set s0 up
+> E c ip -6 addr add fd00:1::2/64 dev c0 nodad
+> E r ip -6 addr add fd00:1::1/64 dev rc nodad
+> E r ip -6 addr add fd00:2::1/64 dev rs nodad
+> E s ip -6 addr add fd00:2::2/64 dev s0 nodad
+> E c ip -6 route add default via fd00:1::1
+> E s ip -6 route add default via fd00:2::1
+> RMAC=$(E r cat /sys/class/net/rs/address)
+> E s ip -6 neigh replace fd00:2::1 lladdr "$RMAC" \
+>   dev s0 nud permanent
+> E r sysctl -qw net.ipv6.conf.all.forwarding=1
+> E r nft -f - <<'NFT'
+> table inet t {
+>   flowtable f {
+>     hook ingress priority 0; devices = { rc, rs };
+>   }
+>   chain fw {
+>     type filter hook forward priority 0; policy accept;
+>   }
+> }
+> NFT
+> 
+> # Client: UDP echo on port 6000.
+> E c python3 -c '
+> import socket
+> s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+> s.bind(("fd00:1::2", 6000))
+> while True:
+>     d, a = s.recvfrom(100)
+>     s.sendto(d, a)
+> ' >/dev/null 2>&1 &
+> 
+> # Server side of the wire: destination MAC of every echo
+> # coming back to the server.
+> E s python3 -c '
+> import socket, sys
+> r = socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
+>                   socket.htons(3))
+> r.bind(("s0", 0))
+> f = open(sys.argv[1], "w")
+> port = (5000).to_bytes(2, "big")
+> while True:
+>     p = r.recv(2048)
+>     # IPv6, next header UDP, destination port 5000
+>     if p[12:14] == b"\x86\xdd" and p[20] == 17 \
+>             and p[56:58] == port:
+>         f.write(p[0:6].hex(":") + "\n")
+>         f.flush()
+> ' "$W/wire.log" >/dev/null 2>&1 &
+> sleep 1
+> 
+> # Server: one datagram a second to the client, port 5000.
+> E s python3 -c '
+> import socket, time, sys
+> c = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+> c.bind(("fd00:2::2", 5000))
+> c.settimeout(0.8)
+> f = open(sys.argv[1], "w")
+> for i in range(18):
+>     t = time.time()
+>     c.sendto(str(i).encode(), ("fd00:1::2", 6000))
+>     try:
+>         c.recvfrom(100)
+>         f.write("%d ok\n" % i)
+>     except socket.timeout:
+>         f.write("%d lost\n" % i)
+>     f.flush()
+>     time.sleep(max(0, 1.0 - (time.time() - t)))
+> ' "$W/server.log" >/dev/null 2>&1 &
+> SV=$!
+> 
+> sleep 4
+> E r ip -6 neigh del fd00:2::2 dev rs
+> E r nft add rule inet t fw ct state established \
+>   meta l4proto udp flow add @f
+> sleep 3
+> FLOW=$(E r grep -o '\[OFFLOAD\]' /proc/net/nf_conntrack |
+>   head -1)
+> echo "flow: $FLOW"
+> echo "entry: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+> E r ip -6 neigh del fd00:2::2 dev rs &&
+>   echo "entry removed, flow offloaded"
+> sleep 2
+> echo "2 s later: $(E r ip -6 neigh show fd00:2::2 dev rs)"
+> wait $SV
+> echo "echoes: $(grep -c ok "$W/server.log") ok," \
+>   "$(grep -c lost "$W/server.log") lost"
+> echo "destination MAC of echoes to the server:"
+> sort "$W/wire.log" | uniq -c
+> 
+> Thanks,
+> John
+> 
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index a431d3fef..b63b139a6 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -21,6 +21,7 @@
- #include <linux/input-event-codes.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-@@ -99,6 +100,10 @@ struct bitland_mifs_quirks {
- 
- 	bool return_code_at_end;
- 	bool skip_ac_type_check;
-+
-+	const char *ec_mode_field;
-+	const char *ec_mode_apply;
-+	phys_addr_t ec_mode_addr;
- };
- 
- static const struct bitland_profile_entry default_profile_entries[] = {
-@@ -113,7 +118,30 @@ static const struct bitland_mifs_quirks default_quirks = {
- 	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
- };
- 
-+static const struct bitland_profile_entry tm2209_profile_entries[] = {
-+	{ PLATFORM_PROFILE_LOW_POWER,   2 },
-+	{ PLATFORM_PROFILE_BALANCED,    1 },
-+	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
-+};
-+
-+static const struct bitland_mifs_quirks tm2209_quirks = {
-+	.profile_entries = tm2209_profile_entries,
-+	.num_profile_entries = ARRAY_SIZE(tm2209_profile_entries),
-+	.return_code_at_end = true,
-+	.skip_ac_type_check = true,
-+	.ec_mode_field = "\\_SB.PCI0.LPC0.EC0.STNM",
-+	.ec_mode_apply = "\\_SB.PCI0.LPC0.EC0.HPTC",
-+	.ec_mode_addr = 0xFE0B0300 + 0x7E,
-+};
-+
- static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2209"),
-+		},
-+		.driver_data = (void *)&tm2209_quirks,
-+	},
- 	{}
- };
- 
-@@ -271,6 +299,48 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
- 	return 0;
- }
- 
-+static int bitland_ec_mode_get(const struct bitland_mifs_quirks *quirks, u8 *val)
-+{
-+	unsigned long long v;
-+	acpi_status status;
-+
-+	status = acpi_evaluate_integer(NULL, (acpi_string)quirks->ec_mode_field,
-+				       NULL, &v);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	*val = v;
-+	return 0;
-+}
-+
-+static int bitland_ec_mode_set(const struct bitland_mifs_quirks *quirks, u8 val)
-+{
-+	void __iomem *addr;
-+	acpi_status status;
-+	u32 glk;
-+
-+	addr = ioremap(quirks->ec_mode_addr, 1);
-+	if (!addr)
-+		return -ENOMEM;
-+
-+	status = acpi_acquire_global_lock(1000, &glk);
-+	if (ACPI_FAILURE(status)) {
-+		iounmap(addr);
-+		return -EBUSY;
-+	}
-+	writeb(val, addr);
-+	acpi_release_global_lock(glk);
-+	iounmap(addr);
-+
-+	status = acpi_execute_simple_method(NULL, (char *)quirks->ec_mode_apply, val);
-+	if (status == AE_AML_BUFFER_LIMIT)
-+		return 0;
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static int laptop_profile_get(struct device *dev,
- 			      enum platform_profile_option *profile)
- {
-@@ -282,14 +352,20 @@ static int laptop_profile_get(struct device *dev,
- 	};
- 	struct bitland_mifs_output_head_rc result;
- 	size_t i;
-+	u8 val;
- 	int ret;
- 
--	ret = bitland_mifs_wmi_call(data, &input, &result);
-+	if (quirks->ec_mode_field) {
-+		ret = bitland_ec_mode_get(quirks, &val);
-+	} else {
-+		ret = bitland_mifs_wmi_call(data, &input, &result);
-+		val = result.data[0];
-+	}
- 	if (ret)
- 		return ret;
- 
- 	for (i = 0; i < quirks->num_profile_entries; i++) {
--		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
-+		if (quirks->profile_entries[i].wmi_val == val) {
- 			*profile = quirks->profile_entries[i].profile;
- 			return 0;
+--AFckwEBk/Xj85OWv
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment; filename="fix.patch"
+
+diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
+index 19cafae748ab..73f49dc41157 100644
+--- a/net/netfilter/nf_flow_table_ip.c
++++ b/net/netfilter/nf_flow_table_ip.c
+@@ -873,7 +873,8 @@ static int nf_flow_queue_xmit4(struct sk_buff *skb,
+ 			return NF_DROP;
  		}
-@@ -350,6 +426,9 @@ static int laptop_profile_set(struct device *dev,
- 	for (i = 0; i < quirks->num_profile_entries; i++) {
- 		if (quirks->profile_entries[i].profile == profile &&
- 		    !quirks->profile_entries[i].no_set) {
-+			if (quirks->ec_mode_addr)
-+				return bitland_ec_mode_set(quirks,
-+							   quirks->profile_entries[i].wmi_val);
- 			input.payload[0] = quirks->profile_entries[i].wmi_val;
- 			return bitland_mifs_wmi_call(data, &input, NULL);
+ 		neigh = ip_neigh_gw4(rt->dst.dev, rt_nexthop(rt, ip_addr->ip));
+-		if (IS_ERR(neigh)) {
++		if (IS_ERR(neigh) ||
++		    !(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
+ 			flow_offload_teardown(flow);
+ 			return NF_DROP;
  		}
--- 
-2.56.0
+@@ -1202,7 +1203,8 @@ static int nf_flow_queue_xmit6(struct sk_buff *skb,
+ 			return NF_DROP;
+ 		}
+ 		neigh = ip_neigh_gw6(rt->dst.dev, rt6_nexthop(rt, &ip_addr->in6));
+-		if (IS_ERR(neigh)) {
++		if (IS_ERR(neigh) ||
++		    !(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
+ 			flow_offload_teardown(flow);
+ 			return NF_DROP;
+ 		}
 
+--AFckwEBk/Xj85OWv--
