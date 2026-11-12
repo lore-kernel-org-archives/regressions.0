@@ -1,87 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.180
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794479717;
-	b=RK75+do4tySQPXPVFqI8n9sjnoAhPQmY3LLSpWAb9ffwx0BJcHlox8RTHclJTpk5HtsO
-	 RefrrN91hCWoqFzqu+rQC8n1bcfj8J6aIqR+iwvGkSpTKkNltjArvP3kerf427wkGwHBz
-	 D/avVM6M1pHMkSqndhCl7AU72btryVCifMrhM43SlRS0nbx3Kes5C9ujzUfgBklEP0Yoj
-	 DrWPVi7kqS79n9vtBUefWJ9xxGMSYkJiv+581X0dhZXG36JPa7tPDEGUmTPPLtSDjcnbC
-	 bpsbOL/XU94G98ktgIns+rxiji+CsBPCOciBYELrcRX1BCxIANQRem8xk6muVY0Fx1Q==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794479717;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.49
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794480348;
+	b=teAKiLT82UKZMq+vEHR/Uwg2LlnFecgJaHkFus3/I7w4M95H0M7hqqRZDKl9FzTUfTvf
+	 aoKNi5OJPwKnUamwIjMd/vsG+HZf7vCajA3kNI1Kz7iH5zysvdpGgJDCGrcEJv1ZEd2Ps
+	 8/sOwO0Kb5zZi+tzPqwm6naObtRQ8Hy75zhG8+tHgq9zKuKv0HZqoeFqfc9AIsQ0kOOhQ
+	 ajRu9gx/YKnHG5ajLWusV+mSwbrcM4o2htxlBgemdF1kI5WFvhl+bqLqSZUR8JPV1uE/z
+	 CwFflFBj4loK/PJwb9gNpSwArYCnSwZr9M/VsNAJ/vZYvfVC+PDSrbXX4PFFktzJ1Yw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794480348;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer;
-	bh=WoymvwdfMBFoMyXW+9QTB+Y4rJogi+4Hn0MI83a+cw0=;
-	b=kfbXLwCBq/d4yhYsKpSSIbzrYEC/PBbsqnYGX/QzNIsxzSG5rTUm0J0xBoyEMcdlfPcp
-	 LUANJL97vTEuJzzCYDD9EwhBoVZSC4JASY61vsJcVHQoFV+XBmPnQby66BksZ6e9sHv+2
-	 YEd2mOc+94THmTLMAbKlq3ax8y9VIwMtETwu1gd4mz6hOENUJ39/qlRhse96jxhR/stLO
-	 c6cmlimKKmmsomX+i47VA0Sd9XJ8q6buyY+an586hXxDwwDQYMtIXMnvy51pXyj5xq7tl
-	 uuqT78tQGRS6QUv1vv/QVXtUZi8M5le86NYPGsPJJ14UxIzotCRY8eWWv5tiqCcjKWg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=ddYVXCpBhwQ+2ajmiZG9m0k4vsq/lXRN7BsHqaZoQkw=;
+	b=MnJhDNsbsShf4FgSiKovb7mUlB8xLxyq2gzwzjxEhmc3l5abKncIups158oCwMvx7dUV
+	 t7LdZSoxkbITcVHNwCGk2SBHEZlrhFkqaCBab2YvaYuAL5ELfu+vgTlomPqdWw0UDdrkW
+	 f3lASVRYDx7sX6zOVCcDkzLf+pFbF6vwkv8z3xVX7NFAzBgOsLRBGC3PyqGhxhUz++QmG
+	 I0/IUAksfPYwjFpbcd7nxaUZ9al+8SZnSLKV9+KqVpg0FuYRAizjSw5qfWI2CNW6rold9
+	 14UeJJP4xgS2Fl1T9wfX42Z/nHa4e+vZJHWK6sJaIx1uRC4Ge1TRe/gqEOV2V/Qywuw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A49JrogQ;
-	arc=none smtp.remote-ip=209.85.215.180
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UbATJpmE;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.49
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769A3606A896
-	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 10:35:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 769A3606A896
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72AA606A8AC
+	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 10:45:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E72AA606A8AC
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A49JrogQ
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cdab6ae1ee9so1904182a12.1
-        for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 02:35:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UbATJpmE
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-716ea2598eeso2429454eaf.0
+        for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 02:45:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794480347; cv=none;
+        d=google.com; s=arc-20260327;
+        b=LYqba2I/PWp3v4B9EKw8uhRGARigzJrlPC16N8BB1bpv6B0EEw5QyLunOSOoats+n+
+         Hsruo11+KSnYvAWmIexC9OyBFx/un8fgHMCjhexf+w9lOSP2q8WSYURne0GhC+VKrXly
+         jeYEFuTscCMztcDuqcq3v6QLrYGuuD8Tl/SfrvFsH5gCnYD/tJ9vAP+kxSMlyP8c+d2L
+         bxzLI1SYrhv+w5SEuZw/MuFS0vzH/IoFK1u2+dRqsILW15IZRPNRobX7S3/b31yr7c8j
+         O4kGtv6GRp6oi0DJpXPtFNapelXKBoe3s54Kkxcuybcveeuw4eYw3aFPRHiFfnLVr4cf
+         XLdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ddYVXCpBhwQ+2ajmiZG9m0k4vsq/lXRN7BsHqaZoQkw=;
+        fh=UWAWrIisON2KTjVC8FrT6SztAaeAkCFKwgdJvnJ+Cn0=;
+        b=pddYUBoonsJQZ9jXb48P/BWgOwsFOte2cZEL5uMDF78sI8kUL4a2M2MZ6MQaIkyNtK
+         Vc5U0lQTRCdXqh+OgDWhr5vg3a7ht1gPb93N4IBXOd2gOcWQyAk8aLj+fcxqlZstsk3y
+         +6xY6bXywe9qFYcue1EU6VpBEJcrcNXwNmji6ETUg/UncKBNzWj6fDQT01Vzqk+BOUuN
+         c1NxE5m7uuok8tJVOzcvSdatZMZj+7VdB5M8zFkzarBsmugHjpLb1x/g7TP5uTxi/TpV
+         ajbBUEAQ6Ihqu+b1veZkkLWCOsSUlehnrJxP962FAXXMC8x9YkFF4wNefYv8YfGhWUxz
+         xO+w==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794479717; x=1795084517; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=WoymvwdfMBFoMyXW+9QTB+Y4rJogi+4Hn0MI83a+cw0=;
-        b=A49JrogQr9MPHL6vYQXSb6GX7eF1aL+AdteRPPiCd9Z48aV14rivkJIY/0b+MQDtrQ
-         JBF0dbKV5Kj9qnibHkghhkW4t7QtMUrAi6wV0PHZdZGenGRLR6YrSeiEI9itb7PBfcPO
-         Pj7fftaq23gV38sY56Nk+UvopwgHoofM11nzrfHmmKKAAzuF70S5X+ibQEMh4UIiA8lv
-         AyQQqp6WeOKSICsGKrzH0+8a9zNNsmcOKuN8m/qcfSBy+zH91I26i412HVB6VDnaGSAG
-         k4aRr1E1wMG3yj/04afhQqUT5lOWfdFrJ0ZdsmSREoNdqgSco/Us+qd8tiaCA9LgMt0k
-         7RyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794479717; x=1795084517;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1794480347; x=1795085147; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=WoymvwdfMBFoMyXW+9QTB+Y4rJogi+4Hn0MI83a+cw0=;
-        b=jm5Ailzimvx37D1Fh9vorzYuwvHwcZKN9rxfuqNX5gMG5YqnYVVYUfLEa/LtADcV+8
-         mTTZ5MPyef+XnJmrlNQ87mJaWZFJsk6IWkNgC32wdEikwrkFLtHoFOLuTbkuTmEBiDpM
-         K/EkD+CrG1nCBlsqOgThJlwJYtu37c0Q3u71vBZzZFLcPXbjbtEQSSPq1IXFcT/nyLYK
-         95NMWXsDM4kSQ+5Zf4DfGRwrw1a7BBYlY5gKwGxvOcF6A6kCOGft6Pwekjz6EwPdCz68
-         TG2ExwoPbzSW2NR35071bLF1tJhgBAIjKTZe/9h827BW0YoZ1vxZCEFkMu02zgzKIf2r
-         fPEA==
-X-Forwarded-Encrypted: i=1; AL+hErE5B4z90HSIiHM87Mv0vP5jQaaOLRhwqnQRdWLw/7yuUJMxS42dLGVj4k5XX2Tc4UX+GQUtIHw+MxUMbQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/Kj3kfN5ht+iRZ0fQ+6EmndoXkbA5oui6dLlJVo1/7SqucTMQs
-	srKtT+MpOSbfn4GHa6lxPLtallLts2zNCj40N0uwRLPUdUpMLtsvg7gP
-X-Gm-Gg: AYBFou1ULx4SQmlmeiuwfTWEklRgnqaZj7RZcf9B9drQPUhJu62c/rn4ejQqWygAedg
-	/68EckrJOYOUBvcIBCsviiaKfaw58gLRJaSUP9AdZpOp6UeGOCXrCqxEzW6vX54kPbCoH67LyWH
-	O5lmIMmgDWUBETjrI8s7MMjKS3mEAVXeeNIdOU0btvb0vjPhBj/Jp0rQYhpS9NxHzBMJfhWv67o
-	VOZ4ZXDxwG0BMiz71uBnPArcnv5jdXssbUVHM/vkSNFe+jYXh3IBnHCzvAMNWo4NyF5VCy7DJa4
-	7d84BSOofor3KIGMb7yUmeJPqu2LfRQtiJ1yJfTEugUT3ec0Kpzh+dJIrY3OMVRo+qpkCV3OGOE
-	y5fMtrrSkrtVEhMXdI5zKiJayZoBVteuU8/aZ9soXGDe+eT4xxnP+bun6oGeNv3kB+rnUNq+Trl
-	quldkCrT9I9kfkG52dPTPRWL21xFbJor7UOZRcLoGtKYjW9QjT20Y1dle9rg6MOXeh0SSwu+ziA
-	z+FiuNaakXMKYE+cwXJ0NoR52Wv43DHP7jc8XZq54U0a6CrdjsqhLcbHKc2a0DawTsEGdOLNpeh
-	8VNG69acHgnKuMuCmCGGG2C2DKD0rLTi/qvFQlZIJ4h0Up3tKHwCiibR9bLCKLpIXwqziyYkQDb
-	JKoo1Jw==
-X-Received: by 2002:a17:90b:4c4c:b0:3b0:e2a9:3466 with SMTP id 98e67ed59e1d1-3b182eebe65mr4740116a91.16.1794479716567;
-        Thu, 12 Nov 2026 02:35:16 -0800 (PST)
-Received: from smtpclient.apple (fs98a57cc9.tkyc008.ap.nuro.jp. [152.165.124.201])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b197ce49d6sm4207584a91.4.2026.11.12.02.35.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Nov 2026 02:35:16 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+        bh=ddYVXCpBhwQ+2ajmiZG9m0k4vsq/lXRN7BsHqaZoQkw=;
+        b=UbATJpmEEzGrt26RN2XQwabrf4s6XkSMV5e9/e4rLFGRMVSLUle4LTM3Tj2lBLerLk
+         mC16IS7hMgXXC7cFySERAOQz+5+c9bICrJUCCfoE3A1OiZ053wifF1v0+GVDZRzzFumU
+         gBvBjHQZQHKp8vvOhypMmDCGmOAYUYFWNM9Ut/aOcx8CvtMc9oXdP6U3V9lJJv0H7GOT
+         HGCEhIzjPxCqHnag3saT+sB7b4rvLYfMBE/VwwHaRAx1OCLQJZRn7PFrorwh9iV6/eNw
+         dHVu8K2OmCyST3HfC1zElZ7c98VSQgEJBhh86Xk7GouM84xqxk9y2ylDbz5nDFH0pWhX
+         AoZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794480347; x=1795085147;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ddYVXCpBhwQ+2ajmiZG9m0k4vsq/lXRN7BsHqaZoQkw=;
+        b=bKXh1cK4rbkngW9TPbvV1kit626U/EKYdnovEy2E1Bk2ucgA0QYKmWuQl6iFCb4Su9
+         6PEHnaMeJL6SoHju9spqBPYj3UQJBs9zdJyIerMJEkdtC2vlUrTT6DBThZ+JnVGEi1t/
+         IqPv+wJFsBo8sSGY8DGkROHgrUWqzGJU/jSBBzBq6ocMC04tyRof7BpK0k1VraZvHnfQ
+         KOE+4yVHX6NpazvlEdwxTUPbaIO5Se37xSB7tJoJBHDqp98qpv9tIQL8xefD77tqzR7s
+         GaoAxHLjxrpUCNVpOXU9uimF4v9iI79K8+ICkszwkzz6mYr+eg3sz5wgWlPNUgmwE/Nx
+         4LFQ==
+X-Forwarded-Encrypted: i=1; AL+hErEAaoMce1q+0MdL7/aaqebPR8KFcTEBGLa244IDi2ch1Gzq714wTPvQLVgU/XI/Hd/V0hpHI23H0Zfydw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9vXWmY2CuzQRHRWq3voOfdoDudAiM1PhzgpIcllai9lap5ii+d
+	d0atprdyGkXFZnfurKbJYjuM38jrfZlmYvGkuR3oLA0BUtMjzZzHlCRWWrCVcMJBPF+TCekpvNr
+	Qshzlz9xbwZU9/LzoYX4Psx8FGLz9GM0=
+X-Gm-Gg: AYBFou3hPqOdKQ4ekcC/0WQyWzBusjn8OadEx8PWVHdpZrTv9NhtlVsn3PVddfCyzVv
+	K3gM6dc2CEjj8da2TnYZCs737sEkxJReZkbCz8ML8ZxbebzSwG3Cje/qeYFV2uzpdqkQXCZfeVW
+	gqoJAeoFqFtzc0bVwnkaPFg8aaimpjau1qtl5TVbk/CqXON6p+l408ZMoKZVjpylwMkxrvisjfP
+	n6JDEnm1UKUAoF+0AvSjVM+jXOJ4yDgEUwImWnNGzBMgQYv67fpf3JWWRdZHCYc3RhKAhorU1eP
+	0SWdL3r7JNOiNAUMpXUOw6Hx+YCfxtat09Ger63Ef4tfsd/xUQWz97Vr2RDteYvwjpGO7QEHK/f
+	QUrJt4lyZF6OPlROevVaxZfiemfHnWfLWcWnyk+8=
+X-Received: by 2002:a05:6820:1621:b0:70d:77b7:6879 with SMTP id
+ 006d021491bc7-7191788d816mr3318135eaf.36.1794480346869; Thu, 12 Nov 2026
+ 02:45:46 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -90,160 +102,25 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.700.51.1.1\))
-Subject: Re: [PATCH v2] mm: memcontrol: Don't lose track of exiting OOM
- victims
+MIME-Version: 1.0
+References: <avA1wXhTMs9eY2NF@chrisdown.name> <6B8E9261-3FF8-441B-8F47-7D35834A8D35@gmail.com>
+In-Reply-To: <6B8E9261-3FF8-441B-8F47-7D35834A8D35@gmail.com>
 From: elenchist <elenchist.dev@gmail.com>
-In-Reply-To: <avA1wXhTMs9eY2NF@chrisdown.name>
-Date: Thu, 12 Nov 2026 19:34:53 +0900
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Muchun Song <muchun.song@linux.dev>,
- Tejun Heo <tj@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Zhan Xusheng <zhanxusheng1024@gmail.com>,
- cgroups@vger.kernel.org,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- kernel-team@meta.com,
- regressions@lists.linux.dev,
- stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6B8E9261-3FF8-441B-8F47-7D35834A8D35@gmail.com>
-References: <avA1wXhTMs9eY2NF@chrisdown.name>
+Date: Thu, 12 Nov 2026 19:45:34 +0900
+X-Gm-Features: AclHuK8UhlNcIj8rZxl-jPAQ-TNb4Ro929pQ1QbaMvl25O9AF4j0sdfra1fF6R8
+Message-ID: <CANYAW49zq97w7ptUO6xkXZ3e+CNMzWH7qxQ1bQu4an1L6_kXuw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: memcontrol: Don't lose track of exiting OOM victims
 To: Chris Down <chris@chrisdown.name>
-X-Mailer: Apple Mail (2.3864.700.51.1.1)
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Tejun Heo <tj@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Zhan Xusheng <zhanxusheng1024@gmail.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Nov 08, 2026 at 12:41:37AM -0800, Chris Down wrote:
-> memory.events showed oom_kill 2 in three runs. In one of them the =
-first
-> process hadn't submitted the read yet when it was killed. The slow =
-read
-> just makes the window easier to hit.
-
-It doesn't need AIO at all.  A plain memcg OOM hits it most of the
-time: the victim only spends 10-20ms in exit_mmap(), and if the
-allocating task fails a charge again in that window, a second (and
-sometimes a third) task gets killed.
-
-Reproducer: memory.max=3D400M, no swap.  A holds 150M, B 100M, C 50M, =
-and
-T grows by 10M every 0.3s.  Only A should be killed.
-
----8<--- overkill.c
-/* A holds 150M, B 100M, C 50M; T grows by 10M every 0.3s up to 200M.
- * Run inside a memcg with memory.max=3D400M. Only A should be killed. =
-*/
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-static char *volatile sink;	/* keep the stores */
-
-static void hold(size_t mb)
-{
-	sink =3D malloc(mb << 20);
-	memset(sink, 1, mb << 20);
-}
-
-int main(void)
-{
-	const char *name[] =3D { "A", "B", "C", "T" };
-	size_t mb[] =3D { 150, 100, 50, 0 };
-	pid_t pid[4];
-
-	for (int i =3D 0; i < 4; i++) {
-		pid[i] =3D fork();
-		if (pid[i])
-			continue;
-		if (mb[i]) {
-			hold(mb[i]);
-		} else {
-			sleep(3);
-			for (int j =3D 0; j < 20; j++, usleep(300000))
-				hold(10);
-		}
-		pause();
-	}
-	sleep(10);
-	for (int i =3D 0; i < 4; i++) {
-		int st, dead =3D waitpid(pid[i], &st, WNOHANG) =3D=3D =
-pid[i];
-
-		printf("%s %s=C2=A5n", name[i],
-		       dead && WIFSIGNALED(st) ? "killed" : "alive");
-		if (!dead) {
-			kill(pid[i], SIGKILL);
-			waitpid(pid[i], NULL, 0);
-		}
-	}
-	return 0;
-}
----8<--- run.sh
-#!/bin/sh
-# cgroup v2, no swap, as root: gcc -O2 -o overkill overkill.c; ./run.sh
-CG=3D/sys/fs/cgroup/overkill
-mkdir $CG && echo 400M > $CG/memory.max || exit 1
-sh -c "echo =C2=A5$=C2=A5$ > $CG/cgroup.procs && exec ./overkill"
-grep '^oom_kill ' $CG/memory.events
-rmdir $CG
----8<---
-
-Over-kill (oom_kill >=3D 2) per 20 runs, ThinkPad X1 Carbon Gen3
-(i5-5200U, 8 GB), x86_64.  "4a" is the same layout driven from a
-systemd-run scope with Python tasks; "C" is the program above:
-
-  kernel                                      4a      C
-  6.8.0-149-generic (Ubuntu)                  0/20    -
-  7.0.0-42-generic (Ubuntu)                  19/20   19/20
-  v7.4-rc1                                   20/20    -
-  v7.4-rc1 + this patch                       0/20    0/20 *
-  v7.0 + 60f21a264930 + this patch            2/20    0/20
-
-  * an earlier, longer version of the same program
-
-v2 has the same code as v1, which is what I tested (identical tree
-after git am).  On v7.0 the patch also needs CSS_TASK_ITER_WITH_DEAD
-from 60f21a264930 ("cgroup, sched_ext: Include exiting tasks in cgroup
-iter"); only its cgroup hunks apply there, so that's what I used.  The
-2/20 left on that kernel look like a separate issue that mainline has
-already fixed.  On v7.0, MGLRU's page table walk in T's reclaim can
-hold an mm_users reference on A's mm (get_next_mm() used
-mmget_not_zero() until d14514c66cb9 "mm/vmscan: prevent MGLRU reclaim
-from pinning address space" in v7.1-rc1).  A's own mmput() is then
-not the last one, so A finishes exiting and drops out of the scan
-right away, and exit_mmap() runs later from mmput_async() in a
-kworker.  The next OOM picks B.  I traced 2 such over-kills in 40
-runs; with MGLRU page table walks turned off (lru_gen/enabled =3D
-0x0005) I got 0/40.  So a 7.0.y backport probably wants d14514c66cb9
-as well; it applies to v7.0 and v6.19 as is.  I haven't built v7.0
-with all three.
-
-Zhan's series [1] is a different problem (thread groups migrated after
-their leader exited); v7.4-rc1 with it still gave 20/20 here.  The two
-patches change the same css_task_iter_start() line, so they will
-conflict.
-
-Tested-by: elenchist <elenchist.dev@gmail.com>
-
-Adding the regressions list: a72f73c4dd9b is in v7.0 and was also
-backported to 6.19.9.
-
-#regzbot introduced: a72f73c4dd9b
-#regzbot title: memcg OOM kills more tasks while the first victim exits
-#regzbot fix: mm: memcontrol: Don't lose track of exiting OOM victims
-
-I used an AI coding assistant (Claude Code) to build the kernels, run
-the tests, analyse the traces and draft this mail; I have checked the
-results and the text.
-
-[1] =
-https://lore.kernel.org/linux-mm/20261027144016.2582880-1-zhanxusheng1024@=
-gmail.com/
-
+My mail client turned the backslashes in the reproducer into yen
+signs, sorry.  Every yen sign there should be a backslash: the printf
+format in overkill.c ends in backslash-n, and in run.sh each of the
+two "$" right after "echo" has a backslash in front of it.
