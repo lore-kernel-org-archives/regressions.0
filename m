@@ -1,60 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.26
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.194.8.81
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794474515;
-	b=kpOvH2ekJd0AFGKhExmrPQ9JnWN1e1BlO8H6rfct10RqTFpZvX278TDzjG7ON8J8K78p
-	 qIkbJ3WN7PkV+p6pc5ehEyte4VByyLrdRB45cihRQ8KOwpkLjHQYT+qs9cysg411vcZ5Y
-	 Uk5yXHSFpyOglMEEZPuRyiLCAAc1zmWmqy01zeGosWDaptxdoQXtojghgP+tJ8cNWS7UP
-	 IWVkvI9pWEK519uuGW0RJZfNWKwdtn7oeJBZIXWXkhS11f45KnkYJ/89eDkMXLkK/vhPT
-	 1F3LDYp38x5ZRLg7+IJsnS61MdthEXZCbZlR1P05H/d2bpespGm9BQpnZ0+TBTUoAIA==
+	t=1794476729;
+	b=gNLUiEPDKtWxo1em33RIYz+Llhvb6mGfywwA9I5X1q6TI6sCSPWYn8ifgtXyXnD/3X3m
+	 8hxCw4PXMpjs6bQHl2liP4bVwCkKyky1vTqbmZdoP3rNcT32Ju0zySkaFTb7TckDZT/0h
+	 G+lFgNVxklqqT4iSx2WTtMo9pmDGwSbG0JtKjNXOZuraE+JAjv4Ngu6x0IwKnA4Aje9WA
+	 TVmACSBelM9e16j84uLbALoy1XZ93eUOvImp0sOTxNf9bS7vLR20Yc5epvt4tiVAI8UpO
+	 Wl1EPkkXX3InCC0IMYqM7A11bAsahh40bG3r/xihhFn+9ZBLWIAY/JCjIml3kUbW+LQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794474515;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=Ala9MWQu+4z68BZPcrMGazBvk1wxslpt7okio92DUeo=;
-	b=y0G5q4BerLn/gZp/iXapH/adW6EcZEtR5WIA8FpOwJPoDa66n7H3/7FXGPFzkdUKWkZi
-	 5fEwk49+c/Yz4re/E5yJvm1UvrJNFFL1wFQa9jXTPmEAtnmsfEfssJvPxtt8hthskG0CA
-	 myeGjgr/e6PIlc29ZNxyMuA0EnB21VfTaKA0EbhxpdjDOezxrI8V1XqOmhvAkC1j3onOs
-	 V3Ntn5wT5pbdirMVcPLG7L+S1j2W3vvU/WUNF80lp4/B6Y1fqNBCv9oj1wazCZAwLU6on
-	 HZN2mN4owU7HI6s+mCffnJ2m3z/dAzVaBDekjUP1LjXMJOJfK0DgIxkEYN4WfvsYErA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794476729;
+	h=DMARC-Filter:Received:DKIM-Signature:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=uKwkGpbKTSm+TeC+5PE4mVU5+tF0hJnI8MkhBwgF5Is=;
+	b=op27FrpiRLy2CiaoOxHQD2R0X7w+ZLylBXAfOJmPBWrvUxC52ejKsi5S60gKhxneCbKt
+	 oFwi/hOEorlAPX78f6ojcyWZKbEegfVYKqNt47O1ITVsKqKUk3lURQvo0FHwS6+tyqY3c
+	 iblAm9mB8i5it9yZJULWhgSptF1hPu10Ks04n2ID8PnpZ6vRxudaOgWRu8ggX9S05Uteo
+	 puiDyVaCXOozjzvPGYmX7fEuzdYDbnBvVn1MkPXyQyXGT1pf3PJ/vBfHpOQjPqR/FDmTd
+	 XPiG0jbTUJQykj/Dffc0Rjfa4md64t7wLvK7gLMVNebX7e/sI+1eF52Ai/+1Gae1GwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=protonmail.com;
-	spf=pass smtp.mailfrom=protonmail.com;
-	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=px47V+Ib;
-	arc=none smtp.remote-ip=109.224.244.26
-Received: from mail-24426.protonmail.ch (mail-24426.protonmail.ch [109.224.244.26])
+	dmarc=pass header.from=dolcini.it;
+	spf=pass smtp.mailfrom=dolcini.it;
+	dkim=pass header.d=dolcini.it header.i=@dolcini.it header.a=rsa-sha256 header.s=default header.b=nYIwTd1T;
+	arc=none smtp.remote-ip=217.194.8.81
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6ED606A8B6
-	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 09:08:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7E6ED606A8B6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145F3606A327
+	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 09:45:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 145F3606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=px47V+Ib
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1794474511; x=1794733711;
-	bh=Ala9MWQu+4z68BZPcrMGazBvk1wxslpt7okio92DUeo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=px47V+IbFKEMejLQpnmt4nfAyBCZlltCcPmbRmXpYoXm51PR/QFfo6EQpR5sAQkHR
-	 vkWtclKVYM7ok7Ja8vA+vw8SdmTO1qPLFUMn6rJYoN0+nHi9JmxEvhritLfdPdfupl
-	 g9McCLuRxsn6l6VBWUcnpsYbt9z0Zc0cESKQBKFipcpWC1XAbpVTNoNTioirGDvhaT
-	 5v8y8VAbJ8SOrtXARp0FJNgN+eqILaaAtsCWmbKu3iiqHoBjyvrosKDv0a+ObrnOXE
-	 s2BmGTbEgaa1m38ecPpt0xwZPMxNT8Do+xw+g6dAtNMsEaCUH9z4DmBRhFnu3BuotT
-	 lCvJwLS0PHEoA==
-Date: Thu, 12 Nov 2026 09:08:27 +0000
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-From: John <shffr@protonmail.com>
-Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>, Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>, "coreteam@netfilter.org" <coreteam@netfilter.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to 00:00:00:00:00:00 once the next hop's neighbour entry is gone
-Message-ID: <LCJrB-Fde--T9NiYx2QfFb-X-9W-vsYYmtmrHwIKuKgM8enKRWF2DYypz2_zJKSKQBMUdb9sS6xMEfPihv1YO2FLjX1OUN-Td3Hq1eAdLgw=@protonmail.com>
-In-Reply-To: <avTngTkNKE5ApQW8@chamomile>
-References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com> <avSIBUcLH4kZyISX@chamomile> <avTngTkNKE5ApQW8@chamomile>
-Feedback-ID: 9232920:user:proton
-X-Pm-Message-ID: 4a2ccb05631e1753db86d5225a72dabd5196ddbe
+	dkim=pass (2048-bit key, unprotected) header.d=dolcini.it header.i=@dolcini.it header.a=rsa-sha256 header.s=default header.b=nYIwTd1T
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 038901FB1F;
+	Thu, 12 Nov 2026 10:45:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1794476719;
+	bh=uKwkGpbKTSm+TeC+5PE4mVU5+tF0hJnI8MkhBwgF5Is=; h=From:To:Subject;
+	b=nYIwTd1TXIHzMzyjHUt6ACpVqDRCGfeI3oXz1tIdjri8GqMNB+v5D1HAyRabie0V/
+	 JRUaLA0OVVPSW1Sb+6IM0MZXNPv/QCMNanBGHX3iABB5ccTtWB7voffjip+Gvt3Bty
+	 8S91W3X7zqfdvc58FcBd6HL7JlA6qphkaKLRPsuaFbnHFrHZWIJQLeHYN4i8BKlKJe
+	 Nn/EJ8eJFihGH0bKk5HSOwE3GPQ55ccioJYFqBJwAeaJfg7tSt4LFpDSImsNOyk2OD
+	 +hW6Wouyfgh1FckyEwan3n9ArSga7l7TU/eDwU2QNh/97YDg6Y4ED2psE7dUAXegO6
+	 r23KhXIseXyUA==
+Date: Thu, 12 Nov 2026 10:45:15 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	regressions@lists.linux.dev,
+	Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, linux-phy@lists.infradead.org,
+	Aristo Chen <aristo.chen@canonical.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Fabio Estevam <festevam@nabladev.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Adam Ford <aford173@gmail.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] phy: freescale: fsl-samsung-hdmi: initialize default
+ rate
+Message-ID: <20261112094515.GA47236@francesco-nb>
+References: <20260903054811.9720-1-aristo.chen@canonical.com>
+ <13219248.O9o76ZdvQC@steina-w>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -64,338 +74,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <13219248.O9o76ZdvQC@steina-w>
 
-Hi Pablo, Thorsten,
++regressions list and Emanuele
 
-Thorsten: I first saw this on 6.18.60 and have reproduced it on
-6.18.62 and v7.4-rc2. 6.18.63 has the same nf_flow_table_ip.c.
-b5964aac51e0 came into 6.18.y with 6.18.45, the release named in
-the thread you linked.
+Hi,
 
-Pablo: on 7.4-rc2 your patch stops the black hole, but as you
-noticed, one packet is still lost each time the next hop's entry
-goes away, which with neighbour GC happens about every 75 s on a
-long-lived flow. 6.18.44, before b5964aac51e0, lost nothing in
-the same tests. On 6.18.y the patch only works together with
-871df5007eda.
-
-I tested with the namespace setup from my first email. The
-server sends UDP datagrams through the router to the client,
-which echoes them back, and I count the echoes that never arrive.
-
-  A: 18 datagrams at 1/s. The router's neighbour entry for the
-     next hop is deleted by hand after the flow is offloaded.
-  B: 150 datagrams, one every 2 s. Nothing is deleted by hand,
-     so only neighbour GC can remove the entries (gc_thresh1=3D0
-     so that GC runs on the small table).
-
-Echoes lost (IPv4 gave the same results as IPv6, within one
-packet):
-
-                            A, of 18     B, of 150
-  6.18.44                        0             0
-  7.4-rc2                       10           115
-  7.4-rc2 + patch                1             4
-  6.18.62 + patch               10           118
-  6.18.62 + 871df5007eda
-          + patch                1             4
-
-With the patch no frame went to 00:00:00:00:00:00 in any run, and
-on 7.4-rc2 the flow was offloaded again about 2 s after the lost
-packet. The four losses in B are one per GC cycle. The fast path
-never refreshes the entry, so it goes STALE and GC removes it
-while the flow is busy. On 6.18.44 the entries went from STALE
-through PROBE back to REACHABLE and were never deleted, and in A
-the deleted entry was resolved again without losing the packet.
-Could the fast path keep the entry in use as it did before?
-
-On 6.18.62 the patch alone stops the zero-MAC frames but the
-echoes are still dropped. There nft_flow_route() ignores a failed
-nft_dev_forward_path(), so every packet in the other direction
-offloads the flow again with the next hop unresolved, and the
-next echo tears it down and is dropped. 871df5007eda ("netfilter:
-flowtable: bail out if forward path cannot be discovered") fixes
-that in mainline but has no Fixes tag and is not in 6.18.y. With
-it backported, 6.18.62 behaves like 7.4-rc2.
-
-My first email was wrong to say the flow has to be offloaded
-without a valid entry. On plain Ethernet every flow uses
-XMIT_NEIGH, and GC alone triggers the bug about 70 s in, so the
-neigh del steps in the reproducer are not needed.
-
-Thanks,
-John
-
-
-On Wednesday, 11 November 2026 at 23:09, Pablo Neira Ayuso <pablo@netfilter=
-.org> wrote:
-
-> On Wed, Nov 11, 2026 at 04:21:44PM +0100, Pablo Neira Ayuso wrote:
-> > Hi,
-> >
-> > Would you give a try to this attached patch?
->=20
-> I forgot you provided a reproducer, I can see one packet is lost after
-> this patch, then the follow up packets don't get blockholed.
->=20
-> Let me revisit this again.
->=20
-> > Thanks.
-> >
-> > On Mon, Nov 09, 2026 at 09:26:55PM +0000, John wrote:
-> > > Hi,
-> > >
-> > > Since commit b5964aac51e0 ("netfilter: flowtable:
-> > > consolidate xmit path"), a flow offloaded with
-> > > FLOW_OFFLOAD_XMIT_NEIGH keeps being forwarded with
-> > > destination MAC 00:00:00:00:00:00 after the next hop's
-> > > neighbour entry has been removed. Nothing resolves the next
-> > > hop again, so the flow stays black-holed for as long as it
-> > > keeps sending.
-> > >
-> > > Before that commit the XMIT_NEIGH case called neigh_xmit(),
-> > > which creates the entry if needed, sends a solicitation and
-> > > queues the packet. Now nf_flow_offload_ipv6_hook() does
-> > >
-> > > =09neigh =3D ip_neigh_gw6(rt->dst.dev, rt6_nexthop(...));
-> > > =09if (IS_ERR(neigh)) { ... }
-> > > =09xmit.dest =3D neigh->ha;
-> > >
-> > > and passes the skb to dev_queue_xmit() through
-> > > nf_flow_queue_xmit(), without looking at neigh->nud_state.
-> > > When ip_neigh_gw6() has just created the entry, ha is all
-> > > zeros, and since the neighbour output path is never used, no
-> > > solicitation goes out and the entry stays unresolved. The
-> > > IPv4 branch has the same construction with ip_neigh_gw4().
-> > > In v7.4-rc2 the code has moved into the per-family xmit
-> > > functions but is otherwise unchanged.
-> > >
-> > > This hit a router here running 6.18.60, which has
-> > > b5964aac51e0 as a stable backport. A WireGuard endpoint
-> > > behind the router talks to nothing else through it, so its
-> > > neighbour entry on the router aged out while the tunnel's
-> > > flow was offloaded, and the endpoint's handshake retries
-> > > every 5 s kept the flow alive. On the router's egress
-> > > interface every forwarded packet of the flow then looked
-> > > like this (addresses replaced):
-> > >
-> > >   02:0e:bd:92:63:28 > 00:00:00:00:00:00,
-> > >   ethertype IPv6 (0x86dd), length 154:
-> > >   2001:db8:1::51.60161 > 2001:db8:2::1f.59320:
-> > >   UDP, length 92
-> > >
-> > > "ip -6 neigh" had no entry for the destination, conntrack
-> > > showed the flow as [OFFLOAD], and deleting the conntrack
-> > > entry restored the tunnel until the next time the entry aged
-> > > out, a few minutes later. Going back to 6.12.115 on the same
-> > > router fixed it.
-> > >
-> > > The script below reproduces it with three network namespaces
-> > > and no special hardware (IPv6 only, needs iproute2, nft and
-> > > python3). The server has a permanent entry for the router,
-> > > so the router only knows the server from its own resolution.
-> > > The flow is offloaded while the router has no valid entry
-> > > for the server, which gives XMIT_NEIGH, and once it is
-> > > offloaded the script removes the router's entry again, which
-> > > is what neighbour GC does to an idle STALE entry.
-> > >
-> > > 6.18.60:
-> > >
-> > >   flow: [OFFLOAD]
-> > >   entry: fd00:2::2 lladdr a2:5b:b4:93:86:a9 REACHABLE
-> > >   entry removed, flow offloaded
-> > >   2 s later:
-> > >   echoes: 7 ok, 11 lost
-> > >   destination MAC of echoes to the server:
-> > >        10 00:00:00:00:00:00
-> > >         7 a2:5b:b4:93:86:a9
-> > >
-> > > 6.12.116 (Debian 6.12.116+deb13):
-> > >
-> > >   flow: [OFFLOAD]
-> > >   entry: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
-> > >   entry removed, flow offloaded
-> > >   2 s later: fd00:2::2 lladdr de:9b:d1:db:19:4c REACHABLE
-> > >   echoes: 17 ok, 1 lost
-> > >   destination MAC of echoes to the server:
-> > >        18 de:9b:d1:db:19:4c
-> > >
-> > > (Datagram 0 is lost on both kernels, during start-up.)
-> > >
-> > > I have not run the reproducer on mainline. I compared the
-> > > code in v7.4-rc2 instead, and the IPv4 path is untested.
-> > >
-> > > I don't know this code well enough to say which fix you
-> > > would want. Handing the packet to neigh_xmit() when the
-> > > entry is not NUD_VALID would restore the old behaviour for
-> > > that case, and tearing the flow down would also work, since
-> > > the next packet would then take the classic path and resolve
-> > > the neighbour. I can test a patch on the router or with the
-> > > script.
-> > >
-> > > #regzbot introduced: b5964aac51e0
-> > >
-> > > --- reproducer ---
-> > >
-> > > #!/bin/bash
-> > > # Flowtable XMIT_NEIGH flow forwarded to 00:00:00:00:00:00
-> > > # after the next hop's neighbour entry goes away. Needs
-> > > # root, iproute2, nft and python3.
-> > > #
-> > > # Namespaces c (client), r (router with a flowtable) and s
-> > > # (server). The server has a permanent entry for the
-> > > # router, so it never solicits and the router only knows
-> > > # the server from its own resolution. The flow is set up
-> > > # before the flow-add rule exists, the router's entry for
-> > > # the server is removed, and only then is the rule added:
-> > > # the flow is offloaded while the next hop has no valid
-> > > # entry, which gives XMIT_NEIGH. Once it is offloaded the
-> > > # entry is removed again, as neighbour GC does with an
-> > > # idle STALE entry.
-> > > set -u
-> > > P=3Dftrepro
-> > > W=3D$(mktemp -d)
-> > > E() { local ns=3D$1; shift; ip netns exec "$P-$ns" "$@"; }
-> > > cleanup() {
-> > >   for j in $(jobs -p); do kill "$j" 2>/dev/null; done
-> > >   for n in c r s; do ip netns del "$P-$n" 2>/dev/null; done
-> > >   rm -rf "$W"
-> > > }
-> > > trap cleanup EXIT
-> > > trap 'exit 1' INT TERM
-> > >
-> > > for n in c r s; do ip netns add "$P-$n"; done
-> > > ip link add rc netns "$P-r" type veth \
-> > >   peer name c0 netns "$P-c"
-> > > ip link add rs netns "$P-r" type veth \
-> > >   peer name s0 netns "$P-s"
-> > > for n in c r s; do E $n ip link set lo up; done
-> > > E c ip link set c0 up
-> > > E r ip link set rc up
-> > > E r ip link set rs up
-> > > E s ip link set s0 up
-> > > E c ip -6 addr add fd00:1::2/64 dev c0 nodad
-> > > E r ip -6 addr add fd00:1::1/64 dev rc nodad
-> > > E r ip -6 addr add fd00:2::1/64 dev rs nodad
-> > > E s ip -6 addr add fd00:2::2/64 dev s0 nodad
-> > > E c ip -6 route add default via fd00:1::1
-> > > E s ip -6 route add default via fd00:2::1
-> > > RMAC=3D$(E r cat /sys/class/net/rs/address)
-> > > E s ip -6 neigh replace fd00:2::1 lladdr "$RMAC" \
-> > >   dev s0 nud permanent
-> > > E r sysctl -qw net.ipv6.conf.all.forwarding=3D1
-> > > E r nft -f - <<'NFT'
-> > > table inet t {
-> > >   flowtable f {
-> > >     hook ingress priority 0; devices =3D { rc, rs };
-> > >   }
-> > >   chain fw {
-> > >     type filter hook forward priority 0; policy accept;
-> > >   }
-> > > }
-> > > NFT
-> > >
-> > > # Client: UDP echo on port 6000.
-> > > E c python3 -c '
-> > > import socket
-> > > s =3D socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-> > > s.bind(("fd00:1::2", 6000))
-> > > while True:
-> > >     d, a =3D s.recvfrom(100)
-> > >     s.sendto(d, a)
-> > > ' >/dev/null 2>&1 &
-> > >
-> > > # Server side of the wire: destination MAC of every echo
-> > > # coming back to the server.
-> > > E s python3 -c '
-> > > import socket, sys
-> > > r =3D socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
-> > >                   socket.htons(3))
-> > > r.bind(("s0", 0))
-> > > f =3D open(sys.argv[1], "w")
-> > > port =3D (5000).to_bytes(2, "big")
-> > > while True:
-> > >     p =3D r.recv(2048)
-> > >     # IPv6, next header UDP, destination port 5000
-> > >     if p[12:14] =3D=3D b"\x86\xdd" and p[20] =3D=3D 17 \
-> > >             and p[56:58] =3D=3D port:
-> > >         f.write(p[0:6].hex(":") + "\n")
-> > >         f.flush()
-> > > ' "$W/wire.log" >/dev/null 2>&1 &
-> > > sleep 1
-> > >
-> > > # Server: one datagram a second to the client, port 5000.
-> > > E s python3 -c '
-> > > import socket, time, sys
-> > > c =3D socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-> > > c.bind(("fd00:2::2", 5000))
-> > > c.settimeout(0.8)
-> > > f =3D open(sys.argv[1], "w")
-> > > for i in range(18):
-> > >     t =3D time.time()
-> > >     c.sendto(str(i).encode(), ("fd00:1::2", 6000))
-> > >     try:
-> > >         c.recvfrom(100)
-> > >         f.write("%d ok\n" % i)
-> > >     except socket.timeout:
-> > >         f.write("%d lost\n" % i)
-> > >     f.flush()
-> > >     time.sleep(max(0, 1.0 - (time.time() - t)))
-> > > ' "$W/server.log" >/dev/null 2>&1 &
-> > > SV=3D$!
-> > >
-> > > sleep 4
-> > > E r ip -6 neigh del fd00:2::2 dev rs
-> > > E r nft add rule inet t fw ct state established \
-> > >   meta l4proto udp flow add @f
-> > > sleep 3
-> > > FLOW=3D$(E r grep -o '\[OFFLOAD\]' /proc/net/nf_conntrack |
-> > >   head -1)
-> > > echo "flow: $FLOW"
-> > > echo "entry: $(E r ip -6 neigh show fd00:2::2 dev rs)"
-> > > E r ip -6 neigh del fd00:2::2 dev rs &&
-> > >   echo "entry removed, flow offloaded"
-> > > sleep 2
-> > > echo "2 s later: $(E r ip -6 neigh show fd00:2::2 dev rs)"
-> > > wait $SV
-> > > echo "echoes: $(grep -c ok "$W/server.log") ok," \
-> > >   "$(grep -c lost "$W/server.log") lost"
-> > > echo "destination MAC of echoes to the server:"
-> > > sort "$W/wire.log" | uniq -c
-> > >
-> > > Thanks,
-> > > John
-> > >
->=20
-> > diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_t=
-able_ip.c
-> > index 19cafae748ab..73f49dc41157 100644
-> > --- a/net/netfilter/nf_flow_table_ip.c
-> > +++ b/net/netfilter/nf_flow_table_ip.c
-> > @@ -873,7 +873,8 @@ static int nf_flow_queue_xmit4(struct sk_buff *skb,
-> >  =09=09=09return NF_DROP;
-> >  =09=09}
-> >  =09=09neigh =3D ip_neigh_gw4(rt->dst.dev, rt_nexthop(rt, ip_addr->ip))=
-;
-> > -=09=09if (IS_ERR(neigh)) {
-> > +=09=09if (IS_ERR(neigh) ||
-> > +=09=09    !(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
-> >  =09=09=09flow_offload_teardown(flow);
-> >  =09=09=09return NF_DROP;
-> >  =09=09}
-> > @@ -1202,7 +1203,8 @@ static int nf_flow_queue_xmit6(struct sk_buff *sk=
-b,
-> >  =09=09=09return NF_DROP;
-> >  =09=09}
-> >  =09=09neigh =3D ip_neigh_gw6(rt->dst.dev, rt6_nexthop(rt, &ip_addr->in=
-6));
-> > -=09=09if (IS_ERR(neigh)) {
-> > +=09=09if (IS_ERR(neigh) ||
-> > +=09=09    !(READ_ONCE(neigh->nud_state) & NUD_VALID)) {
-> >  =09=09=09flow_offload_teardown(flow);
-> >  =09=09=09return NF_DROP;
-> >  =09=09}
->=20
+On Wed, Nov 11, 2026 at 08:11:39AM +0100, Alexander Stein wrote:
+> Am Donnerstag, 3. September 2026, 07:47:58 Mitteleuropäische Normalzeit schrieb Aristo Chen:
+> > The HDMI PHY clock reports 74.25 MHz when cur_cfg is unset, but does
+> > not establish that rate in hardware. The common clock framework caches
+> > the reported rate when registering the clock and skips a first
+> > clk_set_rate(74250000) request because the rate appears unchanged.
+> > 
+> > Consequently, a display whose initial mode uses a 74.25 MHz pixel clock
+> > can leave the PHY with its bootloader register state and receive no
+> > TMDS signal. Requesting another rate first avoids the issue because the
+> > set_rate callback configures the PHY.
+> > 
+> > Program the 74.25 MHz table entry with the reference clock enabled
+> > before registering the clock provider. recalc_rate can then report the
+> > configured rate, and a skipped first rate change is safe. Also enable
+> > the reference clock when restoring that configuration on resume.
+> > 
+> > Fixes: 6ad082bee902 ("phy: freescale: add Samsung HDMI PHY")
+> > Signed-off-by: Aristo Chen <aristo.chen@canonical.com>
 > 
+> Unfortunately this breaks my platform (imx8mp-tqma8mpql-mba8mpxl.dts).
+> With this patch applied I get the following errors in kernel log:
+> > fsl-samsung-hdmi-phy 32fdff00.phy: PLL failed to lock
+> > fsl-samsung-hdmi-phy 32fdff00.phy: error -ETIMEDOUT: failed to configure default rate
+> > fsl-samsung-hdmi-phy 32fdff00.phy: probe with driver fsl-samsung-hdmi-phy failed with error -110
+> 
+> Reverting fixes my platform and HDMI as expected.
+
+Same here on v7.4-rc2, on all the Toradex i.MX8M Plus boards in our CI
+(Verdin iMX8M Plus on Dahlia, SMARC iMX8M Plus), with the very same
+three errors.
+
+#regzbot ^introduced: c01ccf91b257
+#regzbot title: phy: fsl-samsung-hdmi: i.MX8MP HDMI PHY probe fails with "PLL failed to lock"
+
+Francesco
+
