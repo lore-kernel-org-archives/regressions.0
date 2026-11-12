@@ -1,99 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794496797;
-	b=pdNuVGZFNbcr3t7z8myZG8KWzQsavzCMPFWTVWyzZBhgd3c0nWOpca5sL2Ui3iXiPc1M
-	 REKe5luhWxJJJzwRV4UhGmv7HetMe/3xpKWMBUb4vxGlml8msOx0nQ+/hcwFAAC9/igYB
-	 iPbSpfSXOlHFP5lhPNurZ9tiyaPpCasIGznKEZxOPrKNVKOeExH4xWp6cksfG8vcats7L
-	 Wev/qrc1Di2MWpIQfq0Hja3elLCc4iI41Rx/lUkgJcmnsoyp1RF33aU8SETkZV9Nj0Bg3
-	 2aYfq6RXt7ML6PRgvDxlU2wv+H/HX8Wlmlbcd7YhchkroDbkiUgdZ7o3pfd/pPEqUfw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794496797;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=XCU5YMgEOGMwVe29N8gNhg5ChZqSGt6pfW7EISgqdek=;
-	b=sdSYLH/jpGmwajke/7YhUux2jWxExCys/adqNqeDLcpwMxIxpNmisvLctQFKRiQYot3x
-	 tbmG7XhtSHU2vltdhGOV8yNgZWz1NDyVDGGeioRTSPGImz3FujFfBC1pSsFzNpebXNc30
-	 MRsAeyovzVYfOXJlwnl6cH3712C/vC2ZftVtU2r0X2OAxCX/dBDT/k1agXwSfbfJRb5YF
-	 BtWP9LOJMgko4wrf1ptqaFhMJweCRsY1kWypLR6h6u1iYQowV+uSQ9yOCTeTgelwzktoU
-	 vvwIlt0v6+a8pb2udFvlChbJJ9/kwtrrOjfI5+UIgPbHpOBlUejglN5a1eHR+LyI52Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="I/ZwpZ6b";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.54
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794497216;
+	b=4gwV7+vtEapiu0BL+5pxZoNaxn1D6cFZMrrAKpd2m669KXHjyvrXBcIvy+wYwkXEo4Qp
+	 nTVj6w3oGVlHS8fxEg+Xu6q3N6BX1VjGNd74fS1TLMgZtLV5Jy4tMxb/fyB//XIL+ecK2
+	 kjdKzvMdI1VU5AvRlEI/WPBMHb5vf++T0ALmbyBftmW/UGwiKIb2pNP7BTu1iwJVdFTpR
+	 rhe6eUVQquneppCDbXenoL3wCyJ8uvD3foaM5bZ8sq2n2lVHG3bYcK1l1JUB0wHc6/wFO
+	 ji/uDG9Rys0Vs8Mmb0CU+/MKkYFzEGbCYJVyFsij7EePJ/ZCnKqbHZsUNxK5xDIOk6w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794497216;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:From:
+	 Content-Language:Cc:Subject:To:Content-Type:Content-Transfer-Encoding:
+	 X-PPP-Message-ID:X-Rspamd-Server:X-Rspamd-Queue-Id:X-NC-CID;
+	bh=Nt+yBHmXSjaIToP16PMOG2IX8UplziGRkLpPT0bEWH8=;
+	b=VakmL7hpy6BxsctUHpF41qGKd/5XbanibvStWDfu8XZ2xV4tbogp+nN33Rh+zpHLS9zB
+	 Nxaip///neIy2apC9aTRzHrviVLMpaV/Nyim2hfHD+cFzhiIPycR+3zQO1NJ5z9o5qDgW
+	 TIc4rNxbihUsLNw+SkSUzN+8JoB16/KfhgLS1yHO1W9S/PfaHPSkkf9YkGL85WMqXjT3c
+	 tCp8Vw6IPVyirK0EJ0iQXCww5lWXXfUbYfOrGCj/w4K98cLFf++ajFzkdCHTRltFUnTRc
+	 2dW/5G2j3hQ46e1u/Mpq/SfCyQv5RMSq9o8EwTUKzNaWAvabKKHBfFE0692wNhe4pCg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=PVdBHDbE;
+	arc=none smtp.remote-ip=188.68.63.162
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA8F60A383A
-	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 15:19:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7BA8F60A383A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F26606A32E
+	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 15:26:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6F26606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=I/ZwpZ6b
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so43546115e9.3
-        for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 07:19:57 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794496796; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XUO7V+FuQr/aOD4qwQb7HZ3h++JGdELyMWYrPkoMhJWu87zQS4HjaPxFFdhcPErZb+
-         BvLQqZda3pW4Moz20AAH/wPXrRpk0PmNzuBsxaUdeQU1WiZEJulrqAkQSJFX0ZZaO15b
-         UT+RL6LJ2PBwse9lEjT95lQWNsReZj/ydKml/hhY/2fp5AFws/QCn4y4wY/yAHyvwoXR
-         qKgeLStBWyiLIhPJLy5S2tTcNNTL2lUoj+9e4nAYDvG6GlRF4WG3TpTLksKrcSGng5J0
-         g44iKalsHPtGtYcqpy+qXVa//aomtFAs4HS92qBjZ46PmLxd22vWRIjYyJca30Ungiug
-         bppQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=XCU5YMgEOGMwVe29N8gNhg5ChZqSGt6pfW7EISgqdek=;
-        fh=NOYk7KjRcx6oLc8VDWbzRLEpBWWYMEcJvyEM9YQtbfw=;
-        b=EFhLlAk/MLWkVR8WkbLWqYqhg9pIFQV/KKpXdHr0IGnsU4t3EVA4jwkdlzQCLiSd1/
-         bJsTPY9VddMPJcI3aBqqA4utbQ5Id+XHm64Or4P7w7X3q1QzUJd/ojiT1nsLBesj7hrL
-         GqyK3TzUJDcb0uXz5aUbvEFwhnNp7dnpKZZ8UGI37xURRQB8bEWQMTaCJ+YZ2J8Pv6cc
-         J3mPr5K+i030qOsfdE5YVo4QhgJxd8l5PEv/jCDRBeo25lqDyQrRyVexItwVw5n5HdLP
-         peBf+Q2uPasZ9yQwukKnxjjlh7mF5s2mqCW+ttOrHba/VJ5GCPZaGxphGA3yDQiJnyeC
-         9VKA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794496796; x=1795101596; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=XCU5YMgEOGMwVe29N8gNhg5ChZqSGt6pfW7EISgqdek=;
-        b=I/ZwpZ6b2NwrH9Zl/lAq6gMEseiOKQ9wMjae6DAfARKtVoNJ92PE9UioLgQjBxhTlp
-         8hNvYOcqSv2PGDxmqmdwtudv1Bihk1Rmmyet5pCtxN/StDC9KPfGpS51qFsaRhaJwAy2
-         E5FgDzMrMtMerdlKu17JPJf0Estdk1+2UDp2k5WmeT6GSo4BCl6X6M3UA3JbI2YtbLiu
-         3v09hkVGiaF1rg0/WzgnLNNKG4eoPY4CeM5lo6lmC43DKXi98GnLSk9A1rjisJmn7QIY
-         pIy7/k04vspADCIXEezzvJ80qcjTkX/iHVPARiKbL5P50LzqMe0OPXwBG2oeMUOlsjrL
-         zAWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794496796; x=1795101596;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XCU5YMgEOGMwVe29N8gNhg5ChZqSGt6pfW7EISgqdek=;
-        b=rxKlIGk35evxcNl04IDsUnqJtnEsCjUILpEnWwEI5MfzEYhiMWRSQNS3M1I47d5VPO
-         WO7tIo40JOOReQaWjqIfm+cJO2y8nqCZCjMW+vLjJZar1zsGqkDDyTudBnHokNWQXQv7
-         4O0sXL0EAZC5rgmv5HGcAkRWS4k7LgzJJNi5tHw3EPxTyOhOD0OeiOMCF4gzUIyvh+JX
-         bPG7IzP5yuCEEDR+BJHFFakX2Fe5Eqk5EcYKgLGYSwgRifLrvhUYGTkA/Pzr0Ll2y1JB
-         s0GyKgvRSnvX0Y2NXOSGnKUr8gF05wIL/UwlNae3KM+BX5Y/XUU40tYq2DLj3mtowCtH
-         ZleA==
-X-Gm-Message-State: APuU4Z+9NRVWI3V6aLnFZdgbwBDdDAs3h7raoAF2hyhlNTZxLFhW9yC1
-	83PaOtRgBPwGuaG+o8Xx+ygsfb+3NuNT2fH3sMoGdRvLSS46hIzWhJuz69SQsvd3m4WaX8sjOzs
-	ZL9qIG5A4sb1wFCywTuuVPAupxT9ng8w=
-X-Gm-Gg: AYBFou0khACrc1C/8M/M6UvNwX2CCD4VFpBuWMftuB7xnCsowz+//w+yBr9ZeQonFT+
-	GvWmT5PmaAdZMc6vSsQPFDszmWTzpNcWb70U8IJO6OyupkIX3IonQ7HKHJCsG2FmwFaVwTESUJO
-	y5nMfpG/AD7i9AgrE4Ys76CG2wDs0r4rORS8H6+ULrbk/u4PlKRNv/5vk1wY6ocmSJjWcEFrm58
-	HgTEBUKG7V5lVdhVFLaS9pRznLnFJnSQeb4HMt3SdwrEWAYx+SjbpqtbckIbMTioHNOra9MZaEG
-	LGZHew4HOasEzqvG9M34OeP5rZkrKMKkujn4LlzaqRlZWfSYhA8H4946GHzfMfuxGpG9wSZNhXm
-	ly+QSvEbOd3NfLHNfYskpcC8oVlJBCTsVnde9tg==
-X-Received: by 2002:a05:600c:4f84:b0:4a1:e92b:ae4a with SMTP id
- 5b1f17b1804b1-4ba093b9a3cmr106590855e9.21.1794496795435; Thu, 12 Nov 2026
- 07:19:55 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=PVdBHDbE
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jQPPd4G62z3tsv;
+	Thu, 12 Nov 2026 16:26:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1794497205;
+	bh=Nt+yBHmXSjaIToP16PMOG2IX8UplziGRkLpPT0bEWH8=;
+	h=Date:From:Cc:Subject:To:From;
+	b=PVdBHDbE7aSp3TrlBVrtb73R/eDBQBv+8Om42CimsAiDYlT6aLEluyf3euzsHTSQ9
+	 ElLg3U8W+JJrVD3GXB71UTGKVokWWPTgQQ2fNQ82iZxSw3M9L67nA90XIHh5mzWs07
+	 cvXzn0tpaaDtvXPD4vHfaAs2x/EY7JVY0gYqy3TYwNq+4JLAqrQGKwacKtgUqc4ha6
+	 BpCaE900NmTvPk7XNoznpHwgMWoJ7FDN8QK/A7uKR6mR0AdvHrVR9si+L18eaLW+63
+	 n9PoFrVv/DRoKeU3F9pkfsNgjRWhO/ZPqY2TD+kRSY+PFICmBg1cCK+6pWUwxlGK22
+	 Vm787b+TjjveQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jQPMd0C3yz42bb;
+	Thu, 12 Nov 2026 16:25:01 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jQPMc2QjYz8svW;
+	Thu, 12 Nov 2026 16:24:59 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A82F75F9ED;
+	Thu, 12 Nov 2026 16:24:54 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f03086b6-7fb1-4b52-859e-78cd52c9177d@leemhuis.info>
+Date: Thu, 12 Nov 2026 16:24:53 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -103,119 +73,213 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
- <7cd4c010f13ee085e3aa4396705b6b06ed58f7e1.camel@irl.hu> <504167422048bb8197a1ca3fac079cec9dea1ae7.camel@irl.hu>
- <CAN6p6iiFz-JXOt9iFUPa3x4Aqu2c96=ERf0AMZ6pPVWspd=jLw@mail.gmail.com>
-In-Reply-To: <CAN6p6iiFz-JXOt9iFUPa3x4Aqu2c96=ERf0AMZ6pPVWspd=jLw@mail.gmail.com>
-From: Mohamed Yassine JEBABLI <med.jebabli@gmail.com>
-Date: Thu, 12 Nov 2026 16:19:43 +0100
-X-Gm-Features: AclHuK-U1bKsRdqloiglORwVbHTYD3ELvn-XYZ_Olj9JVapFRVasjDHISUDa0vE
-Message-ID: <CAN6p6ihogRNOPM4siK=QykMk_XDD_Essf04OW8d5Q52vORNA4A@mail.gmail.com>
-Subject: Re: [PATCH] ALSA: hda/tas2781: Only accept CRC-less V1 data if all
- entries are valid
-To: Gergo Koteles <soyer@irl.hu>
-Cc: regressions@lists.linux.dev, 
-	Cristian Castellano <cristian.castellano@icloud.com>, stable@vger.kernel.org, 
-	Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
-	Sen Wang <sen@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: regressions with available fixes that take their time towards
+ mainline as of post 7.4-rc2
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179449709545.2619925.1359828242195083426@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: A82F75F9ED
+X-NC-CID: /aEkXTqnkxjOfkyGknT0I8F98S7rnm0EPw87pNxsy40/DRTSXM4=
 
-Hi Gergo,
+Hi Linus!
 
-Regarding the Q27/Q31/Q58 formats: they are not from any
-documentation; I inferred them from the data. Reading the first word
-of each entry as Q27 gives a plausible speaker resistance (3.82 ohm on
-my Legion Pro 7, 3.64 ohm on Cristian's Yoga Pro 9), and reading the
-second word as Q31 gives exactly its reciprocal, within 1e-4, on both
-machines. So, for a consistent entry, R0 =C3=97 InvR0 ~=3D 2^27 =C3=97 2^31=
- =3D
-2^58.
+How much do you care about the following you wrote earlier this year in
+https://lore.kernel.org/all/CAHk-%3Dwi86AosXs66-yi54%2BmpQjPu0upxB8ZAfG%2BLsMyJmcuMSA@mail.gmail.com/
 
-The V2 dump from the ASUS ROG Xbox Ally X thread (with a valid CRC)
-fits the same pattern: r0 =3D 0x3c5f7222 (~7.55 ohm in Q27) and invr0 =3D
-0x10f615d5 (~0.1325 in Q31, i.e. 1/7.55).
+""[...] if it's a regression with a known commit that caused it, I think
+the rule of thumb should generally be "[fix] within a week", preferably
+before the next rc.""
 
-My guess is Q5.27 and Q1.31, but I have no TI reference to confirm it.
+I'm asking, as I see regressions left and right taking much longer --
+even when they easily could be fixed within that timeframe or maybe a
+little more. And my efforts to motivate people to get at least somewhat
+closer to that rule of thumb seem less and less fruitful, as people
+ignore me partially or completely -- just like the "Expectations and
+best practices for fixing regressions" in
+Documentation/process/handling-regressions.rst, which even give a bit
+more time than your rule of thumb.
 
-Finally, all testing was done on my own hardware: the original patch
-was tested on my Legion Pro 7 16IRX9H, and I reviewed and own the
-changes.
+Of course I could ask you every week to pull some fixes directly (like I
+did the past cycle) or even collect them in a tree and submit them as PR
+to you (the idea came up there). But well, bypassing subsystem
+maintainers' knowledge and their CIs should be an exception, as it will
+lead to problems or disaster sooner or later for obvious reasons (and I
+guess won't scale either).
 
-Thanks,
-Mohamed Yassine JEBABLI
+I also fully understand that the AI patch influx is a reason why some
+regressions take longer to get fixed, as my inquiries and prodding put
+even more load on already overloaded people. At the same time the
+current patch volume seems to be the new normal for at least the near
+future. And overall the core problems that lead to slowly fixed
+regressions from what I see are the same as before, they just occur more
+often.
+
+The core problem is basically: the "no regression" rule is well known,
+but people interpret vastly differently how to realize it in practice --
+and often it's reviewing, committing, and mainlining fixes, as outlined
+a few months ago here in an analysis for the maintainers summit:
+https://lore.kernel.org/ksummit/75dc0e2d-2deb-4776-977c-1de7c33465e1@leemhuis.info/
+
+Instead of approaching this from a theoretical and retrospective side,
+let me this time point out regressions that are unfixed right now
+despite available fixes:
 
 
-Le jeu. 12 nov. 2026 =C3=A0 16:09, Mohamed Yassine JEBABLI
-<med.jebabli@gmail.com> a =C3=A9crit :
->
-> Hi Gergo,
->
-> Regarding the Q27/Q31/Q58 formats: they are not from any documentation; I=
- inferred them from the data. Reading the first word of each entry as Q27 g=
-ives a plausible speaker resistance (3.82 ohm on my Legion Pro 7, 3.64 ohm =
-on Cristian's Yoga Pro 9), and reading the second word as Q31 gives exactly=
- its reciprocal, within 1e-4, on both machines. So, for a consistent entry,=
- R0 =C3=97 InvR0 ~=3D 2^27 =C3=97 2^31 =3D 2^58.
->
-> The V2 dump from the ASUS ROG Xbox Ally X thread (with a valid CRC) fits =
-the same pattern: r0 =3D 0x3c5f7222 (~7.55 ohm in Q27) and invr0 =3D 0x10f6=
-15d5 (~0.1325 in Q31, i.e. 1/7.55).
->
-> My guess is Q5.27 and Q1.31, but I have no TI reference to confirm it.
->
-> Finally, all testing was done on my own hardware: the original patch was =
-tested on my Legion Pro 7 16IRX9H, and I reviewed and own the changes.
->
-> Thanks,
-> Mohamed Yassine JEBABLI
->
->
-> Le jeu. 12 nov. 2026, 15:43, Gergo Koteles <soyer@irl.hu> a =C3=A9crit :
->>
->> Hi,
->>
->> On Wed, 2026-11-04 at 16:55 +0100, Gergo Koteles wrote:
->> > Hi Mohamed,
->> >
->> > On Tue, 2026-11-03 at 10:27 +0100, Mohamed Yassine Jebabli via B4 Rela=
-y
->> > wrote:
->> > > From: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
->> > >
->> > > Commit 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data
->> > > without CRC") only checked the first device entry. On machines where
->> > > the BIOS populates fewer entries than p->ndev, the remaining all-zer=
-o
->> > > entries are applied and tas2781_cali_preproc() divides by zero on
->> > > playback open.
->> > >
->> > > Accept CRC-less V1 data only if every expected entry is non-zero and
->> > > self-consistent (R0 * 1/R0 close to 1.0), otherwise reject it as
->> > > before.
->> > >
->> >
->> > ...
->> >
->> > >
->> > > +/*
->> > > + * V1 data without CRC is only trusted if every expected device has=
- a
->> > > + * populated, self-consistent entry: R0 (Q27) * 1/R0 (Q31) must be
->> > > + * close to 1.0 in Q58.
->> > > + */
->> >
->> > Just out of curiosity, where do Q27, Q31, Q58 come from?
->> > I couldn't find anything about these.
->> >
->> >
->>
->> I think it would be good to be able to see which commits were generated
->> by an LLM. This way, people wouldn't have to scour the internet trying
->> to verify hallucinations. Furthermore, it would be possible to see what
->> percentage of the kernel consists of public domain/LLM code.
->>
->> Best regards,
->> Gergo
+######
+# drm/msm/a8xx: failure during boot
+
+Caused by 93b6c8d10fad (v7.4-rc1). Known before the merge window.
+Proposed fix is a oneliner submitted to a different subsys on
+2026-10-21. It got two Tested-by:, but no reply from the maintainer yet.
+A prod from me about one week after submission didn't have any effect
+afaics:
+https://lore.kernel.org/all/20261021080517.2161-1-okerixx@gmail.com/
+
+Report:
+https://lore.kernel.org/lkml/ar_AuRr1eaZzOfw9@baldur/
+
+Side note: here the msm maintainer explains why he mainlined the culprit
+despite the known regression:
+https://lore.kernel.org/lkml/CACSVV00x091i7BKW+bj0RUnkd4rOrHXbhZ4zF6SuTU1NAqsFTA@mail.gmail.com/
+
+On a wider note:
+There is no way for maintainers to automatically filter patch
+submissions that fix user-reported recent regressions, which would allow
+maintainers to prioritize such fixes (and me to better keep an eye on
+those, too). This could have helped here, as the maintainer recently
+applied fixes to his fixes branch, so it not like he is on vacation of
+something like that. So he might not even be aware the patch fixes a
+regression (that, admittedly, is strictly speacing a problem of another
+subsystem, as it exposed it) -- or was unavailable for some time and
+when coming back simply deleted old mails (which I can relate to, but
+well, it's bad when it comes to regression fixes).
+
+
+######
+# phy: qcom: qmp-pcie: link never retrains and the root port comes up
+with no endpoint
+
+Caused by 910b828b22b7 (v7.3-rc1). A revert was posted about a month ago:
+https://lore.kernel.org/lkml/20261013-qmp-pcie-skip-reset-revert-v1@michaelburch.net/
+
+I prodded the thread about two weeks ago; three days later it got
+"Reviewed-by" from a subsystem reviewer. Today the maintainer finally
+accepted the patch, so maybe it will hit mainline soon now.
+
+On a wider note:
+Might be a variant of the problem mentioned above: maintainers have no
+way to automatically filter and prioritize patch submissions that fix
+user-reported and recent regressions.
+
+Could also be confusion on how to handle user-reported regressions from
+recent development cycles. Lorenzo voiced those recently:
+https://mastodonapp.uk/@ljs/117191681502501017 But he is not the only
+one from what I see; that has always been the case, but it seems your
+recent statement "Non-critical fixes to long-standing issues are simply
+not appropriate for this late in the release cycle." in the Linux
+7.1-rc5 announcement made this worse. Or maybe I'm confused, as I assume
+the follow statement of yours is still true:
+
+"I do consider "regression in an earlier release" to be a regression
+that needs fixing. There's obviously a time limit: [...]"
+https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+
+
+######
+# arm64: dts: imx8qm-ss-conn: USB 3.0 broken on Apalis iMX8QM
+
+Caused by 73c3b40e536d (v7.4-rc1). Known for two weeks. Author and
+committer is also the maintainer for the area in question. Posted a
+revert nearly a week ago, but it is no heading towards mainline so far
+afaics:
+https://lore.kernel.org/lkml/20261106161809.3512378-1-Frank.Li@oss.nxp.com/
+
+
+######
+# drm/msm/dp: SoC to reset
+
+Caused by 1bda647ce61b (v7.4-rc1). Know for a week. The affected user
+reported this by way of posting a patch for it, but it didn't get a
+reply yet.
+https://lore.kernel.org/lkml/20261104072048.3486286-1-burke.cates@gmail.com/
+
+On a wider note: I see more users that are affected by a regression are
+directly posting a patch for it. Those fixes thus lack a "Reported-by:"
+tag, which makes it even harder for reviewers and maintainers to see
+when a patch is a regression fix and prioritize those.
+
+
+######
+# drm: amdgpu: Black screen after boot with newer kernels in multi-GPU
+system
+
+Caused by 11c141672045 (v7.3-rc1). Known for 10 weeks, bisected about a
+month ago. Reported at least six times by now afaics:
+https://gitlab.freedesktop.org/drm/amd/-/work_items/5762
+https://gitlab.freedesktop.org/drm/amd/-/work_items/5979
+https://gitlab.freedesktop.org/drm/amd/-/work_items/5806
+https://gitlab.freedesktop.org/drm/amd/-/work_items/6120
+https://lore.kernel.org/amd-gfx/20261014080523.186533-1-rezanikzadch@gmail.com/
+https://lore.kernel.org/amd-gfx/CAGxFSwnJYc03fN+XWU8oLW9EbXhmetQuj1s3-m8UdZHoBdGJ8Q@mail.gmail.com/
+
+Fixes are being prepared for more than three weeks now, but not yet ready:
+https://lore.kernel.org/lkml/20261019-vfct-regression-v1-0-5a63ddd378dd@amd.com/
+https://lore.kernel.org/lkml/20261111-vfct-regression-v6-0-393797bbb6e3@amd.com/
+
+A revert was considered and even submitted a month ago, but not
+performed because it would "trade one regression for annother":
+https://lore.kernel.org/dri-devel/20261019194106.2796150-1-alexander.deucher@amd.com/
+
+Might be the case, albeit the changes that would have been reverted do
+not have a Fixes: tag. So this is not a clear case and might be a misfit
+in this mail, still wanted to mention it due to the relatively huge
+number of reports and the time it takes so far to get this resolved.
+
+
+######
+# ntfs3: SEEK_DATA reports WOF compressed files as holes, cp creates
+zero-filled copies
+
+Caused by c61326967728 (v7.0-rc1). The affected user reported this by
+way of posting a patch for it more than a month ago now, but it didn't
+get a reply yet.
+https://lore.kernel.org/lkml/20261005223318.19303-1-marcin@mennemann.net/
+
+
+######
+# wifi: iwlwifi: BE200: Wi-Fi interface becomes unusable due to firmware
+faults
+
+Known since the end of June. Two reports, both reporters saw the issue
+starting to happen around the 7.1 timeframe -- but the cause was later
+bisected to the 6.5 change e9b63341dc15, so it looks like something
+(another kernel change, firmware, ...) exposed the problem earlier this
+year:
+https://bugzilla.kernel.org/show_bug.cgi?id=221675
+https://bugzilla.kernel.org/show_bug.cgi?id=221898
+
+A fix was attached to bugzilla and confirmed to be working at the end of
+August -- and even merged to iwlwifi tree back then. It was then posted
+to the lists end of September:
+https://lore.kernel.org/all/20260930122439.08094e4c344f.Ic0a4bf544fd6ebaf1fc62b40bf463bd289e58cf0@changeid/
+
+Since then it's also in -next, these days as fdd83f3ad06a26 ("wifi:
+iwlwifi: honor the per-channel 320 MHz regulatory flag"). Near the end
+of the latest merge window I asked why it's taking so long, but in reply
+I only got "You really need to stop pressuring people. Everyone's
+overloaded. Heaping more on doesn't help.". The fix from what I see is
+still not on its way towards mainline. That being said: it feels a bit
+like I'm missing something here -- but OTOH from both reports (one of
+them linked in the fix) it looks like it's a recent regression that
+takes quite a while to get fixed, despite an available fix.
+
+######
+
+Ciao, Thorsten
