@@ -1,22 +1,22 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.85.9.111
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794494619;
-	b=3zQhF6MIgLpOUpiJYJT1kS3rr9Z6xKw7JqWWJdRGTThbVpwihgZNvaMwjz2KtXQrmzK5
-	 GiQdidWUH48xPBVxQX/jHh8209qVOatSrHzW1ULz3zaI1HLgrORtCQP1bB8fE0d6TctnQ
-	 sQJY9pcuGZTSd807wrIn/y5ZNnNeRKgIaOBgbzK95wV+aH5HUXP4fJocVz75Z8p67aVHs
-	 vNZE9U6opmtEcvOhnyTOaYCs2s47x7yv8qdyL1xQTfpUpAvKTd1FAK2e7Mk8vkSwHWgLZ
-	 htrJt+I+/hoYck4sRk3jRUIGEgt0Q5VOuKr4A1vH6RZV8XfJzov6yoVUHd5pz7hky6w==
+	t=1794496696;
+	b=fnf/fKcXGQf0AVF1QoKY0bVUVfdtTDxw0XGsN96F+KsVFEnh4wREOoVs1QU98QvyatLM
+	 pxN856EJJ+XZ8Ppz31JYYYsvwBCWoJ16Yfjw+DF8Zrmix9gynMrmunggs7E8e9eFVZx9d
+	 rk/dOWH8E840OrbgH9/iTOu19MBupQ9YZVDT7tr/wfHG9xuZrKLWY1Off9TgYBCWMTWrJ
+	 zMjbhqfz0soxL3vRbPbg5ONQ6/IAEkyN7GmyEhN0HtypRCcfnrej0yRBAF+FvD8lO9lJF
+	 IapB13vrZU+BqsQ/Qaa2rj6nxq/1ZvlsS8N0DEuoJVwhYatERibLqjgA2AkE//Pkc3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794494619;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794496696;
 	h=DMARC-Filter:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
 	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
 	 MIME-Version;
-	bh=BmLmIRXTRT6cun9WV23K9Y6TFiMIhvIIl7/j6XtjqH0=;
-	b=UtqNYwZS3sCYv/EAoVLOPw3CTDpGienmNhlPZcLSnSw7N3qx4QIwaGFNtnX2tNVWyyGj
-	 FIiJmhVDHRigU8kT7ywIC4YANJFhQfojVjF37QXuRZ3miHkhs/hnP5vo2AhodTfoyfsYr
-	 puHK/B2CSsNdAPp8+pN2wN1XyuRSDL8vptYJA3MdWROpuhJVFwTv/uyR9VwyXIJgepKT/
-	 j/kl3RoFGd8cGevy+nRGbNZ7vxIjDlOCPWBds5xHcBr95/LWLOlkmVF0PEdc2a/CnkhBM
-	 GWykKbzFxNax7TIb2Jm3TDIMGX6pZcmXiE40jI88BwxdZK57BQPe0sp2pvl4QmCCzCQ==
+	bh=r+yQthmGpU4dLS0axjn4IZvfIRlCVOqVLewaA/Ebjsk=;
+	b=ipmB0yw9F4MAf4ZUxmbt3WQW7285RBZo5tBcL4XWaVwdcEizema/6e7WkQFoiISOemtm
+	 zCBH0aXpi4bMRjB4X98fOP85koNUHDSeOnfk+rBN7YU1KK4gW0hD/8HT4s+hloKoBA2sF
+	 QUdcdY12f+0IDeJpU4GyridTghg2FiabETeQYmDCgvCXc/YaTgAXaShnltVkXzO462C0L
+	 0NfYUNUn+w7ng8JwAyN+WsuUgOjZFOlbteNCQ9NlJutKZNeq3neYJ3ayHOxQfNpuGI8Ju
+	 urvC2jnK907+rltBrdOr9qVhCh9UrlCvKD84LXwAd5jOMk4h5m73bkMwP2OnMpGccfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=irl.hu;
 	spf=pass smtp.mailfrom=irl.hu;
@@ -25,21 +25,21 @@ Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id ECCBF606A31C
-	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 14:43:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ECCBF606A31C
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id BDBD060A262B
+	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 15:18:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BDBD060A262B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
 Received: from [192.168.2.4] (51b6855e.dsl.pool.telekom.hu [::ffff:81.182.133.94])
   (AUTH: CRAM-MD5 soyer@irl.hu, SSL: TLS1.3,256bits,ECDHE_RSA_AES_256_GCM_SHA384)
   by irl.hu with ESMTPSA
-  id 00000000000C60CB.000000006AF5D092.000045AF; Thu, 12 Nov 2026 15:43:30 +0100
-Message-ID: <504167422048bb8197a1ca3fac079cec9dea1ae7.camel@irl.hu>
+  id 00000000000C60CB.000000006AF5D8B5.00004720; Thu, 12 Nov 2026 16:18:13 +0100
+Message-ID: <0c5d5163d292c238a27a77eda2690d8cec025b77.camel@irl.hu>
 Subject: Re: [PATCH] ALSA: hda/tas2781: Only accept CRC-less V1 data if all
  entries are valid
 From: Gergo Koteles <soyer@irl.hu>
-To: regressions@lists.linux.dev
-Cc: med.jebabli@gmail.com,
+To: Mohamed Yassine JEBABLI <med.jebabli@gmail.com>
+Cc: regressions@lists.linux.dev,
   Cristian Castellano <cristian.castellano@icloud.com>,
   stable@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
   Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org,
@@ -47,10 +47,12 @@ Cc: med.jebabli@gmail.com,
   Thorsten Leemhuis <regressions@leemhuis.info>,
   Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
   Baojun Xu <baojun.xu@ti.com>, Sen Wang <sen@ti.com>
-Date: Thu, 12 Nov 2026 15:43:20 +0100
-In-Reply-To: <7cd4c010f13ee085e3aa4396705b6b06ed58f7e1.camel@irl.hu>
+Date: Thu, 12 Nov 2026 16:18:03 +0100
+In-Reply-To: <CAN6p6iiFz-JXOt9iFUPa3x4Aqu2c96=ERf0AMZ6pPVWspd=jLw@mail.gmail.com>
 References: <20261103-tas2781-v1-nocrc-fix-v1-1-a769c27f21ce@gmail.com>
 	 <7cd4c010f13ee085e3aa4396705b6b06ed58f7e1.camel@irl.hu>
+	 <504167422048bb8197a1ca3fac079cec9dea1ae7.camel@irl.hu>
+	 <CAN6p6iiFz-JXOt9iFUPa3x4Aqu2c96=ERf0AMZ6pPVWspd=jLw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
@@ -64,44 +66,33 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 
-Hi,
+Hi Mohamed,
 
-On Wed, 2026-11-04 at 16:55 +0100, Gergo Koteles wrote:
-> Hi Mohamed,
+On Thu, 2026-11-12 at 16:09 +0100, Mohamed Yassine JEBABLI wrote:
+> Hi Gergo,
 >=20
-> On Tue, 2026-11-03 at 10:27 +0100, Mohamed Yassine Jebabli via B4 Relay
-> wrote:
-> > From: Mohamed Yassine Jebabli <med.jebabli@gmail.com>
-> >=20
-> > Commit 408249089c48 ("ALSA: hda/tas2781: Accept V1 calibration data
-> > without CRC") only checked the first device entry. On machines where
-> > the BIOS populates fewer entries than p->ndev, the remaining all-zero
-> > entries are applied and tas2781_cali_preproc() divides by zero on
-> > playback open.
-> >=20
-> > Accept CRC-less V1 data only if every expected entry is non-zero and
-> > self-consistent (R0 * 1/R0 close to 1.0), otherwise reject it as
-> > before.
-> >=20
+> Regarding the Q27/Q31/Q58 formats: they are not from any documentation; I
+> inferred them from the data. Reading the first word of each entry as Q27
+> gives a plausible speaker resistance (3.82 ohm on my Legion Pro 7, 3.64 o=
+hm
+> on Cristian's Yoga Pro 9), and reading the second word as Q31 gives exact=
+ly
+> its reciprocal, within 1e-4, on both machines. So, for a consistent entry=
+,
+> R0 =C3=97 InvR0 ~=3D 2^27 =C3=97 2^31 =3D 2^58.
 >=20
-> ...
+> The V2 dump from the ASUS ROG Xbox Ally X thread (with a valid CRC) fits
+> the same pattern: r0 =3D 0x3c5f7222 (~7.55 ohm in Q27) and invr0 =3D 0x10=
+f615d5
+> (~0.1325 in Q31, i.e. 1/7.55).
 >=20
-> > =20
-> > +/*
-> > + * V1 data without CRC is only trusted if every expected device has a
-> > + * populated, self-consistent entry: R0 (Q27) * 1/R0 (Q31) must be
-> > + * close to 1.0 in Q58.
-> > + */
+> My guess is Q5.27 and Q1.31, but I have no TI reference to confirm it.
 >=20
-> Just out of curiosity, where do Q27, Q31, Q58 come from?
-> I couldn't find anything about these.
->=20
+> Finally, all testing was done on my own hardware: the original patch was
+> tested on my Legion Pro 7 16IRX9H, and I reviewed and own the changes.
 >=20
 
-I think it would be good to be able to see which commits were generated
-by an LLM. This way, people wouldn't have to scour the internet trying
-to verify hallucinations. Furthermore, it would be possible to see what
-percentage of the kernel consists of public domain/LLM code.
+Ah okey, these are TI fixed point formats.
 
-Best regards,
+Thanks,
 Gergo
