@@ -1,62 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794478620;
-	b=Js+HAOkHfuP+Nf+zv7e9WOzB8CCHy55NXf9DYuT8HkMZ2yybX9num+QKTs0EsBEu1RYM
-	 jsueQxSJwNZpDNMoZ+8oyXccbJfRlCWZit4ql+bt7MkpoWROUvAC7onCJJnkViVt+f95y
-	 ylnE+v5ZExf1wAqO0zSiyoaIcqG4MsILFqGN226fGa2FKl6ZVLBeTYI6n4NTaepgGpywP
-	 1nzInUGQG+hPJdnEG8ilPYiwO3/rO+C9EhxJ4xLH9K6rPo8WQqNWQlIwR696LAudy4+fm
-	 Oo/y1u/Q+ycxpHxqJalf1CHhDsmxNCXOzK8NM/ysbn+1OE/nniQ6gBF6x3DiKZG0/pg==
+	t=1794479717;
+	b=RK75+do4tySQPXPVFqI8n9sjnoAhPQmY3LLSpWAb9ffwx0BJcHlox8RTHclJTpk5HtsO
+	 RefrrN91hCWoqFzqu+rQC8n1bcfj8J6aIqR+iwvGkSpTKkNltjArvP3kerf427wkGwHBz
+	 D/avVM6M1pHMkSqndhCl7AU72btryVCifMrhM43SlRS0nbx3Kes5C9ujzUfgBklEP0Yoj
+	 DrWPVi7kqS79n9vtBUefWJ9xxGMSYkJiv+581X0dhZXG36JPa7tPDEGUmTPPLtSDjcnbC
+	 bpsbOL/XU94G98ktgIns+rxiji+CsBPCOciBYELrcRX1BCxIANQRem8xk6muVY0Fx1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794478620;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=/RdHwbquKi+MVjjdJwJhpJsAsG12vtsmDqJfkK4Jwn4=;
-	b=euOSgK5tEthNf6F5iTr6XKbRo+xa58DTGMeRIHiGv8HSkbXcImb9xDOy672A4xV3P13t
-	 L0S4fQMyfSS75spN2JnKGypW3faag4T1gKUBGPHwwQ5Fuxn70tlhAz7Ree3THUkE4pWKj
-	 kSz/FzbCQ8dphKp9C06Otwr6jrAbEwpiUOo84kJsSEecwa4p1ZA42xJnwrFnWOCR3fvkS
-	 iKhVBBK0C/mSiJSXJW5kI1V0ey0veNqRgkF40mxcrhiDV+Bb9ZKTzqJ1EbcUS396b+9Gg
-	 ++Xqv6xg/VQ58uiP/ncY63MSfzaIlHmG03tOO1qVqYDkdfT8A5iVkCgS4ky+5ZqUABw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794479717;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Content-Transfer-Encoding:Message-Id:References:To:X-Mailer;
+	bh=WoymvwdfMBFoMyXW+9QTB+Y4rJogi+4Hn0MI83a+cw0=;
+	b=kfbXLwCBq/d4yhYsKpSSIbzrYEC/PBbsqnYGX/QzNIsxzSG5rTUm0J0xBoyEMcdlfPcp
+	 LUANJL97vTEuJzzCYDD9EwhBoVZSC4JASY61vsJcVHQoFV+XBmPnQby66BksZ6e9sHv+2
+	 YEd2mOc+94THmTLMAbKlq3ax8y9VIwMtETwu1gd4mz6hOENUJ39/qlRhse96jxhR/stLO
+	 c6cmlimKKmmsomX+i47VA0Sd9XJ8q6buyY+an586hXxDwwDQYMtIXMnvy51pXyj5xq7tl
+	 uuqT78tQGRS6QUv1vv/QVXtUZi8M5le86NYPGsPJJ14UxIzotCRY8eWWv5tiqCcjKWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ATxohBFD;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A49JrogQ;
+	arc=none smtp.remote-ip=209.85.215.180
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32C8606A323;
-	Thu, 12 Nov 2026 10:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769A3606A896
+	for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 10:35:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 769A3606A896
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ATxohBFD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FCB91F00A05;
-	Thu, 12 Nov 2026 10:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794478620;
-	bh=/RdHwbquKi+MVjjdJwJhpJsAsG12vtsmDqJfkK4Jwn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ATxohBFDTHfYEdsLHe3UlmOS+O+rFc4eVDkGQL5vNv2fMs7+RZQ2uS9LAQMpJ1WDX
-	 U1nnxjcThcj2dp6SOM2vKMcWmndIUgm3S4M7Ha/SXQrFkVe5VCcYa5pUh9hMYtPSiZ
-	 oX/bb7PANfMg5zXIfar1jQGaoikxEQjvW75B4nky5n3nuzE2IHXAFi9nwXJsYCP8Cq
-	 5C6rEl1ZWVu/4tBGW98KN2t3IODQgff1XJ4XLYblSVIVTIg9RhhyfMk96CBd3cBQMQ
-	 bRd0FZ7V5P/zmWo6gyv4lDynLqam2JyY4ffjqKzj5/V1QBlMI/xgkuLr6eYus1kvQT
-	 sSL9YR6adL6rA==
-Date: Thu, 12 Nov 2026 10:16:56 +0000
-From: Sudeep Holla <sudeep.holla@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, regressions@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] driver core: hand off fwnode ownership when shared
- fwnode owner is rejected
-Message-ID: <20261112-truthful-zircon-narwhal-fa5d80@sudeepholla>
-References: <20260928-driver-core-v1-1-0846bb8e0f32@nxp.com>
- <20261112100448.GA53281@francesco-nb>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A49JrogQ
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cdab6ae1ee9so1904182a12.1
+        for <regressions@lists.linux.dev>; Thu, 12 Nov 2026 02:35:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794479717; x=1795084517; darn=lists.linux.dev;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=WoymvwdfMBFoMyXW+9QTB+Y4rJogi+4Hn0MI83a+cw0=;
+        b=A49JrogQr9MPHL6vYQXSb6GX7eF1aL+AdteRPPiCd9Z48aV14rivkJIY/0b+MQDtrQ
+         JBF0dbKV5Kj9qnibHkghhkW4t7QtMUrAi6wV0PHZdZGenGRLR6YrSeiEI9itb7PBfcPO
+         Pj7fftaq23gV38sY56Nk+UvopwgHoofM11nzrfHmmKKAAzuF70S5X+ibQEMh4UIiA8lv
+         AyQQqp6WeOKSICsGKrzH0+8a9zNNsmcOKuN8m/qcfSBy+zH91I26i412HVB6VDnaGSAG
+         k4aRr1E1wMG3yj/04afhQqUT5lOWfdFrJ0ZdsmSREoNdqgSco/Us+qd8tiaCA9LgMt0k
+         7RyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794479717; x=1795084517;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WoymvwdfMBFoMyXW+9QTB+Y4rJogi+4Hn0MI83a+cw0=;
+        b=jm5Ailzimvx37D1Fh9vorzYuwvHwcZKN9rxfuqNX5gMG5YqnYVVYUfLEa/LtADcV+8
+         mTTZ5MPyef+XnJmrlNQ87mJaWZFJsk6IWkNgC32wdEikwrkFLtHoFOLuTbkuTmEBiDpM
+         K/EkD+CrG1nCBlsqOgThJlwJYtu37c0Q3u71vBZzZFLcPXbjbtEQSSPq1IXFcT/nyLYK
+         95NMWXsDM4kSQ+5Zf4DfGRwrw1a7BBYlY5gKwGxvOcF6A6kCOGft6Pwekjz6EwPdCz68
+         TG2ExwoPbzSW2NR35071bLF1tJhgBAIjKTZe/9h827BW0YoZ1vxZCEFkMu02zgzKIf2r
+         fPEA==
+X-Forwarded-Encrypted: i=1; AL+hErE5B4z90HSIiHM87Mv0vP5jQaaOLRhwqnQRdWLw/7yuUJMxS42dLGVj4k5XX2Tc4UX+GQUtIHw+MxUMbQ==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/Kj3kfN5ht+iRZ0fQ+6EmndoXkbA5oui6dLlJVo1/7SqucTMQs
+	srKtT+MpOSbfn4GHa6lxPLtallLts2zNCj40N0uwRLPUdUpMLtsvg7gP
+X-Gm-Gg: AYBFou1ULx4SQmlmeiuwfTWEklRgnqaZj7RZcf9B9drQPUhJu62c/rn4ejQqWygAedg
+	/68EckrJOYOUBvcIBCsviiaKfaw58gLRJaSUP9AdZpOp6UeGOCXrCqxEzW6vX54kPbCoH67LyWH
+	O5lmIMmgDWUBETjrI8s7MMjKS3mEAVXeeNIdOU0btvb0vjPhBj/Jp0rQYhpS9NxHzBMJfhWv67o
+	VOZ4ZXDxwG0BMiz71uBnPArcnv5jdXssbUVHM/vkSNFe+jYXh3IBnHCzvAMNWo4NyF5VCy7DJa4
+	7d84BSOofor3KIGMb7yUmeJPqu2LfRQtiJ1yJfTEugUT3ec0Kpzh+dJIrY3OMVRo+qpkCV3OGOE
+	y5fMtrrSkrtVEhMXdI5zKiJayZoBVteuU8/aZ9soXGDe+eT4xxnP+bun6oGeNv3kB+rnUNq+Trl
+	quldkCrT9I9kfkG52dPTPRWL21xFbJor7UOZRcLoGtKYjW9QjT20Y1dle9rg6MOXeh0SSwu+ziA
+	z+FiuNaakXMKYE+cwXJ0NoR52Wv43DHP7jc8XZq54U0a6CrdjsqhLcbHKc2a0DawTsEGdOLNpeh
+	8VNG69acHgnKuMuCmCGGG2C2DKD0rLTi/qvFQlZIJ4h0Up3tKHwCiibR9bLCKLpIXwqziyYkQDb
+	JKoo1Jw==
+X-Received: by 2002:a17:90b:4c4c:b0:3b0:e2a9:3466 with SMTP id 98e67ed59e1d1-3b182eebe65mr4740116a91.16.1794479716567;
+        Thu, 12 Nov 2026 02:35:16 -0800 (PST)
+Received: from smtpclient.apple (fs98a57cc9.tkyc008.ap.nuro.jp. [152.165.124.201])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b197ce49d6sm4207584a91.4.2026.11.12.02.35.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Nov 2026 02:35:16 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -65,82 +90,160 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261112100448.GA53281@francesco-nb>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.700.51.1.1\))
+Subject: Re: [PATCH v2] mm: memcontrol: Don't lose track of exiting OOM
+ victims
+From: elenchist <elenchist.dev@gmail.com>
+In-Reply-To: <avA1wXhTMs9eY2NF@chrisdown.name>
+Date: Thu, 12 Nov 2026 19:34:53 +0900
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>,
+ Tejun Heo <tj@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Zhan Xusheng <zhanxusheng1024@gmail.com>,
+ cgroups@vger.kernel.org,
+ linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org,
+ kernel-team@meta.com,
+ regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6B8E9261-3FF8-441B-8F47-7D35834A8D35@gmail.com>
+References: <avA1wXhTMs9eY2NF@chrisdown.name>
+To: Chris Down <chris@chrisdown.name>
+X-Mailer: Apple Mail (2.3864.700.51.1.1)
 
-On Thu, Nov 12, 2026 at 11:04:48AM +0100, Francesco Dolcini wrote:
-> +regression list
-> 
-> Hello,
-> 
-> On Mon, Sep 28, 2026 at 07:49:01PM +0800, Peng Fan (OSS) wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > When multiple devices share the same fwnode (e.g. the SCMI bus creates
-> > both "pinctrl" and "pinctrl-imx" devices for SCMI_PROTOCOL_PINCTRL), only
-> > the first device registered becomes the fwnode owner (fwnode->dev, set in
-> > device_add()). If that owner never binds -- for example its driver returns
-> > -ENODEV because it is blocklisted on this SoC, or because its driver is
-> > not compiled in at all -- then driver_bound() is never called for it, so
-> > fwnode_links_purge_suppliers() and fw_devlink_pickup_dangling_consumers()
-> > are never run for the fwnode. The child fwnode supplier links (pin group
-> > nodes such as lpi2c3grp, uart5grp, ...) stay unsatisfied and every
-> > consumer of those child nodes defers probe forever.
-> > 
-> > On i.MX95 this manifests as a complete boot failure: the generic "pinctrl"
-> > SCMI device claims fwnode ownership but its driver returns -ENODEV, while
-> > the vendor "pinctrl-imx" device binds successfully. Because
-> > dev->fwnode->dev still points at the rejected "pinctrl" device,
-> > driver_bound() of "pinctrl-imx" skips the supplier purge and dangling
-> > consumer pickup, so all I2C buses, SPI, UART, MMC, USB and PCIe
-> > controllers wait forever for their pinctrl suppliers.
-> > 
-> > Fix this in two places:
-> > 
-> > 1. In really_probe() failure path: when the driver definitively rejects
-> >    a device (-ENODEV / -ENXIO), fw_devlink_release_shared_fwnode() is
-> >    called. If the rejected device is the fwnode owner, it either
-> >    transfers ownership to an already-bound sibling (and runs the
-> >    purge/pickup on its behalf) or clears ownership so the next sibling
-> >    to bind can re-acquire it.
-> > 
-> > 2. In device_links_driver_bound(): re-acquire the fwnode when it is
-> >    unowned (!fwnode->dev) or when the current owner has no driver at
-> >    all (!fwnode->dev->driver, meaning the driver was never compiled in
-> >    or loaded as a module). This covers the case where probe rejection
-> >    never happens because no driver ever matches.
-> > 
-> > fwnode->dev is not serialized by a lock; instead every writer only ever
-> > touches a fwnode->dev it already owns (== dev, as device_del() does when
-> > it clears ownership) or one that is currently unowned (== NULL, as
-> > device_add() does when it claims ownership). This patch follows the same
-> > discipline: fw_devlink_release_shared_fwnode() only writes fwnode->dev
-> > when this device is the current owner; device_links_driver_bound() only
-> > claims fwnode->dev when it is NULL or when the current owner has no
-> > driver (and therefore cannot be in the process of binding).
-> > 
-> > Fixes: f9aa460672c9 ("driver core: Refactor fw_devlink feature")
-> > Cc: stable@vger.kernel.org
-> > Assisted-by: LLM
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> > This issue is triggered by 
-> > aac4e67d6eb9 ("firmware: arm_scmi: Always create devices for standard protocols")
-> > in linux-next next-20260925.
-> > 
-> > But I think this is a fix to
-> > f9aa460672c9 ("driver core: Refactor fw_devlink feature")
-> > 
-> > Detailed information could be found in patch commit log.
-> 
-> Sudeep's series [1] fixes this in linux-next, but it is not yet in
-> mainline. I'd like to have this tracked so that it is not lost.
-> 
+On Sun, Nov 08, 2026 at 12:41:37AM -0800, Chris Down wrote:
+> memory.events showed oom_kill 2 in three runs. In one of them the =
+first
+> process hadn't submitted the read yet when it was killed. The slow =
+read
+> just makes the window easier to hit.
 
-I have already sent it as fixes for SoC team, it must land in v7.4
+It doesn't need AIO at all.  A plain memcg OOM hits it most of the
+time: the victim only spends 10-20ms in exit_mmap(), and if the
+allocating task fails a charge again in that window, a second (and
+sometimes a third) task gets killed.
 
--- 
-Regards,
-Sudeep
+Reproducer: memory.max=3D400M, no swap.  A holds 150M, B 100M, C 50M, =
+and
+T grows by 10M every 0.3s.  Only A should be killed.
+
+---8<--- overkill.c
+/* A holds 150M, B 100M, C 50M; T grows by 10M every 0.3s up to 200M.
+ * Run inside a memcg with memory.max=3D400M. Only A should be killed. =
+*/
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+static char *volatile sink;	/* keep the stores */
+
+static void hold(size_t mb)
+{
+	sink =3D malloc(mb << 20);
+	memset(sink, 1, mb << 20);
+}
+
+int main(void)
+{
+	const char *name[] =3D { "A", "B", "C", "T" };
+	size_t mb[] =3D { 150, 100, 50, 0 };
+	pid_t pid[4];
+
+	for (int i =3D 0; i < 4; i++) {
+		pid[i] =3D fork();
+		if (pid[i])
+			continue;
+		if (mb[i]) {
+			hold(mb[i]);
+		} else {
+			sleep(3);
+			for (int j =3D 0; j < 20; j++, usleep(300000))
+				hold(10);
+		}
+		pause();
+	}
+	sleep(10);
+	for (int i =3D 0; i < 4; i++) {
+		int st, dead =3D waitpid(pid[i], &st, WNOHANG) =3D=3D =
+pid[i];
+
+		printf("%s %s=C2=A5n", name[i],
+		       dead && WIFSIGNALED(st) ? "killed" : "alive");
+		if (!dead) {
+			kill(pid[i], SIGKILL);
+			waitpid(pid[i], NULL, 0);
+		}
+	}
+	return 0;
+}
+---8<--- run.sh
+#!/bin/sh
+# cgroup v2, no swap, as root: gcc -O2 -o overkill overkill.c; ./run.sh
+CG=3D/sys/fs/cgroup/overkill
+mkdir $CG && echo 400M > $CG/memory.max || exit 1
+sh -c "echo =C2=A5$=C2=A5$ > $CG/cgroup.procs && exec ./overkill"
+grep '^oom_kill ' $CG/memory.events
+rmdir $CG
+---8<---
+
+Over-kill (oom_kill >=3D 2) per 20 runs, ThinkPad X1 Carbon Gen3
+(i5-5200U, 8 GB), x86_64.  "4a" is the same layout driven from a
+systemd-run scope with Python tasks; "C" is the program above:
+
+  kernel                                      4a      C
+  6.8.0-149-generic (Ubuntu)                  0/20    -
+  7.0.0-42-generic (Ubuntu)                  19/20   19/20
+  v7.4-rc1                                   20/20    -
+  v7.4-rc1 + this patch                       0/20    0/20 *
+  v7.0 + 60f21a264930 + this patch            2/20    0/20
+
+  * an earlier, longer version of the same program
+
+v2 has the same code as v1, which is what I tested (identical tree
+after git am).  On v7.0 the patch also needs CSS_TASK_ITER_WITH_DEAD
+from 60f21a264930 ("cgroup, sched_ext: Include exiting tasks in cgroup
+iter"); only its cgroup hunks apply there, so that's what I used.  The
+2/20 left on that kernel look like a separate issue that mainline has
+already fixed.  On v7.0, MGLRU's page table walk in T's reclaim can
+hold an mm_users reference on A's mm (get_next_mm() used
+mmget_not_zero() until d14514c66cb9 "mm/vmscan: prevent MGLRU reclaim
+from pinning address space" in v7.1-rc1).  A's own mmput() is then
+not the last one, so A finishes exiting and drops out of the scan
+right away, and exit_mmap() runs later from mmput_async() in a
+kworker.  The next OOM picks B.  I traced 2 such over-kills in 40
+runs; with MGLRU page table walks turned off (lru_gen/enabled =3D
+0x0005) I got 0/40.  So a 7.0.y backport probably wants d14514c66cb9
+as well; it applies to v7.0 and v6.19 as is.  I haven't built v7.0
+with all three.
+
+Zhan's series [1] is a different problem (thread groups migrated after
+their leader exited); v7.4-rc1 with it still gave 20/20 here.  The two
+patches change the same css_task_iter_start() line, so they will
+conflict.
+
+Tested-by: elenchist <elenchist.dev@gmail.com>
+
+Adding the regressions list: a72f73c4dd9b is in v7.0 and was also
+backported to 6.19.9.
+
+#regzbot introduced: a72f73c4dd9b
+#regzbot title: memcg OOM kills more tasks while the first victim exits
+#regzbot fix: mm: memcontrol: Don't lose track of exiting OOM victims
+
+I used an AI coding assistant (Claude Code) to build the kernels, run
+the tests, analyse the traces and draft this mail; I have checked the
+results and the text.
+
+[1] =
+https://lore.kernel.org/linux-mm/20261027144016.2582880-1-zhanxusheng1024@=
+gmail.com/
+
