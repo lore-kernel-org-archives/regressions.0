@@ -1,97 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.219.45
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794564208;
-	b=flG2tWM+jM+rX2P4o881Wj16Z3l6OEWr/LrqB00xsPuPlNOCJsGEVAp+uCh/UAslnLJw
-	 lDWYOKlxRR3KAkk3I/txE899sYDsPJGmWBpQKe+e0pTTQki8Z0AFhrzSYEUCtjU0CK+hF
-	 gl4UOoqaxpuTIqHphzkpKW9LKudidjvMiauhrztjVqHXZrKQo66HeFCH4OqR1WQwfBPg+
-	 JHO0q5XLhU8ijU/Ji/sqw/15d8U7RLy154W3YeZ+qr269uOQTmg3AKfYLN8aK/g+s6ygy
-	 8f6qoFisspfulAz6aAZJaHXBuzi+ry0fjVCUR2jZVoPaKrJdKywdkqGjwXjC1vcLuEg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794564208;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=f3rKnzeXmPTjVNP6fPu4kFAyMWVVj9CVo0hSntZlMr0=;
-	b=h4CENxcwyunewTYstShYf1vLcgknVW+H3auY5jwwPq1VWpj3NxzAHdou/DhJ9pvlS/pg
-	 Yx1H2fkN8kyJ5oeklatTZebUq1DZH1NhPse9z61E9ItQ1rcgcTB8W0CZq1VrYfGAH1/qs
-	 XyvD2FS+z5iH/6KWfnecKj8s0XxDkMu2gL/7cUhelmekP5FhyAXUFBSbMxDK0FK75CnxX
-	 7N5Wzo2FMl1vvke2Mk3jMvh1cctogv16k2vCgeQ6Tfg/BViVVh9yFvXv+H/FnxGsyxefQ
-	 DtUW06z+9jSAblfHv9Q0s9c6uPPSpdvC6pY4VcmcntPTvxiUe8CzNXV58yfrIj2ZbZQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zEVcHLtr;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.219.45
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794571748;
+	b=UWHdOnzWeos5cLX7jCiAamyXYimCIvVflQByNk6w+7t/yelYHnG/1gC46BFwgHfHdPDL
+	 GUfxbU0FlY3FFPowpBggNLNeNB3qKwo0Nj586j6pN5eQ9s/iciY+94jyoGCp7w22E1Fys
+	 Q/6L7chICEc4/nEnIxGL/zhNGaM+nG6uUHrnHe3Ld3N2huLFb+Yp22JL+s3qDpL3x3acB
+	 Nn4EgmWF0Pqc7pIWdsHLPXvbVdh9/EBvZUlTFxL69Aaw4ybNct9Jv35Oc9q+9FimJzh4Y
+	 yTGeUXsYmqIH2yNIWpn8K3L8ZQGV0BTmXV8bUu7Z6v5uyYhZyHcvKl7f0JW849zprcw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794571748;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=xLZRJNqf2nnZ12pwBR2LFWcyido2Yq8r/3Zhtdj3H0g=;
+	b=TiJJKyDuMvstxwg8eqp9g7QZ6b9fBB0ojgZHtWKaTTjc0OQxGBlNscEbBYcw2WmWgC2s
+	 0qYVlwrsCN2WMB/OSfIuHbrciHcag4lPsB9YaPKQXlpx9GjHotWMXpvJ0f8PgJ7b58/Lr
+	 7TkfDt4mrv94MQ6KKqcHCOmofMnpmbkBP5YECVESdBYylp5YhAXbtGcFx7rd8iuRp1ggM
+	 doiBKYjlYo7Mejpc1BuCDYbQ7QWU0mGLUo3Q4gR+/4brELOaMkJKUo+YA/Bah9VDWTDlb
+	 phBBp3tAiuTlm2YIjzlTSHrnwNGtiUNYcsgFDmX7ej95CnvYFdT0jG121SQHE+u+bbQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=XoqzMQfC;
+	arc=none smtp.remote-ip=188.68.63.162
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646CC60A3838
-	for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 10:03:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 646CC60A3838
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFE9606A323
+	for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 12:09:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6BFE9606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zEVcHLtr
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-91eb3fea2a9so13569896d6.3
-        for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 02:03:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794564207; cv=none;
-        d=google.com; s=arc-20260327;
-        b=skr1TSmEG79xYCuZBhZmslA8/VyjHn43vgL4kR12NE2c69kvB0sHQ4Z4tPydd8Tk2r
-         ayf4Vbf/QqSuGYhoX1KE2PT6kdIkK2hHpFV1EiS/jAzUj+lk3Ek7FLACkvWA0o2mI8LU
-         BljPxgJfBKtftLbLxmCW3DDs3zpqNmkrEVxOiKRdW2XIRBPqzT9yaKpDQ9oqS5tnJB1n
-         d+ei2jnOQlMdkIpCW8Et3/znM4dFMxYDPRORCXbuvEWKEMXgmmWS+X942/yktdz9y5g1
-         +eHtrEBsET3ba8QmANOpfDNPuFXuDgMQX7BLpWU+tcD4mIM6tLMn99WsnhiIMcvOGp0T
-         TVaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=f3rKnzeXmPTjVNP6fPu4kFAyMWVVj9CVo0hSntZlMr0=;
-        fh=5HSqRHrNYtD07jBsqQf+m2AuUqWO92lNWkjRka+TvQ0=;
-        b=WKQnVvpHQ3aDbQEnm/keEscUyCG2SW4RHUgg4jGtkcTFoujFi00rlv+tJjwLIf/N0B
-         GPFKUFD73Og/q8K1hcsusTwdyTu+fbvW8vbpEdUMyCTMmbaPjWFmbj21a9veCDYN0oSE
-         jkvuWzh0JibgF0SnRLSRhGnumSP1el7pjv8BcZjpC0N3w1KGuNbcGOVoAtUym6ed2peQ
-         Xo3kxXNZcyTQ6K2ggENkl9/6BwcWc1nQcg2iOsuIJeU4qg7XqE7e9B25Z+ItDC/k08rj
-         CbqG2L0xhIOZNuPVv5EAcupj86tfxg9qZ+IfqEiFW1UTJNaOfAY99LxSl6UQdOsP9iFo
-         ZHnw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794564207; x=1795169007; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=f3rKnzeXmPTjVNP6fPu4kFAyMWVVj9CVo0hSntZlMr0=;
-        b=zEVcHLtrzMPFtapk9uF6040PJCBXO9FfyYNvmTDH2vz5V7cQq9IRoPsAkibbZja44W
-         gvI6FkJdWsgEnp/cAAZPZbv1vPZIzZYBmEoNSzc/JE8rM2UKtX2fZw0ogN+AfaBJyjJy
-         EwJsMwbnWEBrmxfp2bNVIh+quEWuA3wzxJSDpVaXNgxlTiQjWJ8ccsYNH09Z0RlOE7CB
-         abGIPNaChlhGJAuk8Q2OnbGnkYlRlaoAreQDJVSRBEOybjzVRMjpEo4663+71FOEQKc0
-         ZAQtXytq7ezI0YIjwymbLrqhk/JNxDSb0wQClIYDB1SBFDi4cN4lqqNpBvvibSBqnhD0
-         XfAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794564207; x=1795169007;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=f3rKnzeXmPTjVNP6fPu4kFAyMWVVj9CVo0hSntZlMr0=;
-        b=tYsi1UQ2NQOkzBPwHX2UY3JZ6iPDkZebCxLMJXN5cLQhX2Tr6MzTPau03HDCU2+zuT
-         Ss+Yd54B8I/kUtwy2yO24ULVyARXsCjcPPxhRdzugDN2uf+A/KxGbFJviduu45zZkF5q
-         9PAF31oK5xbaWXYB3XNwHJVl0LZwMT2t28JzULBsLu3A26qcmBqwkIUCL1Bqmj18IESs
-         yeoovh4JZXyyIPuF88M1k+ghf+Y/h2hTtm0evT89rz+NMDaHSrMipFvsm0q/rL0IUaB4
-         UvRexFrK7MaED6JW99z3862POwYg58dJY7z/PAldX5uGMTy6+MSSCrWR51EE0JDZfkbh
-         k+pQ==
-X-Forwarded-Encrypted: i=1; AL+hErHl6HOmglE5hNG/4gt3DMcOuHQzq5Fm9nasrLzWzeFkPQnEaNUNNftin47ua7GZXGGPkZXx/YbSpPWiRQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/1pwQfPPVJjGI1sqm/ZdRLEkvUbTDCx5VlOVtmCs6fyt9SJi+q
-	Xdm71WtvWnt22dSc6IiRVCO2rPcwHdzlaXt9ck06gj32Bff7Nz7d9zydEe8/RNX8KKrdbQlIHFO
-	Pc/H+KiqEJPuwbT49goMzuaFXREDckFY=
-X-Gm-Gg: AYBFou3eE2f+5OaDBi+w8kl0ZZVOyelEuYyeARiVirMT316W1Kg/mofdz2OvtBVNrdg
-	74LR6+RN4v9UQ3obSJYKZAqm0haWexwrpoB4qtQShAdtT7nIRj6LxCTrwjuEUrKXENfTj07E29i
-	QIlVsXHrWnTipl0z3v/DC0x0cS+pYTuSGWhm2Nw9+49lno2LkyVHddcBbBdJ60sry1onZ/nqR13
-	59ANMu+q+hj+11rRqgLlOcErv4nbIpKnXBKVgi15zcEpLOj2BbrvLGRfH2kw3qqnv31n0DnLICy
-	XppIY6BYIJhCaKKT1+K0tO65lIsgMZS85PS40WW0L/+CEGchqfErqcebmWbPRgjbBVHjcE0b362
-	TtiKdGfaTAIZhyR+/KtzlrRYYbrvX2P3ZlKjc
-X-Received: by 2002:a05:622a:5446:b0:535:70b4:3f86 with SMTP id
- d75a77b69052e-55ac9e59bb4mr29783671cf.76.1794564207053; Fri, 13 Nov 2026
- 02:03:27 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=XoqzMQfC
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jQwx82cGJz4XVG;
+	Fri, 13 Nov 2026 13:07:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1794571644;
+	bh=x3XUK4PEvirZiY84EqhnOK4VJttR8MMMU/LdhyNjwM8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XoqzMQfClfvdhiHIAmFgwM940TA8E7l/++Oyw+jFTHXTK8E9uvtq480bh9C+hRTHT
+	 4jHD4/LI8Y2yS2joGzh2MzjB5PlapHsraIOdCCU1a4WXcR87S1EaCApwusV8vljxiZ
+	 HxrLgYCcHCF0PXAZQWQvDBxdrbT6CF7h6zd9QcsATgTEroICeXqkGiWKRr/WbES5Gb
+	 FqQorR/rzwhaVhdkdcNXsWM7WJuVRlsSikbUle1l/CqIgi6NmEq4tIQ7tJFyXibQgr
+	 hpmsuz5GcfV86O6npqGBrD8oOzX30qnfEuS0Ajf84CF+Fqc05NC+rZmKWnwnJUBpbp
+	 DgBaRsHJGMNjA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jQwx81vByz4XTw;
+	Fri, 13 Nov 2026 13:07:24 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jQwx74TWwz8sbs;
+	Fri, 13 Nov 2026 13:07:23 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D55705F97D;
+	Fri, 13 Nov 2026 13:07:08 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4d940e83-a3cc-4b2c-8f1f-9a4ce67c1f89@leemhuis.info>
+Date: Fri, 13 Nov 2026 13:07:07 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -101,197 +74,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: Hristos Nenkov <nenkov2004@gmail.com>
-Date: Fri, 13 Nov 2026 11:03:15 +0100
-X-Gm-Features: AclHuK_9m7WQNlxFW7kCm3i_5qb6-LzCoS-_xPEfDmcl2bQBqfwAi34Sqeb7WTY
-Message-ID: <CAO7_G+ypR12OwOiwnrqXDAC9zoboTMn_qLoASfJqYP3H83Vk5A@mail.gmail.com>
-Subject: [RFC PATCH] fuse: preserve daemon-owned ACL permission decisions
-To: Christian Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>, Seth Forshee <sforshee@kernel.org>, 
-	Lakshita Jain <lakshita.jain@databricks.com>, linux-fsdevel@vger.kernel.org, 
-	fuse-devel@lists.linux.dev, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7] ASoC: tas2783-sdw: add firmware download status check
+To: Lee Mann <leepaulmann@gmail.com>, baojun.xu@ti.com, broonie@kernel.org
+Cc: shenghao-ding@ti.com, niranjan.hy@ti.com, antoine@montane.tech,
+ andrey.golovko@gmail.com, pierre-louis.bossart@linux.dev,
+ matthew.schwartz@linux.dev, linux-sound@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20261107212552.10990-1-leepaulmann@gmail.com>
+ <20261109170325.10953-1-leepaulmann@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20261109170325.10953-1-leepaulmann@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <179457162934.1115284.15655238484368062611@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: D55705F97D
+X-NC-CID: A2jqbRO4Rij73N8Z6e5YddwUaFQhl4SGEgbV3zzmyxlkcMmhK/k=
 
-Legacy FUSE daemons without default_permissions or FUSE_POSIX_ACL can
-make their own permission decisions. Generic ACL ownership checking
-prevents non-owner ACL writes and removals reaching these daemons,
-including operations associated with sed -i and install -m.
+On 11/9/26 18:03, Lee Mann wrote:
+> Follow-up with one more data point, which supports the approach in
+> this patch.
 
-Introduce an opt-in inode-operation flag so FUSE can make the ownership
-decision in its ACL callback. Retain owner/capability checking for
-default_permissions and negotiated POSIX ACL mode, and leave the generic
-ownership check in place for filesystems that do not opt in.
+/me is not sure what "this patch" exactly means (the culprit?)
 
-Enforce the FUSE mount caller restriction and wait for channel readiness
-before reading negotiated policy, including requests on the mount root.
-The wait follows existing request-allocation publication, interruption,
-freezer and abort-accounting conventions.
+Anyway:
+> Same PX13, kernel 7.3.3, with two modules swapped:
+> 
+>   - snd-soc-tas2783-sdw: unmodified v7.4-rc1 tas2783-sdw.c/tas2783.h
+>   - snd-soc-sdca: v7.3.3 plus only the sdca_functions.c fallback from
+>     SOF PR #5904 (function type for mfg 0x0102 / part 0x0000)
+> 
+> Kernel log:
+> 
+>   acpi device:26: function type not a DisCo constant, using fallback for known peripheral
+>   acpi device:26: SDCA function SmartAmp (type 1) at 0x1
+>   acpi device:28: function type not a DisCo constant, using fallback for known peripheral
+>   acpi device:28: SDCA function SmartAmp (type 1) at 0x1
+>   slave-tas2783 sdw:0:1:0102:0000:01:8: Found Smart Amp function at index 0
+>   slave-tas2783 sdw:0:1:0102:0000:01:b: Found Smart Amp function at index 0
+> 
+> speaker-test -c2 -t wav: Front Left from the left speaker, Front Right
+> from the right speaker. No "Defer on undeferrable control" warnings
+> (with the same fallback on the v7.3-rc6 driver I saw ~1600 of them
+> during playback).
+> 
+> So on the PX13 the v7.4 driver works as intended once the ASUS SDCA
+> function is parsed. The regression is only that the parse fails on
+> this firmware. Getting the PR #5904 fallback (or an equivalent) into
+> v7.4 would fix it without bringing back the split. I can test a
+> posted version.
+> 
+> https://github.com/thesofproject/linux/pull/5904
+Hmm, still no reaction from Baojun Xu, who authored the culprit.
+Shouldn't be like that, but that's just how it is sometimes. Maybe this
+mail gets things rolling.
 
-Fixes: 318e66856dde ("xattr: use posix acl api")
-Link: https://lore.kernel.org/all/CALE1rk6tGt_Pe7CpFL1NSTgugVpXLH_iguO2D9VsAVHn1p-02w@mail.gmail.com/
+But if not: Lee, does a revert of the culprit fix this? Or do you want
+to maybe open a separate bug in https://github.com/thesofproject/linux/
+and see if that gets things rolling, give that a partial fix seems to
+exists there already?
 
-Signed-off-by: Hristos Nenkov <nenkov2004@gmail.com>
----
-Hi Christian, Miklos, Al, Jan and Lakshita,
-
-I reproduced Lakshita's report with libfuse 3.14.0 on WSL 6.18.58.1,
-including both setting and removing an access ACL, and prepared this
-candidate for design review.
-
-I built baseline and candidate kernels from
-f66469d9905b39d2c260a15d7d6db450f4db67c1 (7.4-rc1) with a minimal x86_64
-configuration and booted both under QEMU TCG. The expanded matrix
-completed 100 baseline assertions and 101 candidate assertions with
-zero mismatches. The baseline confirms the expected original EPERM;
-the candidate forwards legacy non-owner requests to the daemon while
-retaining the tested kernel-managed restrictions.
-
-The matrix covers access/default ACL set and removal, owner/non-owner
-callers, default_permissions, negotiated FUSE_POSIX_ACL, daemon rejection,
-malformed ACLs, read-only mounts, root requests without allow_other,
-and a root ACL request observed pending before daemon initialization.
-That observation identifies the syscall, not the exact kernel wait site.
-
-Checkpatch completed with 0 errors, 0 warnings and 0 checks. A final
-two-line indentation adjustment produced a byte-identical dev.o; the
-packet's source, guest and image hashes were checked against the build
-and VM receipts.
-
-The test daemon acknowledges operations without storing ACLs, so this
-does not establish ACL persistence or candidate passthrough sed/install
-behavior. Newer upstream, namespace/idmap, LSM and wider other-filesystem
-testing remain outstanding. I can provide the VM harness and serial
-logs if useful.
-
-I used OpenAI Codex to trace the supplied report and draft the changes,
-VM harness and message. I ran the Linux builds and VM tests locally.
-A separate-context AI review identified initialization and caller-policy
-gaps in the first local proposal; this candidate includes corrections
-and the additional boundary controls. No human Reviewed-by or
-maintainer approval is claimed.
-
-Would this opt-in flag be an acceptable way to express the ownership
-policy, or would you prefer a different VFS interface? In particular,
-the placement of the ownership decision relative to generic ACL
-validation, and the readiness helper, need review. This is an RFC,
-not a request for immediate merge.
-
-Thank you for your time.
-
-Best regards,
-Hristos Nenkov
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -627,6 +627,8 @@
- #define IOP_CACHED_LINK                0x0040
- #define IOP_FASTPERM_MAY_EXEC  0x0080
- #define IOP_FLCTX              0x0100
-+/* ->set_acl() is responsible for the ownership check. */
-+#define IOP_ACL_OWNER_CHECK    0x0200
-
- /*
-  * Inode state bits.  Protected by inode->i_lock
-diff --git a/fs/posix_acl.c b/fs/posix_acl.c
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -949,7 +949,8 @@
-
-        if (type == ACL_TYPE_DEFAULT && !S_ISDIR(inode->i_mode))
-                return acl ? -EACCES : 0;
--       if (!inode_owner_or_capable(idmap, inode))
-+       if (!(inode->i_opflags & IOP_ACL_OWNER_CHECK) &&
-+           !inode_owner_or_capable(idmap, inode))
-                return -EPERM;
-
-        if (acl) {
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -433,6 +433,8 @@
-                                   new_decode_dev(attr->rdev));
-        } else
-                BUG();
-+       /* ACL ownership policy depends on the negotiated connection mode. */
-+       inode->i_opflags |= IOP_ACL_OWNER_CHECK;
-        /*
-         * Ensure that we don't cache acls for daemons without FUSE_POSIX_ACL
-         * so they see the exact same behavior as before.
-diff --git a/fs/fuse/acl.c b/fs/fuse/acl.c
---- a/fs/fuse/acl.c
-+++ b/fs/fuse/acl.c
-@@ -5,6 +5,7 @@
-  */
-
- #include "fuse_i.h"
-+#include "dev.h"
-
- #include <linux/posix_acl.h>
- #include <linux/posix_acl_xattr.h>
-@@ -101,6 +102,20 @@
-        if (fuse_is_bad(inode))
-                return -EIO;
-
-+       if (!fuse_allow_current_process(fc))
-+               return -EACCES;
-+
-+       ret = fuse_chan_wait_ready(fc->chan);
-+       if (ret)
-+               return ret;
-+       if (fc->conn_error)
-+               return -ECONNREFUSED;
-+
-+       /* Legacy daemons without default_permissions decide ownership. */
-+       if ((fc->default_permissions || fc->posix_acl) &&
-+           !inode_owner_or_capable(idmap, inode))
-+               return -EPERM;
-+
-        if (fc->no_setxattr || fuse_no_acl(fc, inode))
-                return -EOPNOTSUPP;
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -107,6 +107,25 @@
-                /* wake up aborters */
-                wake_up_all(&fch->blocked_waitq);
-        }
-+}
-+
-+/* Wait for channel negotiation before using connection-dependent policy. */
-+int fuse_chan_wait_ready(struct fuse_chan *fch)
-+{
-+       int err = 0;
-+
-+       atomic_inc(&fch->num_waiting);
-+       if (fuse_block_alloc(fch, false)) {
-+               err = -EINTR;
-+               if (wait_event_state_exclusive(fch->blocked_waitq,
-+                                              !fuse_block_alloc(fch, false),
-+                                              (TASK_KILLABLE |
-TASK_FREEZABLE)))
-+                       goto out;
-+       }
-+       err = READ_ONCE(fch->connected) ? 0 : -ENOTCONN;
-+out:
-+       fuse_drop_waiting(fch);
-+       return err;
- }
-
- static void fuse_put_request(struct fuse_req *req);
-diff --git a/fs/fuse/dev.h b/fs/fuse/dev.h
---- a/fs/fuse/dev.h
-+++ b/fs/fuse/dev.h
-@@ -36,6 +36,7 @@
- unsigned int fuse_chan_num_waiting(struct fuse_chan *fch);
- void fuse_chan_set_fc(struct fuse_chan *fch, struct fuse_conn *fc);
- void fuse_chan_set_initialized(struct fuse_chan *fch, struct
-fuse_chan_param *param);
-+int fuse_chan_wait_ready(struct fuse_chan *fch);
- ssize_t fuse_chan_send(struct fuse_chan *fch, struct fuse_args *args);
- int fuse_chan_send_bg(struct fuse_chan *fch, struct fuse_args *args,
-gfp_t gfp_flags);
- int fuse_chan_send_notify_reply(struct fuse_chan *fch, struct
-fuse_args *args, u64 unique);
+Ciao, Thorsten
