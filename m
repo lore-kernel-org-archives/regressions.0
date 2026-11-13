@@ -1,70 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794571748;
-	b=UWHdOnzWeos5cLX7jCiAamyXYimCIvVflQByNk6w+7t/yelYHnG/1gC46BFwgHfHdPDL
-	 GUfxbU0FlY3FFPowpBggNLNeNB3qKwo0Nj586j6pN5eQ9s/iciY+94jyoGCp7w22E1Fys
-	 Q/6L7chICEc4/nEnIxGL/zhNGaM+nG6uUHrnHe3Ld3N2huLFb+Yp22JL+s3qDpL3x3acB
-	 Nn4EgmWF0Pqc7pIWdsHLPXvbVdh9/EBvZUlTFxL69Aaw4ybNct9Jv35Oc9q+9FimJzh4Y
-	 yTGeUXsYmqIH2yNIWpn8K3L8ZQGV0BTmXV8bUu7Z6v5uyYhZyHcvKl7f0JW849zprcw==
+	t=1794573852;
+	b=LsV1po0SZW0BSsTZ93xNPvXMhU9lvxC4qYMDXFPFwD+JfDe2Ih/f5HhB4b69qsAAkt/p
+	 4saLFvFevBgc6zXBwTC5seU4AO5EFVG2lcAK5vG3naSiG+RFY7dEZYNMduLofBig8GMbd
+	 3fGIR1b/tx7hcMQuFVQj/WQqxe1bQw/u/ExMZZEMlkiDJ+MWBtY/cJXwCoH/hloX79P/5
+	 CrNiL6ZPnFLPPv6IxVr2RVE76TSMQwtgJMvK544eFnGiuJ17SILEae5i/8g2EKdHbZ2Rx
+	 QXLK3GFCXjEN6JWfJcU+7aH44Kd35svqro79fRsVGda54rxYdRyVjvBdHT/4GGg4joA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794571748;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=xLZRJNqf2nnZ12pwBR2LFWcyido2Yq8r/3Zhtdj3H0g=;
-	b=TiJJKyDuMvstxwg8eqp9g7QZ6b9fBB0ojgZHtWKaTTjc0OQxGBlNscEbBYcw2WmWgC2s
-	 0qYVlwrsCN2WMB/OSfIuHbrciHcag4lPsB9YaPKQXlpx9GjHotWMXpvJ0f8PgJ7b58/Lr
-	 7TkfDt4mrv94MQ6KKqcHCOmofMnpmbkBP5YECVESdBYylp5YhAXbtGcFx7rd8iuRp1ggM
-	 doiBKYjlYo7Mejpc1BuCDYbQ7QWU0mGLUo3Q4gR+/4brELOaMkJKUo+YA/Bah9VDWTDlb
-	 phBBp3tAiuTlm2YIjzlTSHrnwNGtiUNYcsgFDmX7ej95CnvYFdT0jG121SQHE+u+bbQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794573852;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=pMOUnEce+C5mclnZmcyWz+KKwfqvAMI7phNLC7162fs=;
+	b=Rpe3CEFmVkhSpvYDiteQXH+ZCYaLY/VIf6MmKRH0r1E4zCbUQltQF17ofPMSijzm8ACj
+	 fchBxCTKFvgDozobNee6s9W867/4aVvQoeZRDd3fGVKrEUDz8IzQbS23tNeOgwPnSPMN7
+	 eclgVmMQx7V5CAHKIj1KyUTQjPJ+qdvNrspewwIIy0GzcUS39j/pBv8Qz01JfQwvRHUkJ
+	 Jvyw75Spv+D6toLfp+3Nvnpg3VnFu2DOgGfc65GY91CA58QxlI6B3lFgXXFDpkW00BABC
+	 xQmfILmcQKkL646zdoVx87CADT2cf1DyK+LpetMKWnhovubVS05Sdp5FOcB7sW8wsvg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=XoqzMQfC;
-	arc=none smtp.remote-ip=188.68.63.162
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PqLFEr+I;
+	arc=none smtp.remote-ip=209.85.221.54
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFE9606A323
-	for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 12:09:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6BFE9606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B13E606A331
+	for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 12:44:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6B13E606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=XoqzMQfC
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jQwx82cGJz4XVG;
-	Fri, 13 Nov 2026 13:07:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1794571644;
-	bh=x3XUK4PEvirZiY84EqhnOK4VJttR8MMMU/LdhyNjwM8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XoqzMQfClfvdhiHIAmFgwM940TA8E7l/++Oyw+jFTHXTK8E9uvtq480bh9C+hRTHT
-	 4jHD4/LI8Y2yS2joGzh2MzjB5PlapHsraIOdCCU1a4WXcR87S1EaCApwusV8vljxiZ
-	 HxrLgYCcHCF0PXAZQWQvDBxdrbT6CF7h6zd9QcsATgTEroICeXqkGiWKRr/WbES5Gb
-	 FqQorR/rzwhaVhdkdcNXsWM7WJuVRlsSikbUle1l/CqIgi6NmEq4tIQ7tJFyXibQgr
-	 hpmsuz5GcfV86O6npqGBrD8oOzX30qnfEuS0Ajf84CF+Fqc05NC+rZmKWnwnJUBpbp
-	 DgBaRsHJGMNjA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jQwx81vByz4XTw;
-	Fri, 13 Nov 2026 13:07:24 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jQwx74TWwz8sbs;
-	Fri, 13 Nov 2026 13:07:23 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D55705F97D;
-	Fri, 13 Nov 2026 13:07:08 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <4d940e83-a3cc-4b2c-8f1f-9a4ce67c1f89@leemhuis.info>
-Date: Fri, 13 Nov 2026 13:07:07 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PqLFEr+I
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-4922523d1afso411741f8f.0
+        for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 04:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794573851; x=1795178651; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=pMOUnEce+C5mclnZmcyWz+KKwfqvAMI7phNLC7162fs=;
+        b=PqLFEr+I6vfZBheNYid4hWb0hUSlH/H2Zkli0HMsVowEtgXqulGrL93xRrNPu2BoSo
+         OVNX5Gt0//V+FxHaJTl/FbMLl9299SgMczxeNMoiwIebsSyWbm2BAGrg4DsTP7BoZEn5
+         56Wk46so4V+aaPQMUGzAyMLnOgu+fJ/heuryp26lk6wbeaFJoOKwrE43sXVEXImNiDp+
+         JpQM3gn5nugpVvkfBo5eGmXWo++N5PXv4oZ5wnOWp/1tvPWT8vPI7922TPSrJ1GyiktL
+         f8Ex4Y+0OhqvQNEep/Dq5OHpAw2UPGDYR5wCP1soC56kSkxv62+louyPRMTYlMlIpx+V
+         E1TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794573851; x=1795178651;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=pMOUnEce+C5mclnZmcyWz+KKwfqvAMI7phNLC7162fs=;
+        b=0L29ADCo+rFxDuUL5Qd4rscSxCg89wsLMR12KkDKRvp0Y6kAMNa3ETNBuSJSITVv9M
+         XtOglRxKX8hMcswGBupp5PkEv9eK6+JVyrakvSMIfGuMQ+5IM6LDg1E0eQWGccItFPQF
+         BBQORuI4enCaFhnefnEgyPa5nJCoZYNBnSJre1IqFOWwfPVEZoawzu2cE7Zm455h0w+I
+         eze3imw8gp8+YqATINunmGBeqSphBiufLbKtBUB7wFF4co1/duoEV7xccTX4KM++cXWv
+         SdJnX4+plJnXT23yWJKull8dWXUajiUNJ+z+g4sQUhO3X/qep8MTEA6a42BY65EEqQGA
+         jfWg==
+X-Forwarded-Encrypted: i=1; AL+hErEA3hAmbNRs48iwDULNjS2c5wZArHIdM/Yw0Z0GqMu4laUEpSfLg5IlpJL9J7GstDl4v9q3I7BfVOOcng==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+wyjI/msLKSxonwRzAhxAi0O73cfNSu+T4EPPcjWmGDCBEmdaP
+	B6U075pccr+bULCEdlkEBX0qDOECIS/+bFzYQiLMFZN9ZGAb34JFBUDJ
+X-Gm-Gg: AYBFou0fT/2nMjz86ejB5wvK9UFI05wBn2PL7kSLc0FWxZVTypRUuplR2ws//X/OGpo
+	3/YQvyxLwQgC8xoOYsRGhmWnn4buNkaDTr2oo4rbDeMu6kmnZyxqA0x6aTBrjYEqf4xx/B9OBmR
+	yuC3l4wft0VeIeTwTUpUy7I0QEODdnFja9IkIhthpXusSESSVvOCy/HcH42F9pELEuZVhfbGvpf
+	0DxFOia6TivtYHM65L93jjOH77qpsSuvB2NJdftXbg7BzvkN0m8vmEfuE+o/ZAbgdNPXFOSMqAz
+	/ahdfKiMEhM4Izrud+2tU3cH2MjO6bAqvPtniw8My++xSm5feem8+PGzUF2Z8B5cXuE7ulTz16x
+	jNyLaK3MeKYemyC4/gHIJrdJ19t2sbc37eN4wAXdtXS37ii9s+TdoSFdiUj2uBYzbxVXLJ6BXIe
+	CJYuNXJ1cmRQ7bXzYI4nMwqpMupZyoj2Jpmos3cpuWCaG5kEIenSmqWBfZSuKpnv0G0fx60EZJX
+	jjy15u42e2E7Oik/0Woap7+bMqoia7odM3452s4PW4BLwLkIsjTmYBVxx5B/5yWroeNqmfWiCN6
+	qteFM+K5EFbwNwGTqnAP6KfdqBkTREe7mnEivWPj8zL+sElkRAAUH1f9FXkJ3O03HO8uhh318SQ
+	USSnVrwQ/vxleyrmRXXmi+IvFPg1yvdnYlkCT0DFlf0NKaItAUPgYIm+8qcjTUp7Vsm55MdU/wG
+	UIzz4boRRxaVhQZO7ijhrameuGFt+5EjxOiGn3OsAstlCfVMGYYd2nNWMiXOcZrFCgQWK0z7cLK
+	9ZHGBPuFIwgS2BFN1pTpO8GTdz5WN1r0PL1vCkC
+X-Received: by 2002:a5d:5d07:0:b0:492:905a:8b22 with SMTP id ffacd0b85a97d-49c6fc9dc00mr5932250f8f.2.1794573850456;
+        Fri, 13 Nov 2026 04:44:10 -0800 (PST)
+Received: from px13.tail3a7e86.ts.net (91-201-160-62.ip4.as24916.net. [91.201.160.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c5f1c0e0dsm5037179f8f.15.2026.11.13.04.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Nov 2026 04:44:09 -0800 (PST)
+From: Lee Mann <leepaulmann@gmail.com>
+To: regressions@leemhuis.info,
+	baojun.xu@ti.com,
+	broonie@kernel.org
+Cc: shenghao-ding@ti.com,
+	niranjan.hy@ti.com,
+	antoine@montane.tech,
+	andrey.golovko@gmail.com,
+	pierre-louis.bossart@linux.dev,
+	matthew.schwartz@linux.dev,
+	linux-sound@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v7] ASoC: tas2783-sdw: add firmware download status check
+Date: Fri, 13 Nov 2026 12:43:58 +0000
+Message-ID: <20261113124358.11823-1-leepaulmann@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <4d940e83-a3cc-4b2c-8f1f-9a4ce67c1f89@leemhuis.info>
+References: <4d940e83-a3cc-4b2c-8f1f-9a4ce67c1f89@leemhuis.info>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,67 +108,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] ASoC: tas2783-sdw: add firmware download status check
-To: Lee Mann <leepaulmann@gmail.com>, baojun.xu@ti.com, broonie@kernel.org
-Cc: shenghao-ding@ti.com, niranjan.hy@ti.com, antoine@montane.tech,
- andrey.golovko@gmail.com, pierre-louis.bossart@linux.dev,
- matthew.schwartz@linux.dev, linux-sound@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20261107212552.10990-1-leepaulmann@gmail.com>
- <20261109170325.10953-1-leepaulmann@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20261109170325.10953-1-leepaulmann@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179457162934.1115284.15655238484368062611@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: D55705F97D
-X-NC-CID: A2jqbRO4Rij73N8Z6e5YddwUaFQhl4SGEgbV3zzmyxlkcMmhK/k=
+Content-Transfer-Encoding: 8bit
 
-On 11/9/26 18:03, Lee Mann wrote:
-> Follow-up with one more data point, which supports the approach in
-> this patch.
+On 11/13/26 13:07, Thorsten Leemhuis wrote:
+> /me is not sure what "this patch" exactly means (the culprit?)
 
-/me is not sure what "this patch" exactly means (the culprit?)
+Yes, sorry: I meant the culprit's approach of leaving channel selection
+to the DisCo table.
 
-Anyway:
-> Same PX13, kernel 7.3.3, with two modules swapped:
-> 
->   - snd-soc-tas2783-sdw: unmodified v7.4-rc1 tas2783-sdw.c/tas2783.h
->   - snd-soc-sdca: v7.3.3 plus only the sdca_functions.c fallback from
->     SOF PR #5904 (function type for mfg 0x0102 / part 0x0000)
-> 
-> Kernel log:
-> 
->   acpi device:26: function type not a DisCo constant, using fallback for known peripheral
->   acpi device:26: SDCA function SmartAmp (type 1) at 0x1
->   acpi device:28: function type not a DisCo constant, using fallback for known peripheral
->   acpi device:28: SDCA function SmartAmp (type 1) at 0x1
->   slave-tas2783 sdw:0:1:0102:0000:01:8: Found Smart Amp function at index 0
->   slave-tas2783 sdw:0:1:0102:0000:01:b: Found Smart Amp function at index 0
-> 
-> speaker-test -c2 -t wav: Front Left from the left speaker, Front Right
-> from the right speaker. No "Defer on undeferrable control" warnings
-> (with the same fallback on the v7.3-rc6 driver I saw ~1600 of them
-> during playback).
-> 
-> So on the PX13 the v7.4 driver works as intended once the ASUS SDCA
-> function is parsed. The regression is only that the parse fails on
-> this firmware. Getting the PR #5904 fallback (or an equivalent) into
-> v7.4 would fix it without bringing back the split. I can test a
-> posted version.
-> 
-> https://github.com/thesofproject/linux/pull/5904
-Hmm, still no reaction from Baojun Xu, who authored the culprit.
-Shouldn't be like that, but that's just how it is sometimes. Maybe this
-mail gets things rolling.
+> But if not: Lee, does a revert of the culprit fix this?
 
-But if not: Lee, does a revert of the culprit fix this? Or do you want
-to maybe open a separate bug in https://github.com/thesofproject/linux/
-and see if that gets things rolling, give that a partial fix seems to
-exists there already?
+Yes. Kernel 7.3.4 with only snd-soc-tas2783-sdw swapped for the
+v7.4-rc1 tas2783-sdw.c with f42fbd560cd8 reverted (the revert applies
+cleanly), stock snd-soc-sdca, no fallback:
 
-Ciao, Thorsten
+  speaker-test -c2 -t wav: Front Left from the left speaker, Front
+  Right from the right speaker.
+
+The kernel log still shows "function type only supported as DisCo
+constant" for both amps, so stereo there comes from the restored
+split, not from the ACPI table.
+
+To sum up on the PX13:
+
+  v7.4-rc1 driver                          : right speaker silent
+  v7.4-rc1 driver, f42fbd560cd8 reverted   : stereo
+  v7.4-rc1 driver + PR #5904 SDCA fallback : stereo
+
+> Or do you want to maybe open a separate bug in
+> https://github.com/thesofproject/linux/ and see if that gets things
+> rolling
+
+Done: https://github.com/thesofproject/linux/issues/6037
+
+Thanks,
+Lee Mann
