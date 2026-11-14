@@ -1,122 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.98
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794627414;
-	b=VjeCjxWGgLwldmhDo64tdT+aiFCF/9tS2bzR5+fb28CeUAkEfe99+YLUQIF/dwafcryd
-	 AYGixRUoqLdNHXIzXy3i5CxPALwUn+o5mvC7grqrUnN0tJODlQcYB7zcJZNMdAAUQl6Rr
-	 QC6l8RO/Q69z3usxpDb+nHF6EOmL/fqetV2Fu43Sk5dGszjqWvpWYOH9Yx8JFqrrtyCvM
-	 /zOgAWhYH8gesMy4SKVQXZBTYtVWiWCehQaF0XNDoBQXEZ/36szFJQfGOsWGe66sKmWlR
-	 p/jYYFUwKdi2qg93jKtMEYUQ/MgK0/JlGL3FpPnx7C9cLgHs/OB4aXngTuB4CROTCpw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794627414;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
-	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Received:X-Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-DetectorID-Processed;
-	bh=3a+9UrHFnp0GCYUcXwgUcuHkUgb2iyxD30t2rDDa9ak=;
-	b=WWuS+4sgCBAtUKTOy2hpeYNeir8g+rkrNOAWXQWlhoir4hTYjUilsQl7S+b8fFmDtdAr
-	 LrUY5ggR4sLKIT+NTxNdstlTbdE+PpF0VuZg/9UnVLfEBuvDKUB418QN/l+Mo/70i68zi
-	 /Jf7SFxONV37FVluv9vZXDm01geHnHuY1Cr8R43kgRKEhFLTPOqQAzgfRDMKDluj7kWR7
-	 0dgSeHEidd6uo3OA46Yp8V4daicgnqMd3KntewIaDc5fev73OxQkW7goWpaC1jMG8eCWg
-	 3VoV9gHQMazTeoGNsgDDeOCeLRGyxHE3YV7TMXzo4L7h6yDHd2f3IiT318+G1DS36wQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=broadcom.com;
-	spf=fail smtp.mailfrom=broadcom.com;
-	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=F8ckFeaN;
-	arc=none smtp.remote-ip=209.85.216.98
-Received: from mail-pj1-f98.google.com (mail-pj1-f98.google.com [209.85.216.98])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.182
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794639422;
+	b=XBxMEJjQK7+9p6SB2en/lnZH9H817OakzUCAv2j169sP8rzRiPd5NNcGO/rCSicsQQek
+	 Vz5iMlrRIZkngWHynHDh57eSwfPQuIB5RN9ncyegzEMrOUkE9OyONJowGv6K6yJbsZ3aA
+	 6z8d9AFFYaPGprXkDTFGCw5JkHIE9bYjm1XwoyPAUw10u6TB0vuo13wRZmaQf+hmW6IJu
+	 aWNqeuTTxijCB8PPX8I0rD4f4kRtpnQDvsj6L7ZyAv+W+h7X8AA9VNyuQ1om4dN5hC4UO
+	 YrG/VdVMcdGkrHRhLalL1kxa9t41qBTDIYduhaQVdSqkmrxV6YvchXiijaod5Ed6xiw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794639422;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
+	bh=svEXNKANMptFL+nn+FJmTq7DF0aaAVsVt5sHrxZKFpg=;
+	b=FDFIkTyC3ZuNieeCBjxWaqmxG4A407280HW9DU34YgJibjE378DZcQhQZAscoYhSY5kW
+	 YwgHBx+79fqxTOXaktlfbW0bQzF138XHt85qMb364mIXD+qdJ3Hl9jifgY9WORyp56U8b
+	 U9qklK5wI9rTglvUntd/0tY1tqhRclNxAs6W4OBsCpvzKQbBEMh8y34Ufr8AOkkFe9quF
+	 gHWqejbHM2u5O1EI4xKxZhdffxDtIFe6ilJxuv65FkZnsnG+T5i639ToGEVD+qXIQ+oWL
+	 JTi5+yGqKWyGpM2owZOcEk4SbJjMcPGDsvZVxom32CaF2KO6s9ATTL3DP5hLafDo4CQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UYdiydcY;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.182
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BA8606A337
-	for <regressions@lists.linux.dev>; Sat, 14 Nov 2026 03:36:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D6BA8606A337
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64008606A327
+	for <regressions@lists.linux.dev>; Sat, 14 Nov 2026 06:57:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64008606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=F8ckFeaN
-Received: by mail-pj1-f98.google.com with SMTP id 98e67ed59e1d1-3b0e0e65adbso754740a91.3
-        for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 19:36:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794627413; x=1795232213;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3a+9UrHFnp0GCYUcXwgUcuHkUgb2iyxD30t2rDDa9ak=;
-        b=sjgoWa3WddjicXL9qtJ10J1hgy510nZqCqXtQ/TxqqqyhagsQSlZSRFU2OfCKj3ztZ
-         QJ/N+55t1d7vDw+IqXgxOhr8xv0CaOvU6HP5Cvw3lzfdcpj6V0uH8MoJXAeExxBDNM4+
-         96QJyF7qhnsm5f8BG5nTvC0FXJzgsMpYb7kPTHJaorYtyjVYEW7nxO3V2xXOWPM+JXTG
-         dEvHVNiibxQlafOd7DQ2221cyrUuEVAbLQlZprGHRsjdxedq9dhi+STth3clS9eOZT7J
-         UlFgKpgTAw+6F2xw0kZwW4jMY+ngY9Hux8JWCoCTV3Cq6gY9CTxxOuRVEfGqKFzYnuFd
-         lNkg==
-X-Forwarded-Encrypted: i=1; AL+hErGA4MkQFciAidqw3yglRr+vCbyPPWqL8JEL0Q6GEIgjxsnzBnBd/m4yfyxPX4oAk9c5NQwnCWzWYHBmyA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+cDawLaCI6uyqsrp3smwRySC5eJc21mHcd3R4NT6zyP2hlPPrb
-	TZNFcpQvzj5eXS0NsoBJ4fF1O9Ik+3jtIYTQ51PYO1GfuFGxv+lSkIAZerVpgKZEpwcOFsghv7o
-	PGuAk9TMWuDjVP0oXi1cdL/Rt8ygMEZ9KznyDQ5015V3lZqY3eYDTVhKsVa2hSb8xHF16yx+N6r
-	PurrGsam5Zq7DzgvGfnQWnx5cb5wOsAJrdbznQOaWqu+i7MBGZ0LX/Vz50Ze+6rs6b1KFzCULlo
-	fs1KufnIK4bUIj5ztkczzc=
-X-Gm-Gg: AYBFou3MUMR2CCAEc02XLVKYBuYPjoYoHU0MTEON2DQW81H6nXYoE84rGJtE6XFyldH
-	ijF46leBSj8YqKzHyEFImRq68BdEg2u2h2jIFLBylYhPzYraIZAbwTfTfA00mf2UW3J5/N9iJHN
-	06ImABxay7QH8vOzSM2DZ9ztckermgA1cVOe2n183S18Xe/wxcD/0koNJqRS+35gkKFukO4Q7Kk
-	9kMNBs8iPHnRuTE8gk7JfzZ0+tR1uEE8ZR0e1lLT6Bwi4htebM5BOEwnNVTb//L502iUEELanGd
-	1Lq4xe0AeBdP/Pfu+9KXz6vOVPETsUJd+tnQEoH64f7y5lWjxyhpAROCjLI2DezG0HC91GynCII
-	sC6VXXIkbz/a1qK13AkKZVmCOKyRGHzYhm72Bj8TeYpjkt9s0xLMvqIWEl5O5+p/VpPfmlOGNfi
-	zhRyMipO4pAwUoRTDIclTgRufMjdp/PuWvr3Wscy9+
-X-Received: by 2002:a17:90b:530b:b0:3b0:968f:fdee with SMTP id 98e67ed59e1d1-3b1b0b63d0emr4640327a91.55.1794627413195;
-        Fri, 13 Nov 2026 19:36:53 -0800 (PST)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-17.dlp.protect.broadcom.com. [144.49.247.17])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3b1b3fbf607sm2582914a91.4.2026.11.13.19.36.51
-        for <regressions@lists.linux.dev>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Nov 2026 19:36:53 -0800 (PST)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-37549877380so2079536eec.0
-        for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 19:36:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UYdiydcY
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-9495e8ae23aso99140985a.2
+        for <regressions@lists.linux.dev>; Fri, 13 Nov 2026 22:57:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794639421; cv=none;
+        d=google.com; s=arc-20260327;
+        b=IOGG2mOrxT1yFf3/tuveRPnvm7riqMvvXq5c80+LOe4txookQ+kQohUAo1GE57gMIo
+         XICKMWFdTI6LWAoqh36+Rs7/Q3FZxSFjMW3oBLOCD8xAt7an0WX6zaYxZXD+XYOYgcHr
+         +c03AYUr5zQ/91fTYi5NV0tSLArd2LC8actVH/N7dHQuML2LAqgCkk2O6H6mRs8rqOLm
+         G9yu2jjmvSasKmgP3z6/N9RKaT4dGen2hZHNNt3xotO6ATMFwVBwZ7PgowzV2fdqNxW0
+         dy5MMZS9R3kR5ayfWJtJMnHvDV3MpDVEMBDJALJNwzcjO62NpM1BTraV1woCrrjkTvez
+         9GWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=svEXNKANMptFL+nn+FJmTq7DF0aaAVsVt5sHrxZKFpg=;
+        fh=ktILtpnh8AXB+huSjgLqwIZrOXtEysOZDtRPFQjY1eI=;
+        b=N7ogaMuS67mEtiXlUCnCWosB14x0R6nwNF+HtepyNi+TaOsYE2IcsfHGBf4glUmHHO
+         rbrsyIBWaI2skLbVXvxe6GxH/txeBdZqCFxrFgkKdRBCEMgw3CqqcyBBhteLigEXRHgt
+         8wWWIKJayasKbm94pf0Vpw14CB+nEaT0TGmxK6cdqBFrw6C+9+ngWWvQCWq71VcTJ8N8
+         S4xd708zhGRrxSQ93VeWlV1GolOoiNWOaJDNEOmIZcT0xmvDuIjHK1egPCiLmfxw22sw
+         6r6Znk+q6RVy0g5lVDq5lSZBO/EfFI88UM1tDjxqTVQqXrB0difKCxkhLPquPnwZej7s
+         Kkow==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1794627410; x=1795232210; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=3a+9UrHFnp0GCYUcXwgUcuHkUgb2iyxD30t2rDDa9ak=;
-        b=F8ckFeaNZhPzGGcCIPjtcGXTaRZrjY2+FjDM7mQeU6v/fnAjg5dtTtbOwyOEzJjoeu
-         I56XHXeVHe2/zskLYT3Ep3Pe+T8USdT+SRsvd1GzakkPT4FGInN+t5YH8awZHdYhnDK8
-         8B0wN8GVqbVkuTub8g9/NaSsHAToFIzCiWhOs=
-X-Forwarded-Encrypted: i=1; AL+hErFs5cmkGvPgLWlkyPH0W1ADnUdLvtGu9LYgJYcg6QfZjydhcoL0lcZ7V3DHPJO2ggUw1pNPj+M+/m6Gyw==@lists.linux.dev
-X-Received: by 2002:a05:7301:1506:b0:36d:394d:e690 with SMTP id 5a478bee46e88-37969089a16mr3722061eec.40.1794627410027;
-        Fri, 13 Nov 2026 19:36:50 -0800 (PST)
-X-Received: by 2002:a05:7301:1506:b0:36d:394d:e690 with SMTP id 5a478bee46e88-37969089a16mr3722036eec.40.1794627409340;
-        Fri, 13 Nov 2026 19:36:49 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3797f98b9b2sm11532824eec.6.2026.11.13.19.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2026 19:36:48 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	Martin Wetterwald <martin@wetterwald.eu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	Gaston Gonzalez <gascoar@gmail.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Umang Jain <uajain@igalia.com>,
-	Kees Cook <kees@kernel.org>,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v2] platform/raspberrypi: vchiq: register bus at subsys_initcall
-Date: Fri, 13 Nov 2026 19:36:47 -0800
-Message-ID: <20261114033647.876683-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261022082927.59030-1-martin@wetterwald.eu>
-References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com> <20261022082927.59030-1-martin@wetterwald.eu>
+        d=gmail.com; s=20260707; t=1794639421; x=1795244221; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=svEXNKANMptFL+nn+FJmTq7DF0aaAVsVt5sHrxZKFpg=;
+        b=UYdiydcYuh4OQOJigYGsqGYiNVn32qdk4LxDqVZ5CGTmaqXaaR4xhYY1cT6BwO4XzA
+         hS3h4lGcbJ2j6cCyrF/TS0Kt/IwhdMGUseue0tHDp0KWZzb93iJSgcYKlXC6B90krxw+
+         THd2x4xAwYrEF9tndo0K1tzwx2HEX4oIVc57F9LtJryGSD9L3m4CRgWVygDakKtnE8/K
+         /xTOHQb8DQ7QOd/pq9pWt3iXBQIfgSeYkkwKx9D0qrVuS83AL4fpptxEkpefLZtvgw2o
+         s0kcaSpxXjg+lrQxH4IiJc5p8WUdJ7yeDVSaDf5xGFCXVJEXINsvDlnpggplMnxZihRm
+         mjvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794639421; x=1795244221;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=svEXNKANMptFL+nn+FJmTq7DF0aaAVsVt5sHrxZKFpg=;
+        b=W42hKzyRoD3KImQwWbRYKZ2q31PZdtdUpWilQ74pNVEJbXqcplnYTrx5FTmXdhUasQ
+         WtFeUW9Q6C6jUbIRQVKI9Ym/2G062VeiXZfJjMkttkOOpTQCfIOz2sgQKyl4Mq/UdCsA
+         DBD81ahQXSRcujSSNn6UX/dwClD+XrEM4Cr2EyJ3uyQk4Y5U/OwQFCpCfEt+6AYEa5JJ
+         goCOrhX9CdXJK0HWp/D8E5yPjrh9gCcmXHxaHjLmfZhKRP6xGyO5RErXgCknbdan9JBD
+         OajF0NpXfIs/KND85P14hyoJ21EfVX13QCjXMp7bubvLmpEE8D8JNszgGg4fztsXgq3a
+         UQMg==
+X-Gm-Message-State: APuU4Z+tFpZrvKc5qe5vOTJ9R+z304fXPEy/AFoQ7BH/SqmzLCFs+LW0
+	qPldN4uc8Z091O4LhsrEWL0YYhbZ8u2swpi0BdgbUf/rwpkOasG9SQhXYQQ2XdWGve+0psLp7xO
+	kN6VQHSDAxDCJr8gVvTWWBgTK8lCWPW0=
+X-Gm-Gg: AYBFou2w8ggD7Ek23LuZzvjB6rhiOUfucufbhIhxNoe8MK66LTOKiLYIm3b4z0PTP3S
+	M48te0HQJZaqcdZEq/OplEKO3KThPAYOKkcKCNtolNuMuxoXY3ff+N9Z1EwoYF1Ie8wfvrtw2tB
+	sR4/RDo56NrGUDhcq2BBhw2pDPndXuDmeykHLWW0y70AtKIhyD8fuLW5C7XpLYpwvsTxg02SOLd
+	SxDYaOJezoGkJi7xiTUx4Y8bILt4lWLWlKpZr6KCwzr/yq82xDxg9IRPjzh+s1BQhsDFijQ2sl2
+	5GQgZecZPYGDYOfv5Z+ci+XfoofmBDujSl3DTn04g2V1VYn0D6zJvzuIDeqQ/dIHHPiqGnYc8H+
+	gKlY1CpnxG9OhElKCsy4OC0yhENhKe7fRMnu0WXmBQmf+PmISp0XMZTPuhPTvmL/XBmgQQ7w=
+X-Received: by 2002:a05:620a:8908:b0:93f:47fa:b722 with SMTP id
+ af79cd13be357-9494bb858b5mr741838185a.13.1794639421226; Fri, 13 Nov 2026
+ 22:57:01 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -126,44 +99,122 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+From: Ali Lin <alexlin901107@gmail.com>
+Date: Sat, 14 Nov 2026 14:56:50 +0800
+X-Gm-Features: AclHuK_n550RFKQmfilUV4kBLWS5ExtF1OorDlMXfULnnkZLu6xhclh-jCwQLTA
+Message-ID: <CAMX8SmaXHh-dzH2n6pRhQr8q=iN=Ui7T3TC42e35LBUjvMaH1Q@mail.gmail.com>
+Subject: [REGRESSION] HID: Corsair K70 RAPIDFIRE interface 1 times out on
+ Linux 7.3.4
+To: linux-input@vger.kernel.org
+Cc: regressions@lists.linux.dev, jikos@kernel.org, bentiss@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Hi,
 
-On Thu, 22 Oct 2026 10:29:24 +0200, Martin Wetterwald <martin@wetterwald.eu> wrote:
-> Since 6.19-rc1, with CONFIG_BCM2835_VCHIQ=y and CONFIG_SND_BCM2835=y
-> (both builtin), the sound cards bcm2835_headphones and bcm2835_hdmi are
-> not detected anymore (vc4-hdmi is not affected).
-> 
-> dmesg shows:
-> 
->   Driver 'bcm2835-audio' was unable to register with bus_type
->   'vchiq-bus' because the bus was not initialized.
-> 
-> Since the VCHIQ interface was moved out of staging, its bus is no longer
-> guaranteed to be registered before its client drivers. bcm2835-audio,
-> still in drivers/staging, registers at device_initcall level and now
-> runs first.
-> 
-> Register the bus and the platform driver at subsys_initcall so the bus
-> exists before any client driver, independently of link order. The
-> platform driver probe already returns -EPROBE_DEFER while the firmware
-> is not ready, so probing earlier is safe. When built as modules, this is
-> equivalent to module_init() and nothing changes.
-> 
-> Tested on Raspberry Pi 1B rev2, 1B+, 2B, 3B and 4B with VCHIQ and
-> bcm2835-audio both builtin and both as modules.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: aa125180c673 ("platform/raspberrypi: Destage VCHIQ interface")
-> Reported-by: Martin Wetterwald <martin@wetterwald.eu>
-> Closes: https://lore.kernel.org/r/CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com/
-> Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> Tested-by: Gaston Gonzalez <gascoar@gmail.com> # Raspberry Pi Zero
-> Signed-off-by: Martin Wetterwald <martin@wetterwald.eu>
-> ---
+I would like to report a possible Linux HID regression affecting the
+Corsair Gaming K70 RAPIDFIRE keyboard (USB ID 1b1c:1b3a).
 
-Applied to https://github.com/Broadcom/stblinux/commits/drivers/fixes, thanks!
---
-Florian
+On Linux 7.3.4-arch1-1, the keyboard works for normal typing, but the
+Num Lock, Caps Lock, and Scroll Lock indicator LEDs do not function
+correctly after boot.
+
+Unplugging and reconnecting the keyboard restores normal operation.
+
+The problem was not observed when booting Linux 6.18.63-2-lts on the
+same machine.
+
+System information:
+
+- Distribution: Arch Linux
+- Architecture: x86_64
+- CPU: Intel Core i5-8500
+- Motherboard: ASUS PRIME H310M-K
+- BIOS: 3204 (2023-12-14)
+- Keyboard: Corsair Gaming K70 RAPIDFIRE
+- USB ID: 1b1c:1b3a
+- Device revision: 3.08
+- USB speed: Full Speed (12 Mbps)
+- USB host controller: xhci_hcd
+
+Test results:
+
+Linux 7.3.4-arch1-1:
+
+- HID initialization timeout reproduced on two separate boots.
+- Normal keyboard input continues to work.
+- Lock indicator LEDs do not function correctly until the keyboard is
+reconnected.
+- USB interface 1 fails to bind to usbhid.
+
+Linux 6.18.63-2-lts:
+
+- One successful boot observed.
+- Keyboard input and Lock indicator LEDs work normally.
+- Both keyboard HID interfaces initialize successfully.
+- No corresponding HID initialization timeout was observed.
+
+Relevant kernel messages on Linux 7.3.4:
+
+[   36.929377] usbhid 1-4:1.1: can't add hid device: -110
+[   36.930405] usbhid 1-4:1.1: probe with driver usbhid failed with error -110
+
+The USB topology on the affected kernel shows:
+
+Port 004, If 0: Driver=usbhid
+Port 004, If 1: Driver=[none]
+
+Additionally, the USB descriptor collection for interface 1 reports:
+
+bInterfaceNumber 1
+wDescriptorLength 29
+Warning: can't get report descriptor, LIBUSB_ERROR_TIMEOUT
+
+Additional observations:
+
+On Linux 7.3.4, the HID timeout occurs approximately 36.9 seconds
+after kernel startup. Subsequent USB devices are enumerated shortly
+afterward.
+
+On Linux 6.18.63 LTS, the keyboard HID interfaces initialize at
+approximately 1.3 seconds.
+
+During one boot with Linux 7.3.4, systemd-udevd also displayed a
+stop-job delay in the initramfs shutdown phase. The system eventually
+booted successfully.
+
+I have not determined whether the delayed USB enumeration and udev
+stop-job observation share the same underlying cause.
+
+Steps to reproduce:
+
+1. Connect the Corsair K70 RAPIDFIRE directly to a motherboard USB port.
+2. Boot Arch Linux using kernel 7.3.4-arch1-1.
+3. Observe that normal keyboard input works, but the Lock indicator
+LEDs do not function correctly.
+4. Check the kernel log for the usbhid interface 1 timeout.
+5. Unplug and reconnect the keyboard.
+6. Observe that the Lock LEDs function normally after reconnection.
+
+Diagnostic logs:
+
+https://gist.github.com/Alexlin7/65e0705265c7c369d83f9d4a7515faed
+
+The Gist includes:
+
+- Linux 7.3.4 kernel boot log
+- Linux 6.18.63 LTS kernel boot log
+- USB topology
+- Corsair K70 USB descriptors
+
+The exact kernel version or commit introducing the issue has not yet
+been identified.
+
+The affected computer is located at my family home, and I do not have
+regular physical access to it. I can perform additional tests when I
+next have access to the machine, although hardware testing responses
+may be delayed.
+
+Thanks.
+Weibo Lin
+
+#regzbot introduced: v6.18..v7.3.4
