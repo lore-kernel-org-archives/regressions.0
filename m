@@ -1,59 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=89.58.8.210
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.183
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794671398;
-	b=1F6q3qWGb7wHJd96J8jOzMvHuBmKQRlU8R4fKybFddj8qAhm2f4/hUmL9y2HNOIRjkS/
-	 1ldtNs9wO9NY3n1FuKuJP3XE9/Y9wEvNWuihTJYQ3gLSjLpJUBPxCgOoaYyN3tTJwva5F
-	 Tru2J8IGbUgZsXv6U33veRR/sG7IxB+4+VkaBnCHiVdA590Z+aSiXI/bPHW9+JAvfe3BU
-	 7WIFlaa0qqdzwCoMRLzcnsA/0os+RBv7tVMW/X3CPoAUpzuWgLT9MgreCl7Kfsg2ezwKB
-	 Gr5H+T2MDjCjzQ4FvxPkXxfJcgGBDSgOyyTL1aKcZ0ZZT0ako1EatLWB73nv8CwGr8g==
+	t=1794677757;
+	b=NIGiLsFyUfuXRRRpSMwe4gfNM0ZZlG4JZT76+U55EnEl19pJxSLg/DrxJulOtEwPNNAn
+	 32SPJJJX3v5o4fwd55Z2KdndSxEnwT8ezOplPppJ1fT6B/a07GXemdsDdxqtcmD1XNqPW
+	 fNSqi9qwDdw7phCGTfyb4Islw7lJ0xL9IOZZTwYU2DhJiGKx5yreKNfsbr3JC0Z8hKX0e
+	 IIEjfyu52rqk2xmMa6lOhq/KRPp+YX7lfdHVYhzzQnHtVQNwdDxxZcUBakjmYCh2bbwb7
+	 inLlEcNLetZSHKlOZBoST6Egz2vK/aYXhldgPFpWOsgVBHuOMlxCToH13K1VTpc3M9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794671398;
-	h=DMARC-Filter:Received:DKIM-Signature:Date:From:To:Cc:Subject:
-	 Message-ID:In-Reply-To:References:X-Mailer:MIME-Version:Content-Type;
-	bh=o5DnMkRRYa/2d2eTcqfJtTS0iCcyKqGOGfoKXlR9sQw=;
-	b=eCRmShD1GnA7duCx1aXID2gLAKpz3kIvvCQ8IdZMHgubriIM2+gKZ+NcVKBZOYKKDSdX
-	 4SZ6QQwH0k/Vq1n73foG0dmCnM5PJa39LUXa5j9UcK4bEAuL5tvfHuocSkHqdyN2TvFVS
-	 1dU8RysvuwSYTpflCWfp8o+5m8f1lddQXVt2p5AciBoT0uXOmBNpBaj+3xGYg0sK3LQPQ
-	 Fqv9ZSe/+JVbR1qxsX7j2ObxQ4BbMtGBKZbxcMuH/DFiga39ifSM7WfcwZg8lU1bpUmMN
-	 D5Y4qMXSYWsNmvm7AGu9Uj69NrcZeN1ZMKGJrm4S4CAOAeuMcbbsqXzfGzsqirGtrpA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794677757;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=qK7SuyRaPZU4Zu8y5BHFfEAd1B/irS9odpnB5X268FU=;
+	b=IUvoylA2fEa+tuLIbueQoBpjnEW89dLl88hHSi481UtseptUI4hdrqt2we8OJyJZwgUR
+	 4KqEI2nuCxjoMHu2Pnxuc8Yrbs/cr9gr1UXxx5T3Sy8cesMGz8zjqEp5Xm+7Lkm+quAvd
+	 49YJNPagOHHvC57GczzGqozZXm09EOy8EQLhdqN4SjJ7XgqR/i8KOetLIfdRuIDja+Yx6
+	 181sEtmFlfGmz5PzMCcIxUNGCPv3QLGHcxhXthoD76HEjuExEAIjzh1LElTtS9/O+DMYJ
+	 FCzezo/2xXMsGAPPM5UhZi31D7FZhImpRjzW5LMOhMmqA91fQsdGFa7N/1wwqgW6KEA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=wagner-flo.de;
-	spf=pass smtp.mailfrom=wagner-flo.de;
-	dkim=pass header.d=wagner-flo.de header.i=@wagner-flo.de header.a=rsa-sha256 header.s=fuldigor header.b=MJgAZQeQ;
-	arc=none smtp.remote-ip=89.58.8.210
-Received: from fuldigor.wagner-flo.de (fuldigor.wagner-flo.de [89.58.8.210])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=justthetip.ca;
+	spf=pass smtp.mailfrom=justthetip.ca;
+	dkim=pass header.d=justthetip.ca header.i=@justthetip.ca header.a=rsa-sha256 header.s=key1 header.b=v+0QoPX8;
+	arc=none smtp.remote-ip=95.215.58.183
+Received: from mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1040D606A331
-	for <regressions@lists.linux.dev>; Sat, 14 Nov 2026 15:49:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1040D606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wagner-flo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wagner-flo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E50606A332
+	for <regressions@lists.linux.dev>; Sat, 14 Nov 2026 17:35:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C7E50606A332
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=wagner-flo.de header.i=@wagner-flo.de header.a=rsa-sha256 header.s=fuldigor header.b=MJgAZQeQ
-Received: from teclador (p4fe8fa45.dip0.t-ipconnect.de [79.232.250.69])
-	by fuldigor.wagner-flo.de (Postfix) with ESMTPSA id 97B4C247B1;
-	Sat, 14 Nov 2026 16:49:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=wagner-flo.de;
-	s=fuldigor; t=1794671388;
-	bh=zsCrDX7nTVibZ3D7ZKVFAJOdCHRHXxbIb6Vte0qGPXw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=MJgAZQeQxYUg5+ooSwAu1Kq5GzXJlD4i05h4MjNSbcu0A4aAKB83JN7LS622/r60n
-	 RQLAGBi7iub+yykUbZogBg0kT46j3a619s277PG/bGfwvrFMX1NCUsDqgqlN+Rvpr4
-	 cSpJEiTFxOySKzLrBJLjXUbk/G61/SwULm4jrW6k=
-Date: Sat, 14 Nov 2026 16:49:47 +0100
-From: Florian Wagner <florian@wagner-flo.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-acpi@vger.kernel.org, rafael@kernel.org
-Subject: Re: [REGRESSION 6.18.y] ACPI: button: lid events lost since
- 6.18.57, please backport a004b8f0d3bc
-Message-ID: <20261114164947.2ffb5ce8@teclador>
-In-Reply-To: <2026-11-08-1-daily-reply-0002-acpi-button-6-18@kernel.org>
-References: <20261108143640.6252e6a8@teclador>
- <2026-11-08-1-daily-reply-0002-acpi-button-6-18@kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-unknown-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=justthetip.ca header.i=@justthetip.ca header.a=rsa-sha256 header.s=key1 header.b=v+0QoPX8
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=2E6UwzKVw7xbUUzy4LRhSE/cy3bndWxPXfWiSHkxIRI=;
+ c=simple/simple; d=justthetip.ca;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794677753; v=1; x=1795282553;
+ b=v+0QoPX8dnT9S1HhuRc4W7BP60sTbojQ7gjTlfbKmjHx2O1ZdoQoQasPl/1gRvcgZmNdmB0S
+ nG/XsQvSG32fSAsMVhln1wwsjXQPkahZ2G3C/ZEIJSyoaClwzzvNPvuAhT5yH1B2F/SOBtFGdDt
+ NteqXejawRnA71OQ6cNaSzlJBa7YImTxAURHPYeDfY/5gze8jWCQoxwJQp4Hz/zsR1XEr8/pLY0
+ IdEIViFKOAfjBPHGi+vfqdf4G6O3JASzljz4+3RtvOs2AD8ucmSpQt1rVxjZdcpkmDsLzLZu2sB
+ E26mEUTgrckRsEIk8xXY6tHoMvIK0nxuE1tcXZfHWbuPA==
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 4af640e38ee65c47;
+	Sat, 14 Nov 2026 17:35:53 +0000
+X-Mizu-Trace-ID: 4af640e38ee65c47
+X-Migadu-Flow: FLOW_OUT
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Hao Qin <hao.qin@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Chris Lu <chris.lu@mediatek.com>,
+	linux-bluetooth@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [STABLE 6.6] Bluetooth MediaTek controller reset fixes
+Date: Sat, 14 Nov 2026 10:35:50 -0700
+Message-ID: <20261114173550.5736-1-lucid_duck@justthetip.ca>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -63,230 +72,42 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/tYvO2Of2RyCCp2rGf/+sa6/"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 
---MP_/tYvO2Of2RyCCp2rGf/+sa6/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi,
 
-On Sun,  8 Nov 2026 19:34:30 -0500
-Sasha Levin <sashal@kernel.org> wrote:
+Please queue these two for 6.6.y, in this order:
 
-> > Backport note: a004b8f0d3bc applies to 6.18.60 and 6.18.62 with
-> > offsets, but does not build as is, because struct acpi_button has no
-> > "dev" member in 6.18.y. Using &button->pdev->dev in the two
-> > dev_dbg() calls is sufficient.  
-> 
-> A backport that works would be much appreciated :)
+  a7208610761a ("Bluetooth: btmtk: Remove resetting mt7921 before
+                 downloading the fw")
+  33634e2ab7c6 ("Bluetooth: btmtk: Remove the resetting step before
+                 downloading the fw")
 
-Oh; shame on me. Here's the missing attachment. But then: I've since
-had the time to test it on a release 6.18.62 kernel and can confirm it
-fixed my issue (GPE24 enabled again; laptop suspends and wakes up from
-lid close/open).
+6.6.145 brought in the controller reset they remove, as a dependency
+of another backport (1c770a550df2, upstream ccfc8948d7e4). 6.12.29 has
+both already [1].
 
-Regards
-Florian
+On 6.6.162 an MT7921AU USB adapter on a USB 3.0 port has no Bluetooth.
+Setup ends with
 
---MP_/tYvO2Of2RyCCp2rGf/+sa6/
-Content-Type: text/x-patch
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename=acpi-button-enable-wakeup-gpes-6.18.y.patch
+  Bluetooth: hci1: Opcode 0x0c03 failed: -110
 
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Date: Fri, 22 May 2026 16:52:10 +0200
-Subject: [PATCH] ACPI: button: Enable wakeup GPEs for ACPI buttons at probe
- time
+and the controller cannot be powered on. On a USB 2.0 port it works.
 
-[ Upstream commit a004b8f0d3bc5d82d3f2c91ff93f4b4b7ccb8f76 ]
+  6.6.162, Alfa AWUS036AXML at USB 3.0    as released   with both
+  boot                                    0 of 1        1 of 1
+  plug-in                                 0 of 1        1 of 1
+  USB reset, then probe                   0 of 5        10 of 10
+  the same, Wi-Fi driver loaded           0 of 5        5 of 5
 
-Prior to commit 57c31e6d620f ("ACPI: scan: Use acpi_setup_gpe_for_wake()
-for buttons"), ACPI button wakeup GPEs having handler methods remained
-enabled after acpi_wakeup_gpe_init(), but currently they are not enabled
-because acpi_setup_gpe_for_wake() disables them.
+With the Wi-Fi driver loaded, its probe also resets the device [2].
+The fixed kernel then still logs that line once per probe, and the
+controller comes up.
 
-That causes function keys to stop working on some systems [1] and there
-may be other related issues elsewhere.
+Both apply to 6.6.162 unchanged.
 
-To address that, make the ACPI button driver enable wakeup GPEs for ACPI
-buttons so long as they have handler methods.  While this does not
-restore the old behavior exactly (the ACPI button driver needs to be
-bound to the button devices for the GPEs to be enabled), it should be
-sufficient to restore the missing functionality.
+[1] https://lore.kernel.org/all/aBxdpIabalg073AU@m.b4.vu/
+[2] https://lore.kernel.org/all/20261112-mt7921u-bt-reset-v1-1-65587a4d7b81@flipper.net/
 
-For this purpose, introduce acpi_enable_gpe_cond() that enables
-a GPE if its dispatch type matches the supplied one and modify
-acpi_button_probe() to use that function for enabling the GPEs in
-question.
-
-Fixes: 57c31e6d620f ("ACPI: scan: Use acpi_setup_gpe_for_wake() for buttons")
-Reported-by: Nick <nick@kousu.ca>
-Closes: https://lore.kernel.org/linux-acpi/E2OXET.4X5GTP37VTNC3@kousu.ca/ [1]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Nick <nick@kousu.ca>
-Cc: 7.0+ <stable@vger.kernel.org> # 7.0+
-Link: https://patch.msgid.link/9629117.CDJkKcVGEf@rafael.j.wysocki
-[ Adjusted for 6.18.y: struct acpi_button has no dev member in this
-  tree, so use &button->pdev->dev in the two dev_dbg() calls. ]
----
- drivers/acpi/acpica/evxfgpe.c | 50 ++++++++++++++++++++++++++++-------
- drivers/acpi/button.c         | 22 +++++++++++++++
- include/acpi/acpixf.h         |  5 ++++
- 3 files changed, 68 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
-index 60dacec1b..4074b5908 100644
---- a/drivers/acpi/acpica/evxfgpe.c
-+++ b/drivers/acpi/acpica/evxfgpe.c
-@@ -78,18 +78,22 @@ ACPI_EXPORT_SYMBOL(acpi_update_all_gpes)
- 
- /*******************************************************************************
-  *
-- * FUNCTION:    acpi_enable_gpe
-+ * FUNCTION:    acpi_enable_gpe_cond
-  *
-  * PARAMETERS:  gpe_device          - Parent GPE Device. NULL for GPE0/GPE1
-  *              gpe_number          - GPE level within the GPE block
-+ *              dispatch_type       - GPE dispatch type to match
-  *
-  * RETURN:      Status
-  *
-- * DESCRIPTION: Add a reference to a GPE. On the first reference, the GPE is
-- *              hardware-enabled.
-+ * DESCRIPTION: Add a reference to a GPE so long as its dispatch type matches
-+ *              the supplied one, or it is different from ACPI_GPE_DISPATCH_NONE
-+ *              if the supplied one is ACPI_GPE_DISPATCH_MASK. On the first
-+ *              reference, the GPE is hardware-enabled.
-  *
-  ******************************************************************************/
--acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
-+acpi_status acpi_enable_gpe_cond(acpi_handle gpe_device, u32 gpe_number,
-+				 u8 dispatch_type)
- {
- 	acpi_status status = AE_BAD_PARAMETER;
- 	struct acpi_gpe_event_info *gpe_event_info;
-@@ -100,14 +104,18 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	flags = acpi_os_acquire_lock(acpi_gbl_gpe_lock);
- 
- 	/*
--	 * Ensure that we have a valid GPE number and that there is some way
--	 * of handling the GPE (handler or a GPE method). In other words, we
--	 * won't allow a valid GPE to be enabled if there is no way to handle it.
-+	 * Ensure that we have a valid GPE number and that the dispatch type of
-+	 * the GPE matches the supplied one (or it is not ACPI_GPE_DISPATCH_NONE
-+	 * if the supplied one is ACPI_GPE_DISPATCH_MASK).
- 	 */
- 	gpe_event_info = acpi_ev_get_gpe_event_info(gpe_device, gpe_number);
- 	if (gpe_event_info) {
--		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
--		    ACPI_GPE_DISPATCH_NONE) {
-+		if (dispatch_type == ACPI_GPE_DISPATCH_MASK)
-+			dispatch_type = ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags);
-+		else if (dispatch_type != ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags))
-+			dispatch_type = ACPI_GPE_DISPATCH_NONE;
-+
-+		if (dispatch_type != ACPI_GPE_DISPATCH_NONE) {
- 			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
-@@ -128,6 +136,30 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	acpi_os_release_lock(acpi_gbl_gpe_lock, flags);
- 	return_ACPI_STATUS(status);
- }
-+ACPI_EXPORT_SYMBOL(acpi_enable_gpe_cond)
-+
-+/*******************************************************************************
-+ *
-+ * FUNCTION:    acpi_enable_gpe
-+ *
-+ * PARAMETERS:  gpe_device          - Parent GPE Device. NULL for GPE0/GPE1
-+ *              gpe_number          - GPE level within the GPE block
-+ *
-+ * RETURN:      Status
-+ *
-+ * DESCRIPTION: Add a reference to a GPE. On the first reference, the GPE is
-+ *              hardware-enabled.
-+ *
-+ ******************************************************************************/
-+acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
-+{
-+	/*
-+	 * Ensure that there is some way of handling the GPE (handler or a GPE
-+	 * method). In other words, we won't allow a valid GPE to be enabled if
-+	 * there is no way to handle it.
-+	 */
-+	return acpi_enable_gpe_cond(gpe_device, gpe_number, ACPI_GPE_DISPATCH_MASK);
-+}
- ACPI_EXPORT_SYMBOL(acpi_enable_gpe)
- 
- /*******************************************************************************
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index 4ddaee895..b507b88df 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -190,6 +190,7 @@ struct acpi_button {
- 	ktime_t last_time;
- 	bool suspended;
- 	bool lid_state_initialized;
-+	bool gpe_enabled;
- };
- 
- static struct acpi_device *lid_device;
-@@ -651,6 +652,21 @@ static int acpi_button_probe(struct platform_device *pdev)
- 		status = acpi_install_notify_handler(device->handle,
- 						     ACPI_ALL_NOTIFY, handler,
- 						     button);
-+		if (ACPI_SUCCESS(status) && device->wakeup.flags.valid) {
-+			acpi_status st;
-+
-+			/*
-+			 * If the wakeup GPE has a handler method, enable it in
-+			 * case it is also used for signaling runtime events.
-+			 */
-+			st = acpi_enable_gpe_cond(device->wakeup.gpe_device,
-+						   device->wakeup.gpe_number,
-+						   ACPI_GPE_DISPATCH_METHOD);
-+			button->gpe_enabled = ACPI_SUCCESS(st);
-+			if (button->gpe_enabled)
-+				dev_dbg(&button->pdev->dev, "Enabled ACPI GPE%02llx\n",
-+					device->wakeup.gpe_number);
-+		}
- 		break;
- 	}
- 	if (ACPI_FAILURE(status)) {
-@@ -694,6 +710,12 @@ static void acpi_button_remove(struct platform_device *pdev)
- 						acpi_button_event);
- 		break;
- 	default:
-+		if (button->gpe_enabled) {
-+			dev_dbg(&button->pdev->dev, "Disabling ACPI GPE%02llx\n",
-+				adev->wakeup.gpe_number);
-+			acpi_disable_gpe(adev->wakeup.gpe_device,
-+					 adev->wakeup.gpe_number);
-+		}
- 		acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
- 					   button->type == ACPI_BUTTON_TYPE_LID ?
- 						acpi_lid_notify :
-diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
-index e65a2afe9..af796d079 100644
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -725,6 +725,11 @@ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
-  */
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_update_all_gpes(void))
- 
-+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
-+				acpi_enable_gpe_cond(acpi_handle gpe_device,
-+						     u32 gpe_number,
-+						     u8 dispatch_type))
-+
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
- 				acpi_enable_gpe(acpi_handle gpe_device,
- 						u32 gpe_number))
--- 
-2.43.0
-
-
---MP_/tYvO2Of2RyCCp2rGf/+sa6/--
+Devin
