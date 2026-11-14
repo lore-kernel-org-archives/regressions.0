@@ -1,69 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=213.167.242.64
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794643319;
-	b=hUEgQslVArVAx+6ORW4RKBBgQcQxD7BF3jE/H9QZgBHC6bB/7e902s+/8ENn/zjAW297
-	 s/+EMVFWGGhltifqb1PPVanr+gP1C9B3ZO2ZpG45RCSQBhf5VhlRidj7JLLJris5Q5VjQ
-	 KHqN6hZTUrBXhHGIMxl5SPw2MWm1gQ98ivPcnKHOMfvSV80uj+MPNWoR5u2xWyZR9dyzf
-	 IcJl2SltUhJgU6e0IqVIbgJsj6arpH4doyY4G+asitqgkD4EV1XSV/JNRs4sYEQIXbAT8
-	 0KxjEcfm1ayqC5TRrsoQ2p91JAg7KEb02wG7M9oRMqkuz9anC/HRVBnp0MxyTusfntg==
+	t=1794655800;
+	b=qUFdoAk16WGgG6F+Z8XNhQcu1D0VJBzsGgphlDjEk5lkcfSVglG0W7vVtvvk4x0CBI1h
+	 VniAogNvh/MIq6+iv4vDAHEcLOOhFtOj2wZzr4UczejJ2qW3gErola3ov4bFp9e2nAFcl
+	 rK2FsY8eOi/hUd2M29CZ8SjyUVwPYmHhvvebVSaza8kHT6NpatJVYh3l28IRf5uI05Bcj
+	 g3/EdN5yaKXnjxyT2Q7Sgf8lUOSJ2f+R3mC5uf/HjGkLzJn4UoSA57Vop+SU7/8f6dfaa
+	 CUGnLbGL/qDZ3zFKbP+Nl4mwCxBVwui0tVF01YwGocfZTXIBxdHDRUC0A/COV6e2ajQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794643319;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=+e4Qv5dpgApZcFQLKkFUQgFtfial+GgeYfnYt/zvYOs=;
-	b=GiqPcqwEIPu4M9i3wXl0ixzb9IC0TSZBy6UHd/c5geS3fUKV42zuK6MFXaCnicHI5ip9
-	 5Pac7uJ6CBKR9xyDF1cjMU4RDPAlCKLj8ey42ZR2gZGC7udlVRn+BXrbSaf5fYjDfLwh5
-	 6tapD/a7TYpRCaXU+nmdHym7O+FaZO+xxx6oTiXdi6zSCvZ/e6ynktuxfuwvzf9ewgFx4
-	 v/4rhukKuMV7CtSzQC6Tqwt0AnymhPwi/Iw5E53eR452J8fCfVvh4ppVz4T+TzUauFl/z
-	 Tfl04SJWZUdqNTpFv5pChzqvTC6YpAIYoC5hnCXKXxt+UGGtYClMhdZR6FqK2PFnNbg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794655800;
+	h=DMARC-Filter:Received:DKIM-Signature:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=LxlvDU/4QCNusug68G4LKS9QTwaEvL3BD/53nUc9d4Y=;
+	b=q3NrIwsBRKQpsx6zYEdJrBfUl4Igr3Uyw/ps9MQ2vk94Zbfu3fVrUm78HUADXjAk63Ka
+	 099gJLPqnkG2qOmZrEzfS+e/TDI5DFZFjom7QMBK4dZfO0xzxU7kmz5iGh8sB+Q9XOQoT
+	 jqM6dMPF8rp5VsHtuLUOobW5rJMr8+1AIhq0KKMvG2Bn5Kj/X3X4GoVoapInHRVcZWeba
+	 dNe+kYtWtxM2f4i3k2APAk7/aLcEganX9N6GMSpS7fajcybA3Ap11FCgCS6G1m36QCU7/
+	 YBE+Xm8EWETrN0Uc6H91DkZXXe9XtBuQSohLBPNBQSIDFG2Es2cp2xohqv3c/af+nPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=AXkK6eAe;
-	arc=none smtp.remote-ip=188.68.63.102
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	dmarc=pass header.from=ideasonboard.com;
+	spf=pass smtp.mailfrom=ideasonboard.com;
+	dkim=pass header.d=ideasonboard.com header.i=@ideasonboard.com header.a=rsa-sha256 header.s=mail header.b=OflXsdf1;
+	arc=none smtp.remote-ip=213.167.242.64
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE3606A334
-	for <regressions@lists.linux.dev>; Sat, 14 Nov 2026 08:01:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0AE3606A334
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA630606A886;
+	Sat, 14 Nov 2026 11:29:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA630606A886
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=AXkK6eAe
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jRRRL0pC1z6V0c;
-	Sat, 14 Nov 2026 09:01:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1794643310;
-	bh=UPXqxqpm2KnGStbmzeRzcOGE/OJEzVC481Zzvzp8we0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AXkK6eAe8qp9yP73+ixsL3o9vgNlOYSg1erRWK204nbTt/DlG8Y/pFNrYZdRRAeiJ
-	 bZ5ooKn3kDyHD2BWfS4/jcCdZmqP2ud5UivZ2yrfbvEEAZNjxvIIic5eIlU511oBTN
-	 FUmXgoN8qge6XFyN80z9llSIgN/+Zvk5ytqrlAwm79TjS/0CNyJ610JHv0t9mQr5Tx
-	 cnfSldr3Hs4ee0afMkN0gbgWXp3DqvbMHuHvYozirNz1WgyDZ/p3SxoQ/ptW9dx87Q
-	 0b85DTno/WculuaFkKgLmukqRSMTiYZ5SnOIpG0YxxvQDKaUFTOzJFwU9t3RsyiZko
-	 iJ1DNwnlbSyAg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jRRRL00y1z4xNp;
-	Sat, 14 Nov 2026 09:01:50 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jRRRK3bs6z8sZd;
-	Sat, 14 Nov 2026 09:01:49 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D1F7C5F98B;
-	Sat, 14 Nov 2026 09:01:40 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <36fc271e-eeae-48ec-ae9e-4fa284605112@leemhuis.info>
-Date: Sat, 14 Nov 2026 09:01:39 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=ideasonboard.com header.i=@ideasonboard.com header.a=rsa-sha256 header.s=mail header.b=OflXsdf1
+Received: from killaraus.ideasonboard.com (2001-14ba-7086-3000--a06.rev.dnainternet.fi [IPv6:2001:14ba:7086:3000::a06])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AD3A5802;
+	Sat, 14 Nov 2026 12:27:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1794655645;
+	bh=enYAqOd6eck7e0RpfjoVDMLIEaqqz3LnOMzk6zUIvm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OflXsdf1vosoudWfIFZuUeaIuqOogOYTbqjaxknNjmbswZryD2wORtnvkavvIIHbz
+	 H+IHsHL3P+IvyNrItpn/RYjTl97PknE6SxYx5veStY0Ly4Y3TUkClvyh1bV6USBmu6
+	 m7tUxFEwWdaX6+UYOdpxEvWXaJ/jGkmPKiVYM2xM=
+Date: Sat, 14 Nov 2026 13:29:49 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Martin Wetterwald <martin@wetterwald.eu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>,
+	Gaston Gonzalez <gascoar@gmail.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Phil Elwell <phil@raspberrypi.com>, Umang Jain <uajain@igalia.com>,
+	Kees Cook <kees@kernel.org>, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2] platform/raspberrypi: vchiq: register bus at
+ subsys_initcall
+Message-ID: <20261114112949.GB836589@killaraus.ideasonboard.com>
+References: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com>
+ <20261022082927.59030-1-martin@wetterwald.eu>
+ <2026102218-vowel-plutonium-629e@gregkh>
+ <CAFERDQ1GeAwFGBQ09eu8p69c_b3_CzAeEfTwiEaVCG_22RQdtQ@mail.gmail.com>
+ <CAFERDQ2fm9u-Y3DGTFNMH+K95gnE=aox1YogRWPwGFX+6Vrghg@mail.gmail.com>
+ <96e08e3b-f034-4d69-8b6b-4a094cb39b25@broadcom.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,52 +74,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HID: Corsair K70 RAPIDFIRE interface 1 times out on
- Linux 7.3.4
-To: Ali Lin <alexlin901107@gmail.com>, linux-input@vger.kernel.org
-Cc: regressions@lists.linux.dev, jikos@kernel.org, bentiss@kernel.org
-References: 
- <CAMX8SmaXHh-dzH2n6pRhQr8q=iN=Ui7T3TC42e35LBUjvMaH1Q@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAMX8SmaXHh-dzH2n6pRhQr8q=iN=Ui7T3TC42e35LBUjvMaH1Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179464330112.547980.6125337135683635613@mxe9fb.netcup.net>
-X-NC-CID: J5KgsYkr5XNtbCq7WW1k0cwXP0CHfvStSuzHfxS6/HjIvbPdbuk=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <96e08e3b-f034-4d69-8b6b-4a094cb39b25@broadcom.com>
 
-On 11/14/26 07:56, Ali Lin wrote:
+On Fri, Nov 13, 2026 at 07:25:35PM -0800, Florian Fainelli wrote:
+> On 11/13/2026 10:09 AM, 'Martin Wetterwald' via BCM-KERNEL-FEEDBACK-LIST,PDL wrote:
+> > On Wed, Nov 4, 2026 at 3:20 PM Martin Wetterwald wrote:
+> >> On Thu, Oct 22, 2026 at 3:31 PM Greg Kroah-Hartman wrote:
+> >>> On Thu, Oct 22, 2026 at 10:29:24AM +0200, Martin Wetterwald wrote:
+> >>>> Hi Greg,
+> >>>> this is a regression introduced by aa125180c673 (via your tree) in
+> >>>> 6.19-rc1 and present in 6.19.y through 7.3.y. If the staging pull for
+> >>>> 7.4-rc1 has not been sent yet, could you take it there? Otherwise,
+> >>>> staging-linus would be great. Thanks!
+> >>>
+> >>> This is not a staging driver anymore, please route it through the proper
+> >>> tree after -rc1 is out.
+> >>>
+> >>> thanks,
+> >>>
+> >>> greg k-h
+> >>
+> >> Hi Florian,
+> >> Now that -rc1 is out, could you take the patch?
+> >>
+> >> I've checked 7.4-rc1 and I confirm the issue is still present.
+> >>
+> >> Thanks!
+> >> Martin
+> > 
+> > Hi Greg, Florian,
+> > 
+> > The file I changed (drivers/platform/raspberrypi/vchiq-interface/vchiq_arm.c)
+> > is currently listed with Florian as maintainer by get_maintainer.pl.
+> > But Florian tells me he doesn't maintain VCHIQ.
+> > 
+> > How to proceed now? This file doesn't seem to have any maintainer as far as I
+> > understand.
+> > Any pointer to someone able to take this patch would be appreciated.
 > 
-> I would like to report a possible Linux HID regression affecting the
-> Corsair Gaming K70 RAPIDFIRE keyboard (USB ID 1b1c:1b3a).
-> 
-> On Linux 7.3.4-arch1-1, the keyboard works for normal typing, but the
-> Num Lock, Caps Lock, and Scroll Lock indicator LEDs do not function
-> correctly after boot.
-> 
-> Unplugging and reconnecting the keyboard restores normal operation.
-> [...]
-> Relevant kernel messages on Linux 7.3.4:
-> 
-> [   36.929377] usbhid 1-4:1.1: can't add hid device: -110
-> [   36.930405] usbhid 1-4:1.1: probe with driver usbhid failed with error -110
-> 
-> The USB topology on the affected kernel shows:
+> Sorry for the lag Martin, I will be taking those patches from now on.
 
-Not my area of expertise, so take this with a grain of salt, as I might
-send you in the wrong direction. But it sounds somewhat like the problem
-this patch tries to solve:
+Thank you Florian, that's very appreciated.
 
-xhci: give back TDs and clean up ep0 after disconnect
-https://lore.kernel.org/all/20261029204324.658845-2-mathias.nyman@linux.intel.com/
+-- 
+Regards,
 
-You might want to compare your error msg with earlier reports that led
-to that patch:
-https://lore.kernel.org/lkml/20261010064407.11030-1-yiyu@yiyuzhou.io/
-https://lore.kernel.org/lkml/20261010071811.20483-1-yiyu@yiyuzhou.io/
-https://lore.kernel.org/linux-usb/20261023132616.339833-1-diogochaves@me.com/
-
-
-
+Laurent Pinchart
