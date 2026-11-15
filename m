@@ -1,73 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.3
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794689631;
-	b=oMO8tM8clJQdyso0egbDNmE5pzlQvy6dBbwGXMwAO/MUZv6zhaHXyuD7Ca0cCJO+Z3Co
-	 cpJacXV6L7jNdO3jJjfhxLzcx9YScvmxkZRYydnsHj7geByP8qESoQ1g9gSogTfie48oG
-	 bFhgUtCGM2LyuxP8Y8OpzrVKi1Epj7RHu58src6wJyGZ7PJruRx6s7rmtgwake82SPwmN
-	 r/uk/Xq7NMZLj77hQOkdBUi6L4zRCDsy1I9QkD32VKTbQzd+SC6/TX7hsMSGvcLAWPkxW
-	 3CIdd5+tkCbzSf0DB6hgFfJPqo1RlssX8homCRalasHJiQeu3HQIsyaRPpGMv05e/EA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794689631;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:Mime-Version:Content-Transfer-Encoding:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:X-Mailer:References:
-	 In-Reply-To:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
-	bh=RUSch1jwRpHlWQSJdR2mOWWkzt6lR/un0SRxwgp5/jg=;
-	b=JJLBSgcdiDV/NM6XptgmMezsn5Sbu4f361zG87EvQEiPlD31QKst3tOwOJNilRiRSTYB
-	 tmdBE24nA/Bh1mM/PP7VVpCqVzRGgDdSvXRt9XM90F/kRvNVdPlT2eyZqONchQnyxHAW4
-	 WTmX6IHdhEm4k4K7e0f2m8v6J6WJxZCfWiWc52xFDRmlbw4GZfOsITti6jT7WKWRk/VCb
-	 LQaESEGV3r5IAaKs0u929yLY9F4oOLHDgs82crWaLtP//nYdhjqXrPZ9dCo34fm0FwgSq
-	 QSNyxzp6wPSDIPKXX25ZVHeD1UyAobDawmFgryGClKc/eaWn1MsIlVVtL3yzbdF3G2A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=web.de;
-	spf=pass smtp.mailfrom=web.de;
-	dkim=pass header.d=web.de header.i=pjjonas@web.de header.a=rsa-sha256 header.s=s29768273 header.b=mU59uasT;
-	arc=none smtp.remote-ip=212.227.15.3
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.169.17
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794710912;
+	b=hrqus1AVRbpcHqknN60jw0fXmrhMAgrrUwwNkUWaGhYK4erOZ7bOGanfU8A95VAUEJE/
+	 ufP7ss0XitfITMpnHXXwYHcs4hs5U7nRDAANJg+Mo/FigRiDyVrhEVtujnsHs9jhozbJN
+	 fnb06wcdsPEEcuVrOirdWDp9ew6qs9hidneDGIoFzRFY12vajcu/xHPnIk3zpt2FZy5pf
+	 SPnhxNtc7Fh+9vhkTAggVdZdsBhGFOK4c/s+XkHymiG//SvZzBsW01m+Ys5tCgJ0TWy7h
+	 6Euk6H+5E2CN2i+bxkU/Si0NB6K6GV/gzpdGp/RTsyWYG12r1GRzX0LbKtQnT/3c/rw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794710912;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Message-ID:
+	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=2umo0JJCXvLyvEoZSPmOUtOWPTh4QvDBiX7/qSnHTbg=;
+	b=E3GcCEvfmNsqYguTwn/BysYrQj8AzQ/An4ZYmh1qEs3EdKWd1NuzbRkJvTUpbevDiqZH
+	 0Qf+1u4r/mZ3bA2aOo9ICX+tkHgp7dqjGBED73/pW7rcZlAN8YsItU7uF8hPT/WQeCHXv
+	 +vYULd/NQuka8UMg52NwVo8bYq5oEdwVEM0I97NmirokefPsRxhIPD1PPY0Q1WZaVjBSO
+	 Po54sgFDHQsFCIgXikC5K8TItk0PWYmIdSsj7gtSyxbO00OoDRJpdMvs2N1qPt5TABNVc
+	 MCf9tV2trhfVDm3Cme0TGS5vg09ybsZZHAl31lljyZ0+IsBNucHi9xLhL9x3Lz1x2Tw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=iav.lv;
+	spf=pass smtp.mailfrom=iav.lv;
+	dkim=pass header.d=iav.lv header.i=@iav.lv header.a=rsa-sha256 header.s=zoho header.b=ScY0RC3N;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=136.143.169.17
+Received: from sender-op-o17.zoho.eu (sender-op-o17.zoho.eu [136.143.169.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4596606A323
-	for <regressions@lists.linux.dev>; Sat, 14 Nov 2026 20:53:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4596606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008AC606A329
+	for <regressions@lists.linux.dev>; Sun, 15 Nov 2026 02:48:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 008AC606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iav.lv
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iav.lv
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=web.de header.i=pjjonas@web.de header.a=rsa-sha256 header.s=s29768273 header.b=mU59uasT
-DKIM2-Signature:  i=1; m=1; t=1794689628;
- mf=PHBqam9uYXNAd2ViLmRlPg==;
- rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
- d=web.de;
- s=s29768273:rsa-sha256:URcbREAVSY4jfwFWGr/BIXqiXhSJ
-   uiVZTuPuwzRDjGMX5naoMvsSbmrpgyQbDBLZdMeqk7z5TXzylfW3RXsBSdHeSByLqONmnTJVZ9I
-   MbpsGjDa4OhWRcWC48hNclYaOMahIR3gSxgCDCxRuoTXM/ZjrYXMMg92TizZ3tEjb4WrSWiqm19
-   Yw6FALlHxjqPR5CsVCc2FIZkHcm2Wfv+PRm8hYkt6T9jN5wmlojlOXvWarygiKz3gmokVfQODRk
-   md8MFUJt8IOIts1+bl8nSf91nQC9s3uVJcWNdK8AH8uZ4u11iNxBpJuYu0ow4LP/+quVYGMyZb8
-   e63vSwGoh+yuLg==;
-Message-Instance:  m=1;
- h=sha256:
-   yGfjYqKPionkxphC6ogVHALRg9Ri8fHJA/1Tldur/SY=:
-   ccsEHEfd882jxVU61GzF7IARbsaFqo9r9rkVD5leH+c=,
-  sha512:
-   rKRAdRHUAKfszy5AUAvy840L9g8AZ5lJk5lWxSL1k++ztdeInIECyZ00PVoGd+Jmmga4N288QwEXyGQsZdf+iQ==:
-   5eW2NWW00xLScUonPRDePYgTy1IzXVs9E/6RzXDWlHAWNpJyak3s6ywGbtfg0V3dWQ2gEi03i6F8tMDsnNixIg==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1794689625; x=1795294425; i=pjjonas@web.de;
-	bh=RUSch1jwRpHlWQSJdR2mOWWkzt6lR/un0SRxwgp5/jg=;
-	h=X-UI-Sender-Class:Mime-Version:Content-Transfer-Encoding:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:cc:content-transfer-encoding:content-type:date:from:
-	 message-id:mime-version:reply-to:subject:to;
-	b=mU59uasTEgp7w9pHnXVvkp7JY2ujdlaOvNXtPcuL2IBUiFAp6lH0gj48kHkGzuKa
-	 tE9VxcspgZmUWvX1e0wzgAzSNV3mmTLKi2oX6DPwiGxUyf2yTgjVI60MhHloknjCb
-	 dftYyRxABt0J2mXbRRZk4akUwmlmbtlIag2oC5M9Wt56e7Lk9HxzaINInvrbbdDoy
-	 HqTsfPc7LgjjJ2qw5lo3nq7CfGV/kvXniE5nSskSU752hA+O1DHA/CMjt21710+9c
-	 lV/T2TQ1TYYt5Vp37UbiQn3A3Zd26aR6dQBp7gn6Fh2pzk3JiCsFOo849A2iZttL2
-	 sS57ZDRz7jz4VZ8Tzw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from client.hidden.invalid by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M2xrs-1xREI82JzA-00DgkK; Sat, 14
- Nov 2026 21:53:44 +0100
+	dkim=pass (1024-bit key) header.d=iav.lv header.i=@iav.lv header.a=rsa-sha256 header.s=zoho header.b=ScY0RC3N
+ARC-Seal: i=1; a=rsa-sha256; t=1794710890; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=LVrE22cZhBk3ivFqRSVvvHabRDpGaP404VVFyRqKHcPmnVnTtgECkS9qDZp7AJ2yqjsyYdB2zSJnQTq8jRQKeK/k1qtGZ1UIpB3FyzZPxn1bDubqp7/f8NxMM0Pcb01F1I2sGlvTgVULhjvS8ev1CFAAm1lGpuXAEbT9OSA5eG8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1794710890; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2umo0JJCXvLyvEoZSPmOUtOWPTh4QvDBiX7/qSnHTbg=; 
+	b=kEkSugXzXkgqwKXcv70Y5PQ+6TyWxM6Adv/BJY+w8evoDiebkXKmkJgreLcG7jDlC2OKKdBIoUVp7ud4IenBWx22bLFBa2WsUutLuA86XUNBINzNC3cX4pZMas4h31JttfoGVdGl19hcg7xlfiFjM6n7Rfgx1EGkv3hKuiNHsIE=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=iav.lv;
+	spf=pass  smtp.mailfrom=iav@iav.lv;
+	dmarc=pass header.from=<iav@iav.lv>
+DKIM-Signature: a=rsa-sha256; b=ScY0RC3NAjThsYJrvp3gIYxyyiS6+P2JdBb9J7UdAcQkKgEU2F8JnUl0cfxw0vN64KjESt3iLcXcC2bwUcFo0HI5O4b9IYWV7jfI3+QhS2PMYCAHycfC3h0qkqm9KzFOAnlEiF7EQOYLH9mOyy/3+5faKzTS8M8JbU0hxMjQ4e8=; c=relaxed/relaxed; s=zoho; d=iav.lv; v=1; bh=2umo0JJCXvLyvEoZSPmOUtOWPTh4QvDBiX7/qSnHTbg=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zoho.eu with SMTPS id 1794710888931829.3476602075157;
+	Sun, 15 Nov 2026 03:48:08 +0100 (CET)
+From: Igor Velkov <iav@iav.lv>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>,
+ Shawn Guo <shengchao.guo@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ linux-gpio@vger.kernel.org,
+ linux-amlogic@lists.infradead.org,
+ regressions@lists.linux.dev
+Subject: [REGRESSION] gpio: shared-proxy: open-drain regulators on ODROID-HC4 fail with -EPERM
+Message-ID: <20261115-hc4-gpio-shared-od-1@iav.lv>
+Date: Sun, 15 Nov 2026 04:55:00 +0200
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -76,196 +65,32 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Nov 2026 21:53:41 +0100
-Message-Id: <DMV8DI3F257U.DPLVLW2DZC3Z@web.de>
-Cc: <regressions@lists.linux.dev>, "Sean Rhodes" <sean@starlabs.systems>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Ulf Hansson"
- <ulfh@kernel.org>
-Subject: Re: [REGRESSION] rtsx_usb_sdmmc: RTS5129 (0bda:0129) no longer
- detects SD card
-From: "Philipp Jonas" <pjjonas@web.de>
-To: "Thorsten Leemhuis" <regressions@leemhuis.info>, "Philipp"
- <pjjonas@web.de>, <linux-mmc@vger.kernel.org>
-X-Mailer: aerc 0.22.0
-References: <523eb7d1cc0811df4a5e4c534538f3dd@web.de>
- <eb52777b-8607-427b-a709-cf1ab76ef672@leemhuis.info>
-In-Reply-To: <eb52777b-8607-427b-a709-cf1ab76ef672@leemhuis.info>
-X-Provags-ID: V03:K1:psjxO2sb6wRumoqe05ywfgkQqQnPV28Zb2A/mmMKF6+qgt3ix3w
- PC6XPM3X/NtYE1xa4O3vVxwhpNBRGWVO/pf8d7Gxtb3zFlwQjrRuEKqF6saKjaI7T8el5a4
- eezGc/4NMd4VNTD+v5qcOA1lDcIiNQEsrCB96Ffjjn7nuUrdp4lLubGCmg1CIghK5OFLtkk
- UVLcd1MZOEae13qz5MVow==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:o8GG9+fGZ8Q=;DPDRwAakohGhDtHzLCd7i7krjeS
- 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
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Wed Nov 11, 2026 at 10:06 AM CET, Thorsten Leemhuis wrote:
-> On 11/8/26 19:51, Philipp wrote:
->>=20
->> the SD card in the internal Realtek RTS5129 USB card reader
->> (0bda:0129) of my Lenovo V110-15IKB is no longer detected.
->>=20
->> Works:  6.12.116, 7.2.x
->> Broken: 6.18.x, 7.3.3
->>=20
->> On broken kernels rtsx_usb and rtsx_usb_sdmmc load and the platform
->> devices rtsx_usb_sdmmc.0.auto / rtsx_usb_ms.1.auto exist, but no
->> mmc host/card appears (no mmc0, no mmcblk0) and there are no errors
->> in dmesg. Reloading rtsx_usb / rtsx_usb_sdmmc, re-inserting the card
->> and disabling USB autosuspend (power/control=3Don) do not help.
->>=20
->> Since 7.2.x worked but 6.18.x does not, I suspect a change that was
->> backported to stable.
->
-> Might, but might not -- and I wonder if you have two bugs, some race, or
-> if some .config setting is disturbing something. Overall this situations
-> is somewhat puzzling. The best way to bring some light into this is afaic=
-s:
->
-> Check if 7.2 is working; if it is, bisect between that and 7.3.3; of
-> not, bisect between 7.2 and 7.2.x to find what fixes things. And ensure
-> to use the same .config as a base during the bisection, as explained here=
-:
-> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.ht=
-ml
->
-> dmesg outputs from a working and a not-that-different version that is
-> broken (say 7.2 and 7.3.3) would be helpful, too.
->
-> Ciao, Thorsten
+Since f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64
+platforms"), two of the three fixed regulators sharing GPIOH_8
+(GPIO_OPEN_DRAIN) on ODROID-HC4 fail on every boot:
 
-I found the culprit:
+  reg-fixed-voltage regulator-p12v-0: setup of GPIO (default) failed: -1
+  reg-fixed-voltage regulator-p12v-0: error -EPERM: can't get GPIO
 
-  7185b6d33b17 ("mmc: rtsx_usb_sdmmc: suppress false CD after init timeout"=
-)
+The first user (vcc_5v) sets the line to output high in
+gpiod_configure_flags(). Its enable then goes through
+gpio_set_open_drain_value_commit(), which emulates high by calling
+direction_input on the proxy, and the proxy switches the shared line to
+input. The next users hit "Shared GPIO's direction already set to input,
+refusing to change" in gpio_shared_proxy_direction_output(). Stack from
+trace_trigger=gpio_direction.stacktrace:
 
-Reverting just that commit on top of 7.3.4 fixes it. Same kernel
-version and config, the revert being the only difference:
+  gpiod_direction_input <- gpio_shared_proxy_direction_input
+  <- gpio_set_open_drain_value_commit <- gpiod_set_value_cansleep
+  <- _regulator_do_enable <- set_machine_constraints <- regulator_register
 
-  7.3.4:           card not detected
-  7.3.4 + revert:  card detected again
+Armbian v7.4-rc2 (its patches don't touch gpiolib or these nodes); same
+with the five shared-proxy fixes from the v7.4-rc3 pull. The winner
+depends on probe order: without the fixes vcc_5v lost in 2 of 4 boots,
+leaving the SD card unpowered and no rootfs.
 
-dmesg with the revert:
-
-[    4.133620] usbcore: registered new interface driver rtsx_usb
-[    5.582812] mmc0: new high speed SD card at address b368
-[    5.638774] mmcblk0: mmc0:b368 SD 1.90 GiB
-
-Without the revert, nothing card related shows up after the
-rtsx_usb line.
-
-Hardware: Lenovo V110-15IKB, internal Realtek RTS5129 (0bda:0129),
-no tray, plain SD slot. The card is permanently inserted and holds
-a LUKS key, so it has to be detected during boot.
-
-Judging from the commit message, I assume an init command times out
-before the card is attached, suppress_cd gets set, and as the card
-is never removed, raw SD_CD never drops and the suppression is never
-cleared. Note that physically removing and re-inserting the card on
-7.3.3 did not bring it back either, so the clearing path does not
-seem to work here as intended.
-
-Sean, Greg, Ulf: CCing you as author/acker/committer.
-Happy to test patches.
-
-#regzbot introduced: 7185b6d33b17
-
-Philipp
+#regzbot introduced: f918e3804498
