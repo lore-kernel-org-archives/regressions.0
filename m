@@ -1,61 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=89.58.8.210
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794852683;
-	b=Xcbv8CltTlquZjp4qXHegqemXssRoaTIhi5ZjQGwU/cbilRKo/JO8dEjprW84YVeaxCY
-	 eD8pBVO9hd3XhTt82wufomEpQfJm5cjn2wYFf6lSru+MwhuySGzmn3n3Xh5Q1ncUOfnyj
-	 3RqdppeY33iVFisO4Tx1cF7SXpStmctY6dMvKEJKB+u5ReOgXNv82XJ2xzWh//1YxBH+4
-	 3cSrLt9quY0gYEAUpByg35zwDNWUTYuqdD2n6Ha9Yewa9+wpj3DTVfZ2DRrai0eBzfzfN
-	 4app7nbgFUrptaftvw02869AImhe1F36LrrqWDrqzKOgb/g2Z+3U2oeG242KCiWIWyw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794852683;
-	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.177
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794864315;
+	b=j9N8KLzv0qtqbX8uk322ovaDxAhZg8AGK2EfSPi13/RrZi1Ia884tKL3kxvq3ErhQoRQ
+	 ODFvYsleoNQMdTUP0k2uhfUblrVUmwKmVK0dMETUJCBz30XKPO6X4/wMv+F7a2EoM1EN9
+	 xi2Ulrkf+r2gufGDyvzPvI0rGAH7k0wbgahyuspRY+lUqvZ+DRGTBFaj396LMhbJPTucm
+	 hI+wKjQv9+dadL/xneljyFH4okCSu0fLlwGI+CIZ3goIWp/TEAx5xm4AJbZhzXaW3t/ty
+	 IxZLoNaaG4d7MTzMO/Kv8/2B1AyyX59c8iTt4czZXs81TDNj9TRa1t5SHbGS7cnlDOw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794864315;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=Ii7eXXhVcBfoOGhMw2PgBCfYdC3g+b8/CmFf4j37bkM=;
-	b=uvMs4yz3qoFC8wVIDJGfmCmCvKtZK6stCd6KO+AkB9mIdaUngIMkwRcQRDbLIkVB4LgM
-	 4S3O/2HiKRIO7aKet8zWdOeonkfi5KE49+Tli7kUAkaK3gu9mKO1QrPGS06ukw1NBVfvq
-	 oJerMx9rMAN/zRvt6DbTkrVYBVNp1IzQQCRuF1qTKYABdC9zq5Ze0V5nehLLtboAxowHP
-	 pXsOW7/dQmobJMZEFeG2D6QwbXVCHYynejkPf/U3yJlp9Olk4Lml/xDoJijVU4yaiOzfp
-	 tUwv16Ko7bUCcpA/+IiqQ0WKa/fFpNs56PUTZALQVMZ9YRERJkvCvWOHuVEV5kB72dA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=wagner-flo.de;
-	spf=pass smtp.mailfrom=wagner-flo.de;
-	dkim=pass header.d=wagner-flo.de header.i=@wagner-flo.de header.a=rsa-sha256 header.s=fuldigor header.b=J3YIZBbo;
-	arc=none smtp.remote-ip=89.58.8.210
-Received: from fuldigor.wagner-flo.de (fuldigor.wagner-flo.de [89.58.8.210])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	bh=37QQkcP84n9nc2171r5Y3lfGKbI4kPRXOp5KQYndgO0=;
+	b=KlKu/ABKBXRUI3RonPWn1Ptjjl7UGRgo0wqe2BVN2E56NYyp09SehADVsUNfAHzDx3fw
+	 ZSvaresI0sXbfwz45W1dLoTiekyoT4L7Qnh44P7vzXAYUaA1G/aX+oolrAqsIenbO7zx5
+	 RaE9sPXV/AEUtk4DQUCa8oxMLpapYmrCxd6PkV5pNcdMBidVPVIM52SRjhSEk1WZdr0VC
+	 M9YRXLo8YQpcQF13V1l50h7YrkS4pZTmo+2/boY+kXAHq0Tg90XB8YL0zRYxg9RVwuqqH
+	 AQuRUY3I+ESuol8xjHpInxijgkwkERnFvgByr3J7EAdZFLmYFuwn40TiBfeZZJsSwwQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T7bmqcyw;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.177
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0797C606A329
-	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 18:11:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0797C606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wagner-flo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wagner-flo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE73606A33A
+	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 21:25:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0FE73606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wagner-flo.de header.i=@wagner-flo.de header.a=rsa-sha256 header.s=fuldigor header.b=J3YIZBbo
-Received: from localhost.localdomain (p4fe8fa45.dip0.t-ipconnect.de [79.232.250.69])
-	by fuldigor.wagner-flo.de (Postfix) with ESMTPSA id 0FBDC9F42;
-	Mon, 16 Nov 2026 19:11:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=wagner-flo.de;
-	s=fuldigor; t=1794852669;
-	bh=dEme217co1guRc4M61YU0j/BR4fYRiFVRuGtXDd3x2k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=J3YIZBbo5i0whdWrQ8A11WtXhqMkSOwUAJ8/oliSX0IRpq3j6yCirG1Rus8VEJiLE
-	 nWy/hlOpy+szJIuTK934l9TGFRJ49qMgdXIRu5N/WeJ81icifeZzWzRHKHtwxeeiJZ
-	 w+4q2LHVE3KnQJAo5NIRxc/7OkOzcGAdYhWzXgfk=
-From: Florian Wagner <florian@wagner-flo.de>
-To: florian@wagner-flo.de,
-	stable@vger.kernel.org
-Cc: regressions@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.18.y] ACPI: button: Enable wakeup GPEs for ACPI buttons at probe time
-Date: Mon, 16 Nov 2026 19:11:04 +0100
-Message-ID: <20261116181104.7297-1-florian@wagner-flo.de>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <2026-11-15-1-daily-reply-0001-acpi-button-618@kernel.org>
-References: <2026-11-15-1-daily-reply-0001-acpi-button-618@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T7bmqcyw
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-8b0dba37a7fso37140097b3.0
+        for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 13:25:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794864314; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jMvcv6vBwuPIpf37QptYbfvCsn+Z6yENPqonob6pwCm8zUNlz5DLDQCJn1bfhsTJUZ
+         inlPwl/oWGKUmXB6wrTA+ha2NXOtjepM0vX0Pp+UUAY+jv+igPOG0CBt7MTsN0MmOiWq
+         uxzj43GCqNWFT5zL62GASlzvHiAyCgnShS+0e1xqJm+bbCUfAoMR6YmS/IX+L7HHE4zT
+         jIuNl7jXh1T22Nd1HSAztp6HOIdNlhcwywwAcapFODIki839kki1fvXVpY5PkftHSHH4
+         8f0vIcMSlEJkGCp4DUDkcQ67EbihcDptbQk3L3zhGaeN+jucweht13+/AhBRsCX1BUj2
+         ckWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=37QQkcP84n9nc2171r5Y3lfGKbI4kPRXOp5KQYndgO0=;
+        fh=vQb3egmPLrnXwqkPapL9Et1/X/9zneHbDcGjFleJj+0=;
+        b=WMZ9Tna8hxlKY9r6rSK9WZBumzjY0trZzZPLgbRiwEJa2e4I+HCQ3tEZLH//y8fzi5
+         wuahobmvkPTqH1T5fCeGMBuVddwT8xXhUvxPTTbkLeGYsJvsqQHqA2z8E1ObW9IqFytc
+         ZX+YEti9QqYS+fDLogfo9Hg0XPQu9TrAx6Umj43JEOCJbHISsTC0lzd6zOjN98dX2ZyZ
+         18HKz7vF40LKDgJGE0/6buGhkxViy9vlGmpKter2DWkgfihN+yZnx136g3/sk0Phycfm
+         KoWikl9tnO2o4ScayBoZbI7ywAQmyRIr5xZQW1jqXgIRoxumfjq8ihJA5dJMv4pcfWxI
+         fHyQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794864314; x=1795469114; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=37QQkcP84n9nc2171r5Y3lfGKbI4kPRXOp5KQYndgO0=;
+        b=T7bmqcywK8Y9IqKGSst20qbvyHEHDl1m0/D5PBQataDNalNCKHo4HTM9Az16IJ8oB6
+         LWox9X/2+XGPM1Yh9WM3QYGmtm6rdhGMcfznwvwL+RdSKOMk3kiBvjLqFI79JAeh9H5v
+         7D9hDk3zYSPPjszrFj0YuE2tEoY2IB9b2qzCvr4MkBcOBWIfys+S6gnO8XsNfc3jHdN1
+         epguFs8pD+GyeDSlKXyeT1c8Zwd0ErajRFJBU0vrzpB58ZKevb/yXWk884+93QJTnJtq
+         gsnN8Btc7IyJh79+Ue/KCFS+htMeafU559H9yqytvdtyCt25z1BKiuULBDAk+DQjwV8o
+         RYkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794864314; x=1795469114;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=37QQkcP84n9nc2171r5Y3lfGKbI4kPRXOp5KQYndgO0=;
+        b=MjOOE1HxNnXdJTn1JgIT/mSiYoggjtrhH5caRRZYhbECDYX6kbG8nVTwh4q5Z6oCSk
+         XWxFgkVThjSvORm/jD4+gGPw/C8pKtZybgSlFx5gbnh2lxur4RmTG6eeB5Ga6NRBRCwc
+         fVMZAjRJdsAu3knXj3slOrJFbEUU8h408rIQLnYdlEt7R5q8zifpB08TcCDy8rOygYlT
+         gcz2KgrFZLDUUKgUAj0/wa6wueuNFLm/h0SaoDWP1Fh6u/vpqBbby5oA39bM9Mqymwbp
+         yFOWw2MLD81BJjahWAIvJpLneFWnYdAwHYzsDo+BH/5ubdgqGGgYAc3avNr+KbdJap55
+         hwqw==
+X-Gm-Message-State: APuU4Z9HD9+NXCbhIGkxKkSckXB6w/ChYaDaiBAz3V48unAUNWZoVioh
+	aOg4KjFSNIIGaU0fbwphBocPi/PCrosz4C3xlOOJe0jVv5VeztLnJ3Pd0Zx28x82HlD+1NHDhn5
+	8IH+hSbElaCxk1SUzx+AmK3I17GmcFAQ=
+X-Gm-Gg: AZFdTZcm2gpGo5h6FdpnsQjnjM25cZ1W0L5VxVTMwKeE/KlWOlNGyD0h6g4IrstSP95
+	eVpfTJ9wkXurdV//MqRjJF43PuhY+sQ98quiw1X6ZhqRi3XDhGoMCsA4TAL3lIRFfc5fCChn7cC
+	L9fGUwHVZM3E9X2Tmts6K5DqRfa5oZ62t1fe7nMcboq5iyucx8cPVeZequ4DgQBWl8UmfjVLvK5
+	ww/dLNJRELSXqL5EYk7xU+aq15kHEfAX3/lICYr0hFTi/GXdiA3DwXle1f5Cigaw78ZDi1uSQi0
+	T4AdpP7c0GiHtb9ep3+Ye8/TikJi0uDy3XeyJgBCGrsI4p7MMNnoxrdTMQoQaq07pIFt/vq3+F1
+	fkZuDXmPM5YOvlYaks60XyZaBbvPh4thdueUjkg==
+X-Received: by 2002:a05:690e:b89:b0:67d:b299:df5e with SMTP id
+ 956f58d0204a3-67db299f0camr1859172d50.108.1794864313941; Mon, 16 Nov 2026
+ 13:25:13 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -65,201 +102,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Ted Vera <tedvera@gmail.com>
+Date: Mon, 16 Nov 2026 14:24:36 -0700
+X-Gm-Features: Aa3M54olKYZfZ_b5P6Fxa-FoemJt0sPccEEWQj7dI_bkTw07AiGNwoiuCaGze2U
+Message-ID: <CAFd_G9guhtVwE1aaFOXE3Ab43BAcwP3RBT=R_SdZ2KDfXB=LeQ@mail.gmail.com>
+Subject: ASoC: rt5677: Do not apply Yoga Book ACPI GPIO mappings to Samus
+To: linux-sound@vger.kernel.org
+Cc: regressions@lists.linux.dev, oder_chiou@realtek.com, lgirdwood@gmail.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Summary:
+On a Google Pixel 2 LS Chromebook (Samus, EVT2) running Fedora 45
+kernel 7.3.3-300.fc45.x86_64, the RT5677 codec repeatedly fails probe
+with Failed to request POW_LDO2: -517 (-EPROBE_DEFER). The codec
+appears in devices_deferred, no RT5677 ALSA card is registered, and
+only HDMI audio is available.
 
-[ Upstream commit a004b8f0d3bc5d82d3f2c91ff93f4b4b7ccb8f76 ]
+The driver=E2=80=99s ACPI GPIO mapping added by commit 0cc00de3dd5b maps GP=
+IO
+resource indexes 0 and 1 to reset and pow-ldo2 for every ACPI RT5677
+device. Samus=E2=80=99s DSDT uses those resources for codec GPIOs (jack det=
+ect
+and mic-present), not Yoga Book-style external reset and power GPIOs.
+The driver requests the mapped GPIOs before registering the codec=E2=80=99s
+GPIO chip, which appears to cause the deferred-probe loop.
 
-Prior to commit 57c31e6d620f ("ACPI: scan: Use acpi_setup_gpe_for_wake()
-for buttons"), ACPI button wakeup GPEs having handler methods remained
-enabled after acpi_wakeup_gpe_init(), but currently they are not enabled
-because acpi_setup_gpe_for_wake() disables them.
+Test and result:
+I built a temporary module against the matching Fedora kernel source
+that skips devm_acpi_dev_add_driver_gpios() on DMI board Samus. With
+that module, the RT5677 device bound successfully, the bdw-rt5677 ALSA
+card appeared, and laptop-speaker audio worked. Secure Boot remained
+enabled. This strongly supports the ACPI GPIO mapping as the cause.
 
-That causes function keys to stop working on some systems [1] and there
-may be other related issues elsewhere.
-
-To address that, make the ACPI button driver enable wakeup GPEs for ACPI
-buttons so long as they have handler methods.  While this does not
-restore the old behavior exactly (the ACPI button driver needs to be
-bound to the button devices for the GPEs to be enabled), it should be
-sufficient to restore the missing functionality.
-
-For this purpose, introduce acpi_enable_gpe_cond() that enables
-a GPE if its dispatch type matches the supplied one and modify
-acpi_button_probe() to use that function for enabling the GPEs in
-question.
-
-Fixes: 57c31e6d620f ("ACPI: scan: Use acpi_setup_gpe_for_wake() for buttons")
-Reported-by: Nick <nick@kousu.ca>
-Closes: https://lore.kernel.org/linux-acpi/E2OXET.4X5GTP37VTNC3@kousu.ca/ [1]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Nick <nick@kousu.ca>
-Cc: 7.0+ <stable@vger.kernel.org> # 7.0+
-Link: https://patch.msgid.link/9629117.CDJkKcVGEf@rafael.j.wysocki
-[ Adjusted for 6.18.y: struct acpi_button has no dev member in this
-  tree, so use &button->pdev->dev in the two dev_dbg() calls. ]
-Signed-off-by: Florian Wagner <florian@wagner-flo.de>
----
-
-Notes:
-    Resent inline with my Signed-off-by, as requested. Applies to v6.18.60
-    through v6.18.63 (the touched files are unchanged in between).
-
- drivers/acpi/acpica/evxfgpe.c | 50 ++++++++++++++++++++++++++++-------
- drivers/acpi/button.c         | 22 +++++++++++++++
- include/acpi/acpixf.h         |  5 ++++
- 3 files changed, 68 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
-index 60dacec1b..4074b5908 100644
---- a/drivers/acpi/acpica/evxfgpe.c
-+++ b/drivers/acpi/acpica/evxfgpe.c
-@@ -78,18 +78,22 @@ ACPI_EXPORT_SYMBOL(acpi_update_all_gpes)
- 
- /*******************************************************************************
-  *
-- * FUNCTION:    acpi_enable_gpe
-+ * FUNCTION:    acpi_enable_gpe_cond
-  *
-  * PARAMETERS:  gpe_device          - Parent GPE Device. NULL for GPE0/GPE1
-  *              gpe_number          - GPE level within the GPE block
-+ *              dispatch_type       - GPE dispatch type to match
-  *
-  * RETURN:      Status
-  *
-- * DESCRIPTION: Add a reference to a GPE. On the first reference, the GPE is
-- *              hardware-enabled.
-+ * DESCRIPTION: Add a reference to a GPE so long as its dispatch type matches
-+ *              the supplied one, or it is different from ACPI_GPE_DISPATCH_NONE
-+ *              if the supplied one is ACPI_GPE_DISPATCH_MASK. On the first
-+ *              reference, the GPE is hardware-enabled.
-  *
-  ******************************************************************************/
--acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
-+acpi_status acpi_enable_gpe_cond(acpi_handle gpe_device, u32 gpe_number,
-+				 u8 dispatch_type)
- {
- 	acpi_status status = AE_BAD_PARAMETER;
- 	struct acpi_gpe_event_info *gpe_event_info;
-@@ -100,14 +104,18 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	flags = acpi_os_acquire_lock(acpi_gbl_gpe_lock);
- 
- 	/*
--	 * Ensure that we have a valid GPE number and that there is some way
--	 * of handling the GPE (handler or a GPE method). In other words, we
--	 * won't allow a valid GPE to be enabled if there is no way to handle it.
-+	 * Ensure that we have a valid GPE number and that the dispatch type of
-+	 * the GPE matches the supplied one (or it is not ACPI_GPE_DISPATCH_NONE
-+	 * if the supplied one is ACPI_GPE_DISPATCH_MASK).
- 	 */
- 	gpe_event_info = acpi_ev_get_gpe_event_info(gpe_device, gpe_number);
- 	if (gpe_event_info) {
--		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
--		    ACPI_GPE_DISPATCH_NONE) {
-+		if (dispatch_type == ACPI_GPE_DISPATCH_MASK)
-+			dispatch_type = ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags);
-+		else if (dispatch_type != ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags))
-+			dispatch_type = ACPI_GPE_DISPATCH_NONE;
-+
-+		if (dispatch_type != ACPI_GPE_DISPATCH_NONE) {
- 			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
-@@ -128,6 +136,30 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	acpi_os_release_lock(acpi_gbl_gpe_lock, flags);
- 	return_ACPI_STATUS(status);
- }
-+ACPI_EXPORT_SYMBOL(acpi_enable_gpe_cond)
-+
-+/*******************************************************************************
-+ *
-+ * FUNCTION:    acpi_enable_gpe
-+ *
-+ * PARAMETERS:  gpe_device          - Parent GPE Device. NULL for GPE0/GPE1
-+ *              gpe_number          - GPE level within the GPE block
-+ *
-+ * RETURN:      Status
-+ *
-+ * DESCRIPTION: Add a reference to a GPE. On the first reference, the GPE is
-+ *              hardware-enabled.
-+ *
-+ ******************************************************************************/
-+acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
-+{
-+	/*
-+	 * Ensure that there is some way of handling the GPE (handler or a GPE
-+	 * method). In other words, we won't allow a valid GPE to be enabled if
-+	 * there is no way to handle it.
-+	 */
-+	return acpi_enable_gpe_cond(gpe_device, gpe_number, ACPI_GPE_DISPATCH_MASK);
-+}
- ACPI_EXPORT_SYMBOL(acpi_enable_gpe)
- 
- /*******************************************************************************
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index 4ddaee895..b507b88df 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -190,6 +190,7 @@ struct acpi_button {
- 	ktime_t last_time;
- 	bool suspended;
- 	bool lid_state_initialized;
-+	bool gpe_enabled;
- };
- 
- static struct acpi_device *lid_device;
-@@ -651,6 +652,21 @@ static int acpi_button_probe(struct platform_device *pdev)
- 		status = acpi_install_notify_handler(device->handle,
- 						     ACPI_ALL_NOTIFY, handler,
- 						     button);
-+		if (ACPI_SUCCESS(status) && device->wakeup.flags.valid) {
-+			acpi_status st;
-+
-+			/*
-+			 * If the wakeup GPE has a handler method, enable it in
-+			 * case it is also used for signaling runtime events.
-+			 */
-+			st = acpi_enable_gpe_cond(device->wakeup.gpe_device,
-+						   device->wakeup.gpe_number,
-+						   ACPI_GPE_DISPATCH_METHOD);
-+			button->gpe_enabled = ACPI_SUCCESS(st);
-+			if (button->gpe_enabled)
-+				dev_dbg(&button->pdev->dev, "Enabled ACPI GPE%02llx\n",
-+					device->wakeup.gpe_number);
-+		}
- 		break;
- 	}
- 	if (ACPI_FAILURE(status)) {
-@@ -694,6 +710,12 @@ static void acpi_button_remove(struct platform_device *pdev)
- 						acpi_button_event);
- 		break;
- 	default:
-+		if (button->gpe_enabled) {
-+			dev_dbg(&button->pdev->dev, "Disabling ACPI GPE%02llx\n",
-+				adev->wakeup.gpe_number);
-+			acpi_disable_gpe(adev->wakeup.gpe_device,
-+					 adev->wakeup.gpe_number);
-+		}
- 		acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
- 					   button->type == ACPI_BUTTON_TYPE_LID ?
- 						acpi_lid_notify :
-diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
-index e65a2afe9..af796d079 100644
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -725,6 +725,11 @@ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
-  */
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_update_all_gpes(void))
- 
-+ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
-+				acpi_enable_gpe_cond(acpi_handle gpe_device,
-+						     u32 gpe_number,
-+						     u8 dispatch_type))
-+
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
- 				acpi_enable_gpe(acpi_handle gpe_device,
- 						u32 gpe_number))
--- 
-2.43.0
-
+Suggested fix: Restrict the mapping to devices whose ACPI GPIO
+resource layout matches the Yoga Book, rather than applying it to
+every RT5677 ACPI device.
