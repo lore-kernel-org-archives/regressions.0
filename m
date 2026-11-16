@@ -1,79 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794825331;
-	b=gmOF5MOYj34qTu2mwj/m1bLMPAdMOQMfIzxojGAWb5Z4KxvbbioPCtPfTPYcFFAB86wu
-	 BFbKNGZFS1mFF7vkMtd7u6X7cORYHrTCqA0iTCNjCVq7l3er2d1r7Gx04pYIxYwr2neOR
-	 9MlVVpW81FgC9p5dLLCwch7sKQ3X01Me0yCopgNaxoe6Q1QieNDX+O0yAbX0esHAT8+/x
-	 MYrTaVJc9AtXi5gG+OVNcH/uzOOjzS9U1kaywZNd3osgvpE1tkziJMb5fSlULErrpqHVw
-	 cEUt7XW5lrPS1M9Ul/3DT323wZu149vOgH1TsJdO9YNvogiqXYNDGNz3Cho0emveICw==
+	t=1794826575;
+	b=vnBPczxtpveiuUhDg4Egft1jdP77aiPFnIYhFKPGPPC0NwQaHS5Z/Pb6/pLxd/Y67ubM
+	 JCYaocTqBRjxigBAmkHc47hc0sSl5HWwcgSlBbFoOgxQVQbpgRWvYmTWqVazLBVgMxDuM
+	 vzJ4eKIMSFGd77T/t9UH/0/XLNT74LAJ2EPoEGQKTh06Apg9bEXNzKt66n9wj4ZubC2u6
+	 z+BCSKBo4P3cZ8BFc8xjZaRyVzpkNKC7kDNw6vWc9SOIV7HnHSbZFFNyLi6nKtPJz9Rg1
+	 ldZ40CjczwPSX1bQ5hpcbbG+RfUFgvS0MkosDeIhy6lM9+yWHL7hOfoBXqBiLr1tHBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794825331;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 In-Reply-To:Organization:References:Date:Message-ID:MIME-Version:
-	 Content-Type;
-	bh=rdnz1ZKxJgMMz4r8HFGPdT9ij83o0Gc4gnC5NGVLfbU=;
-	b=W1jRdILT5YrxcIcLpEzvVcwiH0eCYKCC6UiYUYBGFjnfMZwSN57UbSCgVn7BAo3jZmP5
-	 EwBLagXWfFuzms+BRyQKucE3anrMJON+7irQdyAB1d3RkpoYd6BYz71Ql+r2CgAw3nscK
-	 KAwx0wkXa0b184Uo8IXVtS/k6clLb7WDjfzwkQRJp916LgIWrWGIbqJqD6pLrHtt87OTj
-	 9oRK6+JQTEcmj9IVtldMf33im08oIZfWtJvN01g8T+XaNeXRmH/qJxluLwLQUpVoJIiIG
-	 /pBx4t3SdRd1p8czPFJb+DKnrZufUWDMZt98X6PVGWCStrG5E8iqkuYCLSvZho8Ovtw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794826575;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=zzC9mBd2vZ7VW00+ztDx5uBwxIv15/snwEy/NF1H0SY=;
+	b=WVxUP4oV00gm7Z3yjycWtbVr9kXXALc+xNYjpu4VQTS1z7uVrlwVemvRDQUQ74OEg3Zw
+	 Lyw5ZkA4whv2aQJnY4mqHv2kfaTA9IMjSUKYvszUKvTCkVrQ1EJUq7M3p1LrnWKOUAaCJ
+	 YaX2OPs/WO0CJ70VwdpzIOp9qzmvHlc9nFsc646J8GoCnqlrI5I9sWlcdlKae6e77wyzm
+	 vS4MNwQ/lLC6JPcq/SqEutKjp4NKGlvtjSU18OI8Xfyx1i+wuLycp9Tl7Cs3elC6WVPMP
+	 9oFkYhHzv5Q98d68CTzSnsjfEo+FUymKsm4BrYEcLCjlG55f88oRwfpFK6NSam+KPnw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dMO8ecDb;
-	arc=none smtp.remote-ip=192.198.163.13
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ko+hJvMw;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626F5606A323
-	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 10:35:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 626F5606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23221606A32A;
+	Mon, 16 Nov 2026 10:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dMO8ecDb
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794825330; x=1826361330;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=/UZDrPrPsnD6LBTHOM4nV0t5o1AUMv0eEZfDcvrX/es=;
-  b=dMO8ecDbRCuSSm+wqSUU4ZAqvw7c/fzCrMwfpcYClhsGuUP6n67MoONk
-   e+e3DCTGuqS3P14lO7Ys+xfl/xatnvXex38Y7dk9sK7Uf7HpVckYa1Sq2
-   GAlSwipzDyALwv9lJ8x7dRrYogF7zIwkIKbF3TDaAmylr7Zo5IUVRjblb
-   Nz8npAKT66CCsnEpNfgKwvAy0K86cQFayYHy2baprCIofrlOKUD+CQEcG
-   1wBKVuC0i9RL86L8WYThY16ffeRS6t2vl+EiWaBizkXN+y1Dhw1/W3DFx
-   zpfTk2bCptUr5qcliVskZYs4bpOVbaB3ELFT90xDj3w+oALETBOugJc/G
-   A==;
-X-CSE-ConnectionGUID: zqbKhCSiRtKJIk2NXhxeJQ==
-X-CSE-MsgGUID: bw9krcWBQrKk2KXERQRX7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3546264"
-X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="3546264"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 02:35:30 -0800
-X-CSE-ConnectionGUID: /bxSobFmRn26xiMcwxAH0g==
-X-CSE-MsgGUID: cBiure3tSf6iBViQ1OYQYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="9762142"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 02:35:28 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Frederik Schwan <frederik@tty42.de>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-Cc: regressions@lists.linux.dev, Imre Deak <imre.deak@intel.com>, Rodrigo
- Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [REGRESSION] i915: UHBR training fails with TB5 dock after
- 1fd440de4e02; source FFE update skipped?
-In-Reply-To: <aveDNRBLx1a-9hRQ@mail.tty42.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
- 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
-References: <aveDNRBLx1a-9hRQ@mail.tty42.de>
-Date: Mon, 16 Nov 2026 12:35:25 +0200
-Message-ID: <40e2af4139b94eaeecd41fcdccb4ec1ef3dc098a@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ko+hJvMw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675B41F000C4;
+	Mon, 16 Nov 2026 10:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794826574;
+	bh=zzC9mBd2vZ7VW00+ztDx5uBwxIv15/snwEy/NF1H0SY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Ko+hJvMwamhUSFrHRHQdyoFWI1pQGPuilHDbv87uoPkKbCdWXDYkn7nuRy02cMzys
+	 /1L63aZjXQWx7qlINzyYbT+BmPVJmsbR6u0YIT2nsZDgxQ6PB2TH4cF4+WWklE7R5+
+	 iQ3fYqxguzI77F0yEIVZ8LYZNNslqeS6w6P7RDSzlAAnmBkdEbDYzfeBxCXmA9lG+7
+	 Jnr+cigZupCLFRllacTG03FN30tY8cTefVkjmSh4glFfqc7BFgZSdjHK/yeHvNRzXd
+	 0Gtq11wP1PBArDxmy1imqR671YWgXOGsBqRTAadiqvu6QKDSJDuHO8cYK/3lqj5GV2
+	 5OqQ6x05GPH7A==
+Date: Mon, 16 Nov 2026 12:56:06 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: Sasha Levin <sashal@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	Salvatore Bonaccorso <carnil@debian.org>
+Subject: Re: [REGRESSION 6.12.117] CPA detected W^X violation:
+ 0000000000000121 -> 0000000000000123 range: 0xffffffffc0477000 -
+ 0xffffffffc0477fff PFN 109c1f and WARNING at
+ arch/x86/mm/pat/set_memory.c:665 __change_page_attr_set_clr+0xf62/0xfb0
+Message-ID: <avrhRp9Je2ip6bKM@kernel.org>
+References: <avdb9EPXBv2hRCzQ@eldamar.lan>
+ <draft-agent5-0008-re-pat-wx-regression-612@kernel.org>
+ <e258c325-4b4c-4738-8de7-733da90b532b@oracle.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -83,24 +68,43 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e258c325-4b4c-4738-8de7-733da90b532b@oracle.com>
 
-On Fri, 13 Nov 2026, Frederik Schwan <frederik@tty42.de> wrote:
-> Hi everyone,
-> I just upgraded my system to 7.3.x and found a regression with my notebook/dock setup.
-> 3x 4k displays are hooked to the dock, 2 by DP and one through USB-C (I guess that DP-alt mode then).
->
-> Until 7.2 all displays worked. With 7.3 all displays work until kernel switches from fbdev (?) after
-> which the 2 DP displays have no signal anymore but the USB-C one still works.
+Hi,
 
-Please file i915 bugs as described at [1].
+On Mon, Nov 16, 2026 at 03:01:26PM +0530, Harshit Mogalapalli wrote:
+> Hi Sasha,
+> 
+> On 14/11/26 11:12 pm, Sasha Levin wrote:
+> > On 2026-11-13, Salvatore Bonaccorso <carnil@debian.org> wrote:
+> > > One followup to this. Reverting
+> > > 
+> > > Fixes: 091c44b2d3c3 ("x86/mm/pat: Use pr_warn() for early W^X warnings")
+> > > Fixes: 11d1ba991c07 ("x86/mm/pat: Fix effective RW computation in lookup_address_in_pgd_attr()")
+> > 
+> > Thanks for testing. Queued reverts of both for 6.12.
+> > 
+> 
+> Thanks!
+> 
+> Quick Note: We are just reverting the fixes just removed the fixes to the
+> checker and the actual broken commit is: commit: 88a817e60dbb ("x86/its: Use
+> dynamic thunks for indirect branches") that introduced this problem.
 
-BR,
-Jani.
-
-
-[1] https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.html
-
+It didn't introduce a real problem, the permission are correct in the end.
+It's just the intermediate state that causes warnings.
+ 
+> thanks,
+> Harshit
+> 
+> > The same two patches are also dropped from the 6.6 and 6.1 queues, where they
+> > had not been released yet. 7.3 and 6.18 keep them, since there the check only
+> > prints a pr_warn.
+> > 
+> 
 
 -- 
-Jani Nikula, Intel
+Sincerely yours,
+Mike.
