@@ -1,115 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794866816;
-	b=n+BpDk+pOrGbqhBRZJJNFYgi3eoZchwFpcr34tsCavHzREjoXcDRIwn4l/U3S8gd9INo
-	 DQipNWwGsqi8g1TtJYbJuCQ9e8p3nETY/aOoEmjutvzaxIUiRCz1b+7rt0eTHYSurHUlo
-	 AeJUPvAgzA9uncLpwbQKpwz82yGyUayuSWzF7ZHVnUsVJ1ESlUyxOrdpzZFAfU/p0j5t8
-	 vbgc2cKIWJFV+2Ebg6rrtuxi0rkQrYv5vUEBHwNrxe5vX9yo0ZNDymY1bRO22BrfaE1Wx
-	 +69jIpyaqzGu+PRUmaacvNdMCSs9W4a6y2LfbUUY7Nrgmb4j74b9bR4SI91CROv/OVw==
+	t=1794867732;
+	b=iajV3FbMpnA0q0O3M3yFEzmBXD/VH3aG/i7TDGrrOjJgWyO9GeJ2C7qb1V3X5157/kvX
+	 6bm5+bfkyN3ZIloiDLBK0gpsc9kjRFrCsbNTAKNE+B4fRUmfpqGwagGraqHRNBpyERPD3
+	 AMNhS7I3jAKp7KrFuE2sHXFQaj41+YU7RP9q8hHQQaWj+0rAcSbwUyI6rkZKHE4BiEtZ4
+	 6oqGU+u9AEGxJPLe+B10mYtEumgZnMS4KaZ4U6E97ltNKGjoq4RPXTObduJYYkn86xkqU
+	 MPp4axFoTxnnvXB0dZGUIm88F3iDdYakWCJ5Sdkx+IZ/nrGkxR4Q3bR3G+x6ExLDzUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794866816;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=vsc7QdWwKgQ0PfQnJbRw/cR4lUlNXyZF39QitBUyknA=;
-	b=z4UJZfj08JcO3YXayLnT8xWeMAA/ibTA8EH3aw/9UK1JaNJqySKl0Ae0Uno7L6B0qozj
-	 vNGqqZt+VBzZvG8pQl+jRll4Q7yXYcwbOQWNYpHzmpByN3bjYpLduN2u60mQ5o0frZ4Xu
-	 PtfKpN4afxZz9kXMgAJAHDOeWPezVSYbsmDd24AMrrHj7Z+mQdQigBRgcCjIPCuDzLgi7
-	 lckxuoe/fwJ0fLGKxEvKH0Hkdb2SY8UgrSVyiJHTP9zq6xmUMf/UhEeoPlikFzzvXckcH
-	 NSdQlzdeFkphw5nInksUtyOkxnM1ItaI/iJIU1YpMnwSoAqu2xJH/gkXL0i/T7l7Ykw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794867732;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=pMSexfhR541OuPmIYjYfQMR9TxRQH7Bx+m2xGYqk6uo=;
+	b=KbKywJMpulnwxGPEgwYQWT68QbXt67XHXGh9fEMTxI4lAoChsEE7r7IWJoJtHnqXLdVH
+	 SOnjQh6AfVjMPq3xxvnO7DUvFWhtT9VmXGvc7LORQwt0W6rRkrWk2FfbqAW+Jt4a4tt/M
+	 kRW20MTd5Y54guiRjLPblRNdwvtZ4GeCTTXPuhkhqMta3j3rELy+yU6ri35XJxjCCLinm
+	 qFzeZD1A4jhlptV3X5IwLiVo14J0++onEFmMs4SUFhMFDkx+umBpLunGrLy5qYErpUbpu
+	 HzWovunBWGDMBFc18/SLhUiAJw57RTCdFZJUOtbI/J7dbUX+wgZMKuvRz6yKyvZRopg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=pobox.com;
-	spf=pass smtp.mailfrom=pobox.com;
-	dkim=pass header.d=pobox.com header.i=@pobox.com header.a=rsa-sha256 header.s=fm2 header.b=Of763eXj;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=hV8+IW5E;
-	arc=none smtp.remote-ip=202.12.124.159
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="LDDoIn/N";
+	arc=none smtp.remote-ip=209.85.128.42
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3A6606A329
-	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 22:06:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8B3A6606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pobox.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E749606A31C
+	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 22:22:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9E749606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=pobox.com header.i=@pobox.com header.a=rsa-sha256 header.s=fm2 header.b=Of763eXj;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=hV8+IW5E
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 23EEB7A01B1
-	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 17:06:55 -0500 (EST)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-04.internal (MEProxy); Mon, 16 Nov 2026 17:06:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pobox.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1794866812;
-	 x=1794953212; bh=vsc7QdWwKgQ0PfQnJbRw/cR4lUlNXyZF39QitBUyknA=; b=
-	Of763eXjGwumyQnteF7BPt3bSNwJYxBYa3Ev1ubdkMJgbxaDdyDoru+KwDpp6Kjn
-	3J15TwralibmvGbLxoB3jUprbfD7dOWhF8Wqd8kcvonwj1zXOkqANlBgWWBl6H+Q
-	x4vdUKkz4Gvqjw3Tbuh95SnOOKujzgd6j2HkoINlXyJra1g81L1/zLzJKZXPElsY
-	0HATUZQYE5DkKZ+zFpiEpR4XmLfeOqqX22p1lGqL8GG5S3+3/fAgtxKDyTdftSoW
-	gPO0yG1IyurAh6KLuhD4Zfx+0NpgPBgtiFvpnS5hKQN1teBhbVnrWInR/cU4BPbC
-	cYyWQ+R3W4J6cAqM29uVFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1794866812; x=
-	1794953212; bh=vsc7QdWwKgQ0PfQnJbRw/cR4lUlNXyZF39QitBUyknA=; b=h
-	V8+IW5EzZMBpWZZTLRayaQ8zWdy176E6AWKIuX5tgYoiYi1MNvSkv/iCUXnlZHEP
-	idK5efB5kS1shjR6b7B81P8t/yto4ZAaO0RV8OEFXPB44Xeq6TjhqdhOU2yn6ulS
-	Z4h51SETI2MAflXkLbVjqUn0J0tkyCdGCBZ4ci/C7nsGmBVzuPmdrkkI9QYKqCL+
-	J26AGHPzCwTUAoUC3eEjZSkr0YzGUPHUQBKPgCsl3FtHWzWE8b8Z78m6g3Ms9O+L
-	vynSMUU+Py7/6iH94n0b7mQXSs+9OxovbcugYKyDtpGnWVj/8bsw4xM/qaNAxpag
-	TALzoPDk3HK4x3ewFDA0A==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=pobox.com a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1794866812; d=pobox.com;
-	mf=PGJhcnJ5bkBwb2JveC5jb20+;
-	rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
-	s=fm2:rsa-sha256:T2oN0JSMHb/sldfge9Ym/Z10yOQPiDE5Vj8FCA75rwxwirK
-	WMDI9l6ZBJlOWqCFQwiSUSCOGSDs3MsCdT8IYDlt2gQSe0jQnoRoXbR/K1K32Iyh
-	sEb3IllK1QEZclpQIPLDPKaehwIA/Tbh9sdyUlksQO36y2TCo+xEgHQT2cxy/OoW
-	6KIqHiKTSpzVgOB/vALG+BshT3BylrMa9+O2rzME3tfMWXAa0dXlyoEEiO0TlBsc
-	k70YWu5qbvJ26WcWACFWlrjb6SESlwsFgvRUhd5EUFe86wYjw0xEUnQuXKXY+wrl
-	O9AL4PAACyqgpRCcw/Kk0vHifGgjnAGoZ+EWFDA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=14;
-	hn=cc,content-language,content-transfer-encoding,content-type,
-	date,feedback-id,from,in-reply-to,message-id,mime-version,
-	references,subject,to,user-agent;
-Message-Instance: m=1; h=sha256:UyL/Iv80/j5QV7yVFqfIl7cbPB/ppw8/4Va7FOuu8EU=:4j/DMfnc0hdTWO0CRI7hD4D97WMBwHIteEaLnc8xQz0=;
-X-ME-Sender: <xms:fH77alNur4u4gJACJ3d_TMQmPcdiHMYoedMX3HflSe1a2NtCi8Sb4A>
-    <xme:fH77aob-_vh4Rr8wAU_WoP_xrpMzSFwmm1saRTZ_XL3R91JmBhSNr3UOvUOl0ayia
-    K4enhEgrJFY3CJmjkaWlgz9zCdBuvPzHREMNSd51u7msJTON_7zZRof>
-X-ME-Received: <xmr:fH77akAzqlWoIEgg5PMO5UDMjqPJDq6_BT_lEjo4nHnJUap_X7LKvzx6wKuWB7S8eR3-W-xq2CzZ04ZVkmRtAWU1TUIR0hiP>
-X-ME-Proxy-Cause: dmFkZTFtc41ee/Iidnc/YKyFRrlcbY0qjv7vqTZLN5qT1G/s1A6ODY0jpLG7OyEpYUVtYp
-    rxrHQVSxWkmpyGRsz9lunc8LDSpBqe9tsIONdlQ3MpDcLVxPNBosQA61pMRunTuvOsWRK0
-    XlAqabvwAjhMKyQyDzm/UFdyEHNWaCwCwWjvl882gkJh451mUafQaBB0yDkAGs/9YPYQL3
-    i8GF1w5NLrcOdAemY4lV9Xqv5dH9DyE3gxX++6KPQ6gVwc508qBf7RvoV4KaDZBU2lGdzt
-    VawjCYAbC2Usre/a6pEIEddTaKECceSLt9P6H40e0jaAAEzuItvughm0hzu6r4rd8RJ1QZ
-    oM4+bIXmMb6cDj57o0CGr6UGHVlHQdBL9mALTfZc5kC48fbdUaH357WhcWWQ7CAqrKDByh
-    wsCzY41+N+Auu28QIaqd6IuuLgK8Uu0+VdAnBNh3EUtmD1gPqlYqgeY6oWwsGhYMp+Gabt
-    SoZ2SEVwMaT6KRBp8lEv4OYdZpP5e6KK4TTlaT8uDUFFpRmlkdmk4haJI0fKtQlTlsEz6p
-    dXmLLIy5ZPD5zDt1GpwH6ywPe04dh8fW5w2QYI6X9KyRsb99oplKk6oIh2GFc0dsIE39LK
-    90vn+8HI9Zehkdy1WNoCmZ3uIDeB53vY2RBOKm9ZSRq5S21pjy0Wv1FBnU/A
-X-ME-Proxy: <xmx:fH77auEhFXkbc64TI9i3tVfon4gv-mH-eP6aOB-13zMl7bwebge5_w>
-    <xmx:fH77anOdhv6zpDgUCj-lZBLkMKmoj0__a5uS7gasdEY2qNdhCtIH6Q>
-    <xmx:fH77ani7feRs8uW4UmJVeNoy82Mq0tUG2hfzPrSGsVZAbUI8EsqC-w>
-    <xmx:fH77av0p6DYMXP-WghMsthNo2C6TSJno4dSPXYvRcchbOGsU7nIDJg>
-    <xmx:fH77auSSAO8p553AhlbtJ0V_FAzfA9yDLSSecJfHSRRMfdLsovFEBgzc>
-Feedback-ID: i6289494f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Nov 2026 17:06:50 -0500 (EST)
-Message-ID: <2ed04104-e061-47e4-914e-3a2b35b214dc@pobox.com>
-Date: Mon, 16 Nov 2026 14:06:49 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LDDoIn/N
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4bb64ef5a00so14862175e9.3
+        for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 14:22:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794867730; x=1795472530; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=pMSexfhR541OuPmIYjYfQMR9TxRQH7Bx+m2xGYqk6uo=;
+        b=LDDoIn/N5cUXcQ1vYbGJDVj4gn21d36e4KCJi0oD+zGsXVXVbtjcDieAqiaR7EmU+u
+         08jmv0gSkenkBdH2nd6sLhxkcAxlMzg+S1rgcOqNWKWzyKr0s+CTxYk6BYvtkWIQL6rQ
+         j43n5RPv8C1ABUX4bss0Oq+Eb2/ZDWEAjkffM1LeEF0+rlLnicLnU/5wyamelyE0Yev2
+         qpPeV73R23z4JlWUQ0oQB61w4Xz3500vbxRt54ys4jaSMsMOkr2dWJlnjnJeIJqyBdQe
+         HDe0aBVq9lZOyWrpMH6mI7ZMSe1V063G5u12KRxPwhSrHCdgQj4r/RaEDCiew8XhF8ba
+         at5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794867730; x=1795472530;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pMSexfhR541OuPmIYjYfQMR9TxRQH7Bx+m2xGYqk6uo=;
+        b=u83jKwgObb7EQFZLpWEH370ZXvAM1SyUjw8Q/GlqKjTzOC20i0aOFRWlNAx7s0U3Vn
+         aJCsU0cCS3BiejIqtNBi51MEoGNlv3Arop62yKDNHEWSkXKndZg+47Mmuk1cljXfLdK8
+         fSHpKGJTWGIPBSsGcPHo0A476tWKbXavWLErG3TjmLZHhSoQvAcPTR9roLyWxwef6zsK
+         0bd1KtS/xAYOfMEi30ZSRSy9sWaUdOXf7WPuMCflgye9DMArqOitvS1+rSJL6MQWSMZl
+         1KgXHoRpHTtgvCHUTkuGecr8lOFZ5ve7P7nJSP6ghtFHwPqy/yxnMDFH+lQfc08FyXHn
+         ZRmA==
+X-Forwarded-Encrypted: i=1; AL+hErElKWXmuiudQiAG12v7mCxz1UudE4dwV6M7TVMUn0kyE/NU1lAWa2KfoYyvEvbZW9WXMWF7tYNYjCGJ1w==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/IiipfHZr08DbUHDEJ325CWI3scYi+/w/NMTLj+q8mKOT0VjX9
+	dcZjS8hhwy53vGKfIACKmoT9iB6ovq128hXUjqXFZscAnUjRhQU42qQI
+X-Gm-Gg: AYBFou1C9MZk7lygO68JWCcczNFjXFDqCU16G23LsE9mcsbFkR17r8zck6p6ry7I2xd
+	GHJcUWH7zwzNOWBGpffRC2SO7nfR6bMZbCu26lQ+/cesOrfFmgTz7kQyhO7sBlBN/xKCpeWmU0U
+	mxM43tRkhf51F4py6TJdohr18SBtNovNg78YbTgrEOYm+Hum1eNd1AvJd2J+eivAsRH1M0K31iv
+	q+FPT8NJKzlBOlbOHZL7IowbSTAv0o/qwXvprNLgXiQSWyrNuRm2/Dl4FXT2j2WBTHPeoEWDRls
+	u38UbZ++3BaTAMvGW3vhA/B2vuIqWiZS6o+TaVhW+06ECIpYjViMsfgy7cOQarnjE5B8nBnJfr0
+	ZYmbSoxeCEpWr6VGAxryCvc2r1iPxW/aVGfZVwKcp6WXi2xEHQ0b8JWqI0WS5kyi2N2T2iurMPh
+	qCwEp5GXk4VVwz7pJAfnDFN+69vGfhagpRuMtc7uZKwR49L0Wzak9m/rBZe4WDprrumw9PDEr45
+	WvH4pY3iqkYNXNwAoF2ea2WpdO/KKho6J81N8I7yFbiWhYMej8s37siP58cTx8N8X+at3Cg+oKC
+	p7iJFJP0ym/Wp8z1ktoH6AqNA4hrKn5sxzZ1Uq7De49zNUaUPu8ReVS3ChrlRivOqdG9Dg==
+X-Received: by 2002:a05:600c:548e:b0:4bb:6a5a:782d with SMTP id 5b1f17b1804b1-4bb6a5a78demr119774955e9.17.1794867729993;
+        Mon, 16 Nov 2026 14:22:09 -0800 (PST)
+Received: from lima-fedora ([185.184.13.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb783862d6sm17255175e9.2.2026.11.16.14.22.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2026 14:22:09 -0800 (PST)
+Date: Mon, 16 Nov 2026 23:22:07 +0100
+From: Mihail Mihov <mihovmihailp@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, longman@redhat.com, chenridong@huaweicloud.com, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jstultz@google.com, kprateek.nayak@amd.com, qyousef@layalina.io, 
+	regressions@lists.linux.dev
+Subject: [REGRESSION] core scheduling latency with idle load
+Message-ID: <avt_mdiPQ5gwAisa@lima-fedora>
+References: <20260605105513.354837583@infradead.org>
+ <20260605124052.227463677@infradead.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -119,50 +101,63 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION 6.12.117] CPA detected W^X violation:
- 0000000000000121 -> 0000000000000123 range: 0xffffffffc0477000 -
- 0xffffffffc0477fff PFN 109c1f and WARNING at arch/x86/mm/pat/set_memory.c:665
- __change_page_attr_set_clr+0xf62/0xfb0
-To: Sasha Levin <sashal@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev,
- Salvatore Bonaccorso <carnil@debian.org>
-References: <avdb9EPXBv2hRCzQ@eldamar.lan>
- <draft-agent5-0008-re-pat-wx-regression-612@kernel.org>
- <2e149d01-c932-42d3-9698-c1555e542cb1@pobox.com> <avpUlHHaimEE_Rib@laps>
-Content-Language: en-US
-From: "Barry K. Nathan" <barryn@pobox.com>
-In-Reply-To: <avpUlHHaimEE_Rib@laps>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260605124052.227463677@infradead.org>
 
-On 11/15/26 4:55 PM, Sasha Levin wrote:
-> On Sun, Nov 15, 2026 at 03:16:20PM -0800, Barry K. Nathan wrote:
->> On 11/14/26 9:42 AM, Sasha Levin wrote:
->>> On 2026-11-13, Salvatore Bonaccorso<carnil@debian.org> wrote:
->>>> One followup to this. Reverting
->>>>
->>>> Fixes: 091c44b2d3c3 ("x86/mm/pat: Use pr_warn() for early W^X warnings")
->>>> Fixes: 11d1ba991c07 ("x86/mm/pat: Fix effective RW computation in lookup_address_in_pgd_attr()")
->>> Thanks for testing. Queued reverts of both for 6.12.
->>
->> I see that in the current stable-queue (commit
->> 3b8ff7f280433e6fb085dbc4f44ac6a138f352a0, "Fixes for all trees"),
->> these two reverts are queued in staging-6.12, not queue-6.12, so
->> queued up for 6.12.119 not 6.12.118 as far as I can tell.
->>
->> I don't know if this was some kind of oversight or if it's
->> intentional, so I just wanted to bring it to your attention.
-> 
-> It's intentional. I don't want to play with the queue right before the release,
-> and we've already shipped this regression so there's no reason to rush.
+Hi Peter,
 
-OK. Thanks for explaining!
--- 
--Barry K. Nathan  <barryn@pobox.com>
+I was running some experiments that co-locate a latency-sensitive
+service with SCHED_IDLE batch work in a cpu.idle=1 cgroup, with the
+service in its own core-scheduling cookie. After updating to 7.3 its
+tail latency got much worse. With the help of an LLM I bisected it to
+85570f10a4c6 ("sched/eevdf: Move to a single runqueue") and reduced it
+to the script below. It is still present in v7.4-rc3.
+
+Reproducer (root, SMT machine, CONFIG_SCHED_CORE, cyclictest):
+
+#!/bin/sh
+set -e
+mkdir -p /sys/fs/cgroup/be
+echo 1 > /sys/fs/cgroup/be/cpu.idle
+trap 'echo 1 > /sys/fs/cgroup/be/cgroup.kill; sleep 1; rmdir /sys/fs/cgroup/be' EXIT
+# one SCHED_IDLE spinner per CPU in the cpu.idle=1 cgroup
+chrt -i 0 sh -c 'echo $$ > /sys/fs/cgroup/be/cgroup.procs; for i in $(seq $(nproc)); do while :; do :; done & done'
+sleep 1
+# p99 from cyclictest's 1 us histogram, overflows (> 1 s) included
+p99() { awk '/^[0-9]/ { h[$1+0] = $2; n += $2 } /Overflows/ { o = $4 } END { n += o; for (i = 0; c < n * 0.99; i++) c += h[i]; print "p99", i - 1, "us" }'; }
+printf 'no cookie: '; cyclictest -q -m -i 1000 -D 10 -h 1000000 | p99
+printf 'cookie:    '; coresched new -- cyclictest -q -m -i 1000 -D 10 -h 1000000 | p99
+
+i7-1185G7 (4C/8T), vanilla kernels built with the same config (Gentoo's
+distribution kernel config, HZ=300, PREEMPT_LAZY). p99 in us:
+
+  kernel            no cookie  cookie
+  85570f10a4c6^     54         59
+  85570f10a4c6      53         3695
+  v7.3.4            54         3276
+  v7.4-rc3          53         3290
+
+I also tried the two cpu.idle preemption fixes under discussion [1][2]
+on v7.3.4; the cookie p99 stayed around 3.1 ms with both.
+
+Changing cgroup_mode (up, smp, concur, max, tasks) on v7.4-rc3 did not
+fix it.
+
+On Fri, Jun 05, 2026 at 02:40:20PM +0200, Peter Zijlstra wrote:
+> @@ -14893,30 +14803,8 @@ bool cfs_prio_less(const struct task_str
+[...]
+> -     se_fi_update(sea, rq->core->core_forceidle_seq, in_fi);
+> -     se_fi_update(seb, rq->core->core_forceidle_seq, in_fi);
+
+In case it helps: adding these two calls back on v7.3.4 brought the
+cookie p99 back to 55 us. I don't know whether that is the right thing
+to do, only that it changes this result.
+
+Thanks,
+Mihail
+
+[1] https://lore.kernel.org/all/20261019182622.1584454-1-vincent.guittot@linaro.org/
+[2] https://lore.kernel.org/all/20261105165525.011876858@infradead.org/
+
+#regzbot introduced: 85570f10a4c6
