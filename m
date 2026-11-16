@@ -1,62 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.73
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.162
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794796038;
-	b=qiwPo5nfjyVIRhFYiyd8+PTXeN1L+zo9qSmKN+6BpKoUWUlvPBKpFd8lbBwcZ65k/wH1
-	 QB6KiQgkpf2435PugA4tj4IAdG9gp+xrcLwDkLdPnjgEFlS4uiDx9e5R51lvdHc2GHnfe
-	 WWkf63H7EUnmUWtSbmQOtgdOAySbf2rG9nyObbZfkafmsj9uZ+lnpkKpKKjOp7yeyFmf6
-	 //P0WMx3xAfwwcc7pNUdVjC6Vt+d4g1cnelKZom1IB0etZNCa2nYRxtq0v8CUeBbwUAgz
-	 wlS0wAQIyf4HpGZej6AvkQ7CkAOgezU9LEfITXt9UVN0mF5FV1hVdZlS8spMe5C21WQ==
+	t=1794817837;
+	b=XwtvKDNKF+GOcmH2GhpQP+6tnjFLMBGG0cJlh/n8gl4cdgb2q+gkHgXoVvRSagreVjZ5
+	 gDHx3IK6srfEXJFQ7+8lUoZDswe47UCieWwCl4ivvDuHgFshpAOfn6Kd5C7LUVHphD3Xc
+	 fXylqKREtRYFcvMPwlkVpWrk4loTfyUpSGTZez29txJN1YoMvzZvhveRs4g86SXUCT6fR
+	 cWexjRg2J2R6/pHbQxE0IQTJBnuYKnNmXiGntfHlg+Y4zo3HPRBH2IMCtcPdUGTO14j3Y
+	 qPVdJg12/gb7MSg9IJmIdMxRUtV9p6KqW5ffapFGe938fsFoth6WQdaceNr8r6NxHYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794796038;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition;
-	bh=Xa+s8rck0hvVYXsD+lL/I9md5BKO0hs1gcPH9kuiMFs=;
-	b=EIRQ2xjwXYzVcfPbDKoPHZLZTuxhl8PzOVUjttLD8YMBjEuGuL4MGnrwhIMRock6PenH
-	 P8wZjq7jJpkL+OkPqg85c+ZkzCNDteZrg0fWbopRI0aq2ISYM/noWPP3zf1Wthst5Q5J4
-	 hn8F8ABIuBrHu78DFTW1hMX6RTY+9vCS2+xaqX379QaPCTPuk1bGaAhF640dnOXCbdBtf
-	 CiesVlNDDc8FDLGa7orDIPcnkhXMnC4jHtre1WPIXeDs2eRNZU9o96lFhqu/dpUUJmjHD
-	 gg5vnh02d+SfZ/nFMrt07Nr+S5QD9Ti/fxWk5vOAI23l0xWp+eT14bYR2y0fNy5rGIA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794817837;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=stLAgc75/toghgFHRoMTWr8wGTVjN6A6wa8FXSVhWeE=;
+	b=i25WyO016pTPx8l3WHaXbz5SznFOfkq+Esy1XZi98YNQLmkVg3Ybp0IE1D8ZlbfkBagd
+	 RZgeXNTI3tnX3s7drlFjFlXqz8qZST8qgE+IDtmb9rSGbFuqP5Ay9G3iBY6My3e5XxivO
+	 Rjd1MrBV3GOiSYhCChDSjtA50Thy+dGT3PQDdjnd296ziHhZOFrx+Trgj3Q4kn2dgeM2W
+	 zM4TCkjXBKpcFGEfBYGz/g1WXCuh4VUa5hUC8AzEU1t1H80NoVEzbi+TQz27KQT38QlLh
+	 0xzRFVDGSLnc6qPRI7girRDFDdTxbU6JgCoV4Ul3dIFzVh9HHwN4F7NL3ysjeX4zMGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tliFr88t;
-	arc=none smtp.remote-ip=95.215.58.73
-Received: from mta1.migadu.com (out-73.mta1.migadu.com [95.215.58.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=FG6OLmW8;
+	arc=none smtp.remote-ip=188.68.63.162
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E36606A321
-	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 02:27:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53E36606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DC9606A31C
+	for <regressions@lists.linux.dev>; Mon, 16 Nov 2026 08:30:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01DC9606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tliFr88t
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=Xa+s8rck0hvVYXsD+lL/I9md5BKO0hs1gcPH9kuiMFs=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794796035; v=1; x=1795400835;
- b=tliFr88tkGzfG0yLqb7kDYZly2YmYl8MdwxWzXX53WsrZRQT8OJH9TVbgwLHGreMouhiaYJs
- LC0VfAAgRIozU6xdZpjQoJyl/oqZPw06SQ7lneqDdQEjMD1udTjSKpegaES3kef7mqI2Sw9IJKS
- BLTfDbOeuYHp75iXnoHOKCzo=
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id bf9aec3d1c6270c4;
-	Mon, 16 Nov 2026 02:27:15 +0000
-X-Mizu-Trace-ID: bf9aec3d1c6270c4
-X-Migadu-Flow: FLOW_OUT
-Date: Mon, 16 Nov 2026 02:27:10 +0000
-From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-To: Theodore Ts'o <tytso@mit.edu>, Zhang Yi <yi.zhang@huawei.com>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun@linux.alibaba.com>, 
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, guolingxing <guolingxing@tju.edu.cn>, 
-	Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [REGRESSION] ext4: silent data loss when a split at I/O completion
- gets ENOSPC
-Message-ID: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=FG6OLmW8
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jSgyy4c5Tz3wFW;
+	Mon, 16 Nov 2026 09:30:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1794817802;
+	bh=DZTBprXxK7kjJ5gp7FXYKcB+Rb/buuRguswOL+ZnbEo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FG6OLmW86jfyOMU+R6zPiTLbzHk18vBdKvo/fD5Ot6MKf4vWvYIH62bjCUooqcg0k
+	 uom2OoV9H/uXi61VkySBhUzI+O8XCWKi9cNcdMERK94mviWOhQM1tfDhyoe8hTVhFi
+	 OE8cY4s0V2ONH9F6RLpO7PufJ4Y/d8SqGPE0BKb2TGHPnXUtJM/j0sqAytxa3p8yJr
+	 1hy6+OMQLbX9uZ0jCz+FdUYxIwuAWFRr6T6fT0DW1tqw87Qq5MaFtbaeAjAbbTL2R2
+	 bfgpWVk8LN8Wb6PGjK8k/LEUfX1wwQ0lnFasmrZL/pBNAnlly4bWCwDP5n5JZeJAKa
+	 rwefq9b2y44og==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4jSgyy19RTz42QT;
+	Mon, 16 Nov 2026 09:30:02 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jSgyx1Mb0z8tHp;
+	Mon, 16 Nov 2026 09:30:01 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6B4945F9EB;
+	Mon, 16 Nov 2026 09:29:46 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <380ce8f7-1d88-4d5c-bf3d-108be7055ec9@leemhuis.info>
+Date: Mon, 16 Nov 2026 09:29:45 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -66,33 +73,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ALSA: hda/realtek: no speaker sound on Lenovo Legion
+ 16IRX9H since f2293e7b2ddd (PCI SSID 17aa:3842 shared with ThinkBook X G2
+ IAH)
+To: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Cc: tiwai@suse.de, william <assassinshalo29@gmail.com>, evgeny@devduty.com,
+ stable@vger.kernel.org, regressions@lists.linux.dev,
+ linux-sound@vger.kernel.org
+References: 
+ <CAFjFWEjt+DPJ_gM1uTBZ_NoV6-3mi57ArjZ_Qdah2DqY-GCD1w@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CAFjFWEjt+DPJ_gM1uTBZ_NoV6-3mi57ArjZ_Qdah2DqY-GCD1w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179481778690.466935.124532524917592183@mxe9fb.netcup.net>
+X-NC-CID: cUG7y3e30E7GrDwrudyUN+lU/QL7i9S2qYrjAbXb5gRBUO6D5yg=
 
-Ojaswin's cover letter [1] explains how, since commit ea96cb5c4ae3
-("ext4: don't split extent before submitting I/O"), the split of an
-unwritten extent at I/O completion can get ENOSPC. [1] stops the zeroout
-from hitting other writes in flight, and [2] reports the failed
-conversion to fsync(). Neither gives the split its block, so data is
-still lost.
+On 11/16/26 02:24, william wrote:
+> Commit f2293e7b2ddd ("ALSA: hda/realtek: Enable all four speaker amps on Lenovo
+> ThinkBook X G2 IAH", Cc: stable) matches the laptop by PCI SSID
+> 17aa:3842, on the
+> assumption that this SSID had no quirk entry. The Lenovo Legion 16IRX9H (83DE)
+> has the same PCI SSID, so its internal speakers are silent on kernels that carry
+> this commit. Headphones work.
 
-LLM agents working with me found that it happens with default options
-on a filesystem that is not full, and ran the tests. write() and fsync()
-return success, and after the pages are evicted part of the file reads
-back as zeros.
+Greg, Sasha, that change made it to 7.3.y already, but is in the current
+6.18.y-rc afaics -- so might be something to drop until this is sorted out.
 
-Under a load built to run the allocator dry (QEMU without KVM), 42 of
-72 files lost data at ea96cb5c4ae3, none of 72 at its parent and none
-of 48 on v6.18.63. On mainline at 23c62304dde2 32 of 72 did. With [1]
-rebased on it 42 of 72 still did, now as failed conversions in dmesg.
-With [1] and [2] fsync() failed with ENOSPC on 47 of 72, and the other
-25 read back intact.
+Ciao, Thorsten
 
-Nothing our agents have tried fixes it fully. I'm reporting this so you
-are aware of the regression since v7.0. A reproducer is available to the
-maintainers off-list.
+> Hardware
+> Lenovo Legion 16IRX9H, product 83DE, BIOS N2CN32WW
+> Codec: Realtek ALC287, codec SSID 17aa:38cd, PCI SSID 17aa:3842
+> Amplifier: ACPI TIAS2781:00 (i2c-TIAS2781:00 on i2c_designware.2),
+> driver snd_hda_scodec_tas2781_i2c
+> Kernels
+> Works: 7.2.10-200.nobara.fc44, 7.1.6-1-cachyos (live ISO)
+> Fails: 7.3.4-201.nobara.fc44, 7.3.4-1-cachyos
+> The 3842 entry is absent from v7.2 and v7.3, present in v7.3.4, and still
+> present in v7.4-rc1 and master as of 2026-11-15 (checked via the GitHub mirror).
+> Analysis
+> snd_hda_pick_fixup() walks the table and matches PCI-SSID entries before the
+> codec-SSID fallback. Before the commit, 17aa:3842 had no entry, so this machine
+> fell through to the existing codec-SSID entry
+> SND_PCI_QUIRK(0x17aa, 0x38cd, "Y790 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
+> which works. With the commit, the 3842 entry wins and chains to
+> cs35l41_fixup_i2c_four(), so the codec master waits for four CS35L41 components
+> that do not exist on this machine.
+> Evidence on 7.3.4
+> dmesg: "ALC287: picked fixup for PCI SSID 17aa:3842"; no "bound i2c-TIAS2781:00"
+> line (on 7.2.10 that line is present).
+> /sys/kernel/debug/device_component/hdaudioC0D0: master "not bound",
+> four entries "(unknown) not registered".
+> With dyndbg, after "echo 1 > /sys/class/sound/hwC0D0/reconfig":
+> hdaudioC0D0: trying to bring up adev
+> hdaudioC0D0: Looking for component 0
+> hdaudioC0D0: master has incomplete components
+> After unbinding/binding i2c-TIAS2781:00, tas2781-hda logs "adding component"
+> but the master still reports incomplete components.
+> Workaround confirmed
+> Booting with snd_hda_intel.model=17aa:38cd (alias SSID, handled first by the
+> picker) gives:
+> ALC287: picked fixup for alias SSID 17aa:38cd
+> bound i2c-TIAS2781:00 (ops tas2781_hda_comp_ops [snd_hda_scodec_tas2781_i2c])
+> and the speakers work.
+> Possible direction
+> Since both laptops share the PCI SSID, the ThinkBook entry cannot be fixed by
+> PCI SSID alone. One option is a codec-SSID entry for this machine placed before
+> the 0x3842 line, e.g.
+> HDA_CODEC_QUIRK(0x17aa, 0x38cd, "Legion 16IRX9H / Y790 VECO DUAL",
+> ALC287_FIXUP_TAS2781_I2C),
+> I have not compiled or tested a patch, only the model= alias above. I am happy
+> to test patches on this hardware.
+> Separate observation
+> After the workaround, speakers still stopped after some idle time. It went away
+> with snd_hda_intel power_save=0 power_save_controller=N and keeping
+> i2c-TIAS2781:00 power/control at "on". I applied both at once, so I do not know
+> which is required. This looks unrelated to the regression above.
+> 
+> I'd really appreciate it if the issue is fixed, as I'm now having the
+> same problem when the laptop is turned on after being suspended for a
+> while, and I haven't been able to solve it.
+> Thanks,
+> William
 
-[1] https://lore.kernel.org/linux-ext4/20261102-ext4-endio-zero-bug-v1-0-266d2bb9e6dc@linux.ibm.com/
-[2] https://lore.kernel.org/linux-ext4/20261101102145.647496-1-guolingxing@tju.edu.cn/
-
-#regzbot introduced: ea96cb5c4ae3
