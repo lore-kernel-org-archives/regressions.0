@@ -1,108 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794906619;
-	b=0gUJ6InxteRQm7o+FCdfC3UueIO60plL6ABbxd2bAPaJ7OJUrIK2n1jpLc9bRF4eehA5
-	 xIPw9TR+QONtZzAfdcXsBJDKUN5AllUjnXZciW8zLmxPr5ob9dHFd/6gJB5XXp4cxFFNh
-	 Ba2lTJYJronXMzmLgg3SkjUHaMLXI/5F4T8QMjNZHrTvkMXFxQnh6N55OyiKGlKFLpxsU
-	 WSuAABGclPp0NwmMxBVz9mm6XIfN7OA31u8wzJmFbZ7IQ4FGcgc3WvDEqUUnanokiKSrD
-	 saLB+PkYGcu8qXm+QjucWAmmIvXZryOj+O4mHF1k6kClq1qGkff6/8jNTJsoUV97Piw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794906619;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 X-Spam-Flag:X-Spam-Level:X-Spamd-Result:X-Spam-Score;
-	bh=4tee6l7ESYr5A3tZZUCvQ3/54SAkf97IqRnfqX5jFlk=;
-	b=3RsZ779MDwLZT/iZY6D/3Mdx7dc9w6pTg04rBi5a0b2TUxZA31poFsrOMdvueQ7zUGWK
-	 vv1pQqfb1/8cnqf8h9hP2DnJvJovUM1bkLPqHGznqujYxzFg4E8s9WcBGHDn0yHPgP9CB
-	 8M923JbHGeQ9WuC0UyesdiusrolAYBgxs6c1B9dk4xQfjR6QKCmyDrRiDRdBGsxZV1hx6
-	 ur3zt8qNuE2u/CsWW+AJ9yOjKcDUOmvcxAFMABL0rvNybPx5aW0XP6ALnu/nk605IHBPc
-	 I6ZVUYgP3WiesGLKO37qhBUC98bWGHFP+gZEMSXRT3JE/6EWDtDrOHuosJY2BBoAYhg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=ilTn0leg;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=eXtwup+L;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=ilTn0leg;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=eXtwup+L;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.7
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794910957;
+	b=k0dubHzplg586sDEzW77eE+fBc27+dLJsP8tMFDeX0hjiM9MoZ4xac7Or0LfUeweGTRI
+	 8INoUSBoJS+5Y6SavctCTF8Qw8yxitVIEscwoVis3ektvEXdC4WwDDDzs2EyIAFFp5YvS
+	 2YjSsRrq+Iz6CEuxkKJxXNbaOh2w6fDquLlqM6KkhKga6ABhcvJm6D7vkroLgVtIyW436
+	 IG1ro3vpp8SecwbE6dW2KyyQxT8zA3DbiuF5ComLypWs/fE4JEPxAKBISLwvSNw4w6TPT
+	 NvyaVliErzmQtsE3IweoGzd05YRgw+9YFqBuED3zlqiVxGNFdHVXFFuhSF3vAk9XhpQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794910957;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:
+	 References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=Aq2HfZxK57r5c8CIAtTaplQVsaI9UayBsZXE7N5Vioc=;
+	b=DDjyeJDEb8WdxLHnDETBYRmcb4zsW1XO/uf/fe2TXGTf82BRuolpoaE1u+I2ZJoebk/R
+	 yrJ/d4ZUgqJd9dYVyAhtVSIwolB0XBeu2dnbrnzxvkceDJYqke/1FXgxOyImI167HHO8X
+	 90UtX6kzSt8nUNamS72V+8Pt2u3/NQ7iPdPQowhcLdZdVoER1KB+dTInq8YfGUW6xZkxp
+	 zn3MWZqsh6TBLlludP4tP9mHU5pgJQyD/wJu8LpX4dBFES+6qy/5ZqR+xeP5NaFn+j7G1
+	 12FWc3X19pvnoGgjI4X583WvRGcZOuyGW0/xDwFVxN/4azNPCqu31lTEBOaXt4UlGsQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=0V4GjCUF;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.7
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010007.outbound.protection.outlook.com [52.101.193.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03163606A323
-	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 09:10:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 03163606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCDB606A335
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 10:22:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0FCDB606A335
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=ilTn0leg;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=eXtwup+L;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=ilTn0leg;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=eXtwup+L
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B5181FA8F;
-	Tue, 17 Nov 2026 09:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1794906617; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4tee6l7ESYr5A3tZZUCvQ3/54SAkf97IqRnfqX5jFlk=;
-	b=ilTn0legoSzL/5MrcpyPA0rTED28vcAew0PIClz+VDRvLDMYn/LN8DA4c8c1W9s0d4glgG
-	4RUUVZcMHqWweY7oZGC16Nj1OIIh12scE3X351wi3c+sfZ366xMSbA0lgvmmp11/7gWcOd
-	HJsUaTIXJj7ixuLcUVL8oSh2zZr4Q6s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1794906617;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4tee6l7ESYr5A3tZZUCvQ3/54SAkf97IqRnfqX5jFlk=;
-	b=eXtwup+LdxiLJAz7cRNuZoYVVuI+eluVWO20lWsnFOQNs5ho4GY21omaI0+vZrNUwsc+nQ
-	ogw6GlrlpxeBzsAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1794906617; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4tee6l7ESYr5A3tZZUCvQ3/54SAkf97IqRnfqX5jFlk=;
-	b=ilTn0legoSzL/5MrcpyPA0rTED28vcAew0PIClz+VDRvLDMYn/LN8DA4c8c1W9s0d4glgG
-	4RUUVZcMHqWweY7oZGC16Nj1OIIh12scE3X351wi3c+sfZ366xMSbA0lgvmmp11/7gWcOd
-	HJsUaTIXJj7ixuLcUVL8oSh2zZr4Q6s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1794906617;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4tee6l7ESYr5A3tZZUCvQ3/54SAkf97IqRnfqX5jFlk=;
-	b=eXtwup+LdxiLJAz7cRNuZoYVVuI+eluVWO20lWsnFOQNs5ho4GY21omaI0+vZrNUwsc+nQ
-	ogw6GlrlpxeBzsAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AF0C01334C;
-	Tue, 17 Nov 2026 09:10:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id p9qRIvgZ/Gq8awAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 17 Nov 2026 09:10:16 +0000
-Date: Tue, 17 Nov 2026 10:10:16 +0100
-Message-ID: <87v75vzuvb.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: william <assassinshalo29@gmail.com>
-Cc: linux-sound@vger.kernel.org,
-	tiwai@suse.de,
-	evgeny@devduty.com,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] ALSA: hda/realtek: no speaker sound on Lenovo Legion 16IRX9H since f2293e7b2ddd (PCI SSID 17aa:3842 shared with ThinkBook X G2 IAH)
-In-Reply-To: <CAFjFWEjt+DPJ_gM1uTBZ_NoV6-3mi57ArjZ_Qdah2DqY-GCD1w@mail.gmail.com>
-References: <CAFjFWEjt+DPJ_gM1uTBZ_NoV6-3mi57ArjZ_Qdah2DqY-GCD1w@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=0V4GjCUF
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h2sCR6UksDclMJx3ws4gFt5tr57E/ofkH7cxbZeNDswtKxPXhNggLq5/ECMJWxRRicPPLogYDoIacn7fUI3bJBZH6mFeVFnnrvKFVxgTHoMDA57Ad9kXczi5ZX9zsUY5Jqm29B2AXGxLt68r5J8+noPYTOlhndVKQdy+BG7YHN4VkENGQ8vfQ/Md+U370Tcw2RxYvwZGXeIrI0XTfH8EZUvVWZNtJp6hxHzIncwo7w5PgLR6TWWi9t2HMyz6YsQxGUJXJE4/b6t5RT/vq8TorScVeXPrUDLziLZ0ajSpqpiWF4qFUdf0fwtq/oNUGokZ7jglcA35Oq3bSH4Y/VAY/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Aq2HfZxK57r5c8CIAtTaplQVsaI9UayBsZXE7N5Vioc=;
+ b=k/VxjEDTtQHMByPFpCD0A4Jjkzc7FRUmKN8i9bf2pSzeZGCFLViuWlwuLp7hB1h8G9PT4l5iwpFq0F4Dxi/xUpDGO/INBYSrCHLWQqhHD+t2EsQDFMeNiiH7t7azvrnG0VyGwwdkdtOwfb9cBgtqoe0n2sOE/SkUjpLVXiSN/dfIkj3Qtvw7tgvo1x8Gyi7QMSke20lcgvKN4bvAAmn5CEtdikiYmEi8NmW5SPaBFgwPkNV/RdwdYLc2n3Mg2DSZtjYE+fQWleIN8ahchezrK5ih8VxHgtM461izPOigcDGdYRJIck8v5wAphDkRJ3a89caE9ks59g6IWclw7/Zv0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Aq2HfZxK57r5c8CIAtTaplQVsaI9UayBsZXE7N5Vioc=;
+ b=0V4GjCUFlcM1+iK8BnkJ2q2MWo5Kv9wdvhnQ7pS+yz5u4cjVW0+yCjN13AhwQsAF8efQ46atxncvRkaJZNvNkgSq3tvhnV+lyPbKd3nKNT6//oM2D3+oyE5nc/RHUy6h0DuO2l3qCs01N0cVPbswZ/Rm3iAV0NmIRSEaqW62280=
+Received: from BY3PR05CA0023.namprd05.prod.outlook.com (2603:10b6:a03:254::28)
+ by PH7PR12MB5594.namprd12.prod.outlook.com (2603:10b6:510:134::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Tue, 17 Nov
+ 2026 10:22:29 +0000
+Received: from MW3PEPF00001652.namprd21.prod.outlook.com
+ (2603:10b6:a03:254:cafe::a8) by BY3PR05CA0023.outlook.office365.com
+ (2603:10b6:a03:254::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.639.0 via Frontend Transport; Tue, 17
+ Nov 2026 10:22:29 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ MW3PEPF00001652.mail.protection.outlook.com (10.167.249.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.639.0 via Frontend Transport; Tue, 17 Nov 2026 10:22:28 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 17 Nov
+ 2026 04:22:26 -0600
+Received: from [10.136.43.35] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.57 via Frontend
+ Transport; Tue, 17 Nov 2026 04:22:21 -0600
+Message-ID: <add0d6ee-c28d-4274-b8d1-58638abac47a@amd.com>
+Date: Tue, 17 Nov 2026 15:52:15 +0530
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -111,140 +100,131 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spamd-Result: default: False [-12.30 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	URIBL_BLOCKED(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -12.30
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] core scheduling latency with idle load
+To: Mihail Mihov <mihovmihailp@gmail.com>, Peter Zijlstra
+	<peterz@infradead.org>
+CC: <mingo@kernel.org>, <longman@redhat.com>, <chenridong@huaweicloud.com>,
+	<juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+	<dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
+	<mgorman@suse.de>, <vschneid@redhat.com>, <tj@kernel.org>,
+	<hannes@cmpxchg.org>, <mkoutny@suse.com>, <cgroups@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <jstultz@google.com>, <qyousef@layalina.io>,
+	<regressions@lists.linux.dev>
+References: <20260605105513.354837583@infradead.org>
+ <20260605124052.227463677@infradead.org> <avt_mdiPQ5gwAisa@lima-fedora>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <avt_mdiPQ5gwAisa@lima-fedora>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PEPF00001652:EE_|PH7PR12MB5594:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e121163-96ea-4b30-f577-08df4494aedd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700016|82310400026|23010399003|10067099003|56012099006|11063799006|4143699003|261028144727099003|261022105027099003|261021123027099003|261026140227099003|261026121527099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	ijFy5q4LflUk9pl93AgPesXP6hvx3Js30ZxhpTXDjAZ0qR9CvpDhElwAQ/ih2FadMqXM1GTtXrCm4LyxvzMhGEB772wPxYO9QqmARgZYKMKn3Z+z71F6zfWU47eC2/ed/JbFe3thzta/I+p9KbNyK0ooIUd0oN7lAZKWB2veIq8HlVBeluwwpM/4ylr6viCKF4XlgJlwltkD9oraeMywwV1X3HRkCar3sOSPNN5EOf6IEvi+zlbRFu8ljbyerArITKwm2o9Ijcj1KmWcE7cGQqcKs089OwfDfQ3OcwZOSxXKxc2sL59Kfk/EVuOMn8laxLTaDjrvb6EUTFn3HL7Z7h/tykcGvla9nT3VyOa4jxQwnnHUZS0eYkzEY2Ibwbvu78v3T3gZI3iE4Qpo73EEDPbIiJQwPml3J3K9JOmFkzx+CQfmxlqf0lRm9s441rVXPBO+G2VBA6U3yzHrv5RjTmuoHwKzmu3QbP9rViYIuxC1FdqEd2QrAhfkP8nf4zlgNg+E7NK7Nq8588e5VwtchrfpL2u62xkLjCLnfXg4eqy6equsNMoDvObu1ttIUPWclt5CauerK6XQo8HilY2wPQOkhKHC4kYXeyZdQBrHQLRvkGKaMrCdBskjc204lnz664o3wSQwL4VrJYo72GBnydclf4yV1uT30UkK6jYa+eAvY9RimHptpTnq71Zz5uinktXK0oXq8TgNqmJiB3qORQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700016)(82310400026)(23010399003)(10067099003)(56012099006)(11063799006)(4143699003)(261028144727099003)(261022105027099003)(261021123027099003)(261026140227099003)(261026121527099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	SF5XajKHmlt+Oczs5Z04j2AecoNq2qM9hehJfGEDYc+Hyi/5zCivrVDdgT/NsYqhv9TpIufFQgw486MkXOr9eB8TEskVCakkzbGuzNHdhx9IBtEvbAF9rzFXhfB8/Gd1Z5pQCQOBLDR+SSVH2vnVcLdI+ZmU5H1PjKW3MchigABiKt4Xj9Qpfl4mAytbzeA7nCRd32Gw+OPkq1ONekatyk8D6plgQi17haOzyghYKTBLP3lLqzQxAppK+VCA7UJJEejMLWeJdQ3EqPajP8UMCXy/3qCj7Mp5IGiNLvhbyv80nxu3w/E9Dg/JQ9hGTUb1PGwjJrrn/u4/KWsPdsoDlwt0TSoSPzcDk5y+pRV5JmTqLWOc9qfoBiTNueiI/qhX5YkMryxmH8UkHYLKIsXRisPhXY/1+oLQB4s+uSIfaNQ0qVA4+eH0KQHuKlwqlDKx
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2026 10:22:28.8194
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e121163-96ea-4b30-f577-08df4494aedd
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MW3PEPF00001652.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5594
 
-On Mon, 16 Nov 2026 02:24:00 +0100,
-william wrote:
+Hello Mihail,
+
+On 11/17/2026 3:52 AM, Mihail Mihov wrote:
+> On Fri, Jun 05, 2026 at 02:40:20PM +0200, Peter Zijlstra wrote:
+>> @@ -14893,30 +14803,8 @@ bool cfs_prio_less(const struct task_str
+> [...]
+>> -     se_fi_update(sea, rq->core->core_forceidle_seq, in_fi);
+>> -     se_fi_update(seb, rq->core->core_forceidle_seq, in_fi);
 > 
-> Hi,
-> Commit f2293e7b2ddd ("ALSA: hda/realtek: Enable all four speaker amps on Lenovo
-> ThinkBook X G2 IAH", Cc: stable) matches the laptop by PCI SSID
-> 17aa:3842, on the
-> assumption that this SSID had no quirk entry. The Lenovo Legion 16IRX9H (83DE)
-> has the same PCI SSID, so its internal speakers are silent on kernels that carry
-> this commit. Headphones work.
-> Hardware
-> Lenovo Legion 16IRX9H, product 83DE, BIOS N2CN32WW
-> Codec: Realtek ALC287, codec SSID 17aa:38cd, PCI SSID 17aa:3842
-> Amplifier: ACPI TIAS2781:00 (i2c-TIAS2781:00 on i2c_designware.2),
-> driver snd_hda_scodec_tas2781_i2c
-> Kernels
-> Works: 7.2.10-200.nobara.fc44, 7.1.6-1-cachyos (live ISO)
-> Fails: 7.3.4-201.nobara.fc44, 7.3.4-1-cachyos
-> The 3842 entry is absent from v7.2 and v7.3, present in v7.3.4, and still
-> present in v7.4-rc1 and master as of 2026-11-15 (checked via the GitHub mirror).
-> Analysis
-> snd_hda_pick_fixup() walks the table and matches PCI-SSID entries before the
-> codec-SSID fallback. Before the commit, 17aa:3842 had no entry, so this machine
-> fell through to the existing codec-SSID entry
-> SND_PCI_QUIRK(0x17aa, 0x38cd, "Y790 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
-> which works. With the commit, the 3842 entry wins and chains to
-> cs35l41_fixup_i2c_four(), so the codec master waits for four CS35L41 components
-> that do not exist on this machine.
-> Evidence on 7.3.4
-> dmesg: "ALC287: picked fixup for PCI SSID 17aa:3842"; no "bound i2c-TIAS2781:00"
-> line (on 7.2.10 that line is present).
-> /sys/kernel/debug/device_component/hdaudioC0D0: master "not bound",
-> four entries "(unknown) not registered".
-> With dyndbg, after "echo 1 > /sys/class/sound/hwC0D0/reconfig":
-> hdaudioC0D0: trying to bring up adev
-> hdaudioC0D0: Looking for component 0
-> hdaudioC0D0: master has incomplete components
-> After unbinding/binding i2c-TIAS2781:00, tas2781-hda logs "adding component"
-> but the master still reports incomplete components.
-> Workaround confirmed
-> Booting with snd_hda_intel.model=17aa:38cd (alias SSID, handled first by the
-> picker) gives:
-> ALC287: picked fixup for alias SSID 17aa:38cd
-> bound i2c-TIAS2781:00 (ops tas2781_hda_comp_ops [snd_hda_scodec_tas2781_i2c])
-> and the speakers work.
-> Possible direction
-> Since both laptops share the PCI SSID, the ThinkBook entry cannot be fixed by
-> PCI SSID alone. One option is a codec-SSID entry for this machine placed before
-> the 0x3842 line, e.g.
-> HDA_CODEC_QUIRK(0x17aa, 0x38cd, "Legion 16IRX9H / Y790 VECO DUAL",
-> ALC287_FIXUP_TAS2781_I2C),
-> I have not compiled or tested a patch, only the model= alias above. I am happy
-> to test patches on this hardware.
-> Separate observation
-> After the workaround, speakers still stopped after some idle time. It went away
-> with snd_hda_intel power_save=0 power_save_controller=N and keeping
-> i2c-TIAS2781:00 power/control at "on". I applied both at once, so I do not know
-> which is required. This looks unrelated to the regression above.
-> 
-> I'd really appreciate it if the issue is fixed, as I'm now having the
-> same problem when the laptop is turned on after being suspended for a
-> while, and I haven't been able to solve it.
+> In case it helps: adding these two calls back on v7.3.4 brought the
+> cookie p99 back to 55 us.
 
-Thanks for the report.  Could you verify whether the patch below is
-what you've tested?  I left Y790 entry as is because it's not 100%
-sure whether it has also the same codec SSID.
+I can confirm I see skipped cfs_rq->zero_vruntime_fi updates for root from
+cfs_prio_less() which would have previously bumped up the zero_vruntime_fi
+at common ancestor.
 
+> I don't know whether that is the right thing
+> to do, only that it changes this result.
 
-thanks,
+It might be since cfs_prio_less() would have compared the zero_vruntime_fi
+at common ancestor but now, everything is driven at root cfs_rq.
 
-Takashi
+That said, perhaps se_fi_update() could itself be optimized now with
+flattened pick. Could you try below changes a try:
 
--- 8< --
-Subject: [PATCH] ALSA: hda/realtek: Fix regression on Lenovo Legion 16IRX9H
+  (Prepared on top of v7.4-rc3; Lightly tested)
 
-Lenovo Legion 16IRX9H has the very same PCI SSID (17aa:3842) as the
-recently added quirk for Lenovo Thinkpad X G2 IAH, but it needs a
-different qurik.  Although the quirk for Legion 16IRX9H is present,
-it's not applied because the PCI SSID 17aa:3842 matches at first and
-the new quirk for Thinkpad X G2 is taken instead.
-
-As a workaround, put the codec SSID matching (17aa:38cd) for Legion
-before the conflicting PCI SSID quirk entry.
-
-Fixes: f2293e7b2ddd ("ALSA: hda/realtek: Enable all four speaker amps on Lenovo ThinkBook X G2 IAH")
-Cc: <stable@vger.kernel.org>
-Reported-by: william <assassinshalo29@gmail.com>
-Closes: https://lore.kernel.org/CAFjFWEjt+DPJ_gM1uTBZ_NoV6-3mi57ArjZ_Qdah2DqY-GCD1w@mail.gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- sound/hda/codecs/realtek/alc269.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
-index 2c541c68ff5b..1d609584e778 100644
---- a/sound/hda/codecs/realtek/alc269.c
-+++ b/sound/hda/codecs/realtek/alc269.c
-@@ -8542,6 +8542,8 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3827, "Ideapad S740", ALC285_FIXUP_IDEAPAD_S740_COEF),
- 	SND_PCI_QUIRK(0x17aa, 0x3834, "Lenovo IdeaPad Slim 9i 14ITL5", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
- 	SND_PCI_QUIRK(0x17aa, 0x383d, "Legion Y9000X 2019", ALC285_FIXUP_LEGION_Y9000X_SPEAKERS),
-+	/* Legion 16IRX9H shares PCI SSID 17aa:3842 with Thinkpad X G2 below */
-+	HDA_CODEC_QUIRK(0x17aa, 0x38cd, "Lenovo Legion 16IRX9H", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x3842, "ThinkBook X G2 IAH", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_4_THINKPAD),
- 	/* IdeaPad Pro 5 14IAH10 shares PCI SSID 17aa:3843 with Yoga Book 9i;
- 	 * use codec SSID to distinguish them
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0c8af1cac2d5..3935693bdf2f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -15278,30 +15278,21 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
+ /*
+  * se_fi_update - Update the cfs_rq->zero_vruntime_fi in a CFS hierarchy if needed.
+  */
+-static void se_fi_update(const struct sched_entity *se, unsigned int fi_seq,
+-			 bool forceidle)
++static void cfs_rq_fi_update(struct cfs_rq *cfs_rq, unsigned int fi_seq, bool forceidle)
+ {
+-	for_each_sched_entity(se) {
+-		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+-
+-		if (forceidle) {
+-			if (cfs_rq->forceidle_seq == fi_seq)
+-				break;
+-			cfs_rq->forceidle_seq = fi_seq;
+-		}
++	if (forceidle && cfs_rq->forceidle_seq == fi_seq)
++		return;
+ 
+-		cfs_rq->zero_vruntime_fi = cfs_rq->zero_vruntime;
+-	}
++	cfs_rq->forceidle_seq = fi_seq;
++	cfs_rq->zero_vruntime_fi = cfs_rq->zero_vruntime;
+ }
+ 
+ void task_vruntime_update(struct rq *rq, struct task_struct *p, bool in_fi)
+ {
+-	struct sched_entity *se = &p->se;
+-
+ 	if (p->sched_class != &fair_sched_class)
+ 		return;
+ 
+-	se_fi_update(se, rq->core->core_forceidle_seq, in_fi);
++	cfs_rq_fi_update(&rq->cfs, rq->core->core_forceidle_seq, in_fi);
+ }
+ 
+ bool cfs_prio_less(const struct task_struct *a, const struct task_struct *b,
+@@ -15319,6 +15310,9 @@ bool cfs_prio_less(const struct task_struct *a, const struct task_struct *b,
+ 	cfs_rqa = &task_rq(a)->cfs;
+ 	cfs_rqb = &task_rq(b)->cfs;
+ 
++	cfs_rq_fi_update(cfs_rqa, rq->core->core_forceidle_seq, in_fi);
++	cfs_rq_fi_update(cfs_rqb, rq->core->core_forceidle_seq, in_fi);
++
+ 	/*
+ 	 * Find delta after normalizing se's vruntime with its cfs_rq's
+ 	 * zero_vruntime_fi, which would have been updated in prior calls
 -- 
-2.53.0
+Thanks and Regards,
+Prateek
 
