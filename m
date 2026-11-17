@@ -1,152 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.14.11
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.170
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794950264;
-	b=Wj5Kf7ZV9h/IaDt/XzegTQSBxDofrmvGSxaq/yEYjH7Ab2xW2iZPbT2b1uN3HPO4PGVS
-	 yGyUancslZlyZjvGckkP5Ih71uyXAX7Li3v+VEV1/fQHxpLUMSBukjCLTeCXJJVNJR+kN
-	 0v+ijiWt5EOtTUrAwtgcmMBVk6NUBa1Vdl2TGyda0u/BQSj/0Hti1KDm2KnwBH7bRb22L
-	 vsxwukV78yOjuStr2NMXJh0t6JlYs5sA5+thmxFMRY0g2M2gEk3/1vgAY2SVRr5wq7qgc
-	 Xb6i4i/gkaI6yPylnYZQLGOGa+7MktO7ZAaIlAQ4czWJvbMeaPBf+1DgkOKP7JhPa8Q==
+	t=1794954441;
+	b=k+bZD9VshE/xsNjOWm8IYjArnIAlYXDjFBfakLSih3hEciEsbLpbMQfpcq3QgbEOun4/
+	 yaxyiQAemBafN8W+cLVMmfGpUJ8qgt+VR7c1I0oqiDTJ+m28Z+NPxM82M4oUueoqTGJZg
+	 jxbf3Ayxjr+HH9ijPPIqUn5YbQxUBrW2R9044ZMXxmE0innOtvUr4aOy2c6BgE2n9/tRC
+	 F2BA38t92vG+og+4V5jnvbRz9qgQ26ad15thUWUKDe5hdNwVsthxdzVrjypJuT249n4co
+	 QvAMmQikisugwLb7kqDNiwEBRP7nMQ2pJmwOQpuUN+U+SGxFLcCGaHnd5aEDk1GIypg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794950264;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
-	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 msip_labels:x-ms-exchange-messagesentrepresentingtype:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:
-	 x-ms-exchange-slblob-mailprops:x-microsoft-antispam:
-	 x-microsoft-antispam-message-info:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:
-	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=8MuQzzEWYrbY1XLHeLhTp4ulOuRp62sgRwL5vQf4PAg=;
-	b=Y3uduemSzSwVgzIxeEKhVu7h5Nop+knlBuB2VwwSuoW1wl3dzSfqdzG0MGIgGLFlNq0f
-	 jBrFXBk3/IdaZ+pNY2+0sK1P9uo66fCQX3cqZnvsoGYYgBowjIE99NK4w+jk4sPWbfCMi
-	 gBdfhhShexKc1wtfi8HN51GINCwpsGQj4zpGkdjK9P0jAkvItiITFQHNQzaUyj2DmIZff
-	 OlHeAfpuJ8qISEM2Gai8I0+APzdPGFZLxTpewHdkOqwh9cumeUpVJe86oD7qOvw7c2Yqz
-	 /0W+/p05GIsDPNmw0m7s8DcZuhVwYmoZcRsCSjZnrAebuCyuO4S0PToxg5PVj2e/Z6g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794954441;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
+	b=i7lrSWSpsY1SAmzWqZGRP5rv7xdZ+ehO9UFM8HmPxdatBaKyw6oJDRpJ4vPhIQ3kyKHn
+	 Psa6r/ao9HsSthCEsy++e+YQtPWI9Y7OmfonmVGZ2vEvESwJR7WM4oXtbze8zvdgVAg3j
+	 hDSHXULtV5qoq9Nq//s/piCE+xcoC47K7B6Qqu0ME6sSyjHQwvZMssdt2ZRnAWrv03PqS
+	 G7GXIndqm+xMSc8pcZJVaKgWm7HjK1vqk1uJWPH/DGUcDgEJ82u00mY4j9ty9q8FqBFwh
+	 csnmP1ycawkyZwz1wT5IeFqOXdcMrPopC4Cr4njyyBIhNNTVMwvNdKFat2kO5vl8plA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=live.com;
-	spf=pass smtp.mailfrom=live.com;
-	dkim=pass header.d=live.com header.i=@live.com header.a=rsa-sha256 header.s=selector1 header.b=fwdMByN0;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.14.11
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012011.outbound.protection.outlook.com [52.103.14.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yXm3b6YG;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.170
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9874606A32A
-	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 21:17:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9874606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A0B606A31C
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 22:27:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47A0B606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=live.com header.i=@live.com header.a=rsa-sha256 header.s=selector1 header.b=fwdMByN0
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dESsGN+JSKxZg39UBWDzH5JggMpAdvtC37LBWOmggirnWoBFG4Y2d5c1lykpLkXgurAoG3QGVIpB4hIwsL0cahTAhrX9f5Kxb7AZ3l1A/upNvflRP1hyJ52IRiwR4Nwwfep923nXlaO6rPhVCEEX7m96zDyJ44CYiJG6hw4nJD09bPDripuMz1omGBFMKg5hvN7piEMbwIJguavjmGTuN8tkNLteRF/7D85nwsH9WBMj04QDMt/cqIveMGFUtvKAFetjhbQPo006WLG0yQOrnhLBqdS0rp7pcB0EO3G7gyNe+9CRymlI5Xtwm5z8b8DQXUCoQE6/zXoPZk4AAQ8Paw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8MuQzzEWYrbY1XLHeLhTp4ulOuRp62sgRwL5vQf4PAg=;
- b=nSabE3g6tTbFmxEbgwqgqANqLE7yvX7KzOvB4Bk1vHQh0ikmC9aKPaq7zRmbGHnUiTChV4zClj9xVfFudEunP/+HvTbTAJVAnJVSydBWVXjC4SbZGL4wxAgWVYzOvvsHn4YE2QHds3IUWTp7AEJS79fCporzej93kcRxVKvT6PBhJZPibV3Titl5GCRuajitrIw1cHIHmexVfZcPDJKxBR5Z4ga0169Z0S9Q2XRao9vPkwapPtTw3IfaoZtcvw3qx7DccAZ6Jxqg6Wo90vmLCETj+qoUDOjNTiVHsQjimdtebbAXIMS+lJb0dFiSiv0/k0FK4SAas0Vq+1iUDQmv1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8MuQzzEWYrbY1XLHeLhTp4ulOuRp62sgRwL5vQf4PAg=;
- b=fwdMByN0zbVpeyh7HosRILv4J9+/L/XxuJv+RPEcQgcJ5CzdJB16EJ+iaj3qN0GMxWWGEVZhUp9npMyiOZxpSIjGbX/WpbIUAofhERCktWk8bZoVQDIdgt6803g+7UmmbBA15kpD69kge2MA7/ug6xVMaY489crDkcYS16GS9lra/S9UqV1PH2hQmVLwYAEdA8eDknAyRLbgbucBbn7NJr73py/XpJr1En4d27tw3gbjjzxd93qvVz1YvyiIrYv2rLc6j8ZaHmHTAdpyGSgnstChizQ5UGENFFhTKPs8EwqCKJ+UhpUvWXE/GvOKMqtI08aRiQWfWX4+sbm1hAsy8w==
-Received: from SA3PR11MB870554.namprd11.prod.outlook.com
- (2603:10b6:806:510::10) by SN7PR11MB8041.namprd11.prod.outlook.com
- (2603:10b6:806:2ec::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.10; Tue, 17 Nov
- 2026 21:17:41 +0000
-Received: from SA3PR11MB870554.namprd11.prod.outlook.com
- ([fe80::57fc:ce0e:773f:1c2d]) by SA3PR11MB870554.namprd11.prod.outlook.com
- ([fe80::57fc:ce0e:773f:1c2d%5]) with mapi id 15.21.0615.013; Tue, 17 Nov 2026
- 21:17:41 +0000
-From: Lucas Cota <lucasbrunocota@live.com>
-To: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] Logitech G733 USB audio volume issue since Linux 7.3
-Thread-Topic: [REGRESSION] Logitech G733 USB audio volume issue since Linux
- 7.3
-Thread-Index: AQHddsxv6e8Y3c73YEaHT6/bZ99EqbcyxAMe
-Date: Tue, 17 Nov 2026 21:17:40 +0000
-Message-ID:
- <SA3PR11MB870554D0B14BDBE05EC72B8B59B67B2@SA3PR11MB870554.namprd11.prod.outlook.com>
-References:
- <SA3PR11MB87055423D68E21680C47BB55B4B67B2@SA3PR11MB870554.namprd11.prod.outlook.com>
-In-Reply-To:
- <SA3PR11MB87055423D68E21680C47BB55B4B67B2@SA3PR11MB870554.namprd11.prod.outlook.com>
-Accept-Language: en-US, pt-BR
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR11MB870554:EE_|SN7PR11MB8041:EE_
-x-ms-office365-filtering-correlation-id: ed5e3dde-ca49-4cf0-3211-08df44f036af
-x-ms-exchange-slblob-mailprops:
- 9qw5+ftluCBM04rZffbgGeDNXPMguI7e/8TmI6uxpXVOdxRwoDgvX6uC7YAjcLtQMyF4C4gK3e28HncvRK4VHYI5UYepzcuwCCV5yOGFejasjabmHJMUODQprVbdVaUT7m++u5YznzxiFHZnHbyATzWIdXHdW31PhaPjZz2tjUJNwZeATYVUKoxNq9D8xIB5T8B6byhCU0Hg0Af8fgycasT8U/pfvvyyFCwPBsgWRMqIXkEINjYrzNhOloRsJtuSe3w8gsw9vzo0d11gXxdNMBh9R5rgeirGfqXAm/42VxCA5zeNZtXkHNiaNVAe8wBTzU8mqHj32NhNVGPGLiV5M0vxGpLRV7VO/411AN+qCI9SV3t3eAeH81yCze9e3oKV0FvdigcW83R9tT2yPJXBD6qKn3ViCtDkSEVxxYOUvG2TIkrILrfCCzwI2ZohqC5U/GwpYGJPdd7fwGFQt+/Ot9OHPLjUX+qAcR5m9rK6bz6m4X+kg2GZOwT+n1BDHRrNF2E/8kxpcSp/n+/Mkgzv+s2jW3UWcXIdJECp6acV8W+y1gZQ+Tcq1/lQG1thKtz9aQ326O6Q/RwL7Y5AtwdRXoHIrmB8u3vPYPz0fDpKmIEVAd1V+zy5zpszW1VFLcgqgKcgH7seif/IBmO0jzUm8ZwvTVZbQAr5XA/Eef33OdcrInqkAXjZJ41tITTOv5TiUxiM4A5vJjE=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|51005399006|19110799012|8060799015|8062599012|24021099003|15080799012|15030799006|31061999003|25010399006|12091999003|40105399003|440099028|102099032|3412199025;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?fF1JKHwYG3TRf5TnFv0vlh2T/nKKdv+rzOyBiX8WtmQb5UHHY6RtVMcGc5?=
- =?iso-8859-1?Q?yKQHCYIIK1avDZ0w/O/d/YswysmM65IW97BBtMybO2HPCUiEuGJY31ix/5?=
- =?iso-8859-1?Q?e191JkslhzrKiHfypHJGc1OJe1sRu6bkci2JAZ/YGyO+eY3TyUDmBzjmA2?=
- =?iso-8859-1?Q?2d22olw126kBdRq8SfjzIDs/AABWmM64c9WEw2R4S7rCvRuPtjRZlr9XWv?=
- =?iso-8859-1?Q?K+z69l43pvfZVRuAeI1xLLt85Ji9JwxMjrWlYhoOmzln4QtNRnH2eukRid?=
- =?iso-8859-1?Q?53mGYe/dwAp0U11AG+n4qYdUy3qDD921POBxnZ8P7j+CF6SFchyQtJakaI?=
- =?iso-8859-1?Q?ZvDrpmieY4IpU8eQ+DDv/4oAjfV4+27PA8kG9DZAcmDSvJl6iHaVfr+Zyf?=
- =?iso-8859-1?Q?GNFs/We0zNpvimQZcd0ylV9wT+nGBJslL8b/Lf/m/UO2p+wIx7gMEuknos?=
- =?iso-8859-1?Q?q2/y4m8y1a3tohXdpwS4kOeANx/0iGJOPFdE681+FuoNuw8E3PnOw3cSUy?=
- =?iso-8859-1?Q?jFqTXHtN5RnMQP0lSW0R1Qmntu9a+j81XxRQS+bhPoibaOJM8rPcW6En2M?=
- =?iso-8859-1?Q?tafWohDi+jdZESAIqzZyHc/e8j/Ul63owPqJSErwAodptGT4rZeVAnfW1u?=
- =?iso-8859-1?Q?2OUxT+/6od++1gskPSx8w2SByNfKaTyrRLHbOz3qsXHT0rwLxgRpPhtq8W?=
- =?iso-8859-1?Q?KPmInL2KWgTuqsRJ3WNDy01DReNqs4DXoCsGrFesxuzxkJvQjis9gJsJD4?=
- =?iso-8859-1?Q?ap205Xfg7KtTo7MCQSWVRUP3oi4cgchWFk2xbPC8WznKaBUaL5FaK54Hi5?=
- =?iso-8859-1?Q?MEF144CnAwLvZnDNddgB42kVlXQ8+KyEpjdL99pgvEDpD6oyxwuZFlfk8p?=
- =?iso-8859-1?Q?ghGH1IESPYaZCtHDMmnj1ZVAfpZjVw+ZLmLSzGGpkLgAQ9fr0ILtUUAL1Q?=
- =?iso-8859-1?Q?EuLYihIulaxOuu6ngaq9kSMt67itcMsfo6h2BvwupJkKnxKYdhQCWh0Fjc?=
- =?iso-8859-1?Q?+cYTy4ApMP9znhGOSMzf/QhmJlyhext/afBncf?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?pkd6BJw9s+MwTaEXjTB3GhWm/EKhbQrw5ZpvjkmfzlFXwx19noDLXT+mJW?=
- =?iso-8859-1?Q?+ryRTwDMR8/ZLEIEecUKVVoGNmUM2qYTx8PayPvABOlaz/9TBzL1n6n+OQ?=
- =?iso-8859-1?Q?nc+mvPvX2Q5VwIwafX4BPFYrR/QPFzirZsAQcuOl61ExDgos0exE24lmJj?=
- =?iso-8859-1?Q?P9YiPaUU4ihOL2QFNeINueg4XhBZlGyfmbMxPSN/gEHG30Fb9HwsFrmEJS?=
- =?iso-8859-1?Q?yQbxX3/IUy8JNZuHtIlLXEn/1QC6pxHzcjbZgkXes/21T01cvsRjR7e2Hw?=
- =?iso-8859-1?Q?kUlDHphCxQvxLUQj5c2kpfLMi9zb1Z8hd8jDhpBcLoumU5+hrXLc6G06Jk?=
- =?iso-8859-1?Q?muRP0cWPIgB4TefjdNvNlNb/1hq45cE/I4w62G4sGLdFiFnb3SWvFkq8ly?=
- =?iso-8859-1?Q?4gWbLx0/2dqKQHwRjmbgzfxNdYktAMUOA5/5L9D4r8SUXU3k8ZqucEs3Uc?=
- =?iso-8859-1?Q?NiLyPPQX60iPDWbYb2euBuuz67hUjX1BYV9LEYWXGkMkS07Ac3srmMz4xk?=
- =?iso-8859-1?Q?Ta6z7QZXbtFSZPHx/uywCdDJhzB270KkiZRifXjd6QSESNnMCmIK6R3yM2?=
- =?iso-8859-1?Q?AEeMQFU2FvWzEfALlvXKFxonfCckR5hty8zATzdVluUHt2xy4O/kWUeVu8?=
- =?iso-8859-1?Q?EAsgkE4Z/nKxDUb8ABsQKhVdLJYZOX7r/9s1uw47RwGMQ7EKERj6Soxyi/?=
- =?iso-8859-1?Q?lIosoQ3FQaofkV2ZhViunNPpJ9kSkBoU0vZVRFer3WaH/uQA+22+g86YOm?=
- =?iso-8859-1?Q?pTb6HthsuQ3/ulhZ5fG9lgcc9BMGRnmbyPZX+oObYEaICvM9/ZVSOpMJZy?=
- =?iso-8859-1?Q?kNIomz7c+9OXmRzdDp1Hqt6zEFCG3qhZrxKE3mEj9TE8/t4Bfyf7qySyZ1?=
- =?iso-8859-1?Q?TRq+VQbWQHGjNQ+HvjWilTdEMrpkNuNDgFhPirHqe4B0aWHykbaFcNe5Rn?=
- =?iso-8859-1?Q?TXTM2r4d8k63HRXkJ81mGu26yTmG00dxR+NJJF6sXd8cw+DSdTkNPkLMG/?=
- =?iso-8859-1?Q?yTZ+9sT6l8oO3QbtD9nATP1/4hSubnxbYFagMll3CvvMOpgaBBxJ05EKlW?=
- =?iso-8859-1?Q?s/VFLTgklWDH9ojzR8griRju8iay4eAhU98eCW6OMQvO5aFcZ0AbDVwgI+?=
- =?iso-8859-1?Q?vnK/XTUA+NlDwmoYV7382XLfQ8c8npjMSbJciwWwR4ETjBOG5kxq2fbNLo?=
- =?iso-8859-1?Q?CPZpEeMl/iZzKedFEugTnoM5LTtVtMLxKR5vgRw8H4BPTTbd58wTrD3DrE?=
- =?iso-8859-1?Q?9eigjNBg18jLD5UuGJCgGAFJlof+FFgsFnrQPl77iLRAccg7W7nA4YlX/y?=
- =?iso-8859-1?Q?6fRVmYb4dPMuKcGEnGc6RNx0MSso6/fx0paJxBaczwq0zM7mvEFEFdLUmA?=
- =?iso-8859-1?Q?GyvB1nyJcP5ny4NzT4NvvBnwCK2BdyiPa8cjENW3Pyh03kBuR2QkTWOXm0?=
- =?iso-8859-1?Q?2MRcJmQ63+6ag/iIavoe0x3kN53v4XH8xACkW2ffWKbPuAqNFirgddlw26?=
- =?iso-8859-1?Q?UmpWikUQPw5sWF2BXfCqlS?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yXm3b6YG
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-36dbde64409so741433eec.0
+        for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 14:27:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794954439; cv=none;
+        d=google.com; s=arc-20260327;
+        b=OwhvK4MZjZWYjsBu3azgPbQ0sBDhOTwuSOccFRoIGO4erQ3p/QVMqvMatC1N90GNV2
+         v4ooLQc4q7Lh5yZSTA5Jas8JipIC4L3j5I+LY49T3aYAjxd2Yysq18IGXP+2BKBWhOVL
+         cAZpBI9Nm+V9Il+QN/TQ3wEg2EZQ8dZywG4Zlz0H3PLPAY+qj6kKT2oXNtWxcmPM2l7X
+         SxvQ9dUwHFv2Djue5OQbAvZPAusqdpvEdwpTiAT7VvIDzqC4L9b2xQeN/9Z9dRtmdW7u
+         T8RC4LxqpOLtzkmcJlXiBHOrNEca2abGP8RigsTE8F6UAcc8QFMlfnk0vqJxOyH6Iy+W
+         7o6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
+        fh=jtjX4eq83XQCW9IxqymjgMHmnqRxkGnsAosuXvEJQcQ=;
+        b=WmRnSGOpS24Qkge8vyL0oSsnrETOyWUCnZcOXNe2OmocoL2BRlTzGnF8i04G75o6ee
+         OKErErbxqsXPDc+HAHh2smlUcVP84RhhzO/sxZqpnZ7tU3p9W/HRBkniANKr3039+3bR
+         ybEgi5hFnl/VuOEp3wYK9TkJrfNYej5VJU4G7rczaWqh8Y6k4XtPWwoZRmF8ZhqpKG/k
+         r2eoQA860gjS4U/bLjEvHR7d2LlUe4MqfBnJ8z+eNNgvB0xg+IkgsWAnBXTkbNA0EmRF
+         0/QHSe0mtHc/foOQ30ZjueXZJOmP1i7unHHKLrXC2wVDgvznOO2DozWqCuAEHXRrBg87
+         PxoA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794954439; x=1795559239; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
+        b=yXm3b6YG6CsBezQeb7jdul6mjzlcjkAZvsxt3eJ7xNDiff/qedhHhsLhyVYDbh1T9d
+         ppNSU5l+cQRBGTw2ePagI2Iws3aeTvqHG/g9Tvk2DLkg97z/ru2go+uVS9bR3BTqqTl+
+         ZKFvQ5YfAMEjwBKpwdFGytK5o+1hBKjIqZpM43d0qcnr21VgtgWQGgdtP0PU/reO49gL
+         k8NzoHMBjr/rXB6/hQ9HPslI04zWhWh5yl7hztZ4Q6syM9N7dem4rog9nYn5xav1YYZT
+         IpmFFd92WMRyyjevzb1uOFxbz/39XD0IA9+QQM2EuFKLKX1EQ6dr++p+qKWCgJVGNzQp
+         wGcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794954439; x=1795559239;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
+        b=ZbaJ+lnkYDJoutbhGKnbFKtXHKcE79hWFZcDKcW/4bBdrYumHr/szDXhZV4xttb5or
+         Fww+V/hRAvTcJkeDiiFFO5t62nfwoe7TDr4bB0DDX1Bn1cMNJcA8smdHX+GzZTbttV7W
+         F8Ptjk/uUjtl74dG+Uxmt7RZygP5eWSdIUS+X66bK0QmGH8h9f/YmRa0h/BL4xYTjRdU
+         NhxzbhS1AZiIktYGVRnrJTvYcTc2TLeL9/47xiw4ShDs3xsu2PyRAWSPwKlDQQ3oZnAU
+         X27bCJbIkPVr1DPV0A4/C5sCBCw5BKUlkVpcdHxGDLH41oZZRnTxPjLH0f4I6OgyNHmx
+         GUZQ==
+X-Forwarded-Encrypted: i=1; AL+hErHytgsg22ReSY8uCupAoQKli1KtO3HseyjUTEccI+lTkZ3Ez/4iKNSb71LJ7WJWisVj09Che7YUZrhgnw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9yc25EGgWFfer6UC4tWml0peZo+TevZDTlIuy7rhTkYL0xTM8c
+	+wdKBZfxkF+TwS0qyoDnSuOkjazurCFEMqPx/rDyEPal20lURN2Wfah8y25aKw9LSzDQ0d5acQU
+	lYtMg0XQ40hSeg+91Llh7RXJinGoq7Wg=
+X-Gm-Gg: AZFdTZe9pb7MACYlwjXTIevaY5eZf0wBuzO0TXLw116jGlt7N0c/hO0LZWYhXSUAMzy
+	T6BMzN+l4Ycf4UXXiLTPTA28BOoTlcaWOr3alI8uT8VWVPbG/wd09RlA0JfMlMIoZgKFlRsy+Pr
+	uUryqSlNif89WbW7GMVdA0K0rkKvzXy+NIbZlTv9QQ1cUBIZZ0/eMH2Q9P2kJO4qD4QSaZT53dZ
+	W4KtiOO0K7TTz1SGJCtmyHNCtGiT30eLAGvMCOwovNrNjpMuk5wL7KviSOdtSW8QlmeG8gevevJ
+	Q5jxd+H+swok05CFUKdYBZGqe2/ULjtCAxe5G0HTGN7ti2sVh2BcFOuYGq8stMFF9Ioa7zfbCJk
+	rabatOzOhc51lrI5bMn/CWL9kytFixqQfWyN5P/mg5MJ6nwrdLlgBixAsI+7sns3BRSKEepKBKw
+	EaXryfPADJ1YXeOuMczsKJpaNdLMv/cFikenbNVnI=
+X-Received: by 2002:a05:7300:7314:b0:375:c5e1:931d with SMTP id
+ 5a478bee46e88-38280c2e5fbmr1001348eec.25.1794954439224; Tue, 17 Nov 2026
+ 14:27:19 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -156,101 +105,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-a6b68.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB870554.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed5e3dde-ca49-4cf0-3211-08df44f036af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Nov 2026 21:17:40.9809
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8041
+References: <CAJ6F8CFSfgdZqaKMndGZtbaww32Xr_KVL3gA_2Jemgv9i9vskg@mail.gmail.com>
+ <CAJ6F8CFgkgksyk6YM3NdMkQNhSFWV4depC4c-mHvpDHpnjhM-Q@mail.gmail.com>
+ <6ab4a114-57b2-40c7-99d4-55a4ac4c9a9c@leemhuis.info> <CAJ6F8CHzm4=ryY+j3ao6doR=-67Lq=3-w-kbhk1wdvtYDhyNeA@mail.gmail.com>
+ <CAGEkeHdxaC2BBg5wWOCL0pj0r4Ks6mD_a3KpE7h+en9Aupb4zA@mail.gmail.com>
+In-Reply-To: <CAGEkeHdxaC2BBg5wWOCL0pj0r4Ks6mD_a3KpE7h+en9Aupb4zA@mail.gmail.com>
+From: =?UTF-8?Q?Cl=C3=A9ment_Smagghe?= <cle.smagghe@gmail.com>
+Date: Tue, 17 Nov 2026 23:27:07 +0100
+X-Gm-Features: Aa3M54pO67MCZLcmJlYCwS3g7jZlLsxu4gjlyt9JHnihscax6mlfWNEjuiM6Vfo
+Message-ID: <CAJ6F8CF5FF6-+Z6tOA7Gz=m_Cvxz-n7G=bqVY5H+fBCV3kbo_Q@mail.gmail.com>
+Subject: Re: [REGRESSION] ntfs3: existing files/dirs with ':' in their name
+ became inaccessible in 7.3 (ads on by default)
+To: Hungyu Lin <dennylin0707@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, almaz.alexandrovich@paragon-software.com, 
+	ntfs3@lists.linux.dev, regressions@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,=0A=
-=0A=
-I have some additional findings regarding the Logitech G733=0A=
-(USB ID 046d:0b1f) volume issue.=0A=
-=0A=
-I confirmed that the physical volume wheel can also cause abnormal=0A=
-volume attenuation on Linux 7.2.15, so the issue is not exclusive=0A=
-to Linux 7.3.=0A=
-=0A=
-On Linux 7.3.x, the hardware PCM mixer sometimes initializes at=0A=
-51/74 (-23 dB), even though ALSA has 74/74 saved in asound.state.=0A=
-=0A=
-I found two workarounds that together resolve the issue:=0A=
-=0A=
-1. Enable "api.alsa.soft-mixer =3D true" for the G733 in WirePlumber.=0A=
-   This prevents the physical volume wheel from causing excessive=0A=
-   attenuation or loss of audio.=0A=
-=0A=
-2. At session startup, explicitly change the hardware PCM volume=0A=
-   from 38/74 to 74/74 using:=0A=
-=0A=
-   amixer -c Headset cset 'name=3DPCM Playback Volume' 38,38=0A=
-   amixer -c Headset cset 'name=3DPCM Playback Volume' 74,74=0A=
-=0A=
-   Setting 74/74 directly is not always sufficient. Forcing an=0A=
-   actual volume transition restores the expected hardware gain.=0A=
-=0A=
-I currently apply the second workaround using a systemd user=0A=
-oneshot service after WirePlumber starts.=0A=
-=0A=
-Both workarounds have been tested successfully after reboot on=0A=
-Fedora 45 with Linux 7.3.x. The headset now starts at the expected=0A=
-volume, and the physical volume wheel works without abnormal=0A=
-attenuation.=0A=
-=0A=
-The root cause remains unclear, but the findings suggest an=0A=
-interaction with the USB audio hardware mixer controls.=0A=
-=0A=
-Best regards,=0A=
-Lucas=0A=
-________________________________________=0A=
-From: Lucas Cota <lucasbrunocota@live.com>=0A=
-Sent: Tuesday, November 17, 2026 16:47=0A=
-To: linux-sound@vger.kernel.org <linux-sound@vger.kernel.org>=0A=
-Cc: regressions@lists.linux.dev <regressions@lists.linux.dev>=0A=
-Subject: [REGRESSION] Logitech G733 USB audio volume issue since Linux 7.3=
-=0A=
-=A0=0A=
-Hi,=0A=
-=0A=
-I'm experiencing an audio volume regression with my Logitech G733 wireless =
-headset (USB ID 046d:0b1f) on Fedora 45.=0A=
-=0A=
-Kernels tested:=0A=
-- 7.2.15: Everything works normally, including the physical volume wheel, w=
-ithout any custom ALSA or WirePlumber configuration.=0A=
-- 7.3.3 and 7.3.4: Audio volume is significantly lower, and using the physi=
-cal volume wheel causes further issues.=0A=
-=0A=
-On 7.2.15, the kernel reports:=0A=
-sticky mixer values (...), disabling=0A=
-=0A=
-On 7.3.x, it reports:=0A=
-broken mixer GET_CUR=0A=
-=0A=
-Unlike 7.2.15, the newer kernels expose a hardware PCM volume control (0-74=
-).=0A=
-=0A=
-I can temporarily restore the expected volume using:=0A=
-=0A=
-amixer -c Headset cset name=3D'PCM Playback Volume' 38,38=0A=
-amixer -c Headset cset name=3D'PCM Playback Volume' 74,74=0A=
-=0A=
-However, turning the headset's physical volume wheel makes the audio quiet =
-again, even though ALSA still reports PCM at 74/74.=0A=
-=0A=
-Enabling WirePlumber's api.alsa.soft-mixer =3D true helps with software vol=
-ume control but doesn't fix the physical wheel issue.=0A=
-=0A=
-This seems related to the USB mixer behavior change between Linux 7.2 and 7=
-.3.=0A=
-=0A=
-Could you please investigate whether the G733 needs a device-specific fix?=
-=0A=
-=0A=
-Thanks!=
+On Tuesday, Nov 17, 2026 at 8:29 PM, Hungyu Lin <dennylin0707@gmail.com> wr=
+ote :
+>
+> On Sat, Nov 14, 2026 at 7:43 AM Cl=C3=A9ment Smagghe <cle.smagghe@gmail.c=
+om> wrote:
+>
+> I sent a fix that makes 'ads' opt-in again:
+> https://lore.kernel.org/all/20261115103845.56074-1-dennylin0707@gmail.com=
+/
+>
+> Could you reply with your Tested-by if it works for you?
+
+Hi Hungyu,
+
+Thanks a lot for the quick fix. Your patch doesn't apply as-is to
+v7.3.4 (the context line 'opts->ugm =3D 1;' only exists in 7.4), so I
+applied the same one-line removal on top of v7.3.4, rebuilt the ntfs3
+module with the Arch config and tested on the affected volume:
+
+- mounted without any 'ads' option: 'ads' no longer shows up in the
+  mount options, both existing directories with ':' in their name can
+  be stat'ed again, and a new directory with ':' in its name can be
+  created, stat'ed, renamed and removed;
+- mounted with an explicit 'ads' option: ADS mode is enabled and
+  shown in the mount options as before.
+
+Tested-by: Cl=C3=A9ment Smagghe <cle.smagghe@gmail.com>
+
+A minor, non-blocking suggestion: Documentation/filesystems/ntfs3.rst
+says every option can be negated with a "no" prefix, but 'noads' is
+rejected (only 'ads' / 'ads=3D<bool>' are registered). Accepting
+'noads', or at least documenting 'ads=3D0', would avoid confusion. Not
+a blocker for this fix, though.
+
+Thanks again,
+Cl=C3=A9ment
