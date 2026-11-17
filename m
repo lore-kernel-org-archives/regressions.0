@@ -1,75 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=211.125.139.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794920360;
-	b=RmHPhhKh/WNSqPxxxjvmxJZRDQissiiOGm/FJbQDbtJ+CXk+dkVOG2T6OgOT3YB++mJm
-	 juEJsjxO6sSivQG7Bc1l47iGJOS/8+8rBYvVd2Qe1y9WSvp7edL30RaBmuCnudJn0gH3x
-	 DD3OYnVsX646WjIXjdXxIsgfUPqEGPicAJXcww72zKpwO6ChbOmrB0Lr4I7dlU1WLO/X3
-	 pKj+13E4WMoJBGaZjoplfzHGfVM4Ir5gFxKDLSABW5Zq8A9HIKz6rYYzQRHO2ufkTXS66
-	 7W70OHKd0vhfyWZMJaa+HG/BWioMQrZPaN9zSO7kWxHfd2NNEpR2zQPXSTtPlf91dQw==
+	t=1794922508;
+	b=fOodY9msPZd5GRuJIhXfkIe/EbK40OeHyRWK6UelqA6lUZo70bLx2JjbFhubclZxoW7g
+	 G7L4S0o1FFA7zUG3hX5xMJpyGgWhEr+Z3vh+p/fcYwUq2+OQNQcDs5ibN/KHdIq5cufSI
+	 qlSwlSqPZNczfXV9mRQ+loE34qEK6cdbT8jogFOtWkQ9OlSyEH9lRFJuui7gjbsDANnPk
+	 FtkgmSSEy4zw9fg7pEoDnEWrnugECyCNiWj2k2qoDe+g0yEpuJH587VxWAPdC6Ooxo/Bj
+	 Eshgw2nzi9YuzcewuUhNXcqDOunB7Da+SLzxsdV/5vBdrMetcgH4BhTtKBC7wxprhdQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794920360;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 Received:X-CSE-ConnectionGUID:X-CSE-MsgGUID:X-IronPort-AV:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=zmYS0GN2id4S6B9+p+P2ma3OGfmv55Yw6pTtpNz0ax4=;
-	b=dy7kUiLqdu+waV/ejkX5Cd1cOCIQCY3HNLEO2YhVFiccZ5dCzq5mHBeJw2bzHB4wr+Qh
-	 6qxfLu0VSdOAnvt+27bzA4AyLIXslXTsYdLwJfWSt2sG3J3fSBv7LPnSsuF7I7kfVeMf+
-	 sjONloJecqobvjyLWV+P7xeWgJGYGwWvDVlu2ValiQ9JF1dMWmlzIzLaVkciK4QAHtcWD
-	 iSurijoBXCGBktRCPutIhDSxgcQl5/X4PKsQNoColTVTV1Nw0EBTg9UcAJ0cWDd2XUsZS
-	 GdO3TiZea6szfCfEf958ryBMV2acA1csx1GQ0+hqc5ISYJg+so8LSfDbv6YVGXg0zlQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794922508;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=ioA43pJHcDJQL8W7VvWm4+CiwKJ1zY7tj7ZN6Wqk5cw=;
+	b=OBKhtG9jKB3dA4EE8euHF99pmOEhmTed9IdVNa8QXsUE2TIkwz4K866Btl8fUKnyJxEG
+	 AMcvRJj7jSM9PXNAjdls0SZDFBh6afvy+qYS0H7u1w2hDgy4xESrPUJ8yECluNgO/bAEE
+	 WNtQp8lazrXqL3vsTZJPYLwNpvC+RjHTtlgSv5I5f6dZC94/KOGkkD5xiL/VTu5kXgqaA
+	 RKeCDYPoHJdy8tKqtkqbh+Mzmyh4B/a2H1Wns9HgsAVthUvjEPU8CbtLwDCvhWCP/8Okg
+	 k/jpNpWpoQEPB5+ASeq9ESlLKcMRiGW7JYOfWYJtI/qgryQXXqj7BGMcYLCEYXwhVlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=sony.com;
-	spf=fail smtp.mailfrom=sony.com;
-	dkim=pass header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=s1jp header.b=M6+5xZo2;
-	arc=none smtp.remote-ip=211.125.139.71
-Received: from jpms-ob01-os7.noc.sony.co.jp (jpms-ob01-os7.noc.sony.co.jp [211.125.139.71])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aMYUJUxw;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1087606A33D
-	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 12:59:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1087606A33D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 50757606A334;
+	Tue, 17 Nov 2026 13:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=s1jp header.b=M6+5xZo2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1794920360; x=1826456360;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zmYS0GN2id4S6B9+p+P2ma3OGfmv55Yw6pTtpNz0ax4=;
-  b=M6+5xZo2zqKfw8JPingnakCO0FG7m5uoOx92DmTWpCXIPxTdmS7hmgoC
-   gAaTdykvstOzd7bOy1jtUsHyQkYgPpcu3peyMd6gWVcL7O4OA4zsJWm5n
-   VrrTVAt/m2x054vaAE/Ieemq4oQEjqjEFQmaxKZewt28vdxoPN+luBYbP
-   heHK4EQXVPCe8/+SNDPmiRG0MQ5lb3uv36C68i8yBcxOnP0kuq3rSU0r2
-   iC8W0zcKtY1g6wtxplNdahM42m24ENF9ZbGTxvauGUEkLPuhj4nc3V8DP
-   kGz0hRnInzEEfcxSzn/eafvOAkCXoX3liAYnnB/nV9vPt2L0idsUKPyjR
-   g==;
-X-CSE-ConnectionGUID: mgDIiWA2QzawOw3EgzZVTg==
-X-CSE-MsgGUID: 6Eg7HelrQTKsAIl+Ni9TRw==
-Received: from unknown (HELO jpmta-ob01-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::6])
-  by jpms-ob01-os7.noc.sony.co.jp with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 17 Nov 2026 21:59:13 +0900
-X-CSE-ConnectionGUID: o/EHE8gRSzCh9O+gy3ZboA==
-X-CSE-MsgGUID: PGkxXTqkTACjjzKTNEoReg==
-X-IronPort-AV: E=Sophos;i="6.27,166,1786978800"; 
-   d="scan'208";a="85562380"
-Received: from unknown (HELO jpc00229873) ([IPv6:2001:cf8:1:519:0:dddd:790b:411f])
-  by jpmta-ob01-os7.noc.sony.co.jp with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 17 Nov 2026 21:59:13 +0900
-Date: Tue, 17 Nov 2026 21:59:12 +0900
-From: Naoki Matsumoto <naoki.matt.matsumoto@sony.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, regressions@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	chenchangcheng <chenchangcheng@kylinos.cn>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [REGRESSION] 5.15.y, 5.10.y: media: uvcvideo: please backport
- 5b9c75c794ce
-Message-ID: <avxPoIvOXcFZayI0@jpc00229873>
-References: <avxKOmxCBLF+7qdT@jpc00229873>
- <CANiDSCuX1+ehTGN=HNuLL9YBTt8tUw6fJ2D1JqfePQGaz+QOzA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aMYUJUxw
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 6C2D91F000C5;
+	Tue, 17 Nov 2026 13:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794922508;
+	bh=ioA43pJHcDJQL8W7VvWm4+CiwKJ1zY7tj7ZN6Wqk5cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aMYUJUxwV3D3h7O6WftIBGjTr+39NhtyC9CFwIximBe8cUa2/9uJe/qc/n5Rk8Ze+
+	 maEFKoZ6vfLi6KHduZDmxqIk/j4OqtlebeG3zquyHhgR82OPzXHVwk7UbK+WoD+v+L
+	 m61h+VgjWkU0IS03f1wbbCRReTD0YQyeGXS8fmqMF9FEAjfJn8HkE0whcU51ZTWzGu
+	 jYAbvI5xz6QmfX18oN/PdFlluZ8U/w7JQG2Hna7vkaye5SzcLO0IEfW+/lCfPC3APH
+	 5aMLQa/sEY09iCzj4ob1EXD8r/6bR5nFWn0Io5z0wO6aLSC4sVyKqEg1dDYj/nJZzj
+	 IQWQDrA+EnYVQ==
+Date: Tue, 17 Nov 2026 14:35:03 +0100
+From: Bartosz Golaszewski <brgl@kernel.org>
+To: Igor Velkov <iav@iav.lv>
+Cc: Linus Walleij <linusw@kernel.org>, 
+	Shawn Guo <shengchao.guo@oss.qualcomm.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] gpio: shared-proxy: open-drain regulators on
+ ODROID-HC4 fail with -EPERM
+Message-ID: <kcopbszdsz2amzas3hmchxokw4bjxafu2wzjplthyihkellwd2@hd2k3tomwvdq>
+References: <20261115-hc4-gpio-shared-od-1@iav.lv>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -81,17 +60,56 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANiDSCuX1+ehTGN=HNuLL9YBTt8tUw6fJ2D1JqfePQGaz+QOzA@mail.gmail.com>
+In-Reply-To: <20261115-hc4-gpio-shared-od-1@iav.lv>
 
-Hello Ricardo
-
-On Tue, Nov 17, 2026 at 01:42:00PM +0100, Ricardo Ribalda wrote:
-> Thanks a lot for your email. I believe I already asked stable to
-> cherry-pick this
-> https://lore.kernel.org/stable/20260323-uvc-backport-bpi-v1-1-5b62c6798ccf@chromium.org/
+On Sun, Nov 15, 2026 at 04:55:00AM +0200, Igor Velkov wrote:
+> Since f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64
+> platforms"), two of the three fixed regulators sharing GPIOH_8
+> (GPIO_OPEN_DRAIN) on ODROID-HC4 fail on every boot:
 > 
+>   reg-fixed-voltage regulator-p12v-0: setup of GPIO (default) failed: -1
+>   reg-fixed-voltage regulator-p12v-0: error -EPERM: can't get GPIO
+> 
+> The first user (vcc_5v) sets the line to output high in
+> gpiod_configure_flags(). Its enable then goes through
+> gpio_set_open_drain_value_commit(), which emulates high by calling
+> direction_input on the proxy, and the proxy switches the shared line to
+> input. The next users hit "Shared GPIO's direction already set to input,
+> refusing to change" in gpio_shared_proxy_direction_output(). Stack from
+> trace_trigger=gpio_direction.stacktrace:
+> 
+>   gpiod_direction_input <- gpio_shared_proxy_direction_input
+>   <- gpio_set_open_drain_value_commit <- gpiod_set_value_cansleep
+>   <- _regulator_do_enable <- set_machine_constraints <- regulator_register
+> 
+> Armbian v7.4-rc2 (its patches don't touch gpiolib or these nodes); same
+> with the five shared-proxy fixes from the v7.4-rc3 pull. The winner
+> depends on probe order: without the fixes vcc_5v lost in 2 of 4 boots,
+> leaving the SD card unpowered and no rootfs.
+>
 
-Oh sorry. Yes, it's a totally same report. I will watch also one.
+I was wondering why does the second user even arrive in
+gpio_shared_proxy_direction_output() at all when it should take the
+emulation path. I think the issue is with the proxy driver not
+propagating the -ENOTSUPP error code in set_config(). While I did author
+that code, I have no idea why I did it and if I even had any reason at
+all. Could you try the following diff?
 
-Regards,
-Naoki
+diff --git a/drivers/gpio/gpio-shared-proxy.c b/drivers/gpio/gpio-shared-proxy.c
+index cb593192076f..8197ebb5f9a2 100644
+--- a/drivers/gpio/gpio-shared-proxy.c
++++ b/drivers/gpio/gpio-shared-proxy.c
+@@ -186,7 +186,7 @@ static int gpio_shared_proxy_set_config(struct gpio_chip *gc,
+ 	}
+
+ 	ret = gpiod_set_config(desc, cfg);
+-	if (ret && ret != -ENOTSUPP)
++	if (ret)
+ 		return ret;
+
+ 	shared_desc->cfg = cfg;
+
+With it, both users should take the simulation route.
+
+Thanks,
+Bartosz
