@@ -1,57 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.70.190.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794877391;
-	b=C2OVRZhOgTv39k+ttBwPJjbu5IqvW+8Vctwp53fexz36GFMuay83/+4uUwHsFO/IUBO5
-	 iWiLCExRnLfk2Jhu2NVtGKABlr0X6F7C29fvYPBxhh7AVTy60UsTmNqcswkv7lIp+euDW
-	 sRvKOHGF97Iyr9Sn3wq+xO0HbmwSvTQ+On2+mev7RPi75blybM/1W/Uub3nTKGB3f+AAt
-	 4RndmtcaM1Xzg7T9WQVlagfIR4k4YIlqeaLBZyHm9aNC/qCCBeDYM1Tip23O1JTxOFZyo
-	 kR1tVFDKlJk9rdOE9Ha+1WGIJvrQQA4dz1ahEoPw3IOULz8Ja/ngZfdrF9zgVqpFhhg==
+	t=1794878449;
+	b=zA48s3vCeZqISlFFthpECCAKd/zFZawS+NoIj2JUsPvegtwdnts5yRodVb/7ltbKS2/S
+	 F17wRGMuukR7jO68qxE5f6AFFRZpzEJ/WqRhJ3lamH6zCic9c+OROdSw1eFWkrsu38YMp
+	 vKPN3IQ6cDzswyNjKXM7EzsdsYNB06CTyMqHWbBruxuMSyYMH7ZcYu000sTEMjjoU7fsq
+	 tT2cjacgdOjXY+pbqzplnzehDn3NpeHZ/f3iTqhGNtaxfKkFpkU3aYTVG4vgW3Bxkqpyj
+	 Ko5ud0JGYSD2O7Y3FJvyq3CatrOiUHm9CQTMFFEKckEGcvuToA/jlZGh3ePAzoQ6GMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794877391;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=VSsxVqIpPocHwXdbYnDV3IVSPQ59g639wPhtS/DpJuc=;
-	b=2aGBrfwTxK/sOut+lPHv9hWgOFdlE1Xq3CTX+jtjAw5xooKocXOt5XhzCplM9EBP5q0b
-	 Z2AXBVISwcEL8KKBnt2fkC5+s8YkKsk7MXzL/X+22rj6tCrl5iEMb3O79207Kar8sZ7Qj
-	 e1mBIuUubFDG3At0xDJAbNsGsaWbD/Cv2cmF19Of18YmcD2SIqA2sR67jZYM465sGmPT4
-	 YS9IS+ca5W1/Tq7qTwf1TId6dakd07jyutnv1CatAH834WKB2aTe+BhxJV96FIj6ytgiT
-	 PUZAOSsBw3D7YsqZ1sZ1FhwcStYv1ovNuQE3SG9hhZnub7F/3ac0BhWRC4nD05OLEVw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794878449;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
+	bh=dKzxTSJhWwJg9hAdUbBcgVQMl0ndIM8fz0e2PMyCgLI=;
+	b=FExyaOv739dEpIe0PYFkf/EBOXuFeFAw4L7tG6GC2IfsnbRnnjix6Pex33fU+IoMdq3m
+	 sQLVLWGhWg5VZMBFpNVK3IJQKGz24OAJQg1uBQxWWVkVrjQA7I19Pib8LXCNok71efamA
+	 SapN7K4JsSMbfI07XEYQUO/L+RKCri4vSMIeJGkjYMaZs3B5NRXpE1D6JHKDQDt83BiHk
+	 Km9ILIT+l/xC5o36uDLBa9Ies6oDzNyyGtaXzEfdGuyKKBr75Edjwz2MUtEZpmFOy5AX9
+	 UIlbhbp81aULczxu1Ybq+t2XXsnTDQk2yMYrP1FxqBDYYf50wTCcgco7aEfaPayj0Wg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DH7Q9ors;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=netfilter.org;
+	spf=pass smtp.mailfrom=netfilter.org;
+	dkim=pass header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=ZijA604n;
+	arc=none smtp.remote-ip=217.70.190.124
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4223606A31C;
-	Tue, 17 Nov 2026 01:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id C387D606A331
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 01:20:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C387D606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DH7Q9ors
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A03FD1F000C4;
-	Tue, 17 Nov 2026 01:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794877391;
-	bh=VSsxVqIpPocHwXdbYnDV3IVSPQ59g639wPhtS/DpJuc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DH7Q9orsMuxRWex72emEAe5XG5nw2FYKjuzMoTSK3GfjJJmkEC1WQLP5Y5+Gtv+6l
-	 QnvNmptz+7X9hjjGEkGdgJaaJTaF6AAGSSa3FM1Cx0iC6Z9D4k1NIjzMoHsFJL/BkF
-	 UN0ZnAPzeUi0k6ITsflSZi16v5vdjrEZbrpCxjFp6/EXdbojvsAkKDJgzaVyyFJVVt
-	 UndfjfDpKDm+uXMxPmssB7a01LPbAwGLyVsHfUckcHaBqxY4aIAnKiqqht9tDfS0hC
-	 +iyjI2nEVE2gA0Fkd9oDqdLj99f+wiQBmPB0ltOLzDDzYZQVnwKbgI8jjX7iXsVFQV
-	 nKPrt+NXjTfKA==
-From: Sasha Levin <sashal@kernel.org>
-To: florian@wagner-flo.de,
-	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	regressions@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 6.18.y] ACPI: button: Enable wakeup GPEs for ACPI buttons at probe time
-Date: Mon, 16 Nov 2026 20:03:01 -0500
-Message-ID: <2026-11-16-2-daily-reply-0005@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261116181104.7297-1-florian@wagner-flo.de>
-References: <20261116181104.7297-1-florian@wagner-flo.de>
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=ZijA604n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1794878446;
+	bh=dKzxTSJhWwJg9hAdUbBcgVQMl0ndIM8fz0e2PMyCgLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZijA604nGkhrDNKXgOYFx2W7T+S9GJ82c2GSjWCFKBfYJZuWS0TytcDWX3LVKVlcW
+	 YWMFuIw8Lk4G0LXMdqspErsbLbs1gYgbuZYlvr3g9SoznqzYauMGk5d8wTuSIIeJYn
+	 ZRo9+0xLhFGhPAl2hmumZPGMdVa3izi7Vq50nhL5mdUiRFo15u/JwGPkfvYK3XvR40
+	 C8Sf930S9XeOA3JZVQG5EHbKjz1Bhfoq/OdgSe28RkehFKgw0cCGEfiMLDxkqyVs14
+	 D3wIF0Aul68mdegHZSTQvVxpB/JAfUYq7PYoPcoIftbVsbkZCH5qI3fkPHvZU91NTI
+	 BNAuSuGbMKr8g==
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with UTF8SMTPSA id 16C5160057;
+	Tue, 17 Nov 2026 02:20:46 +0100 (CET)
+Date: Tue, 17 Nov 2026 02:20:43 +0100
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: John <shffr@protonmail.com>
+Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+	"coreteam@netfilter.org" <coreteam@netfilter.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to
+ 00:00:00:00:00:00 once the next hop's neighbour entry is gone
+Message-ID: <avur6_dQVhWTrTTh@chamomile>
+References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
+ <avSIBUcLH4kZyISX@chamomile>
+ <avTngTkNKE5ApQW8@chamomile>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -61,13 +69,28 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <avTngTkNKE5ApQW8@chamomile>
 
-> That causes function keys to stop working on some systems [1] and there
-> may be other related issues elsewhere.
+On Wed, Nov 11, 2026 at 11:09:09PM +0100, Pablo Neira Ayuso wrote:
+> On Wed, Nov 11, 2026 at 04:21:44PM +0100, Pablo Neira Ayuso wrote:
+> > Hi,
+> > 
+> > Would you give a try to this attached patch?
+> 
+> I forgot you provided a reproducer, I can see one packet is lost after
+> this patch, then the follow up packets don't get blockholed.
+> 
+> Let me revisit this again.
 
-Queued for 6.18, thanks.
+To address this issue, I think it should be possible to remove the
+neighbour lookup from the datapath and let the flowtable GC maintain the
+neighbour entry.
 
--- 
-Thanks,
-Sasha
+https://lore.kernel.org/netfilter-devel/20261117011248.3004853-2-pablo@netfilter.org/T/
+
+If this works, this will allow for more flowtable tx path consolidation
+as a follow up.
+
+I lightly tested my patchset with a simple flowtable scenario.
