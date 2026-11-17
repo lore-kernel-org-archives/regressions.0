@@ -1,97 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.7
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794910957;
-	b=k0dubHzplg586sDEzW77eE+fBc27+dLJsP8tMFDeX0hjiM9MoZ4xac7Or0LfUeweGTRI
-	 8INoUSBoJS+5Y6SavctCTF8Qw8yxitVIEscwoVis3ektvEXdC4WwDDDzs2EyIAFFp5YvS
-	 2YjSsRrq+Iz6CEuxkKJxXNbaOh2w6fDquLlqM6KkhKga6ABhcvJm6D7vkroLgVtIyW436
-	 IG1ro3vpp8SecwbE6dW2KyyQxT8zA3DbiuF5ComLypWs/fE4JEPxAKBISLwvSNw4w6TPT
-	 NvyaVliErzmQtsE3IweoGzd05YRgw+9YFqBuED3zlqiVxGNFdHVXFFuhSF3vAk9XhpQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794910957;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:
-	 References:Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=Aq2HfZxK57r5c8CIAtTaplQVsaI9UayBsZXE7N5Vioc=;
-	b=DDjyeJDEb8WdxLHnDETBYRmcb4zsW1XO/uf/fe2TXGTf82BRuolpoaE1u+I2ZJoebk/R
-	 yrJ/d4ZUgqJd9dYVyAhtVSIwolB0XBeu2dnbrnzxvkceDJYqke/1FXgxOyImI167HHO8X
-	 90UtX6kzSt8nUNamS72V+8Pt2u3/NQ7iPdPQowhcLdZdVoER1KB+dTInq8YfGUW6xZkxp
-	 zn3MWZqsh6TBLlludP4tP9mHU5pgJQyD/wJu8LpX4dBFES+6qy/5ZqR+xeP5NaFn+j7G1
-	 12FWc3X19pvnoGgjI4X583WvRGcZOuyGW0/xDwFVxN/4azNPCqu31lTEBOaXt4UlGsQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=0V4GjCUF;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.193.7
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010007.outbound.protection.outlook.com [52.101.193.7])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794912860;
+	b=pRDHD+eLPR6DWiCmt5BlzukebYOSkzpnRxoKytXAjqrL3j2OLuOK3daDFJKdnwPfidug
+	 OtbTnkSWe2g27m+43rfsJEWrEZ/SW0st0TCsGXQqy8uKbThwnNKmlx86MpQHnO8niOyUE
+	 OarIMYFr634LYA5aufa9UdszMbUDEyiABAIP3YSqw58/a2Zxfo7P437fGFmthq+pJi5Y2
+	 NloeV8nuI60JVtDeoBUOZxi+M1UwZg/NQesEGrJmUrpFXTPMKg2ldhMkZl0l1ba9h43WN
+	 XBjhwxF6JcmG4CvKFDCe+AeExK/mNmerJuPWUfU7JP3ot0NuZ8X2EXPy4+H0QQodTOQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794912860;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Gm-Message-State:X-Gm-Gg:
+	 X-Received:X-Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:From:Subject:To:Cc:References:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
+	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=PTs88JOJil1zv+VWb8/Lu7bcOjPi5qntSr6+ZYlo3es=;
+	b=HE6g/cwCUA0I8lxmPUwr731fnrWHBCSAPccS7WXkOAT45LnTWgyttts7nCdh91T13qm1
+	 Mn4jRhm6urSRBAIUt4fav0MjxXU8fpUgCouTziqTCWzfV/O7N3ny4JuIIuMugw2L8Zxsj
+	 +y933zBHZsd4LIUTzESWyewE8E5sf2q2NDFKbhvskl0CDp5GYFx9N6Zt9qulXPvaG8Con
+	 9a4TcSD/dxejGGNulvCD4GfBJLMzDN2IVjSkgIiYNoidVCwGvoA8/ICM+RmQRrQ9bE5EM
+	 zzphg+DsfSK0acCG0hIE6Je2ViIu5HtvVtydQuL5fPCSrqV7naPeybdBeYmO1pPgdzg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=kCahjSi6;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Jo+gG9kH;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCDB606A335
-	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 10:22:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0FCDB606A335
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7577606A31C
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 10:54:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7577606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=0V4GjCUF
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h2sCR6UksDclMJx3ws4gFt5tr57E/ofkH7cxbZeNDswtKxPXhNggLq5/ECMJWxRRicPPLogYDoIacn7fUI3bJBZH6mFeVFnnrvKFVxgTHoMDA57Ad9kXczi5ZX9zsUY5Jqm29B2AXGxLt68r5J8+noPYTOlhndVKQdy+BG7YHN4VkENGQ8vfQ/Md+U370Tcw2RxYvwZGXeIrI0XTfH8EZUvVWZNtJp6hxHzIncwo7w5PgLR6TWWi9t2HMyz6YsQxGUJXJE4/b6t5RT/vq8TorScVeXPrUDLziLZ0ajSpqpiWF4qFUdf0fwtq/oNUGokZ7jglcA35Oq3bSH4Y/VAY/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Aq2HfZxK57r5c8CIAtTaplQVsaI9UayBsZXE7N5Vioc=;
- b=k/VxjEDTtQHMByPFpCD0A4Jjkzc7FRUmKN8i9bf2pSzeZGCFLViuWlwuLp7hB1h8G9PT4l5iwpFq0F4Dxi/xUpDGO/INBYSrCHLWQqhHD+t2EsQDFMeNiiH7t7azvrnG0VyGwwdkdtOwfb9cBgtqoe0n2sOE/SkUjpLVXiSN/dfIkj3Qtvw7tgvo1x8Gyi7QMSke20lcgvKN4bvAAmn5CEtdikiYmEi8NmW5SPaBFgwPkNV/RdwdYLc2n3Mg2DSZtjYE+fQWleIN8ahchezrK5ih8VxHgtM461izPOigcDGdYRJIck8v5wAphDkRJ3a89caE9ks59g6IWclw7/Zv0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Aq2HfZxK57r5c8CIAtTaplQVsaI9UayBsZXE7N5Vioc=;
- b=0V4GjCUFlcM1+iK8BnkJ2q2MWo5Kv9wdvhnQ7pS+yz5u4cjVW0+yCjN13AhwQsAF8efQ46atxncvRkaJZNvNkgSq3tvhnV+lyPbKd3nKNT6//oM2D3+oyE5nc/RHUy6h0DuO2l3qCs01N0cVPbswZ/Rm3iAV0NmIRSEaqW62280=
-Received: from BY3PR05CA0023.namprd05.prod.outlook.com (2603:10b6:a03:254::28)
- by PH7PR12MB5594.namprd12.prod.outlook.com (2603:10b6:510:134::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Tue, 17 Nov
- 2026 10:22:29 +0000
-Received: from MW3PEPF00001652.namprd21.prod.outlook.com
- (2603:10b6:a03:254:cafe::a8) by BY3PR05CA0023.outlook.office365.com
- (2603:10b6:a03:254::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.639.0 via Frontend Transport; Tue, 17
- Nov 2026 10:22:29 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- MW3PEPF00001652.mail.protection.outlook.com (10.167.249.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.639.0 via Frontend Transport; Tue, 17 Nov 2026 10:22:28 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 17 Nov
- 2026 04:22:26 -0600
-Received: from [10.136.43.35] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.57 via Frontend
- Transport; Tue, 17 Nov 2026 04:22:21 -0600
-Message-ID: <add0d6ee-c28d-4274-b8d1-58638abac47a@amd.com>
-Date: Tue, 17 Nov 2026 15:52:15 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=kCahjSi6;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Jo+gG9kH
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AH8hMxL3407597
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 10:54:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PTs88JOJil1zv+VWb8/Lu7bcOjPi5qntSr6+ZYlo3es=; b=kCahjSi6w02VUeNV
+	5fcTXcwuAtp0kRlw9hStmd82TepvvMihOQWopWZe4Yhip9S3uZZiyFcxAo6IkEBk
+	fvC1poqVj6NAmBYa5lwd7HPY5PjXywXXNhV5EGPUmupVT0gsA1Lh8rPmKdg588F8
+	tymi9nR5vlAIVvdZ7XEU4Hfk8WA1v8p4dil/l2jugCa5UqgvakcCUOlujTWog3Pk
+	q++E1XI2W1ev4/CyNIUtJql/NYF2qpUKdYjAYfTBH4g7ffeqqM14RIrmX4rGmf1O
+	ZTGqFmmD2MQKJXQ2zA9OgjIu9tV5NgH/Tm1MtDYWSUm3mYHTiT8MI0K86Mg7MqJG
+	aml3Qg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j09htjqd8-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 10:54:18 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-947a607ec40so431606585a.3
+        for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 02:54:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1794912858; x=1795517658; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=PTs88JOJil1zv+VWb8/Lu7bcOjPi5qntSr6+ZYlo3es=;
+        b=Jo+gG9kHn10AmfRu6/8nHuaI6/kr4+VsuX/ud+gySaePumWsy1QzBQ7M8mOshcERB1
+         qmFTDDU65Y1lsqmzFbeOe6jDsS+bYi5uBB02fD5p9oeW6Ub//U7Sck+2HLjY5V0YhqS6
+         DXdf00Vn8SBoy41AJxDYFHCaj+ZOO979AQPNiNizcJdQqYKNSvzNy+i9dqSr2JIz5PXo
+         PxZ7UUVPRwHUQI0JLQXXa1qwiiHHCLmFWtENBM2h/CO33gcbi9bdIF+MRrfjRLmurD/4
+         cGBGffhJlkGjNeiqqPrAUZJ5kQI/Fx7MlI8LICycJYzy2NVbwcDpy6I8TqLllo1+aW1i
+         b8qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794912858; x=1795517658;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=PTs88JOJil1zv+VWb8/Lu7bcOjPi5qntSr6+ZYlo3es=;
+        b=MPUkB4iz49Oaj6qLaq9TbK0euYEDG1XmMn6WvALLgOnxXObBDU51EG2ZvmEiO09l92
+         OGy+fY83PABiE0kxzd1Dgt/AVUgWho0GM3ci47+LkJjYf/EkVa4OG/P0+VCvzhoYPAh2
+         J15WsOHSFfTSNfEwFUB4CLYpyJMjl7TEGxv9sLunMmlJWtTaQtxDPW1X22yLx0Qq16H4
+         4aXF5uLPkkGbAqgqEZGP3c4dN50BvmNgsmW4do2Vyr07Q6grl3uSFzlGHRQvzo69GOMx
+         i347YQSI2P6F7zMZ2/ibc/58TOqz+LfnSayzJc5SK7Ok+Ddmgkde+H+zz5+b/lwP3Gju
+         iJug==
+X-Gm-Message-State: APuU4Z/+ivkY6PeRx76uHnTsOxLum+El+w3W77+bGC5Gc+Tf0HjI9jHs
+	H6+TzxKxeCpD3B5DmnTSfrroOVErpzSjCvhsqy0B4ovvxV4V/bDEYykhDcoYVf2QGgp/UujCkS+
+	6QPWvHeWxzscH2IFiLu1TI0MtrmW2cyvpZ6X2yHSD4LFOx5nxKGEbNxOEWSyidft2mA==
+X-Gm-Gg: AYBFou24Si8ydgXGhJ6Ew3P6OIUGwgmBdjnK6yNWh5sEpTnq7DnIRCX+oziTrqEUuTf
+	ybD6HMOggcQeBtpCu0NnNtVXTn5nvmGOzxlv9BZpUur8Bc/T5swAdyue1TuDuC/ZS+5UxupzUKq
+	lQc/ppmOqFHgk/JL7BUMDBrRF7ClaZ3L2pbHBFe8c4/TJn4ZGgxYUL33eNXoOEmhrfgmfZzFcVr
+	rL/4gZG2VLQb1WZYfaTwykVxPKhtUvwyV/HrU5F36s82LdLkPKbLu4eOSiQKPXYsgO5AK5oies3
+	R02oyIPLHdioN9QhnDhdWOxInlUyyth9tjDHJ9drwzfraLJ4XQtHWpycJMKjYGBszGCM4HGqVBC
+	74I3XmrvtcmqMVgnc9/2bZZwB5WEx5KY++TaFr8KdSNOtAqfedmPgzJGl3Ib4eF0O4sxL
+X-Received: by 2002:a05:620a:1a09:b0:93d:23b3:5088 with SMTP id af79cd13be357-9494bb88e1emr2137094885a.16.1794912857734;
+        Tue, 17 Nov 2026 02:54:17 -0800 (PST)
+X-Received: by 2002:a05:620a:1a09:b0:93d:23b3:5088 with SMTP id af79cd13be357-9494bb88e1emr2137092385a.16.1794912857208;
+        Tue, 17 Nov 2026 02:54:17 -0800 (PST)
+Received: from [172.20.97.137] ([195.50.164.66])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb783f8220sm58576545e9.5.2026.11.17.02.54.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Nov 2026 02:54:16 -0800 (PST)
+Message-ID: <d5ece1f3-b70b-4c70-aa52-cd0d00253ea5@oss.qualcomm.com>
+Date: Tue, 17 Nov 2026 11:54:15 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -102,129 +113,99 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] core scheduling latency with idle load
-To: Mihail Mihov <mihovmihailp@gmail.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: <mingo@kernel.org>, <longman@redhat.com>, <chenridong@huaweicloud.com>,
-	<juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-	<dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
-	<mgorman@suse.de>, <vschneid@redhat.com>, <tj@kernel.org>,
-	<hannes@cmpxchg.org>, <mkoutny@suse.com>, <cgroups@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <jstultz@google.com>, <qyousef@layalina.io>,
-	<regressions@lists.linux.dev>
-References: <20260605105513.354837583@infradead.org>
- <20260605124052.227463677@infradead.org> <avt_mdiPQ5gwAisa@lima-fedora>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <avt_mdiPQ5gwAisa@lima-fedora>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PEPF00001652:EE_|PH7PR12MB5594:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e121163-96ea-4b30-f577-08df4494aedd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700016|82310400026|23010399003|10067099003|56012099006|11063799006|4143699003|261028144727099003|261022105027099003|261021123027099003|261026140227099003|261026121527099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	ijFy5q4LflUk9pl93AgPesXP6hvx3Js30ZxhpTXDjAZ0qR9CvpDhElwAQ/ih2FadMqXM1GTtXrCm4LyxvzMhGEB772wPxYO9QqmARgZYKMKn3Z+z71F6zfWU47eC2/ed/JbFe3thzta/I+p9KbNyK0ooIUd0oN7lAZKWB2veIq8HlVBeluwwpM/4ylr6viCKF4XlgJlwltkD9oraeMywwV1X3HRkCar3sOSPNN5EOf6IEvi+zlbRFu8ljbyerArITKwm2o9Ijcj1KmWcE7cGQqcKs089OwfDfQ3OcwZOSxXKxc2sL59Kfk/EVuOMn8laxLTaDjrvb6EUTFn3HL7Z7h/tykcGvla9nT3VyOa4jxQwnnHUZS0eYkzEY2Ibwbvu78v3T3gZI3iE4Qpo73EEDPbIiJQwPml3J3K9JOmFkzx+CQfmxlqf0lRm9s441rVXPBO+G2VBA6U3yzHrv5RjTmuoHwKzmu3QbP9rViYIuxC1FdqEd2QrAhfkP8nf4zlgNg+E7NK7Nq8588e5VwtchrfpL2u62xkLjCLnfXg4eqy6equsNMoDvObu1ttIUPWclt5CauerK6XQo8HilY2wPQOkhKHC4kYXeyZdQBrHQLRvkGKaMrCdBskjc204lnz664o3wSQwL4VrJYo72GBnydclf4yV1uT30UkK6jYa+eAvY9RimHptpTnq71Zz5uinktXK0oXq8TgNqmJiB3qORQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700016)(82310400026)(23010399003)(10067099003)(56012099006)(11063799006)(4143699003)(261028144727099003)(261022105027099003)(261021123027099003)(261026140227099003)(261026121527099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	SF5XajKHmlt+Oczs5Z04j2AecoNq2qM9hehJfGEDYc+Hyi/5zCivrVDdgT/NsYqhv9TpIufFQgw486MkXOr9eB8TEskVCakkzbGuzNHdhx9IBtEvbAF9rzFXhfB8/Gd1Z5pQCQOBLDR+SSVH2vnVcLdI+ZmU5H1PjKW3MchigABiKt4Xj9Qpfl4mAytbzeA7nCRd32Gw+OPkq1ONekatyk8D6plgQi17haOzyghYKTBLP3lLqzQxAppK+VCA7UJJEejMLWeJdQ3EqPajP8UMCXy/3qCj7Mp5IGiNLvhbyv80nxu3w/E9Dg/JQ9hGTUb1PGwjJrrn/u4/KWsPdsoDlwt0TSoSPzcDk5y+pRV5JmTqLWOc9qfoBiTNueiI/qhX5YkMryxmH8UkHYLKIsXRisPhXY/1+oLQB4s+uSIfaNQ0qVA4+eH0KQHuKlwqlDKx
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2026 10:22:28.8194
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e121163-96ea-4b30-f577-08df4494aedd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MW3PEPF00001652.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5594
+From: johannes.goede@oss.qualcomm.com
+Subject: Re: ASoC: rt5677: Do not apply Yoga Book ACPI GPIO mappings to Samus
+To: Ted Vera <tedvera@gmail.com>, linux-sound@vger.kernel.org,
+        Yauhen Kharuzhy <jekhor@gmail.com>
+Cc: regressions@lists.linux.dev, oder_chiou@realtek.com, lgirdwood@gmail.com,
+        broonie@kernel.org
+References: <CAFd_G9guhtVwE1aaFOXE3Ab43BAcwP3RBT=R_SdZ2KDfXB=LeQ@mail.gmail.com>
+Content-Language: en-US, nl
+In-Reply-To: <CAFd_G9guhtVwE1aaFOXE3Ab43BAcwP3RBT=R_SdZ2KDfXB=LeQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE3MDA0MyBTYWx0ZWRfX3i9v25dkNgRN
+ VGeaQ8yAmgdNPLql+ttT7sgr4A4bcFJn5X4HYOrZ1FIURl4c2XwNgQ7cKAC6ZMMpsjXFVzGnEx/
+ cNEhFaIQAY++aZf1KXANPyeWfQjpkes=
+X-Proofpoint-ORIG-GUID: v1-ZvaK8A6LVDMtnkKcI35iRjnXeVpY6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE3MDA0MyBTYWx0ZWRfXzZdDSjbHaoTc
+ ggfHIoDVLVPRAhIE6JEYo2B3wm6ePjT/6Z5NZCk9QR80oEfgJ++67cEFnKoHdiFglvYOW1qB8nS
+ tY/hu4X9J7MQk7UxPuT08Bns1optx+u/RA26Vvsx3cBVEINpjRgfRFg7221KuRAN6sDSrXtAHlF
+ D+J/Pu01YGXVnG8kX0MILR2lrv5GUWdXIQ45PmzM9yhsR7XF4MYxZnlEHICACeCWpx9LGjEsVL9
+ tJ5Ah5UGWwl+uXqutJoc11f9iPSWGXvfMBRro/vLo6uHe5Z4qbXD8wLSkS/B1ez9HG7IJHf+XZd
+ tKkOtvO0i7Qk0DqGWJjctm+mL3SwaeAcM117qo39Ebc3U3EZLazjVKTWf/xvQTIDHAXuZIrRUp+
+ djkVvoEer/KeOnZhSMHkRnfK+NJCxy2vonO5r+yh8QaSHWGxwe2jgLnnxPUtKE6Qv8Ge/mw4RYA
+ xgbUQ4uuSJ28h+ZzE3w==
+X-Authority-Analysis: v=2.4 cv=K963jCWI c=1 sm=1 tr=0 ts=6afc325a cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=Jk2/TV77q6/E6wQq2oQJxQ==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=dsTg57I5qmWE0NA2W7kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: v1-ZvaK8A6LVDMtnkKcI35iRjnXeVpY6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-17_01,2026-11-16_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611170043
 
-Hello Mihail,
+Hi,
 
-On 11/17/2026 3:52 AM, Mihail Mihov wrote:
-> On Fri, Jun 05, 2026 at 02:40:20PM +0200, Peter Zijlstra wrote:
->> @@ -14893,30 +14803,8 @@ bool cfs_prio_less(const struct task_str
-> [...]
->> -     se_fi_update(sea, rq->core->core_forceidle_seq, in_fi);
->> -     se_fi_update(seb, rq->core->core_forceidle_seq, in_fi);
+Note adding Yauhen the author of the troublesome commit to the To: list
+(why was this not done in the first place ?).
+
+
+On 16-Nov-26 22:24, Ted Vera wrote:
+> Summary:
+> On a Google Pixel 2 LS Chromebook (Samus, EVT2) running Fedora 45
+> kernel 7.3.3-300.fc45.x86_64, the RT5677 codec repeatedly fails probe
+> with Failed to request POW_LDO2: -517 (-EPROBE_DEFER). The codec
+> appears in devices_deferred, no RT5677 ALSA card is registered, and
+> only HDMI audio is available.
 > 
-> In case it helps: adding these two calls back on v7.3.4 brought the
-> cookie p99 back to 55 us.
+> The driver’s ACPI GPIO mapping added by commit 0cc00de3dd5b maps GPIO
+> resource indexes 0 and 1 to reset and pow-ldo2 for every ACPI RT5677
+> device. Samus’s DSDT uses those resources for codec GPIOs (jack detect
+> and mic-present), not Yoga Book-style external reset and power GPIOs.
+> The driver requests the mapped GPIOs before registering the codec’s
+> GPIO chip, which appears to cause the deferred-probe loop.
+> 
+> Test and result:
+> I built a temporary module against the matching Fedora kernel source
+> that skips devm_acpi_dev_add_driver_gpios() on DMI board Samus. With
+> that module, the RT5677 device bound successfully, the bdw-rt5677 ALSA
+> card appeared, and laptop-speaker audio worked. Secure Boot remained
+> enabled. This strongly supports the ACPI GPIO mapping as the cause.
+> 
+> Suggested fix: Restrict the mapping to devices whose ACPI GPIO
+> resource layout matches the Yoga Book, rather than applying it to
+> every RT5677 ACPI device.
 
-I can confirm I see skipped cfs_rq->zero_vruntime_fi updates for root from
-cfs_prio_less() which would have previously bumped up the zero_vruntime_fi
-at common ancestor.
+Only adding the GPIO mappings (devm_acpi_dev_add_driver_gpios()) on
+a DMI match of the yogabook sounds good to me.
 
-> I don't know whether that is the right thing
-> to do, only that it changes this result.
+DMI strings can be taken from:
 
-It might be since cfs_prio_less() would have compared the zero_vruntime_fi
-at common ancestor but now, everything is driven at root cfs_rq.
+drivers/platform/x86/x86-android-tablets/dmi.c
 
-That said, perhaps se_fi_update() could itself be optimized now with
-flattened pick. Could you try below changes a try:
+Note there are both a X90F/L models which ship with Android and
+use a different BIOS, as well as X91F/L models which ship with
+Windows (same hw, different BIOS).
 
-  (Prepared on top of v7.4-rc3; Lightly tested)
+Yauhen, I guess the ACPI mappings where for the Windows X91 model,
+since on Android I expect the GPIO's to be hardcoded in the driver?
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0c8af1cac2d5..3935693bdf2f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -15278,30 +15278,21 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
- /*
-  * se_fi_update - Update the cfs_rq->zero_vruntime_fi in a CFS hierarchy if needed.
-  */
--static void se_fi_update(const struct sched_entity *se, unsigned int fi_seq,
--			 bool forceidle)
-+static void cfs_rq_fi_update(struct cfs_rq *cfs_rq, unsigned int fi_seq, bool forceidle)
- {
--	for_each_sched_entity(se) {
--		struct cfs_rq *cfs_rq = cfs_rq_of(se);
--
--		if (forceidle) {
--			if (cfs_rq->forceidle_seq == fi_seq)
--				break;
--			cfs_rq->forceidle_seq = fi_seq;
--		}
-+	if (forceidle && cfs_rq->forceidle_seq == fi_seq)
-+		return;
- 
--		cfs_rq->zero_vruntime_fi = cfs_rq->zero_vruntime;
--	}
-+	cfs_rq->forceidle_seq = fi_seq;
-+	cfs_rq->zero_vruntime_fi = cfs_rq->zero_vruntime;
- }
- 
- void task_vruntime_update(struct rq *rq, struct task_struct *p, bool in_fi)
- {
--	struct sched_entity *se = &p->se;
--
- 	if (p->sched_class != &fair_sched_class)
- 		return;
- 
--	se_fi_update(se, rq->core->core_forceidle_seq, in_fi);
-+	cfs_rq_fi_update(&rq->cfs, rq->core->core_forceidle_seq, in_fi);
- }
- 
- bool cfs_prio_less(const struct task_struct *a, const struct task_struct *b,
-@@ -15319,6 +15310,9 @@ bool cfs_prio_less(const struct task_struct *a, const struct task_struct *b,
- 	cfs_rqa = &task_rq(a)->cfs;
- 	cfs_rqb = &task_rq(b)->cfs;
- 
-+	cfs_rq_fi_update(cfs_rqa, rq->core->core_forceidle_seq, in_fi);
-+	cfs_rq_fi_update(cfs_rqb, rq->core->core_forceidle_seq, in_fi);
-+
- 	/*
- 	 * Find delta after normalizing se's vruntime with its cfs_rq's
- 	 * zero_vruntime_fi, which would have been updated in prior calls
--- 
-Thanks and Regards,
-Prateek
+So the devm_acpi_dev_add_driver_gpios() should be only done
+if there is a DMI match for the X91F/L models, re-using
+the DMI match strings from:
+
+drivers/platform/x86/x86-android-tablets/dmi.c
+
+Regards,
+
+Hans
+
 
