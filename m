@@ -1,101 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.170
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794954441;
-	b=k+bZD9VshE/xsNjOWm8IYjArnIAlYXDjFBfakLSih3hEciEsbLpbMQfpcq3QgbEOun4/
-	 yaxyiQAemBafN8W+cLVMmfGpUJ8qgt+VR7c1I0oqiDTJ+m28Z+NPxM82M4oUueoqTGJZg
-	 jxbf3Ayxjr+HH9ijPPIqUn5YbQxUBrW2R9044ZMXxmE0innOtvUr4aOy2c6BgE2n9/tRC
-	 F2BA38t92vG+og+4V5jnvbRz9qgQ26ad15thUWUKDe5hdNwVsthxdzVrjypJuT249n4co
-	 QvAMmQikisugwLb7kqDNiwEBRP7nMQ2pJmwOQpuUN+U+SGxFLcCGaHnd5aEDk1GIypg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794954441;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
-	b=i7lrSWSpsY1SAmzWqZGRP5rv7xdZ+ehO9UFM8HmPxdatBaKyw6oJDRpJ4vPhIQ3kyKHn
-	 Psa6r/ao9HsSthCEsy++e+YQtPWI9Y7OmfonmVGZ2vEvESwJR7WM4oXtbze8zvdgVAg3j
-	 hDSHXULtV5qoq9Nq//s/piCE+xcoC47K7B6Qqu0ME6sSyjHQwvZMssdt2ZRnAWrv03PqS
-	 G7GXIndqm+xMSc8pcZJVaKgWm7HjK1vqk1uJWPH/DGUcDgEJ82u00mY4j9ty9q8FqBFwh
-	 csnmP1ycawkyZwz1wT5IeFqOXdcMrPopC4Cr4njyyBIhNNTVMwvNdKFat2kO5vl8plA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yXm3b6YG;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.170
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794958762;
+	b=GXrHR+UVvqjH9bcux+MiZ63BFxpBFonmEiVzyELok8yAOVjt7+6pQ2K1n1Q+tVWPP8X7
+	 Ul0H/n1YrIl7GDmIHkztW0IfU37FrXRGY+r0Ns6N4bSiuMYOHN12ss8yUnh6e/CFcEsug
+	 kTkyRoUQBWcyhk6xnETMyh+IZ6xwzHSx5IXYoAjK8Gj/O1H7sCWPX4DCZBc5eCbxkfcbK
+	 0ZkENm2oaH/pttCp9YGPkq3IUi55bvMH33nV6s89fefv5bzPTxovf0usQaeoQ/7iJHOiF
+	 xkFcdjfgDn+ViBM+Rg4xoo8Ngo3MCRuH6Qm29BL8q1pqDU7+OscTjbjtav37b4UrnDw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794958762;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 X-Cookie;
+	bh=wkFBKPQXTtUyZziZ1ANq/sgDTGMxbX4P5wGnOw/2HDw=;
+	b=u83rQgSitu3/3/9IVygLBsi0g22uGfgvJJQyPhB6RwqxwP8t1NT9E4MFyKEEwxH80baU
+	 uwZ/ctg/Dfl0vLlkGc8NYb+5B23irnyiYbdcgcRbQhw957MRa+Ks6xVglF0+SkgImAYLt
+	 V0p4N7Lp27eh9M2I8UxDB+j8/C8izvv8VssfrHSOcwlyCge98l0E0Ad+w6cwnmy8oFzdy
+	 yojwH2fR37gHk1F8HpyRcb9QuG8YilzjZLusNPZUc6y8aQai6mRKfvjQ4EpKxYHr9pqfx
+	 Xd5yuFoN3K7L/viqZgHcVbeiMEXkoD3t/FamZ9/dzbQFaTohdLzujzdohi5HtCZX0Iw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hz27g2RL;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A0B606A31C
-	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 22:27:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47A0B606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D003606A31C;
+	Tue, 17 Nov 2026 23:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yXm3b6YG
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-36dbde64409so741433eec.0
-        for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 14:27:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794954439; cv=none;
-        d=google.com; s=arc-20260327;
-        b=OwhvK4MZjZWYjsBu3azgPbQ0sBDhOTwuSOccFRoIGO4erQ3p/QVMqvMatC1N90GNV2
-         v4ooLQc4q7Lh5yZSTA5Jas8JipIC4L3j5I+LY49T3aYAjxd2Yysq18IGXP+2BKBWhOVL
-         cAZpBI9Nm+V9Il+QN/TQ3wEg2EZQ8dZywG4Zlz0H3PLPAY+qj6kKT2oXNtWxcmPM2l7X
-         SxvQ9dUwHFv2Djue5OQbAvZPAusqdpvEdwpTiAT7VvIDzqC4L9b2xQeN/9Z9dRtmdW7u
-         T8RC4LxqpOLtzkmcJlXiBHOrNEca2abGP8RigsTE8F6UAcc8QFMlfnk0vqJxOyH6Iy+W
-         7o6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
-        fh=jtjX4eq83XQCW9IxqymjgMHmnqRxkGnsAosuXvEJQcQ=;
-        b=WmRnSGOpS24Qkge8vyL0oSsnrETOyWUCnZcOXNe2OmocoL2BRlTzGnF8i04G75o6ee
-         OKErErbxqsXPDc+HAHh2smlUcVP84RhhzO/sxZqpnZ7tU3p9W/HRBkniANKr3039+3bR
-         ybEgi5hFnl/VuOEp3wYK9TkJrfNYej5VJU4G7rczaWqh8Y6k4XtPWwoZRmF8ZhqpKG/k
-         r2eoQA860gjS4U/bLjEvHR7d2LlUe4MqfBnJ8z+eNNgvB0xg+IkgsWAnBXTkbNA0EmRF
-         0/QHSe0mtHc/foOQ30ZjueXZJOmP1i7unHHKLrXC2wVDgvznOO2DozWqCuAEHXRrBg87
-         PxoA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794954439; x=1795559239; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
-        b=yXm3b6YG6CsBezQeb7jdul6mjzlcjkAZvsxt3eJ7xNDiff/qedhHhsLhyVYDbh1T9d
-         ppNSU5l+cQRBGTw2ePagI2Iws3aeTvqHG/g9Tvk2DLkg97z/ru2go+uVS9bR3BTqqTl+
-         ZKFvQ5YfAMEjwBKpwdFGytK5o+1hBKjIqZpM43d0qcnr21VgtgWQGgdtP0PU/reO49gL
-         k8NzoHMBjr/rXB6/hQ9HPslI04zWhWh5yl7hztZ4Q6syM9N7dem4rog9nYn5xav1YYZT
-         IpmFFd92WMRyyjevzb1uOFxbz/39XD0IA9+QQM2EuFKLKX1EQ6dr++p+qKWCgJVGNzQp
-         wGcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794954439; x=1795559239;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Qc4tF92xQdHPstDc9OOaR7th/jMxJe62KjbX9qJMUYY=;
-        b=ZbaJ+lnkYDJoutbhGKnbFKtXHKcE79hWFZcDKcW/4bBdrYumHr/szDXhZV4xttb5or
-         Fww+V/hRAvTcJkeDiiFFO5t62nfwoe7TDr4bB0DDX1Bn1cMNJcA8smdHX+GzZTbttV7W
-         F8Ptjk/uUjtl74dG+Uxmt7RZygP5eWSdIUS+X66bK0QmGH8h9f/YmRa0h/BL4xYTjRdU
-         NhxzbhS1AZiIktYGVRnrJTvYcTc2TLeL9/47xiw4ShDs3xsu2PyRAWSPwKlDQQ3oZnAU
-         X27bCJbIkPVr1DPV0A4/C5sCBCw5BKUlkVpcdHxGDLH41oZZRnTxPjLH0f4I6OgyNHmx
-         GUZQ==
-X-Forwarded-Encrypted: i=1; AL+hErHytgsg22ReSY8uCupAoQKli1KtO3HseyjUTEccI+lTkZ3Ez/4iKNSb71LJ7WJWisVj09Che7YUZrhgnw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9yc25EGgWFfer6UC4tWml0peZo+TevZDTlIuy7rhTkYL0xTM8c
-	+wdKBZfxkF+TwS0qyoDnSuOkjazurCFEMqPx/rDyEPal20lURN2Wfah8y25aKw9LSzDQ0d5acQU
-	lYtMg0XQ40hSeg+91Llh7RXJinGoq7Wg=
-X-Gm-Gg: AZFdTZe9pb7MACYlwjXTIevaY5eZf0wBuzO0TXLw116jGlt7N0c/hO0LZWYhXSUAMzy
-	T6BMzN+l4Ycf4UXXiLTPTA28BOoTlcaWOr3alI8uT8VWVPbG/wd09RlA0JfMlMIoZgKFlRsy+Pr
-	uUryqSlNif89WbW7GMVdA0K0rkKvzXy+NIbZlTv9QQ1cUBIZZ0/eMH2Q9P2kJO4qD4QSaZT53dZ
-	W4KtiOO0K7TTz1SGJCtmyHNCtGiT30eLAGvMCOwovNrNjpMuk5wL7KviSOdtSW8QlmeG8gevevJ
-	Q5jxd+H+swok05CFUKdYBZGqe2/ULjtCAxe5G0HTGN7ti2sVh2BcFOuYGq8stMFF9Ioa7zfbCJk
-	rabatOzOhc51lrI5bMn/CWL9kytFixqQfWyN5P/mg5MJ6nwrdLlgBixAsI+7sns3BRSKEepKBKw
-	EaXryfPADJ1YXeOuMczsKJpaNdLMv/cFikenbNVnI=
-X-Received: by 2002:a05:7300:7314:b0:375:c5e1:931d with SMTP id
- 5a478bee46e88-38280c2e5fbmr1001348eec.25.1794954439224; Tue, 17 Nov 2026
- 14:27:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hz27g2RL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D98C1F000C4;
+	Tue, 17 Nov 2026 23:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794958762;
+	bh=wkFBKPQXTtUyZziZ1ANq/sgDTGMxbX4P5wGnOw/2HDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hz27g2RLMQHpLHwHyl8zLPWJobmOAbmeJyum5J3YQgBThZJqFGaSKAL45IRRe54BA
+	 4+sefngXTsZMNuUWI1UBCTVT9nA4NQItirkXGnYHTWODm9ZNJCP7YsmUEDN548fg0L
+	 aXRNFSEmInI0FTH/WHNbRKl3pLqIz7+XWVzl9qDEHtq81IUvVuiVJnP8bi+WYKRc9E
+	 AfQARqRfpd+fO2gKcgijojor7sQskF56om6vbbvlI2TTV6+Z4Z+f3AwFlXuIGmXIpD
+	 F4eI2kMDMY8GWgYCfDdPnnlDoNSJB9xige8Fa+kd0ALzIcfaB6W2nsI3KlNGn+WRsF
+	 2RYJqf2XUr+JA==
+Date: Tue, 17 Nov 2026 23:39:17 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Cc: johannes.goede@oss.qualcomm.com, Ted Vera <tedvera@gmail.com>,
+	linux-sound@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>,
+	regressions@lists.linux.dev, oder_chiou@realtek.com,
+	lgirdwood@gmail.com,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: ASoC: rt5677: Do not apply Yoga Book ACPI GPIO mappings to Samus
+Message-ID: <51903d75-8831-4e2f-9b25-92deb979f5a7@sirena.org.uk>
+References: <CAFd_G9guhtVwE1aaFOXE3Ab43BAcwP3RBT=R_SdZ2KDfXB=LeQ@mail.gmail.com>
+ <d5ece1f3-b70b-4c70-aa52-cd0d00253ea5@oss.qualcomm.com>
+ <c0da379f-e10a-464d-b01a-d65e0e07e5e6@linux.dev>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -105,57 +62,48 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CAJ6F8CFSfgdZqaKMndGZtbaww32Xr_KVL3gA_2Jemgv9i9vskg@mail.gmail.com>
- <CAJ6F8CFgkgksyk6YM3NdMkQNhSFWV4depC4c-mHvpDHpnjhM-Q@mail.gmail.com>
- <6ab4a114-57b2-40c7-99d4-55a4ac4c9a9c@leemhuis.info> <CAJ6F8CHzm4=ryY+j3ao6doR=-67Lq=3-w-kbhk1wdvtYDhyNeA@mail.gmail.com>
- <CAGEkeHdxaC2BBg5wWOCL0pj0r4Ks6mD_a3KpE7h+en9Aupb4zA@mail.gmail.com>
-In-Reply-To: <CAGEkeHdxaC2BBg5wWOCL0pj0r4Ks6mD_a3KpE7h+en9Aupb4zA@mail.gmail.com>
-From: =?UTF-8?Q?Cl=C3=A9ment_Smagghe?= <cle.smagghe@gmail.com>
-Date: Tue, 17 Nov 2026 23:27:07 +0100
-X-Gm-Features: Aa3M54pO67MCZLcmJlYCwS3g7jZlLsxu4gjlyt9JHnihscax6mlfWNEjuiM6Vfo
-Message-ID: <CAJ6F8CF5FF6-+Z6tOA7Gz=m_Cvxz-n7G=bqVY5H+fBCV3kbo_Q@mail.gmail.com>
-Subject: Re: [REGRESSION] ntfs3: existing files/dirs with ':' in their name
- became inaccessible in 7.3 (ads on by default)
-To: Hungyu Lin <dennylin0707@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, almaz.alexandrovich@paragon-software.com, 
-	ntfs3@lists.linux.dev, regressions@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SjdPSLczvmqMTBs+"
+Content-Disposition: inline
+In-Reply-To: <c0da379f-e10a-464d-b01a-d65e0e07e5e6@linux.dev>
+X-Cookie: Marriage, n.:
 
-On Tuesday, Nov 17, 2026 at 8:29 PM, Hungyu Lin <dennylin0707@gmail.com> wr=
-ote :
->
-> On Sat, Nov 14, 2026 at 7:43 AM Cl=C3=A9ment Smagghe <cle.smagghe@gmail.c=
-om> wrote:
->
-> I sent a fix that makes 'ads' opt-in again:
-> https://lore.kernel.org/all/20261115103845.56074-1-dennylin0707@gmail.com=
-/
->
-> Could you reply with your Tested-by if it works for you?
 
-Hi Hungyu,
+--SjdPSLczvmqMTBs+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks a lot for the quick fix. Your patch doesn't apply as-is to
-v7.3.4 (the context line 'opts->ugm =3D 1;' only exists in 7.4), so I
-applied the same one-line removal on top of v7.3.4, rebuilt the ntfs3
-module with the Arch config and tested on the affected volume:
+On Tue, Nov 17, 2026 at 06:34:24PM +0100, Pierre-Louis Bossart wrote:
 
-- mounted without any 'ads' option: 'ads' no longer shows up in the
-  mount options, both existing directories with ':' in their name can
-  be stat'ed again, and a new directory with ':' in its name can be
-  created, stat'ed, renamed and removed;
-- mounted with an explicit 'ads' option: ADS mode is enabled and
-  shown in the mount options as before.
+> But the open is whether those GPIO mappings belong in the codec driver?
+> Back in 2017 (!) Andy moved the Samus mappings to the machine driver
+> bdw-rt5677, why not add those YogaBook mappings to the cht_rt5677
+> machine driver?
 
-Tested-by: Cl=C3=A9ment Smagghe <cle.smagghe@gmail.com>
+> Looks like the addition of those mappings for the YogaBook didn't follow
+> the Samus precedent, now we have two different ways of doing the same
+> thing even though the codec is the same...
 
-A minor, non-blocking suggestion: Documentation/filesystems/ntfs3.rst
-says every option can be negated with a "no" prefix, but 'noads' is
-rejected (only 'ads' / 'ads=3D<bool>' are registered). Accepting
-'noads', or at least documenting 'ads=3D0', would avoid confusion. Not
-a blocker for this fix, though.
+If the GPIOs are for LDO enable and reset those sound very cleearly like
+something the CODEC should manage, the CODEC driver needs to know what's
+going on there and those devices are used on non-ACPI platforms.  So too
+do jack detection signals, but possibly the GPIO usage here is intended
+to be as extra interrupt signals since it looks like the device has
+integrated detection?  That'd mean a separate per-platform mapping.
 
-Thanks again,
-Cl=C3=A9ment
+--SjdPSLczvmqMTBs+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmr85aUACgkQJNaLcl1U
+h9A2Gwf8D4EKk70pupTjkgmJDPNl6uX67k9wZaLEj1G+SkItsKPsDGhKxjcqvj3i
+5cZuFPcU5naDPdhPKxYVziEyBEHrcLxrUw+Xd7ltaOJK+8XKspX4nxYcQpL058iq
+ryO21QROwCbcss5oR8Ymxiu2mzts4qsv2xy37gwt2KURLQrHBGHZe2QVPRPRtvD3
+ER+gv3D6/5181H7UDyRza2UcqaRJNl7Oc43GjWlqaCcXqmtpxS4L8wUwdqGBiTYU
+7kHNWMKFaLSSnPEdkzakzy5MOL+b3UBy1XfqKOYYelVhIt5tLv9032h5PtX+jp3z
+XbBcVbwfHf5dQ4n2FXBze49iWeME2Q==
+=rJdv
+-----END PGP SIGNATURE-----
+
+--SjdPSLczvmqMTBs+--
