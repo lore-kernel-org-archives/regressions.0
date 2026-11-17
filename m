@@ -1,101 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794913913;
-	b=ckKtJ5OZywPMTzuuZ6MyP6ydpyBWwmFtc5qNOKeP6VphbFX4TkTQ2ZZEHLasllrigr6O
-	 CppDzKRPblDITCla3yntS80nVpOqx2IrNosgLsoXXHG7EC9Setr/Gr6rClUfUrs5ZQHhA
-	 GS5JkC2a3si49hWbpnkMcIGNMXc8w1MWZrj9T1vvtwLcTFjVujKic1F1y4htnqUtN9bKC
-	 gh5fd5Yq8EeHi2xaj74bYEYF7Z8J/m2vi80mRoUCZAjciDdjcxr8TWJwfn1G7KfdX6txw
-	 kbhT8NeADaOoXUNktNUE4hcOgK4C5KN5A0/yxqxhs0rcXE2nVZAIoPS4q9eATCxJnuw==
+	t=1794914390;
+	b=c86eSB6+1HBC/TfYOrJYtJ/MMOm0fxI96cH6+ISXAUD6GO3CYFOd8Et5tsAFdu1Oduw2
+	 KsknHmGFdSDrR+m5rIcPksP1+T/Tyg80OPZUclawgwlAOHMxUTFmWBHKTnuiYHVXnzcCo
+	 6NPpxJlKGkzFBgzBaga/C/nKJ9I0ORIyvz6sLwt2Cm0SmN3s48JxxogjOivk/qQxlkXwu
+	 BbG2ZwS8MYqpONcDZAXs2n+WfqmfN2LsMoBtyI+6IVVHXNqezWBpPuqgo8aW82CyW8W2o
+	 cAIPjWY8q0jBy4eEsu2IncJqAwxZigIW3oUfzjE+P3mcUGfzXqx2smLSicfEqlsWyeA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794913913;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=Kn42LlYA1UZYSbOfHBABnjOJ0sk0wIks9BO0RA5nM0A=;
-	b=G0UzPAQ3CHGlc1UrzbDBmEkvdDiADQFN9DwQTKZzk4oW6QADQsqyR9bN+Wmue9/+ZMY6
-	 feIR0f22lKVLD4wET1r1HWZDgL/AHQ3OsFx3HYTJ/C4KPNqqV4+aKNzkCF1A2KiI4m+iM
-	 QkpgAMO4bnTOK5UcuBNyHzHHYvGbKKTY6bb10J2b4AlLMR4q+FDS1rQ4SmzrNX0fQXn1i
-	 4zL6rOBlydKrpiFKp2GHsya+2sQjD61A9ADC+He6Bu90T9pCc+EtHrSwqfuNgpVqyuyqB
-	 upeGmMkBrWSdDg4doCXJEYvCBI4qBoLZmwFGnFoXFu95tisLMgFnMLuiLfXAJs9IGmw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794914390;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
+	 References:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=637AXF9wFoSkEmtNS0d29vTnknxZCJItDtybf93OyJQ=;
+	b=1MEECRBsofCLObt8qo21YxWN9u0/CcDSdZWPECzHCUvjYPRO5CjsEqHo3QKG9BCqdzQ5
+	 2oXeECv0nDXEYx6dEdj9sEqk09Hdp6sly2Qgauj9TRhOrgBcA3Ban4FkmCHY4vBH5wpr2
+	 1I+St0sgvL8etHUF3k0EbOXFu7qkE8/MSIExu+kpJSzWA0IPsZCfoT6OQyrT38ROtvpi4
+	 OE/X5B6jNHONGqjyoJ14QH1jsjteqeZsZG48MLzdgvDS86Ge9HuKaubGkF/fidDYUrInG
+	 MeYi7fXuKMEZY/LiaOc38ZfecTAMX+v9HVvj129tEQWddVu4S0Mto4VJVS+F265hwYQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qLIuBgwv;
-	arc=none smtp.remote-ip=209.85.128.51
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="eW1/iavd";
+	arc=none smtp.remote-ip=188.68.63.98
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3385E606A329
-	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 11:11:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3385E606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2999606A880
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 11:19:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2999606A880
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qLIuBgwv
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso46430335e9.3
-        for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 03:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794913911; x=1795518711; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Kn42LlYA1UZYSbOfHBABnjOJ0sk0wIks9BO0RA5nM0A=;
-        b=qLIuBgwvu8HewGkB/6/krSrcMhOuLjT4PBy1dKzynpF54szwtFqWJ1advO2v5urc9l
-         SBx8HXunBDM0A61N0eehfitFLQouG6K+9F1pOIxwhv8qObyi/kLUdx3xtEEsrLt64Cma
-         Dw+Kj+NPp3sb13LJ4LdfKVfR5D9f6tJE1PlgNijahSsICto0bAzqMpC1MwVUiIasWvtt
-         ENjRb09z2CtFTndzfGKwvMENpluGENXhCMZ9o4QPksB2BUIDmzuGGrRJDqYYgd/1BmA1
-         wwqC8yMGFRnLM8mTEPCojno6hjUEJDPcrafyEbOpvXrnmTBMSEirusPbb0O4AFZVLf1K
-         1kxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794913911; x=1795518711;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Kn42LlYA1UZYSbOfHBABnjOJ0sk0wIks9BO0RA5nM0A=;
-        b=hGUaDOTjY0zsEUncI4U1q4nxGdlaqZW84T+RMDQ0hVMI6565oTu4s90QxgAUEMJLoh
-         WNXJugDgx/9/9lELTZSm0RBWEWm/NQnwDy9ZaaFF4dvpELZXudW6auGiNPsZge0CBhWX
-         1XD6+QHSxxMnX+EqPpEMfMQkTEKgFchAytg1Z8ffI/9XQ54718gQ4V6zUa8//k4lDkuv
-         wZVoiF9lu9G0jXWf3vA+ViL8eLlQTYRPFTEW5UC+rPp8T1KCDpcKaELqoa1udBHUxs9Y
-         PaGVj94CTboTsjXBshtu2qWr8Dtb6vwSk5xwRiI+yc3JKcPlo49Ivg7yFtcyQgZ0s1AH
-         3iPw==
-X-Forwarded-Encrypted: i=1; AL+hErGglw2LWuFEitjyYf2f4Jml0kVosGGbOEabF60IagbWBKLLFthnfm67lHj1YbR7Ms591jN0M7sC3yvAyw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9AdVqQq89QIkp13XvlmA9SLH1hEautElaXRv3EyoGyzCY94KjV
-	fSPd2O8lMzXIcdx/FD/1GF2Gd4KiZbwV6WY3mK+e65hSTLv1YXfnWt1G
-X-Gm-Gg: AYBFou3U9LCnQ5swsOkrlnA9VrTPtZpk7h7F0cnBObQbRJuChyyyXZcnnp7E0ZcNNE1
-	ED/6XD1KTuhfDJ7UWteIo7n1bdxJ9ioj86IuB6r8PKZ9RtpmgJWC6qhwiLqBrv9RTzXwkXUHBM2
-	E83PiXyiSWQWy3x2VxbIHzjTMmDLsRTeRLpOwFsTPojVLSy1VHkuTP+9ULLRPPKAw4NqI/SqEzi
-	MsL4Huk9SM+cBEzHhyMsWgkCrbSCO4jVECfK8FYhB9rMeOiKO3JRdee6KID526eSeM8BjBvQpYG
-	D1q2kVjadqbdWaaCIJNbPN9HJ4bgniBN/OFuxO997LMZlnyiNRoa2p69bfuLsRVJg4TxIEgfi82
-	UVIHCYHAmlasFO1DI9kvXJYV/WPAgOQaUU2c5Uo7png6MmfgDKgZ2T2J2vVu+BZB2/J39kdb2YY
-	YA9Ex8jQty8l+CxY2OdMHgm9UqrB/1ChSkpoTQvJ5bRyThO87sUMnTX7tYnBolg7FtwgE2h8QVJ
-	/v/+hbK0fWquIXDFEwBRdDMd3BhvGk2Dg9C8IfMOt+Dsw6N51XBIxFouVi3oTjsFXFBHBCWZf8F
-	bFK0Lgn4AiGSUbZ88yvO8dUBc1jxGgP+tDzMurJH+7Dxbqi/YKlV9IFFZx3Yz949K+NtXEVPUU3
-	nuWLdqYCSN6okS67c8A==
-X-Received: by 2002:a05:600c:4ecd:b0:4a2:1655:87db with SMTP id 5b1f17b1804b1-4bb5599d31bmr293588205e9.0.1794913911432;
-        Tue, 17 Nov 2026 03:11:51 -0800 (PST)
-Received: from lima-fedora (eduroam-269-3-018.epfl.ch. [192.33.199.18])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49d673ce75fsm20642423f8f.55.2026.11.17.03.11.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 03:11:50 -0800 (PST)
-Date: Tue, 17 Nov 2026 12:11:48 +0100
-From: Mihail Mihov <mihovmihailp@gmail.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org, 
-	longman@redhat.com, chenridong@huaweicloud.com, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, tj@kernel.org, 
-	hannes@cmpxchg.org, mkoutny@suse.com, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jstultz@google.com, qyousef@layalina.io, 
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] core scheduling latency with idle load
-Message-ID: <avwzqWkw9dJMYlkw@lima-fedora>
-References: <20260605105513.354837583@infradead.org>
- <20260605124052.227463677@infradead.org>
- <avt_mdiPQ5gwAisa@lima-fedora>
- <add0d6ee-c28d-4274-b8d1-58638abac47a@amd.com>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=eW1/iavd
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jTMhD6mSYz6Ch4
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 12:19:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1794914381;
+	bh=637AXF9wFoSkEmtNS0d29vTnknxZCJItDtybf93OyJQ=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=eW1/iavd3XDSWxDIAGwfSWJA7p/D4qcCLFXmMTlQoz7k7VvDBoG6ufeGt0ad80mLz
+	 VmsqtkK9XNFCtMrqGReGr6qAM0ydZC3/GXorFB1nNgv6w7k1kt6OQ/+DdTqSQIXHef
+	 DOuIXf+yeZIAB6P/NhmO7wJNNwdtKGnXG0cMbkco+O8EQUHytfc60wHdJqku5KaVRR
+	 eNt9ZQO4IPz1w6MSGinOB/HxS600EYRMYI9Q5GxtYBYJtiaUL0hpRaRbMkJaSipOXT
+	 RTdbchi3oNebpOSXO1LSgK6Ikd1PTI8AGvkwfFpLTv7g98we+6N249DZfYlaFVgHbA
+	 wxd+28ZAUJm2A==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jTMfr6BSDz50wj
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 12:18:28 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.899
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jTMfl37ffz8v3g
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 12:18:23 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1FDD95F8B2
+	for <regressions@lists.linux.dev>; Tue, 17 Nov 2026 12:17:56 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <8504cec4-4bc6-47ef-bd14-e99b27fd0e36@leemhuis.info>
+Date: Tue, 17 Nov 2026 12:17:54 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -105,25 +78,47 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <add0d6ee-c28d-4274-b8d1-58638abac47a@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179491427631.868355.14638397336664385553@mxe9fb.netcup.net>
+X-NC-CID: 3VZEfvmfHsRcD2O4Ly50Ie6KUiuvO75VQ3H3susDH9K+Tt732cg=
 
-Hi Prateek,
 
-On Tue, Nov 17, 2026 at 03:52:15PM +0530, K Prateek Nayak wrote:
-> That said, perhaps se_fi_update() could itself be optimized now with
-> flattened pick. Could you try below changes a try:
 
-With this on top of v7.4-rc3 the reproducer gives:
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-  kernel              no cookie  cookie
-  v7.4-rc3            53         3290
-  v7.4-rc3 + patch    53         54
+#regzbot report:
+https://lore.kernel.org/linux-mmc/20261112124430.110629-1-johannes.goede@oss.qualcomm.com/johannes.goede@oss.qualcomm.com/
+#regzbot introduced: eed222aca8d0
+#regzbot title: mmc: sdio: rtw88 8723bs support sometimes fails to bind
+at boot
+#regzbot fix: mmc: sdio: Set acpi_device.power.flags.ignore_parent flag
+on sdio_func companion
 
-(p99 in us, same machine and config as in the report.)
+#regzbot report: https://lore.kernel.org/all/aveDNRBLx1a-9hRQ@mail.tty42.de/
+#regzbot dup:
+https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/17848
 
-Tested-by: Mihail Mihov <mihovmihailp@gmail.com>
+#regzbot report:
+https://lore.kernel.org/stable/20261108143640.6252e6a8@teclador/
+#regzbot fix: ACPI: button: Enable wakeup GPEs for ACPI buttons at probe
+time
 
-Thanks,
-Mihail
+#regzbot report:
+https://lore.kernel.org/stable/179104011040.2214689.5921682013387867802@eldamar.lan/
+#regzbot fix: Revert "Bluetooth: btusb: Add ASUS USB-BT540 for Realtek
+8761CU"
+
+
