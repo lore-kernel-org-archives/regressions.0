@@ -1,47 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794998968;
-	b=OOnVzmRZsjB74fPLqBU9HiDCyrVauJlauLQVCy2vVhEdkoLHeDKeurlcinr4e7ImmxFx
-	 ypifN9ylCmCcSERNvseHhXncLqf0uFhbSEpKhrRu3YxjkQFkEWe0eLbwLWWo0da2BtAq2
-	 7zqwEwPcQYT8E+ZlO5vCuqpvKwTE0D4dRzR5usZI3zygY5gzce4ER9ojAMedvg9DIgMbk
-	 ZQCUl4OZRRKiKPm/qEfJSUcRR7pojDs25Eh6lIvCsiPloofQb64weDaEeR44TDMozHiHX
-	 XwK8Kxz5NsbGSknNrFHwGyiQpbB9fkrSSAT2TYanbtTmxpsL8Rgrc/M0SNMW4bPiQbA==
+	t=1795002316;
+	b=dv7jnJEMuuUQDeVQdNqUt63RdHbtKS2mogBPjEiCZcoM3HYjqsXhbtfs/jaJR8e43LxZ
+	 uMed4oOxVe7gfFdjC7YQteUqNo0J3Ra8bnW63sWRPvSeRHPVrT0av+6vnPTHSYiMHrhjP
+	 2uOciJmXhTsY6YeY23Kl1rIjXH4ezK5o6+pUpJZ9lhEpMwItjrxrou9qEWZco9GBzyQ9u
+	 PzUVsmaaan+QazdiTMeJDD7VKpyo+XmIZv/oC9skPwVlZvribQkD9x8NG+tCURRmr1ERE
+	 l9dfISLowyP8RINSJm9r6aLu91BHBNeXbTIf4TIhT6KUh3PmTMSkAJu603uGwG3djzg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794998968;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=yjddwcwOXL4YWgrbreUffyhglJyEjmO2zwDmfBYX+v8=;
-	b=S4iO67vowafIKCzOxwoM2VpJn3Wrklq0F6pKH3OyR+YKk8FV/pbS/jh7snQlY/fUInmO
-	 siVwZGOJfXuwfAJn/M+CDZdW2sNWDwMtv48bXcH5GRceTm7ROYL6dAvyuDlXGqY91gfVF
-	 YBdrbM5aOs7kI1LLzg0O37RquvdSGWW/2vtSQTiGHhJqpLBVDF/YvTfhcB4U2uJ1uK2Ct
-	 fauZl8R38JP4tOSyGXrputj9m0OUPdLYB4UNU4zcttPPSRNJTFNKILbia8+76eP9ncoKl
-	 71WOc4N1VJfR8I8MsasxWdy5xQOLRZiCJHwEt4iohtOb9dxYVxuHr1E4u1XDCk118Yw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795002316;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
+	b=Z/2PYw+dj4hOKAiuTBEyiVy7E8WTeU0CyBICgviMG9eYpgFRwQXiP2/ntgmGXeR7stRP
+	 oyGUcIHG4TqfMNnBEiJfiDGci8HpyQ0wUg8W+4Xyg/n6mYo0J5jRcCmbw7XPldT9hV34I
+	 hfoZwameW4Ur2nNBlbRFZMp0AcDa3eA7i/4zV3pjpHNoz/jSzmqzprddg+3hTen6pDixU
+	 xlvJg/tGTNMNKbk1RHVaBifvvIPeUcxdQDrOtYccg5cS90uXo4w7violLd6diXbTW1xlC
+	 1ZvwzFX3mA0RpSiJEC6Wbv8XmPcHp1vu44FfmAgm4OJrRTGGgYWcs9fl0e2BpTaWnyA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=pass smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.93.99
-Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Mlx4RbP1;
+	arc=none smtp.remote-ip=209.85.215.173
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C027606A33B
-	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 10:49:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C027606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jTyxn0Tr7z1c0PX
-	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 18:48:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id CB53940574
-	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 18:49:21 +0800 (CST)
-Received: from [10.174.179.19] (unknown [10.174.179.19])
-	by APP4 (Coremail) with UTF8SMTPSA id gCh0CgAnZPOTgv1q3vJQEw--.21239S3;
-	Wed, 18 Nov 2026 18:49:21 +0800 (CST)
-Message-ID: <1102a630-de07-4494-aea2-207e5b84e2a0@huaweicloud.com>
-Date: Wed, 18 Nov 2026 18:48:50 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F49606A32A
+	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 11:45:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79F49606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Mlx4RbP1
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cdab938dc83so475288a12.3
+        for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 03:45:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795002316; x=1795607116; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
+        b=Mlx4RbP1F0Fjxjq1/HOuTlwajRtPhoOpmXMAUMTa5f4iKvaJ5qqo/7DxpLyfx12n+R
+         4Pfcsc2Yw0LHcRAdiy1SBB6eH9euYvrD5FFKngE9OtEteROgBt2dW7vRkfmKYE8EUoSD
+         W/vgVi12sccLKymXqBR3E5pjB7av1w+taTg2AQ6qCLTSvT+zoUqSBH7Tf5EBuDaTu+5f
+         uoJh7+DJ0gnYO0Nc9qaDd21y59NQs/2mpe8IWW21RBq8wlZWspgHCNJZK+i8wxD2ISS6
+         rMsCvJfDj1CiINUr8WA+FQitExTbe33S8XqAX3d0Jk3nGv20nwa4HEuS+Idy5dkyFu5G
+         29/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795002316; x=1795607116;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
+        b=SqsJi4Jmag8NhWiOTMaO7aC3NWSXqPvKcD9rMCF5+zseOOUQO7hsq2OjaxwTj733E2
+         qHz39Vdl1J/iKIQk3CYpndyyPQoSCbTOPSWdrIJkm6hi9OGlKClj02+vawT71aNeu0tu
+         IbsupfxHEoq7VMhxXSGq4jyXWHeU20RDQgwhDj3A+bzu/5GcsAGRx8hPLYH38qNlc9tr
+         HtnPVXeZHGxSnqSr9TpRvbIUIHQvXIYpGvJctGglnpnM8n1MFHSCvjg7JFKP+E8BfCz2
+         a0ZkyyTElXwV7tglyVXuwHSNuzpPzNOYCGWG0tAVRknsc3Hmf2P3NN/nVLO/nHCAn0Gs
+         KkUg==
+X-Forwarded-Encrypted: i=1; AL+hErFNUnlkSZRmf8QGx2qFrM/N34LCrlkxkEdaQOwV5g2BOJXfL+BbuG+sPAq1ZpIVTYZilw7Iw4fz0n78DA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+LMyb7ggryY0x/3mMzad7yQ4eVqGpGF0opZu+iswhISSQUrUjF
+	0M3Mg5FblLjh9XxjExEovD1rooMeDUJAB9G5lAzqWOIYDE6SfPjF250l
+X-Gm-Gg: AZFdTZcwR0csxypafDYtdG6wrNpMRw78MY6cYhAhcy7m3y+LzeUtnFpXjs0HgZn2Vz7
+	uFP3armNdRxZkG1s1UTVgWJguDI4fD6LfUDSIQwxxB9Gicocla5UQBTDELstMwH9MM43bTCQffV
+	8eUv+/Z+NQDNU+SgghhgXg0cszg+uieMtrddoTLVWqOgCcGjm/oot4l3K6koF3iVXoMrB8YTtl4
+	EIs/YXV+ZwKfAovNAwMP5ouSqR2AeWfaGhMqAkgIZhDJ7AqVwouYGmne6cPSUDfDGtzFJiPUkYW
+	tHE0p6Pmms4zMODy2rBLlZBIYglBJQS6pMKOeR75VuNtuSAvgYi/3atO6GTFbkYYBLvikAaWBxw
+	RmtwVve2X05BJrl0OjhEiqLWPslDToa0OIwNu9vc8P8eEBFOUBMQdHy5KDMB9qCgvC42vsdhneS
+	yxSKGUr0zVY/USCfyfQB96n4QGCxyyJIvxMKjpl0KJSRs5BL0U3GtdoFmnN0jPZlZ8qHCiq18sy
+	JGmnr3qTkvYtug+fUUbRBWk5/5zjap+pQL6MdXGJ6vfc5oRLwsEM+lyJkEyWEz3LrUH6gKFHMBE
+	WMkQcJpY5FnFcTTwlMbN3A==
+X-Received: by 2002:a17:90b:448b:b0:3b0:9782:8721 with SMTP id 98e67ed59e1d1-3b3d07b9f34mr2444000a91.36.1795002315663;
+        Wed, 18 Nov 2026 03:45:15 -0800 (PST)
+Received: from [0.0.0.0] ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3ac2550e1sm8966783a91.3.2026.11.18.03.45.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Nov 2026 03:45:14 -0800 (PST)
+Message-ID: <bd605c87-542f-43be-8e3c-01f2f3c14f28@gmail.com>
+Date: Wed, 18 Nov 2026 19:45:11 +0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -52,135 +93,183 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>,
- Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
- Baokun Li <libaokun@linux.alibaba.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- guolingxing <guolingxing@tju.edu.cn>, Josef Bacik <josef@toxicpanda.com>,
- Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <av1Z_RLuH4vd0Wyi@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Subject: Re: [RFC PATCH] platform/x86: bitland-mifs-wmi: Add Redmi Book Pro 15
+ 2023 (TM2209) quirk
+To: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ regressions@leemhuis.info, regressions@lists.linux.dev,
+ shlyapugin@gmail.com, Musaev Ibragim <atomicus.xyz@gmail.com>
+References: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
+ <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <av1Z_RLuH4vd0Wyi@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgAnZPOTgv1q3vJQEw--.21239S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF15ZryxJrW5Cry5Aw1xuFg_yoWrZr15pF
-	WF9a4Syr4qkr1v9r1xZa1UXFyFqayftrW3Krn5WrZaka98uFn7KrWfKa1YkFyDCrs7Gw4j
-	vrWF9ry3W3Z0yrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AK
-	xVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAwI
-	DUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 11/18/2026 3:55 PM, Ojaswin Mujoo wrote:
-> On Tue, Nov 17, 2026 at 07:37:10PM +0800, Zhang Yi wrote:
->> On 11/16/2026 10:27 AM, Jose Fernandez (Anthropic) wrote:
->>> Ojaswin's cover letter [1] explains how, since commit ea96cb5c4ae3
->>> ("ext4: don't split extent before submitting I/O"), the split of an
->>> unwritten extent at I/O completion can get ENOSPC. [1] stops the zeroout
->>> from hitting other writes in flight, and [2] reports the failed
->>> conversion to fsync(). Neither gives the split its block, so data is
->>> still lost.
->>>
->>> LLM agents working with me found that it happens with default options
->>> on a filesystem that is not full, and ran the tests. write() and fsync()
->>> return success, and after the pages are evicted part of the file reads
->>> back as zeros.
->>>
->>> Under a load built to run the allocator dry (QEMU without KVM), 42 of
->>> 72 files lost data at ea96cb5c4ae3, none of 72 at its parent and none
->>> of 48 on v6.18.63. On mainline at 23c62304dde2 32 of 72 did. With [1]
->>> rebased on it 42 of 72 still did, now as failed conversions in dmesg.
->>> With [1] and [2] fsync() failed with ENOSPC on 47 of 72, and the other
->>> 25 read back intact.
->>>
->>
->> Hi Jose!
->>
->> I'm sorry for causing this regression. The cause of this problem is that
->> the transaction freeing the file's space has not yet been committed and
->> thus cannot be returned to the mb allocator, so the extent cannot be
->> split at endio time to allocate space for metadata. This is easily
->> reproduced in scenarios with frequent file creation and deletion, even
->> though there is still plenty of free space on disk.
->>
->> I think the solution should be based on Ojaswin's counting approach in
->> [1] or the PENDING_CONVERSION solution we discussed, and then, after
->> extent splitting fails, try to flush the journal and retry. My idea is
->> roughly as follows:
->>
->> 1. For the iomap buffered I/O path and the DIO path, this is relatively
->>    simple. We just need to add journal flush and retry logic in
->>    ext4_iomap_finish_ioend() and ext4_dio_write_end_io().
->>
->> 2. For the traditional bh buffered I/O path, we cannot flush the journal
->>    in ext4_convert_unwritten_io_end_vec(), because this may lead to an
->>    ABBA deadlock with data=ordered mode. The journal process needs to
->>    wait for ordered folio writeback, but this folio may contain some
->>    ranges that need to be converted, and if we flush the journal after
->>    the conversion fails, it will form a mutual dependency with journal
->>    flushing. Therefore, we have to fall back to splitting before issuing
->>    I/O, and when splitting fails, flush the journal and retry via
->>    jbd2_journal_force_commit_nested() in ext4_do_writepages().
->>
->> 3. Split the workqueues used at the end of iomap and bh writeback to
->>    avoid deadlocks. Because the filesystem may simultaneously have
->>    different inodes going through the bh path and the iomap path, if the
->>    iomap completion worker is flushing the journal, it may need to wait
->>    for the folio of another inode going through the bh path to finish
->>    conversion, and that conversion worker still needs to be handled on
->>    the same wq, thus causing a deadlock.
->>
->> The current bh buffered I/O handling flow cannot be unified with the
->> other two, which is indeed not ideal. However, once data=ordered mode is
->> sunset in the future, we should be able to unify them. What do you all
->> think of this solution? Any better ideas?
->>
->> Thanks,
->> Yi.
-> 
-> Hey Zhang, thanks for the poc, it looks largely okay. I agree that this
-> seems to be the right way forward although its unfortunate to have to
-> revert back the unwrit to unwrit split. Hopefully we can move completely
-> switch to iomap soon enough. 
-> 
-> On the extent status cache for zeroout approach, i'm currently fixing a
-> few bs < ps bugs I'm seeing in it and would clean it up and post it as
-> v2. My idea is to keep the first patch disabling zeroout and rest of
-> them implementing the es changes and renabling it. 
+On 11/11/26 20:48, Oleg Rybalov wrote:
+> On TM2209 the power mode is the STNM byte in EC RAM. Fn+K rotates it
+> in EV20 and the EC0._Q24 handler then applies the matching SoC limits
+> with HPTC. SystemPerMode does not affect STNM, so changing the platform
+> profile had no effect on power.
+>
+> Read the mode from STNM and, on set, write STNM and evaluate EC0.HPTC
+> as the Fn+K handler does. HPTC returns AE_AML_BUFFER_LIMIT because SVRP
+> declares its ALIB buffer one byte longer than its data; the limits are
+> already sent at that point, so treat it as success.
+>
+> The board reports DMI_SYS_VENDOR "XIAOMI" with TM2209 in
+> DMI_BOARD_NAME, returns the WMI return code at the end of the buffer
+> and charges over USB-C only.
+>
+> Signed-off-by: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
+> ---
+> Based on v15 of "Merge redmi-wmi into bitland-mifs-wmi":
+> https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
+>
+> Tested on BIOS RMAPH5B0P0909 only.
+>
+>   drivers/platform/x86/bitland-mifs-wmi.c | 83 ++++++++++++++++++++++++-
+>   1 file changed, 81 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+> index a431d3fef..b63b139a6 100644
+> --- a/drivers/platform/x86/bitland-mifs-wmi.c
+> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
+> @@ -21,6 +21,7 @@
+>   #include <linux/input-event-codes.h>
+>   #include <linux/input.h>
+>   #include <linux/input/sparse-keymap.h>
+> +#include <linux/io.h>
+>   #include <linux/kernel.h>
+>   #include <linux/leds.h>
+>   #include <linux/module.h>
+> @@ -99,6 +100,10 @@ struct bitland_mifs_quirks {
+>   
+>   	bool return_code_at_end;
+>   	bool skip_ac_type_check;
+> +
+> +	const char *ec_mode_field;
+> +	const char *ec_mode_apply;
+> +	phys_addr_t ec_mode_addr;
+>   };
+>   
+>   static const struct bitland_profile_entry default_profile_entries[] = {
+> @@ -113,7 +118,30 @@ static const struct bitland_mifs_quirks default_quirks = {
+>   	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
+>   };
+>   
+> +static const struct bitland_profile_entry tm2209_profile_entries[] = {
+> +	{ PLATFORM_PROFILE_LOW_POWER,   2 },
+> +	{ PLATFORM_PROFILE_BALANCED,    1 },
+> +	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
+> +};
+> +
+> +static const struct bitland_mifs_quirks tm2209_quirks = {
+> +	.profile_entries = tm2209_profile_entries,
+> +	.num_profile_entries = ARRAY_SIZE(tm2209_profile_entries),
+> +	.return_code_at_end = true,
+> +	.skip_ac_type_check = true,
+> +	.ec_mode_field = "\\_SB.PCI0.LPC0.EC0.STNM",
+> +	.ec_mode_apply = "\\_SB.PCI0.LPC0.EC0.HPTC",
+> +	.ec_mode_addr = 0xFE0B0300 + 0x7E,
+> +};
 
-Hi Ojaswin,
+I think this is an anti-pattern.
 
-Yeah, this makes sense to me. Looking forward to your v2. I'll re-adapt
-this POC based on your patch afterwards. :)
+Do we get a WMI method for this?
 
-> We can just backport
-> the first patch. Along with your poc fixes here also backported to 7.0
-> i believe we should be good to go.
-> 
-
-Sorry, I don't quite understand. As far as I know, 7.0 is already EOL, so
-why does this still need to be backported to this version?
-
-Thanks,
-Yi.
-
-
+> +
+>   static const struct dmi_system_id bitland_mifs_dmi_table[] = {
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2209"),
+> +		},
+> +		.driver_data = (void *)&tm2209_quirks,
+> +	},
+>   	{}
+>   };
+>   
+> @@ -271,6 +299,48 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+>   	return 0;
+>   }
+>   
+> +static int bitland_ec_mode_get(const struct bitland_mifs_quirks *quirks, u8 *val)
+> +{
+> +	unsigned long long v;
+> +	acpi_status status;
+> +
+> +	status = acpi_evaluate_integer(NULL, (acpi_string)quirks->ec_mode_field,
+> +				       NULL, &v);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	*val = v;
+> +	return 0;
+> +}
+> +
+> +static int bitland_ec_mode_set(const struct bitland_mifs_quirks *quirks, u8 val)
+> +{
+> +	void __iomem *addr;
+> +	acpi_status status;
+> +	u32 glk;
+> +
+> +	addr = ioremap(quirks->ec_mode_addr, 1);
+> +	if (!addr)
+> +		return -ENOMEM;
+> +
+> +	status = acpi_acquire_global_lock(1000, &glk);
+> +	if (ACPI_FAILURE(status)) {
+> +		iounmap(addr);
+> +		return -EBUSY;
+> +	}
+> +	writeb(val, addr);
+> +	acpi_release_global_lock(glk);
+> +	iounmap(addr);
+> +
+> +	status = acpi_execute_simple_method(NULL, (char *)quirks->ec_mode_apply, val);
+> +	if (status == AE_AML_BUFFER_LIMIT)
+> +		return 0;
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+>   static int laptop_profile_get(struct device *dev,
+>   			      enum platform_profile_option *profile)
+>   {
+> @@ -282,14 +352,20 @@ static int laptop_profile_get(struct device *dev,
+>   	};
+>   	struct bitland_mifs_output_head_rc result;
+>   	size_t i;
+> +	u8 val;
+>   	int ret;
+>   
+> -	ret = bitland_mifs_wmi_call(data, &input, &result);
+> +	if (quirks->ec_mode_field) {
+> +		ret = bitland_ec_mode_get(quirks, &val);
+> +	} else {
+> +		ret = bitland_mifs_wmi_call(data, &input, &result);
+> +		val = result.data[0];
+> +	}
+>   	if (ret)
+>   		return ret;
+>   
+>   	for (i = 0; i < quirks->num_profile_entries; i++) {
+> -		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
+> +		if (quirks->profile_entries[i].wmi_val == val) {
+>   			*profile = quirks->profile_entries[i].profile;
+>   			return 0;
+>   		}
+> @@ -350,6 +426,9 @@ static int laptop_profile_set(struct device *dev,
+>   	for (i = 0; i < quirks->num_profile_entries; i++) {
+>   		if (quirks->profile_entries[i].profile == profile &&
+>   		    !quirks->profile_entries[i].no_set) {
+> +			if (quirks->ec_mode_addr)
+> +				return bitland_ec_mode_set(quirks,
+> +							   quirks->profile_entries[i].wmi_val);
+>   			input.payload[0] = quirks->profile_entries[i].wmi_val;
+>   			return bitland_mifs_wmi_call(data, &input, NULL);
+>   		}
