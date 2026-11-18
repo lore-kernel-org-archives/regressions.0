@@ -1,66 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.36
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.80.171.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795010777;
-	b=Ht00xkWeF+gSa/vqP6A0dKp+Hctk7IO+1HKH4O7ZFY3klTeaFqbaqSCXctZL8/Za5DSO
-	 cewT8rt3q645cGBtUULaQTy7iGr2gvokC5JmzwQ+KGWgkPeQS8gx3KtKSWjMXwuiKyJYr
-	 fjlNs0aROjU45TF9Cddp4yq2TKKCWr3JxDQFWDijLXgXgDmPIemFzKILFugSzzvXbQ3/H
-	 uGVXpGL5zqt27jIL4zXB4BAP0GvHHRJ2qb8FjmvGYYpP2k+UO/j1hsrBi5j+F3tSx5JhH
-	 nm+jAa4Wo8ULT6hQQdanM1sQQd/p+A8TpsClTMQ/NInN7oMi0wF+4VUPHp5RNXtkrlg==
+	t=1795015130;
+	b=bdESvs4qJho/wJUqikoP7Kb4klR2RJ+kxGCXgnNaW/wVgQjSLr8NSuvBYR/w3tcy2GFI
+	 LHuFZ6Wdv17iLCJi+2OtmxCMEEK4Z2ClI3q0w50qa0uNP3W1xCbxuPifqxYX3kkVOMuDR
+	 Fsd2wtyoVYRGs2i6st1PlvWSH4SLhzbcLV9JSyHhtKFqg0H23JHB5dEgKCwemoLzMFkSy
+	 c6xY+G+9/tuNgkNaCAy6PsititZ/5ckUHejW1MmgGj+DR64UbypmV583NRKLBpKc4iUSk
+	 vmHCwd6FfbOwnceMfFV4dCqBYwHEph7I3xr1P0lMQOrKDIvnksu1hBxgeYdx97qvj3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795010777;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=zDdHU1Mp/qEVnnzvJCrNaX1Z+NluRq2vfZr6YiBJ/FM=;
-	b=iCeOmJKP0aong7GVhY3XAobxbsv2RxyMFi9FJJwh9+E82NUvSvaJnLX7L7acOTyFadYK
-	 hLBjnZz0UwvZvGpZdMZPUPN69RCwhcDvtbZdmR9Xx1isO9CzNm6NBMcYlwoS7Yzm+pm/L
-	 iW7l5+wYCTzwctjOCTsgDLndjQc/43sutSCV0eKGFhRaM4AArBCRyj5gxmnP0oJ8qh/cJ
-	 ggfyAEbXM6plwjAlTXbgm7asB50+vIPp5wEB4+G+HqRZNVFSqBBBL0Wb6qie1hbYPKKYf
-	 rpFlRPnezvHb4SHECypBrUAocAllVV/iKcMckZ23OehMcsVY3hTBgz1VjS0/5q4uxGw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795015130;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
+	 User-Agent:Content-Language:To:Cc:From:Subject:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=87/G7NYhRL2kitGkKd0g1i85DRo2vK/WQx+jWKZEx+U=;
+	b=c+IQjq0U10x04LI75zUYcblZMrYWnOSzvgNfzvMocy6AfAVjuZ40VTsLuKTYHtNLiFUZ
+	 RWjgVD4ZmzshH9zbK/6ASEZdSISDFcg56nBdiG8MuHJyBhX0ZLY2dACyxNfONqdllo2sy
+	 UqaCIjDoLBjiU1RIPUO7eARje9ytK9xZMya9wUhWOxWKkk9g8rrOCK8XYUKqz5/lO1Cty
+	 E+P9waUWfURV1BNhrZ5m8C42H3Xma3V3OryKDNDDVCbvnCPprVruZc764ksNUjh4c+HoW
+	 wer24VZEVcRhlPZmkKL90ZwWqEuQrhr0lgj7f5L6dR605Bf86yFDIissLqCVMTX358Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=RPBTyxN5;
-	arc=none smtp.remote-ip=95.215.58.36
-Received: from mta1.migadu.com (out-36.mta1.migadu.com [95.215.58.36])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=letteboer.com;
+	spf=pass smtp.mailfrom=letteboer.com;
+	dkim=pass header.d=letteboer.com header.i=@letteboer.com header.a=rsa-sha256 header.s=dkim header.b=IZ9dJUB8;
+	arc=none smtp.remote-ip=45.80.171.131
+Received: from albissimus.dikhoed.net (albissimus.dikhoed.net [45.80.171.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EF4606A31C
-	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 14:06:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14EF4606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFE260A2614
+	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 15:18:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0AFE260A2614
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=letteboer.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=letteboer.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=RPBTyxN5
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=zDdHU1Mp/qEVnnzvJCrNaX1Z+NluRq2vfZr6YiBJ/FM=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795010774; v=1; x=1795615574;
- b=RPBTyxN5I9/5DUMxX7kWUlulbiqTWvooAOtDgIkV/VcY49qaagrx36PoX9i6Lp75iX5gn2i5
- uQtfcMuZGpTuIX+ABE4H20KE3sk4P+NtpTrchLdHEHV2jOXfMalZsT0xgzNP4p0Z/WI0HchJ4Tf
- ZUF9ikc8YjrjAQ7WXctKJwVk=
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id aa0702a36d5e3080;
-	Wed, 18 Nov 2026 14:06:13 +0000
-X-Mizu-Trace-ID: aa0702a36d5e3080
-X-Migadu-Flow: FLOW_OUT
-Date: Wed, 18 Nov 2026 14:06:06 +0000
-From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-To: Zhang Yi <yi.zhang@huaweicloud.com>, Theodore Ts'o <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun@linux.alibaba.com>, 
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, guolingxing <guolingxing@tju.edu.cn>, 
-	Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-Message-ID: <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
- <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=letteboer.com header.i=@letteboer.com header.a=rsa-sha256 header.s=dkim header.b=IZ9dJUB8
+Received: from [45.80.171.134] (unknown [45.80.171.134])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by albissimus.dikhoed.net (Postfix) with ESMTPSA id 20AFFD2938C;
+	Wed, 18 Nov 2026 16:18:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=letteboer.com;
+	s=dkim; t=1795015121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=87/G7NYhRL2kitGkKd0g1i85DRo2vK/WQx+jWKZEx+U=;
+	b=IZ9dJUB8g/r4OrhcG19Tgt7H3Ih25VbsAVNcascUYTaDd7CUDdY5RIrBOLB3LjOt8C/7o6
+	DIlboQW6MNY0pJm8wT+EmKv2ywzp/JKCdyeNqYfvn0boaOj5zM+fPq4vDKFq/SSBNQ/eqU
+	D0Gd6U6jA5fh84dVHcOBvedQ5CQP/gQ=
+Message-ID: <9e803eea-2446-425a-93d3-2524890d9508@letteboer.com>
+Date: Wed, 18 Nov 2026 16:18:41 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -70,15 +59,97 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: hkallweit1@gmail.com
+Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, andrew@lunn.ch,
+ rmk+kernel@armlinux.org.uk
+From: Frits Letteboer <frits@letteboer.com>
+Subject: [REGRESSION] r8169: RTL8127A (XID 6c9) SFP+ link fails to come up in
+ 7.4-rc3 (inband/10gbase-r)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 18, 2026 Zhang Yi wrote:
-> Could you provide a reproducer? My guess is that high concurrency causes
-> the blocks freed by my current process to be taken by I/O issued by
-> other processes
+Hi Heiner,
 
-That fits our runs. I'll send you the script off-list.
+Between Linux 7.3 and 7.4-rc3, my Realtek RTL8127A (XID 6c9) SFP+ NIC
+stopped establishing a link and generating interrupts under r8169.
 
-- Jose
+Hardware details:
+- NIC: Realtek RTL8127 10GbE Controller (rev 08), XID 6c9
+- Transceiver: Intel FTLX8571D3BCV-IT (10GBASE-SR SFP+)
+
+On Linux 7.3, r8169 attached the "Realtek SFP PHY Mode" driver and
+brought up the 10Gbps link normally. On 7.4-rc3, r8169 configures
+"inband/10gbase-r link mode" via phylink, after which "Link detected"
+remains "no", no link state transitions are logged, and zero IRQs fire.
+
+Tested workarounds on 7.4-rc3:
+- pci=nomsix, iommu=pt, amd_iommu=off: no effect
+- Realtek out-of-tree r8127 driver (11.017.02) on 7.4-rc3: works
+   properly and brings the 10G link up immediately.
+
+--- dmesg on Linux 7.3 (working) ---
+[    3.777598] r8169 0000:0a:00.0 eth1: RTL8127A, 8c:a6:82:71:89:12, XID 
+6c9, IRQ 152
+[    3.777601] r8169 0000:0a:00.0 eth1: jumbo features [frames: 16362 
+bytes, tx checksumming: ko]
+[   13.540664] r8169 0000:0a:00.0 re0: renamed from eth1
+[   34.179244] Realtek SFP PHY Mode r8169-0-a00:00: attached PHY driver 
+(mii_bus:phy_addr=r8169-0-a00:0, irq=MAC)
+[   34.871337] r8169 0000:0a:00.0 re0: Link is Down
+[   35.053740] r8169 0000:0a:00.0 re0: Link is Up - 10Gbps/Full - flow 
+control off
+
+--- dmesg on Linux 7.4-rc3 (broken) ---
+[    3.806559] r8169 0000:0a:00.0 eth1: RTL8127A, 8c:a6:82:71:89:12, XID 
+6c9, IRQ 152 (32 total)
+[    3.806562] r8169 0000:0a:00.0 eth1: jumbo features [frames: 16362 
+bytes, tx checksumming: ko]
+[   14.285134] r8169 0000:0a:00.0 re0: renamed from eth1
+[   34.926923] r8169 0000:0a:00.0 re0: configuring for inband/10gbase-r 
+link mode
+[   40.505158] r8169 0000:0a:00.0: invalid VPD tag 0x00 (size 0) at 
+offset 0; assume missing optional EEPROM
+
+--- ethtool re0 on Linux 7.4-rc3 ---
+Settings for re0:
+     Supported ports: [ MII ]
+     Supported link modes:   10000baseT/Full
+                             10000baseKX4/Full
+                             10000baseKR/Full
+                             10000baseR_FEC
+                             10000baseCR/Full
+                             10000baseSR/Full
+                             10000baseLR/Full
+                             10000baseLRM/Full
+                             10000baseER/Full
+     Supported pause frame use: No
+     Supports auto-negotiation: Yes
+     Supported FEC modes: Not reported
+     Advertised link modes:  10000baseT/Full
+                             10000baseKX4/Full
+                             10000baseKR/Full
+                             10000baseR_FEC
+                             10000baseCR/Full
+                             10000baseSR/Full
+                             10000baseLR/Full
+                             10000baseLRM/Full
+                             10000baseER/Full
+     Advertised pause frame use: No
+     Advertised auto-negotiation: Yes
+     Advertised FEC modes: Not reported
+     Speed: 10000Mb/s
+     Duplex: Full
+     Auto-negotiation: on
+     Port: MII
+     PHYAD: 0
+     Transceiver: internal
+     Supports Wake-on: pumbg
+     Wake-on: d
+     Link detected: no
+
+I am happy to test any diagnostic patches on this hardware.
+
+Thanks!
+
