@@ -1,88 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795002316;
-	b=dv7jnJEMuuUQDeVQdNqUt63RdHbtKS2mogBPjEiCZcoM3HYjqsXhbtfs/jaJR8e43LxZ
-	 uMed4oOxVe7gfFdjC7YQteUqNo0J3Ra8bnW63sWRPvSeRHPVrT0av+6vnPTHSYiMHrhjP
-	 2uOciJmXhTsY6YeY23Kl1rIjXH4ezK5o6+pUpJZ9lhEpMwItjrxrou9qEWZco9GBzyQ9u
-	 PzUVsmaaan+QazdiTMeJDD7VKpyo+XmIZv/oC9skPwVlZvribQkD9x8NG+tCURRmr1ERE
-	 l9dfISLowyP8RINSJm9r6aLu91BHBNeXbTIf4TIhT6KUh3PmTMSkAJu603uGwG3djzg==
+	t=1795006255;
+	b=B7SwpOBhLpmkI2AtRXMmE7gKT6MXonDJhOmw3fXqiXelvpzC7H6kzQXz6LgXF6uT1ETN
+	 7BNMv0Wk4riYZ5EYRUCav5gZWGMKtXUlmyY/J2L6qMOc6SzoQvSysrxa0i5/UiOgNgA5g
+	 kma0EpEzjbTdsDC2ReIftFvq52UJa7kOkrtZfSqvClGVK1DTm6fwmaBoZ1Y3YgQKT9SW/
+	 0ZLEz1hulqloBTXNkm1TigHQBG6EX44ed84h8nYP0OB25mNKaEYwrFfmQTyihQkho/7Kq
+	 cSYJwDvkpjKgZ9ZhSbup9TOnrYvaaqdE38k+fkwusAFZeloKqKkAEM1vk9ZZ4rirnCQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795002316;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
-	b=Z/2PYw+dj4hOKAiuTBEyiVy7E8WTeU0CyBICgviMG9eYpgFRwQXiP2/ntgmGXeR7stRP
-	 oyGUcIHG4TqfMNnBEiJfiDGci8HpyQ0wUg8W+4Xyg/n6mYo0J5jRcCmbw7XPldT9hV34I
-	 hfoZwameW4Ur2nNBlbRFZMp0AcDa3eA7i/4zV3pjpHNoz/jSzmqzprddg+3hTen6pDixU
-	 xlvJg/tGTNMNKbk1RHVaBifvvIPeUcxdQDrOtYccg5cS90uXo4w7violLd6diXbTW1xlC
-	 1ZvwzFX3mA0RpSiJEC6Wbv8XmPcHp1vu44FfmAgm4OJrRTGGgYWcs9fl0e2BpTaWnyA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795006255;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-Spamd-Result:X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:
+	 X-Spam-Score:X-Spam-Level:X-Rspamd-Queue-Id;
+	bh=GDH0Uc8xA8nFTHB+QczAoC92j01+8FV/Hvk/je9m3jE=;
+	b=O6v9TI4ZKTqCvSTuMCBvbLAN9bG67uWyN994GMQp6FhJL0+QRYMgpbT92XfiXFHlyEzU
+	 DC5zopjMY1jUGpzgYhgkts4vyH6Cbo7wqscJI1h7Q4/Gnk9R/76aCcWaDmKOPl4SmBpGT
+	 TTtK0lfDGBmXHib6N/ut7KWjqKHK5b02+05c2HFoZCurU5JEY2HOjoNe/556YZsXYG5ks
+	 dC7Xy65SCknv6RtE24w1kITDKFbkHZuLMAzue17fq83OIa4rwKW090XxJDEblvH2E9cMK
+	 c57ts3AjeLfOkegUS45eAtNeSbR5+ddoozQ/D47zqun6Y2b+e+0KiKF84GJFDygDEnQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Mlx4RbP1;
-	arc=none smtp.remote-ip=209.85.215.173
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=zweV+myS;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9Aipow9u;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=zweV+myS;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9Aipow9u;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F49606A32A
-	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 11:45:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79F49606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4665F606A320
+	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 12:50:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4665F606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Mlx4RbP1
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cdab938dc83so475288a12.3
-        for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 03:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795002316; x=1795607116; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
-        b=Mlx4RbP1F0Fjxjq1/HOuTlwajRtPhoOpmXMAUMTa5f4iKvaJ5qqo/7DxpLyfx12n+R
-         4Pfcsc2Yw0LHcRAdiy1SBB6eH9euYvrD5FFKngE9OtEteROgBt2dW7vRkfmKYE8EUoSD
-         W/vgVi12sccLKymXqBR3E5pjB7av1w+taTg2AQ6qCLTSvT+zoUqSBH7Tf5EBuDaTu+5f
-         uoJh7+DJ0gnYO0Nc9qaDd21y59NQs/2mpe8IWW21RBq8wlZWspgHCNJZK+i8wxD2ISS6
-         rMsCvJfDj1CiINUr8WA+FQitExTbe33S8XqAX3d0Jk3nGv20nwa4HEuS+Idy5dkyFu5G
-         29/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795002316; x=1795607116;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=DnVN4oQm5vTmEy9Yk/HP88sUnMp8Vqm6PKjzwgqph7k=;
-        b=SqsJi4Jmag8NhWiOTMaO7aC3NWSXqPvKcD9rMCF5+zseOOUQO7hsq2OjaxwTj733E2
-         qHz39Vdl1J/iKIQk3CYpndyyPQoSCbTOPSWdrIJkm6hi9OGlKClj02+vawT71aNeu0tu
-         IbsupfxHEoq7VMhxXSGq4jyXWHeU20RDQgwhDj3A+bzu/5GcsAGRx8hPLYH38qNlc9tr
-         HtnPVXeZHGxSnqSr9TpRvbIUIHQvXIYpGvJctGglnpnM8n1MFHSCvjg7JFKP+E8BfCz2
-         a0ZkyyTElXwV7tglyVXuwHSNuzpPzNOYCGWG0tAVRknsc3Hmf2P3NN/nVLO/nHCAn0Gs
-         KkUg==
-X-Forwarded-Encrypted: i=1; AL+hErFNUnlkSZRmf8QGx2qFrM/N34LCrlkxkEdaQOwV5g2BOJXfL+BbuG+sPAq1ZpIVTYZilw7Iw4fz0n78DA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+LMyb7ggryY0x/3mMzad7yQ4eVqGpGF0opZu+iswhISSQUrUjF
-	0M3Mg5FblLjh9XxjExEovD1rooMeDUJAB9G5lAzqWOIYDE6SfPjF250l
-X-Gm-Gg: AZFdTZcwR0csxypafDYtdG6wrNpMRw78MY6cYhAhcy7m3y+LzeUtnFpXjs0HgZn2Vz7
-	uFP3armNdRxZkG1s1UTVgWJguDI4fD6LfUDSIQwxxB9Gicocla5UQBTDELstMwH9MM43bTCQffV
-	8eUv+/Z+NQDNU+SgghhgXg0cszg+uieMtrddoTLVWqOgCcGjm/oot4l3K6koF3iVXoMrB8YTtl4
-	EIs/YXV+ZwKfAovNAwMP5ouSqR2AeWfaGhMqAkgIZhDJ7AqVwouYGmne6cPSUDfDGtzFJiPUkYW
-	tHE0p6Pmms4zMODy2rBLlZBIYglBJQS6pMKOeR75VuNtuSAvgYi/3atO6GTFbkYYBLvikAaWBxw
-	RmtwVve2X05BJrl0OjhEiqLWPslDToa0OIwNu9vc8P8eEBFOUBMQdHy5KDMB9qCgvC42vsdhneS
-	yxSKGUr0zVY/USCfyfQB96n4QGCxyyJIvxMKjpl0KJSRs5BL0U3GtdoFmnN0jPZlZ8qHCiq18sy
-	JGmnr3qTkvYtug+fUUbRBWk5/5zjap+pQL6MdXGJ6vfc5oRLwsEM+lyJkEyWEz3LrUH6gKFHMBE
-	WMkQcJpY5FnFcTTwlMbN3A==
-X-Received: by 2002:a17:90b:448b:b0:3b0:9782:8721 with SMTP id 98e67ed59e1d1-3b3d07b9f34mr2444000a91.36.1795002315663;
-        Wed, 18 Nov 2026 03:45:15 -0800 (PST)
-Received: from [0.0.0.0] ([20.89.137.63])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3ac2550e1sm8966783a91.3.2026.11.18.03.45.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Nov 2026 03:45:14 -0800 (PST)
-Message-ID: <bd605c87-542f-43be-8e3c-01f2f3c14f28@gmail.com>
-Date: Wed, 18 Nov 2026 19:45:11 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=zweV+myS;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9Aipow9u;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=zweV+myS;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9Aipow9u
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7F0C41F8CD;
+	Wed, 18 Nov 2026 12:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795006253; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GDH0Uc8xA8nFTHB+QczAoC92j01+8FV/Hvk/je9m3jE=;
+	b=zweV+mySX0Pp0JxCuhifRvXnL/PjK3fwmoh4KKCDcTeUak5b3mQMmOb5E+GBYKTv3rLm5Y
+	k1+Ehen54lPVJmcWt8ModUeVwpizQ45CrxktMPeisNhjcdSTPyjJ+k4ADVj5epWc9lDjKl
+	w+z2BjEZJhYhvFu/9dxcYEz/1459/MQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795006253;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GDH0Uc8xA8nFTHB+QczAoC92j01+8FV/Hvk/je9m3jE=;
+	b=9Aipow9u9Etxk5EVjUhlDpTpNktwJfTGf8G8Q7rWQKXtrArvDeFsFdL2mk3vY0DmvZHsSC
+	mbRKVw2KEd6OYDBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zweV+myS;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=9Aipow9u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795006253; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GDH0Uc8xA8nFTHB+QczAoC92j01+8FV/Hvk/je9m3jE=;
+	b=zweV+mySX0Pp0JxCuhifRvXnL/PjK3fwmoh4KKCDcTeUak5b3mQMmOb5E+GBYKTv3rLm5Y
+	k1+Ehen54lPVJmcWt8ModUeVwpizQ45CrxktMPeisNhjcdSTPyjJ+k4ADVj5epWc9lDjKl
+	w+z2BjEZJhYhvFu/9dxcYEz/1459/MQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795006253;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GDH0Uc8xA8nFTHB+QczAoC92j01+8FV/Hvk/je9m3jE=;
+	b=9Aipow9u9Etxk5EVjUhlDpTpNktwJfTGf8G8Q7rWQKXtrArvDeFsFdL2mk3vY0DmvZHsSC
+	mbRKVw2KEd6OYDBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30C9E134E9;
+	Wed, 18 Nov 2026 12:50:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cmNqAi2f/WrgVQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 18 Nov 2026 12:50:53 +0000
+Date: Wed, 18 Nov 2026 13:50:52 +0100
+Message-ID: <871p8ixpzn.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: william <assassinshalo29@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	evgeny@devduty.com,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] ALSA: hda/realtek: no speaker sound on Lenovo Legion 16IRX9H since f2293e7b2ddd (PCI SSID 17aa:3842 shared with ThinkBook X G2 IAH)
+In-Reply-To: <CAFjFWEgAJWe1q-3U2=5x4Tu0DcGcAano7nownXjg-uF9FADbRQ@mail.gmail.com>
+References: <CAFjFWEjt+DPJ_gM1uTBZ_NoV6-3mi57ArjZ_Qdah2DqY-GCD1w@mail.gmail.com>
+	<87v75vzuvb.wl-tiwai@suse.de>
+	<CAFjFWEgAJWe1q-3U2=5x4Tu0DcGcAano7nownXjg-uF9FADbRQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -91,185 +115,71 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] platform/x86: bitland-mifs-wmi: Add Redmi Book Pro 15
- 2023 (TM2209) quirk
-To: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- regressions@leemhuis.info, regressions@lists.linux.dev,
- shlyapugin@gmail.com, Musaev Ibragim <atomicus.xyz@gmail.com>
-References: <49e43ccd-fa28-44a0-9e8d-554868d0585e@gmail.com>
- <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
-Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <20261111124849.11309-1-rybalov.oleg.dev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-12.51 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -12.51
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 7F0C41F8CD
 
-On 11/11/26 20:48, Oleg Rybalov wrote:
-> On TM2209 the power mode is the STNM byte in EC RAM. Fn+K rotates it
-> in EV20 and the EC0._Q24 handler then applies the matching SoC limits
-> with HPTC. SystemPerMode does not affect STNM, so changing the platform
-> profile had no effect on power.
->
-> Read the mode from STNM and, on set, write STNM and evaluate EC0.HPTC
-> as the Fn+K handler does. HPTC returns AE_AML_BUFFER_LIMIT because SVRP
-> declares its ALIB buffer one byte longer than its data; the limits are
-> already sent at that point, so treat it as success.
->
-> The board reports DMI_SYS_VENDOR "XIAOMI" with TM2209 in
-> DMI_BOARD_NAME, returns the WMI return code at the end of the buffer
-> and charges over USB-C only.
->
-> Signed-off-by: Oleg Rybalov <rybalov.oleg.dev@gmail.com>
-> ---
-> Based on v15 of "Merge redmi-wmi into bitland-mifs-wmi":
-> https://lore.kernel.org/r/20261028112742.674847-1-qby140326@gmail.com
->
-> Tested on BIOS RMAPH5B0P0909 only.
->
->   drivers/platform/x86/bitland-mifs-wmi.c | 83 ++++++++++++++++++++++++-
->   1 file changed, 81 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index a431d3fef..b63b139a6 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -21,6 +21,7 @@
->   #include <linux/input-event-codes.h>
->   #include <linux/input.h>
->   #include <linux/input/sparse-keymap.h>
-> +#include <linux/io.h>
->   #include <linux/kernel.h>
->   #include <linux/leds.h>
->   #include <linux/module.h>
-> @@ -99,6 +100,10 @@ struct bitland_mifs_quirks {
->   
->   	bool return_code_at_end;
->   	bool skip_ac_type_check;
-> +
-> +	const char *ec_mode_field;
-> +	const char *ec_mode_apply;
-> +	phys_addr_t ec_mode_addr;
->   };
->   
->   static const struct bitland_profile_entry default_profile_entries[] = {
-> @@ -113,7 +118,30 @@ static const struct bitland_mifs_quirks default_quirks = {
->   	.num_profile_entries = ARRAY_SIZE(default_profile_entries),
->   };
->   
-> +static const struct bitland_profile_entry tm2209_profile_entries[] = {
-> +	{ PLATFORM_PROFILE_LOW_POWER,   2 },
-> +	{ PLATFORM_PROFILE_BALANCED,    1 },
-> +	{ PLATFORM_PROFILE_PERFORMANCE, 3 },
-> +};
-> +
-> +static const struct bitland_mifs_quirks tm2209_quirks = {
-> +	.profile_entries = tm2209_profile_entries,
-> +	.num_profile_entries = ARRAY_SIZE(tm2209_profile_entries),
-> +	.return_code_at_end = true,
-> +	.skip_ac_type_check = true,
-> +	.ec_mode_field = "\\_SB.PCI0.LPC0.EC0.STNM",
-> +	.ec_mode_apply = "\\_SB.PCI0.LPC0.EC0.HPTC",
-> +	.ec_mode_addr = 0xFE0B0300 + 0x7E,
-> +};
+On Wed, 18 Nov 2026 03:08:41 +0100,
+william wrote:
+> 
+> Hi Takashi,
+> 
+> Thanks for the quick patch.
+> 
+> To answer your question: I have not built a kernel with this patch, so I cannot
+> say I tested it. What I did was boot 7.3.4 with snd_hda_intel.model=17aa:38cd,
+> which selects the same ALC287_FIXUP_TAS2781_I2C fixup through the 17aa:38cd
+> entry. The log then shows "picked fixup for alias SSID 17aa:38cd" and
+> "bound i2c-TIAS2781:00", and the speakers work. The effect is the same, but it
+> is a different code path, so it is not a Tested-by for the patch.
+> 
+> About the Y790 entry: on this Legion 16IRX9H, /proc/asound/card*/codec#0
+> reports "Subsystem Id: 0x17aa38cd", so the codec SSID is the same one used by
+> the existing "Y790 VECO DUAL" entry. On 7.2.10 the speakers worked without any
+> parameter.
+> 
+> One clarification on my first message: the last paragraph about silence after
+> suspend is a separate issue, unrelated to this regression and to this patch.
+> Please ignore it here.
+> 
+> I would prefer not to be credited.
+> Please leave the Reported-by tag out of the commit.
 
-I think this is an anti-pattern.
+OK, now I submitted a proper patch and will merge it for the next PR.
 
-Do we get a WMI method for this?
 
-> +
->   static const struct dmi_system_id bitland_mifs_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TM2209"),
-> +		},
-> +		.driver_data = (void *)&tm2209_quirks,
-> +	},
->   	{}
->   };
->   
-> @@ -271,6 +299,48 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
->   	return 0;
->   }
->   
-> +static int bitland_ec_mode_get(const struct bitland_mifs_quirks *quirks, u8 *val)
-> +{
-> +	unsigned long long v;
-> +	acpi_status status;
-> +
-> +	status = acpi_evaluate_integer(NULL, (acpi_string)quirks->ec_mode_field,
-> +				       NULL, &v);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	*val = v;
-> +	return 0;
-> +}
-> +
-> +static int bitland_ec_mode_set(const struct bitland_mifs_quirks *quirks, u8 val)
-> +{
-> +	void __iomem *addr;
-> +	acpi_status status;
-> +	u32 glk;
-> +
-> +	addr = ioremap(quirks->ec_mode_addr, 1);
-> +	if (!addr)
-> +		return -ENOMEM;
-> +
-> +	status = acpi_acquire_global_lock(1000, &glk);
-> +	if (ACPI_FAILURE(status)) {
-> +		iounmap(addr);
-> +		return -EBUSY;
-> +	}
-> +	writeb(val, addr);
-> +	acpi_release_global_lock(glk);
-> +	iounmap(addr);
-> +
-> +	status = acpi_execute_simple_method(NULL, (char *)quirks->ec_mode_apply, val);
-> +	if (status == AE_AML_BUFFER_LIMIT)
-> +		return 0;
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
->   static int laptop_profile_get(struct device *dev,
->   			      enum platform_profile_option *profile)
->   {
-> @@ -282,14 +352,20 @@ static int laptop_profile_get(struct device *dev,
->   	};
->   	struct bitland_mifs_output_head_rc result;
->   	size_t i;
-> +	u8 val;
->   	int ret;
->   
-> -	ret = bitland_mifs_wmi_call(data, &input, &result);
-> +	if (quirks->ec_mode_field) {
-> +		ret = bitland_ec_mode_get(quirks, &val);
-> +	} else {
-> +		ret = bitland_mifs_wmi_call(data, &input, &result);
-> +		val = result.data[0];
-> +	}
->   	if (ret)
->   		return ret;
->   
->   	for (i = 0; i < quirks->num_profile_entries; i++) {
-> -		if (quirks->profile_entries[i].wmi_val == result.data[0]) {
-> +		if (quirks->profile_entries[i].wmi_val == val) {
->   			*profile = quirks->profile_entries[i].profile;
->   			return 0;
->   		}
-> @@ -350,6 +426,9 @@ static int laptop_profile_set(struct device *dev,
->   	for (i = 0; i < quirks->num_profile_entries; i++) {
->   		if (quirks->profile_entries[i].profile == profile &&
->   		    !quirks->profile_entries[i].no_set) {
-> +			if (quirks->ec_mode_addr)
-> +				return bitland_ec_mode_set(quirks,
-> +							   quirks->profile_entries[i].wmi_val);
->   			input.payload[0] = quirks->profile_entries[i].wmi_val;
->   			return bitland_mifs_wmi_call(data, &input, NULL);
->   		}
+thanks,
+
+Takashi
