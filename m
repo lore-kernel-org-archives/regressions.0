@@ -1,62 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795027596;
-	b=yh92Yab2bz/0h9kDTIHHK6A/DzDnNX80JE4665mvTg6P+AMdhWlVQrNrE2kfDNJJjsMb
-	 Y5DBU/7tBo7qqflLhj+EJwXOLgvYPQ7PnUFA5p+tIog9rzv1Jhgz02+obYIJBIYqXrE6U
-	 FZ9NmvbKDy2qUP7cTlhRf4ZFdErB43ctvdQtg+0EvOsK+EvZAfJF6M8bRjEA9+zebnjrd
-	 s8Pz4ox1otsn9mWytOVAflu6krQlOTHf8bMJTR8qy1WzzTplpITOITm6yR5iSvUzPhTzL
-	 Ez8KogpvKM1CKbJr3NGXfovQOc+PdV5Hz79m9Nt1pB54PR5sNQO0YKORQ7o02DPPLyw==
+	t=1795038967;
+	b=cQuvNUgkdspnEryJzh7qM06ViOVC1sY7rAUgxMVJ5BqCxphZcLTmKysHafBZuJqrF/j/
+	 MQKxwnvuBO4rQwE6/JQTCxJ9gCooXq9OHunlahRrzFJexlwgRRQ3qusSq6FXBv3mqD+oI
+	 53W3/ru8XnHppR8jdoyGi+MRknL3GbDWDhzXHz+qYYHpfYpHMUhiJxBzTjUet5lr89ZD/
+	 WE/sS5J8H/cs5dOeoyPOfWiYsSJYlx0wDsWMPbh6ZmVpLoluKWfoZoVt9IsStflYl7m67
+	 08Dy/LygZvcLiN9voPhKJ1rTxpKY1yu4T1I1cRYVVLBE2fqkeCwSAfz+teRUUS1cICA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795027596;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=0gWaaqlBeOYUC+C+1fvhqDgaQxw/BjGOD9U7GCCUc9w=;
-	b=3ByTDUcuYXPtX4Z7rHrEnYWcEd5YbzSaqzFQjQPX0/OcAJzlBdOwia9ZraLr9BALLupc
-	 0HggIB3F/eZTM6EzyqTpBgCd8HcGQfYkDm98aOeBNlwAx4ZlLXInfLhelQgKThTsLbrjM
-	 g/tZU3eptB8x6ZS3NaKDftqe7nyV4zybAalKhM6diAuB/vsM9kAtg3FLvUomYWCMwWbF0
-	 ZRGrLL15hrW1gYfzupbWHhW2d/WrPqZN/+yAi16+n+GZveIGYA48/aGAZ+iydrnVJN9Ir
-	 NkyOczTMZ3fwXpN8rVDO7D5A5Ad1NA9/cn0jIHsCn5em26aDMKB994CizAx4jkskvyg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795038967;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Content-Language:To:Cc:From:
+	 Subject:Autocrypt:Content-Type:Content-Transfer-Encoding;
+	bh=JP9DJ/6BgMEo7F/Go2s9zrWYqCykmDDtvRywOW1eMrI=;
+	b=TrFYEwBjZWkXPmSrcF6GwQEEfWxV1hCXtG/asIAZ+2YmnGqfexE2FMTb5OI63HtKq2nx
+	 sb1r141gogGcx7oG6JAHMiDyFl4jKfdGYCWKdpwd3TsURX3W7whic8KpxqPMn3e19MhkF
+	 UQ/bFWQEncENDU9u976PehKG1aiMz3Dadf4EpHMrZEmI5CYHtQQVcCkRcizId8cg5ZqwK
+	 7VyqQJWJBQsz6BmWiaw+vf59Db5lwDEfFs7xWPZJUTAZX5rZpp8qTprDvuIsy7h2UFYyz
+	 G6UD8sTgR3zgUXCYqEsF3wz/28RUFuWHgOy9u7Gy8v698yy9ocd7EEUlvBtECbcOpYQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=lunn.ch;
-	spf=pass smtp.mailfrom=lunn.ch;
-	dkim=pass header.d=lunn.ch header.i=@lunn.ch header.a=rsa-sha256 header.s=20171124 header.b=NR6BAlQC;
-	arc=none smtp.remote-ip=156.67.10.101
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BshLYKH1;
+	arc=none smtp.remote-ip=209.85.208.48
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6538606A338;
-	Wed, 18 Nov 2026 18:46:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6538606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451B6606A32A
+	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 21:56:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 451B6606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.a=rsa-sha256 header.s=20171124 header.b=NR6BAlQC
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=0gWaaqlBeOYUC+C+1fvhqDgaQxw/BjGOD9U7GCCUc9w=; b=NR6BAlQC0t4l9Rusxoe6dX1ZME
-	jp277QVulkgU/F/Q6UjKFhTY80f2Jgkv/yeYtwyzb9NhIu7N5h2kw46PZPduBvHLhXKssChp91UhY
-	O0AhSIOUtn4rGSrwVSh7wZJhAHaD3uv6qKTdSuhE73LOO1XxY5gB4tsrbtqbyZQ+EorI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1xTkfx-00HUf7-Dd; Wed, 18 Nov 2026 19:46:33 +0100
-Date: Wed, 18 Nov 2026 19:46:33 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Frits Letteboer <frits@letteboer.com>
-Cc: hkallweit1@gmail.com, netdev@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] r8169: RTL8127A (XID 6c9) SFP+ link fails to come
- up in 7.4-rc3 (inband/10gbase-r)
-Message-ID: <0b8d1aa5-5fe6-4472-85a2-15a5b7b09df9@lunn.ch>
-References: <9e803eea-2446-425a-93d3-2524890d9508@letteboer.com>
- <bb775cfb-525b-4471-bc80-46bb9f98cc31@lunn.ch>
- <75638763-689b-45f3-b8dd-72f74c4dea3a@letteboer.com>
- <2e06bc02-eb83-4ff9-a454-685480135bb8@lunn.ch>
- <e970af13-35de-4249-8d0d-a2bdfced1058@letteboer.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BshLYKH1
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6b86bbce3d1so2160019a12.0
+        for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 13:56:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795038966; x=1795643766; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:autocrypt:subject:from:cc:to
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=JP9DJ/6BgMEo7F/Go2s9zrWYqCykmDDtvRywOW1eMrI=;
+        b=BshLYKH1E4XED6oPYkiDNAP8/8L8YYkf5hW0qsStJrRhpJuMb0CupWSaO8tPGNej/z
+         ypTsKcDlBFWiTil5Fl6c+HatY606L5nYBuqN7wJefu7BMiO9mijEx6XO3z1lY+CnY7vh
+         WLTBbc2ELzz293XCWe36TlHTx6b5ek67++sqmZdD3D4zMzGOg0E+v0qWz6w6Cisvm4qd
+         zfidC5aIb2ys37HF3tsaeo+rBqmyLcE0vAi8MudoihXdDKnj9jaX2E8Vn6o/83MCR2QR
+         tKOu+hePrqbzpL9Vmh50sAP/GwNsTEJZoLxfsMm9RdS2rMWI8uRDSilJIW2RWcUXE78T
+         hb2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795038966; x=1795643766;
+        h=content-transfer-encoding:content-type:autocrypt:subject:from:cc:to
+         :content-language:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JP9DJ/6BgMEo7F/Go2s9zrWYqCykmDDtvRywOW1eMrI=;
+        b=wdLaWFaK/dgs1nKxnNkPtulBHuWeCvDPeZte+pnBIG8Y9ISsciZOPihpsUhfNa9XyI
+         Xgl0s76A5xNtLZnZNf44TopPoQ3kjh7/CjiTj9goctK8HUVlVX34wmUJn0slZh7n20/E
+         VuxuHyaSbDuKiStj4928vRi5dOmhbgO0K/9XzOtbRxeCLsliUj2QkzFwnoW0W9zZq+TU
+         Csof8bpHO3H8dvAlxIEFSr0lglsC2fEWBa7CxCHaOzH4F96MZgdN9q9x1BGWoUiXw70J
+         rnmE9PgqKsbkZch4i0yIeeUXA/9ATRherSH3sHWa2hk4oodDghY3mDm0D4EZnyHMudWv
+         UHqQ==
+X-Forwarded-Encrypted: i=1; AL+hErFrwIHdMezN8/PXEx/3SgnIt1bGqYAsfbaWA/sH0/Cj5RmSwYfX6RnhbhigLUWclCTRuVRph+Erul8qgg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+ZJGpGFXyBdw5kzJOzv8E8+6F7B2B4pidz3NADIqoyuNLBJaTP
+	vhvS2xlKFcG+5UFuwQMg1VgOhWq45fbkJdfU9YyVDqqHFN4/6X7c0btz
+X-Gm-Gg: AYBFou3xpmzAtHMLoYSmbeQICRSgfEC3PvJCWhnh9LMt/TfM7jSfdwy+oESZBEERmOM
+	HT3sna0e6+bBlGatoK/euIAG1PGT8J+LDlJF5Xopbthz2yQYmUuJGZXYYsdkBrETIf7YS5ope8S
+	vOLPqbNQkGT7RjcF0tb9STCe5ynVlWxj7V8lvvW9WG0Hzr60nI+Gt/NuN8O8R9pO1ZsTL4+kxlC
+	fuGlcLC6XVQL6z/mwjDRJ5uT5pmhLtfiut0hwLj3WxaqgcWluI3MVrvAWQ5q5w3ZpFMhu1CAOUC
+	qnEo0I+euWyqWyu/VAwvmXx8Jao60M28IbK53jCY3jqUa2VCRLP9oa6BtNd9OTpVS8LfJJjHO3r
+	DokQvVv/qise8hcLKM50w3860ZJhFMaMamL02dkIOggcAV47XVkH85imHTxJxtgUMRj3Zp9GVBg
+	hEKrvjhmV9LbPYCwOy47lr+7P8pZxmpD8YM6WYwPwepqwmaMcSkKi3Xo7t4VgdFSErHI/sn4qKc
+	bKRqEt85qQKSmGSAbfpkwZZElVv6s70PT9Qp92/oixLLlNRfm9SglDpzD/wAlzzSuuyTV9gxBHH
+	/VtcNQ/s+FM67KJDmfqjThZG7Jhx3hayqUAadvQAwksQb6cmaOoyPU9zBgmcFg==
+X-Received: by 2002:a17:907:1c83:b0:c46:9ca9:f522 with SMTP id a640c23a62f3a-c510e1a6e2fmr380900066b.26.1795038965405;
+        Wed, 18 Nov 2026 13:56:05 -0800 (PST)
+Received: from [192.168.2.32] (clk-166.netdrive.pl. [185.24.27.166])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-c512341e0adsm41316366b.36.2026.11.18.13.56.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Nov 2026 13:56:04 -0800 (PST)
+Message-ID: <ec1ffcbb-1625-4925-ae6b-f2b04dca1e1a@gmail.com>
+Date: Wed, 18 Nov 2026 22:56:01 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -66,41 +90,251 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e970af13-35de-4249-8d0d-a2bdfced1058@letteboer.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+To: linux-media@vger.kernel.org, regressions@lists.linux.dev
+Cc: jiangong.han@windriver.com, hverkuil+cisco@kernel.org,
+ mchehab@kernel.org, stable@vger.kernel.org
+From: =?UTF-8?Q?Pawe=C5=82_Ziemniak?= <pziemniak@gmail.com>
+Subject: [REGRESSION] media: em28xx: NULL pointer dereference in
+ em28xx_close_extension() on disconnect/unload
+Autocrypt: addr=pziemniak@gmail.com; keydata=
+ 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 Yt7+
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 18, 2026 at 07:31:06PM +0100, Frits Letteboer wrote:
-> 
-> On 18/11/2026 19:06, Andrew Lunn wrote:
-> > On Wed, Nov 18, 2026 at 06:58:02PM +0100, Frits Letteboer wrote:
-> > > On 18/11/2026 16:32, Andrew Lunn wrote:
-> > > > On Wed, Nov 18, 2026 at 04:18:41PM +0100, Frits Letteboer wrote:
-> > > > > Hi Heiner,
-> > > > > 
-> > > > > Between Linux 7.3 and 7.4-rc3, my Realtek RTL8127A (XID 6c9) SFP+ NIC
-> > > > > stopped establishing a link and generating interrupts under r8169.
-> > > > Can you do a git bisect? Find out which patch broken it?
-> > > > 
-> > > Thank you for your reply.
-> > > 
-> > > 
-> > > I was going to bisect, however it seems after loading the out-of-tree r8127
-> > > driver,, the link now comes up reliably, even with the r8169 driver. I am
-> > > thoroughly confused.
-> > Try a really cold boot. Pull the plug, so it does not have any standby
-> > power. If the board supports WoL, it could be it is kept powered even
-> > when 'turned off'.
-> > 
-> > After a cold boot, see if the 7.4-rc3 boots correctly. That is what we
-> > are mostly interested in.
-> 
-> I forgot to mention that I did that before sending the mail. I just did it
-> again and left it disconnected for 5 minutes, just to be sure.
+Hi,
 
-Nice. Not everybody would think of this.
+Commit 826915b6b65e ("media: em28xx: fix use-after-free of 
+dev_next->devlist on disconnect",
+CVE-2026-89891) introduces a 100% reproducible kernel NULL pointer 
+dereference in
+em28xx_close_extension() on real dual-TS hardware (Hauppauge 
+WinTV-dualHD, USB ID 2040:8265)
+whenever the device disconnects or the em28xx module is unloaded.
 
-So, probably not a regression. Unless you manage to reproduce it
-again.
+#regzbot introduced: 826915b6b65e
 
-	Andrew
+Impact
+------
+When triggered by a USB disconnect, the Oops kills the kworker thread on
+usb_hub_wq (hub_event -> usb_disconnect -> usb_disable_device ->
+usb_unbind_interface -> em28xx_usb_disconnect -> em28xx_close_extension)
+while the USB device/hub lock is held. This permanently deadlocks USB
+enumeration/lsusb and container/device teardown until a full host reboot.
+
+When triggered by `modprobe -r em28xx_dvb em28xx_rc em28xx`, modprobe is
+killed (SIGKILL) leaving em28xx stuck in initstate "going" (refcnt -1).
+
+Hardware & Kernels Affected
+---------------------------
+- Hardware: Dell Inc. OptiPlex 3070 (Intel Cannon Lake PCH xHCI 
+0000:00:14.0)
+- USB Device: Hauppauge WinTV-dualHD (2040:8265, has_dual_ts = 1, 
+is_audio_only = 0)
+- Observed identically on Proxmox VE kernels (in-tree em28xx module; taint
+   flags are only from ZFS/r8125 OOT modules and are unrelated):
+   - 7.0.14-23-pve (2026-10-27, usb_hub_wq disconnect)
+   - 7.0.14-26-pve (2026-10-28, usb_hub_wq disconnect)
+   - 7.0.14-28-pve (2026-11-07, usb_hub_wq disconnect)
+   - 7.0.14-29-pve (2026-11-18, modprobe -r reproducer)
+
+Reproducer
+----------
+With a Hauppauge WinTV-dualHD (2040:8265) attached (and no userspace holding
+/dev/dvb/*):
+   # modprobe -r em28xx_dvb em28xx_rc em28xx
+(or physically unplugging / resetting the USB stick).
+
+Root Cause Analysis
+-------------------
+For normal dual-TS devices (has_dual_ts = 1, is_audio_only = 0), only the
+primary `dev` is inserted into `em28xx_devlist`; `dev->dev_next->devlist`
+is never added to `em28xx_devlist` (and remains zero-initialized with
+next == NULL, prev == NULL).
+
+Disassembly of the crashing Code bytes at 
+`em28xx_close_extension+0x80/0x140`:
+
+   mov    0x17a0(%r12),%rbx   ; rbx = dev->dev_next (ffff8ba4513fe000)
+   test   %rbx,%rbx           ; if (!dev->dev_next)
+   je     +0x4b
+   mov    0x1f0(%rbx),%rax    ; rax = dev->dev_next->devlist.prev == 0x0
+   mov    0x1e8(%rbx),%rdx    ; rdx = dev->dev_next->devlist.next == 0x0
+   lea    0x1e8(%rbx),%rdi    ; rdi = &dev->dev_next->devlist 
+(ffff8ba4513fe1e8)
+   cmp    (%rax),%rdi         ; <-- #PF CR2=0x0 in 
+list_del(&dev->dev_next->devlist)
+
+Because `dev->dev_next->devlist.next` and `.prev` are NULL (0x0),
+`list_del(&dev->dev_next->devlist)` unconditionally dereferences NULL
+inside `__list_del_entry_valid()`.
+
+If `em28xx_devlist` is only supposed to hold primary devices (as 
+addressed by
+commit 95f76f51937f "media: em28xx: defer audio-only extension 
+registration"),
+`list_del(&dev->dev_next->devlist)` should either be removed or guarded
+(e.g., initialized with `INIT_LIST_HEAD(&dev_next->devlist)` and checked 
+with
+`!list_empty(&dev->dev_next->devlist)` or `dev->dev_next->devlist.next`).
+
+Trace 1: Spontaneous USB Disconnect (deadlocks usb_hub_wq)
+----------------------------------------------------------
+usb 1-2: USB disconnect, device number 2
+em28xx 1-2:1.0: Disconnecting em28xx #1
+em28xx 1-2:1.0: Disconnecting em28xx
+em28xx 1-2:1.0: Closing DVB extension
+em28xx 1-2:1.0: Closing DVB extension
+em28xx 1-2:1.0: Closing input extension
+em28xx 1-2:1.0: Closing input extension
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] SMP PTI
+CPU: 4 UID: 0 PID: 3086307 Comm: kworker/4:1 Tainted: P S  OE      
+  7.0.14-28-pve #2 PREEMPT(lazy)
+Tainted: [P]=PROPRIETARY_MODULE, [S]=CPU_OUT_OF_SPEC, [O]=OOT_MODULE, 
+[E]=UNSIGNED_MODULE
+Hardware name: Dell Inc. OptiPlex 3070/02N3WF, BIOS 1.33.0 03/26/2025
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:em28xx_close_extension+0x80/0x140 [em28xx]
+Code: 81 fb 50 82 3c c1 75 cd 49 8b 9c 24 a0 17 00 00 48 85 db 74 4b 48 
+8b 83 f0 01 00 00 48 8b 93 e8 01 00 00 48 8d bb e8 01 00 00 <48> 3b 38 
+0f 85 fa 26 00 00 48 3b 7a 08 0f 85 f0 26 00 00 48 89 42
+RSP: 0000:ffffcf6822097af8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff8ba4513fe000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8ba4513fe1e8
+RBP: ffffcf6822097b08 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8ba45576c000
+R13: ffff8ba4461dd8e0 R14: ffffffffc13c8590 R15: ffff8ba4461dd850
+FS:  0000000000000000(0000) GS:ffff8babd7908000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000005f5b86004 CR4: 00000000003726f0
+Call Trace:
+  <TASK>
+  em28xx_usb_disconnect.cold+0x71/0xbf [em28xx]
+  usb_unbind_interface+0x9b/0x2e0
+  device_remove+0x68/0x80
+  device_release_driver_internal+0x206/0x270
+  device_release_driver+0x12/0x20
+  bus_remove_device+0xfd/0x1c0
+  ? device_remove_attrs+0xb6/0x100
+  device_del+0x160/0x3c0
+  usb_disable_device+0xea/0x240
+  usb_disconnect+0xe6/0x2e0
+  hub_event+0xe8c/0x1a40
+  process_one_work+0x1a9/0x3c0
+  worker_thread+0x1b8/0x360
+  ? __pfx_worker_thread+0x10/0x10
+  kthread+0xf7/0x130
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x2da/0x3a0
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+note: kworker/4:1[3086307] exited with irqs disabled
+
+Trace 2: Deterministic Reproducer (`modprobe -r em28xx_dvb em28xx_rc 
+em28xx`)
+-----------------------------------------------------------------------------
+em28xx 1-2:1.0: Closing DVB extension
+em28xx 1-2:1.0: Closing DVB extension
+em28xx: Removed (Em28xx dvb Extension) extension
+em28xx 1-2:1.0: Closing input extension
+em28xx 1-2:1.0: Closing input extension
+em28xx: Removed (Em28xx Input Extension) extension
+usbcore: deregistering interface driver em28xx
+em28xx 1-2:1.0: Disconnecting em28xx #1
+em28xx 1-2:1.0: Disconnecting em28xx
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] SMP PTI
+CPU: 3 UID: 0 PID: 151085 Comm: modprobe Tainted: P S         OE     
+  7.0.14-29-pve #1 PREEMPT(lazy)
+Tainted: [P]=PROPRIETARY_MODULE, [S]=CPU_OUT_OF_SPEC, [O]=OOT_MODULE, 
+[E]=UNSIGNED_MODULE
+Hardware name: Dell Inc. OptiPlex 3070/02N3WF, BIOS 1.33.0 03/26/2025
+RIP: 0010:em28xx_close_extension+0x80/0x140 [em28xx]
+Code: 81 fb 50 f2 14 c1 75 cd 49 8b 9c 24 a0 17 00 00 48 85 db 74 4b 48 
+8b 83 f0 01 00 00 48 8b 93 e8 01 00 00 48 8d bb e8 01 00 00 <48> 3b 38 
+0f 85 fa 26 00 00 48 3b 7a 08 0f 85 f0 26 00 00 48 89 42
+RSP: 0018:ffffcadcb18d3b80 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff8a28c5d92000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8a28c5d921e8
+RBP: ffffcadcb18d3b90 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8a28c5d96000
+R13: ffff8a28df3b60e0 R14: ffffffffc114f590 R15: ffff8a28df3b6050
+FS:  0000747342ef1640(0000) GS:ffff8a304b888000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000049f936006 CR4: 00000000003726f0
+Call Trace:
+  <TASK>
+  em28xx_usb_disconnect.cold+0x71/0xbf [em28xx]
+  usb_unbind_interface+0x9b/0x2e0
+  device_remove+0x68/0x80
+  device_release_driver_internal+0x206/0x270
+  driver_detach+0x4a/0xa0
+  bus_remove_driver+0x83/0x120
+  driver_unregister+0x2f/0x60
+  usb_deregister+0x81/0x109
+  em28xx_usb_driver_exit+0x10/0xf90 [em28xx]
+  __do_sys_delete_module.isra.0+0x1c3/0x2f0
+  __x64_sys_delete_module+0x12/0x20
+  x64_sys_call+0x20c3/0x2390
+  do_syscall_64+0x10b/0x14c0
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+  </TASK>
+note: modprobe[151085] exited with irqs disabled
+
+Happy to test a patch on this hardware.
+
+
+Regards,
+
+   Paweł Ziemniak
+
