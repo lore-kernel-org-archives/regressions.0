@@ -1,58 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.98
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795015968;
-	b=pDU5OmZQEJDH8fbGh0BEsraLWfuYm/oISjCeDJOa1e1b5u3TOelDZudHz9M0IJgI17Zq
-	 8szpLylKW/aKnPEdmTe3l80lkzaJbZMaqzrIz3iJ63nF6ZGVnF97zprtAIdOF06MGmNwN
-	 Z3wEDE309HLXkDNQdbAyuokD1QLuPLalDzrP1MrJOu3LkgYr4KGLBb4mqMNKF2wVpd6CY
-	 gHb5D5S0nZPLc23rxScmoGr6zRZpkf5gAJxBgoYayKASup7mLmbrQG5o7KFobtnFx0JpT
-	 k5yBJebcwyRXS0MCiliZZp0rYy1WmUwiq4PLm/RpfogMrTU09PWMAe32Cc9iM7jez/Q==
+	t=1795016915;
+	b=rUD0PMH0kzzkCtLxG1cIOFjEhBia38wsTEjinTtH7EqS5ejE++Fi5QN4lRH5SSBXGoVH
+	 2TtIKv5Cw6GjHlD3X1mOacbCYLOPvQyL9MoNmRDvWI38a39wHtl0xcgeqDEEvppBazzRB
+	 oSnCwp3/Y9UWlMybjn8EzLidzjQhguMG6auxxDoIW25LTa/gZspUFJUaySV0xR1Ln58oK
+	 tDv8/zw9NrNeNG0Xs0cjLjCgC6L123GZj3I2HqWo3MxbeNPgjQOGLkjgDhPauGhjfL6HP
+	 q91iXMn8/WS9oovComvsBfAerNeDChrLvcsFav62opv4chi6sFUrF7UH2cUP0HKxm2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795015968;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=PtL8/+akObd7KiIRwLMWdhZxYtaj6/g81RYosEwESzU=;
-	b=m0YWOfWrXta3+zA+NhAAQIkeKyfYbP/9kkNjMvaBZl6NwWpcX8wcE3dmT/MmxbIYoVm2
-	 +o18o8qpXbJwS8xPlZZnI+e3w7REZgZ3qFT75q/10zL8XDmTjlTazyKz8L5u8kqhb/Zi5
-	 rHx0f6UZaX1yJnWV053BNCMfwqmVpLuNHl+MWxu0PZ5AC7hhJtLAnoBjydwGnJu3DB0Y0
-	 UP6CRv76CD/tIpw57CnaEhmDT5I9WkJa98NG1QgudfXCra/9KgZJnFNbfFFvHXu+hv9At
-	 FVgZ8CIzMqDE8ZuJzAty4sMOWgeuvp5ajrNYxe0ZM6N3HjqC/DswMaasPX+iDu33mdw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795016915;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=m5LgUOKMWb8vJkuqw01Y2mNnINBmVuzndAfYu1bG4UA=;
+	b=mHQF+OxM/szkOvVninGEFETP53symgQbjAOuu7YbEn17IE8se9aC8P8HfsSJVP6/DvsX
+	 C9f/vb7yqrw/WtPLcJ/Nu3Nj9lRxqbl94OQ1Ucjk9z3cxRVbpHY1Bent/lP/H+bcUjEXi
+	 y0P3JG6Xeus6l0R1/QyabOpxiTewslpbzsMqsuIyuNG/fVeN/KQoWgh5otxY6hfXAzbUO
+	 TT+NchAD7iQKfYgMEC3SlSAD3qLGC/NwF81Sds55DADrDDAkGkCBtpjnh3VSxsIt9HCX7
+	 FZ9pewufBuq+LcGOQuBiRxarqRpmCUPvTw2qMWFhu2mmf2EMf0jjq0S7++QDcrAP5Uw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=lunn.ch;
-	spf=pass smtp.mailfrom=lunn.ch;
-	dkim=pass header.d=lunn.ch header.i=@lunn.ch header.a=rsa-sha256 header.s=20171124 header.b=4nkRqlT5;
-	arc=none smtp.remote-ip=156.67.10.101
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=TJTgKrwT;
+	arc=none smtp.remote-ip=188.68.63.98
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91D606A325;
-	Wed, 18 Nov 2026 15:32:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F91D606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0338606A339
+	for <regressions@lists.linux.dev>; Wed, 18 Nov 2026 15:48:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0338606A339
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.a=rsa-sha256 header.s=20171124 header.b=4nkRqlT5
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=PtL8/+akObd7KiIRwLMWdhZxYtaj6/g81RYosEwESzU=; b=4nkRqlT5D1JABIJe+VVb/HtlXh
-	xN5YafgDhfGmRYaIJKJ8wwydEDlER7sKxc+QkUlumMg4dnwQDTIwUORCCwnqlaLimd7vew61NwvJZ
-	J4rFKc+hQan7211dJpisbiuXH6FRw5G2TWMAUztEH9ivzdInw1v7JgwciILYi7JM7hRw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1xTheO-00HSG4-V0; Wed, 18 Nov 2026 16:32:44 +0100
-Date: Wed, 18 Nov 2026 16:32:44 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Frits Letteboer <frits@letteboer.com>
-Cc: hkallweit1@gmail.com, netdev@vger.kernel.org,
-	regressions@lists.linux.dev, rmk+kernel@armlinux.org.uk
-Subject: Re: [REGRESSION] r8169: RTL8127A (XID 6c9) SFP+ link fails to come
- up in 7.4-rc3 (inband/10gbase-r)
-Message-ID: <bb775cfb-525b-4471-bc80-46bb9f98cc31@lunn.ch>
-References: <9e803eea-2446-425a-93d3-2524890d9508@letteboer.com>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=TJTgKrwT
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jV5Wm5hjQz68M2;
+	Wed, 18 Nov 2026 16:44:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1795016692;
+	bh=6W78CIV+VFHs/eRoRR7XLz3T4okJ2yxymasjkheTO4o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TJTgKrwTmHDnrCKNLZwJXAA7PH4jsGacSvD5L0+WSyOjEGueHJsJ2VVxnTedhrTOB
+	 uKd26MJw7EKzmAYcdDWH2LDttkYeDjfaAfvzvlABFVOlLgqF+M7UXStn06wC1AaHJH
+	 BDHPQDH4B6zc3tiP9Bnkqb0shgDp/ONhOEIBBdFJUn9FejayVpBtHgeLR7NUTuy52g
+	 sz4SVINanTaioqDoksgkw5ALudnpZYAHHn1k4kK4jNq8bvB10hm8OACYWCILEz2Cp3
+	 3/Pb+nScHhaOjvOW7AY/MjkwDXmKLYpmRpVNkXIuaYXm2LrmdnnspRch+4x64csT+z
+	 9F99N9JyORm6w==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4jV5WB5dcqz51ct;
+	Wed, 18 Nov 2026 16:44:22 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jV5W94x4Qz8svk;
+	Wed, 18 Nov 2026 16:44:16 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7FC3D5FD6A;
+	Wed, 18 Nov 2026 16:44:06 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <cfdb01ab-ee1f-410a-912d-1b07f90b6e91@leemhuis.info>
+Date: Wed, 18 Nov 2026 16:44:04 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -62,16 +74,112 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] r8169: RTL8127A (XID 6c9) SFP+ link fails to come up
+ in 7.4-rc3 (inband/10gbase-r)
+To: Frits Letteboer <frits@letteboer.com>, hkallweit1@gmail.com
+Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, andrew@lunn.ch,
+ rmk+kernel@armlinux.org.uk
+References: <9e803eea-2446-425a-93d3-2524890d9508@letteboer.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
 In-Reply-To: <9e803eea-2446-425a-93d3-2524890d9508@letteboer.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <179501664687.2416742.10315534654183012741@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 7FC3D5FD6A
+X-NC-CID: UYn6CVIyMPUVvFAFYSkmsb8rzkqIKsi9LyHswDMF3P7GVWp4Rfo=
 
-On Wed, Nov 18, 2026 at 04:18:41PM +0100, Frits Letteboer wrote:
-> Hi Heiner,
+On 11/18/26 16:18, Frits Letteboer wrote:
 > 
 > Between Linux 7.3 and 7.4-rc3, my Realtek RTL8127A (XID 6c9) SFP+ NIC
 > stopped establishing a link and generating interrupts under r8169.
+> 
+> Hardware details:
+> - NIC: Realtek RTL8127 10GbE Controller (rev 08), XID 6c9
+> - Transceiver: Intel FTLX8571D3BCV-IT (10GBASE-SR SFP+)
+> 
+> On Linux 7.3, r8169 attached the "Realtek SFP PHY Mode" driver and
+> brought up the 10Gbps link normally. On 7.4-rc3, r8169 configures
+> "inband/10gbase-r link mode" via phylink, after which "Link detected"
+> remains "no", no link state transitions are logged, and zero IRQs fire.
+> 
+> Tested workarounds on 7.4-rc3:
+> - pci=nomsix, iommu=pt, amd_iommu=off: no effect
+> - Realtek out-of-tree r8127 driver (11.017.02) on 7.4-rc3: works
+>   properly and brings the 10G link up immediately.
+> 
+> --- dmesg on Linux 7.3 (working) ---
+> [    3.777598] r8169 0000:0a:00.0 eth1: RTL8127A, 8c:a6:82:71:89:12, XID
+> 6c9, IRQ 152
+> [    3.777601] r8169 0000:0a:00.0 eth1: jumbo features [frames: 16362
+> bytes, tx checksumming: ko]
+> [   13.540664] r8169 0000:0a:00.0 re0: renamed from eth1
+> [   34.179244] Realtek SFP PHY Mode r8169-0-a00:00: attached PHY driver
+> (mii_bus:phy_addr=r8169-0-a00:0, irq=MAC)
+> [   34.871337] r8169 0000:0a:00.0 re0: Link is Down
+> [   35.053740] r8169 0000:0a:00.0 re0: Link is Up - 10Gbps/Full - flow
+> control off
+> 
+> --- dmesg on Linux 7.4-rc3 (broken) ---
+> [    3.806559] r8169 0000:0a:00.0 eth1: RTL8127A, 8c:a6:82:71:89:12, XID
+> 6c9, IRQ 152 (32 total)
+> [    3.806562] r8169 0000:0a:00.0 eth1: jumbo features [frames: 16362
+> bytes, tx checksumming: ko]
+> [   14.285134] r8169 0000:0a:00.0 re0: renamed from eth1
+> [   34.926923] r8169 0000:0a:00.0 re0: configuring for inband/10gbase-r
+> link mode
+> [   40.505158] r8169 0000:0a:00.0: invalid VPD tag 0x00 (size 0) at
+> offset 0; assume missing optional EEPROM
 
-Can you do a git bisect? Find out which patch broken it?
+This is not my area of expertise, so the following might mislead you.
+Nevertheless FWIW:
 
-    Andrew
+That error msg recently showed up here, so I wonder if it might be related:
+https://lore.kernel.org/all/20260522114135.2104890-1-18255117159@163.com/
+
+Ciao, Thorsten
+
+> --- ethtool re0 on Linux 7.4-rc3 ---
+> Settings for re0:
+>     Supported ports: [ MII ]
+>     Supported link modes:   10000baseT/Full
+>                             10000baseKX4/Full
+>                             10000baseKR/Full
+>                             10000baseR_FEC
+>                             10000baseCR/Full
+>                             10000baseSR/Full
+>                             10000baseLR/Full
+>                             10000baseLRM/Full
+>                             10000baseER/Full
+>     Supported pause frame use: No
+>     Supports auto-negotiation: Yes
+>     Supported FEC modes: Not reported
+>     Advertised link modes:  10000baseT/Full
+>                             10000baseKX4/Full
+>                             10000baseKR/Full
+>                             10000baseR_FEC
+>                             10000baseCR/Full
+>                             10000baseSR/Full
+>                             10000baseLR/Full
+>                             10000baseLRM/Full
+>                             10000baseER/Full
+>     Advertised pause frame use: No
+>     Advertised auto-negotiation: Yes
+>     Advertised FEC modes: Not reported
+>     Speed: 10000Mb/s
+>     Duplex: Full
+>     Auto-negotiation: on
+>     Port: MII
+>     PHYAD: 0
+>     Transceiver: internal
+>     Supports Wake-on: pumbg
+>     Wake-on: d
+>     Link detected: no
+> 
+> I am happy to test any diagnostic patches on this hardware.
+> 
+> Thanks!
+
