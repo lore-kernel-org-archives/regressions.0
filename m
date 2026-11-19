@@ -1,95 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.17
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795118116;
-	b=mGlPf0MUY9DvTqJpm8kuJEMsehyZK7aYVwbZJNnwNbAx5nCYfwLWpBCvq5RNd4WtWZKk
-	 nmbjH8R8qOSD8vpkWfqKVR1V/e7RKFmXbARsAl+ghzvAxuTcvLROwx7NhflUM6clFF1Oc
-	 QsZr9gjRqUZDbOBfYlVXEmuGb2h0rl94yG4adJo9EACFEUeoZF44Tv1DcdzYtCBwS6XmC
-	 4MdESPZNEyiKpjn/b/Nt4wSXCmmeX4VZzbK51pNPfj5tgapbTN2tO6KGJHn33pDfwsZHY
-	 boOxOSyR97xojGlcxikutxzSj1qOPRK4VMsEQf82Wbw2DBRA7cx1jLGpiMxKK6iiGpw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795118116;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Content-Language:Cc:From:Subject:To:Content-Type:
-	 Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=/aX/p+DXTpEM0//85gWWHzAhz0SaoWMJPIpYGUzA1O4=;
-	b=0XSxDrNHsz6URJrGedwLh1suH+jVpz4fFTvSYEcnPWKlVZ17N3utFnO61ZEfuTE6YdyJ
-	 7Sol9SJ79XMnjmpJZv7kPNyGsnnGpxFlBpu2YlB0es1bs27CokUb7GfLCw+7/O3Rqetwr
-	 HXi5Fdz3bFBHSu0LsAb4ud1uT3vZ5KBHl/PsHXCOUxF+J/tyMCUWmK50j0pVGjKGnN2MQ
-	 a1nEo7YS+Fj+MRjcLfU7vzyaQxYceF2draFXpMNcrbNXrE4Fm5Xo4Pcg+aHKqSUkCU5Ht
-	 WYIDY+LPNmCP9lVCSbYg3d8/AORESnQEyXQq4fAve7eIqwYesbs2kbBCEhEWuWOZhlw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=IdXwBgHI;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.17
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010017.outbound.protection.outlook.com [52.101.85.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795120253;
+	b=uf9dV+byPUd89hzP0V7g012A4u7rOsbk42BZo/mAN1nRBRov8X+9ZlreSrby4917cVmV
+	 mnCGCr/45q+7GryJaF6h4VfDyfbknWfo06vGhDH9rrxJfE+7J6XNkpVZT32cNRV6NlnSx
+	 E5G1T47ypIOrfw6nzfFXXTrZ3uh3prG3uaYROvBWDVGgdyY+KUFhkUnTbqVaDbl5aQ3Oa
+	 Z5foV2uibbVQuPRnLua4Fd6d4GynT2jkYKNG/ig0wbplUdXNNZ75V3enolUhu3B9kgS7s
+	 J4FYRPogUv+GfrtQ9zWtCG3EiavBQlLsZFmpe6QjkuuWteLVO96NtBMy+MJq+MuAX5g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795120253;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:
+	 Organization;
+	bh=tytvhk3JrVSHsXOPa2vj4/q7ALh5xJT51+mQ59xmCMM=;
+	b=4mgQfImB92XgZ2DhtQAo3lhoBvw2/EPF8IML9xqWIOiJIvig/Ew6n+eQVM1KZK+ID/nd
+	 DgZWFszJESyDekYfCHcsncaP7rthjkZYS6FS3fi+2iZ21Hb3H3HfGP+VeZziNKWNzWUlF
+	 6fdplbX+w+qjf8BB7lJRUnhHHRA7+teKCVkVDhIdSEFPWKAO0uF3edbqCguhcGCBq6YCL
+	 YGXDgOsrZfAXIIuGOvwIuFIMFKRnoPL5HcXAmtm+qxxmVPinCfV1wM04+zkY43XUhlls/
+	 c0EFXkw4+pkdXf9/uFxIoaiIUd6DzDt6BFkosue0LeQB/ZMV0pzV5urERz//0ORZTcg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JzDDyvtZ;
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27FE606A324
-	for <regressions@lists.linux.dev>; Thu, 19 Nov 2026 19:55:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D27FE606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE48606A331
+	for <regressions@lists.linux.dev>; Thu, 19 Nov 2026 20:30:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1CE48606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=IdXwBgHI
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g5x/oLtN4aJLdKtgIaHhQ30gzv3gSidAn5fDVX/4x6MIx8dtLaGANFRI4s5ChEMED+TFtf06IkwB3JH6t3qz1+uyNvvIsvG4XV6x9URkMzRuFlUY7UDWUlNtzRMKNqezw0EZCj95qdPIPm6gouplQeo0hUqrSkOGaSW6AfuY+T6F7dxVk9gbIR9ILmDjdRz5+MJb5KNLgmCZNd3GV326z7e4abq1V02qoWftPg0DLmwDAAPkP9rRkpp0eNhn8btQE792gSB9GR5g+M+YrurIc71AQQkqCigC1w4zT7nO8ixyqwka2icno/TSKbXqoi2AV6M02rI/yM7UegbO66QGIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/aX/p+DXTpEM0//85gWWHzAhz0SaoWMJPIpYGUzA1O4=;
- b=coa8Z4BNooZGwVgkaTwmelogIDN7L+5qKCW6mHDmKSS1E9he1FfCLwxkISsDwlsUi9p+c6Rwf4LEEkG9Q6MuFwsodV4idCvbY6S5yktVqbkdpXkLlIAymGXD+jP+dOJlbZcN61XsjYihwe26SgUA09JGBkThVyJvP5ibFQJ1F1eyiiLvOf/cjr+cB7QaN86Bt6q0wvZEjPsyECRdxVIFtTJ9WFYvUNNEq/zvfYcxolS9yk7BQXboLVU6SiivxOHrGJhwp0KXV/MY6/L7d3boBDHgss1CG8akSWn1M1Xk10+A6ZuDK18g8Qera/EBq15wvYh+UGYFZiMmPKRH9DfhaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/aX/p+DXTpEM0//85gWWHzAhz0SaoWMJPIpYGUzA1O4=;
- b=IdXwBgHImTjJuag5497QCVvwz5aO+fDQMbv/p63LkYyO3VPVib/oNXVGqhy4y5o/KwzBwBAh5RxrQZSE/xETTvoXm4vpOOX372mCXk3WrOVy/goYAclVrsMrHJEOXYyusfADFcu8pRWak3buEgDN/r7MF3FsiEG9YVaHlER3rz99RduC0ARiCYZU6zQxLI9xuD71AO1Y4bx7hNfgf79z7Miz0xtQGV9C39PxwSfbqYSlG5+bffOwh5NJtf7A3iS2r0iEkC0RXvb6rsknNjXowCFSxbraWo+ht1nto3Sef0RylAPqH4/FiPrrpH3FxJADt3LPj957DfzFW/jMfADHyA==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB8069.namprd12.prod.outlook.com (2603:10b6:8:f0::7) by
- MW6PR12MB8914.namprd12.prod.outlook.com (2603:10b6:303:244::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.10; Thu, 19 Nov
- 2026 19:55:04 +0000
-Received: from DS0PR12MB8069.namprd12.prod.outlook.com
- ([fe80::4f0b:dec1:4317:9b86]) by DS0PR12MB8069.namprd12.prod.outlook.com
- ([fe80::4f0b:dec1:4317:9b86%6]) with mapi id 15.21.0615.009; Thu, 19 Nov 2026
- 19:55:04 +0000
-Message-ID: <bd2a701b-866c-4d4c-bd0b-37b4410628be@nvidia.com>
-Date: Thu, 19 Nov 2026 21:54:37 +0200
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- x86@kernel.org, linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gal Pressman <gal@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>
-From: Yael Chemla <ychemla@nvidia.com>
-Subject: [REGRESSION] x86: Use RCU in all users of,__module_address() slows
- kTLS+wrk workload on KASAN+PROVE_LOCKING+kmemleak
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL0P290CA0015.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:5::7)
- To DS0PR12MB8069.namprd12.prod.outlook.com (2603:10b6:8:f0::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JzDDyvtZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795120253; x=1826656253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=7S1RuKZKjFiciBHtIpfDPfnceGxBPatJxPFsTbrfcd4=;
+  b=JzDDyvtZ6IDxoN9VPFaVSRw8oW58hqscyS6zII8QMLzqd8OlTSPlDy2/
+   69XNGPhrWODOuFNnUJn0DOxogR3/EqspY7o1Tjg3i8IbwrPsg+U42BzsP
+   NbSdcGL+CZijx9YPofIS9rVsbxQd3Wq+jwBykX0M4MDoV9qaxtehyUlyU
+   6+d5YDaSUKbi6wKPvRSzKwGky4up4LLrOr3bw2EE217ygDeSqd7TIDW2f
+   yI6O3gsOj5X930SSVDKFHk9R22RYWeI7fJuBaNAv3uzhsuewRPWH/B0I5
+   iTqvIiBAWcVqon+qlmEO/e4Jjn9KeqKz0LsMWiHgAs0U8kA91RfKyS956
+   A==;
+X-CSE-ConnectionGUID: +i/OPfZaRSS7OYcOck8Vpg==
+X-CSE-MsgGUID: HOZm4SIPTZWo0oMP8NvgyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3982252"
+X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
+   d="scan'208";a="3982252"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:30:52 -0800
+X-CSE-ConnectionGUID: gKSvUEcGTfyH7sSrxh70EQ==
+X-CSE-MsgGUID: gn6DCL6xQgK2aVUP4tq2hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,221,1787036400"; 
+   d="scan'208";a="10521474"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 12:30:50 -0800
+Date: Thu, 19 Nov 2026 22:30:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Cc: Ted Vera <tedvera@gmail.com>, linux-sound@vger.kernel.org,
+	regressions@lists.linux.dev, oder_chiou@realtek.com,
+	lgirdwood@gmail.com, broonie@kernel.org
+Subject: Re: ASoC: rt5677: Do not apply Yoga Book ACPI GPIO mappings to Samus
+Message-ID: <av9cdww9a7NV2DHz@ashevche-desk.local>
+References: <CAFd_G9guhtVwE1aaFOXE3Ab43BAcwP3RBT=R_SdZ2KDfXB=LeQ@mail.gmail.com>
+ <d0219acc-0e2d-4bcd-b303-e7edaa236eec@linux.dev>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -99,93 +81,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB8069:EE_|MW6PR12MB8914:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93553656-bb91-47e5-a6c4-08df467700c0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|23010399003|10067099003|261022075727099003|56012099006|261026140227099003|11063799006|261022105027099003|261028144727099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	vVGOo4Vl5SceXVvKMPcQhbUmkB/oRJ+RJf00N3IqypwO0W07iKYGE2+1Osp4BwvIkC2IzK5o0XxvVgq0qjzkGzwmGg9AXn3J+gqh5gSeaPqXju3nJdjb2jWzwDyf65sIxP1hPXM+sxzR5zdpzAo16b+7CZJ7Ss24vilbMjyl6Jp38WX8CWEf7eeafKssnIDAW+CzDpyHAFj2TlnBgcPO2b93LIdXeEA9gsyuqDV7Os8P9cSt8so5Ahv9kPgXIjNtarb7zw5C4Xtv+UjjMbPQbzP2YciivHDvK8+8fD+XXBY18YCWcfVs8oWVbW4d3nfF2JqFCgAaKFEKpic66a1QsW2p31gyMp/vU0smFAmP56EBcmRggy++WQR3+TIUlD5gSWMudFwtcwDdfqVj1/TfrnWgmFFVVpArTiBRJCBOgWbJ2hYP27eDE+gKH0LcWCXRBOiT2kcOywSTUy0RDfqu5A7KhMtmMQTKgFQDYuiUdLXuGcNijXv0asCNDMeD4I0K5J3171Dw3kLsQitOsGtZE413f04Ging2T7lPD4F268efYY8OA39lwgmruhL4OHCfQ77qAndeXeGF4Tv1w73nAStgz/RL+fOBlRadPIre8Iu1v8SvZfZoUxTtkytW+f5atiAqj8TaSRpGlBY0cwchrLZKoQIU8z46bnOr+H06sq4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8069.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(23010399003)(10067099003)(261022075727099003)(56012099006)(261026140227099003)(11063799006)(261022105027099003)(261028144727099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OE1EZWJReWR1WngwTWp5c0lvL3BySys5d043dW1iYTNrMit4RittZnYrdlVy?=
- =?utf-8?B?ci9xUjA2Q3BUQjRUYWxUdWI2NzlnWEJLaTY4NUxjRlFSanB2blpoR1ByWVNo?=
- =?utf-8?B?ZjZwTFJvUXBoOU50Nk5odE5uVVlsL3AvbHozVVd2d2pKa2JYelR6RUphL2hi?=
- =?utf-8?B?dWdkYUl3V2ZCUGZoQ25MclFhcVRZMGkwbUttaTZhelhYNnhseDBybDVaRkZh?=
- =?utf-8?B?SmsyUWdZQjA5OXZlbVhIUE5uYUEwa2VVNjNMK0VuSU01czc3Qi9RT1R0Y0Nq?=
- =?utf-8?B?OFVkNWhUWDgxQmdWaVNCbHEzcXNSOVhxV2lUNGlHT09ydmQ5RUFPNEVXU084?=
- =?utf-8?B?UHg4cWZPTk9JT2h1RGxXRWlmcGRJbVhqbDBLMVRzN1FsY0tpall1NVJLWXRw?=
- =?utf-8?B?QmtEY1dyMlZrdGJocCtwaG11RWR6STdndGRLQnl3alVsK1VsR2hJVjIxMWJq?=
- =?utf-8?B?M0JYNk9HRnVBb0ZGUzZQYjl0WGx0N2U1cVZseWd5d2s3ZWFVTjc2RmNhRmtp?=
- =?utf-8?B?T011SWw4aFpXc21yQ2M1eWdJekdwVnhJS1BQUFJnYzl4YXlGTm1wR1pTNU9X?=
- =?utf-8?B?OStMUnlTRFNXOWFBa3l1U2NYbGpWVktDK2N1YzZlUTdjSGhDZHRCMkdtTUNn?=
- =?utf-8?B?eStOY3hqSDVvaXN2VVhVRmx5V1hVSlVQL1VxdWI5ZzlTbyt1STdqb1BBMVJ6?=
- =?utf-8?B?eEcyTk9kSFlKaXdKaFhSYitITUIwdTZ6VlAxZVg2Y3lkZnBoZGlVZUJSaS81?=
- =?utf-8?B?WXRic1hjUURob2lhbXJDeGZoNVpuNnZLZGYzYi84d090Ym9rdWFIZzJDYnds?=
- =?utf-8?B?SHd0MW1wbDQ5UEVTa2F2NGxDYVZCVHZYeWYxaEFWM0xxNi9aOUp5KzFIUjRD?=
- =?utf-8?B?Zk5CS1FjRnE5dktXVXRTTFB2RnVNSFR5MnB2ZFhML0M3RGl4bGdoZ3NET3Zt?=
- =?utf-8?B?SSs3MlpMd0s3dHU1UGlERDFFUTZGRWttSW1vekJXa01DZ0VqZ2t6dW9sZy9T?=
- =?utf-8?B?bzNDK2FPS2d0Mjc3NFFNNFdYVDRtcURZZWN1amplanVtNE8waUtJVzc4TGUr?=
- =?utf-8?B?YkZQVmhxREtUb1l1NVk4aXVLKzlneVBybk5sWFlyNlRKUE1zcVV2UGc1Q3hn?=
- =?utf-8?B?WG1jU0ZoS3V5UThSY3gzUFJYVFRQMDlKbkFsUkpaMkhKK1E5eTZhc3JvNjdN?=
- =?utf-8?B?Vkd5RGs0M1c4MGwzUjZtWkZ5Q0ZJdUlkUURRa2Z5aHVnbzA4SGQrR3IxeTlw?=
- =?utf-8?B?SndqYlMrL21Idm1iMFlxUEZQZURiWTVVMitkdUFMckRsczRJb2tXZUFaTC9S?=
- =?utf-8?B?YVdPK1ZIVEdTTi9uS3g2M0IwRjdDSHpvUkxybkcxZ0hGU2N3Nko2MTI5UEFj?=
- =?utf-8?B?UHp4YStWaWE3V0Zyd0k4dml1bjBSR1JWd011YUd1WWdxRXJJSWc5eWtnUGVL?=
- =?utf-8?B?U29BS1Zhc0EySnhid3ZMakM0QkJyUnNxMHR6VDZ2SHovSjIyc0RtTEV2MS9j?=
- =?utf-8?B?aysxZkNMNG02aWx3bi80aVN0RjRVVHpnbGtrd0VtUXVkVXNsRFRBdWpBVFd6?=
- =?utf-8?B?U2ZJRXNKbDZkSEluZm5EZzY2Wlk2Q24vbit3UzVVMXBCLyt6S0JscFVDMm9l?=
- =?utf-8?B?eVFQQnlFNmNQUTN1TzV1MEdPcnIyUzI3V3gwN0VYQzVmaGhROUE3V29naU4z?=
- =?utf-8?B?bjVpaTI4NWJHS2ZEVCtPK0tlQ3pSdmNlK1ZKZHFUSVhsZzdQUVFwVXU4UGlr?=
- =?utf-8?B?V0JZQmJ0eEpHSWI1KytteU12YUdLK0RmaDZaN0RCaFFxYk01azM3Z3NaVUR2?=
- =?utf-8?B?bmlqWjZsaXFiZVJPY09tbmFJaTdQL3Z3SGRxa1Z4NjAvcVhDVkFjdjMxbWht?=
- =?utf-8?B?Z2pSV3ZjWjV2LytKazM3ZFY1LzJTLzR5SUJIOUp4TFgxYWRpTlY5K2hndzZY?=
- =?utf-8?B?YnUxcWxtTlE4RFNLS29OU25UbWRTVnFaZWJ1ZXBXdUovMjVJRU45eDN5ZXVW?=
- =?utf-8?B?R1h1RnY1ajBpaURIQlM2OC96MlZWR3dyTVdOa0FNd0tZc2o1M1ZLQThCcTJu?=
- =?utf-8?B?TkQzVGQ4SjB6OG9nOTNuRDcvU0VRNlpMeE9OQW9CRHh3M0o2dm4wZDFDTDhU?=
- =?utf-8?B?SXIxWGZBWUIrZGJseU5kcWQxSWIxa2lEajlPMTNLN0FOWHF6NmI4Sjhzb1BP?=
- =?utf-8?B?Qy9qWDBvZjdiZUZjOFBicGlyVmd2MXFXaExFNllMaHJocDIyRFhqUlVGR1Ar?=
- =?utf-8?B?aHFFVjJxWHVhclFFRnlZVFg0bytSdVk0d1liS2c2RUZVSk1WKy9QSVJkbDRK?=
- =?utf-8?B?d2FSM3NPcXpVR2VaRUlzNTI1cFYzemVxN2JoYmFRWkVxaG0rcFNRdz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93553656-bb91-47e5-a6c4-08df467700c0
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8069.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2026 19:55:04.1346
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YOs0Q6bOITz+sXZiCE6lWNg9daPEW+GuiZzffsgvSa0sXqaCYlq7PbJGE87nJg/omYkz6W4MxKbnpjUMx2W3Ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8914
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d0219acc-0e2d-4bcd-b303-e7edaa236eec@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
+On Tue, Nov 17, 2026 at 09:11:13AM +0100, Pierre-Louis Bossart wrote:
+> On 11/16/26 22:24, Ted Vera wrote:
+> > Summary:
+> > On a Google Pixel 2 LS Chromebook (Samus, EVT2) running Fedora 45
+> > kernel 7.3.3-300.fc45.x86_64, the RT5677 codec repeatedly fails probe
+> > with Failed to request POW_LDO2: -517 (-EPROBE_DEFER). The codec
+> > appears in devices_deferred, no RT5677 ALSA card is registered, and
+> > only HDMI audio is available.
+> > 
+> > The driver’s ACPI GPIO mapping added by commit 0cc00de3dd5b maps GPIO
+> > resource indexes 0 and 1 to reset and pow-ldo2 for every ACPI RT5677
+> > device. Samus’s DSDT uses those resources for codec GPIOs (jack detect
+> > and mic-present), not Yoga Book-style external reset and power GPIOs.
+> > The driver requests the mapped GPIOs before registering the codec’s
+> > GPIO chip, which appears to cause the deferred-probe loop.
+> > 
+> > Test and result:
+> > I built a temporary module against the matching Fedora kernel source
+> > that skips devm_acpi_dev_add_driver_gpios() on DMI board Samus. With
+> > that module, the RT5677 device bound successfully, the bdw-rt5677 ALSA
+> > card appeared, and laptop-speaker audio worked. Secure Boot remained
+> > enabled. This strongly supports the ACPI GPIO mapping as the cause.
+> > 
+> > Suggested fix: Restrict the mapping to devices whose ACPI GPIO
+> > resource layout matches the Yoga Book, rather than applying it to
+> > every RT5677 ACPI device.
+> 
+> Humm, it's a 2015 device that I used in the past without issues. It was
+> one of the early SOF devices... See commit bcb43fd.
+> Is this a commercial version or an early prototype? I don't recall what
+> EVT2 stands for in Chromebooks.
+> Also adding Andy in Cc:, he was the one who suggested the GPIO fixes.
 
-A kTLS stress test started failing in v6.15-rc1 on kernels built with
-KASAN and PROVE_LOCKING. It was bisected to commit 14daa3bca217 ("x86:
-Use RCU in all users of __module_address().")
+I have Google Pixelbook 2015 (still one left), I may try to install F45 on it.
+Note, F43 worked on this device so well!
 
-The test runs wrk (1000 connections, 15s, --timeout 5s) against nginx
-serving a 1 MB file over kTLS, with 1% packet loss. It fails because too
-few requests complete: wrk reports only timeouts, no connect/read/write
-errors. With --timeout 10s it passes.
-
-Reverting 14daa3bca217 on top of 01d5b167dc23 (modules-6.15-rc1 merge)
-or v7.4-rc2 (7475ea8b5861), with the same config, makes the test pass;
-without the revert it fails on both.
-
-The failing config has KASAN, PROVE_LOCKING, kmemleak and UBSAN enabled.
-Building without KASAN, or without PROVE_LOCKING, also passes.
-
-I have not looked into where the time goes.
-
-#regzbot introduced: 14daa3bca217
-
-Thanks,
-Yael Chemla
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
