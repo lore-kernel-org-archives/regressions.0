@@ -1,53 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795095218;
-	b=4EiRroursxyRuyujWi48rzaDcQ/UzxgE6nJB5ENqi5AkErQ0KV6XtmNQa/9UzwFGl2np
-	 5a3LQz9XdIkaOmpRRzJjccDXvwnZd0z8ozDNhEfv6pe73NaZYl1dTrxOUtVrFzeVSJnRM
-	 V81zy5YB5A7InirmKGGVAYTAHyMvVrHkIbQXs7iHgl7tyzBA1iJt11S32i8GDe3JAPt7N
-	 RcS8sY9UZanePdCh+ms4m4svceTvknSN5O8JBr950dhi2k3iQUzDW1iZJXBmeCezvj0KW
-	 luMBulywsgvSaVWXIM7ftJ9X7VGU8ttv2hG/Ei1SFjyaljf/O02zTIjvXdEW71ZCpOQ==
+	t=1795104516;
+	b=RyhlZz1ht7/JjjyilbCf0OTPj5oPhLWqEih3VyqYomqIrSCjGhJjMo/XquaoMHPX8k29
+	 En5QGuFafQwGsRckstVvxRpD9gMVz9pXL49pFNqcitN0XX5QiU9aBmWmsJM/9bNELlCyf
+	 sN21qkvvkgo6MBzYKS+HOVf4qELaNH6MuOWxdaZaXdsH4TM+ErhgD2e07uYpXT0C0IEFl
+	 gnuBjznqu4WHeB1n342M1SIJK1kF7YbKHRVYqwBb+QNlpN1C6EwrfrrsEwiMt6s/uefUc
+	 OERJGU0k+SKctnZvbhDC0DwULMlkQWumcoH1A8D0OHwVmgXf+JnbGfguVoQADMuSCzQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795095218;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=XfS+oHcrTjlhmSvOogEzFZfufao3H+gzZJA52Yl0GXo=;
-	b=iKY8qKrHYRbxmc9B8p0mxhoIfbf9cDgu0IjA5qK4Uq9eqpi16JhVlrOQ5z7igEA4Hzpi
-	 rsgrQ3MTiCIcxEtDU0f+TDi9chitNySp/u9RMRehwvzOJr9lecSsCMoN7V605Kf10dN1E
-	 17ckho2jbws2hlhf55KExC0/ZgC3nMols8Q79IPzDz3HxOTXTA+IG10ZsSPs24HLdhnZw
-	 1JavbMmcwnhwPE46DOpLd927HIF33elzJ4X3ZwQIjoqXU8WYP5/jndwmX+Ov5+swMJLud
-	 RaL9ZdlcIffZcpvXtp1rPqmKNgg7ioeTplbxX3Z7ggVWCgvUL9tXfMlEsZlFwUX/5NA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795104516;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=UUMbqy+TiISpQgDGl3gDWRmwEP4ubm4k5QKg0vigiAs=;
+	b=ziJhlpmxbTueeiKLj+I4IdiGDc9jyYdYIwHHPZXc1VOiQMLWPXh/gEfnzmAiX9dW1siq
+	 z7GPfhQSt58M3u8eC1nseKcR5P7Zs3w4/GVOT6TByRgkLOnqi4Qecy4T0OMr8Tsv/sV/R
+	 /sw06k6b212oMz8iMz8f6IflKwfqFrl3HCIXHOh+ICCcewu+bDSG3u25clpQOesgy7cAy
+	 rFv3wBHlNNhbSHAMuRUJLiIrgFk1xUG1sjXgfg1wamuc5YUnTJiotp2PuqZlexIXCbpGY
+	 Pn1f/k3q9mh2HxZbz+JDd0x5G+koqLeVknXMl0lSYof3Jc5v4jogqVlZ5UvXnRNUFHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UxZSQr4U;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mnww0mgg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A95E606A324;
-	Thu, 19 Nov 2026 13:33:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82049606A320;
+	Thu, 19 Nov 2026 16:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UxZSQr4U
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D8B1F000C5;
-	Thu, 19 Nov 2026 13:33:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mnww0mgg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271731F000C4;
+	Thu, 19 Nov 2026 16:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795095217;
-	bh=XfS+oHcrTjlhmSvOogEzFZfufao3H+gzZJA52Yl0GXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UxZSQr4U6FaeHWjThQV1wutK0RaIVgLz7QifO5G+Fffnc98S64mmxh6WAMD5JV/tc
-	 I8YsYXxwLw6Q+n74SjXe9JKPCLZIKUh9sfiocjmDuXwYy7bI9K7ixySYr3MT5oYoz3
-	 VZpjO0hmfGXtn6axj217YeNIFlW7PPVpBdckcPvRyc8kiZphVOYBW7tqCi4Q+i1/h4
-	 VXLGz7wXaOtYA7PEMfLzVluucdo86V7MPSlnl+ZDi8jkIw4BqXw/fr52YovZJs7UO9
-	 uSCQlqhNCUxiYEE9FYJQzDQ66TMrjKbHxwmuGlDpd3F+JpXQpcMlNB4PvW6hGQxf2S
-	 HSJt/tBnoYXSA==
-Date: Thu, 19 Nov 2026 14:33:34 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Akisaira <akisaira@outlook.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] fs: validate_fs_switch() rewrites fs_struct under
- PID 1 threads
-Message-ID: <20261119-arznei-flecken-galen-f83bdbce6a56@brauner>
-References: <TY4PR01MB14006C85EBAAA186836A6E05CA67A2@TY4PR01MB14006.jpnprd01.prod.outlook.com>
+	s=k20260515; t=1795104516;
+	bh=UUMbqy+TiISpQgDGl3gDWRmwEP4ubm4k5QKg0vigiAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Mnww0mggEmYPmwCPjcWHPU+nD/5VpbiQ1Lq4SOaAEcdHBvRLX8Vm6ysXTnk7IVZq3
+	 kavZ8kfoSZ0i47fJcsiu1okzgwZvOC4eEYTSsHq/oUwQ4bSY9929tXhbyUfQh0x/uw
+	 2m+d1+nc6HTnVXtrWhE9YpvO08VSWt0LDHYU9yvtFi98WbXlI9zGZs0YB+Dt1diQuZ
+	 lanqX/o3/9LtIWrfOsNqij+QKNayon8zASOnmGy2Hz40hed0tMI5csVuPSZUeZAcRs
+	 tD8dBGkDcqi+IXZ1na08KdOkY6RKVpvSmcDIWYgVwHoWvtFpn9DG++HQWN59qjW2wQ
+	 aKYd+c2y6pdgw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	chenchangcheng <chenchangcheng@kylinos.cn>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Naoki Matsumoto <naoki.matt.matsumoto@sony.com>
+Subject: Re: [REGRESSION] 5.15.y, 5.10.y: media: uvcvideo: please backport 5b9c75c794ce
+Date: Thu, 19 Nov 2026 11:08:04 -0500
+Message-ID: <2026-11-19-1-daily-reply-0002@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <avxKOmxCBLF+7qdT@jpc00229873>
+References: <avxKOmxCBLF+7qdT@jpc00229873>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -57,21 +65,13 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY4PR01MB14006C85EBAAA186836A6E05CA67A2@TY4PR01MB14006.jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 19, 2026 at 12:30:21AM +1100, Akisaira wrote:
-> Skipping the set_fs_root()/set_fs_pwd() reset when old_fs->users > 1
-> (one reference is held by userspace_init_fs itself) clears the denials
-> and lets init proceed on v7.4-rc3 (tested on arm64, Qualcomm SC8280XP),
-> though that leaves kthreads using the old fs_struct via
-> scoped_with_init_fs() rather than switching them to nullfs. Happy to
-> test a proper fix.
+> I use a UVC device of USB3 at v5.15.y. I found the frame rate down with
+> the below message after updating stable version.
 
-If there's a legitimate case like Android's here then we should just
-restore v7.2 behavior. I've sent a fix with you in Cc.
-
-Thanks for the report.
+Queued for 5.15 and 5.10, thanks.
 
 -- 
+Thanks,
+Sasha
