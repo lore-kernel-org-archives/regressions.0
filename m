@@ -1,60 +1,150 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.97
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795177842;
-	b=fbQ/W94gu8CBuDW/eynUtcJ2oRkhH56YF5410BSUklx8h3k43GV10MDPuXZ6BS3x/Qmv
-	 DsjCdE1NJRj4Vn5nPwQVC5J7ap2gxKdKl/sNbduvqn9X41DPALiX02VhQm0TudQLAnpAb
-	 hpd53eP7dz50K58NSzPMehZ4oaz50+jJOB/KZe0QRgN2FhPqIOtBNUWcyOBmLVcvhOBZd
-	 Ilt1bfqNWdHEfEPKPAP/yJlNMx8pYrzd09LgFo42X35DgO8CSVSh435n1N1vxL17393co
-	 n3a1rmJCP3j2btDxEju/2npmGLqzWJmfNaJMoLsz4MyAkpY1w113d5BI1fPwuzbAmZQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795177842;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=3x2uiAzQDyjRyuSsB/NleI/o1rLWVIuk9GwKt/3SqVY=;
-	b=jVudwsO7R5kMVx4HHlbefNiVAN8Eg03MX6NCtD42wuCNwQrDXy2mx3uCMox63XdJstiP
-	 jVWEwu95OguF/V2NOJ1C6zOk7Hqix1F2WIUMGrFJJcP8ELnl4qnLAzfquZO3lNb9egDd4
-	 i7L8ZaFXbyr9Sr8E2m8g4hMh2ZEZd0jjhFzlEELSN5YpUXZVHHRQCcn0yTFx8uJbf4E33
-	 XG22RW4js5nEFWOBfh/qC5N+ZnX/VpmPdHHNKeku3QG9r5DBqz3ktGqIippaBztVw3E+9
-	 DiFVzczc2qElDfD2rVb12okfUTVVN/Z0fWrURQYsxBFDGVGc9+kuPAGqCwBE9uGoOgQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=protonmail.com;
-	spf=pass smtp.mailfrom=protonmail.com;
-	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=iL2IYH33;
-	arc=none smtp.remote-ip=79.135.106.97
-Received: from mail-10697.protonmail.ch (mail-10697.protonmail.ch [79.135.106.97])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.32.15
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795178948;
+	b=z3nYsfCTzMK7IZkHgV0Rd1LA8XkumpsWiDX/j5i9g0cB1T2kA/4RXvod7ZKd85OiHBoL
+	 aHilSmMTl54QJ9ExymLGdQNn7Ie9sW811TYvGgnpxQEV4qLeT3kxdn5V0Ijk1L4ZJN0k+
+	 Q7MSg14Ssn2GBTdQYdljUbiXp82tYKfHBdcSc4PSH4aJBAR4JYpG2qgzYd4dye61M4wtx
+	 /va2UyB6yufKG4f6QdYr/FFPfxQ78z/p8t6SNobvzdJkcFD0wKWtPNZoK7FLURX55EYWM
+	 vF5iyhzzEd32WMnPruk1Ckn9z7y8BndlBBK8NM3euWRDLaPjX4r0vwiZ3pFb/k93e/A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795178948;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:Accept-Language:
+	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:
+	 x-ms-exchange-slblob-mailprops:x-microsoft-antispam:
+	 x-microsoft-antispam-message-info:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:
+	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=FBBYV+IvGLBq1XOdscqZtOwDlUSaV1CiQAP5RKeBDZQ=;
+	b=Teas/gWXMPiqQ9t9+42saYLGG8Cwsz4j4kUapY05BM7n19L4w9xLy+3zcmUgtKMK6cW8
+	 +f8aYRj4YgZrcVvbFD078VsqtM+jEySPrHWfb8WKoViyLAMUN87kYgELOg3H7ybDd0H0v
+	 qXsPpo6Qw0wcD+PrXvMlbww2bgtENLcxn/C/5jkJe9wk8c1xWMgqmmb2k9R39ogS7Mjtw
+	 cs0f6bnmKQifrC5SyCTEVIusUY2kh11vNtqftoAm8xEjsFMb6RXWgZiMwP//8se53IBb/
+	 0HyGsAq2EKPa0xSE/ebeLSSiRXc/paeye8lQqaYddvIwm16frSDtxjiRltb5TXBOyJA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=outlook.com;
+	spf=pass smtp.mailfrom=outlook.com;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=MP4Ulve7;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.32.15
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazolkn19012015.outbound.protection.outlook.com [52.103.32.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20078606A325
-	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 12:30:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20078606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C06606A325;
+	Fri, 20 Nov 2026 12:49:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98C06606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=iL2IYH33
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1795177839; x=1795437039;
-	bh=3x2uiAzQDyjRyuSsB/NleI/o1rLWVIuk9GwKt/3SqVY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=iL2IYH33shWhvLf/J0TVsbZNoH/IWweuJfYJCpwaxxyKFzjUWKHjVuXZoEPmYLLHT
-	 g7L/1A0EEWg6hqIMcv99DPwA6iGPQQFrZSxeke+f7hhicr5XOfiqu2nuswo95/yT4k
-	 D46J696zRvkLABfDSg4CHYG3Nqf1vmDOuGpFaTBOKdukrxTttpjF9P3GvB8sl4rGY7
-	 uVslTnlx1t7ZzFeVBUnzjGSXmLorIKw1r6GDfmfto7w2SRKV0sX4/FOxXHC9ro6r28
-	 GEyyRMeXPpX2H7AgGLf8/mlUa6OB856doI9Hh8K80UaSI5LtXFusfy6Aq6dPNz4sWh
-	 CPsgt+yCDWjBQ==
-Date: Fri, 20 Nov 2026 12:30:34 +0000
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-From: John <shffr@protonmail.com>
-Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>, Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>, "coreteam@netfilter.org" <coreteam@netfilter.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to 00:00:00:00:00:00 once the next hop's neighbour entry is gone
-Message-ID: <mnTRsDnjFGwkaEs2TyBhSVGORGNjDv2jpYzwr8fY9E3xMMohO6nE5PDALNhJYrjPVDAfxziY2rjCLBNeJ5zs7vRg-6LyTC56Ypk4TKStDKg=@protonmail.com>
-In-Reply-To: <av-RdjXsq4IXsnMg@chamomile>
-References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com> <avSIBUcLH4kZyISX@chamomile> <avTngTkNKE5ApQW8@chamomile> <LCJrB-Fde--T9NiYx2QfFb-X-9W-vsYYmtmrHwIKuKgM8enKRWF2DYypz2_zJKSKQBMUdb9sS6xMEfPihv1YO2FLjX1OUN-Td3Hq1eAdLgw=@protonmail.com> <av-RdjXsq4IXsnMg@chamomile>
-Feedback-ID: 9232920:user:proton
-X-Pm-Message-ID: d0bec2f19f1968670e03cb0da2155cefd3870d42
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=MP4Ulve7
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=izRojUiuXFX34ugQTazfxIxNAFv2Pt9oRDqXn3NNk3WnGty421Ta2KcTnv3BD3sohlPuTlBOnQGgGmBw1f5oBeW/xRxFVvn27C0Y5lMpXz59SGmA2Wj45fBJMYvO7MyE+q3UKgae8S7cDzdoal4BTaSvDqv+V0tPVF/sxS6gu1+nkTX6WY8fpnEVo2Cx9gAY7AK2gl+OWLw5AqAucmZkEYmLmm/xoLh9AN5EXf6uB19krAL8uiqOYKCsf/Iw1nkYjYptDlrUF0g5vDy+OtdMJ/40P05cW8mfdaIdn+9Xr51UQtWflXaJQEmKHhw/NbmPWiw4OOhcGrje+RKSOSJkag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FBBYV+IvGLBq1XOdscqZtOwDlUSaV1CiQAP5RKeBDZQ=;
+ b=n3E84JNjZwjoESIGgBIrPVdpx8d7R62Ima83PcII99WdccLVzHNty3mdp0VOSHVdGDDQU9WASsuRoIDhnBVvh2NEA94HzFtxkNP5W5JMxHRPdri23v8lzhKzQmTWnMsU9YQOeIJq44myCVQRnLz27PErsXrN7MJVH+zw8XwzZ9Vpc6nqZ7aSWcvGdb+rtRT4qND6iP1WaLHV6/SC++ae/d69Z4+SEiMchH4vSo71oRv5hQusL/UWrq5xhG4Bf6pX3wsZjcrXTuhJ8Pq4+Mf/n8emd7OTjiKCMpWBk5yIUv+vRpC8HgUCSY16rg2R8L+YcNnNHKaMATefghK0gXYQBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FBBYV+IvGLBq1XOdscqZtOwDlUSaV1CiQAP5RKeBDZQ=;
+ b=MP4Ulve771jLim278y+FYHfJS0PMQXariSXZngUR3nF2EXWq9KgMrh0X7YBNJcNfS4aw8+XchXNC+AFxAnb0SquIBDTMgH+5wr8QCi9whzD6Ip0PkpdV2nEVDB8ya07T+GxgmM0KjPd8V2Lk9dJyHA5IoWhKHHEAS/Y3wkN0H6o7Onz2j1Ptsa5H/9vfoDlpUkqFr6sXJ6GbK8sRppsNvcSNMch0zIGiDo8bACtS5GR3DMaPr8S5jzCMagq/l+Q4aLKgev9uWiaYPBhe5ib5BTSHxb9mafaXHeSDndp2EQ2XA1DLUrs8PxB5El5l5P63stxVQobjvY+HRYUOEK7nFg==
+Received: from VE1P190MB0877.EURP190.PROD.OUTLOOK.COM (2603:10a6:800:1ac::12)
+ by FRZP190MB2215.EURP190.PROD.OUTLOOK.COM (2603:10a6:d10:139::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Fri, 20 Nov
+ 2026 12:49:04 +0000
+Received: from VE1P190MB0877.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b9ea:ba75:b983:11fa]) by VE1P190MB0877.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b9ea:ba75:b983:11fa%6]) with mapi id 15.21.0639.011; Fri, 20 Nov 2026
+ 12:49:04 +0000
+From: "d3nchk@outlook.com" <d3nchk@outlook.com>
+To: "ntfs@lists.linux.dev" <ntfs@lists.linux.dev>
+CC: "linkinjeon@kernel.org" <linkinjeon@kernel.org>, "hyc.lee@gmail.com"
+	<hyc.lee@gmail.com>, "zenghongling@kylinos.cn" <zenghongling@kylinos.cn>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [REGRESSION][NTFS] Linux 7.3.4 mounts 64K-cluster NTFS read-only
+ after $MFTMirr record 24 mismatch
+Thread-Topic: [REGRESSION][NTFS] Linux 7.3.4 mounts 64K-cluster NTFS read-only
+ after $MFTMirr record 24 mismatch
+Thread-Index: AQHdeO2GTFIG3wiCfUeuSBEr21/wVQ==
+Date: Fri, 20 Nov 2026 12:49:04 +0000
+Message-ID:
+ <VE1P190MB0877D026E2C3905F0324B46F85782@VE1P190MB0877.EURP190.PROD.OUTLOOK.COM>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: VE1P190MB0877:EE_|FRZP190MB2215:EE_
+x-ms-office365-filtering-correlation-id: 9c3b08e0-e61b-4633-a5a5-08df4704a897
+x-ms-exchange-slblob-mailprops:
+ ZLYX9kf+sFZxKjlXyB2wc/pvxSEMppw8L/3RxB8jtVUk3m6IGL7YaLXMAg4Ia2R+7mqLCCUoUB88EpRrgWwxpy/4wdX1vF0Q/3LAc4FtDAMOZbcxmQxpMuI+FsKAZgnLENrftTzwCnyVP2yPUtf73KQuy5sYL3PazcMy8RwPh6zHgFhJtZAOFDtheBKKkkNNpikctqoOcwV/Vw2VIVQZqB3S+xJrWecKhDiVJEH+qzZBIz2wTqKZ7Cnj1PVNJBvI9RwLGx8E73CUDkfX4mg9ODW6VaXheGmmI4hEFVRd4iQnQRhX2pXCX4ZxDhuInLFxQro76wOa2Mmi5OcyK+pDpShluUkRaR+DUutR1tM8oPVMppYoKol02qiUFWvQ9RkqF28li7lsTttQdDFq5b6wXKOWhHs+moaynJYZ5N9fpC7DNhvO69BqC5TQ0PQ1Smz7YE3jvqBO6o5Rx1lQF7WNx5gfLIl9+gxpqitjP+z1CGmML/hvIVy7bISQ9unyYkZybNMY2PJMUTcPfGnMW46DOdEZ4gtIUqREN2xOOEkIZ0J/gYkBJP9mnygWOEqL8vGcMQ023vUicHohvlUKra3Qd4w0dmQoinYljxt9tmjimBxnIwYRPnCQADUv1TZUy5QaO7uLYX08zJ6kD5zFEz31WBnF/TGGo9JzYrN68axxFseX79aYTptOv/1A80OY2DtvlavT/tjqvm0PT0ggkAi74tAwmXENVobD2MCkHcTTQU1tlL5ywocHFiiw5cltP720VLHkkyh6fPj6C56vuYoisKIX2dDGrUSNQrrwoLjLqHg9hplJ9dnMTg==
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|12121999013|31061999003|4040399003|13031999006|8062599012|8060799015|19110799012|22091999003|24121999003|15080799012|38102599003|24021099003|51005399006|40105399003|26121999007|3430499035|102099032|26104999009|3412199025|440099028;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?xanryZtYrCihrx40ILWd8mKxBDEFWBRuOy1uHZaBqPaCxoyFs4WzAE8rXxeJ?=
+ =?us-ascii?Q?VJ7EDOtADyTWD9vGfLdp24W5qzPVUlDTq/rbj/NGirqi8GObqaFgFugGjyGF?=
+ =?us-ascii?Q?cyEOWxEgf7wm5e35FWvaXiWDCstvp4OGgwb6sfohOGaE5DgpH4HC4f995duX?=
+ =?us-ascii?Q?RKYOLxm7Md4UB9t6kzWnMYf6pTqhi2iNjTI1cNE8qfciw1Kl6029b2Z5Pl2u?=
+ =?us-ascii?Q?l+qKmjfxTgDH6huo+cIDkfUJ0fzOUCTy44AYAFV9DcMXCuf2qws816e6d5or?=
+ =?us-ascii?Q?moi7jASdvD1GZzvUudtCsIpil/DLO1+luToJA6fclar2n+r8GoeRKguygtEz?=
+ =?us-ascii?Q?5EZo58joA7MgEQ3rJ+g6mSWMUWEhMPbPjcCenTiMpl2VGYuwQlUMWl6oIyr4?=
+ =?us-ascii?Q?xWxBD0nycaBKQXoDcmzYgwNjELV03I6LFMwigOW3Qns8XVBR9L9VqrerD0zc?=
+ =?us-ascii?Q?TcixCOaXr7y+D08Bix9hW4UHVrHJXIHhzKFMqHjfyQyjJp2XaS//t1J4honv?=
+ =?us-ascii?Q?n6cUPKNVgbHUV81IzKcGRo6qB/JGRxlgVcNZFIri3h3oiLnGsjg3O3h81Ger?=
+ =?us-ascii?Q?NHL3dWu5iFhmv4PkAVx0QEFEkEDod0Gf24+0bYQTFk5fIPuyaaOXowD5XLwM?=
+ =?us-ascii?Q?Nk59BMahzo+SUg01EcE3YQlxhwXLgA46lNDvkgUKmrnfmg5cT47bryZJ0Nir?=
+ =?us-ascii?Q?UaWZyR/1dLzwxptrLYLiDbi4nI4Wd7hpgSPgd3EaljHZldNwfbrZwzi+7nV6?=
+ =?us-ascii?Q?zTXmwOdz00KAQRSQEjOkInHBXWgmeLDpui/owxxAUFOw5UYINN8ii2rIa5C9?=
+ =?us-ascii?Q?1RgYhDe7hUfkKGbfy0vrLThr3sEEAvP5KfWqrNsC+LxiUBOQxvn+vObtEtYi?=
+ =?us-ascii?Q?HioBsFpwTupkezUthVC0LhBs7yh07aAgplrGNjp2kdBlISaDvEPpB/ke48pQ?=
+ =?us-ascii?Q?OLkVclcsRcKq9M4Xmyxa24ibi/VGhMxdqFedf1Y6EhztHno/XrUPE+eCWQLt?=
+ =?us-ascii?Q?iLQZQBq/lScUxrAjzd+/ujd8bp6fzFQZHac8ylDAfnbxwHvTOaPBcVLEQvMc?=
+ =?us-ascii?Q?+r5mGp9n4OYqxtIDgfEGIBHmnWSINDK3jrVpmlNo4eKCb7+eU9DOeVyp57z+?=
+ =?us-ascii?Q?K3tDVpAtKyrG?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?c8gxEkRUgmERwxK3clMV0k3DFDfQO/RbmPCtpJvWvVLlBGb7+kDwzOIeFPI+?=
+ =?us-ascii?Q?VuipzxzXXr+2opfNBe4v1SWtfq5RwbNqdbAm0FyJtkUySwLa8kBsV5QSo/Xu?=
+ =?us-ascii?Q?/TQTIhiuY9mKauxNd2A0nAkOdOuq2fJ/qusUL+9pkQ39efH9fWtN100Bs5DW?=
+ =?us-ascii?Q?3GtZwHALFDMdmQB+kwudibswSxaIjaH0+vf+0Lt6EJ10hTRRrMGkZ3LtOvlW?=
+ =?us-ascii?Q?ubG/RAwJxD9WizjeqENFVujMtDzZxxGqT24aUFu8s7Y+FnobmPc6BQYT+2p7?=
+ =?us-ascii?Q?6DZNlf7AcrUu5ThnJoZi80+NT0r6BsvhK0GlRw4eTtr9gD62vOAcf4jn8Hqu?=
+ =?us-ascii?Q?BB5+rGXlQClMd1TD0Q+BQ0S2gDGQ+mlNRZekzlVJQLdH15wbYHi3MIWQhD94?=
+ =?us-ascii?Q?yyJSPvbTN27MtdPQBnvcFxaYudomkUoc3qCf+Y9dzjS6BAN8qGTwenwauLpt?=
+ =?us-ascii?Q?NPKU1+vOmM+Xn1CisfXOiWz0W7Bi2OiUarJa1OaH9SVXOErEe78pYmLsjXCc?=
+ =?us-ascii?Q?V6QnQYQH3vGPqY2XMJ+7tm+YHdorX200lursElhNY0QMEA5pfmO1Febwwk4v?=
+ =?us-ascii?Q?3Pf3Cw+i0OxgztRPcojKWvMAKWVRIcA3nJINsBktGvdl95MGctbh8nTDvXtP?=
+ =?us-ascii?Q?U81rLfDHIiLl4zRWxY9M0HhB+K2tBqQT/h4vt0satkH69KmNW2BfzNlvET4E?=
+ =?us-ascii?Q?uDMFj4yGGLQaJcuDV2KdZNmEgismZmldkz3BNH7b2eEygyg4pLRJdWSMdHA7?=
+ =?us-ascii?Q?hKH2okQRJedTUP5YoN6RV716VC8CpcwODjsV42ehHZxQ0/kSRjd5ptxhV0yp?=
+ =?us-ascii?Q?tB2zjOZyMIZBb4H9NF+MW34b6t5+l0ueVSQ8MmWLgW0dfwzxlfDBr7pfiART?=
+ =?us-ascii?Q?rQfGSQo82QKYb3PPiG92rabmT3XPT0OkBw2vAGOnUsPrZEU1Su0ImacfcAtD?=
+ =?us-ascii?Q?NrAA8C86aVZeRfdvv3z0b3IBFK+jf02wx2/7uKsfgeEfJlQNfslFiA7OCIUh?=
+ =?us-ascii?Q?zhM5FpJsKtOlLa8eeanYuBxtIzY5nyWiUlFUTdek7K/TfoGYY3QIDUw5Jxmx?=
+ =?us-ascii?Q?9mQuttBXZ/1n4TLsu1ycWzC5uaszrs+mFq0k+A7xoY8lYakIHxhQyYYNq+tJ?=
+ =?us-ascii?Q?pT8qS67t5FNBhLy9sV2Tg62J4uWTT4u0B34Ed/kyF3XeB3X9onhRZ0CXT8zc?=
+ =?us-ascii?Q?mOEK6CanVaR/o8d1yONHetn+LgmlnCnhAJNANTOrODXNmRBQWytvWDUOA3lj?=
+ =?us-ascii?Q?S22AwCJMOZhbeArKU48rm21Q5TMIHVkSlqvxDqoFMjhaTyfqTOrK4xfHJ5Sh?=
+ =?us-ascii?Q?Y7/AWet0afnw1O8QjTE39JXutn9gXdNp28gjA2mHgrj9XU+A0BtHjzExyDeD?=
+ =?us-ascii?Q?T/N2Z90=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -64,58 +154,70 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1P190MB0877.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c3b08e0-e61b-4633-a5a5-08df4704a897
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2026 12:49:04.3703
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRZP190MB2215
 
-Thanks for the series. I tested v4 on 7.4-rc3 with the same two
-tests as in my earlier mail, IPv4 and IPv6, and no packets were
-lost. In the GC test the entries went from STALE through PROBE
-back to REACHABLE for the whole run and were never deleted.
-
-v4 adds a new problem for flows that leave the router through a
-tunnel device, which plain rc3 handles correctly. I put a GRE or
-WireGuard tunnel between the router and the server, with the
-tunnel device and the client's veth in the flowtable, and sent
-one UDP datagram per second for 60 s. On plain rc3 the flow is
-offloaded once and stays offloaded. With v4 the flowtable GC
-tears it down within 0.2 s of every offload and the next packet
-offloads it again, 53 to 55 times in 60 s. Each datagram from the
-server arrived after a teardown, so 59 of the 60 took the classic
-path, against 5 on plain rc3. Nothing was lost, so the cost is
-the classic path and the churn.
-
-As far as I can tell nf_flow_dst_check_gc() returns false for the
-direction out through the tunnel, because the neighbour on that
-device fails the addr_len !=3D ETH_ALEN check (GRE has 4, WireGuard
-0). nft_dev_fill_forward_path() already treats such devices as
-non-Ethernet and offloads them with a zero h_dest, so perhaps the
-GC check should skip them the same way.
-
-A 6.18.y backport probably also needs 871df5007eda, since 6.18.y
-still offloads a flow when the next hop is unresolved.
-
-John
-
-
--------- Original Message --------
-On Friday, 11/20/26 at 01:17 Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-On Thu, Nov 12, 2026 at 09:08:27AM +0000, John wrote:
-> Hi Pablo, Thorsten,
->
-> Thorsten: I first saw this on 6.18.60 and have reproduced it on
-> 6.18.62 and v7.4-rc2. 6.18.63 has the same nf_flow_table_ip.c.
-> b5964aac51e0 came into 6.18.y with 6.18.45, the release named in
-> the thread you linked.
->
-> Pablo: on 7.4-rc2 your patch stops the black hole, but as you
-> noticed, one packet is still lost each time the next hop's entry
-> goes away, which with neighbour GC happens about every 75 s on a
-> long-lived flow. 6.18.44, before b5964aac51e0, lost nothing in
-> the same tests. On 6.18.y the patch only works together with
-> 871df5007eda.
-
-For the record, I posted these series to address this issue:
-
-https://lore.kernel.org/netfilter-devel/20261119090736.3342541-1-pablo@netf=
-ilter.org/T/
-
+Hello,=0A=
+=0A=
+Resending in plain text because the previous HTML-formatted message was rej=
+ected by the regressions mailing list. Apologies if this creates duplicates=
+ for other recipients.=0A=
+=0A=
+I am reporting a regression in the in-kernel fs/ntfs driver (NOT ntfs3).=0A=
+=0A=
+Environment:=0A=
+- Distribution: Debian 13, backports kernel=0A=
+- Working kernel: 7.2.12=0A=
+- Broken kernel: 7.3.4+deb13-amd64=0A=
+- Device: /dev/nvme0n1p1=0A=
+- Filesystem: NTFS 3.1=0A=
+- Cluster size: 65536 bytes=0A=
+- Mount options: defaults (including errors=3Dcontinue)=0A=
+- Driver: fs/ntfs/ntfs.ko.xz=0A=
+=0A=
+Kernel log:=0A=
+=0A=
+ntfs: (device nvme0n1p1): check_mft_mirror(): $MFT and $MFTMirr record 24 d=
+o not match. Run chkdsk.=0A=
+ntfs: volume version 3.1, dev nvme0n1p1, cluster size 65536=0A=
+ntfs: (device nvme0n1p1): load_system_files(): Errors were recorded during =
+mount. Mounting read-only. Run chkdsk.=0A=
+=0A=
+This volume worked read-write with kernel 7.2.12. After upgrading to 7.3.4,=
+ it is forcibly mounted read-only, making normal file operations impossible=
+.=0A=
+=0A=
+Windows chkdsk has been run repeatedly, both through the GUI and command li=
+ne, including dismounted-volume checks. The issue persists after rebooting =
+into Linux.=0A=
+=0A=
+I suspect commit 749357bd48c16c4cdc09093450deca609492f012 introduced the ne=
+w read-only behavior for this case.=0A=
+=0A=
+There is also a potentially relevant NTFS compatibility issue: modern Windo=
+ws may not keep all $MFTMirr records synchronized on volumes with large clu=
+sters. Here the mismatch is reported at record 24, beyond the first 16 reco=
+rds.=0A=
+=0A=
+Please investigate:=0A=
+=0A=
+1. Whether the comparison of MFT mirror record 24 is valid for modern Windo=
+ws-created NTFS volumes with 64K clusters.=0A=
+2. Whether this is a false-positive filesystem corruption report.=0A=
+3. Whether errors=3Dcontinue can be honored for noncritical MFT mirror mism=
+atches, while retaining mandatory read-only protection for Windows hibernat=
+ion and genuinely unsafe filesystem states.=0A=
+4. Whether a fix can be backported to the Linux 7.3 stable series.=0A=
+=0A=
+This regression prevents normal read-write access to this volume.=0A=
+=0A=
+Thank you.=
