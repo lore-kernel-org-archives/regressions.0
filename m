@@ -1,50 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.4
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795184824;
-	b=Z+BZzAfEhQV6udw37a1kqJL4f7HgBZklNIh1+ghEofD+YzkjX8FuX1H0+IDpQS87vFhW
-	 YC1mDyca2CEJkvCBl4e3QPBB1ilziy+IY5c+O8cgqOcEkG5bA+UF1O7ugYo6KtiMlpElY
-	 mkmErE6IrVbrOxtGzrPJMUAiR48NXEpi2uJbuUtT8FyqJuzruNNoMCvc23NImWRycuLfQ
-	 2XhbCihN6UQBPGtObMeobeQet7ZmG6sXuQdwl9Edcg/UjMvD6KgtL+9ol6BSoY9DcPSGd
-	 jEnqlyvQQvrBqELvZlVIDRLmNfBLapYKYYEg5TYzUWJ103IOGHip36vBbihghqx6lYw==
+	t=1795185851;
+	b=u6O19cv3P2TAyC/wqyKbfECUEJdc85ffFvLTqiqFQ5ZmfA+pF1v83R1GfnyzEnpKiJn2
+	 zNKEhKCFdlIggUom0zb7lgGL4IQCI1lJisWmtd1dp8Uj1cA5AuxVzZYsidoQjTqh1qbKh
+	 fYSh0BNcCMa5hjfT7sKeowIbt6U7eclRQL/46NAcfS+TSZFcQtM0rqjz2kBZem5F0jyEh
+	 LYwr4M/U8hmzrHLuGXyskNChlNZxd54KVA8JSZ7XRp0e1qhKhxH7hSXl5XIs4nHCmorFh
+	 s22fZM0QP8rCeQYVOSg9sevkcDDV3VPcHjulv2ciDsRiG64skAgm8+/nOBWlN6eG20A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795184824;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-Originating-IP:X-CM-SenderInfo;
-	bh=X5uMGtPn4ARocnI6PlxLm4xxrDwcmpIfjMn71WllvfQ=;
-	b=aW+V9SDT+guG0as0OcV/Cd9fjkr0v16OtaXOjeBZLij+yuiuLTmZvu40EkzEeora1IkU
-	 xhCxIS8N7h8EZ4gsAYBHJ8iLypA4mVRdyC40/U1kO3j1R0bR55yiqdUaBHFBhTfMwHFv8
-	 lET6vQcZJZVj8YmEw4fN1dTGH/92mZNkPtGps3vzGEpFk7uVGW0HORO6sCujGk/TpYzLh
-	 qt+qrj0Ejb5HlXeZ2NDdho79BNbbstCzadUFTe+1IgMvo6DdsY5q0h5EiSl9Fpm8Qs2a9
-	 cEFkEc/D5bAED68qT5NwVw7jTEFjIMGb80kr+tigfD2DeRE0K9zDXpTmZWkwUKcx5cA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795185851;
+	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
+	 X-UI-Sender-Class:Received:Mime-Version:Content-Transfer-Encoding:
+	 Content-Type:Date:Message-Id:Subject:From:To:Cc:X-Mailer:References:
+	 In-Reply-To:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
+	bh=M4Xl1y2K7U681cmLm19mvIuC8zvk+I8mQ245EOnKHyM=;
+	b=OW86k1+/DHN5v5RYBmwRHOM+E2uqH/ya1K9cYE2T7HJEfoPJeiUg3uEVMzOnbH8CfFv5
+	 6YX9ZNuqarr8UCVh+TlVSMZTgjr2mszTI8E6dUIST9oHzjkZPnj6qaewbBlTuYQQdx4O3
+	 8ZnX3RCchIOq9uXPafdedmZr3LBEyDqAYE62PTJYkePpS1AVe/IT7TiFj0oSVKB9wda2j
+	 N9lsLhZdKnDSGPTe0vX1vZKZ87sfpKCMd1FfzMtVrbMSwkxT0P7uk0/B4yPRS3wl7JooM
+	 yp3fBXQjvjRARDqp9duE1JQkH50oOe04TtCTwRKRdoS9pX+XTkv7AAbk0hm1jAwK4Vg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=VjcvCpSA;
-	arc=none smtp.remote-ip=117.135.210.4
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	dmarc=pass header.from=web.de;
+	spf=pass smtp.mailfrom=web.de;
+	dkim=pass header.d=web.de header.i=pjjonas@web.de header.a=rsa-sha256 header.s=s29768273 header.b=sO5RhVQf;
+	arc=none smtp.remote-ip=212.227.15.4
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D63606A326;
-	Fri, 20 Nov 2026 14:27:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2D63606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49149606A320
+	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 14:44:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49149606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=VjcvCpSA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=X5uMGtPn4ARocnI6PlxLm4xxrDwcmpIfjMn71WllvfQ=;
-	b=VjcvCpSAqVfy/z/9RtpYE/JTtDpwg0Lyj0LVqVafgd3XZFzOVtXgOtiUq9RlF+
-	rKqcCH6S/MggoxeZ5ON39evY3FnFHiSPiSlTa83faQolLTBeumEadov2w5MGeiuQ
-	PEhGA5F11cfXC8qzqveTfy1L0vQ19vs0GE7C5gHaQQWpM=
-Received: from [IPV6:2409:8900:1e87:c681:e0d9:72d0:20c3:a0ec] (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3n0ORWABrJM58JA--.47517S2;
-	Fri, 20 Nov 2026 22:26:27 +0800 (CST)
-Message-ID: <ee94181c-784f-4f9b-8697-cca5abec6b07@163.com>
-Date: Fri, 20 Nov 2026 22:26:25 +0800
+	dkim=pass (2048-bit key) header.d=web.de header.i=pjjonas@web.de header.a=rsa-sha256 header.s=s29768273 header.b=sO5RhVQf
+DKIM2-Signature:  i=1; m=1; t=1795185848;
+ mf=PHBqam9uYXNAd2ViLmRlPg==;
+ rt=PHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4=;
+ d=web.de;
+ s=s29768273:rsa-sha256:AqUh9DHlXaNkG2WDDk54tbXGFFkC
+   Agq7x21PQmM9DATjwgm0XadUNCwyyPcqqQR2OSxtqNAQwZovFgTHcms/49n6PqFcqDV2we9/Xap
+   F764yPpxRFwfU2DlsGPbo73ThDODZU7FG2jGsuh8Bz2zhsSblwkzXownqKkHJU9DsCBY6O6XWBE
+   0wkGvLllOeoVhH4y2ABWa+B172frBTqCK+NdCPe/DHYKQ7AKm0K/qj1a7JF+pOA937BVvrBh1Zq
+   LxgJeiy8jehFoixWksZhYg0Ye2c4fbZekwhdp59+sl9y2lxp1YjUAMgZPAOz6vkWN7fjzIrwGo3
+   +Pu2dGcw1hE6Ug==;
+Message-Instance:  m=1;
+ h=sha256:
+   4GNQCvfCKDr7KHPzmo9wIkQMHkXSka9P6kS1V8WxN00=:
+   k+ZXWroofm6iBUXwAiHqaJw0loKGeCQZwnJn/bqyqc4=,
+  sha512:
+   ns5I7gjMR6SAB+xZllVuLNeePX0IQ3rCTO1hpvftWeTv9Q+c6KaM2Csre1EzhlQyHswgKTnpqCnwZOj2VgR5RA==:
+   pknVmZZ5kEk5YDxYueueOJTTf1F1JbOwe7MXZB7KUbtGw67a0CqUgrdMpmUiXaXYhF70VoI8M7G+QjcmSNGv1A==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1795185838; x=1795790638; i=pjjonas@web.de;
+	bh=M4Xl1y2K7U681cmLm19mvIuC8zvk+I8mQ245EOnKHyM=;
+	h=X-UI-Sender-Class:Mime-Version:Content-Transfer-Encoding:
+	 Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:cc:content-transfer-encoding:content-type:date:from:
+	 message-id:mime-version:reply-to:subject:to;
+	b=sO5RhVQfvMG8wAPaCQretHDnwgZc8k0QjKmmo0/ksi+Scnxfci4yjGmDimnV8IQJ
+	 OAYpXjvvlP1Uh/2ywH/h5C9yIiRSwNTD51wsLbR7PlaaoM7eJjFJBMpxOzfTWPPpD
+	 k1/BHcEuPyBzijWu+Sbd0E7PgHIquDiIuXFrqDekvtYFZCPGnYQuXZkVd8YA6+23t
+	 OlBd+QcnLyaYlf/A3/oWbk1LBoaP0BhJCtGRM/uITeGSKW6xFBjEvE9VQBqf35hzK
+	 ZKBTlt8/HXXCwkJBnB3QQm+nh9hHQ5jgufNGrMCw3fdKtekmGMyftK2S6Ewr4KITs
+	 TJE6rYOlZahLe6Rnjw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2SL5-1yYEIT1c5f-012Ktp; Fri, 20
+ Nov 2026 15:43:58 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -53,110 +76,288 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][NTFS] Linux 7.3.4 mounts 64K-cluster NTFS read-only
- after $MFTMirr record 24 mismatch
-To: "d3nchk@outlook.com" <d3nchk@outlook.com>,
- "ntfs@lists.linux.dev" <ntfs@lists.linux.dev>
-Cc: "linkinjeon@kernel.org" <linkinjeon@kernel.org>,
- "hyc.lee@gmail.com" <hyc.lee@gmail.com>,
- "zenghongling@kylinos.cn" <zenghongling@kylinos.cn>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <VE1P190MB0877D026E2C3905F0324B46F85782@VE1P190MB0877.EURP190.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: liubaolin <liubaolin12138@163.com>
-In-Reply-To: <VE1P190MB0877D026E2C3905F0324B46F85782@VE1P190MB0877.EURP190.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3n0ORWABrJM58JA--.47517S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZw1rCF4UWw4UGw4xZrWfuFg_yoWrGrW3pr
-	Z0ywnxtF4kJ34Duwn7tFWxJF90y34SyF4Yqa4kGFy5Krn8JFW0qrySqr4a9a9xArySgw4q
-	qFyqg343KFZrCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRpwZ3UUUUU=
-X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbC6RMV32sAWJPtwAAA39
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 20 Nov 2026 15:43:54 +0100
+Message-Id: <DN049N2EXDXT.30B93GJPIZN9S@web.de>
+Subject: Re: [REGRESSION] rtsx_usb_sdmmc: RTS5129 (0bda:0129) no longer
+ detects SD card
+From: "Philipp Jonas" <pjjonas@web.de>
+To: "Sean Rhodes" <sean@starlabs.systems>, "Philipp Jonas" <pjjonas@web.de>
+Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>,
+ <linux-mmc@vger.kernel.org>, <regressions@lists.linux.dev>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Ulf Hansson"
+ <ulfh@kernel.org>
+X-Mailer: aerc 0.22.0
+References: <523eb7d1cc0811df4a5e4c534538f3dd@web.de>
+ <eb52777b-8607-427b-a709-cf1ab76ef672@leemhuis.info>
+ <DMV8DI3F257U.DPLVLW2DZC3Z@web.de>
+ <CABtds-3f_Gcsd6_vgcbqiAoN-9AUwHg5cr71VetRpO5jC4ZxFw@mail.gmail.com>
+ <DMZEIO23VCO0.2BB6F5495FHVG@web.de>
+ <CABtds-0DNu1HP1M5qf34SWEMoYW3i9jkNxOYg5+7gywGU01nwg@mail.gmail.com>
+In-Reply-To: <CABtds-0DNu1HP1M5qf34SWEMoYW3i9jkNxOYg5+7gywGU01nwg@mail.gmail.com>
+X-Provags-ID: V03:K1:cKMLbQkq99PURCAjcRig11DpmX2hgjDyG/KfMbxJYSH+C5PalLj
+ 81pygAGSzpyQtR+V3NKMnxKlq3sMqikznhsSnYpmaZFbN/whd9E/qZHupO2QccxBTRDgn5d
+ CeJfDCD3MWbUoNOxZJoNbdJhGN+iRRJs+4T8jMFM6+uM6F2wFmLi4gqa19n8yTa6t2L3mBH
+ NY10Heoom6fztjCMXOHEg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:iLZVXx8FPG4=;iPJdAg5gB7+N7gSa4t6T1wAhLrC
+ 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
 
+On Thu Nov 19, 2026 at 11:10 PM CET, Sean Rhodes wrote:
+> Hi
+>
+> Thanks - I don't have any cards that old to test with, but the attached
+> should work (borrowed from the old driver that was removed)
+>
+> Sean
+>
+> On Thu, 19 Nov 2026 at 18:53, Philipp Jonas <pjjonas@web.de> wrote:
+>
+>> On Thu Nov 19, 2026 at 3:35 PM CET, Sean Rhodes wrote:
+>> > Hi
+>> >
+>> > Could you share the trace from a failing 7.3.4? And what card was it?
+>> >
+>> > Thanks
+>> >
+>> > Sean
+>> >
+>> > On Sat, 14 Nov 2026 at 20:54, Philipp Jonas <pjjonas@web.de> wrote:
+>> >
+>> >> On Wed Nov 11, 2026 at 10:06 AM CET, Thorsten Leemhuis wrote:
+>> >> > On 11/8/26 19:51, Philipp wrote:
+>> >> >>
+>> >> >> the SD card in the internal Realtek RTS5129 USB card reader
+>> >> >> (0bda:0129) of my Lenovo V110-15IKB is no longer detected.
+>> >> >>
+>> >> >> Works:  6.12.116, 7.2.x
+>> >> >> Broken: 6.18.x, 7.3.3
+>> >> >>
+>> >> >> On broken kernels rtsx_usb and rtsx_usb_sdmmc load and the platfor=
+m
+>> >> >> devices rtsx_usb_sdmmc.0.auto / rtsx_usb_ms.1.auto exist, but no
+>> >> >> mmc host/card appears (no mmc0, no mmcblk0) and there are no error=
+s
+>> >> >> in dmesg. Reloading rtsx_usb / rtsx_usb_sdmmc, re-inserting the ca=
+rd
+>> >> >> and disabling USB autosuspend (power/control=3Don) do not help.
+>> >> >>
+>> >> >> Since 7.2.x worked but 6.18.x does not, I suspect a change that wa=
+s
+>> >> >> backported to stable.
+>> >> >
+>> >> > Might, but might not -- and I wonder if you have two bugs, some rac=
+e,
+>> or
+>> >> > if some .config setting is disturbing something. Overall this
+>> situations
+>> >> > is somewhat puzzling. The best way to bring some light into this is
+>> >> afaics:
+>> >> >
+>> >> > Check if 7.2 is working; if it is, bisect between that and 7.3.3; o=
+f
+>> >> > not, bisect between 7.2 and 7.2.x to find what fixes things. And
+>> ensure
+>> >> > to use the same .config as a base during the bisection, as explaine=
+d
+>> >> here:
+>> >> >
+>> >>
+>> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.h=
+tml
+>> >> >
+>> >> > dmesg outputs from a working and a not-that-different version that =
+is
+>> >> > broken (say 7.2 and 7.3.3) would be helpful, too.
+>> >> >
+>> >> > Ciao, Thorsten
+>> >>
+>> >> I found the culprit:
+>> >>
+>> >>   7185b6d33b17 ("mmc: rtsx_usb_sdmmc: suppress false CD after init
+>> >> timeout")
+>> >>
+>> >> Reverting just that commit on top of 7.3.4 fixes it. Same kernel
+>> >> version and config, the revert being the only difference:
+>> >>
+>> >>   7.3.4:           card not detected
+>> >>   7.3.4 + revert:  card detected again
+>> >>
+>> >> dmesg with the revert:
+>> >>
+>> >> [    4.133620] usbcore: registered new interface driver rtsx_usb
+>> >> [    5.582812] mmc0: new high speed SD card at address b368
+>> >> [    5.638774] mmcblk0: mmc0:b368 SD 1.90 GiB
+>> >>
+>> >> Without the revert, nothing card related shows up after the
+>> >> rtsx_usb line.
+>> >>
+>> >> Hardware: Lenovo V110-15IKB, internal Realtek RTS5129 (0bda:0129),
+>> >> no tray, plain SD slot. The card is permanently inserted and holds
+>> >> a LUKS key, so it has to be detected during boot.
+>> >>
+>> >> Judging from the commit message, I assume an init command times out
+>> >> before the card is attached, suppress_cd gets set, and as the card
+>> >> is never removed, raw SD_CD never drops and the suppression is never
+>> >> cleared. Note that physically removing and re-inserting the card on
+>> >> 7.3.3 did not bring it back either, so the clearing path does not
+>> >> seem to work here as intended.
+>> >>
+>> >> Sean, Greg, Ulf: CCing you as author/acker/committer.
+>> >> Happy to test patches.
+>> >>
+>> >> #regzbot introduced: 7185b6d33b17
+>> >>
+>> >> Philipp
+>> >>
+>>
+>> Hi,
+>>
+>> Attached is the full dmesg from an unpatched 7.3.4, booted with
+>> rtsx_usb_sdmmc.dyndbg=3D+p rtsx_usb.dyndbg=3D+p mmc_core.dyndbg=3D+p
+>> The card was inserted the whole time.
+>>
+>> The relevant part:
+>>
+>> [    4.273107] mmc0: starting CMD0 arg 00000000 flags 000000c0
+>> [    4.274391] mmc0: req done (CMD0): 0: 00000000 00000000 00000000
+>> 00000000
+>> [    4.277087] mmc0: starting CMD8 arg 000001aa flags 000002f5
+>> [    4.909018] rtsx_usb_sdmmc rtsx_usb_sdmmc.0.auto: rtsx_usb_get_rsp
+>> failed (err =3D -110)
+>> [    4.909149] mmc0: req done (CMD8): -110: 00000000 00000000 00000000
+>> 00000000
+>> [    4.909157] mmc0: starting CMD55 arg 00000000 flags 000000f5
+>> [    4.909313] rtsx_usb_sdmmc rtsx_usb_sdmmc.0.auto: cmd->error =3D -123
+>>
+>> After the CMD8 timeout every further command (CMD55, CMD1, and the
+>> retries at 300 and 250 kHz) fails immediately with -ENOMEDIUM. The
+>> same pattern repeats at ~82s after runtime resume.
+>>
+>> The card is a 2 GB standard capacity SD card, so most likely SD 1.x,
+>> which per spec does not respond to CMD8 at all. On 7.2 the core then
+>> simply continued with CMD55/ACMD41. With 7185b6d33b17 that CMD8
+>> timeout is treated as "no media", so I suspect all pre-SD 2.0 cards
+>> are affected, not just mine.
+>>
+>> Philipp
+>>
 
+Works for me, the card is detected again on 7.3.4 with your patch
+applied (and without the revert):
 
-在 2026/11/20 20:49, d3nchk@outlook.com 写道:
-> Hello,
-> 
-> Resending in plain text because the previous HTML-formatted message was rejected by the regressions mailing list. Apologies if this creates duplicates for other recipients.
-> 
-> I am reporting a regression in the in-kernel fs/ntfs driver (NOT ntfs3).
-> 
-> Environment:
-> - Distribution: Debian 13, backports kernel
-> - Working kernel: 7.2.12
-> - Broken kernel: 7.3.4+deb13-amd64
-> - Device: /dev/nvme0n1p1
-> - Filesystem: NTFS 3.1
-> - Cluster size: 65536 bytes
-> - Mount options: defaults (including errors=continue)
-> - Driver: fs/ntfs/ntfs.ko.xz
-> 
-> Kernel log:
-> 
-> ntfs: (device nvme0n1p1): check_mft_mirror(): $MFT and $MFTMirr record 24 do not match. Run chkdsk.
-> ntfs: volume version 3.1, dev nvme0n1p1, cluster size 65536
-> ntfs: (device nvme0n1p1): load_system_files(): Errors were recorded during mount. Mounting read-only. Run chkdsk.
-> 
-> This volume worked read-write with kernel 7.2.12. After upgrading to 7.3.4, it is forcibly mounted read-only, making normal file operations impossible.
-> 
-> Windows chkdsk has been run repeatedly, both through the GUI and command line, including dismounted-volume checks. The issue persists after rebooting into Linux.
-> 
-> I suspect commit 749357bd48c16c4cdc09093450deca609492f012 introduced the new read-only behavior for this case.
-> 
-> There is also a potentially relevant NTFS compatibility issue: modern Windows may not keep all $MFTMirr records synchronized on volumes with large clusters. Here the mismatch is reported at record 24, beyond the first 16 records.
-> 
-> Please investigate:
-> 
-> 1. Whether the comparison of MFT mirror record 24 is valid for modern Windows-created NTFS volumes with 64K clusters.
-> 2. Whether this is a false-positive filesystem corruption report.
-> 3. Whether errors=continue can be honored for noncritical MFT mirror mismatches, while retaining mandatory read-only protection for Windows hibernation and genuinely unsafe filesystem states.
-> 4. Whether a fix can be backported to the Linux 7.3 stable series.
-> 
-> This regression prevents normal read-write access to this volume.
-> 
-> Thank you.
+[    5.647781] mmc0: new high speed SD card at address b368
+[    5.693354] mmcblk0: mmc0:b368 SD 1.90 GiB
 
-Hi,
-    Thanks for the report and the detailed logs.
+Tested-by: Philipp Jonas <pjjonas@web.de>
 
-    I checked 749357bd48c1. It didn't introduce the mirror comparison,
-but it did make errors recorded during mount force a read-only mount, 
-even with errors=continue. That explains the change in behaviour you're 
-seeing.
-    There is a known compatibility issue with the comparison itself.
-On volumes with large clusters, Windows 10 can leave later records
-in $MFTMirr out of date.
-
-    ntfs-3g already handles this by comparing only the first 16 records, 
-or fewer if the mirror is smaller. See commit 85e208176ffd ("Stopped 
-checking matches of MFTMirr against MFT at record 16").
-   fs/ntfs still compares the whole mirror. With 64 KiB clusters and
-1 KiB MFT records, that means records 0 through 63. A difference
-at record 24 could therefore just be a stale mirror copy, rather
-than filesystem corruption. Your report looks consistent with
-this case.
-
-    I'll follow the ntfs-3g approach and limit the record checks and
-comparison to the first 16 records within the mirror. We'll still
-read the full mirror and check its location, and leave the mirror
-writeback range unchanged.
-
-    This should allow read-write mounting in this case, provided
-there are no other errors. We shouldn't need to relax the general
-errors= handling or change the read-only protection for hibernated
-volumes and other unsafe states.
-
-    I'll include a Fixes tag and Cc stable so the patch can be
-considered for the 7.3 stable series after upstream acceptance.
-
-    I'll send the patch shortly and CC you. You can then give it a
-try and let us know whether it resolves the issue.
-
-Thanks,
-Baolin
-
+Thanks!
+Philipp
