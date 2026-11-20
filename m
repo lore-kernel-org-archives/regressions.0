@@ -1,66 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.70.190.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=136.175.108.221
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795133820;
-	b=DqkiN5/Ok7lcHcLJJbbrp+VmwMqzkBtJwm1OW+mBTB99jcZObtLT8gRbi3mrR/Gru2/v
-	 GsspVGHozfThq9UEDHfR9AtoSJLQ/5LO+k7El6OIO8nLdf0dahGsslnY37l8gNgYY2Fpu
-	 2RDb6qUKRoKQeHc37m2Z6PPfPu15feKzsoyQ94lf6IF9u+IjMa644iX+cnbZ/zLm9fHzS
-	 7og7oKi62VuGqYX4dFkImZReOXgAbYb/MbtAFBHoYk+RCSa7TxKNWV9HmvjJKwgS1xK5u
-	 khaRbW8TVNBlEDPjp5BC2thIY+/xkiMqDtdln1sY1tDhrpFND3yXUW1C1hvmZxoIU+Q==
+	t=1795143179;
+	b=M98vUnerlis42NydFwFTNLS47/eJ2UOtObOgbDuyBqn0+wOLqynGxfibJeMsdcvzg0Ht
+	 f+KSfUg0TGXi4eayppxNtVN4jLohngy5Suu9pvaMQRJdspORomHyuy9n0bUe38wXKirwH
+	 /4Sli0D8sDg0pVinHPSTh3iQUujvEjZBKzBvaz61aZ3rqcCmzoao/E3dhpKlKXTO+mImG
+	 cTJd9fiXcNr9VqDPifMC3uJxz6cZvYAAZNVTeivzuTbvHzCPFGuERIUQsgkYDS6RCae/1
+	 zkN2zMHgkMySDnsGbeZaEszc27+22+Fn22oc/h+imFY8QDm7izg0ctGZ+nXGTIiiRHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795133820;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
-	bh=UaidrchdsiA6ina6W5vc78SK6thsHus4W9FFXBWLfs8=;
-	b=2VbZqUFDxtC4bMX1Ov0Js8Q60jt3twjGhAR/4Xt2v2lcwuMESrsoPox7z3RR6ruXYTCW
-	 eDHVTeUsn3GaXOI41F1eOe/JMpcGbbilQKBzzuYhGozBJhSnlJEdCviWs00rUAZDVl0bk
-	 T11bD9id6rB0XRBNo3NIgWJSGgOEkpWlUASiFIJKl8GedSZj1+BVdxwvMLueiNRpLbUyT
-	 hP/0hwetQ/PxunEOVXvs39Rj7PFo4bvvhDrSqlfL17xHzNrAG5Tu3JCHfvYUm8SuCbcju
-	 F2wF6b+//+C4zqF8NEQGcerbnM4Dw2txUwSjAnJ9m8po1L/QJqVJS+/lpfQOALDSjSA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795143179;
+	h=DMARC-Filter:Received:X-Zone-Loop:X-Originating-IP:DKIM-Signature:
+	 Message-ID:Date:MIME-Version:User-Agent:To:Cc:References:Subject:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Authenticated-Id;
+	bh=msYeIQlcLBBah1ScNLjcrzC4Z7h2py1hSnX94ae5ztU=;
+	b=S8zAcTr6RDQVTqtoTQ6D+TxfCXmMqTIh60Z45n01mhjs0fHk+eXgCMbitrAJSvQV2W5m
+	 1cfH3Z2WUirhxd3rc6nPIFjIC8Wye87TjTsxhG1yIV11wrCF7AF16lVd6u6jvNXGWZTHF
+	 gj7DPuX8tYmPyoT7PZDbpdEhDkFOTfxuGTELuq5aj7ZSVaXm/53kq7ZSQwlcjY0HJzv2H
+	 fNJs05M+0qBD8KrqpLY9iynhPnzO3TgFrvwCQsOJ7YjDimEUnEuloJGWaPpeQ+s2ZlIRB
+	 PvtR/nIOlvxVPx6JeC+p+DRTlxTF9PE/5jBlnH1vvM9mt4MjrRKEXvjOOXL5iOcy2wA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=netfilter.org;
-	spf=pass smtp.mailfrom=netfilter.org;
-	dkim=pass header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b="Kw/m1nn5";
-	arc=none smtp.remote-ip=217.70.190.124
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+	dmarc=none header.from=tylorstech.com;
+	spf=pass smtp.mailfrom=tylorstech.com;
+	dkim=pass header.d=tylorstech.com header.i=@tylorstech.com header.a=rsa-sha256 header.s=x header.b=1fih5ECV;
+	arc=none smtp.remote-ip=136.175.108.221
+Received: from mail-108-mta221.mxroute.com (mail-108-mta221.mxroute.com [136.175.108.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id C3361606A325
-	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 00:16:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C3361606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33FB606A32C
+	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 02:52:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D33FB606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tylorstech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tylorstech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.a=rsa-sha256 header.s=2025 header.b=Kw/m1nn5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1795133817;
-	bh=UaidrchdsiA6ina6W5vc78SK6thsHus4W9FFXBWLfs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kw/m1nn5uPO8sIjJtDnbS9vwZHOGeIIyv6jCAiZjfZqcMs9PfYN0Zu84MZXhXI2+l
-	 8VY2fpe/BgeMC2D+MZEFbir2yWm+v0rTo4/3r0ecDW8tCKVyarMELnpgMCZOnIt3kW
-	 0iYb+WIwvuljtEN2W9tGCMGiVvpGo9Rp1mZqoLP1NmdhuD5B8A0xzwCUrx/R8Z1lYj
-	 2pUcV72PNAgpMT77gSurAASzXvF0y1S1qXFEhcejdrmPsoEKBQYqpWtkJtNhK7CRSh
-	 T5WLE+NXOlfccAXSaHScs/X0au7VjVj86t/zTFVF+mRbdXcOsDPj421JZ4djs9x8MW
-	 t02UNDfBy259Q==
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with UTF8SMTPSA id 52D17601C8;
-	Fri, 20 Nov 2026 01:16:57 +0100 (CET)
-Date: Fri, 20 Nov 2026 01:16:54 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: John <shffr@protonmail.com>
-Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
-	"coreteam@netfilter.org" <coreteam@netfilter.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to
- 00:00:00:00:00:00 once the next hop's neighbour entry is gone
-Message-ID: <av-RdjXsq4IXsnMg@chamomile>
-References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com>
- <avSIBUcLH4kZyISX@chamomile>
- <avTngTkNKE5ApQW8@chamomile>
- <LCJrB-Fde--T9NiYx2QfFb-X-9W-vsYYmtmrHwIKuKgM8enKRWF2DYypz2_zJKSKQBMUdb9sS6xMEfPihv1YO2FLjX1OUN-Td3Hq1eAdLgw=@protonmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=tylorstech.com header.i=@tylorstech.com header.a=rsa-sha256 header.s=x header.b=1fih5ECV
+Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta221.mxroute.com (ZoneMTA) with ESMTPSA id 1a1f6def3f1000d084.004
+ for <regressions@lists.linux.dev>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Fri, 20 Nov 2026 02:52:49 +0000
+X-Zone-Loop: 62d2e0e0b59022b7c14ce552879576f99bc5df479cf8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=tylorstech.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	From:Subject:References:Cc:To:MIME-Version:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID; bh=msYeIQlcLBBah1ScNLjcrzC4Z7h2py1hSnX94ae5ztU=; b=1fih5E
+	CVYF0iI3fiNq76L3wCq5alYWwCu9aEv7YdZr2Gbwn1WDQXDXZm5S5ieHT27fSt8c7QplB/Et39Vfr
+	Pbv+j3n8EEHDinI5kme6ZB2TEFtKzdr4bCI9OIXRpTVvldQ0qKS1mUrKrW38xO59pE0bjS6yoaz0M
+	KSDHmBHSK0MbUJMFGiunmYYGs35mUvRilNjleH0je3GNbNiut2/Tjlgfq4JIf1tlRSAkSavxCvqQy
+	aEgEa0S+fkUMBkG8BtIggUt5evk1FzIcj0EX5Iltj/r1BHhfxl8nvtafzbgJqt7zLZuaoZ955APou
+	pJOIwaLDEBEWsCpkMxVqCrvn/l8g==;
+Message-ID: <088fad53-fb61-4513-80da-d0067da5c217@tylorstech.com>
+Date: Thu, 19 Nov 2026 20:52:39 -0600
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -70,25 +62,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LCJrB-Fde--T9NiYx2QfFb-X-9W-vsYYmtmrHwIKuKgM8enKRWF2DYypz2_zJKSKQBMUdb9sS6xMEfPihv1YO2FLjX1OUN-Td3Hq1eAdLgw=@protonmail.com>
+User-Agent: Mozilla Thunderbird
+To: regressions@leemhuis.info
+Cc: alexander-zorn@gmx.net, amd-gfx@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <3b5586d0-b973-4984-9fbc-43c9ab960d76@leemhuis.info>
+Subject: Re: [REGRESSION] Black screen after splash with Linux 7.0 on MSI
+ Creator A16 AI+ (AMD Strix Point + NVIDIA)
+Content-Language: en-US
+From: Tylor Pater <tylor@tylorstech.com>
+In-Reply-To: <3b5586d0-b973-4984-9fbc-43c9ab960d76@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Id: tylor@tylorstech.com
 
-On Thu, Nov 12, 2026 at 09:08:27AM +0000, John wrote:
-> Hi Pablo, Thorsten,
-> 
-> Thorsten: I first saw this on 6.18.60 and have reproduced it on
-> 6.18.62 and v7.4-rc2. 6.18.63 has the same nf_flow_table_ip.c.
-> b5964aac51e0 came into 6.18.y with 6.18.45, the release named in
-> the thread you linked.
-> 
-> Pablo: on 7.4-rc2 your patch stops the black hole, but as you
-> noticed, one packet is still lost each time the next hop's entry
-> goes away, which with neighbour GC happens about every 75 s on a
-> long-lived flow. 6.18.44, before b5964aac51e0, lost nothing in
-> the same tests. On 6.18.y the patch only works together with
-> 871df5007eda.
+Hi,
 
-For the record, I posted these series to address this issue:
+I'm seeing what looks like the same issue on an ASUS ProArt P16 (Strix 
+Point 890M + RTX 5060, Samsung ATNA60HR07-0 OLED eDP panel). Panel 
+frozen on the boot splash on every boot with 7.3.4/7.3.5; 6.18.60 works. 
+System is otherwise up (SSH, compositor running)...
 
-https://lore.kernel.org/netfilter-devel/20261119090736.3342541-1-pablo@netfilter.org/T/
+On the failing kernel eDP-1 replay_state is 48 and psr_state is 0; on 
+6.18 replay_state is 0 and psr_state is 6. Booting 7.3.5 with 
+amdgpu.dcdebugmask=0x400 (disable Panel Replay only) fixes it and the 
+driver falls back to PSR. DMCUB firmware is 0x09005700 on both.
+
+Might be worth trying amdgpu.dcdebugmask=0x400 on the MSI to see if it's 
+the same Replay issue?
+
+Full details, logs and dtn_log dumps: 
+https://gitlab.freedesktop.org/drm/amd/-/work_items/6174
+
+And I saw this issue across multiple distros as well.
+
+Thanks,
+Tylor Pater
+
