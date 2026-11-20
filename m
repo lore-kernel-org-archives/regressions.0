@@ -1,144 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.63.51
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.181
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795210635;
-	b=txCRLzdj+gDhb0MKUkutILaw5RtJ80zCBOno7mQ80ebxc8H9V8PjwZpjyrE8qTJDhm4B
-	 PnhCX254hYzk6+uMVjcdVJdljKnSZUGqD3h3fUJtqWOjNaJ94feE8t4YUbJmE3MfLNZSI
-	 RaD6rIbhKtM1Sd/1j44NqTe/K9R/IACtw6YCtbR0ErNMD+HDKy4l0s+5GyNT63JMPGhaQ
-	 Ohk6lkPZaIuRy6Mt3XnaXKZvf/h2YslSdh9y4xIfv0Ewnc8gSV8S1r+923+o2WhvIP0c4
-	 tlO2qJ/BHX5dKiJFIhNxzVMBhUMh/gfT8hR6VAirz4NRZcLvDg6mk0j4Vxr2mDb8G8Q==
+	t=1795213124;
+	b=BJMbBguDtC57sOZttMfFKskrWoGIQXnt2fepmcFRNEhdJyemHxhKBi2SuOxoxdgF0Hp+
+	 49+r9oJx4SoGE4xWbxxZhAD8jqzxjNZ0w0wNJ+rk4Of1pdLjWStK5rN1pG3EakngprNKD
+	 /QwPFPQ/Kte1lR1Vhgo5JTXgKQ2lKF6RyM5A8JQYJ2UoLkOAygmEjg9dgIjxu9fy0mt8+
+	 a4WLxG8L/o1iOu0KT3uDr5TFUIbJzM0v5w3bi0xurpq9ApwTlQiNq0DrUTSI0Gu0f/G7s
+	 xDw7YhY54FH7jkJ5dRTrgc1Zozn+4Mmj8WDvhHEAj1D/vsNooDf2uLa60R9yIOQO+Gg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795210635;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:x-fermilab-ob:
-	 x-fermilab-sender-location:x-ms-exchange-senderadcheck:
-	 x-ms-exchange-antispam-relay:x-microsoft-antispam:
-	 x-microsoft-antispam-message-info:x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=z9nhg3GGyjpGDFqfbr3Sqs+FgLCFblxI4WDkrwgYWZg=;
-	b=Ki+7pWAc3TcfWky0ceE/B1mhd3P3B6l5igkuxzzJwybY2HlWmfurvaI1aM7E2m4EqXWu
-	 KkX4jX/2+XUCO8nE13NDpjJah7dxGGnCGLeYnzQfftZLEQ0CfczUB8YiAxnpgZfRfF/jq
-	 Zo4C6dYkcRAc68sF59ElqM2nTgEAWGjUVVv8P9vnKexH5ickkXiC/kyMx+bAhJBodlW6/
-	 j1jjHFHoN9L5dPcODo1SW890/wdLiHUnAzULsOfGRu5wChy9+OIRAXI3qTlTkm1iXVEFJ
-	 x5topzEy3OoWDDGdx7bE/DRQhF8iJIrcBypWbu2fSuhwAGqDhjc/hWSBZGEjqKwb+8A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795213124;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=9hK61NhYm4hbvqQZMc/tWnALDQEyPFZSvX9uNHUR+Aw=;
+	b=CapT5cNcCWUtE0dfg7vb/VdB7iXJW+CRgzGgC0sGcmNDNuOvTStUlC00/PNGnesPLL6t
+	 43KPhSdqSY86kbX9dwsoo26LeUKPlwQcBetzBIiVFsLcW5XfZlMWF3PeaHftt8m9HQXjY
+	 1HVmw8TwDLqdhsstbPiAdnG6allZjjtFihyi24bFhCzUKdvuLL7nChse5n0JpZpVi61Rq
+	 Mow6iQvrfMQKpUpTWyyD5wlK2jyy/cV5qHhbh4yzmKnaWexjUHTrH3gtGPfCtVUHwnb0Z
+	 QYX1erp93TsWi2LrqdW/LOy4RgAaAzjuYmHZbDCdEoL9scPzToWaTRoi2jcMyl17doQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fnal.gov;
-	spf=pass smtp.mailfrom=fnal.gov;
-	dkim=pass header.d=fnal.gov header.i=@fnal.gov header.a=rsa-sha256 header.s=selector2 header.b=XdgM50ye;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.63.51
-Received: from DM4PR09CU001.outbound.protection.outlook.com (mail-centralusazon11012051.outbound.protection.outlook.com [52.101.63.51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uGUT8LIJ;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.181
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1DA606A69C
-	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 21:37:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E1DA606A69C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fnal.gov
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnal.gov
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F588606A6AE
+	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 22:18:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F588606A6AE
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fnal.gov header.i=@fnal.gov header.a=rsa-sha256 header.s=selector2 header.b=XdgM50ye
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IzVin1slM/WPuColki8PHLza4c6Zg2+GD8FiE+80tlJJDnpDNSAnPdyD6ZSgRX0ZIlXeq55+C+CE6yJw5+2OMnNQC4q31DAL0R19RfZv/Gh1Kq1EVmrkyS0/YNTh6F6/74FT12KpHbIcdgM2g2IWygMtfZA8bAGajtMIxFzxrS3i211nGVCVCQhh335dSsbZsX1YshFYQuyEP3DOYGOvigjCX9bB5NITM1UOFqYwCU8oPYkPpBL5R6292CbvAmbiXOzzQ4KwFz+h1W8I+Buo7eseVhW66erSUzJKOhBV0Zw08T5DcmBsX2AwaG18m5dlU+2DjLIcPLYFtaYT6N2/zQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z9nhg3GGyjpGDFqfbr3Sqs+FgLCFblxI4WDkrwgYWZg=;
- b=EyWOPIkdiEKbwduJ4TrI2x0VQpPse5BaqpW7+/JXjLHKR5SWb6RNLosPIo6dIW7iYQDTS0NKQdsYWU4v8QakaStVVScub6ixoHuwHdUn29prbtLlpAk1dZBQHMsrl3d1RyfXtlbcSF4DvqTcTiEx3/c90ChRsCM9h3Y3BMpq5cRGnKBvLBd/ifMnBAmmgkRgq8+vPgKhqCUDWosZJP0cj+8WOqjgKXVe4q4zd4qieurN4QAmAP6QssgflvKjcwgiR8MPha1qwa21a66+EY9TLn80tqLeAuetlSIdbjmo2BO35DaidsSpN6D7jJTFt/IZbCwckL1JestIkZIVBWPToQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fnal.gov; dmarc=pass action=none header.from=fnal.gov;
- dkim=pass header.d=fnal.gov; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fnal.gov; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z9nhg3GGyjpGDFqfbr3Sqs+FgLCFblxI4WDkrwgYWZg=;
- b=XdgM50yeRQS3UzjVkGGjwxRI/hQMS88lbzD1Mq7CxtH5tLL3jWL+5P1QSXylQJrPiIMxM4F3LWuu2oz+2zv58Kn5HrGQh7RC/2PkaYxEhTSqG9NjJCtrTEXZ1++v3lguR3trQ2EYw+/jeeOBAl9lgFlEr/OfD+3iRW/pOwPozOO2EgSACe/ZLVKQ2ik0HUS9lKGQrhmkt2EsQMQrwkH3AJP7/JJPGmNUFSP2kpaC4Y8wHiUh0koUABZIe3uV6TqGmIUWMbt0YB5THQKn5g+z5csKn62RgdPAwgAJNlaJYOjk7GCFTjo0oxGPgn1xw3iyKeCic+CBZcWYRkK939W+HA==
-Received: from DS5PR09MB13532.namprd09.prod.outlook.com (2603:10b6:8:47a::5)
- by PH8PR09MB9214.namprd09.prod.outlook.com (2603:10b6:510:185::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Fri, 20 Nov
- 2026 21:37:10 +0000
-Received: from DS5PR09MB13532.namprd09.prod.outlook.com
- ([fe80::21dd:6f53:4c7c:1611]) by DS5PR09MB13532.namprd09.prod.outlook.com
- ([fe80::21dd:6f53:4c7c:1611%7]) with mapi id 15.21.0639.011; Fri, 20 Nov 2026
- 21:37:09 +0000
-From: Ronald Rechenmacher <ron@fnal.gov>
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-CC: "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR20 in BW
- allocation mode for HBR3-only DP OUT, external monitors stay black (v7.2 ->
- v7.3)
-Thread-Topic: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR20
- in BW allocation mode for HBR3-only DP OUT, external monitors stay black
- (v7.2 -> v7.3)
-Thread-Index: AQHdeST1dAec1YnCd0qQ5BmHrAikIg==
-Date: Fri, 20 Nov 2026 21:37:09 +0000
-Message-ID:
- <DS5PR09MB1353250098A5804464BB8BAE6DC782@DS5PR09MB13532.namprd09.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fnal.gov;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS5PR09MB13532:EE_|PH8PR09MB9214:EE_
-x-ms-office365-filtering-correlation-id: a66a50f0-68c2-4bad-16fd-08df474e6ea5
-x-fermilab-ob: 1
-x-fermilab-sender-location: inside
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|23010399003|366016|10067099003|38070700021|261026121527099003|56012099006|261022113327099003|261026140227099003|261009223027099003|261021135927099003|261102130727099003|261102123227099003|261026130827099003|261021123027099003|261028144727099003|261022115727099003|261022075727099003|261022105027099003|261026135527099003|261021121427099003|261021133027099003|261021130227099003|6133799003|18002099003|3023799007|4133799003;
-x-microsoft-antispam-message-info:
- vMudLgX94cqzPZ3I5/oQsTrki3DAlTdUr7H9SNPbVKq3fmsu2NZjRf6U17zR0trmFjmZsP8Bgkia2MRE9qpDlNmyfg5Msu30ibiKh3yVr6I79umeI7r7BUXwwjQc0ehwm19Z4C1oEHkdgYg141p30HywYsvBMrniM7ftNGPPgHk9ifY4BitHHfvCt4rNhbgI85ajNWj9Jz56Iz+AtFuAA0+QOf8s8X2Z41N0x8V2w1JUijwZtQ3/DbjDExUeSpU+Ee7NQHmuuaFiRBMFjdI7nhtewlFpFCd4EPJmRQU5d/86ZYGqKL6lZ5Pkp86008QYDa0+t2v5yKJ/pe/O73yoQSFqxTP7JPZn6KpUI/3ChyzkF9CpIbhx5Uy9B7sXhm7FcAs6IGrnP/Vm3ObVjkP8lqHETQprgtPiSC1MoeBa5ztJlxSEcSwPgIkb7ZxJMdV855xQ0BgyIIPd2QkURAoOZFtvPqnCmnmOyJ1gBXTb2YYpPNgOMs7vHHoc+qTv8WUHyL6CoCs7FqO/tq/vhU/8RtGhIn9+DDPrCYphPRpysfARsKfiFudTlJNDJLCgzCacXhIbCylpXKXHmIAV6ouYQX04W5A4YUr8t0/Ww/Jn3Vk4xaip/q4GQniuANVxgjzJLc134ebBKOiA6NrQpVq6I+9pyclsf9n54PHIl6as1f4=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS5PR09MB13532.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(10067099003)(38070700021)(261026121527099003)(56012099006)(261022113327099003)(261026140227099003)(261009223027099003)(261021135927099003)(261102130727099003)(261102123227099003)(261026130827099003)(261021123027099003)(261028144727099003)(261022115727099003)(261022075727099003)(261022105027099003)(261026135527099003)(261021121427099003)(261021133027099003)(261021130227099003)(6133799003)(18002099003)(3023799007)(4133799003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?ZGUHSQ6wHS8B9j4FYA7IKwdLkCK0v9/x/5V3SG7bFLN9dTZl8Ms0QDHexf?=
- =?iso-8859-1?Q?tWQ/ynuTt43QEXqdmJt8U2FR4MyYreY/vUBWUi+kc5U++O3ufyiHQuCyIT?=
- =?iso-8859-1?Q?BcDeVutohIhZJHQrrTziF5M2wPhGYk71UW97bLEkmkDwX7oIpFPe8YAO8x?=
- =?iso-8859-1?Q?oBbaVyI3/RskDI9juMkgjXTyN5eOynNgV/fWJyAiXSrhYRs8RqgW0Iz2kd?=
- =?iso-8859-1?Q?+k+bswJUqRogoLQEWpWyrfvntZhOrpxKrD6cmmv5D43JIqKbZWbEGL7rJl?=
- =?iso-8859-1?Q?2jG6jFBu4+HT/2a5IhKEezz4XJdBQ75QYRPmZZM6B96aeajZTBjh7JAKse?=
- =?iso-8859-1?Q?mmNCmPEbJFY5uKb/UZMQkz19MvcD/Lh9yq68M0So6S1Fz2OM28lW+xJmCB?=
- =?iso-8859-1?Q?L2hZNt2rJx6y0+yL0PewMrYSqRiLRSj7xeC/PZ3gWWctca934TG8nwMoKK?=
- =?iso-8859-1?Q?gNx+p0u21Qc7W5X98vH8cIYHxdOa6Dl8EEirA8pgnFcQtswS8WSE7rIpOU?=
- =?iso-8859-1?Q?07ln6OKQOl4NC8BNEw8lDT0UL/8viUfguqWDReEbhkF9geLjRS+ANDzjD/?=
- =?iso-8859-1?Q?UDxGYRYqiqH7keCWLlBUwIbm/Vs2/xZVEW56N8Y3Mp8nYOdUDiPqQKlnY7?=
- =?iso-8859-1?Q?Sqh5Alj1lr8mEdensbvkWDKGgoCUs6HJqrUk4nyYGH9rp+W/eTJ9cDo6Lw?=
- =?iso-8859-1?Q?ywYzEkaRb/vJOISeEUFqQ8Rv0Et+0WpqPiSwiX8BncK4tUjRjxcYvDZmvz?=
- =?iso-8859-1?Q?O94S1PWwX9mWLYDeBlBdbmVQvhcRTvhQc/isDZlJ0+n7qQY3hkTU7SQmRW?=
- =?iso-8859-1?Q?geOM/+Zots/vAiUnfs224Zc03L+I7ZDDnByZtXdzm7QHtbdRW/6BbccP1z?=
- =?iso-8859-1?Q?AAaSYwLisw7AIPW0nl3Jb1T+R3mUpieS62z2AC+zReA0Gb3nqYjWuouguI?=
- =?iso-8859-1?Q?MWR8pl9NTD2m2UNy2Khi9NjN77yAGsaOwyAaIwPan3ISV9g5LBYuxbfQ0O?=
- =?iso-8859-1?Q?bnomLVN/Y1SCPfV2S5jZs3rzQ0SiIjux37WqI2j05peJS7xYPJp8Qye3lv?=
- =?iso-8859-1?Q?FG1jX9QKRxeedU8sMrZFjYWLTFhSG0eCkPv5D0HwrbZyL7vQdx6UWxld/6?=
- =?iso-8859-1?Q?SA9seIDSIrtBbgOQ/ogIvSpGLDgIgX9+wrxyocp2cgjnsKg7HmVr81pkrO?=
- =?iso-8859-1?Q?TZrpp1PJI/g304sloKHqPLXtW0Dh3pPbg0sJp8dEm0fwmgImZl9444Mx4d?=
- =?iso-8859-1?Q?sT3Ss68XBPFyhiaAwdxIIrG8s+kM6WYvKhsUv4QdY49wQSNLUaq2e3/i7W?=
- =?iso-8859-1?Q?CoB89H30SjNYvoC2tXvrMMnVWGAQEKX3T6mTwDOuJBj7P3tli6/xX03ZDw?=
- =?iso-8859-1?Q?80VeM26NmrxuwV7bdOPzu9ZgXGEcnsu4DLqQwKFYzAQ1oT61M4Vuz3Xvvs?=
- =?iso-8859-1?Q?yrpU0kIckX4Ly33W00DbUuSQnJsCAjjmM3F4Q0nXdlGmn9yg2MBlDz9yug?=
- =?iso-8859-1?Q?6HTvwok63IZGHCquJ1bgGbNksS4febA3XUyC7ITqvJkhl9UoZmlh55LzPm?=
- =?iso-8859-1?Q?kTrZxyfyKI/qiI1OTeAdPp0PyDZr5qDq15sqXR2jOBQYa0RMNnD1E6kSuP?=
- =?iso-8859-1?Q?6gE82CjDgFw4JPR+egnhcpsLYxZBsal+8Vo6TF3gohcTX3nIEcgkLehbT/?=
- =?iso-8859-1?Q?gnHgmBDIM2bTXj+1PPKDgT3PhsdXwOpow6zOj+k1XX3CRpGOaOICkhV0lb?=
- =?iso-8859-1?Q?qQuN00XUdbCZv+dTwsZfL2JHK5fI4AwFV/4n2EpzVShb5laGNRQ/fUMl85?=
- =?iso-8859-1?Q?fj3t7UdyHA=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uGUT8LIJ
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-94961ed97bcso161032385a.1
+        for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 14:18:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795213122; cv=none;
+        d=google.com; s=arc-20260327;
+        b=YxrCVOCVAu5RyRCucu/YcF0TbjTD0tl5ptvkid3OxkyG830BfkQC4ddamPC4YRlKsZ
+         nKJFiAedwlyuJmKAxp5rRI/hnXarIFupurUBwHI8OcG/I3NoCe2nRe8PcGzdTMUUdAiI
+         P0DjjoJ8NUi9KmFK7GrZZyo1EjGJBTKekvJKxYbrluBlafwKRtRCeEVn9e5Lp4LxJH3F
+         nM6XUm3jVRiEiivv9MsYmOMCRFvJt32CtSq2BDOJOX86LEGq9ARcfdo2WKvvTXkmowuH
+         HzZjPNANAhC6KmZ3bxwObjM7io68XfXKTOKAP6aoa5X9mNAeySKZGwaWZa+/bbY34R4R
+         gvLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=9hK61NhYm4hbvqQZMc/tWnALDQEyPFZSvX9uNHUR+Aw=;
+        fh=X8bAOrnIlrmHjJwKUcVr3/H4we6hjeL6wzG/BZGd+K4=;
+        b=MWNutdq2HpENXA1paLdUIfSDqvPEdrJURXJPZb9T0CuCBpQ1RmA3aKKAv0Oqczua65
+         8wVhfZrUoWbBkQ6aebCGooWBXT5Xz9ds2YGdeKknCzVGuAcplTY04n+DuiurYEdkS5nQ
+         YdfiS9l/l5AZ0uus8FrkTiJwYCeRJ4GkEqf0SaTpE/lQSd1i3SUHwJGV64hpOjhTr9iN
+         kRwK94RJwEK/+nWsK7ml8XaJ/0Z7Kh+L8TV04lmgs8DQeIBljvURp6ls5jaiW5KYlsdT
+         8hbhuQSYy19TRNlJe8gBNOiTSCELz9cjzl7Rmjcvi05QfzrSJysh7+zDw7tmpjA7O7Jd
+         YOGQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795213122; x=1795817922; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9hK61NhYm4hbvqQZMc/tWnALDQEyPFZSvX9uNHUR+Aw=;
+        b=uGUT8LIJIogjrOJ2qc7X2GCwjnMAiyOToB6k/4t1pWvGj6LfHRT4ZOm9+xZDuLL8Kt
+         gkKkz+lArlFAJYM47GCodKpFiw+kz1bKz/uEGhXzwFvQbWtun4SbLz0X/psDulojlGoR
+         hsoR1R31eWh/5cQm1RXFWF4PuS2zgbVg5+s9XrzTcUSywilxUxbcC9OqUu5rRDjcT3N2
+         aYv3Bg9AyC5GQO/BLi4bG5GcdN0vjaGa2d+VaC3JmKYjA1KLKgFQ9piiIJbWH++iroD4
+         eStIm9iXIDTeFWipGhIQRiD1IkDIrbgWMw3Q3tc5fXhu6K8WKfy69O28n5B1cKXhYWTF
+         IDIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795213122; x=1795817922;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=9hK61NhYm4hbvqQZMc/tWnALDQEyPFZSvX9uNHUR+Aw=;
+        b=NaQ8kXT9KsjQUFRJxIEQ+4iIVuAtRgkkiKZLZKatII2fhwp2TX7NZgDakehhM7QMBS
+         Gcf+kWS3bbr0cqZh1G0F+x2KiZdUx8ZkmkYcwwg1oQRM442wU+/dVUSrcO1aMODMNN4z
+         w62gpZTTskw8hgX3kHdPVCt8SdNHULm69NWEhMmgjocrDX9xI6x5kw9iGWuyyFuNYxJN
+         4vYPbQ+O8ykOFU7uWXMWv2mQ4z8DIBFNFnlA359mEwCmlKr9UKtBJVJ1mVJx7b2dJo38
+         FgUZaKHOZu8xwk5CmNlRMB2l9Dfc6Gd92FLMX/GdP78otynFa9PKlGTl+WJIfeJLKz57
+         Bc9Q==
+X-Forwarded-Encrypted: i=1; AL+hErGGfLIZ+xQnC1hlLTyE8fC8lAy6gpzT5Yxwlg5cqwjlkcIBWjpHmSimyc1Rv/oQSjfPXM2rvItvqJHxHA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9tiHOHq/GhQ8hx0Iwf9EvewrCw3ZyLdjhj7v0OyeLraOdlBYFW
+	QV9Nfw/79E8gLtZHepxhb6HWbb1FZaDNlV+B/h122ZcaOBS2L4izDtLSKzgYqn0YEzAe0/vBNkw
+	Mjp59FizEnb+mStPLtVFHj5vQF60BcNU=
+X-Gm-Gg: AYBFou26EUAm6zlqGRl3d7jHaYGpjLpmp9nzgNAzVHuo8XnmnXGjT2N9b6p9QkP7Mmj
+	Z6skG49Hd/MfeRbhz0VS0SjDxX4FEOWQOT7a06E33lZdkDu+HBCVal2Dn8gg20XEh8rElltGqGM
+	Yh3NR3Yi4L9nXMGz+RlfkAiS/vcUtU2oETKnPpa0wsXIzIdTgmVMlkvmvB2M1uzvx2kM0XvHSWV
+	w92fUk50LFMkiV9cszozpUMbEgzQgSfx/t0PS92clOWPEo9sGvzQq+IKxUoxuta8OIp8nHEKq5g
+	P0m2vwblAc58lqROxxUinp3XQkPxfcfCdCieqwEPaRLoP/YZzCEOnOBbZImJlAf5OZ8fR/LunAc
+	TgI0a92NVz7MBSdsmv+3bRzray0JLDW40OkHG948iWrm6R7pdyXOcS510v0EfZKRXvLsse0iaoJ
+	b4tuE2kIOoB2vzNh4VVEVtBA==
+X-Received: by 2002:a05:620a:1308:b0:949:6493:7c6c with SMTP id
+ af79cd13be357-949ba9e05efmr715091585a.30.1795213121902; Fri, 20 Nov 2026
+ 14:18:41 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -148,164 +104,337 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-OriginatorOrg: fnal.gov
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS5PR09MB13532.namprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a66a50f0-68c2-4bad-16fd-08df474e6ea5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2026 21:37:09.8822
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d5f83d3-d338-4fd3-b1c9-b7d94d70255a
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR09MB9214
+References: <aveDNRBLx1a-9hRQ@mail.tty42.de> <avsSK1OE97meC40e@ideak-desk.lan> <avtDzWO1sOXYvxZ2@mail.tty42.de>
+In-Reply-To: <avtDzWO1sOXYvxZ2@mail.tty42.de>
+From: Dave Airlie <airlied@gmail.com>
+Date: Sat, 21 Nov 2026 08:18:30 +1000
+X-Gm-Features: AclHuK-PSpYuj1ahpbNwXwT3dsy09uR-DRKpJwSDX7vu-5SIVe4I6Jr9vd-wnBw
+Message-ID: <CAPM=9tz7suJ0UwGPVCusSQr1Km_hK29aNAGWyaCehTEeAHVXbQ@mail.gmail.com>
+Subject: Re: [REGRESSION] i915: UHBR training fails with TB5 dock after
+ 1fd440de4e02; source FFE update skipped?
+To: Frederik Schwan <frederik@tty42.de>
+Cc: Imre Deak <imre.deak@intel.com>, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, regressions@lists.linux.dev, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Subject: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR20 in=
- BW allocation mode for HBR3-only DP OUT, external monitors stay black (v7.=
-2 -> v7.3)=0A=
-=0A=
-To: Thunderbolt/USB4 maintainers, linux-usb=0A=
-Cc: i915/DP tunnel developers, intel-gfx, regressions=0A=
-=0A=
-Hi,=0A=
-=0A=
-Since moving from 7.2 to 7.3, the external monitors behind a Thunderbolt 5=
-=0A=
-dock stay black. They are detected, read EDID, and show up in the desktop's=
-=0A=
-display settings, but no picture appears. Booting with=0A=
-thunderbolt.bw_alloc_mode=3D0 fixes it completely.=0A=
-=0A=
-#regzbot introduced: v7.2..v7.3=0A=
-=0A=
-Hardware=0A=
---------=0A=
-- Laptop: Dell Pro Max 18 Plus MB18250, BIOS 3.5.2 (10/15/2026)=0A=
-- CPU/display: Arrow Lake-HX, i915 (MTL display version 14.00, PCI 8086:7d6=
-7)=0A=
-- Host router: Barlow Ridge JHL9580 (8086:5780/5781), NVM 64.81; the=0A=
-  i915 DDI TC3 port is wired to the router's DP IN (TC port mode "legacy")=
-=0A=
-- Dock: Dell Pro TBT5 Dock WD25TB5 (Barlow Ridge hub JHL9480), NVM 69.81,=
-=0A=
-  internal Synaptics MST branch (DPCD 1.4, max HBR3 x4)=0A=
-- 3 monitors on the MST hub: 2x 3840x2160@60 (one uses DSC), 1x 1920x1080@6=
-0=0A=
-- USB4 link to the dock comes up asymmetric (3 RX / 1 TX, 40 Gb/s lanes)=0A=
-=0A=
-Kernels=0A=
--------=0A=
-- Good: 7.2.15 (Fedora 7.2.15-200.fc44)=0A=
-- Bad:  7.3.3  (Fedora 7.3.3-300.fc45)=0A=
-- The 7.3.4 stable changelog has no i915, drm display, or thunderbolt=0A=
-  changes, so I expect 7.3.4 to be affected too (not tested).=0A=
-=0A=
-What happens=0A=
-------------=0A=
-Both tunnel adapters report HBR3 x4 as their maximum. With bandwidth=0A=
-allocation mode enabled, though, the tunnel's maximum is reported as=0A=
-UHBR20 x4, and i915 picks that up as the DPRX rate:=0A=
-=0A=
-  thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): DP IN maximum supported ban=
-dwidth 8100 Mb/s x4 =3D 25920 Mb/s=0A=
-  thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): DP OUT maximum supported ba=
-ndwidth 8100 Mb/s x4 =3D 25920 Mb/s=0A=
-  thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): non-reduced bandwidth 8100 =
-Mb/s x4 =3D 25920 Mb/s=0A=
-  thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): maximum bandwidth through a=
-llocation mode 20000 Mb/s x4 =3D 77575 Mb/s=0A=
-  thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): bandwidth allocation mode e=
-nabled=0A=
-  i915 0000:00:02.0: [drm:drm_dp_tunnel_enable_bw_alloc] [DPTUN 1:1:13][AUX=
- USBC3/DDI TC3/PHY TC3] Enabling BW alloc mode: DPRX:20000x4 Group alloc:0/=
-103500 Mb/s (Ok)=0A=
-=0A=
-The LTTPR (LTTPR 1) PHY capabilities read by i915 also flip between=0A=
-"04 03 00" and "04 00 00" around this point, i.e. its 128b/132b UHBR10/20=
-=0A=
-bits come and go.=0A=
-=0A=
-i915 then tries 128b/132b, which always fails:=0A=
-=0A=
-  i915 [CONNECTOR:543:DP-3][ENCODER:542:DDI TC3/PHY TC3][DPRX] Max loop cou=
-nt reached=0A=
-  i915 ... [DPRX] 128b/132b Link Training failed at link rate =3D 2000000, =
-lane count =3D 4=0A=
-  i915 ... [DPRX] 128b/132b Link Training failed at link rate =3D 2000000, =
-lane count =3D 4=0A=
-  i915 ... [DPRX] Reducing link parameters from 4x2000000 to 4x1000000=0A=
-=0A=
-Two observed outcomes:=0A=
-=0A=
-1. Cold boot with the dock attached: UHBR20 and UHBR10 fail, then i915 fall=
-s=0A=
-   back to HBR3, and 8b/10b training passes for both the LTTPR and the DPRX=
-.=0A=
-   The monitors still stay black.=0A=
-2. Dock hotplug: the fallback state is reset, and UHBR20 fails twice. The=
-=0A=
-   limit drops to UHBR10, but there is no further training attempt, and=0A=
-   i915_display_info still shows port_clock=3D2000000 on all MST pipes. The=
-=0A=
-   monitors stay black. On the hotplug path i915's modeset retry also hit a=
-=0A=
-   WARN in snd_hda_spdif_ctls_unassign (from=0A=
-   intel_connector_modeset_retry_work_fn -> intel_audio_codec_disable).=0A=
-=0A=
-In about 12 boot/hotplug attempts on 7.3.3, the monitors came up once or tw=
-ice.=0A=
-=0A=
-Workarounds that work on 7.3.3=0A=
-------------------------------=0A=
-a) thunderbolt.bw_alloc_mode=3D0 on the kernel command line: no UHBR attemp=
-ts,=0A=
-   training passes at HBR3 x4 on the first try at boot and after hotplug,=
-=0A=
-   all monitors work, no i915 errors.=0A=
-b) With BW allocation mode left enabled, forcing HBR3 before any UHBR attem=
-pt=0A=
-   on the new link also works, and the forced rate survives later hotplugs:=
-=0A=
-     echo 810000 > /sys/kernel/debug/dri/0000:00:02.0/DP-3/i915_dp_force_li=
-nk_rate=0A=
-     echo 1      > /sys/kernel/debug/dri/0000:00:02.0/DP-3/i915_dp_force_li=
-nk_retrain=0A=
-   Forcing 540000 the same way trained successfully but stayed black (needs=
-=0A=
-   DSC at ~13 bpp for this monitor setup).=0A=
-=0A=
-So falling back to HBR3 after a failed UHBR attempt is not enough; HBR3 onl=
-y=0A=
-works when UHBR is never attempted. My guess is that the failed 128b/132b=
-=0A=
-training leaves the Barlow Ridge DP IN/OUT path or the dock's branch device=
- in=0A=
-a state that 8b/10b retraining does not recover, but I can't verify that.=
-=0A=
-=0A=
-On 7.2.15, i915 always reports i915_dp_max_link_rate=3D810000 for this=0A=
-connector and never logs a 128b/132b attempt or a link training error. I=0A=
-don't have drm.debug/thunderbolt dyndbg logs from 7.2, so I can't say wheth=
-er=0A=
-7.2 enabled BW allocation mode on this tunnel.=0A=
-=0A=
-Questions=0A=
----------=0A=
-- Should the tunnel's "maximum bandwidth through allocation mode" be capped=
-=0A=
-  by the DP OUT adapter's maximum (HBR3 x4 here)?=0A=
-- Should i915 handle a failed UHBR attempt on this path differently, keepin=
-g=0A=
-  the fallback across hotplug and recovering after the 8b/10b fallback?=0A=
-=0A=
-I have full logs (drm.debug=3D0x10e thunderbolt.dyndbg=3D+p) for the bad bo=
-ot,=0A=
-covering a cold boot, a hotplug, and both debugfs experiments, plus=0A=
-i915_display_info, i915_dp_mst_info and connector debugfs snapshots from 7.=
-2.15=0A=
-and 7.3.3. I can test patches or a mainline build, and can bisect v7.2..v7.=
-3=0A=
-if that helps.=0A=
-Download URL: https://drive.google.com/uc?export=3Ddownload&id=3D1ZE5GYE69I=
-gIpT6fWs5XHmMpseIurGgK8=0A=
-=0A=
-Thanks,=0A=
-Ron Rechenmacher=
+This is a pretty well reported regressions in 7.3 that is hitting a
+lot of laptop/docks, can we get some maintainer to just pull the patch
+together and get it into the tree soon?
+
+Dave.
+
+On Tue, 17 Nov 2026 at 04:26, Frederik Schwan <frederik@tty42.de> wrote:
+>
+> On Mon, Nov 16, 2026 at 04:24:43PM +0200, Imre Deak wrote:
+> > On Fri, Nov 13, 2026 at 11:08:15PM +0100, Frederik Schwan wrote:
+> > > Hi everyone,
+> > > I just upgraded my system to 7.3.x and found a regression with my notebook/dock setup.
+> > > 3x 4k displays are hooked to the dock, 2 by DP and one through USB-C (I guess that DP-alt mode then).
+> > >
+> > > Until 7.2 all displays worked. With 7.3 all displays work until kernel switches from fbdev (?) after
+> > > which the 2 DP displays have no signal anymore but the USB-C one still works.
+> > >
+> > > Bisect:
+> > >
+> > > # bad: [c03c1a14507dfaf8b856c2608f9ac216021fc222] Linux 7.3
+> > > # good: [8d3ae59288f1e7d58d76558a6ee96d533bc5019f] Linux 7.2
+> > > git bisect start 'v7.3' 'v7.2' '--' 'drivers/gpu/drm/i915/display' 'drivers/gpu/drm/display'
+> > > # good: [bbf51a67d1fe895f3d27402d2560259a619b6dba] drm/i915/dp_link_caps: Use max common lane count from link_caps
+> > > git bisect good bbf51a67d1fe895f3d27402d2560259a619b6dba
+> > > # good: [d6a1bc7c9b4ce71674a633242251d8a804ced82d] drm/i915: Throw away the BIOS fb if has the wrong depth/bpp
+> > > git bisect good d6a1bc7c9b4ce71674a633242251d8a804ced82d
+> > > # bad: [f0cabcc880aba3f05ca59d735f6d166b7fceca80] drm/i915/fbc: No surface size restrictions from LNL onwards
+> > > git bisect bad f0cabcc880aba3f05ca59d735f6d166b7fceca80
+> > > # good: [b0b6d44646dc7750df4f052d17688fb7e7569a74] drm/dp_tunnel: Add UHBR tunneling support
+> > > git bisect good b0b6d44646dc7750df4f052d17688fb7e7569a74
+> > > # bad: [662560bad9be29c3e1a2668806392d2ed9a743d6] drm/i915/bw: Fix spelling mistake "threshod" -> "threshold"
+> > > git bisect bad 662560bad9be29c3e1a2668806392d2ed9a743d6
+> > > # good: [47fff2b1749e9ba5dfab7528960555cc865360b5] drm/i915/dp: Disable UHBR link configs with 1/2 lanes
+> > > git bisect good 47fff2b1749e9ba5dfab7528960555cc865360b5
+> > > # bad: [8b9bc7786adef4e2df3a23293c0682efac6dcc83] drm/i915/dram: Interpret 0xF populated-channel count as 16
+> > > git bisect bad 8b9bc7786adef4e2df3a23293c0682efac6dcc83
+> > > # bad: [1fd440de4e02efab97874bbda0a4daf59d228fa3] drm/i915/dp_tunnel: Add UHBR tunneling support
+> > > git bisect bad 1fd440de4e02efab97874bbda0a4daf59d228fa3
+> > > # first 'bad' commit: [1fd440de4e02efab97874bbda0a4daf59d228fa3] drm/i915/dp_tunnel: Add UHBR tunneling support
+> > >
+> > > I collected logs as well with `drm.debug=0x10e log_buf_len=32M thunderbolt.dyndbg=+p`:
+> > >
+> > > good: v7.2-rc1-263-gb0b6d44646dc.log
+> > > bad: v7.2-rc1-268-g1fd440de4e02.log
+> > > patched: patched.log
+> > >
+> > > #regzbot introduced: 1fd440de4e02efab97874bbda0a4daf59d228fa3
+> > > #regzbot title: i915: UHBR training fails through TB5 dock when source FFE updates are skipped
+> > >
+> > > I was desperate and thought I'd give it a quick try with help of Codex which ended in a rabbit whole of DP protocol investigation for me :).
+> > > We came up with a patch which I tested successfully.
+> > >
+> > > I've attached the patch and the "report" codex created in case you're interested.
+> > >
+> > > Best regards,
+> > > Frederik
+> >
+> > > From: Frederik Schwan <frederik@tty42.de>
+> > > Date: Fri, 13 Nov 2026 22:57:12 +0100
+> > > Subject: [PATCH] drm/i915/dp: Update source FFE presets during UHBR training with LTTPRs
+> > >
+> > > UHBR link training uses intra-hop AUX replies at the DPRX address even
+> > > when LTTPRs are present. However, intel_dp_set_signal_levels() only
+> > > programs the source transmitter when intel_dp_phy_is_downstream_of_source()
+> > > identifies the receiver being trained as directly downstream of it.
+> > > With LTTPRs present, this check rejects DP_PHY_DPRX.
+> > >
+> > > As a result, UHBR training updates the requested FFE presets in the DPCD
+> > > training set but does not apply them to the source PHY. This causes
+> > > UHBR20 and UHBR10 training failures on a Meteor Lake system connected to
+> > > a ThinkPad Thunderbolt 5 Smart Dock 7500. Enabling UHBR tunneling exposed
+> > > the existing assumption in the source signal-level update path.
+> > >
+> > > Always update the source signal levels during UHBR training. Preserve
+> > > the per-PHY check for 8b/10b training, which trains downstream receivers
+> > > individually.
+> >
+> > The fix is correct, however the above explanation for the root cause and
+> > fix isn't clear. The actual one is:
+> >
+> > 128b132b links (i.e. links used for UHBR modes) are link trained in
+> > LTTPR-transparent-mode, even in the cases where LTTPRs are detected on
+> > the link: In transparent mode the DPRX PHY is link trained directly,
+> > without link training the LTTPR PHYs first separately and so the source
+> > must set the FFE parameters during the - single - DPRX link training
+> > phase.
+> >
+> > During a non-transparent link training (i.e. on 8b10b links), the link
+> > training signal parameters (i.e. vswing/pre-emph) are only set for the
+> > first LTTPR PHY, directly downstream of the source, if LTTPRs are
+> > detected on the link. Such LTTPR PHY link training phases are indicated
+> > by phy being set to one of the DP_PHY_LTTPRx values as opposed to
+> > DP_PHY_DPRX. At the moment, according to the above setting the source's
+> > link training signal parameters are skipped whenever a PHY other than
+> > DP_PHY_LTTPR1 is being link trained on a link with LTTPRs detected on
+> > it. This is not correct during a transparent link training (i.e. on
+> > 128b132b links), when the port is in the legacy or DP-alt mode (in the
+> > TBT-alt mode the Thunderbolt subsytem owns and programs the source's
+> > PHY).
+> >
+> > Please update the commit message according to the above lines.
+> >
+>
+> Done, hope I didn't forget anything. Patch attached.
+>
+> > > With this change, the affected system completes four-lane UHBR20
+> > > training, including channel equalization, interlane alignment and CDS.
+> > >
+> > > Fixes: 1fd440de4e02 ("drm/i915/dp_tunnel: Add UHBR tunneling support")
+> >
+> > The change is not limited to tunnel scenarios, rather to any case where
+> > a 128b132b link (i.e. for any UHBR mode) is used in a legacy or DP-alt
+> > TypeC port mode (i.e. not TBT-alt port mode), with LTTPRs detected on
+> > the link. So the above Fixes: line is not correct, instead the patch
+> > should be backported to a kernel version in which the 128b/132b (i.e.
+> > UHBR support) in general was enabled.
+>
+> a421d8a99216d46926609611cdcf260fdf900645 seems to be the first commit of
+> the current DP2.0 implementation. That is as old as 5.17.
+>
+> >
+> > > Signed-off-by: Frederik Schwan <freswa@archlinux.org>
+> > > Assisted-by: Codex:gpt-6
+> > > ---
+> > > The analysis and patch preparation were assisted by OpenAI Codex. The
+> > > reporter performed the bisect and hardware tests.
+> > >
+> > >  drivers/gpu/drm/i915/display/intel_dp_link_training.c | 8 +++++++-
+> > >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/i915/display/intel_dp_link_training.c b/drivers/gpu/drm/i915/display/intel_dp_link_training.c
+> > > index cb92cff90614..92b8a8a1af3d 100644
+> > > --- a/drivers/gpu/drm/i915/display/intel_dp_link_training.c
+> > > +++ b/drivers/gpu/drm/i915/display/intel_dp_link_training.c
+> > > @@ -1019,7 +1019,13 @@ void intel_dp_set_signal_levels(struct intel_dp *intel_dp,
+> > >                    TRAIN_SET_PREEMPH_ARGS(intel_dp->train_set));
+> > >     }
+> > >
+> > > -   if (intel_dp_phy_is_downstream_of_source(intel_dp, dp_phy))
+> > > +   /*
+> > > +    * UHBR training uses intra-hop AUX replies at the DPRX address, even
+> > > +    * with LTTPRs present. The requested FFE presets apply to the source
+> > > +    * transmitter, unlike 8b/10b training of individual downstream PHYs.
+> > > +    */
+> > > +   if (intel_dp_is_uhbr(crtc_state) ||
+> > > +       intel_dp_phy_is_downstream_of_source(intel_dp, dp_phy))
+> >
+> > Introducing an is_transparent_mode() helper and adding that to
+> > intel_dp_phy_is_downstream_of_source() would be better probably, but
+> > that's a bigger change and should be left out from this fix.
+> >
+> > intel_dp_get_lane_adjust_tx_ffe_preset() should be fixed similarly to
+> > the above.
+> >
+> > >             encoder->set_signal_levels(encoder, crtc_state);
+> > >  }
+> > >
+> >
+> > > i915 UHBR / Thunderbolt 5 regression investigation
+> > > ================================================
+> > >
+> > > Provenance
+> > > ----------
+> > > Frederik Schwan performed the bisect, built and booted the test kernels,
+> > > and supplied the hardware logs. OpenAI Codex, an AI coding assistant,
+> > > analyzed those logs and the kernel source, identified the skipped source
+> > > PHY callback, prepared the candidate fix, and ran the source-level checks.
+> > > This report was prepared by Codex. Its interpretation is offered for
+> > > maintainer review; the hardware results below come from the supplied logs.
+> > >
+> > > Setup and regression boundary
+> > > -----------------------------
+> > > Host: Lenovo 21Q8CTO1WW, BIOS N4EET24W (1.10), 2026-06-29.
+> > > GPU: Intel Meteor Lake, i915, PCI ID 8086:7d51.
+> > > Dock: ThinkPad Thunderbolt 5 Smart Dock 7500, connected over Thunderbolt 5.
+> > > Display topology: dock MST hub feeding two DisplayPort 1.x displays.
+> > > Affected upstream display link: DP-4 / DDI TC3, four lanes, one LTTPR.
+> > > The GPU-side state dump shows tbt_mode: no: the physical source PHY is
+> > > in use, rather than the integrated TBT alternate-mode PHY path.
+> > >
+> > > The bisect began with v7.2 good and v7.3 bad, restricted to
+> > >   drivers/gpu/drm/i915/display
+> > >   drivers/gpu/drm/display
+> > >
+> > > First bad:
+> > >   1fd440de4e02efab97874bbda0a4daf59d228fa3
+> > >   drm/i915/dp_tunnel: Add UHBR tunneling support
+> > >
+> > > Immediate parent tested good:
+> > >   47fff2b1749e9ba5dfab7528960555cc865360b5
+> > >   drm/i915/dp: Disable UHBR link configs with 1/2 lanes
+> > >
+> > > The final patched hardware capture identifies its kernel as
+> > > 7.3.4-arch1-2, built 2026-11-13 20:51:44 UTC. NVIDIA modules are also
+> > > loaded; the affected link and training messages in this report are i915.
+> > >
+> > > Failure and unsuccessful experiments
+> > > ------------------------------------
+> > > Before the source-FFE fix, four-lane UHBR20 training fails, including a
+> > > retry, followed by UHBR10 failure. Representative six-byte link status:
+> > >   UHBR20: 33 33 00 08 ee ee
+> > >   UHBR10: 33 33 00 08 66 66
+> > >
+> > > The adjustment bytes request FFE preset 14 or 6, respectively, on all
+> > > four lanes. Lane EQ bits are set but alignment is absent. The sink-status
+> > > bit 0x08 is DP_INTRA_HOP_AUX_REPLY_INDICATION; these are intra-hop replies,
+> > > not proof that the entire downstream path has finished training.
+> > >
+> > > Experiment 1 (dmesg.log): remove the legacy alignment-bit requirement
+> > > from the UHBR lane-EQ helper, preserving it for active-link monitoring.
+> > > Result: training advances to "Lane channel eq done" but then fails with
+> > > "Interlane align timeout". This did not fix the problem.
+> > >
+> > > Experiment 2 (dmesg.log.1): restore the original helper and repeat the
+> > > 0x2215 capability read after LTTPR initialization, logging tunnel caps.
+> > > Result: coding=01 rates=03 before initialization, after initialization,
+> > > and after the extra read; 0x2215 returns 00. UHBR20 and UHBR10 still fail
+> > > with "Max loop count reached". This did not fix the problem either.
+> > >
+> > > Failed runs fall back to HBR3. Although HBR3 training passes, FEC-enable
+> > > polling subsequently times out with status 0x04 or 0x00. The logs show
+> > > 8b/10b coding selected and intra-hop mode clearing; there is no evidence
+> > > that the driver simply leaves UHBR coding or intra-hop mode enabled.
+> > > The cause of the fallback FEC failure has not been established.
+> > >
+> > > Source-level finding
+> > > --------------------
+> > > File: drivers/gpu/drm/i915/display/intel_dp_link_training.c
+> > > Function: intel_dp_set_signal_levels()
+> > >
+> > > The existing code calls encoder->set_signal_levels() only if
+> > > intel_dp_phy_is_downstream_of_source(intel_dp, dp_phy) returns true.
+> > > That helper accepts a link without repeaters or the source-adjacent
+> > > LTTPR, DP_PHY_LTTPR(lttpr_count - 1).
+> > >
+> > > UHBR lane EQ calls the signal-level update path with DP_PHY_DPRX, even
+> > > when repeaters are present, because it uses intra-hop AUX replies.
+> > > Consequently, with one or more LTTPRs, the existing guard skips the
+> > > source transmitter callback. The debug print precedes the guard, so
+> > > "TX FFE presets: 14/14/14/14" does not establish that those presets
+> > > were programmed into the GPU PHY. The AUX training-set writes still run.
+> > >
+> > > For this platform, the callback leads to intel_cx0_phy_set_signal_levels().
+> > > The lane level is derived from train_set through intel_ddi_dp_level(),
+> > > and the corresponding transmitter settings are written to the PHY.
+> > > The integrated TBT alternate-mode path has its own early return there;
+> > > that is not the path shown by this system's PHY state.
+> > >
+> > > Candidate fix
+> > > -------------
+> > > Allow the callback whenever intel_dp_is_uhbr(crtc_state) is true, retaining
+> > > the existing per-PHY guard for 8b/10b:
+> > >
+> > >   if (intel_dp_is_uhbr(crtc_state) ||
+> > >       intel_dp_phy_is_downstream_of_source(intel_dp, dp_phy))
+> > >           encoder->set_signal_levels(encoder, crtc_state);
+> > >
+> > > Neither unsuccessful experimental change is included in this fix.
+> > > The bisected commit enabled a path that exposes an older assumption;
+> > > it did not introduce the original guard itself.
+> > >
+> > > Hardware evidence with the fix (dmesg.log.2)
+> > > -------------------------------------------
+> > > First successful sequence on DP-4:
+> > >   20.224632  Lane channel eq done
+> > >   20.271570  Interlane align done
+> > >   20.297496  CDS interlane align done
+> > >   20.297680  128b/132b Link Training passed at link rate = 2000000,
+> > >              lane count = 4
+> > >
+> > > Second successful sequence on DP-4:
+> > >   33.891635  Lane channel eq done
+> > >   33.934586  Interlane align done
+> > >   33.956537  CDS interlane align done
+> > >   33.956747  128b/132b Link Training passed at link rate = 2000000,
+> > >              lane count = 4
+> > >
+> > > The first sequence reaches status 77 77 8d 00 11 11 at CDS completion.
+> > > There are no UHBR training failures, fallback attempts, or FEC-enable
+> > > timeouts in this capture. Earlier Thunderbolt DPRX-read timeouts and
+> > > unrelated NVIDIA messages do appear; this is not an error-free system log.
+> > >
+> > > The result strongly supports the skipped source FFE update as the cause
+> > > of the reported UHBR training failure. It also demonstrates that the
+> > > DP1.x monitors do not inherently prevent this upstream link training at
+> > > UHBR20. It does not establish long-term display stability or validate
+> > > UHBR-to-HBR3 fallback recovery, which was not exercised in this run.
+> > >
+> > > Validation performed by Codex
+> > > -----------------------------
+> > > - Built intel_dp_link_training.o using a configuration copied from the
+> > >   running kernel and processed by olddefconfig.
+> > > - git diff --check and scripts/checkpatch.pl passed for the code change.
+> > > - A standalone harness extracted the source functions and mocked the
+> > >   encoder callback. Before the change, all UHBR cases with 1-8 repeaters
+> > >   missed the callback. Afterward, those cases passed, and tested 8b/10b
+> > >   per-PHY callback behavior was unchanged. This is not a KUnit or hardware
+> > >   test and does not validate electrical signal quality.
+> > > - The code patch applies cleanly to the v7.3 version of the source file.
+> > >
+> > > Supporting material
+> > > -------------------
+> > > Primary attachments:
+> > >   bisect.log
+> > >   i915-uhbr-source-ffe.patch
+> > >   v7.2-rc1-263-gb0b6d44646dc.log (known-good capture)
+> > >   v7.2-rc1-268-g1fd440de4e02.log (first-bad capture)
+> > >   patched.log (successful final candidate on 7.3.4)
+> > >
+> > > Optional experimental captures:
+> > >   dmesg.log (lane-EQ helper experiment)
+> > >   dmesg.log.1 (0x2215 refresh experiment)
+> > >
+> > > Logging parameters:
+> > >   drm.debug=0x10e log_buf_len=32M thunderbolt.dyndbg=+p
+> > >
+> > > Retain full logs, preferably compressed, so reviewers can inspect the
+> > > capability reads, AUX transactions, topology and ordering. The source
+> > > filenames from the bisect should be interpreted together with the actual
+> > > kernel banners and bisect.log.
