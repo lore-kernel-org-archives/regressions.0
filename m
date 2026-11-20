@@ -1,68 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.97
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795175870;
-	b=JyRp+Dla1hiOu2ngyR4vFSantUYCnwxa5tBv9Ritw8I+Le9vcSujp5eNREB5QAQKvSTg
-	 5fj7f5gQQOE/ZOCnkJKAQHVM26w77XtC8ijuPmUMcXTmoXKpkaAKo0aoFUffk7pQT9+ej
-	 t55NAlMQdp30AzJL3s0vb/q2vnWd3DDvcSrz79/reXCR352z/z9ctbY/m1znekHT8156y
-	 TLn/e9ZqdvlCbMb19SUy0cwRnPmCHOYscFlmprzTFwf09X648NmAVQ0DICwggXrm7Agi1
-	 w75foFLng5cyR7styz2db5VV+kbHfM9/eqzhcQep9YJ1Vb8IJgHGKLIiBPu7tIQ94zA==
+	t=1795177842;
+	b=fbQ/W94gu8CBuDW/eynUtcJ2oRkhH56YF5410BSUklx8h3k43GV10MDPuXZ6BS3x/Qmv
+	 DsjCdE1NJRj4Vn5nPwQVC5J7ap2gxKdKl/sNbduvqn9X41DPALiX02VhQm0TudQLAnpAb
+	 hpd53eP7dz50K58NSzPMehZ4oaz50+jJOB/KZe0QRgN2FhPqIOtBNUWcyOBmLVcvhOBZd
+	 Ilt1bfqNWdHEfEPKPAP/yJlNMx8pYrzd09LgFo42X35DgO8CSVSh435n1N1vxL17393co
+	 n3a1rmJCP3j2btDxEju/2npmGLqzWJmfNaJMoLsz4MyAkpY1w113d5BI1fPwuzbAmZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795175870;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=wLp+MxiKos5wcI7ePiP3oh9z2cyJ/ZVCuxwX0/ByaD4=;
-	b=oIuhAl2mHwSTLiqPKj4NK/YVAHDeZeWHLIolA4R4jVutwmBFX+5ACd9k4oHcKQSZPMW4
-	 Q6dToKdfC30iNmLe8zET0kwje5aKkb61I53CBGz01KoI9kO9lpktsYpud1Iv9qy7ma8BR
-	 YoGboiUn3kAK7xWJaf1HBVvupVHTG4sZPx/GIoIibSLTRoOGnUcGbxCmaz8FAbFp3jDN3
-	 AkldGmr+fDoznxP2CfiKz3P5Lf1FAeObQ43/P99zY9qTJ+08XgvEtaP0Gi5b5vgofaNTS
-	 33xNZ2u1Nb3ekDxx8p9QY8hJXryNLj0VVrGnwljFwV+c1JMYK5eNl9rlhD+5q3e6qdQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795177842;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=3x2uiAzQDyjRyuSsB/NleI/o1rLWVIuk9GwKt/3SqVY=;
+	b=jVudwsO7R5kMVx4HHlbefNiVAN8Eg03MX6NCtD42wuCNwQrDXy2mx3uCMox63XdJstiP
+	 jVWEwu95OguF/V2NOJ1C6zOk7Hqix1F2WIUMGrFJJcP8ELnl4qnLAzfquZO3lNb9egDd4
+	 i7L8ZaFXbyr9Sr8E2m8g4hMh2ZEZd0jjhFzlEELSN5YpUXZVHHRQCcn0yTFx8uJbf4E33
+	 XG22RW4js5nEFWOBfh/qC5N+ZnX/VpmPdHHNKeku3QG9r5DBqz3ktGqIippaBztVw3E+9
+	 DiFVzczc2qElDfD2rVb12okfUTVVN/Z0fWrURQYsxBFDGVGc9+kuPAGqCwBE9uGoOgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=bPIR+4US;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dmarc=pass header.from=protonmail.com;
+	spf=pass smtp.mailfrom=protonmail.com;
+	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=iL2IYH33;
+	arc=none smtp.remote-ip=79.135.106.97
+Received: from mail-10697.protonmail.ch (mail-10697.protonmail.ch [79.135.106.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F106606A32A;
-	Fri, 20 Nov 2026 11:57:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9F106606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20078606A325
+	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 12:30:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20078606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=bPIR+4US
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wLp+MxiKos5wcI7ePiP3oh9z2cyJ/ZVCuxwX0/ByaD4=; b=bPIR+4USXq3inxA5yPeSvwm2mz
-	WKdPklYm/+yxAf7w74YVCTPPbZLz5xNIsbvdBiiF8/XHFuCins+oGC2VHzzbb6yXIxbRWG2BAYETi
-	5CE1bNF2m0IdU94Lx1mzdb5qHlFQngAJ3ndvWac+QQsZu2dCGi6XL3FNWYBnkCq4y77a1lKtiywbT
-	VxKqOi0cRfGTh1pdMz8RZnhmr5oXhfU3ah6drxs44dbiHyDhrqd9zJQf8gK+0x9AF15mi7dnSRvbx
-	uEYpPD9+SwcXResrqa0CQUcLG1mKJYZ4o9AgplvppRk6sJXWe3Cib20AVZtaOoO1e65G3J++hyXJl
-	X54MPC+A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUNFS-00000003txx-1rkI;
-	Fri, 20 Nov 2026 11:57:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 47FE63008D6; Fri, 20 Nov 2026 12:57:45 +0100 (CET)
-Date: Fri, 20 Nov 2026 12:57:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Yael Chemla <ychemla@nvidia.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>, x86@kernel.org,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Gal Pressman <gal@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [REGRESSION] x86: Use RCU in all users of,__module_address()
- slows kTLS+wrk workload on KASAN+PROVE_LOCKING+kmemleak
-Message-ID: <20261120115745.GR2668564@noisy.programming.kicks-ass.net>
-References: <bd2a701b-866c-4d4c-bd0b-37b4410628be@nvidia.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=iL2IYH33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1795177839; x=1795437039;
+	bh=3x2uiAzQDyjRyuSsB/NleI/o1rLWVIuk9GwKt/3SqVY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=iL2IYH33shWhvLf/J0TVsbZNoH/IWweuJfYJCpwaxxyKFzjUWKHjVuXZoEPmYLLHT
+	 g7L/1A0EEWg6hqIMcv99DPwA6iGPQQFrZSxeke+f7hhicr5XOfiqu2nuswo95/yT4k
+	 D46J696zRvkLABfDSg4CHYG3Nqf1vmDOuGpFaTBOKdukrxTttpjF9P3GvB8sl4rGY7
+	 uVslTnlx1t7ZzFeVBUnzjGSXmLorIKw1r6GDfmfto7w2SRKV0sX4/FOxXHC9ro6r28
+	 GEyyRMeXPpX2H7AgGLf8/mlUa6OB856doI9Hh8K80UaSI5LtXFusfy6Aq6dPNz4sWh
+	 CPsgt+yCDWjBQ==
+Date: Fri, 20 Nov 2026 12:30:34 +0000
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+From: John <shffr@protonmail.com>
+Cc: "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>, Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>, "coreteam@netfilter.org" <coreteam@netfilter.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] netfilter: flowtable: XMIT_NEIGH flows sent to 00:00:00:00:00:00 once the next hop's neighbour entry is gone
+Message-ID: <mnTRsDnjFGwkaEs2TyBhSVGORGNjDv2jpYzwr8fY9E3xMMohO6nE5PDALNhJYrjPVDAfxziY2rjCLBNeJ5zs7vRg-6LyTC56Ypk4TKStDKg=@protonmail.com>
+In-Reply-To: <av-RdjXsq4IXsnMg@chamomile>
+References: <MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com> <avSIBUcLH4kZyISX@chamomile> <avTngTkNKE5ApQW8@chamomile> <LCJrB-Fde--T9NiYx2QfFb-X-9W-vsYYmtmrHwIKuKgM8enKRWF2DYypz2_zJKSKQBMUdb9sS6xMEfPihv1YO2FLjX1OUN-Td3Hq1eAdLgw=@protonmail.com> <av-RdjXsq4IXsnMg@chamomile>
+Feedback-ID: 9232920:user:proton
+X-Pm-Message-ID: d0bec2f19f1968670e03cb0da2155cefd3870d42
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -72,31 +64,58 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd2a701b-866c-4d4c-bd0b-37b4410628be@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 19, 2026 at 09:54:37PM +0200, Yael Chemla wrote:
-> Hi,
-> 
-> A kTLS stress test started failing in v6.15-rc1 on kernels built with
-> KASAN and PROVE_LOCKING. It was bisected to commit 14daa3bca217 ("x86:
-> Use RCU in all users of __module_address().")
-> 
-> The test runs wrk (1000 connections, 15s, --timeout 5s) against nginx
-> serving a 1 MB file over kTLS, with 1% packet loss. It fails because too
-> few requests complete: wrk reports only timeouts, no connect/read/write
-> errors. With --timeout 10s it passes.
-> 
-> Reverting 14daa3bca217 on top of 01d5b167dc23 (modules-6.15-rc1 merge)
-> or v7.4-rc2 (7475ea8b5861), with the same config, makes the test pass;
-> without the revert it fails on both.
-> 
-> The failing config has KASAN, PROVE_LOCKING, kmemleak and UBSAN enabled.
-> Building without KASAN, or without PROVE_LOCKING, also passes.
-> 
-> I have not looked into where the time goes.
-> 
-> #regzbot introduced: 14daa3bca217
+Thanks for the series. I tested v4 on 7.4-rc3 with the same two
+tests as in my earlier mail, IPv4 and IPv6, and no packets were
+lost. In the GC test the entries went from STALE through PROBE
+back to REACHABLE for the whole run and were never deleted.
 
-Anything *SAN is not a performance target, not a regression.
+v4 adds a new problem for flows that leave the router through a
+tunnel device, which plain rc3 handles correctly. I put a GRE or
+WireGuard tunnel between the router and the server, with the
+tunnel device and the client's veth in the flowtable, and sent
+one UDP datagram per second for 60 s. On plain rc3 the flow is
+offloaded once and stays offloaded. With v4 the flowtable GC
+tears it down within 0.2 s of every offload and the next packet
+offloads it again, 53 to 55 times in 60 s. Each datagram from the
+server arrived after a teardown, so 59 of the 60 took the classic
+path, against 5 on plain rc3. Nothing was lost, so the cost is
+the classic path and the churn.
+
+As far as I can tell nf_flow_dst_check_gc() returns false for the
+direction out through the tunnel, because the neighbour on that
+device fails the addr_len !=3D ETH_ALEN check (GRE has 4, WireGuard
+0). nft_dev_fill_forward_path() already treats such devices as
+non-Ethernet and offloads them with a zero h_dest, so perhaps the
+GC check should skip them the same way.
+
+A 6.18.y backport probably also needs 871df5007eda, since 6.18.y
+still offloads a flow when the next hop is unresolved.
+
+John
+
+
+-------- Original Message --------
+On Friday, 11/20/26 at 01:17 Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+On Thu, Nov 12, 2026 at 09:08:27AM +0000, John wrote:
+> Hi Pablo, Thorsten,
+>
+> Thorsten: I first saw this on 6.18.60 and have reproduced it on
+> 6.18.62 and v7.4-rc2. 6.18.63 has the same nf_flow_table_ip.c.
+> b5964aac51e0 came into 6.18.y with 6.18.45, the release named in
+> the thread you linked.
+>
+> Pablo: on 7.4-rc2 your patch stops the black hole, but as you
+> noticed, one packet is still lost each time the next hop's entry
+> goes away, which with neighbour GC happens about every 75 s on a
+> long-lived flow. 6.18.44, before b5964aac51e0, lost nothing in
+> the same tests. On 6.18.y the patch only works together with
+> 871df5007eda.
+
+For the record, I posted these series to address this issue:
+
+https://lore.kernel.org/netfilter-devel/20261119090736.3342541-1-pablo@netf=
+ilter.org/T/
+
