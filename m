@@ -1,150 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.32.15
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795178948;
-	b=z3nYsfCTzMK7IZkHgV0Rd1LA8XkumpsWiDX/j5i9g0cB1T2kA/4RXvod7ZKd85OiHBoL
-	 aHilSmMTl54QJ9ExymLGdQNn7Ie9sW811TYvGgnpxQEV4qLeT3kxdn5V0Ijk1L4ZJN0k+
-	 Q7MSg14Ssn2GBTdQYdljUbiXp82tYKfHBdcSc4PSH4aJBAR4JYpG2qgzYd4dye61M4wtx
-	 /va2UyB6yufKG4f6QdYr/FFPfxQ78z/p8t6SNobvzdJkcFD0wKWtPNZoK7FLURX55EYWM
-	 vF5iyhzzEd32WMnPruk1Ckn9z7y8BndlBBK8NM3euWRDLaPjX4r0vwiZ3pFb/k93e/A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795178948;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:
-	 x-ms-exchange-slblob-mailprops:x-microsoft-antispam:
-	 x-microsoft-antispam-message-info:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:
-	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=FBBYV+IvGLBq1XOdscqZtOwDlUSaV1CiQAP5RKeBDZQ=;
-	b=Teas/gWXMPiqQ9t9+42saYLGG8Cwsz4j4kUapY05BM7n19L4w9xLy+3zcmUgtKMK6cW8
-	 +f8aYRj4YgZrcVvbFD078VsqtM+jEySPrHWfb8WKoViyLAMUN87kYgELOg3H7ybDd0H0v
-	 qXsPpo6Qw0wcD+PrXvMlbww2bgtENLcxn/C/5jkJe9wk8c1xWMgqmmb2k9R39ogS7Mjtw
-	 cs0f6bnmKQifrC5SyCTEVIusUY2kh11vNtqftoAm8xEjsFMb6RXWgZiMwP//8se53IBb/
-	 0HyGsAq2EKPa0xSE/ebeLSSiRXc/paeye8lQqaYddvIwm16frSDtxjiRltb5TXBOyJA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=outlook.com;
-	spf=pass smtp.mailfrom=outlook.com;
-	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=MP4Ulve7;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.32.15
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazolkn19012015.outbound.protection.outlook.com [52.103.32.15])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.69.43.37
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795180674;
+	b=EGquHpnnK+5qGt2UQqk5ciOI5n9gCSZlM/kreRZZmPzRhqL3ZvKibcGgdOoqqKdike0j
+	 zuGyiu8Pg993O/gtNs5pbB26+feDdyb3RBECaLSkUb1ZbwEkm6chmh9tDCHPAxSza7v7O
+	 k8LD6/WHHlST8oM7ntNrxY2NYEJFTyVakD71x2zkLlkXqMyesHoff6m8CAJngoUHtpM4I
+	 xsTPfHWbgX+vH+3u3S0a+8SBz6AasOeOQBwKksSZHfwvMgPGdlceTenBmGleLbmUDpDvB
+	 /vADH1tV4Hpt6qNLV7LS0LchOTf/HVTbhHN+2pl+RZKWHxQsNuxD13SzwFsv+HHDgjg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795180674;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Date:From:To:Cc:
+	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition;
+	bh=5JWf5OXupYVqIkiH9DSB2am/4xavv4dxRVzrPrLSdSI=;
+	b=j+KCbeu/YYlHC6n5XVWPX4iJHcQqLtJmP0SmDjtnxnLxQWcbd9A6TTPkcAtIyFvz/S4T
+	 BgKJ+jelEfFye657XHUUmO6QIMOV4ixgFELazyq6rlLXDyzJimWXf7nP8XZQaqfPJk9nF
+	 ojZISM7+M+p7L1tC3lhz82Uox1TaPcJfVgutKyUa4GY+XB8ENjpwHAvVj71d2joHhr9nP
+	 MNYfMSLZWm5g+YT70e4+Yzg3LP4rF8gizQHyGoihnXAzrLgXg9ZidHL0QeygQG0BVyw8J
+	 MOl6pJY0hBx5HYirAx+hpRCcEwqsbqt15FLD6CtK98IghvT3G3mw3Uz88u+AZ4oztzQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=vozeler.com;
+	spf=pass smtp.mailfrom=vozeler.com;
+	dkim=pass header.d=vozeler.com header.i=@vozeler.com header.a=rsa-sha256 header.s=max-2024-2 header.b=KqzQW1pg;
+	arc=none smtp.remote-ip=80.69.43.37
+Received: from imap.hinterhof.net (imap.hinterhof.net [80.69.43.37])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C06606A325;
-	Fri, 20 Nov 2026 12:49:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98C06606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3558160A2617
+	for <regressions@lists.linux.dev>; Fri, 20 Nov 2026 13:17:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3558160A2617
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vozeler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vozeler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=MP4Ulve7
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=izRojUiuXFX34ugQTazfxIxNAFv2Pt9oRDqXn3NNk3WnGty421Ta2KcTnv3BD3sohlPuTlBOnQGgGmBw1f5oBeW/xRxFVvn27C0Y5lMpXz59SGmA2Wj45fBJMYvO7MyE+q3UKgae8S7cDzdoal4BTaSvDqv+V0tPVF/sxS6gu1+nkTX6WY8fpnEVo2Cx9gAY7AK2gl+OWLw5AqAucmZkEYmLmm/xoLh9AN5EXf6uB19krAL8uiqOYKCsf/Iw1nkYjYptDlrUF0g5vDy+OtdMJ/40P05cW8mfdaIdn+9Xr51UQtWflXaJQEmKHhw/NbmPWiw4OOhcGrje+RKSOSJkag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FBBYV+IvGLBq1XOdscqZtOwDlUSaV1CiQAP5RKeBDZQ=;
- b=n3E84JNjZwjoESIGgBIrPVdpx8d7R62Ima83PcII99WdccLVzHNty3mdp0VOSHVdGDDQU9WASsuRoIDhnBVvh2NEA94HzFtxkNP5W5JMxHRPdri23v8lzhKzQmTWnMsU9YQOeIJq44myCVQRnLz27PErsXrN7MJVH+zw8XwzZ9Vpc6nqZ7aSWcvGdb+rtRT4qND6iP1WaLHV6/SC++ae/d69Z4+SEiMchH4vSo71oRv5hQusL/UWrq5xhG4Bf6pX3wsZjcrXTuhJ8Pq4+Mf/n8emd7OTjiKCMpWBk5yIUv+vRpC8HgUCSY16rg2R8L+YcNnNHKaMATefghK0gXYQBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FBBYV+IvGLBq1XOdscqZtOwDlUSaV1CiQAP5RKeBDZQ=;
- b=MP4Ulve771jLim278y+FYHfJS0PMQXariSXZngUR3nF2EXWq9KgMrh0X7YBNJcNfS4aw8+XchXNC+AFxAnb0SquIBDTMgH+5wr8QCi9whzD6Ip0PkpdV2nEVDB8ya07T+GxgmM0KjPd8V2Lk9dJyHA5IoWhKHHEAS/Y3wkN0H6o7Onz2j1Ptsa5H/9vfoDlpUkqFr6sXJ6GbK8sRppsNvcSNMch0zIGiDo8bACtS5GR3DMaPr8S5jzCMagq/l+Q4aLKgev9uWiaYPBhe5ib5BTSHxb9mafaXHeSDndp2EQ2XA1DLUrs8PxB5El5l5P63stxVQobjvY+HRYUOEK7nFg==
-Received: from VE1P190MB0877.EURP190.PROD.OUTLOOK.COM (2603:10a6:800:1ac::12)
- by FRZP190MB2215.EURP190.PROD.OUTLOOK.COM (2603:10a6:d10:139::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.12; Fri, 20 Nov
- 2026 12:49:04 +0000
-Received: from VE1P190MB0877.EURP190.PROD.OUTLOOK.COM
- ([fe80::b9ea:ba75:b983:11fa]) by VE1P190MB0877.EURP190.PROD.OUTLOOK.COM
- ([fe80::b9ea:ba75:b983:11fa%6]) with mapi id 15.21.0639.011; Fri, 20 Nov 2026
- 12:49:04 +0000
-From: "d3nchk@outlook.com" <d3nchk@outlook.com>
-To: "ntfs@lists.linux.dev" <ntfs@lists.linux.dev>
-CC: "linkinjeon@kernel.org" <linkinjeon@kernel.org>, "hyc.lee@gmail.com"
-	<hyc.lee@gmail.com>, "zenghongling@kylinos.cn" <zenghongling@kylinos.cn>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [REGRESSION][NTFS] Linux 7.3.4 mounts 64K-cluster NTFS read-only
- after $MFTMirr record 24 mismatch
-Thread-Topic: [REGRESSION][NTFS] Linux 7.3.4 mounts 64K-cluster NTFS read-only
- after $MFTMirr record 24 mismatch
-Thread-Index: AQHdeO2GTFIG3wiCfUeuSBEr21/wVQ==
-Date: Fri, 20 Nov 2026 12:49:04 +0000
-Message-ID:
- <VE1P190MB0877D026E2C3905F0324B46F85782@VE1P190MB0877.EURP190.PROD.OUTLOOK.COM>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VE1P190MB0877:EE_|FRZP190MB2215:EE_
-x-ms-office365-filtering-correlation-id: 9c3b08e0-e61b-4633-a5a5-08df4704a897
-x-ms-exchange-slblob-mailprops:
- ZLYX9kf+sFZxKjlXyB2wc/pvxSEMppw8L/3RxB8jtVUk3m6IGL7YaLXMAg4Ia2R+7mqLCCUoUB88EpRrgWwxpy/4wdX1vF0Q/3LAc4FtDAMOZbcxmQxpMuI+FsKAZgnLENrftTzwCnyVP2yPUtf73KQuy5sYL3PazcMy8RwPh6zHgFhJtZAOFDtheBKKkkNNpikctqoOcwV/Vw2VIVQZqB3S+xJrWecKhDiVJEH+qzZBIz2wTqKZ7Cnj1PVNJBvI9RwLGx8E73CUDkfX4mg9ODW6VaXheGmmI4hEFVRd4iQnQRhX2pXCX4ZxDhuInLFxQro76wOa2Mmi5OcyK+pDpShluUkRaR+DUutR1tM8oPVMppYoKol02qiUFWvQ9RkqF28li7lsTttQdDFq5b6wXKOWhHs+moaynJYZ5N9fpC7DNhvO69BqC5TQ0PQ1Smz7YE3jvqBO6o5Rx1lQF7WNx5gfLIl9+gxpqitjP+z1CGmML/hvIVy7bISQ9unyYkZybNMY2PJMUTcPfGnMW46DOdEZ4gtIUqREN2xOOEkIZ0J/gYkBJP9mnygWOEqL8vGcMQ023vUicHohvlUKra3Qd4w0dmQoinYljxt9tmjimBxnIwYRPnCQADUv1TZUy5QaO7uLYX08zJ6kD5zFEz31WBnF/TGGo9JzYrN68axxFseX79aYTptOv/1A80OY2DtvlavT/tjqvm0PT0ggkAi74tAwmXENVobD2MCkHcTTQU1tlL5ywocHFiiw5cltP720VLHkkyh6fPj6C56vuYoisKIX2dDGrUSNQrrwoLjLqHg9hplJ9dnMTg==
-x-microsoft-antispam:
- BCL:0;ARA:14566002|12121999013|31061999003|4040399003|13031999006|8062599012|8060799015|19110799012|22091999003|24121999003|15080799012|38102599003|24021099003|51005399006|40105399003|26121999007|3430499035|102099032|26104999009|3412199025|440099028;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?xanryZtYrCihrx40ILWd8mKxBDEFWBRuOy1uHZaBqPaCxoyFs4WzAE8rXxeJ?=
- =?us-ascii?Q?VJ7EDOtADyTWD9vGfLdp24W5qzPVUlDTq/rbj/NGirqi8GObqaFgFugGjyGF?=
- =?us-ascii?Q?cyEOWxEgf7wm5e35FWvaXiWDCstvp4OGgwb6sfohOGaE5DgpH4HC4f995duX?=
- =?us-ascii?Q?RKYOLxm7Md4UB9t6kzWnMYf6pTqhi2iNjTI1cNE8qfciw1Kl6029b2Z5Pl2u?=
- =?us-ascii?Q?l+qKmjfxTgDH6huo+cIDkfUJ0fzOUCTy44AYAFV9DcMXCuf2qws816e6d5or?=
- =?us-ascii?Q?moi7jASdvD1GZzvUudtCsIpil/DLO1+luToJA6fclar2n+r8GoeRKguygtEz?=
- =?us-ascii?Q?5EZo58joA7MgEQ3rJ+g6mSWMUWEhMPbPjcCenTiMpl2VGYuwQlUMWl6oIyr4?=
- =?us-ascii?Q?xWxBD0nycaBKQXoDcmzYgwNjELV03I6LFMwigOW3Qns8XVBR9L9VqrerD0zc?=
- =?us-ascii?Q?TcixCOaXr7y+D08Bix9hW4UHVrHJXIHhzKFMqHjfyQyjJp2XaS//t1J4honv?=
- =?us-ascii?Q?n6cUPKNVgbHUV81IzKcGRo6qB/JGRxlgVcNZFIri3h3oiLnGsjg3O3h81Ger?=
- =?us-ascii?Q?NHL3dWu5iFhmv4PkAVx0QEFEkEDod0Gf24+0bYQTFk5fIPuyaaOXowD5XLwM?=
- =?us-ascii?Q?Nk59BMahzo+SUg01EcE3YQlxhwXLgA46lNDvkgUKmrnfmg5cT47bryZJ0Nir?=
- =?us-ascii?Q?UaWZyR/1dLzwxptrLYLiDbi4nI4Wd7hpgSPgd3EaljHZldNwfbrZwzi+7nV6?=
- =?us-ascii?Q?zTXmwOdz00KAQRSQEjOkInHBXWgmeLDpui/owxxAUFOw5UYINN8ii2rIa5C9?=
- =?us-ascii?Q?1RgYhDe7hUfkKGbfy0vrLThr3sEEAvP5KfWqrNsC+LxiUBOQxvn+vObtEtYi?=
- =?us-ascii?Q?HioBsFpwTupkezUthVC0LhBs7yh07aAgplrGNjp2kdBlISaDvEPpB/ke48pQ?=
- =?us-ascii?Q?OLkVclcsRcKq9M4Xmyxa24ibi/VGhMxdqFedf1Y6EhztHno/XrUPE+eCWQLt?=
- =?us-ascii?Q?iLQZQBq/lScUxrAjzd+/ujd8bp6fzFQZHac8ylDAfnbxwHvTOaPBcVLEQvMc?=
- =?us-ascii?Q?+r5mGp9n4OYqxtIDgfEGIBHmnWSINDK3jrVpmlNo4eKCb7+eU9DOeVyp57z+?=
- =?us-ascii?Q?K3tDVpAtKyrG?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?c8gxEkRUgmERwxK3clMV0k3DFDfQO/RbmPCtpJvWvVLlBGb7+kDwzOIeFPI+?=
- =?us-ascii?Q?VuipzxzXXr+2opfNBe4v1SWtfq5RwbNqdbAm0FyJtkUySwLa8kBsV5QSo/Xu?=
- =?us-ascii?Q?/TQTIhiuY9mKauxNd2A0nAkOdOuq2fJ/qusUL+9pkQ39efH9fWtN100Bs5DW?=
- =?us-ascii?Q?3GtZwHALFDMdmQB+kwudibswSxaIjaH0+vf+0Lt6EJ10hTRRrMGkZ3LtOvlW?=
- =?us-ascii?Q?ubG/RAwJxD9WizjeqENFVujMtDzZxxGqT24aUFu8s7Y+FnobmPc6BQYT+2p7?=
- =?us-ascii?Q?6DZNlf7AcrUu5ThnJoZi80+NT0r6BsvhK0GlRw4eTtr9gD62vOAcf4jn8Hqu?=
- =?us-ascii?Q?BB5+rGXlQClMd1TD0Q+BQ0S2gDGQ+mlNRZekzlVJQLdH15wbYHi3MIWQhD94?=
- =?us-ascii?Q?yyJSPvbTN27MtdPQBnvcFxaYudomkUoc3qCf+Y9dzjS6BAN8qGTwenwauLpt?=
- =?us-ascii?Q?NPKU1+vOmM+Xn1CisfXOiWz0W7Bi2OiUarJa1OaH9SVXOErEe78pYmLsjXCc?=
- =?us-ascii?Q?V6QnQYQH3vGPqY2XMJ+7tm+YHdorX200lursElhNY0QMEA5pfmO1Febwwk4v?=
- =?us-ascii?Q?3Pf3Cw+i0OxgztRPcojKWvMAKWVRIcA3nJINsBktGvdl95MGctbh8nTDvXtP?=
- =?us-ascii?Q?U81rLfDHIiLl4zRWxY9M0HhB+K2tBqQT/h4vt0satkH69KmNW2BfzNlvET4E?=
- =?us-ascii?Q?uDMFj4yGGLQaJcuDV2KdZNmEgismZmldkz3BNH7b2eEygyg4pLRJdWSMdHA7?=
- =?us-ascii?Q?hKH2okQRJedTUP5YoN6RV716VC8CpcwODjsV42ehHZxQ0/kSRjd5ptxhV0yp?=
- =?us-ascii?Q?tB2zjOZyMIZBb4H9NF+MW34b6t5+l0ueVSQ8MmWLgW0dfwzxlfDBr7pfiART?=
- =?us-ascii?Q?rQfGSQo82QKYb3PPiG92rabmT3XPT0OkBw2vAGOnUsPrZEU1Su0ImacfcAtD?=
- =?us-ascii?Q?NrAA8C86aVZeRfdvv3z0b3IBFK+jf02wx2/7uKsfgeEfJlQNfslFiA7OCIUh?=
- =?us-ascii?Q?zhM5FpJsKtOlLa8eeanYuBxtIzY5nyWiUlFUTdek7K/TfoGYY3QIDUw5Jxmx?=
- =?us-ascii?Q?9mQuttBXZ/1n4TLsu1ycWzC5uaszrs+mFq0k+A7xoY8lYakIHxhQyYYNq+tJ?=
- =?us-ascii?Q?pT8qS67t5FNBhLy9sV2Tg62J4uWTT4u0B34Ed/kyF3XeB3X9onhRZ0CXT8zc?=
- =?us-ascii?Q?mOEK6CanVaR/o8d1yONHetn+LgmlnCnhAJNANTOrODXNmRBQWytvWDUOA3lj?=
- =?us-ascii?Q?S22AwCJMOZhbeArKU48rm21Q5TMIHVkSlqvxDqoFMjhaTyfqTOrK4xfHJ5Sh?=
- =?us-ascii?Q?Y7/AWet0afnw1O8QjTE39JXutn9gXdNp28gjA2mHgrj9XU+A0BtHjzExyDeD?=
- =?us-ascii?Q?T/N2Z90=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=vozeler.com header.i=@vozeler.com header.a=rsa-sha256 header.s=max-2024-2 header.b=KqzQW1pg
+Received: from dp.vpn.hinterhof.net (dynamic-176-002-211-151.176.2.pool.telefonica.de [176.2.211.151])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "x201t.vpn.hinterhof.net", Issuer "Max Vozeler" (not verified))
+	by imap.hinterhof.net (Postfix) with ESMTPS id 79B9F905A5B;
+	Fri, 20 Nov 2026 13:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vozeler.com;
+	s=max-2024-2; t=1795180663;
+	bh=0PEgacUkNlIZomwm9ydbicVjYtPuVcdoui4iSWh3UOI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=KqzQW1pgjX75vCWF4sRK1jvCfEwUPZMYeQhd3lBWshcPFbdacYsvQCLuDZXzwSO9e
+	 7Zgx/s6doXeDdGmQy1UsSRkWYrBCwWpZHfW/aHLk3wYiXSsEjN1koGWMPKNJKaK+S2
+	 LZEHQa+FSC7vLD8rBilCquIkP5onVcjALDHk92+6Di/WW4lcCoodSFEyrDJw7XHbG5
+	 PyrHJutQCZuxx33KNpnyKP9XBbuOOddGDCBALWHybXSInoaallhwOU21UFT3gC8rPl
+	 k4oljtJC+AgGfIgKKxTXQk6d+LCN5sV+9rXZ5MZK9qx3CGaLj+6PMoEYDLabM1I24P
+	 bTCt7+zsD6a2w==
+Received: by dp.vpn.hinterhof.net (Postfix, from userid 1000)
+	id CC87526018A; Fri, 20 Nov 2026 14:17:43 +0100 (CET)
+Date: Fri, 20 Nov 2026 14:17:43 +0100
+From: Max Vozeler <max@vozeler.com>
+To: linux-nfs@vger.kernel.org
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: [Regression linux-6.1.y]: NFSv4 server: sec=krb5p mount fails with
+ EIO in 6.1.192
+Message-ID: <awBIdxOJ4XSXuc7S@dp.vpn.hinterhof.net>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -154,70 +67,164 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1P190MB0877.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c3b08e0-e61b-4633-a5a5-08df4704a897
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2026 12:49:04.3703
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRZP190MB2215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,=0A=
-=0A=
-Resending in plain text because the previous HTML-formatted message was rej=
-ected by the regressions mailing list. Apologies if this creates duplicates=
- for other recipients.=0A=
-=0A=
-I am reporting a regression in the in-kernel fs/ntfs driver (NOT ntfs3).=0A=
-=0A=
-Environment:=0A=
-- Distribution: Debian 13, backports kernel=0A=
-- Working kernel: 7.2.12=0A=
-- Broken kernel: 7.3.4+deb13-amd64=0A=
-- Device: /dev/nvme0n1p1=0A=
-- Filesystem: NTFS 3.1=0A=
-- Cluster size: 65536 bytes=0A=
-- Mount options: defaults (including errors=3Dcontinue)=0A=
-- Driver: fs/ntfs/ntfs.ko.xz=0A=
-=0A=
-Kernel log:=0A=
-=0A=
-ntfs: (device nvme0n1p1): check_mft_mirror(): $MFT and $MFTMirr record 24 d=
-o not match. Run chkdsk.=0A=
-ntfs: volume version 3.1, dev nvme0n1p1, cluster size 65536=0A=
-ntfs: (device nvme0n1p1): load_system_files(): Errors were recorded during =
-mount. Mounting read-only. Run chkdsk.=0A=
-=0A=
-This volume worked read-write with kernel 7.2.12. After upgrading to 7.3.4,=
- it is forcibly mounted read-only, making normal file operations impossible=
-.=0A=
-=0A=
-Windows chkdsk has been run repeatedly, both through the GUI and command li=
-ne, including dismounted-volume checks. The issue persists after rebooting =
-into Linux.=0A=
-=0A=
-I suspect commit 749357bd48c16c4cdc09093450deca609492f012 introduced the ne=
-w read-only behavior for this case.=0A=
-=0A=
-There is also a potentially relevant NTFS compatibility issue: modern Windo=
-ws may not keep all $MFTMirr records synchronized on volumes with large clu=
-sters. Here the mismatch is reported at record 24, beyond the first 16 reco=
-rds.=0A=
-=0A=
-Please investigate:=0A=
-=0A=
-1. Whether the comparison of MFT mirror record 24 is valid for modern Windo=
-ws-created NTFS volumes with 64K clusters.=0A=
-2. Whether this is a false-positive filesystem corruption report.=0A=
-3. Whether errors=3Dcontinue can be honored for noncritical MFT mirror mism=
-atches, while retaining mandatory read-only protection for Windows hibernat=
-ion and genuinely unsafe filesystem states.=0A=
-4. Whether a fix can be backported to the Linux 7.3 stable series.=0A=
-=0A=
-This regression prevents normal read-write access to this volume.=0A=
-=0A=
-Thank you.=
+#regzbot introduced: v6.1.190..v6.1.192
+
+Hi,
+
+after upgrading an NFS server (Debian bookworm) to 6.1.192
+(Debian linux-image-6.1.0-55-amd64), NFSv4 clients fail to mount exports
+using sec=krb5p with EIO.
+
+Downgrading the server back to 6.1.190 (linux-image-6.1.0-54-amd64)
+makes things work again.
+
+Good: 6.1.190 (Debian linux-image-6.1.0-54-amd64)
+Bad:  6.1.192 (Debian linux-image-6.1.0-55-amd64, linux-image-6.1.0-56-amd64)
+
+sec=krb5i works on the exact same server, export, and Kerberos keytab;
+only sec=krb5p fails.
+
+# mount -vvv -t nfs4 -o sec=krb5p,vers=4.0 10.x.y.z:/<export> /mnt
+mount.nfs4: timeout set for Fri Nov 20 08:10:07 2026
+mount.nfs4: trying text-based options 'sec=krb5p,nfsvers=4.0,addr=10.x.y.z,clientaddr=10.x.y.a'
+mount.nfs4: mount(2): Input/output error
+mount.nfs4: mount system call failed
+
+Server dmesg with rpcdebug enabled:
+
+[42095.312947] svc: server 0000000039bc31cb, pool 0, transport 00000000cfa39484, inuse=2
+[42095.312971] svc: server 0000000072d08ff5, pool 0, transport 00000000cfa39484, inuse=3
+[42095.312975] svc: svc_authenticate (0)
+[42095.324501] svc: server 0000000072d08ff5, pool 0, transport 00000000c60f4fcd, inuse=2
+[42095.334305] svc: server 0000000072d08ff5, pool 0, transport 00000000c60f4fcd, inuse=2
+[42095.334324] svc: svc_authenticate (6)
+[42095.334331] svc: server 0000000039bc31cb, pool 0, transport 00000000c60f4fcd, inuse=3
+[42095.334388] RPC:       xs_local_send_request(1756) = 0
+[42095.338142] RPC:       krb5_encrypt returns 0
+[42095.338144] RPC:       krb5_encrypt returns 0
+[42095.338148] RPC:       krb5_encrypt returns 0
+[42095.338148] RPC:       krb5_encrypt returns 0
+[42095.338151] RPC:       krb5_encrypt returns 0
+[42095.338151] RPC:       krb5_encrypt returns 0
+[42095.338154] RPC:       krb5_encrypt returns 0
+[42095.338154] RPC:       krb5_encrypt returns 0
+[42095.338156] RPC:       krb5_encrypt returns 0
+[42095.338156] RPC:       krb5_encrypt returns 0
+[42095.338158] RPC:       krb5_encrypt returns 0
+[42095.338158] RPC:       krb5_encrypt returns 0
+[42095.338160] RPC:       gss_import_sec_context_kerberos: returning 0
+[42095.338163] RPC:       gss_get_mic_v2
+[42095.338546] svc: server 0000000072d08ff5, pool 0, transport 00000000cfa39484, inuse=2
+[42095.338554] svc: svc_authenticate (6)
+[42095.338555] RPC:       gss_verify_mic_v2
+[42095.338557] RPC:       gss_get_mic_v2
+[42095.338557] svc: server 0000000039bc31cb, pool 0, transport 00000000cfa39484, inuse=3
+[42095.338559] RPC:       gss_verify_mic_v2
+[42095.338573] nfsd4_exchange_id rqstp=0000000072d08ff5 exid=0000000096ec91a4 clname.len=27 clname.data=0000000035150242 ip_addr=10.x.y.50 flags 101, spa_how 1
+[42095.338592] nfsd4_exchange_id seqid 0 flags 20001
+[42095.338594] RPC:       gss_get_mic_v2
+[42095.338777] svc: server 0000000072d08ff5, pool 0, transport 00000000cfa39484, inuse=2
+[42095.338783] svc: svc_authenticate (6)
+[42095.338784] RPC:       gss_verify_mic_v2
+[42095.338786] RPC:       gss_get_mic_v2
+[42095.338786] svc: server 0000000039bc31cb, pool 0, transport 00000000cfa39484, inuse=3
+[42095.338787] RPC:       gss_verify_mic_v2
+[42095.338790] nfsd4_exchange_id rqstp=0000000072d08ff5 exid=0000000096ec91a4 clname.len=27 clname.data=0000000035150242 ip_addr=10.x.y.50 flags 101, spa_how 1
+[42095.338799] nfsd4_exchange_id seqid 0 flags 20001
+[42095.338834] RPC:       gss_get_mic_v2
+[42095.338953] svc: server 0000000072d08ff5, pool 0, transport 00000000cfa39484, inuse=2
+[42095.338958] svc: svc_authenticate (6)
+[42095.338958] RPC:       gss_verify_mic_v2
+[42095.338960] RPC:       gss_get_mic_v2
+[42095.338960] svc: server 0000000039bc31cb, pool 0, transport 00000000cfa39484, inuse=3
+[42095.338962] RPC:       gss_verify_mic_v2
+[42095.338982] check_slot_seqid enter. seqid 1 slot_seqid 0
+[42095.338998] RPC:       set up xprt to 10.x.y.50 (port 0) via tcp
+[42095.339057] RPC:       gss_get_mic_v2
+[42095.339264] svc: server 0000000072d08ff5, pool 0, transport 00000000cfa39484, inuse=4
+[42095.339267] svc: svc_authenticate (6)
+[42095.339268] RPC:       gss_verify_mic_v2
+[42095.339270] RPC:       gss_get_mic_v2
+[42095.339271] RPC:       gss_verify_mic_v2
+[42095.339271] svc: server 0000000039bc31cb, pool 0, transport 00000000cfa39484, inuse=5
+[42095.339274] __find_in_sessionid_hashtbl: 1795172831:1033077859:4:0
+[42095.339284] nfsd4_sequence: slotid 0
+[42095.339285] check_slot_seqid enter. seqid 1 slot_seqid 0
+[42095.339287] alloc_cld_upcall: allocated xid 9
+[42095.340556] --> nfsd4_store_cache_entry slot 000000008b186fa8
+[42095.340560] RPC:       gss_get_mic_v2
+[42095.343136] svc: server 0000000072d08ff5, pool 0, transport 00000000f9548822, inuse=2
+[42095.344680] svc: server 0000000072d08ff5, pool 0, transport 00000000f9548822, inuse=2
+[42095.344687] svc: svc_authenticate (6)
+[42095.344690] svc: server 0000000039bc31cb, pool 0, transport 00000000f9548822, inuse=3
+[42095.344757] RPC:       xs_local_send_request(1756) = 0
+[42095.347090] RPC:       krb5_encrypt returns 0
+[42095.347092] RPC:       krb5_encrypt returns 0
+[42095.347096] RPC:       krb5_encrypt returns 0
+[42095.347096] RPC:       krb5_encrypt returns 0
+[42095.347099] RPC:       krb5_encrypt returns 0
+[42095.347099] RPC:       krb5_encrypt returns 0
+[42095.347101] RPC:       krb5_encrypt returns 0
+[42095.347101] RPC:       krb5_encrypt returns 0
+[42095.347103] RPC:       krb5_encrypt returns 0
+[42095.347104] RPC:       krb5_encrypt returns 0
+[42095.347105] RPC:       krb5_encrypt returns 0
+[42095.347105] RPC:       krb5_encrypt returns 0
+[42095.347107] RPC:       gss_import_sec_context_kerberos: returning 0
+[42095.347109] RPC:       gss_get_mic_v2
+[42095.347456] svc: server 0000000072d08ff5, pool 0, transport 00000000cfa39484, inuse=4
+[42095.347468] svc: svc_authenticate (6)
+[42095.347469] RPC:       gss_verify_mic_v2
+[42095.347471] RPC:       gss_get_mic_v2
+[42095.347471] svc: server 0000000039bc31cb, pool 0, transport 00000000cfa39484, inuse=5
+[42095.347473] RPC:       gss_unwrap_kerberos_v2
+[42095.347646] RPC:       bc_destroy xprt 00000000488733b3
+[42095.348467] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.348472] svc: svc_authenticate (6)
+[42095.348474] RPC:       gss_verify_mic_v2
+[42095.348481] RPC:       gss_get_mic_v2
+[42095.348483] RPC:       gss_unwrap_kerberos_v2
+[42095.348507] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.348713] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.348752] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.348758] svc: svc_authenticate (6)
+[42095.348759] RPC:       gss_verify_mic_v2
+[42095.348761] RPC:       gss_get_mic_v2
+[42095.348763] RPC:       gss_unwrap_kerberos_v2
+[42095.348762] svc: server 0000000039bc31cb, pool 0, transport 000000005d77f59c, inuse=3
+[42095.365858] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.365867] svc: svc_authenticate (6)
+[42095.365870] RPC:       gss_verify_mic_v2
+[42095.365869] svc: server 0000000039bc31cb, pool 0, transport 000000005d77f59c, inuse=3
+[42095.365877] RPC:       gss_get_mic_v2
+[42095.365877] svc: svc_authenticate (6)
+[42095.365880] RPC:       gss_delete_sec_context deleting 000000004f9c6594
+[42095.365881] RPC:       gss_verify_mic_v2
+[42095.365892] RPC:       gss_get_mic_v2
+[42095.365894] RPC:       gss_verify_mic_v2
+[42095.365900] nfsd4_destroy_session: 1795172831:1033077859:4:0
+[42095.365901] __find_in_sessionid_hashtbl: 1795172831:1033077859:4:0
+[42095.365903] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=3
+[42095.365928] RPC:       gss_get_mic_v2
+[42095.366086] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.366091] svc: svc_authenticate (6)
+[42095.366092] RPC:       gss_verify_mic_v2
+[42095.366094] RPC:       gss_get_mic_v2
+[42095.366094] svc: server 0000000039bc31cb, pool 0, transport 000000005d77f59c, inuse=3
+[42095.366095] RPC:       gss_verify_mic_v2
+[42095.366101] alloc_cld_upcall: allocated xid 10
+[42095.367452] RPC:       gss_get_mic_v2
+[42095.367647] svc: server 0000000072d08ff5, pool 0, transport 000000005d77f59c, inuse=2
+[42095.367653] svc: svc_authenticate (6)
+[42095.367655] RPC:       gss_verify_mic_v2
+[42095.367655] svc: server 0000000039bc31cb, pool 0, transport 000000005d77f59c, inuse=3
+[42095.367658] RPC:       gss_get_mic_v2
+[42095.367660] RPC:       gss_delete_sec_context deleting 0000000023931779
+
+Let me know if there is any useful information I can provide.
+
+Best regards,
+Max
