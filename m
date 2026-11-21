@@ -1,98 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.228.68
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795281903;
-	b=QPyMhE63Qu64/iP07bgGVi5C4jZvgkSNWu6UWX6typ/sF1iV421+0CT7hzjU8v3dc+X0
-	 kzCs3vYTdZ8t3nEpZaApo4XmAUYB+5J3+2vLygctmVVJMQYkOYeYtddWyjkJAsYAPa7hg
-	 pAet/jPqicZL79Wr/vt7PfLxqK/jTaHxmg19OR+7O1TOrtiaENGYHvYfmN0ShLO6ZgUQF
-	 eQYtQQshQxa6fLdlRVskN2xGFrHsQ8KSLlN771xLDz9KiLkOWgHK/dBGTNwWY3+yqV0zb
-	 tAjklfJQg4KCtasYrxpM9Xme1Rc3L7iSWuYuVfLjHpTvADk76I/1iKzIM2lPrwJLdRg==
+	t=1795283587;
+	b=PW/3I9fbpzQ8EuFduEJgQ+/5BW6QyBu4xcWbfkWFiKVXqvEKlBtb0u22XR33XiJC1Gpn
+	 wdyPDHgkbjHD1u13734hp153vk2sDR6CD/g+bPl5BXVy28yAs2eN7cENvzvuxp1ovPnxB
+	 WBXRMs2hcufqz9jqyaK6f8p5tqSkvebb8kDg2isQe0acJ3OK92FeSFVIHodyKWRJOZQ/f
+	 Q7By+xU9SMbQbfxjwxpjR2ksCF7ODEUN4UjWifpwz+3imjyP6CW9IbgLpVipDNxagZQfU
+	 9d71ymGrHSp40ygeDc5PeadSDtZeTLkBpVQec2+zZ+JlTWG0agn20VfBvo/9227LA4g==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795281903;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795283587;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=JCtH1NAeUC8PDgGkI7aBz7U+Ki2zRpiZyYVsYZXvsB4=;
-	b=gBq6F1JHYBb/5FnDQdr6Tvz07nwRpkE9UNXzyIi0FZBEQS5K1uvON82oNh2AL1wxPqM/
-	 F6CSVj1oNr9YV5bhLGkC2CfmJ3/3zVXQ/qJkXpELkPNCjBYTKPzH3pu2yVxZTJjI2HzFB
-	 BQwwY3r0Tf+HbUC0Dxu/pJcEH9uBY9zJaHN+Fp1i8JrorbqY+e+zYbcwIaH27PtqVKVAE
-	 c8r16RpPtl9RsuJ6PxBmkuBLfc/2SkrMxWKZrMLv8B0as3jNvMkbfUzzdHJgbiE89jQOm
-	 IyWzrwKiGftuynSiYtfy7YI8aml3awgGWURQ1KWgmEN7agzsod84sTPQQHYLlTx9q2Q==
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
+	b=Z2nfEaoIlaBXNKLgWV3f2bo5k1DDAdiFasFWZdHDjMseeGscndhf4RgPtrsExQEy68iv
+	 18vKYMwdLdLaghFUJZ+JIuNbx+RU5JaaqfKFykxU3r5n3Ncuzv8mGs0JFNGHGWod3nMas
+	 jh5NlJfWJZXxL8OhimLDOzVTEd4cC3CNbVWJEe1lw0O0jRA6C4qbro54qIzoqOQ8mB6mr
+	 nWiV1QIWz7ns7qfUGIv15y0evoKubXOAgvlUMZLiHZPrW5KiAx/udq9BHZTkvVrXQwXPu
+	 3JfWGY7Bp61Mpga/ik4F5AaAI0hR3w2sAnn83gwP8xDDpLb86bn4tBl4AXZF4aEIgGQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wYPhCgCr;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.228.68
-Received: from mail-ed2-f4.google.com (mail-ed2-f4.google.com [74.125.228.68])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uunKAHoD;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
+Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24600606A320
-	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 17:25:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24600606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC01F606A330
+	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 17:53:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC01F606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wYPhCgCr
-Received: by mail-ed2-f4.google.com with SMTP id 4fb4d7f45d1cf-6ba1338b134so709482a12.0
-        for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 09:25:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795281901; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uunKAHoD
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-67da69e7c31so2031933d50.3
+        for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 09:53:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795283585; cv=none;
         d=google.com; s=arc-20260327;
-        b=D8EVpvZkCzRJnBm2OPNVuBseMcSB/RzDkRy5HHqGKpDpKhHqQSs4tpBrZjwjed3lZe
-         O+dufpBr7glUF9FGQhfDem0vji9XSlkmTFySmSH3t1HsZ9zMAMbwycz8/mY3InKN5oYB
-         +wlceBFFry4SpHYeG56KNfiRrw3jQlvMgT8TUiF/GIe1J95sEW+lcfrAK0PjS39519PX
-         xzBQgyUUqKQNUJFuct/LQbbQfGyordy9fP6h09ZcMqscjKdKPsN2uQbsyQUyhHAuZA2O
-         F/94rq8E2/M41SVYuLdA8zDZ9WXqOuC3eluOynjM+UyrY5CgFZKZ3j/0kjUkxFRuOgJw
-         OdUQ==
+        b=LSncKUTrhIZky5s1+GVtO72vmzokKRC8y20ZEuAaAaKI9NsaG9EuVmtMSMTwb95cY5
+         zGI1zxWTVDs/JSJaMl5DBkte9T95DHXsxpX5RPU87S2PH/XW4FpkWXPv61Fw3nw86UzJ
+         z5LxRrsrSwak+mSSbBiJxgx3BjLFzwI7TIKflW2CeIQ/LTRd3D2cpyuS4Yc742v8sQnn
+         yplDjziPAdHuE8uDVyLTOgKjRU049fFn7ofZS6AN1pNtiTnxMyqx8KbnYncNaNj7YZYQ
+         6KtfyfE3koqK4V/WYc2W8mTfbAkE6+cF1pcy3JU/LokwkMxx2PX1pLaxEfIZ0ZfpjGyK
+         dw9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=JCtH1NAeUC8PDgGkI7aBz7U+Ki2zRpiZyYVsYZXvsB4=;
-        fh=NUcw+zTRceKdkra3pHA+MzM2ZlD4Q9dutdakHrI4cxU=;
-        b=MzPEJ/Ue9Eu+uNXjuJeP/FK6xXuPxa5j8xISkVY5ECicwO5vgRMV3nbPap1JBnXN+N
-         GaXDlwGmf7PGLCK4oglT2PVYC9Yx1lrQFKUlx2o74+5Njw+AOF0c+4eLOulhuZgfX7F6
-         A2e0TG2kolhRHIO2pW12XZusdHo94vcvxncDVWyD1OBUD7b53G41+BYf8yHqT7/gnmMA
-         ke8h+/AXfwnr4nTWPIRSt29q/qt0NkuKMEJACTwwZGUrh0Egsvv0EM3XOca4ilGqt5Hp
-         gRBugswKs07wJ4quN8gowSJm5An34xsSW0oIgRZy/KHL64tCDVxi18BVIG+1MtJg8U6T
-         WnFQ==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
+        fh=AMTnz6toAZSGza4Toga8fZCrc4nxwPGHyIqZevB9ufg=;
+        b=h5Dc+2VONjRSiQVNbM8oPydDbSUnWS4YprmmrbWcgYfoFRAmO1OcQFox4syBJzvGpd
+         n0cFFVupb3QnPVHq9kCupWe/e89+LFQ3812cKTH/fTD908Ocw5iJPagA+k36kN1DjOKF
+         ANXz1ApzUkAa1mkO5I8nCJEd5+vopy24R0RGLRpBZTOFr/gBUv0ai191G+NoFDygLPhL
+         LbaC+jbPQwuOzMf50d4dKaivppa6P227dV83tZq9PQ8JaFmIhV9+91+7hxe0qWXz6rZb
+         9UGjVbZEbgcTzo4A9OhQOhdA+WCmLH1RZ1TdO+UAgE8IvX79iJ+Mbm9MzC/uJptBDnQ3
+         xYag==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795281901; x=1795886701; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=JCtH1NAeUC8PDgGkI7aBz7U+Ki2zRpiZyYVsYZXvsB4=;
-        b=wYPhCgCrreP4ngecNLR0Bd6FYSS67G+crFRg+dxnI1IqgYeW5EFyhiWaiE3J42/36o
-         ASXFCdGCrmmIUSMLUs6pTBD6YuXbgKUB1TacrHu17t7dvbwiC7AqhCy0DBX0ijdEr+Dw
-         5l7nS5GtopG4ixPRBdLsQxuJ9gpLGRsrfmdBjYAscoQiQgbDPO5+STwU0e7GRjgdlbEZ
-         FDdsjzSzOn+ukv7Q50A5vA0mvdfuYmrwPN0sclktSMHOHwmyh7JsymyPnDHU7R1BKpZ7
-         pu/xFbnYJNdB9c03a+NlGvESdtgfSMUn5M9bh2cdsAp4TKgrhyhoDvcIFWavCxubK9z9
-         fEeA==
+        d=gmail.com; s=20260707; t=1795283585; x=1795888385; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
+        b=uunKAHoDkduV9phh64q3Emhnd+oUbqB9DFeDEL5rPvWHegc4V2Z2x48xNye8nEM7tM
+         TcLc6o/SaUKRhgAbBkmffK7jUz3g+herJMtxQQt15V9yMoqDyViXBUcj5ruo2pglHlyq
+         8mjflZKWq36kN+7WK/wq3V/0OtnfpV3XacEh/IV7uR0iPj+cgjCH3W93ltey9vuFtau/
+         fv8+lJUaOD/+Qmk0WiYJKjjWcAA5/0iLRo2kDRvd/VaneHIRPFId21ukyO0GLmO1XoR9
+         kfSNge4nMjINKNyNDAApbZ76PpCJW/YZd7pGgYwh0M2I6CQv3Tf02IZk/fAEqHb9YOKs
+         6eCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795281901; x=1795886701;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=JCtH1NAeUC8PDgGkI7aBz7U+Ki2zRpiZyYVsYZXvsB4=;
-        b=ikJzucG9V5vwdIQZy1NvRYqyWsPmhY0uzMC0wefmDXUu6auG12CWdiZ2w+HYCuNbhf
-         uopJ5XyjxKj0MV1Eu9F92ZSE1WHsaFpvH3hju/7VTQsgEOBLb6+WvmmjL0BoP+EEgshZ
-         57hPXPm2f+nTxRX0yKvzWedzZQR7M+eQaJDiVLpXFwTFS+GGL7id0dDFViziRh292lTH
-         oTLhtMANrLS0azfAUJnIb6fkFr+667RTYTJ1jSYLETJCm/7zOqGZ6A4SQxNVAC1l0D8W
-         aMWpO+js7tuegVFjRr0ZOK7yjcsskhyk9EeS45+StxFeNqbQdwte2x5OOJHvmoXfUfvE
-         NvCQ==
-X-Forwarded-Encrypted: i=1; AL+hErH1Je+UftHX9/mXVXEwrRQl/g2oh41bUOaV45hBJnEHtZ294PZiAaBu0iqFKgEttz9Nxr+3YhVH39X29w==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8ZgLwV1jqMaj38aqLO+gf/SEqymYYzdNsDEPFug8wSNXcOM3Mt
-	Bl8cAAm2hwkB5hdzNxrirL3ndblkeIE1jRt5/bVx9dm38EfHCreJ1+Vi/WOV20PWOfC0zKhMm3A
-	tYz8jYbwpwcVZbs0AwqD6huc4SaJhzTQ=
-X-Gm-Gg: AZFdTZfySgsqYV1QdZP1MBCqsj9JCMPzjWgXtgi8u6JtzweRZ2xRqMlCTGpkOoo0emT
-	EgcPSLxUX2RgZCTMo2Q8japI4YJ5s+dqhakVMI+4AQPev3sdGh6mxZkoD8hSPpxkzhhlqB1b6nt
-	8q7u+b7qu9vt7RWMwNLOja7XEF9oOcIQxvu+j34aomgObVQKxmSBg+mNrFcRoLXUtiDQyxpbbyG
-	DQvKXVcJeU8ylGnLgwD2ObPMH3bmo2bZCHzMjy6nQ2fIPIAAjme3e9gzamhzu+i9JGH+94Rqgk7
-	ckSLl3EBhZ8ioDcdT9RtDHdwdL0oz2GNCBJOUL5bUfoUGucXvBbpcCMXuaXaGHohG4SE5zFS8A2
-	nquCWZB5nnbfeA3eb96PziJZUj7KLD3v/jqgd3LcEyltRkt32ZlBn9bybvISVoa/8OpHLJCMrH+
-	sjcRrqtfB11YvCzi8pzRG2HpdYPUjS4wOT/ahgIiB+nabwwucE7XLmXw==
-X-Received: by 2002:aa7:df05:0:b0:6b6:eefc:ae7a with SMTP id
- 4fb4d7f45d1cf-6ba37c7b05emr3499352a12.4.1795281901195; Sat, 21 Nov 2026
- 09:25:01 -0800 (PST)
+        d=1e100.net; s=20260707; t=1795283585; x=1795888385;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
+        b=v5dMSfAWUntU239Ju/AhCFsNbb7rkqqpkCGrl/5BoJbcGXG8Ti9VxGeg4Irfkq+Nnc
+         JjxmO6wgu/XWwIdwxxoMA8z8lnFX5bV26DjlZ1kS69d5i2SI+ysmXisMSvE9bG+D1ZjM
+         1C2qjk9aW+Rk5EBf57kCOw5Iqq8yRPKmFB7hmbFGKNuMS20nogWjjs7ZWUwrZTkLjrrS
+         KiTrvtr5ZS3aZQ0CTOt63Ls2VU1af+26SAw3BfED6MSXYamBeXM8XJzqfmkns00KF79i
+         1AHA6JvZ6rAS3/xLnX0rBS7s+rZzj5r+hGGF7xc2t72TFfMxKWoX/bWpFNNgSymPqpHJ
+         ipQw==
+X-Forwarded-Encrypted: i=1; AL+hErEvLWW/STuF15x2cV4kxQf9nEIoOCZ3aE6dkVV/A3XAq9hzQrlY0RcwUfPPyHUOUBsfBOCFhh7QQN3k0Q==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+cBnWH9KlVf3ia5EkgvIC5thx0LMTzq+6C0MQGQ1je/Ul2zK33
+	gdGrhZlaPANzG+Z/z85iV2C8fRhtrxA0j1yCqELL/vRvcF9KsoQzrXbW+xEDN0nmiP3y3Wm4wYS
+	0NpPHsPweGB+QsNoOMIoJqg5l6R4hbXc=
+X-Gm-Gg: AZFdTZdXmGnTDJ4hR5TTxhz6sFWpnFQr1mQHkVw7LrKQsFUcngbpLheqQwJYoqCV739
+	YaPi35Jpz4F9kqu0JCmkLH044ewXQ8UlTFXSBDuIRQBXqo2nxqA2SX5dCSnn5er9NXyvrz0GEEK
+	S+qex7WfQCB9PQQioxT+nAJ/3mZlTAEmWEmOTpEs/bhU+sQFShk6SSW+JcC7P+FdCncKAeNURmJ
+	s9oy4jsLYn1AhlyHPqMvkSfPwwPVKOvNzwDmD74FgGwYOJRAu75/7Uzw6ANux/6VOQSjA9844E7
+	fTLtNrz2yfKYuML5sPtGcGIXlv4IFKj/E/7zuf59FOs5CNxnT12jrlMZ9uB/D5JNZFzhvu/2wX7
+	JaHCZOXJMGMkXmfbICy3U8AdZyPedfvZ/q44=
+X-Received: by 2002:a05:690e:419c:b0:679:f97f:fdf6 with SMTP id
+ 956f58d0204a3-67df448c769mr2372917d50.66.1795283585556; Sat, 21 Nov 2026
+ 09:53:05 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -102,254 +104,349 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: Cristian-Marian Fotache <cristianmarianfotache@gmail.com>
-Date: Sat, 21 Nov 2026 18:24:47 +0100
-X-Gm-Features: Aa3M54r1WQ9QYMX58sNtqVV1NoX8RoAihWmhYpBtIOPrj8qXsUyEYluUqKamgqg
-Message-ID: <CACGjpbf73XdwrG34ffjmYU3ZYuStPpFNXf9w+AGYcTmLyHCN_w@mail.gmail.com>
-Subject: [REGRESSION] ALSA: hda/realtek: Higole F9B fixup breaks speakers on
- unrelated Apollo Lake laptop (10ec:111e)
-To: tiwai@suse.com, perex@perex.cz
-Cc: linux-sound@vger.kernel.org, asas1asas200@gmail.com, 
-	regressions@lists.linux.dev
-Content-Type: multipart/mixed; boundary="000000000000fe58e80660cca3fa"
-
---000000000000fe58e80660cca3fa
+References: <CAFS5DSFUi28HgX8t5bRRGVqPkOZ+VqrP+LtyMiwPQhyRpTxFTg@mail.gmail.com>
+ <556c4720-0159-4874-8d5b-6379566f6d4a@bsbernd.com> <CAFS5DSEhgk8fJgAwEn+-U-7vnBchCrx6L1uReT3Upm+AA22=Wg@mail.gmail.com>
+ <CAFS5DSEsdz8Eu1vmeCkE+6eeXgk+9yS6EwqyHSeD2jkq90DZaA@mail.gmail.com> <CACVXFVPEaJ6oPOaoZZo_XMpywHCzFWSYCrKG=srEDpCqPRp=Dw@mail.gmail.com>
+In-Reply-To: <CACVXFVPEaJ6oPOaoZZo_XMpywHCzFWSYCrKG=srEDpCqPRp=Dw@mail.gmail.com>
+From: Luciano Lo Giudice <lmlogiudice@gmail.com>
+Date: Sat, 21 Nov 2026 14:52:53 -0300
+X-Gm-Features: Aa3M54r6reYAtN06M1ZwSGTa3uJCDCA6gB7GWyRDqP3xh-2RmbBELTckYCoPkTg
+Message-ID: <CAFS5DSEp13YPLwRut2OiQfQqO70s6whbLWmEQ14mt8_JjBfBRw@mail.gmail.com>
+Subject: Re: [REGRESSION] ublk: dispatched IO intermittently never posts its
+ fetch completion (v7.0)
+To: Ming Lei <tom.leiming@gmail.com>
+Cc: Bernd Schubert <bernd@bsbernd.com>, linux-block@vger.kernel.org, 
+	io-uring@vger.kernel.org, regressions@lists.linux.dev, axboe@kernel.dk, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Ming,
 
-I would like to report an internal speaker regression affecting an
-Intel Apollo Lake laptop with a Realtek ALC269VC codec.
+Thank you for confirming the apparent fix in 7.4 as well. Do I
+understand correctly that no fixes to address this problem will be
+backported to 7.0?
 
-The regression appears to be related to the following upstream commit:
+All the best,
+Luciano.
 
-2a8ee6897302ca12ff39e8eb180503956797c60c
-ALSA: hda/realtek: Fix silent speaker on Higole F9B
-
-Original patch:
-https://patch.msgid.link/20260923141344.1543158-1-asas1asas200@gmail.com
-
-Affected hardware
-
-CPU: Intel Celeron J3455 (Apollo Lake)
-
-PCI audio controller: 8086:5a98
-
-PCI subsystem ID: 10ec:111e
-
-Codec: Realtek ALC269VC
-
-Codec vendor ID: 0x10ec0269
-
-Codec subsystem ID: 0x10ec111e
-
-Codec revision: 0x100202
-
-DMI baseboard product: SCHNEIDER
-
-BIOS: American Megatrends AN12DV201 (2021-01-25)
-
-Distribution: Linux Mint Xfce
-
-This laptop is not a Higole F9B, but shares its subsystem identifier.
-
-Regression testing
-
-6.14.0-37-generic: internal speakers work.
-
-7.0.0-43-generic (#43~24.04.1-Ubuntu): internal speakers are silent.
-
-7.0.0-43-generic with snd_hda_intel.model=nofixup: internal speakers work again.
-
-The workaround has also been verified across a reboot.
-
-Diagnostic findings
-
-The affected kernel reports:
-
-ALC269VC: picked fixup  for PCI SSID 10ec:111e
-
-Comparing the complete codec dumps from the working and affected
-kernels reveals changes to the connection configurations of nodes 0x14
-and 0x15.
-
-For speaker pin 0x14, the working kernel reports:
-
-Connection: 2
-  0x0c 0x0d*
-
-The affected kernel reports:
-
-Connection: 2
-  0x0c* 0x0d
-In-driver Connection: 1
-  0x0c
-
-Node 0x15 also receives the restricted in-driver connection list.
-
-The captured ALSA mixer configurations from the working and affected
-kernels are byte-for-byte identical.
-
-When booting with snd_hda_intel.model=nofixup, the kernel reports:
-
-ALC269VC: picked no fixup (nofixup specified)
-
-The original connection topology is restored, and the internal
-speakers produce sound again.
-
-Suspected cause
-
-The subsystem-ID-based Higole F9B quirk appears to match unrelated
-hardware that requires a different audio routing configuration.
-
-A more restrictive hardware match may be needed to preserve the
-original Higole F9B fix without introducing a regression on other
-devices sharing subsystem ID 10ec:111e.
-
-I have not performed a full kernel bisection or independently tested
-the suspected commit in an upstream kernel build.
-
-Comparative codec dumps, mixer configurations, kernel logs, PCI
-information and DMI information are included in the attached
-diagnostic archive. A separate unified codec diff is also attached.
-
-I would be happy to provide additional diagnostics, test proposed
-patches, or assist in developing a correction that preserves
-functionality on both machines.
-
-The investigation and preparation of this report were assisted by an
-LLM. All physical hardware testing and diagnostic captures were
-performed directly on the affected machine.
-
-Thank you for your time.
-
-Best regards,
-Cristian-Marian Fotache
-
---000000000000fe58e80660cca3fa
-Content-Type: application/gzip; name="phoenix-audio-debug-public.tar.gz"
-Content-Disposition: attachment; 
-	filename="phoenix-audio-debug-public.tar.gz"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mwqogxma0>
-X-Attachment-Id: f_mwqogxma0
-
-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
-vXm2Y4OsW6su6IX2b+3L39tJN8f0jSNzuP0xtp0xheKmkPwP6mN9r82fuSOWn/F8sJcMk2Rb1tqC
-NHuuwXyfZz5EiqjPHGvo8MXeMVw2GFTUwgz6fjvbhHzPIMe+kaiEEarC7ghVFC7lu/szbqjvhRub
-wj97cCCfgAMyz/vHzv8+9NMfz+d/g8O4mv+taHmZ/y3zv2X+t8z/lvnfMv/7XeZ/6zyFRCcy/1vm
-f8v8b5n/LfO/Zf63zP+W+d8y/1vmf8v8b5n/LfO/Zf63zP+W+d8vSJmQud0yt/tgmREyb1vmbcu8
-bZm3LfO2Zd62zNuWedsyb1vmbcu8bZm3LfO2Zd62zNuWedsyb1vmbcu8bZn/vZr//c31HkDVHO39
-/xvzvzVSkPnfMv9b5n/L/G+Z/y3zv+X7v2X+t8z/lvnfMv9b5n/L/G+Z/y3zv2X+t8z/lvnfMv9b
-5n/L/G+Z/y3zv2X+t8z/lvnfMv9b5n/L/G+Z/y3zv2X+t8z/lvnfMv9b5n/L/G+Z/y3zv2X+t8z/
-lvnfMv9b5n/LY1v+tzmyDvre72T534oKS9RK/jfWoLrM/z7C8QuCUTcZT/1HalZPnUdrIeq1TpuX
-PZHciwaeO0L+kz/ws6m4XM0qWQWNPeYzJ8imUl+oY9ostibSqN5qipwqBOdEQ/0nWIJTomHTidJf
-QC2lTqKFqgwqkHmWQR3UYkMaeFDqQ0Ujy2t4vtBg1TYm9a9EwamTLrMZ9Rmqw8IOJgHOET1HFAJ3
-5knrkzNOCNQNncAaMdQDxQtqUEMPp1B42YoLdNSC69o99WDdBxp4VrNfTp2cdGpNZPnID8dj1wML
-A4oE+VAWjoceNRm3M6al/j013W+cbXCf2jaYFaKF6wYR82r1VWhRehEHgvq82iZknE5e7hoPLCpu
-1NcA6Vmi/5zDWQJdQQPbHY+fwKDx+J4B0OKxeWX00QJ3F6v3n6AZjPXPuQLYIg8vbkWyxeLLkHU8
-fuEbPMYyrb/Uj6i2Lir3YByovRusNgfLTbxdVQuiarXWWRvQ694pskHgjKeN3BfD4o+ZYQ1ANoXd
-ulLtinpDPjDIcIEOQGaCAHlWP9xU+bpxtkpBNMjx8xDgLGVBhM8sb/SN92NejrPq8gTDCxMMzkkh
-nmC9+IGLxSnWok444Eatxy3dqV3PyXSGKeCga4YGODp0xNbvzibf6o14iNrhqM+h3njM5PPHvE2d
-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
-je30CghpEclDHvKQhzw2Hv8PaRod4QAYAQA=
---000000000000fe58e80660cca3fa
-Content-Type: text/x-patch; charset="US-ASCII"; name="phoenix-codec-routing.diff"
-Content-Disposition: attachment; filename="phoenix-codec-routing.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mwqogxq01>
-X-Attachment-Id: f_mwqogxq01
-
-LS0tIGNvZGVjLXdvcmtpbmcudHh0CisrKyBjb2RlYy1icm9rZW4udHh0CkBAIC0xNDYsNyArMTQ2
-LDkgQEAKICAgUG93ZXIgc3RhdGVzOiAgRDAgRDEgRDIgRDMgRVBTUwogICBQb3dlcjogc2V0dGlu
-Zz1EMCwgYWN0dWFsPUQwCiAgIENvbm5lY3Rpb246IDIKLSAgICAgMHgwYyAweDBkKgorICAgICAw
-eDBjKiAweDBkCisgIEluLWRyaXZlciBDb25uZWN0aW9uOiAxCisgICAgIDB4MGMKIE5vZGUgMHgx
-NSBbUGluIENvbXBsZXhdIHdjYXBzIDB4NDAwNThkOiBTdGVyZW8gQW1wLU91dAogICBDb250cm9s
-OiBuYW1lPSJIZWFkcGhvbmUgUGxheWJhY2sgU3dpdGNoIiwgaW5kZXg9MCwgZGV2aWNlPTAKICAg
-ICBDb250cm9sQW1wOiBjaHM9MywgZGlyPU91dCwgaWR4PTAsIG9mcz0wCkBAIC0xNjMsNiArMTY1
-LDggQEAKICAgUG93ZXI6IHNldHRpbmc9RDAsIGFjdHVhbD1EMAogICBDb25uZWN0aW9uOiAyCiAg
-ICAgIDB4MGMqIDB4MGQKKyAgSW4tZHJpdmVyIENvbm5lY3Rpb246IDEKKyAgICAgMHgwYwogTm9k
-ZSAweDE2IFtWZW5kb3IgRGVmaW5lZCBXaWRnZXRdIHdjYXBzIDB4ZjAwMDAwOiBNb25vCiBOb2Rl
-IDB4MTcgW1BpbiBDb21wbGV4XSB3Y2FwcyAweDQwMDUwYzogTW9ubyBBbXAtT3V0CiAgIEFtcC1P
-dXQgY2Fwczogb2ZzPTB4MDAsIG5zdGVwcz0weDAwLCBzdGVwc2l6ZT0weDAwLCBtdXRlPTEK
---000000000000fe58e80660cca3fa--
+On Sat, Nov 21, 2026 at 2:23=E2=80=AFAM Ming Lei <tom.leiming@gmail.com> wr=
+ote:
+>
+> On Fri, Nov 20, 2026 at 8:26=E2=80=AFPM Luciano Lo Giudice
+> <lmlogiudice@gmail.com> wrote:
+> >
+> > Hello everyone,
+> >
+> > Using Bernd's repo, I was _unable_ to reproduce the bug after several
+> > runs (it used to hang in about 1 out of 3 runs). I had to add a small
+> > compat layer to make the module build in 7.0, but it was overall
+> > pretty easy. I will be now using this module for any development on
+> > 7.0 (thanks, Bernd!) and will report if any other issues arise.
+>
+> I can't reproduce it on 7.4-rc, and we did merge many similar fixes recen=
+tly.
+> Unfortunately, 7.0 isn't a stable release, so can you move to 7.3
+> stable release?
+> Otherwise, you may have to sort out the backport by yourself.
+>
+> Thanks,
+> Ming
+>
+>
+> >
+> > All the best,
+> > Luciano.
+> >
+> > On Fri, Nov 20, 2026 at 8:40=E2=80=AFPM Luciano Lo Giudice
+> > <lmlogiudice@gmail.com> wrote:
+> > >
+> > > Hello Bernd,
+> > >
+> > > Yes, I can do that. I'll go ahead and compile ublk_drv from your repo
+> > > for the 7.0 backport and see how that goes.
+> > >
+> > > All the best,
+> > > Luciano.
+> > >
+> > > On Fri, Nov 20, 2026 at 8:27=E2=80=AFPM Bernd Schubert <bernd@bsbernd=
+.com> wrote:
+> > > >
+> > > >
+> > > >
+> > > > On 11/20/26 23:55, Luciano Lo Giudice wrote:
+> > > > > From: Luciano Lo Giudice <lmlogiudice@gmail.com>
+> > > > > To: linux-block@vger.kernel.org, io-uring@vger.kernel.org
+> > > > > Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+> > > > >     stable@vger.kernel.org, regressions@lists.linux.dev
+> > > > > Subject: [REGRESSION] ublk: dispatched IO intermittently never po=
+sts its
+> > > > >  fetch completion (v7.0)
+> > > > >
+> > > > > Hello everyone,
+> > > > >
+> > > > > I'm writing a library that implements various block devices in us=
+erspace by
+> > > > > utilizing the ublk framework. Every so often, I'm hitting a compl=
+etion loss on
+> > > > > Linux 7.0, in which an inflight request is lost forever, which le=
+ads to an
+> > > > > unkillable process and a ublk block device that cannot be torn do=
+wn, and so the
+> > > > > machine needs to be rebooted to remedy this. I've tested the atta=
+ched reproducer
+> > > > > on 6.8, but found no hangs after many runs. Details of the bug ar=
+e below.
+> > > >
+> > > > Hi Luciano,
+> > > >
+> > > > I just scanned the io-uring list and found this by accident. I have=
+ been
+> > > > working on this for a couple of month.
+> > > >
+> > > >
+> > > > Would you be open to test a specific branch or dkms module? I actua=
+lly
+> > > > wanted to send this to upstream last months already, but then found=
+ and
+> > > > fixed (with a lot of AI help) more issues and also got busy with ot=
+her
+> > > > tasks.
+> > > >
+> > > > https://github.com/bsbernd/linux/tree/ublk-stop-races-with-tests-fo=
+r-7.3
+> > > >
+> > > > and here the backports, that also work on 7.0 (with a compat patch)=
+ and
+> > > > that is used for our dkms module
+> > > >
+> > > > https://github.com/bsbernd/linux/tree/niova-ublk-7.1-fix-backports
+> > > >
+> > > > The 7.3 patches are actually verified through tla+ and an ublk bran=
+ch
+> > > > for https://github.com/brauner/linux-formal
+> > > >
+> > > >
+> > > > @Ming the patches for 7.3 include heavy ublk state changes (it is n=
+ow a
+> > > > bit closer to what fuse-io-uring does) and also adds debugfs that c=
+an be
+> > > > used understand state issues.
+> > > >
+> > > >
+> > > > Thanks,
+> > > > Bernd
+> > > >
+> > > >
+> > > > >
+> > > > > 1. Environment
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > >
+> > > > > - Breaks on 7.0.0-31-generic and 7.0.0-43-generic using the kerne=
+ls that ship
+> > > > >   with Ubuntu. Tested on amd64 and the ublk_drv module.
+> > > > > - An identical binary was run on 6.8.0-117-generic but no hangs w=
+ere reproduced.
+> > > > > - This was run on virtual machines provisioned with LXD and with =
+4 CPUs.
+> > > > > - After reading the code, I suspect the issue arises due to the 2=
+025 rework (the
+> > > > >   list batching first appeared in 6.15 and the per-IO task tracki=
+ng in 6.16).
+> > > > >   I have not run any kernels between 6.8 and 7.0
+> > > > >
+> > > > > 2. About the attached reproducer
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > >
+> > > > > - It's a single C file that requires only liburing.
+> > > > > - 3 devices are loaded (2 are file-backed, the other memory-backe=
+d).
+> > > > > - A fourth device is added, started, loaded (briefly), stopped an=
+d
+> > > > >   deleted in a loop while the others are under loaded. This is th=
+e
+> > > > >   fastest way I found to reproduce the issue.
+> > > > > - On 7.0, this hangs within the first 2 runs. On 6.8, no hangs we=
+re
+> > > > >   observed after more than 10 runs. When the issue is detected, t=
+he
+> > > > >   program prints what evidence it can gather (per-device inflight
+> > > > >   operation numbers, the running threads' waiting channels and th=
+e
+> > > > >   io_uring's pending CQE counts).
+> > > > > - Bonus: 2 additional bugs where found when shrinking the workloa=
+d:
+> > > > >   A queue was leaking its io_uring (keeping the chardev pinned), =
+and
+> > > > >   START_DEV issued for a queued that had died before arming. Both=
+ stalled
+> > > > >   the program identically on 6.8 and both were fixed in the attac=
+hed version.
+> > > > >
+> > > > > 3. What indicates a failure (from userspace's POV)
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> > > > >
+> > > > > - The issue is always connected to a READ request:
+> > > > >   /sys/block/ublkb$N/inflight yields "1 0" and is never modified =
+again.
+> > > > > - The thread that handles the queue is blocked in io_cqring_wait =
+(as seen by
+> > > > >   inspecting /proc/$TID/wchan), byt the ring has no entries to co=
+nsume.
+> > > > > - The ublksrv_io_desc for the corresponding tag was written by th=
+e kernel
+> > > > >   at dispatch. The server reads descriptors after a CQE is posted=
+, but
+> > > > >   this never happens.
+> > > > > - There is no way (AFAIK) to recover the tag. The lost completion=
+ is the
+> > > > >   one that would set UBLK_IO_FLAG_OWNED_BY_SRV so a COMMIT_AND_FE=
+TCH for
+> > > > >   the tag is rejected (returns -EINVAL).
+> > > > > - Something very similar also shows on the control plane, which i=
+s why I
+> > > > >   suspect shared implementation details rather than something que=
+ue-specific.
+> > > > > - START_DEV, STOP_DEV and DEL_DEV will occassionnally never post =
+their CQE
+> > > > >   after the kernel provably completes. In one capture, the delete=
+d block
+> > > > >   device was already gone from /sys/block when the caller's 30 se=
+conds
+> > > > >   time bound fired. Repeated re-enters never produced the complet=
+ion.
+> > > > > - DEL_DEV was seen stalling 30-90 seconds on the kernel for opera=
+tions that
+> > > > >   should complete instantly. The io-wq worker thread was blocked =
+in:
+> > > > >
+> > > > >   ublk_ctrl_del_dev
+> > > > >     del_gendisk
+> > > > >       blk_mq_freeze_queue_wait
+> > > > >
+> > > > >   the device was stuck half-deleted, and it reacted to ADD_DEV by=
+ returning
+> > > > >   -EEXIST for minutes. In the worst instance it survivied its own=
+ server
+> > > > >   exiting and stayed un-deletable (needed a reboot).
+> > > > > - A START_DEV completed with -EINTR. The process was detached and=
+ arms no
+> > > > >   signal sources. I didn't capture the pending signal set in that=
+ instance,
+> > > > >   so I cannot rule out a spurious signal, but the same op's immed=
+iate retry
+> > > > >   stalled for a full 30 seconds.
+> > > > > - Not needed to repro the bug: COOP_TASKRUN, readahead bursts, ev=
+entfd wakeups.
+> > > > >
+> > > > > 4. Aftermath
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > >
+> > > > > - AFter the request is lost, teardown hangs and takes the control=
+ plane with
+> > > > >   it. Looking at /proc/*/wchan and dmesg of a hanged instance sho=
+ws that the
+> > > > >   teardown uring command (running in an io-wq worker) is stucj in
+> > > > >
+> > > > >   ublk_stop_dev/ublk_ctrl_del_dev
+> > > > >     del_gendisk
+> > > > >       blk_unregister_queue
+> > > > >         elevator_set_none
+> > > > >           blk_mq_freeze_queue_wait
+> > > > >
+> > > > >   And the message printed by the kernel is:
+> > > > >
+> > > > >     INFO: task iou-wrk-2115:2118 blocked for more than 122 second=
+s.
+> > > > >     [...]
+> > > > >      ublk_stop_dev_unlocked.part.0+0x38/0x160 [ublk_drv]
+> > > > >      ublk_ctrl_uring_cmd+0x629/0x830 [ublk_drv]
+> > > > >
+> > > > > - Subsequent control command hangs on the control mutex:
+> > > > >     task iou-wrk-12720:12721 is blocked on a mutex likely owned b=
+y task
+> > > > >     iou-wrk-12626:12629.
+> > > > >     [...]
+> > > > >      ublk_ctrl_get_params+0x8b/0x190 [ublk_drv]
+> > > > >
+> > > > > - Killing the process doesn't help. The worker thread keeps waiti=
+ng on the
+> > > > >   queue and the frozen queue waits for a request whose owner (the=
+ server) is
+> > > > >   gone. On 7.0, ublk_timeout(...) only takes action for unprivile=
+ged devices by
+> > > > >   SIGKILL'ing the server. On privileged processes it retursn BLK_=
+EH_RESET_TIMER
+> > > > >   so a lost request is re-armed forever and never aborted, even w=
+hen the
+> > > > >   server is dead.
+> > > > >
+> > > > > - When the process exits, the io_uring io-wq teardown warns while=
+ a worker is
+> > > > >   still stuck and the process remains a zombie. The following mes=
+sage is
+> > > > >   printed by the kernel:
+> > > > >
+> > > > >     WARNING: io_uring/io-wq.c:1370 at io_wq_put_and_exit+0x10d/0x=
+2e0,
+> > > > >     CPU#3: live_server_ram/2115
+> > > > >
+> > > > > 5. Where I suspect is the problem
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > >
+> > > > > - Evidence points at the completion side of the 2025 rework.
+> > > > > - per-IO task tracking ( ("ublk: require unique task per io inste=
+ad of
+> > > > >   unique task per queue", Pure Storage, 04/2025,
+> > > > >   https://patchew.org/linux/20250416-ublk._5Ftask._5Fper._5Fio-v5=
+-0-9261ad7bff20@purestorage.com/):
+> > > > >   our fetches are all submitted by the queue's own thread, so io-=
+>task
+> > > > >   should always match at dispatch time;
+> > > > > - rq_list batching: ublk_queue_rqs() coalesces same-<ctx_handle, =
+task>
+> > > > >   requests into one list and queues a single
+> > > > >   io_uring_cmd_complete_in_task(io->cmd, ublk_cmd_list_tw_cb) for=
+ the
+> > > > >   whole batch. If that single task work is lost, every request in=
+ the
+> > > > >   list strands - the observations are consistent with one lost re=
+quest per
+> > > > >   occurrence.
+> > > > >
+> > > > > 6. Follow-ups
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > >
+> > > > > - Does this ring any bells in the 7.0 completion rework (lost tas=
+k work
+> > > > >   for ublk_cmd_list_tw_cb / ublk_cmd_tw_cb, or io->task mismatch =
+taking
+> > > > >   a path that neither completes nor aborts)? Is a fix already in
+> > > > >   flight?
+> > > > > - Independently of the completion loss: should ublk_timeout() for
+> > > > >   privileged daemons fail a request whose ublk server is gone? To=
+day
+> > > > >   BLK_EH_RESET_TIMER keeps a lost request - and with it the del_g=
+endisk
+> > > > >   freeze and the control mutex - stuck forever after server's dea=
+th,
+> > > > >   which turns a single lost completion into a machine-level hang.
+> > > > >
+> > > > > I can test candidate patches on 7.0.0-43 or bisect across 6.15-7.=
+0 on a
+> > > > > VM, or capture the trace of a missing completion.
+> > > > >
+> > > > > #regzbot introduced: v6.8..v7.0
+> > > > >
+> > > > > Best regards,
+> > > > > Luciano
+> > > >
+>
+>
+>
+> --
+> Ming Lei
