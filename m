@@ -1,96 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.31
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795284597;
-	b=KyDmIS5PQ2iRF22r6icbVdh6062owwjozul//nYVv5IfU96LBfJqLMA4K+0U/C9X+bhW
-	 hSTQWj1GubmPqvPowAFB193xELp7vi9xs/e67QOJ/vWqKoi4jtKgt9G4/6A4EFpoqF9F9
-	 QsmIWDlgH0I8oMwfsr54VS/gWmyVPa5vBFkwH2lALwjtjlN3du8YOr28sSuJI844H5Zf0
-	 5F8PZs3Lc7cvyfSHAXjJDe6Gl/KFaJu4NOEYp5YKlxkeUSiSua4G2K1MbyDoblF7jBuTq
-	 qbq16BtSJFQs980BmcUYq4CXUkRLKhETbaTv3ImNLAoWU4swkz+HyzsCh9rsO6qAM5Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795284597;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:
-	 X-Microsoft-Original-Message-ID:MIME-Version:
-	 X-MS-Exchange-MessageSentRepresentingType:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=9C1CMl8WXKICL0GbAnribefCwuW7T0qgk5cnuy1CfKU=;
-	b=Y5ko/bATlzx3i+b0hDmD3qSzOWe+CL11WBPLliTSxUDCS9vxNnfPM+boOz5ELFcKM2wc
-	 bJEE3CdJZqJj9nOk3B/d4pC6iV5EErutN9L+n77grQG5nakcGTWThst2bPrkwhq5VaP1P
-	 zVm9sOonZEIW1T4cstRKI/2dMKFcM64MUPbHAS9tw2dlZNdCb7cExzpOIGcF3KA4/ayEC
-	 NYq/bJga1vAPxAKFlhc68S+SpH/i/n0HbT3AbSH6T4gUGN+kOLf4QbGqxshrAc68R+OM9
-	 NaGMe4J4PXGDDOAaqT8u12gH22ZUu90QdjCmabmH3/rsYVf9x/GUN3JZ5gJqzwfkcrQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=outlook.com;
-	spf=pass smtp.mailfrom=outlook.com;
-	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=XAeu9ahP;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.31
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazolkn19011031.outbound.protection.outlook.com [52.103.43.31])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.181
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795294799;
+	b=W9CDp457PmJATFXxop6AxwmF6l41MufCRdOI19Rj6wgw5QnDqlwkmsPf6IPxhF+IZha8
+	 nLkC6YBx4h+KelKO/ab2E1yT8L/W151sNN0AykUbHGsqA2Sgsh6KEbpHyKVK9e3pEgUMv
+	 R4YlL6v9Nk6qbNunoHtxnNqq3Lt5tgzcfJG9FDe5lZ9RK0KeHHV592HSJ+ulOtAXiygtE
+	 HzaLnjIHtR4joQyG5PCFC5zvMNjwJ5e+Xv7Mj0PCwou9mcVg1A9Jjs2y4dNN0tikIN8ZU
+	 Lbep5iwSWLGuayPp26+/lRMoiRTFe9sslc7RQbdsdiIECSs1i5LNKerEzYmjwws0Q+Q==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795294799;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=rNw2ecWt+pedjRV7G84Ccjw1Wl3MuYIFanxv93/iz/o=;
+	b=r0ZBCbVzUv0vQZTvp95WCmA0xz06JtG3u9KsXyLDVJfRgxrOjlzbu4W4J0o5yHq9t1VK
+	 dSXjdnwCfCyKxpq0kbYP2SyvDqzCx6azsUH/Oq71ZBsPa3BdjsJF0GgQ7ebJ+CMONmMf9
+	 EbFV7068tesJu6D4jSskMvU2WegfIUk62WSCUWxT8u07kqw7K8QF/7tNzdC2jvsQ+qq38
+	 DOQuNJblgR1pKblB5NfgDF7Uxvz5G63M4WDHy+AGskEeo397TfymdHo/pXeDycIZdw2/z
+	 SdmZQILJU2hr/S+bbrNOGWVgrJbMbBv82PufaGlrKa5wMaN1DVsMcQvgEbHO9l1xjNA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=kernel.dk;
+	spf=pass smtp.mailfrom=kernel.dk;
+	dkim=pass header.d=kernel.dk header.i=@kernel.dk header.a=rsa-sha256 header.s=google header.b=pksFmcKQ;
+	arc=none smtp.remote-ip=74.125.82.181
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B7D606A333
-	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 18:09:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64B7D606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFCE606A334
+	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 20:59:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0BFCE606A334
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=XAeu9ahP
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mbfBNMbFykG/I3KH8fXjIlv0llZjX72jo7zvtGLfYR0JOOF0NLx3XujBEx6S+mQVG6cpSU67EL+AztLW6wO/AsRWCf0ZmmuoJwdLZX7AybYs7jVjkxfl0I6ToD0U3Bg9eKFjtdGW9/MAHhozz+YSKgPo+CooqxnDRD70kr4LOg+G3x/J4Nbal7tj6q6IL+XBpfL4YMs+jim/lKfHTdoM++24aRSb3ZlxXynW7S9XAkgMDrfBiYzerwRicCaFVS2wnz4seMzoU+13MWQkfQNeq84VTZqGHaDpwrtTOIKzeIs/s+xmon3xuGZcWIMw/IIN44rON0JhQgEpkVIsPXrTsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9C1CMl8WXKICL0GbAnribefCwuW7T0qgk5cnuy1CfKU=;
- b=BveIv+gIvZffXT+OuuRYOSSymnZ5O+Es6EI38uEf/gEsHwJG97ZYXeLftyKOyyyqbDyOznr/hbSCPNNbOPJSnYjE0hNfSac49q0S0qB+e/1T+vPmy+JvF/pFNZrZ/9JROol7PTyZu8fAFH18FLUe0coXRPiWozVLSH6O5pwOEa1nntm4ogbE4oSEC1I9smeeYh/EOj58o75leJZ16BiUnVc7mUkGjuyd5G06yAYqDI6sdqV4pURaTVh4sNDfpep2aAGG4bGL2UsGbqv94BAnmAoSU/uoCPyWEBI4tvNf84ZxpzB+Rxd6Tp0VCWASD+MBjOzxBueDio1jxFs654SyJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9C1CMl8WXKICL0GbAnribefCwuW7T0qgk5cnuy1CfKU=;
- b=XAeu9ahPdYlLbNxH0Pqiw4xRT072ngR2JVTo3Pm1qzWelJF2R272mWGETzZtPhNg8Fw4+tMMStKsohlupIuzdsozFK+AVq+DcrLYMaic0C0JWfBQ05hmO32M13rQrB9Mgx1CWYVpm5HCMYTi+3qf8ALPa2/rWxV2065s6tJk5aVdB75Wr7vCEpNomH/5B6U1lfTFMwGaXKEyhMbHh/cBr41+dCX8//WomsQev7go/jt2JQNBQqBzDR+zrCZNnchm42IAr8nT0gYdpmKBtwZf4IlIcHG2UU4zf4b0CAZAmlu2dqEgxZLKPWX+kBKYFiLvKNGxVXhgFhy8RhrE3UFfLA==
-Received: from TYYPR01MB8167.jpnprd01.prod.outlook.com (2603:1096:400:116::5)
- by OS7PR01MB957758.jpnprd01.prod.outlook.com (2603:1096:604:829::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Sat, 21 Nov
- 2026 18:09:52 +0000
-Received: from TYYPR01MB8167.jpnprd01.prod.outlook.com
- ([fe80::a416:eb44:4807:2c0a]) by TYYPR01MB8167.jpnprd01.prod.outlook.com
- ([fe80::a416:eb44:4807:2c0a%6]) with mapi id 15.21.0639.012; Sat, 21 Nov 2026
- 18:09:52 +0000
-Message-ID:
- <TYYPR01MB8167C4C0641826B070DB684FA6472@TYYPR01MB8167.jpnprd01.prod.outlook.com>
-Date: Sun, 22 Nov 2026 05:09:47 +1100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] fs: don't reset userspace_init_fs when PID 1 stops
- sharing it
-To: Christian Brauner <brauner@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- linux-fsdevel@vger.kernel.org
-References: <20261119-work-fs-pid1_unshare-v1-0-b6a7e468bd68@kernel.org>
- <20261119-work-fs-pid1_unshare-v1-2-b6a7e468bd68@kernel.org>
-Content-Language: en-US
-From: Akisaira <akisaira@outlook.com>
-In-Reply-To: <20261119-work-fs-pid1_unshare-v1-2-b6a7e468bd68@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY5P282CA0088.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:201::14) To TYYPR01MB8167.jpnprd01.prod.outlook.com
- (2603:1096:400:116::5)
-X-Microsoft-Original-Message-ID:
- <2c7070ce-b869-466e-b5a5-1740e0bb1068@outlook.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.dk header.i=@kernel.dk header.a=rsa-sha256 header.s=google header.b=pksFmcKQ
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-3282db206d3so5975449eec.0
+        for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 12:59:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel.dk; s=google; t=1795294797; x=1795899597; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rNw2ecWt+pedjRV7G84Ccjw1Wl3MuYIFanxv93/iz/o=;
+        b=pksFmcKQMnqG0pnsDe1H+Ng9TDCdn5W0fPn1RyyLBky5yFtdeR2O31u91OSaLDu6gP
+         SsHA82Zn0/jcY2omJnNW81y4pB8qDAA41b8W8hN1dPfKd3hUR6BFtcwnIVtEtdR1dltE
+         b+3DQS8G84B7FWN+6GST1TlBpLaj21FeCObXMvU7pAhWJw04xJ98C9OQQCE/MCllercq
+         IhOPGoLLbGtR2sEGxiKiQZ7u+0xt+cxPAUWvOc5DGeov8BIgUepQGsP12v2k5pyGGSaP
+         29Af01sxk2kt+ozvcylD0w1l87OyPvmmQZjvOM8QfwMJa2PF/hgLcUOiyy+slXHBQHeG
+         FNVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795294797; x=1795899597;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=rNw2ecWt+pedjRV7G84Ccjw1Wl3MuYIFanxv93/iz/o=;
+        b=OX/92ISE83Q9WygDIHnCSZeFB4DjoAN37WrZuADzz+4H4kdmmPm6jbyv0IyJLAj1FT
+         nT2z7D0zoal9W4zlLZ2BgyBhCCJzFy9S2PkUg6FZMfl7PDBQHw6/XPW4wS9QGwFI2xMi
+         E5K8h0sJOg8c8+PAUBVFXJ3XW/Gx/UOeU+R9p+1NpXvOtHEJGnGthMFZFmMxmdIrJwza
+         cZjsrZDdmKkefwazOUyZCiLKz8qP0dBeseg3tWpa2qSQXVDpQtz+yFE2kIpeGhHEwy2O
+         EoWdeLbaf8yMAYbQNmBiwD8sZPt71D0H/Q8WwDQ4fbEenH0OXOgN/wzauqUnQase5nlV
+         vO3Q==
+X-Forwarded-Encrypted: i=1; AL+hErGEBkTr5wO8qR5ZaJP9HR5xfDtx7lCiUo5eKgv6tH0/aPGlxnGg0D7ZD0jc3FpM7x0+gtojMTQITudbWg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z8r0L7lWSXhd/IM3S1/TXr58PYOB90IfV/pUMzbYXCbL7EZ6sOA
+	MD8UcO/HNDRQzhk+FNTeL/HBsxJAk0S1bl3OH7fWBGt0mVe1lLMNrwcA71xdotcZkKk=
+X-Gm-Gg: AZFdTZdd/QrOntzyWhHec3b5AbtHsjOxtsRMMSsNXazNY7eFtzD9bDlKBKoWGYlSwJD
+	UqY51BTpXLnsYSFmfVA1SHoObcRbOWx2+oMeT2qWmFl4/wl9hsBa+iDejZXwHfaLn265mrFZo7J
+	Yw6CXf6JUV2XFDor1ESOSsA7S+WgsPX+qEQIlrqVKdUOon6xC6xNiBe7HoGQCRL3eX8Ubo93Pq2
+	IGkQpkhbFgW/W4/Rce2vbJpbO+yBE39UKz9asS+3ofKyswODUnbnJyTJUHDzHHSXRBK8ZDi+u4q
+	9faxXofTmIp8iL/gohcsWcldaMUZncogXINYooAu0clCS/PsM9LGzBkAD0KlphNDQE6DNi1Wrai
+	4MEIGaZISAwstdoIktoungO/A9Fo36EdEZIAAK4LnL4S6JeEfAd416GCsD95Ftd+GzjgTAdcI1G
+	xFOM7/7Pl5895g4zPGz3kmTSs8tKtZ3sPiQewm4+qutctfxuFGD/tYl7CGOw/BVGUzO20TysCWa
+	CIlzP4ba8s8I2hBZumfDLNg8oB6zvW74ZSUGsvazavTCKYamrAPTlH507xKcDqv0z6KaA0R0trh
+	rES0Sj4oWrlbNsvln4xg2Apsccjad/62R41jfvyzFei+KW9x6Aq12hxG7DRAE5TexHbdP6Mtdxt
+	hw2W6EX46m+Tx0soQCTaLzaF2AiJGTR5CSMkUCm17IkBKXRVQ
+X-Received: by 2002:a05:7022:b051:20b0:1b4:e533:ff50 with SMTP id a92af1059eb24-1b556912ca9mr7773791c88.40.1795294797090;
+        Sat, 21 Nov 2026 12:59:57 -0800 (PST)
+Received: from [192.168.1.142] ([198.8.77.135])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5566c3052sm16445888c88.1.2026.11.21.12.59.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Nov 2026 12:59:56 -0800 (PST)
+Message-ID: <c4da472a-1f3f-4676-95ac-89a4a3ce4a4a@kernel.dk>
+Date: Sat, 21 Nov 2026 13:59:55 -0700
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -100,102 +93,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYYPR01MB8167:EE_|OS7PR01MB957758:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1464094-5462-4c4e-1ad2-08df47faa377
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8022599003|25031999004|6090799003|23021999003|15080799012|5072599009|24121999003|22091999003|25010399006|21061999006|8060799015|19110799012|24021099003|3412199025|440099028|3071699003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?alV6RjVqU2ZVK1hnNGJYV2NiMzdhd3BvMHg1d0tjOThrdHFlQWZtSEo0RUNU?=
- =?utf-8?B?RlgzdGJBWlVHQjFuMU4vWk1JM2J0QUZDRzJzNzA2bGlUS3NTSXRtUUFKVXhk?=
- =?utf-8?B?SWJRcUZybkJQWVhNNUgyRlVkZ2FPVWpqTklZTlhESVdYSitIZFhYTUx0SnVw?=
- =?utf-8?B?OWE2WEt0N3dXNm9obzRYR3FNTjI2Q3FDdXZubll4TCt5Tm5ZQUZiak0zZVpO?=
- =?utf-8?B?NnVQTTZZVy9tVTJWcWJLU0xQL1I2NTRWMWw4NzgzcXVzV0JXUGV2bW9Xb0NP?=
- =?utf-8?B?enBOWFFxS1EvcmNmcmpEUjkxMUlpWDZReVJOUkVQazVaM1BWc1dLTWYzVlRk?=
- =?utf-8?B?SzNLNFI5VEhLTHJLaitKSllGN210L1dpdzAxcUxZSHhGeWZBNDVjOXp5Sk5m?=
- =?utf-8?B?S3JaK29qUUttOUZDcFNnRjkzQTB5d1Y0Zm5EN1FhQ0ZkOE02RXlEaWVpODkw?=
- =?utf-8?B?T0lueDM3a1Vxd3hmSHZMM2g3cUVycTI5VkMwZVhGcDBqUDVKU29qQmllMHJO?=
- =?utf-8?B?RFliWG1PVHZwcXlobWUydGdtb2ZPZEN1a1RWS3k1WGhVdGZac0JaWlp6dzRv?=
- =?utf-8?B?RjViaU93TjZ4THR1STVEQ2tmbXloNEZFUkRNa0JzVVJuK3BUaXFIT1VmQUdM?=
- =?utf-8?B?bU9kZUdjcnpFRWI2TzBMd2llSWIweEtqWGhaL1ZTc2hJenhtVEVES3FSdXFR?=
- =?utf-8?B?TGExZDVya1h6WVBWV29ITmwxaFN1TmJnRWJUcU1yOGE3U3ZTQXVxWlhES0I0?=
- =?utf-8?B?dlNkcEl4M0lydmpXQ2puSHlURjBZalN5VWJ6bGQzNnM4MXo0UmgzLzFBY1Fj?=
- =?utf-8?B?REdaZVA4MUlJdW9lRHp5UjIzdXE3bVNDNnF4eC9abWJLVGtPeHp6UXk0bHA2?=
- =?utf-8?B?R054RW0rRC90bnVnZE95L3ZCNjhkTnBYbWNlR0h6NytIbUJaanlHdjEzQWsr?=
- =?utf-8?B?YWhybDVRV1hCMmtFODZjT1hqa2FzYTdtRDNzc0xVbGxUM0U2U2FMSWFtYlJZ?=
- =?utf-8?B?enMwYUMvTk1TNlpXN3N1OHYzSXlVRmNRRkZ2S1NtMUs1bFptWTZUSlgyLzZV?=
- =?utf-8?B?akVRNDVMWmVreTVnVGd6QjdkakdTbFJXQ0pMT0tQV3JyZWlTK0F2NWllRUJQ?=
- =?utf-8?B?eXhrMUtwSU1MMlNsZjkrNmxONzVkVGJFa0F2YmR5bUNTci9lMVVrY1BwRU5F?=
- =?utf-8?B?QXMzMEhMTkxjeEE3a3YrSk1jelVQYitmaGEybjFieGx5UTdkamVyK2lTc1ND?=
- =?utf-8?B?VFdqTS9MNkIvWExHd0pKWjZIakpEQWk1WTU0WnU5bEhOT0dMZW5YQTdyQVNV?=
- =?utf-8?B?UGpEYUdQdGxwMzJQczIzOHltbGpITkYwaFFUZVp4ZmIwaVZnVzl1QjREM1F2?=
- =?utf-8?B?UEg4Yzl4RThHaVEvZDRZZEh4TWxROFZrUXlYY3psYVNUUEtJZytIWkxhSVRv?=
- =?utf-8?B?Smh1Qm1XZmcxbzRmNG00MStqZW9NNkRMcDB5WklBPT0=?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bVhvQXkrMDFwN0pIK09qcUlOdkptaFdFRjB4OE5yalRsWG5GdXZxQXJ0MHMw?=
- =?utf-8?B?YXZaWXNpZ1N2NHFMTzVoaUhIYkNTeFFOTTArWUtSZlBia254NkdCbzhyYjBO?=
- =?utf-8?B?ZFRNMVBCNnZwL254WmF2SnpMalpWWFFKVGlYSmNLdDhnMEFKclNRNGpMa3JQ?=
- =?utf-8?B?dHdZdlQybzY5dmFER29yZzhuMG5rdDlDU0I2eTR4WEhLcHNDNTRDTjVKVGZ4?=
- =?utf-8?B?Z0l1WHNWM1ZWVWo1ZENOb2tHTW5Vc3R4TTNUYUMxa05rcHRHcW00SjhyekFn?=
- =?utf-8?B?dzNsOE1GRGh6eEl3N0ZTTm5XdGt6WGpIci9iSW5pY2tyNVhWNjBmcU90Wk5M?=
- =?utf-8?B?RVZndlhoQ0pCbnp1WkdxUnVQVEVTR1djRG1uRkZ2TmdlRkNlc3VyYkZFbHNR?=
- =?utf-8?B?TFB3bnhpS3FrQnJCZndGNTdrdnE0dmRCL1RIWnR2YVJJMHJyTUhPK00zTkY3?=
- =?utf-8?B?dU83SUN6QjduaFl6bCthS1Q4WmQ1MVlSaWd5V0hKS1g5L3FmaVZKVkltNXhL?=
- =?utf-8?B?TzZYTlBpOXluTENWcG5BenFiZHFFdFVxcHJVSE1RRmZXSHAzRnZnVnlOZGht?=
- =?utf-8?B?cmdHUWNSSUhEWXRTdWJSRHVqeEM2cWtnZmlVS2svZGxLNXpJSktiYTJTdUI3?=
- =?utf-8?B?aDc3S1FzNE9ReEdBMGpkalZhY0t1Y0FjV09GQURCMGthdmZrY2tZcjBrZTN1?=
- =?utf-8?B?QVVvQ2xSRHlnT0c5d2tUM01zMFQrMkw1RHlVWWtETk9UUndPcFAvSjRhZXZW?=
- =?utf-8?B?a0duNFFwaS9US2Vob21SQkJxcjgyengvMXdZYmpRYlJPMjkxcHRRcFRCMFov?=
- =?utf-8?B?ZDBrbU1nc1o5cHNaTWtJQkpaMlRRTkVaTXlvTzdlUnVIZWRZZnJ5MkpCajJV?=
- =?utf-8?B?VG5JbnBXb25YajIzV1BFbUpLVmE4aHNnMktsY0NRcERNZzNKMWUyd3ZVTEEz?=
- =?utf-8?B?emxzUUtoMUhvZVcrcmUvWXRaaFNzTGR5dndsMmI4bWNxaE1mYzJsWDBxTHdS?=
- =?utf-8?B?SUxBbUljVzFmc0hQbWZrTHQ1bGdXeVVpYjBDNnpRQ0VPeXhxVktvMktVdHB3?=
- =?utf-8?B?NklRR0M2eDJyK1dqMG9NSE1JQnZsVHIyQytRbERHeTFEbG9vTFc4RmkzbjJS?=
- =?utf-8?B?KytmazFWb1R4OHFoQ1Q4OXQzSm9KVVYyS0VtbTA4UXVMZEJZV3ZlZkJCMWZD?=
- =?utf-8?B?bFZhYllvV3RGVEJnRGQrdlFLa0V4OHY0VDllTWUzcWZnbjlHc2N3dU1RbkY5?=
- =?utf-8?B?S29kM0FjTmsyRzMrU283NUNpcElqK1Z5di90QWhxSjYzZmhFb2pEUnFDdXlv?=
- =?utf-8?B?M3JacS85MFZYZDdDZVdQNS8vamYvK1lJdEluUlZtdFFQZWJzblpoOHpDMGxz?=
- =?utf-8?B?S1VjWnZHaU54M1Q4V25jcEtUMmlOR0tkTERMUjRydGNVTCs2b0o0WTRDREpo?=
- =?utf-8?B?eExGZjhSTTY4dFlHVnJ2N25oc0JNWGlmV1JUYWFDQUFzSHVWQnpZWlVzS1Jr?=
- =?utf-8?B?dHFuZHJZaUkvaUZxbnNmUU8rUkI1Y0dTQ3BqaHpkM0Z1Mmw1TlliTithc0hu?=
- =?utf-8?B?MXJGZUxidWk3Z2xwRVptTVlwSlp0TDJnUHlCeXNDREV4M2tSdXlqVFY2MUNT?=
- =?utf-8?B?czNrT0tKVHp6TWt3OUFRUkEyRWRRNGY0emxSajVEaEZzZklYMXg1eFdXSEtW?=
- =?utf-8?B?OXBZU3BNQUZ4RUh4ZUxyM1dHSVdJWXpvUkFtS1R2TTZSYUUwV2Q3b0F0ZXdD?=
- =?utf-8?B?aXRNc2x4VXhpSE5wemxnMHExTWpBbjAwbnJzRlM5UWY3ekp1TzYvd3lOYk1k?=
- =?utf-8?B?dmVISjdGY1k4eUdJcG9rc0Fia0ZKbnR2aHpCbVMvVFJtMEVtcVpMTHZ1NFZD?=
- =?utf-8?Q?1y825r7xdsMiz?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1464094-5462-4c4e-1ad2-08df47faa377
-X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB8167.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2026 18:09:52.6111
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB957758
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ublk: dispatched IO intermittently never posts its
+ fetch completion (v7.0)
+To: Luciano Lo Giudice <lmlogiudice@gmail.com>,
+ Ming Lei <tom.leiming@gmail.com>
+Cc: Bernd Schubert <bernd@bsbernd.com>, linux-block@vger.kernel.org,
+ io-uring@vger.kernel.org, regressions@lists.linux.dev, stable@vger.kernel.org
+References: <CAFS5DSFUi28HgX8t5bRRGVqPkOZ+VqrP+LtyMiwPQhyRpTxFTg@mail.gmail.com>
+ <556c4720-0159-4874-8d5b-6379566f6d4a@bsbernd.com>
+ <CAFS5DSEhgk8fJgAwEn+-U-7vnBchCrx6L1uReT3Upm+AA22=Wg@mail.gmail.com>
+ <CAFS5DSEsdz8Eu1vmeCkE+6eeXgk+9yS6EwqyHSeD2jkq90DZaA@mail.gmail.com>
+ <CACVXFVPEaJ6oPOaoZZo_XMpywHCzFWSYCrKG=srEDpCqPRp=Dw@mail.gmail.com>
+ <CAFS5DSEp13YPLwRut2OiQfQqO70s6whbLWmEQ14mt8_JjBfBRw@mail.gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CAFS5DSEp13YPLwRut2OiQfQqO70s6whbLWmEQ14mt8_JjBfBRw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 19, 2026 at 02:25:02PM +0100, Christian Brauner wrote:
- > There are a couple of fixes to not leave stale state behind but it seems
- > that there is legitimate userspace out there that does need this. So
- > stop resetting userspace_init_fs for now. I can probably rework this to
- > something sane but I'm not sure it's worth it. Kthreads and
- > usermodehelpers keep using what PID 1 left behind, just like they kept
- > using init_fs before PID 1 got its own fs_struct. Keep the notice
- > though but downgrade it to pr_info().
+On 11/21/26 10:52 AM, Luciano Lo Giudice wrote:
+> Hello Ming,
+> 
+> Thank you for confirming the apparent fix in 7.4 as well. Do I
+> understand correctly that no fixes to address this problem will be
+> backported to 7.0?
 
-Thanks for the quick fix. I applied both patches on top of v7.4-rc3
-instead of my local workaround and booted Android 17 on arm64
-(Qualcomm SC8280XP).
+As Ming said, 7.0 is not a maintained stable release. That means
+no further 7.0.x releases will be done, and nothing will change
+that. Also means that if you're running 7.0.x you've been missing
+out on a lot of fixes that have gone into all stable releases and
+upstream kernels since then.
 
-Android boots cleanly with no init property denials, "VFS: Pid 1 stopped
-sharing filesystem state" appears once at info level, and post-unshare
-direct firmware loads from /vendor/firmware (ath11k, Adreno SQE/GMU, QCA
-Bluetooth) continue to work. I didn't exercise the pivot_root() path in
-1/2 since Android doesn't use pivot_root(), so tagging 2/2 only.
+Just get on 7.3-stable.
 
-Tested-by: Akisaira <akisaira@outlook.com>
+-- 
+Jens Axboe
 
