@@ -1,100 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.31
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795283587;
-	b=PW/3I9fbpzQ8EuFduEJgQ+/5BW6QyBu4xcWbfkWFiKVXqvEKlBtb0u22XR33XiJC1Gpn
-	 wdyPDHgkbjHD1u13734hp153vk2sDR6CD/g+bPl5BXVy28yAs2eN7cENvzvuxp1ovPnxB
-	 WBXRMs2hcufqz9jqyaK6f8p5tqSkvebb8kDg2isQe0acJ3OK92FeSFVIHodyKWRJOZQ/f
-	 Q7By+xU9SMbQbfxjwxpjR2ksCF7ODEUN4UjWifpwz+3imjyP6CW9IbgLpVipDNxagZQfU
-	 9d71ymGrHSp40ygeDc5PeadSDtZeTLkBpVQec2+zZ+JlTWG0agn20VfBvo/9227LA4g==
+	t=1795284597;
+	b=KyDmIS5PQ2iRF22r6icbVdh6062owwjozul//nYVv5IfU96LBfJqLMA4K+0U/C9X+bhW
+	 hSTQWj1GubmPqvPowAFB193xELp7vi9xs/e67QOJ/vWqKoi4jtKgt9G4/6A4EFpoqF9F9
+	 QsmIWDlgH0I8oMwfsr54VS/gWmyVPa5vBFkwH2lALwjtjlN3du8YOr28sSuJI844H5Zf0
+	 5F8PZs3Lc7cvyfSHAXjJDe6Gl/KFaJu4NOEYp5YKlxkeUSiSua4G2K1MbyDoblF7jBuTq
+	 qbq16BtSJFQs980BmcUYq4CXUkRLKhETbaTv3ImNLAoWU4swkz+HyzsCh9rsO6qAM5Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795283587;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
-	b=Z2nfEaoIlaBXNKLgWV3f2bo5k1DDAdiFasFWZdHDjMseeGscndhf4RgPtrsExQEy68iv
-	 18vKYMwdLdLaghFUJZ+JIuNbx+RU5JaaqfKFykxU3r5n3Ncuzv8mGs0JFNGHGWod3nMas
-	 jh5NlJfWJZXxL8OhimLDOzVTEd4cC3CNbVWJEe1lw0O0jRA6C4qbro54qIzoqOQ8mB6mr
-	 nWiV1QIWz7ns7qfUGIv15y0evoKubXOAgvlUMZLiHZPrW5KiAx/udq9BHZTkvVrXQwXPu
-	 3JfWGY7Bp61Mpga/ik4F5AaAI0hR3w2sAnn83gwP8xDDpLb86bn4tBl4AXZF4aEIgGQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795284597;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:
+	 X-Microsoft-Original-Message-ID:MIME-Version:
+	 X-MS-Exchange-MessageSentRepresentingType:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=9C1CMl8WXKICL0GbAnribefCwuW7T0qgk5cnuy1CfKU=;
+	b=Y5ko/bATlzx3i+b0hDmD3qSzOWe+CL11WBPLliTSxUDCS9vxNnfPM+boOz5ELFcKM2wc
+	 bJEE3CdJZqJj9nOk3B/d4pC6iV5EErutN9L+n77grQG5nakcGTWThst2bPrkwhq5VaP1P
+	 zVm9sOonZEIW1T4cstRKI/2dMKFcM64MUPbHAS9tw2dlZNdCb7cExzpOIGcF3KA4/ayEC
+	 NYq/bJga1vAPxAKFlhc68S+SpH/i/n0HbT3AbSH6T4gUGN+kOLf4QbGqxshrAc68R+OM9
+	 NaGMe4J4PXGDDOAaqT8u12gH22ZUu90QdjCmabmH3/rsYVf9x/GUN3JZ5gJqzwfkcrQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uunKAHoD;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=outlook.com;
+	spf=pass smtp.mailfrom=outlook.com;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=XAeu9ahP;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.43.31
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazolkn19011031.outbound.protection.outlook.com [52.103.43.31])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC01F606A330
-	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 17:53:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC01F606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B7D606A333
+	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 18:09:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64B7D606A333
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=uunKAHoD
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-67da69e7c31so2031933d50.3
-        for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 09:53:06 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795283585; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LSncKUTrhIZky5s1+GVtO72vmzokKRC8y20ZEuAaAaKI9NsaG9EuVmtMSMTwb95cY5
-         zGI1zxWTVDs/JSJaMl5DBkte9T95DHXsxpX5RPU87S2PH/XW4FpkWXPv61Fw3nw86UzJ
-         z5LxRrsrSwak+mSSbBiJxgx3BjLFzwI7TIKflW2CeIQ/LTRd3D2cpyuS4Yc742v8sQnn
-         yplDjziPAdHuE8uDVyLTOgKjRU049fFn7ofZS6AN1pNtiTnxMyqx8KbnYncNaNj7YZYQ
-         6KtfyfE3koqK4V/WYc2W8mTfbAkE6+cF1pcy3JU/LokwkMxx2PX1pLaxEfIZ0ZfpjGyK
-         dw9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
-        fh=AMTnz6toAZSGza4Toga8fZCrc4nxwPGHyIqZevB9ufg=;
-        b=h5Dc+2VONjRSiQVNbM8oPydDbSUnWS4YprmmrbWcgYfoFRAmO1OcQFox4syBJzvGpd
-         n0cFFVupb3QnPVHq9kCupWe/e89+LFQ3812cKTH/fTD908Ocw5iJPagA+k36kN1DjOKF
-         ANXz1ApzUkAa1mkO5I8nCJEd5+vopy24R0RGLRpBZTOFr/gBUv0ai191G+NoFDygLPhL
-         LbaC+jbPQwuOzMf50d4dKaivppa6P227dV83tZq9PQ8JaFmIhV9+91+7hxe0qWXz6rZb
-         9UGjVbZEbgcTzo4A9OhQOhdA+WCmLH1RZ1TdO+UAgE8IvX79iJ+Mbm9MzC/uJptBDnQ3
-         xYag==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795283585; x=1795888385; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
-        b=uunKAHoDkduV9phh64q3Emhnd+oUbqB9DFeDEL5rPvWHegc4V2Z2x48xNye8nEM7tM
-         TcLc6o/SaUKRhgAbBkmffK7jUz3g+herJMtxQQt15V9yMoqDyViXBUcj5ruo2pglHlyq
-         8mjflZKWq36kN+7WK/wq3V/0OtnfpV3XacEh/IV7uR0iPj+cgjCH3W93ltey9vuFtau/
-         fv8+lJUaOD/+Qmk0WiYJKjjWcAA5/0iLRo2kDRvd/VaneHIRPFId21ukyO0GLmO1XoR9
-         kfSNge4nMjINKNyNDAApbZ76PpCJW/YZd7pGgYwh0M2I6CQv3Tf02IZk/fAEqHb9YOKs
-         6eCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795283585; x=1795888385;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3GVBKnEvVzO5eniKkH3p5YWrA2bZ/HsDBEwwsELK9/s=;
-        b=v5dMSfAWUntU239Ju/AhCFsNbb7rkqqpkCGrl/5BoJbcGXG8Ti9VxGeg4Irfkq+Nnc
-         JjxmO6wgu/XWwIdwxxoMA8z8lnFX5bV26DjlZ1kS69d5i2SI+ysmXisMSvE9bG+D1ZjM
-         1C2qjk9aW+Rk5EBf57kCOw5Iqq8yRPKmFB7hmbFGKNuMS20nogWjjs7ZWUwrZTkLjrrS
-         KiTrvtr5ZS3aZQ0CTOt63Ls2VU1af+26SAw3BfED6MSXYamBeXM8XJzqfmkns00KF79i
-         1AHA6JvZ6rAS3/xLnX0rBS7s+rZzj5r+hGGF7xc2t72TFfMxKWoX/bWpFNNgSymPqpHJ
-         ipQw==
-X-Forwarded-Encrypted: i=1; AL+hErEvLWW/STuF15x2cV4kxQf9nEIoOCZ3aE6dkVV/A3XAq9hzQrlY0RcwUfPPyHUOUBsfBOCFhh7QQN3k0Q==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+cBnWH9KlVf3ia5EkgvIC5thx0LMTzq+6C0MQGQ1je/Ul2zK33
-	gdGrhZlaPANzG+Z/z85iV2C8fRhtrxA0j1yCqELL/vRvcF9KsoQzrXbW+xEDN0nmiP3y3Wm4wYS
-	0NpPHsPweGB+QsNoOMIoJqg5l6R4hbXc=
-X-Gm-Gg: AZFdTZdXmGnTDJ4hR5TTxhz6sFWpnFQr1mQHkVw7LrKQsFUcngbpLheqQwJYoqCV739
-	YaPi35Jpz4F9kqu0JCmkLH044ewXQ8UlTFXSBDuIRQBXqo2nxqA2SX5dCSnn5er9NXyvrz0GEEK
-	S+qex7WfQCB9PQQioxT+nAJ/3mZlTAEmWEmOTpEs/bhU+sQFShk6SSW+JcC7P+FdCncKAeNURmJ
-	s9oy4jsLYn1AhlyHPqMvkSfPwwPVKOvNzwDmD74FgGwYOJRAu75/7Uzw6ANux/6VOQSjA9844E7
-	fTLtNrz2yfKYuML5sPtGcGIXlv4IFKj/E/7zuf59FOs5CNxnT12jrlMZ9uB/D5JNZFzhvu/2wX7
-	JaHCZOXJMGMkXmfbICy3U8AdZyPedfvZ/q44=
-X-Received: by 2002:a05:690e:419c:b0:679:f97f:fdf6 with SMTP id
- 956f58d0204a3-67df448c769mr2372917d50.66.1795283585556; Sat, 21 Nov 2026
- 09:53:05 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=XAeu9ahP
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mbfBNMbFykG/I3KH8fXjIlv0llZjX72jo7zvtGLfYR0JOOF0NLx3XujBEx6S+mQVG6cpSU67EL+AztLW6wO/AsRWCf0ZmmuoJwdLZX7AybYs7jVjkxfl0I6ToD0U3Bg9eKFjtdGW9/MAHhozz+YSKgPo+CooqxnDRD70kr4LOg+G3x/J4Nbal7tj6q6IL+XBpfL4YMs+jim/lKfHTdoM++24aRSb3ZlxXynW7S9XAkgMDrfBiYzerwRicCaFVS2wnz4seMzoU+13MWQkfQNeq84VTZqGHaDpwrtTOIKzeIs/s+xmon3xuGZcWIMw/IIN44rON0JhQgEpkVIsPXrTsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9C1CMl8WXKICL0GbAnribefCwuW7T0qgk5cnuy1CfKU=;
+ b=BveIv+gIvZffXT+OuuRYOSSymnZ5O+Es6EI38uEf/gEsHwJG97ZYXeLftyKOyyyqbDyOznr/hbSCPNNbOPJSnYjE0hNfSac49q0S0qB+e/1T+vPmy+JvF/pFNZrZ/9JROol7PTyZu8fAFH18FLUe0coXRPiWozVLSH6O5pwOEa1nntm4ogbE4oSEC1I9smeeYh/EOj58o75leJZ16BiUnVc7mUkGjuyd5G06yAYqDI6sdqV4pURaTVh4sNDfpep2aAGG4bGL2UsGbqv94BAnmAoSU/uoCPyWEBI4tvNf84ZxpzB+Rxd6Tp0VCWASD+MBjOzxBueDio1jxFs654SyJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9C1CMl8WXKICL0GbAnribefCwuW7T0qgk5cnuy1CfKU=;
+ b=XAeu9ahPdYlLbNxH0Pqiw4xRT072ngR2JVTo3Pm1qzWelJF2R272mWGETzZtPhNg8Fw4+tMMStKsohlupIuzdsozFK+AVq+DcrLYMaic0C0JWfBQ05hmO32M13rQrB9Mgx1CWYVpm5HCMYTi+3qf8ALPa2/rWxV2065s6tJk5aVdB75Wr7vCEpNomH/5B6U1lfTFMwGaXKEyhMbHh/cBr41+dCX8//WomsQev7go/jt2JQNBQqBzDR+zrCZNnchm42IAr8nT0gYdpmKBtwZf4IlIcHG2UU4zf4b0CAZAmlu2dqEgxZLKPWX+kBKYFiLvKNGxVXhgFhy8RhrE3UFfLA==
+Received: from TYYPR01MB8167.jpnprd01.prod.outlook.com (2603:1096:400:116::5)
+ by OS7PR01MB957758.jpnprd01.prod.outlook.com (2603:1096:604:829::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Sat, 21 Nov
+ 2026 18:09:52 +0000
+Received: from TYYPR01MB8167.jpnprd01.prod.outlook.com
+ ([fe80::a416:eb44:4807:2c0a]) by TYYPR01MB8167.jpnprd01.prod.outlook.com
+ ([fe80::a416:eb44:4807:2c0a%6]) with mapi id 15.21.0639.012; Sat, 21 Nov 2026
+ 18:09:52 +0000
+Message-ID:
+ <TYYPR01MB8167C4C0641826B070DB684FA6472@TYYPR01MB8167.jpnprd01.prod.outlook.com>
+Date: Sun, 22 Nov 2026 05:09:47 +1100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] fs: don't reset userspace_init_fs when PID 1 stops
+ sharing it
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org
+References: <20261119-work-fs-pid1_unshare-v1-0-b6a7e468bd68@kernel.org>
+ <20261119-work-fs-pid1_unshare-v1-2-b6a7e468bd68@kernel.org>
+Content-Language: en-US
+From: Akisaira <akisaira@outlook.com>
+In-Reply-To: <20261119-work-fs-pid1_unshare-v1-2-b6a7e468bd68@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY5P282CA0088.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:201::14) To TYYPR01MB8167.jpnprd01.prod.outlook.com
+ (2603:1096:400:116::5)
+X-Microsoft-Original-Message-ID:
+ <2c7070ce-b869-466e-b5a5-1740e0bb1068@outlook.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,349 +100,102 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CAFS5DSFUi28HgX8t5bRRGVqPkOZ+VqrP+LtyMiwPQhyRpTxFTg@mail.gmail.com>
- <556c4720-0159-4874-8d5b-6379566f6d4a@bsbernd.com> <CAFS5DSEhgk8fJgAwEn+-U-7vnBchCrx6L1uReT3Upm+AA22=Wg@mail.gmail.com>
- <CAFS5DSEsdz8Eu1vmeCkE+6eeXgk+9yS6EwqyHSeD2jkq90DZaA@mail.gmail.com> <CACVXFVPEaJ6oPOaoZZo_XMpywHCzFWSYCrKG=srEDpCqPRp=Dw@mail.gmail.com>
-In-Reply-To: <CACVXFVPEaJ6oPOaoZZo_XMpywHCzFWSYCrKG=srEDpCqPRp=Dw@mail.gmail.com>
-From: Luciano Lo Giudice <lmlogiudice@gmail.com>
-Date: Sat, 21 Nov 2026 14:52:53 -0300
-X-Gm-Features: Aa3M54r6reYAtN06M1ZwSGTa3uJCDCA6gB7GWyRDqP3xh-2RmbBELTckYCoPkTg
-Message-ID: <CAFS5DSEp13YPLwRut2OiQfQqO70s6whbLWmEQ14mt8_JjBfBRw@mail.gmail.com>
-Subject: Re: [REGRESSION] ublk: dispatched IO intermittently never posts its
- fetch completion (v7.0)
-To: Ming Lei <tom.leiming@gmail.com>
-Cc: Bernd Schubert <bernd@bsbernd.com>, linux-block@vger.kernel.org, 
-	io-uring@vger.kernel.org, regressions@lists.linux.dev, axboe@kernel.dk, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYYPR01MB8167:EE_|OS7PR01MB957758:EE_
+X-MS-Office365-Filtering-Correlation-Id: a1464094-5462-4c4e-1ad2-08df47faa377
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8022599003|25031999004|6090799003|23021999003|15080799012|5072599009|24121999003|22091999003|25010399006|21061999006|8060799015|19110799012|24021099003|3412199025|440099028|3071699003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?alV6RjVqU2ZVK1hnNGJYV2NiMzdhd3BvMHg1d0tjOThrdHFlQWZtSEo0RUNU?=
+ =?utf-8?B?RlgzdGJBWlVHQjFuMU4vWk1JM2J0QUZDRzJzNzA2bGlUS3NTSXRtUUFKVXhk?=
+ =?utf-8?B?SWJRcUZybkJQWVhNNUgyRlVkZ2FPVWpqTklZTlhESVdYSitIZFhYTUx0SnVw?=
+ =?utf-8?B?OWE2WEt0N3dXNm9obzRYR3FNTjI2Q3FDdXZubll4TCt5Tm5ZQUZiak0zZVpO?=
+ =?utf-8?B?NnVQTTZZVy9tVTJWcWJLU0xQL1I2NTRWMWw4NzgzcXVzV0JXUGV2bW9Xb0NP?=
+ =?utf-8?B?enBOWFFxS1EvcmNmcmpEUjkxMUlpWDZReVJOUkVQazVaM1BWc1dLTWYzVlRk?=
+ =?utf-8?B?SzNLNFI5VEhLTHJLaitKSllGN210L1dpdzAxcUxZSHhGeWZBNDVjOXp5Sk5m?=
+ =?utf-8?B?S3JaK29qUUttOUZDcFNnRjkzQTB5d1Y0Zm5EN1FhQ0ZkOE02RXlEaWVpODkw?=
+ =?utf-8?B?T0lueDM3a1Vxd3hmSHZMM2g3cUVycTI5VkMwZVhGcDBqUDVKU29qQmllMHJO?=
+ =?utf-8?B?RFliWG1PVHZwcXlobWUydGdtb2ZPZEN1a1RWS3k1WGhVdGZac0JaWlp6dzRv?=
+ =?utf-8?B?RjViaU93TjZ4THR1STVEQ2tmbXloNEZFUkRNa0JzVVJuK3BUaXFIT1VmQUdM?=
+ =?utf-8?B?bU9kZUdjcnpFRWI2TzBMd2llSWIweEtqWGhaL1ZTc2hJenhtVEVES3FSdXFR?=
+ =?utf-8?B?TGExZDVya1h6WVBWV29ITmwxaFN1TmJnRWJUcU1yOGE3U3ZTQXVxWlhES0I0?=
+ =?utf-8?B?dlNkcEl4M0lydmpXQ2puSHlURjBZalN5VWJ6bGQzNnM4MXo0UmgzLzFBY1Fj?=
+ =?utf-8?B?REdaZVA4MUlJdW9lRHp5UjIzdXE3bVNDNnF4eC9abWJLVGtPeHp6UXk0bHA2?=
+ =?utf-8?B?R054RW0rRC90bnVnZE95L3ZCNjhkTnBYbWNlR0h6NytIbUJaanlHdjEzQWsr?=
+ =?utf-8?B?YWhybDVRV1hCMmtFODZjT1hqa2FzYTdtRDNzc0xVbGxUM0U2U2FMSWFtYlJZ?=
+ =?utf-8?B?enMwYUMvTk1TNlpXN3N1OHYzSXlVRmNRRkZ2S1NtMUs1bFptWTZUSlgyLzZV?=
+ =?utf-8?B?akVRNDVMWmVreTVnVGd6QjdkakdTbFJXQ0pMT0tQV3JyZWlTK0F2NWllRUJQ?=
+ =?utf-8?B?eXhrMUtwSU1MMlNsZjkrNmxONzVkVGJFa0F2YmR5bUNTci9lMVVrY1BwRU5F?=
+ =?utf-8?B?QXMzMEhMTkxjeEE3a3YrSk1jelVQYitmaGEybjFieGx5UTdkamVyK2lTc1ND?=
+ =?utf-8?B?VFdqTS9MNkIvWExHd0pKWjZIakpEQWk1WTU0WnU5bEhOT0dMZW5YQTdyQVNV?=
+ =?utf-8?B?UGpEYUdQdGxwMzJQczIzOHltbGpITkYwaFFUZVp4ZmIwaVZnVzl1QjREM1F2?=
+ =?utf-8?B?UEg4Yzl4RThHaVEvZDRZZEh4TWxROFZrUXlYY3psYVNUUEtJZytIWkxhSVRv?=
+ =?utf-8?B?Smh1Qm1XZmcxbzRmNG00MStqZW9NNkRMcDB5WklBPT0=?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bVhvQXkrMDFwN0pIK09qcUlOdkptaFdFRjB4OE5yalRsWG5GdXZxQXJ0MHMw?=
+ =?utf-8?B?YXZaWXNpZ1N2NHFMTzVoaUhIYkNTeFFOTTArWUtSZlBia254NkdCbzhyYjBO?=
+ =?utf-8?B?ZFRNMVBCNnZwL254WmF2SnpMalpWWFFKVGlYSmNLdDhnMEFKclNRNGpMa3JQ?=
+ =?utf-8?B?dHdZdlQybzY5dmFER29yZzhuMG5rdDlDU0I2eTR4WEhLcHNDNTRDTjVKVGZ4?=
+ =?utf-8?B?Z0l1WHNWM1ZWVWo1ZENOb2tHTW5Vc3R4TTNUYUMxa05rcHRHcW00SjhyekFn?=
+ =?utf-8?B?dzNsOE1GRGh6eEl3N0ZTTm5XdGt6WGpIci9iSW5pY2tyNVhWNjBmcU90Wk5M?=
+ =?utf-8?B?RVZndlhoQ0pCbnp1WkdxUnVQVEVTR1djRG1uRkZ2TmdlRkNlc3VyYkZFbHNR?=
+ =?utf-8?B?TFB3bnhpS3FrQnJCZndGNTdrdnE0dmRCL1RIWnR2YVJJMHJyTUhPK00zTkY3?=
+ =?utf-8?B?dU83SUN6QjduaFl6bCthS1Q4WmQ1MVlSaWd5V0hKS1g5L3FmaVZKVkltNXhL?=
+ =?utf-8?B?TzZYTlBpOXluTENWcG5BenFiZHFFdFVxcHJVSE1RRmZXSHAzRnZnVnlOZGht?=
+ =?utf-8?B?cmdHUWNSSUhEWXRTdWJSRHVqeEM2cWtnZmlVS2svZGxLNXpJSktiYTJTdUI3?=
+ =?utf-8?B?aDc3S1FzNE9ReEdBMGpkalZhY0t1Y0FjV09GQURCMGthdmZrY2tZcjBrZTN1?=
+ =?utf-8?B?QVVvQ2xSRHlnT0c5d2tUM01zMFQrMkw1RHlVWWtETk9UUndPcFAvSjRhZXZW?=
+ =?utf-8?B?a0duNFFwaS9US2Vob21SQkJxcjgyengvMXdZYmpRYlJPMjkxcHRRcFRCMFov?=
+ =?utf-8?B?ZDBrbU1nc1o5cHNaTWtJQkpaMlRRTkVaTXlvTzdlUnVIZWRZZnJ5MkpCajJV?=
+ =?utf-8?B?VG5JbnBXb25YajIzV1BFbUpLVmE4aHNnMktsY0NRcERNZzNKMWUyd3ZVTEEz?=
+ =?utf-8?B?emxzUUtoMUhvZVcrcmUvWXRaaFNzTGR5dndsMmI4bWNxaE1mYzJsWDBxTHdS?=
+ =?utf-8?B?SUxBbUljVzFmc0hQbWZrTHQ1bGdXeVVpYjBDNnpRQ0VPeXhxVktvMktVdHB3?=
+ =?utf-8?B?NklRR0M2eDJyK1dqMG9NSE1JQnZsVHIyQytRbERHeTFEbG9vTFc4RmkzbjJS?=
+ =?utf-8?B?KytmazFWb1R4OHFoQ1Q4OXQzSm9KVVYyS0VtbTA4UXVMZEJZV3ZlZkJCMWZD?=
+ =?utf-8?B?bFZhYllvV3RGVEJnRGQrdlFLa0V4OHY0VDllTWUzcWZnbjlHc2N3dU1RbkY5?=
+ =?utf-8?B?S29kM0FjTmsyRzMrU283NUNpcElqK1Z5di90QWhxSjYzZmhFb2pEUnFDdXlv?=
+ =?utf-8?B?M3JacS85MFZYZDdDZVdQNS8vamYvK1lJdEluUlZtdFFQZWJzblpoOHpDMGxz?=
+ =?utf-8?B?S1VjWnZHaU54M1Q4V25jcEtUMmlOR0tkTERMUjRydGNVTCs2b0o0WTRDREpo?=
+ =?utf-8?B?eExGZjhSTTY4dFlHVnJ2N25oc0JNWGlmV1JUYWFDQUFzSHVWQnpZWlVzS1Jr?=
+ =?utf-8?B?dHFuZHJZaUkvaUZxbnNmUU8rUkI1Y0dTQ3BqaHpkM0Z1Mmw1TlliTithc0hu?=
+ =?utf-8?B?MXJGZUxidWk3Z2xwRVptTVlwSlp0TDJnUHlCeXNDREV4M2tSdXlqVFY2MUNT?=
+ =?utf-8?B?czNrT0tKVHp6TWt3OUFRUkEyRWRRNGY0emxSajVEaEZzZklYMXg1eFdXSEtW?=
+ =?utf-8?B?OXBZU3BNQUZ4RUh4ZUxyM1dHSVdJWXpvUkFtS1R2TTZSYUUwV2Q3b0F0ZXdD?=
+ =?utf-8?B?aXRNc2x4VXhpSE5wemxnMHExTWpBbjAwbnJzRlM5UWY3ekp1TzYvd3lOYk1k?=
+ =?utf-8?B?dmVISjdGY1k4eUdJcG9rc0Fia0ZKbnR2aHpCbVMvVFJtMEVtcVpMTHZ1NFZD?=
+ =?utf-8?Q?1y825r7xdsMiz?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1464094-5462-4c4e-1ad2-08df47faa377
+X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB8167.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2026 18:09:52.6111
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB957758
 
-Hello Ming,
+On Thu, Nov 19, 2026 at 02:25:02PM +0100, Christian Brauner wrote:
+ > There are a couple of fixes to not leave stale state behind but it seems
+ > that there is legitimate userspace out there that does need this. So
+ > stop resetting userspace_init_fs for now. I can probably rework this to
+ > something sane but I'm not sure it's worth it. Kthreads and
+ > usermodehelpers keep using what PID 1 left behind, just like they kept
+ > using init_fs before PID 1 got its own fs_struct. Keep the notice
+ > though but downgrade it to pr_info().
 
-Thank you for confirming the apparent fix in 7.4 as well. Do I
-understand correctly that no fixes to address this problem will be
-backported to 7.0?
+Thanks for the quick fix. I applied both patches on top of v7.4-rc3
+instead of my local workaround and booted Android 17 on arm64
+(Qualcomm SC8280XP).
 
-All the best,
-Luciano.
+Android boots cleanly with no init property denials, "VFS: Pid 1 stopped
+sharing filesystem state" appears once at info level, and post-unshare
+direct firmware loads from /vendor/firmware (ath11k, Adreno SQE/GMU, QCA
+Bluetooth) continue to work. I didn't exercise the pivot_root() path in
+1/2 since Android doesn't use pivot_root(), so tagging 2/2 only.
 
-On Sat, Nov 21, 2026 at 2:23=E2=80=AFAM Ming Lei <tom.leiming@gmail.com> wr=
-ote:
->
-> On Fri, Nov 20, 2026 at 8:26=E2=80=AFPM Luciano Lo Giudice
-> <lmlogiudice@gmail.com> wrote:
-> >
-> > Hello everyone,
-> >
-> > Using Bernd's repo, I was _unable_ to reproduce the bug after several
-> > runs (it used to hang in about 1 out of 3 runs). I had to add a small
-> > compat layer to make the module build in 7.0, but it was overall
-> > pretty easy. I will be now using this module for any development on
-> > 7.0 (thanks, Bernd!) and will report if any other issues arise.
->
-> I can't reproduce it on 7.4-rc, and we did merge many similar fixes recen=
-tly.
-> Unfortunately, 7.0 isn't a stable release, so can you move to 7.3
-> stable release?
-> Otherwise, you may have to sort out the backport by yourself.
->
-> Thanks,
-> Ming
->
->
-> >
-> > All the best,
-> > Luciano.
-> >
-> > On Fri, Nov 20, 2026 at 8:40=E2=80=AFPM Luciano Lo Giudice
-> > <lmlogiudice@gmail.com> wrote:
-> > >
-> > > Hello Bernd,
-> > >
-> > > Yes, I can do that. I'll go ahead and compile ublk_drv from your repo
-> > > for the 7.0 backport and see how that goes.
-> > >
-> > > All the best,
-> > > Luciano.
-> > >
-> > > On Fri, Nov 20, 2026 at 8:27=E2=80=AFPM Bernd Schubert <bernd@bsbernd=
-.com> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 11/20/26 23:55, Luciano Lo Giudice wrote:
-> > > > > From: Luciano Lo Giudice <lmlogiudice@gmail.com>
-> > > > > To: linux-block@vger.kernel.org, io-uring@vger.kernel.org
-> > > > > Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-> > > > >     stable@vger.kernel.org, regressions@lists.linux.dev
-> > > > > Subject: [REGRESSION] ublk: dispatched IO intermittently never po=
-sts its
-> > > > >  fetch completion (v7.0)
-> > > > >
-> > > > > Hello everyone,
-> > > > >
-> > > > > I'm writing a library that implements various block devices in us=
-erspace by
-> > > > > utilizing the ublk framework. Every so often, I'm hitting a compl=
-etion loss on
-> > > > > Linux 7.0, in which an inflight request is lost forever, which le=
-ads to an
-> > > > > unkillable process and a ublk block device that cannot be torn do=
-wn, and so the
-> > > > > machine needs to be rebooted to remedy this. I've tested the atta=
-ched reproducer
-> > > > > on 6.8, but found no hangs after many runs. Details of the bug ar=
-e below.
-> > > >
-> > > > Hi Luciano,
-> > > >
-> > > > I just scanned the io-uring list and found this by accident. I have=
- been
-> > > > working on this for a couple of month.
-> > > >
-> > > >
-> > > > Would you be open to test a specific branch or dkms module? I actua=
-lly
-> > > > wanted to send this to upstream last months already, but then found=
- and
-> > > > fixed (with a lot of AI help) more issues and also got busy with ot=
-her
-> > > > tasks.
-> > > >
-> > > > https://github.com/bsbernd/linux/tree/ublk-stop-races-with-tests-fo=
-r-7.3
-> > > >
-> > > > and here the backports, that also work on 7.0 (with a compat patch)=
- and
-> > > > that is used for our dkms module
-> > > >
-> > > > https://github.com/bsbernd/linux/tree/niova-ublk-7.1-fix-backports
-> > > >
-> > > > The 7.3 patches are actually verified through tla+ and an ublk bran=
-ch
-> > > > for https://github.com/brauner/linux-formal
-> > > >
-> > > >
-> > > > @Ming the patches for 7.3 include heavy ublk state changes (it is n=
-ow a
-> > > > bit closer to what fuse-io-uring does) and also adds debugfs that c=
-an be
-> > > > used understand state issues.
-> > > >
-> > > >
-> > > > Thanks,
-> > > > Bernd
-> > > >
-> > > >
-> > > > >
-> > > > > 1. Environment
-> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > >
-> > > > > - Breaks on 7.0.0-31-generic and 7.0.0-43-generic using the kerne=
-ls that ship
-> > > > >   with Ubuntu. Tested on amd64 and the ublk_drv module.
-> > > > > - An identical binary was run on 6.8.0-117-generic but no hangs w=
-ere reproduced.
-> > > > > - This was run on virtual machines provisioned with LXD and with =
-4 CPUs.
-> > > > > - After reading the code, I suspect the issue arises due to the 2=
-025 rework (the
-> > > > >   list batching first appeared in 6.15 and the per-IO task tracki=
-ng in 6.16).
-> > > > >   I have not run any kernels between 6.8 and 7.0
-> > > > >
-> > > > > 2. About the attached reproducer
-> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > >
-> > > > > - It's a single C file that requires only liburing.
-> > > > > - 3 devices are loaded (2 are file-backed, the other memory-backe=
-d).
-> > > > > - A fourth device is added, started, loaded (briefly), stopped an=
-d
-> > > > >   deleted in a loop while the others are under loaded. This is th=
-e
-> > > > >   fastest way I found to reproduce the issue.
-> > > > > - On 7.0, this hangs within the first 2 runs. On 6.8, no hangs we=
-re
-> > > > >   observed after more than 10 runs. When the issue is detected, t=
-he
-> > > > >   program prints what evidence it can gather (per-device inflight
-> > > > >   operation numbers, the running threads' waiting channels and th=
-e
-> > > > >   io_uring's pending CQE counts).
-> > > > > - Bonus: 2 additional bugs where found when shrinking the workloa=
-d:
-> > > > >   A queue was leaking its io_uring (keeping the chardev pinned), =
-and
-> > > > >   START_DEV issued for a queued that had died before arming. Both=
- stalled
-> > > > >   the program identically on 6.8 and both were fixed in the attac=
-hed version.
-> > > > >
-> > > > > 3. What indicates a failure (from userspace's POV)
-> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> > > > >
-> > > > > - The issue is always connected to a READ request:
-> > > > >   /sys/block/ublkb$N/inflight yields "1 0" and is never modified =
-again.
-> > > > > - The thread that handles the queue is blocked in io_cqring_wait =
-(as seen by
-> > > > >   inspecting /proc/$TID/wchan), byt the ring has no entries to co=
-nsume.
-> > > > > - The ublksrv_io_desc for the corresponding tag was written by th=
-e kernel
-> > > > >   at dispatch. The server reads descriptors after a CQE is posted=
-, but
-> > > > >   this never happens.
-> > > > > - There is no way (AFAIK) to recover the tag. The lost completion=
- is the
-> > > > >   one that would set UBLK_IO_FLAG_OWNED_BY_SRV so a COMMIT_AND_FE=
-TCH for
-> > > > >   the tag is rejected (returns -EINVAL).
-> > > > > - Something very similar also shows on the control plane, which i=
-s why I
-> > > > >   suspect shared implementation details rather than something que=
-ue-specific.
-> > > > > - START_DEV, STOP_DEV and DEL_DEV will occassionnally never post =
-their CQE
-> > > > >   after the kernel provably completes. In one capture, the delete=
-d block
-> > > > >   device was already gone from /sys/block when the caller's 30 se=
-conds
-> > > > >   time bound fired. Repeated re-enters never produced the complet=
-ion.
-> > > > > - DEL_DEV was seen stalling 30-90 seconds on the kernel for opera=
-tions that
-> > > > >   should complete instantly. The io-wq worker thread was blocked =
-in:
-> > > > >
-> > > > >   ublk_ctrl_del_dev
-> > > > >     del_gendisk
-> > > > >       blk_mq_freeze_queue_wait
-> > > > >
-> > > > >   the device was stuck half-deleted, and it reacted to ADD_DEV by=
- returning
-> > > > >   -EEXIST for minutes. In the worst instance it survivied its own=
- server
-> > > > >   exiting and stayed un-deletable (needed a reboot).
-> > > > > - A START_DEV completed with -EINTR. The process was detached and=
- arms no
-> > > > >   signal sources. I didn't capture the pending signal set in that=
- instance,
-> > > > >   so I cannot rule out a spurious signal, but the same op's immed=
-iate retry
-> > > > >   stalled for a full 30 seconds.
-> > > > > - Not needed to repro the bug: COOP_TASKRUN, readahead bursts, ev=
-entfd wakeups.
-> > > > >
-> > > > > 4. Aftermath
-> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > >
-> > > > > - AFter the request is lost, teardown hangs and takes the control=
- plane with
-> > > > >   it. Looking at /proc/*/wchan and dmesg of a hanged instance sho=
-ws that the
-> > > > >   teardown uring command (running in an io-wq worker) is stucj in
-> > > > >
-> > > > >   ublk_stop_dev/ublk_ctrl_del_dev
-> > > > >     del_gendisk
-> > > > >       blk_unregister_queue
-> > > > >         elevator_set_none
-> > > > >           blk_mq_freeze_queue_wait
-> > > > >
-> > > > >   And the message printed by the kernel is:
-> > > > >
-> > > > >     INFO: task iou-wrk-2115:2118 blocked for more than 122 second=
-s.
-> > > > >     [...]
-> > > > >      ublk_stop_dev_unlocked.part.0+0x38/0x160 [ublk_drv]
-> > > > >      ublk_ctrl_uring_cmd+0x629/0x830 [ublk_drv]
-> > > > >
-> > > > > - Subsequent control command hangs on the control mutex:
-> > > > >     task iou-wrk-12720:12721 is blocked on a mutex likely owned b=
-y task
-> > > > >     iou-wrk-12626:12629.
-> > > > >     [...]
-> > > > >      ublk_ctrl_get_params+0x8b/0x190 [ublk_drv]
-> > > > >
-> > > > > - Killing the process doesn't help. The worker thread keeps waiti=
-ng on the
-> > > > >   queue and the frozen queue waits for a request whose owner (the=
- server) is
-> > > > >   gone. On 7.0, ublk_timeout(...) only takes action for unprivile=
-ged devices by
-> > > > >   SIGKILL'ing the server. On privileged processes it retursn BLK_=
-EH_RESET_TIMER
-> > > > >   so a lost request is re-armed forever and never aborted, even w=
-hen the
-> > > > >   server is dead.
-> > > > >
-> > > > > - When the process exits, the io_uring io-wq teardown warns while=
- a worker is
-> > > > >   still stuck and the process remains a zombie. The following mes=
-sage is
-> > > > >   printed by the kernel:
-> > > > >
-> > > > >     WARNING: io_uring/io-wq.c:1370 at io_wq_put_and_exit+0x10d/0x=
-2e0,
-> > > > >     CPU#3: live_server_ram/2115
-> > > > >
-> > > > > 5. Where I suspect is the problem
-> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > >
-> > > > > - Evidence points at the completion side of the 2025 rework.
-> > > > > - per-IO task tracking ( ("ublk: require unique task per io inste=
-ad of
-> > > > >   unique task per queue", Pure Storage, 04/2025,
-> > > > >   https://patchew.org/linux/20250416-ublk._5Ftask._5Fper._5Fio-v5=
--0-9261ad7bff20@purestorage.com/):
-> > > > >   our fetches are all submitted by the queue's own thread, so io-=
->task
-> > > > >   should always match at dispatch time;
-> > > > > - rq_list batching: ublk_queue_rqs() coalesces same-<ctx_handle, =
-task>
-> > > > >   requests into one list and queues a single
-> > > > >   io_uring_cmd_complete_in_task(io->cmd, ublk_cmd_list_tw_cb) for=
- the
-> > > > >   whole batch. If that single task work is lost, every request in=
- the
-> > > > >   list strands - the observations are consistent with one lost re=
-quest per
-> > > > >   occurrence.
-> > > > >
-> > > > > 6. Follow-ups
-> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > >
-> > > > > - Does this ring any bells in the 7.0 completion rework (lost tas=
-k work
-> > > > >   for ublk_cmd_list_tw_cb / ublk_cmd_tw_cb, or io->task mismatch =
-taking
-> > > > >   a path that neither completes nor aborts)? Is a fix already in
-> > > > >   flight?
-> > > > > - Independently of the completion loss: should ublk_timeout() for
-> > > > >   privileged daemons fail a request whose ublk server is gone? To=
-day
-> > > > >   BLK_EH_RESET_TIMER keeps a lost request - and with it the del_g=
-endisk
-> > > > >   freeze and the control mutex - stuck forever after server's dea=
-th,
-> > > > >   which turns a single lost completion into a machine-level hang.
-> > > > >
-> > > > > I can test candidate patches on 7.0.0-43 or bisect across 6.15-7.=
-0 on a
-> > > > > VM, or capture the trace of a missing completion.
-> > > > >
-> > > > > #regzbot introduced: v6.8..v7.0
-> > > > >
-> > > > > Best regards,
-> > > > > Luciano
-> > > >
->
->
->
-> --
-> Ming Lei
+Tested-by: Akisaira <akisaira@outlook.com>
+
