@@ -1,69 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.69.43.37
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795265669;
-	b=0puGMASatyA20bt/7xYFGtU7TyXFub+wpklM2y9204Xj1SC6ejafB1PUtU0Far7PiFGi
-	 UHmxFFdhKtvO5Oo4QuR4Y/9eurH5ZQXYZJPPO+iA95dMWL0lptF2lD40MAH6hMzSAYDct
-	 +BgNfwxXGVn3GTcs72EjD26eRjq1likp2TP8uS0w7yaand4PXGX3+PCpIs1Uk/Fk3wYkK
-	 p533HEvQQVA93ZHLMlp7iq+/OXUv/kBnHzavJwpAljIr1aXlEA9a5u/Xib6k0jB/D48Wp
-	 NxXutNviYCpxUy+t4Iu6x49weLVLBBiAZT0jvYh29VSdfnHbKpZGNLhaLiwTyOE0sfw==
+	t=1795266841;
+	b=vMUeyDPfoNTVVuSzJ0jpBSC1oUr82r2kROX3R8BBeDSshEpBcUtRrHxRxT85O3Zl0apx
+	 94fNWJjMw5fr8KifhBFWVmXwMaUrO6SXe6jxJzvAT6aEVY1Gc50xAX+cImdBwduXyNgYk
+	 /zRnC0K8AcyegDpg78fAcxSov2NUjJKB4bKOQpiI2METf6wGyvehCv7U9qFAzWtV56GsK
+	 K4hQP2oFiAkZ4fhxGEd3t52kNIjtK6sTxeLTsVF52dUSU0Zgxe0kaS9Vw9YSZvuwPpYTs
+	 5ZUMihJ2s8rOkF4LJxkdG29a4sh0YXGHkMhou20uKxq4METKxhWKZ0ST5rXZgEEBc4w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795265669;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=1uVgY2z+hshq7F0ZSrAjjHHeZk9uqmH1avdHg94R25I=;
-	b=oANtLf/TQOV302iJCn7XQL8zHUJA/QKFeTCj+/2ABlxkONO4Uvxr6gYPvRtTQOgnUW9P
-	 XNR3XJb9S7J/43GwFj9eOkrZfO1uAApnOdynO8682k9wqb55Ztz+GfDSVXJB32Vcdz0aF
-	 DMYoE+pdHt1Bn/kSJAdnHyINEVjMZbRS+41a0Q9tscgfFfT/hHg2y2cFHR07dKI2F+34w
-	 7XGKG83uryKKivvgLq4ug41hQ8mat5JKtBh/SNPHT0aNN16ZvMAadreifxNgpgdlj0HCR
-	 3FlVIOP1aBzHwQasJCTsWcDUYI1LhWRx9cQM2Wk9crxFG8uZJoD/0DMcvOF3N+NCZGw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795266841;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=3uk1V2g2BrgRRimIAVfUYX/6Cv+bp9NcizxCwFi/VHA=;
+	b=iD20t8Ga0OUEDRyIr9A7UGcgW3KDRnU/Jrzzn8yVhlPnbhLrfCB2Ut9uWiHH6ctjNS9U
+	 DZTaPF8yyBxo4S4ptOxcP2oGlXObq0OzH0zL5AgS4bSB5hjzol/zO4acP/DyGejUCNoEP
+	 gGps/ddh/NYlfdI8Gr8WbgQJJTMjIdDAfvQJyZ9kVDqzNUcZCnNMM9XI9oRT7PSHwWYqd
+	 mw9YHg8PzBwqm7V4jBo3GAPt51Kp8q+rjNfOB4Q4KabD0tAiaw2J3LSh4XJpUqw7CzgU0
+	 CzaoNnfz06x2fGF2+FCgNnQlqR5Bv5Is98j7gsgOjEjMY4i0jhyTkPxaVHqOKre4ldg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=vozeler.com;
-	spf=pass smtp.mailfrom=vozeler.com;
-	dkim=pass header.d=vozeler.com header.i=@vozeler.com header.a=rsa-sha256 header.s=max-2024-2 header.b=WZCZ+79K;
-	arc=none smtp.remote-ip=80.69.43.37
-Received: from imap.hinterhof.net (imap.hinterhof.net [80.69.43.37])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=p7hyPtmr;
+	arc=none smtp.remote-ip=209.85.221.171
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7C9606A32A
-	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 12:54:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A7C9606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vozeler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vozeler.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3A2606A32A
+	for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 13:14:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A3A2606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vozeler.com header.i=@vozeler.com header.a=rsa-sha256 header.s=max-2024-2 header.b=WZCZ+79K
-Received: from dp.vpn.hinterhof.net (i59F45518.versanet.de [89.244.85.24])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
-	(Client CN "x201t.vpn.hinterhof.net", Issuer "Max Vozeler" (not verified))
-	by imap.hinterhof.net (Postfix) with ESMTPS id 3EF578FB862;
-	Sat, 21 Nov 2026 12:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vozeler.com;
-	s=max-2024-2; t=1795265665;
-	bh=Co2PLgesTLFmsH1fAtY9kckuLxDISae4B5FYwQnvqMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WZCZ+79KFo2IJ0xo0vmrpBenYLPfmmfWOFL9HMclYXg7q9gUs0GlmHTBts3YfTSss
-	 M5RyJRcE/I/8rdlrp0Z5OS6e7Im7dgO3arsAvw67HuA/X8Mt5146n5H1UTlsQmQhXK
-	 QzGv32E2dpwFonaB0nJ3OJO+p0nPYfq0JSb93TYWOjqKX49Td/LEB+bB/ArDu8MiKB
-	 zqEjQN+K8kEa3W4MdE6yAGcOgdyrdgtvUz3rc+jLkC+caulOeMQDx8OMBIbu7l/ecp
-	 8hD5KbRsj/rD4vE9CCD+WrRRVsucEtufEkP21OQtlLfjExxBONCsPyNchS/ExJBVmN
-	 3uW/VW9hV/5Pg==
-Received: by dp.vpn.hinterhof.net (Postfix, from userid 1000)
-	id F203A26018A; Sat, 21 Nov 2026 13:54:24 +0100 (CET)
-Date: Sat, 21 Nov 2026 13:54:24 +0100
-From: Max Vozeler <max@vozeler.com>
-To: Chuck Lever <cel@kernel.org>, Sasha Levin <sashal@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Chris Mason <mason@kernel.org>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [Regression linux-6.1.y]: NFSv4 server: sec=krb5p mount fails
- with EIO in 6.1.192
-Message-ID: <awGUgH8RBMjjKIEk@dp.vpn.hinterhof.net>
-References: <awBIdxOJ4XSXuc7S@dp.vpn.hinterhof.net>
- <awFyZbQE8pDyOxUy@dp.vpn.hinterhof.net>
- <awGO-R42ggk_WEga@dp.vpn.hinterhof.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=p7hyPtmr
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5ee2ad94713so1278656e0c.0
+        for <regressions@lists.linux.dev>; Sat, 21 Nov 2026 05:14:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795266840; x=1795871640; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3uk1V2g2BrgRRimIAVfUYX/6Cv+bp9NcizxCwFi/VHA=;
+        b=p7hyPtmr7M3bwMQN4ikV9ZWxFzJ5VUWsJO341oubWstrgunBdvqDr2kLk6fYp3NCBY
+         qxFs8su+ofPHr0Du3wUZbgdEbWPmePHa+e6bvduj1r+DyN3y5TPNqSX5nGYHV/GAkqDk
+         vATMhi/teUA+CKPVwTHVyrk+I8tnuUNisxK9oRL38zEPXpIdL9M86YfzfM3JtG7VUY+S
+         siDH/2jKoakyaEqZ0ngcnmK7JlEQqtshVijBSXdPbSU5jmc8U6l5u7qa/oLuTW/RCYHT
+         e9FvEsiwfALvjY3HN+32BQQfYvCgSviJlD+sWMjIUpIbFuOUspmJYmKpKSfKZwRPf2Ge
+         BeNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795266840; x=1795871640;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=3uk1V2g2BrgRRimIAVfUYX/6Cv+bp9NcizxCwFi/VHA=;
+        b=ZWHfINPjCK7O7n7THFEWYaQuFMjZ6IrZfgvKCJ4iq3nHbkU5uQpGrRAJvxx4kkVDu8
+         M3exCF3okvUJ9B/BK6TuSdhVQcezb5Dd4gW5f2YtZxHEqrAqMHzh2IYCYwH3loGzaSOV
+         EeQeOyTx/hl7fT4aZ9ti+lIj1/mpr1sZXnKSVbRDBlLLzxcgCzNyTek0h6VDSuLLB70w
+         ehEO7RZvq+47TDh/Q5Y2p3ZYo8IjWtaYtLEkCY59JCCBcde8gOOL985JPz3qGvJxCkQt
+         zNdec+jN3/KEJ8NrxPbMYQ8PuzOSY38vMZRu+QIa1MTbFTRf6H5Pq8mHx6mCGwaV02dz
+         t6ug==
+X-Forwarded-Encrypted: i=1; AL+hErEI2iPgHpOAfpZXRR3/0xe4HR2kNGw+UxflGXbZs8Xu4hfDmuufGKm8HPvyNMI8HFkWfkvTobv93qkUwQ==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9IXYOjlBophuSPZZyZm2aPBVnIqTUA1C8QwzorI6DZ1Ru9J9tU
+	OAjKfgiNsBWikhtPMBVMSE1FehxsYVqOBGMfR4Y9+87xzLwG/8UUBkKF
+X-Gm-Gg: AZFdTZdirIgSGhwLDYG8sDuwReMeqyeTYLD0EuNtXX5R+wsMFwFt2mjo6vw5ysXaT3q
+	sLkMWgGpMQ17hLOBMdX+sSB6PlQsZbUh/jJAFNR8DS2xEGstr18lbMbC5gayT5HfjJTBkSOQhC/
+	ElSMHBGPwVNCFrIkAPDU6oINViZGm4UTfIlOzaCkmTWee8zS/hMNNLstsQEYNT8rOM1tY5RdY60
+	/fw3V4Pcld6dQrlGPj9e7U0tfY/32w3CTsKCCxY4ZEMIZEUAcSNq80kONdsUWVRMyHy7r0BH9j0
+	sdLqLC83hurLgd6OskCwDmLUNaABmpvPZsslO3nRD+0m80NZTqo2YKI0Lby6scKyQBNZXTXDuNx
+	DgW7O4AzxojlyCu7iFppC28D8O7VL9tbXClAjWqYmQuW9JR9VZMyrzthFM3ma5h/DmlA6NK0uUr
+	7Kgcho+PzkOdverrbhsPuvh+7zkKDH/hNjKrImupAFNCb7fsmD0SNKs7DjF+QwsXrZiphFBMRK9
+	RyDFUA49XmXYSBNs2B0RWYwFoCjBoVFOSMqJHIx4CJXY2hbSaC8W7J3E8oc7TbP7LnE6Ehu39YW
+	6s005oCK3qkZmTf8ZTRp2yausuSWDkDq3n1b+ImEwnKaOpA=
+X-Received: by 2002:a05:6122:4201:b0:5ee:a81:e77 with SMTP id 71dfb90a1353d-5ee8af0e023mr2950746e0c.6.1795266840149;
+        Sat, 21 Nov 2026 05:14:00 -0800 (PST)
+Received: from localhost ([2804:14d:5cd5:542e::1a7f])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-99e6dfc0b22sm5702260241.6.2026.11.21.05.13.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2026 05:13:59 -0800 (PST)
+From: "R. V. Lobato" <vieira.lobato@gmail.com>
+To: nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
+Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, Dave Airlie <airlied@redhat.com>, Ilia Mirkin <imirkin@alum.mit.edu>, stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [REGRESSION] nouveau: GM108 hangs at boot since "drm/nouveau/devinit/gf100-: try to avoid double-running vbios scripts" (6.18.64)
+Date: Sat, 21 Nov 2026 10:13:50 -0300
+Message-ID: <20261121101350.bab69dff11a2@gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,77 +93,112 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <awGO-R42ggk_WEga@dp.vpn.hinterhof.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-[Resend to @kernel.org for Chuck and Chris; previous mail bounced]
+Hi,
 
-On Sat, Nov 21, 2026 at 01:30:49PM +0100, Max Vozeler wrote:
-> #regzbot introduced: 82cf21374fb7ee55b37be9afb6704ba0eeffb236
-> 
-> On Sat, Nov 21, 2026 at 11:28:53AM +0100, Max Vozeler wrote:
-> > On Fri, Nov 20, 2026 at 02:17:43PM +0100, Max Vozeler wrote:
-> > > after upgrading an NFS server (Debian bookworm) to 6.1.192
-> > > (Debian linux-image-6.1.0-55-amd64), NFSv4 clients fail to mount exports
-> > > using sec=krb5p with EIO.
-> > > 
-> > > Downgrading the server back to 6.1.190 (linux-image-6.1.0-54-amd64)
-> > > makes things work again.
-> > > 
-> > > Good: 6.1.190 (Debian linux-image-6.1.0-54-amd64)
-> > > Bad:  6.1.192 (Debian linux-image-6.1.0-55-amd64, linux-image-6.1.0-56-amd64)
-> > 
-> > Reproduced with vanilla 6.1.191 and 6.1.192
-> > 
-> > Good: 6.1.190
-> > Bad: 6.1.191, 6.1.192
-> 
-> bisect points to
-> 
-> commit 82cf21374fb7ee55b37be9afb6704ba0eeffb236
-> Author: Chuck Lever <chuck.lever@oracle.com>
-> Date:   Mon Jan 2 12:07:07 2023 -0500
-> 
->     SUNRPC: Convert unwrap_priv_data() to use xdr_stream
->     
->     [ Upstream commit 42140718ea26c47fb06c679451a6aa6703545136 ]
->     
->     Done as part of hardening the server-side RPC header decoding path.
->     
->     Reviewed-by: Jeff Layton <jlayton@kernel.org>
->     Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->     Stable-dep-of: a919c5c88769 ("SUNRPC: svcauth_gss: enforce krb5 token minimum length")
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> This seems to have been part of a larger series, only parts of which
-> were backported for a919c5c88769 ?
-> 
-> Best regards,
-> Max
+The 6.18.64 backport 15465d681517 ("drm/nouveau/devinit/gf100-: try
+to avoid double-running vbios scripts", upstream 2139cb633d48, review
+patch 426/686 <20261113153835.372076643@linuxfoundation.org>) breaks
+nouveau on my GM108 laptop GPU. The machine hangs during boot.
+6.18.63 works. Reverting only the gf100.c hunk of this commit on top
+of 6.18.64 fixes it.
 
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [08889840163ebcdb7e24bf7ec311bc2e6fc3aaea] Linux 6.1.191
-> git bisect bad 08889840163ebcdb7e24bf7ec311bc2e6fc3aaea
-> # status: waiting for good commit(s), bad commit known
-> # good: [79807e970724c1f90cee1316361d61b80db4eef6] Linux 6.1.190
-> git bisect good 79807e970724c1f90cee1316361d61b80db4eef6
-> # good: [91c2a5d201daf66fa3f42b8a383bb89174bde2c8] serial: core: fix infinite loop in handle_tx() for PORT_UNKNOWN
-> git bisect good 91c2a5d201daf66fa3f42b8a383bb89174bde2c8
-> # bad: [ab8c8e027fa8f9314340a96999dd3309b7f80d61] fbdev: ssd1307fb: defer I2C transfers from damage callbacks
-> git bisect bad ab8c8e027fa8f9314340a96999dd3309b7f80d61
-> # good: [35b46918d5deee01fade7e2f2075a7c238a2a0e8] cifs: prevent readdir from changing file size due to stale directory metadata
-> git bisect good 35b46918d5deee01fade7e2f2075a7c238a2a0e8
-> # good: [91abd8383fd0588d1fcc31120d6344150a64ba5a] net: sched: cls_api: add filter counter
-> git bisect good 91abd8383fd0588d1fcc31120d6344150a64ba5a
-> # bad: [ed126ca71d4d949ad99f40b974a8f7685e808f8b] net/packet: defer vmalloc TX_RING free until skbs finish
-> git bisect bad ed126ca71d4d949ad99f40b974a8f7685e808f8b
-> # bad: [82cf21374fb7ee55b37be9afb6704ba0eeffb236] SUNRPC: Convert unwrap_priv_data() to use xdr_stream
-> git bisect bad 82cf21374fb7ee55b37be9afb6704ba0eeffb236
-> # good: [8da6f765098d46e5b3178ef4b2f8273c9ba1d3bb] SUNRPC: Rename automatic variables in unwrap_priv_data()
-> git bisect good 8da6f765098d46e5b3178ef4b2f8273c9ba1d3bb
-> # first bad commit: [82cf21374fb7ee55b37be9afb6704ba0eeffb236] SUNRPC: Convert unwrap_priv_data() to use xdr_stream
+Hardware: HP Spectre x360 15-bl0XX, BIOS F.04, Intel HD 620 (i915,
+drives the panel) + NVIDIA GM108M [GeForce 940MX] [10de:134d], no
+display engine, runtime PM enabled.
 
-Context: https://lore.kernel.org/regressions/awBIdxOJ4XSXuc7S@dp.vpn.hinterhof.net/T/#rd62f582e83e56dd3f5e8b430de3de07bee6b60b7
+On 6.18.64 the VRAM size is garbage and the boot stops shortly after:
 
+  nouveau 0000:01:00.0: NVIDIA GM108 (1180d0a2)
+  nouveau 0000:01:00.0: bios: version 82.08.62.00.15
+  nouveau 0000:01:00.0: fb: -1159778304 MiB GDDR5
+  nouveau 0000:01:00.0: bus: MMIO read of 00000000 FAULT at 6013d4 [ PRIVRING ]
+  nouveau 0000:01:00.0: bus: MMIO read of 00000000 FAULT at 10f65c [ PRIVRING ]
+  nouveau 0000:01:00.0: bus: MMIO read of 00000000 FAULT at 17e280 [ PRIVRING ]
+  (no "drm: VRAM", no "Initialized nouveau"; the system hangs)
+
+On 6.18.63 the same machine prints "fb: 2048 MiB GDDR5" and nouveau
+initializes normally.
+
+My reading of the cause: the new code in gf100_devinit_preinit() runs
+the VGA CRTC check only when
+
+  !(nvkm_devinit_disable(base) & (1ULL << NVKM_ENGINE_DISP))
+
+The guard expects nvkm_devinit_disable() to return a mask of disabled
+engines. In 6.18.64 it calls the void ->disable() hook, which disables
+subdevs with nvkm_subdev_disable(), and then always returns 0. So the
+guard is always true, also on boards without a display engine. On
+GM108 the VGA CRTC reads hit the PRIVRING fault at 0x6013d4 and, I
+infer, return a nonzero value (I did not log it), so post is set to
+false, the VBIOS init scripts never run, and the memory controller is
+left uninitialized.
+
+nouveau.config=NvForcePost=1 lets the machine boot, but only fixes the
+first init, because force_post is cleared after the first preinit.
+On every runtime resume of the GPU the check skips devinit again:
+
+  [   35.770421] nouveau 0000:01:00.0: Enabling HDA controller
+  [   35.805652] nouveau 0000:01:00.0: fifo: fault 01 [WRITE] at 0000000000120000 engine 05 [BAR2] client 08 [HUB/HOST_CPU_NB] reason 02 [PTE] on channel -1 [007fd38000 unknown]
+  [   35.806084] nouveau 0000:01:00.0: fifo: SCHED_ERROR 20 []
+  ...
+  [   75.453651] WARNING: CPU: 0 PID: 1081 at nvkm_runl_cgrp_get_cgid+0x79/0x110 [nouveau]
+
+Counts per boot:
+
+  kernel                        runtime resumes  fifo faults  SCHED_ERROR  WARNINGs
+  6.18.63 (two boots)           25 / 30          0            0            0
+  6.18.64 + NvForcePost=1       2                31           103381       39
+  6.18.64 + gf100.c hunk revert 3                0            0            0
+
+The revert I use (restores 6.18.63's gf100.c exactly):
+
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c
+@@ -27,7 +27,6 @@
+ #include <subdev/bios/init.h>
+ #include <subdev/bios/pll.h>
+ #include <subdev/clk/pll.h>
+-#include <subdev/vga.h>
+ 
+ int
+ gf100_devinit_pll_set(struct nvkm_devinit *init, u32 type, u32 freq)
+@@ -100,25 +99,6 @@
+ 	 * can use it as a reliable way to know whether we should run devinit.
+ 	 */
+ 	base->post = ((nvkm_rd32(device, 0x2240c) & BIT(1)) == 0);
+-
+-	/*
+-	 * However some VBIOS init sequences miss this bit. So fall back to
+-	 * the nv50 method of checking if the bit is not set. Running the
+-	 * VBIOS multiple times may have detrimental effects.
+-	 */
+-	if (base->post) {
+-		u64 disable = nvkm_devinit_disable(base);
+-		/* magic to detect whether or not x86 vbios code has
+-		 * executed the devinit scripts to initialise the
+-		 * board. only works if there's a display engine.
+-		 */
+-		if (!(disable & (1ULL << NVKM_ENGINE_DISP))) {
+-			if (nvkm_rdvgac(device, 0, 0x00) ||
+-			    nvkm_rdvgac(device, 0, 0x1a)) {
+-				base->post = false;
+-			}
+-		}
+-	}
+ }
+ 
+ static const struct nvkm_devinit_func
+
+A proper fix probably needs the guard to test whether the display
+engine actually exists (for example nvkm_device_engine(device,
+NVKM_ENGINE_DISP, 0) after ->disable() has run) instead of the return
+value of nvkm_devinit_disable(). I have not tested that. I have only
+tested 6.18.y; I can test patches on this machine.
+
+#regzbot introduced: v6.18.63..v6.18.64
+
+Thanks,
+R. V. Lobato
