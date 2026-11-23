@@ -1,89 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.244.194.184
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795427224;
-	b=G7/oaD+rHysvtLAsbIoxfnqBZz8HB0u8Kd7s6iD4TZQt+ZeUEAoz1fyrvB8UqHZ3ri1u
-	 CY2eQkdSjF3YX0oXj4sgRjunEtg6YA/vNJCWV9Z/LYHmWoSMy14QiCm0p72oqzqrIkpLs
-	 v8MQR3zXZWK1JCJWYTExJ+p8rJ1RCZhwa7BWCgmfcCb4zD6TDgjkYkn1ZV38eZl1sR4EE
-	 a/jXBr21NjBt0liFrqprgONgcDES8NUpM0s/VJc6qzxkeukcbZG9bly3gA+VID02Q0FZb
-	 zotkPxgFeq2pAjyaZYaHiFF4NUY+TYWDbqEJQi4qVjB3oEs+VG/44EVzgKrW3WNPRnQ==
+	t=1795431426;
+	b=FcJDBuQCQ7REd2PXtYkzPJl+dTtjrjZGiVtoFs+M0QYqbCzxE819UWrJKH0WlPiWaVoZ
+	 18IF+AbiEV+M3hE66zR3u9t0bU93h3/kfV7AQXci2phv5KnSkfLJCytHRdvSFi8loU124
+	 vZxwt3qhrACDCwOaJdzox3Uk7UaKFlkQURJv+Rt0f/JPKuUOEYRq6o46orGabUUSS/P9k
+	 subEHgcF92hbYGAwaX3a13oikgio52Fv1R+u/gdGCAgqy6HUiJuHWc09PwY/Ejvn8KMPO
+	 q1Fy6oX9xVXULnv+zg/HEaEeof/vnc8c2AzphN8P1QKCwg4+o3IXDYPtyeA1cL9UZBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795427224;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
-	 Message-ID:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Correlation-ID;
-	bh=QKKddyB/3LPaj9XpOHrjBXWO+kDb0/gFR60jM/AbPd4=;
-	b=S9r8dUXN0T2l9BFFkwJgTmGdD0F6qAP83BExL3ArlaALYrYgK/TtYu6LOexQn14uqnnA
-	 g6C6xy6uwGDADL9ji0sA5l/t9H4DoHix6AtCF91ExqrV67kCS9u92cLKPBDRJNSkemoVl
-	 97JBM95XraYbwqnoRUMeK1Bj8i20ksCg95XtjeGhgmajGYe1S2Zvo3GMQ25lm70KnGpYi
-	 WWZ5jwii1fbxPeIL82rfbepep1a1JqDe5mqpUTRhFizfohFBXCMLRGJb1R8DpFGcPRtr0
-	 pWNoNjs+MWLHizY1wGa7hTC8mczniJ+Y5NUHL0fMKdJ4bnXF6goWg1GQA79qFOcLxaw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795431426;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
+	bh=X5svZ998AfK7SFajFSBgAeoI0l40RLsVySjObineKnM=;
+	b=bs/Omp3jzXVONzTU6TmuoeaVvnMu6XiBORJbz/5+8sIQyXZsrkqnxHLE/8u7so5XauQk
+	 sxeMV7koxYiObq622Hj8JxHzwKrRrWqv6Hf2WvJDxoG8g+fF1e6jKbsA7YWybspj7A/zn
+	 KFVxZyHI36CtOzYoe4lsRWJWJ4ZHPPjf2tXEoJcWrvORtyUgEkyXF5IzAMtUR006A37kA
+	 v/+u9wJcGywTBv32DsrQ9nqquPaBWTcRQnqJ9Sn8FiNui5GBza5D2Msct+cD9lvc5SnwE
+	 qCExirzoz8zGoVkfXJvb6ZSLXm9Ru53vHpyxN7DyN2FbP81kuAFix5BluxUq715WmBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zW+C5Osj;
-	arc=none smtp.remote-ip=209.85.221.50
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=LQfu8CMo;
+	arc=none smtp.remote-ip=185.244.194.184
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EFB606A31E
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:47:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1EFB606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBE7606A31E
+	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 10:57:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CEBE7606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zW+C5Osj
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-48e47347279so1748634f8f.1
-        for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 01:47:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795427222; x=1796032022; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:subject
-         :message-id:cc:to:from:date:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=QKKddyB/3LPaj9XpOHrjBXWO+kDb0/gFR60jM/AbPd4=;
-        b=zW+C5OsjyVPTCx3/5FxXT+q0PZV/L3N55gFlgW17W8LerHKlltoYzUgyFPjSqgLedf
-         tT2ghEqouTYPMBmCkUj/XnaJ1hxPPPcVeg8tczzAmlttlp1vBKbbjjKqvLtTGjSiNjze
-         ZIQx7uw2IUzlrsCNdPF8uZ72C8nrx4mhM5ijBJQ9ISK5E0adSl/jGt7fctvhPvTLcID6
-         yFyTz+mYB425X6LyN63/yNvIMefZH5YGh5uSc7GubK2RIo+hHFlr9LJNy61DHTc8AyG8
-         G7G7ZzLSg78XlBhE9PTETEuJ5SU43nycpo93MQUqtcf5daxyeU1xjtLqDhsKvZAdx/uP
-         07Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795427222; x=1796032022;
-        h=content-transfer-encoding:content-type:mime-version:subject
-         :message-id:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=QKKddyB/3LPaj9XpOHrjBXWO+kDb0/gFR60jM/AbPd4=;
-        b=bZ7JRqucuwpRd20Iy4NnONzzX6ZjBhjotT6zpuHn4h1HNPebSll/CRQqwVOUUrsnh4
-         edPZHZv0+HyFQjFQBn7ZcpFOK9ydoMQjJ2e7ZWjwkk3pPi95TRfPNgDiZ5uEv5mnUDdS
-         VUujktUMjig2vTiV70UAZ7OzOO9GYzSHm5UnfIGDLthojyuDi6v7YovSVLneiwWh71R3
-         lL5IH4BYUt0O3dyNHD4l5u/jsEQXIzv700s4WsfwxnHg0Qo+U6s1pLS6s1vAIt/7RVTn
-         j2R+udKfjj1yvnKA8059tes+CnhxD0uvzB32T72XmmMLph9hrJLB51FMqzE9pGVkToQn
-         tPrw==
-X-Gm-Message-State: APuU4Z/CTZK0cLRLzbCP5AyjGl89/mxMvnylHobKLCf7nYdSwGaXmKYc
-	UAMtTEvUohhQshtz/xFEoCEb/jhG00G2cZifKHAJ4epxwQ8/alGpQJ6MaRlR2HL5
-X-Gm-Gg: AZFdTZe25GJwFp9GGxH83GIiK9wj541KbPqZ1gMohTf+NEoQpsYFfjnLZrMUFrCsxxR
-	YHdtLV2L5jlOErL6AcVgrtpB2Rs5euUD6EjdVwrKG4/fZPDSqSWWQzEl3zIuWNGqxcRKufqYzmR
-	v/XOPGc/BYjLBlc7PO0wmIqNAb3ABKVyuPlum005QBlmuuOORdmLcGprJalNr4GGnSHr8SF/HoH
-	jJUaT/EaIO2ezpeRVWr/8wBkcl53akwOCzDS4rPJ4komSLZYFts7MEzRTIrqZuSIjcPWUKfZbl6
-	V7pfN1Gh6mQ03XdBd/e/kjTGqfVswyxWTcx2VBoLtqSjKUOld8oZyWtTJGtSF9/OCoGW5fQzlXm
-	eoiNKOiJfq+z5bc/rT5mxSIrDIAXHCWXV7yQCIh3d3b0EBo6UPtsu7rmFIDpH2FUC4lGc+e96Zn
-	oysmgEnrQbdoFTPSzCffwYA/V2wwAH+CfqpaFqVmh29ToEP8HErcPa4ry2I5XdrJFdxXN9RW3L1
-	gWliQk/rYbnJunIskQ2XwK1HdcZco8L6RI6rsq1yeS6kL3mYKweV0LG6h1FBpnYgOIhkldHntgk
-	AYjSBFjm66Lki+6ZVvfiXC8xwQg5nrRMbt4VoST1EYbfjIk1EQ==
-X-Received: by 2002:a05:6000:29c6:b0:4a9:b2f1:aac4 with SMTP id ffacd0b85a97d-4abb42ea141mr14220172f8f.22.1795427221995;
-        Mon, 23 Nov 2026 01:47:01 -0800 (PST)
-Received: from [127.0.0.1] ([187.40.49.252])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a68048esm21834603f8f.29.2026.11.23.01.47.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2026 01:47:01 -0800 (PST)
-Date: Mon, 23 Nov 2026 10:46:58 +0100
-From: Marcus Lell <marcus.lell@gmail.com>
-To: linux-btrfs@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Message-ID: <b8b122c5-87c7-4363-b3cc-c91d24ff4d2d@gmail.com>
-Subject: btrfs corruption across different storage configurations. Both with
- free addressable free storage.
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=LQfu8CMo
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jY2st2bTXz9HF1;
+	Mon, 23 Nov 2026 11:55:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1795431346;
+	bh=rxwxq7gPotnmPGcefVQ3QwGpF3KbLCwKtYmRQBY/L+E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LQfu8CMomI9wbHqn9dA9sjkUsdWTqhpkd+3BKy5iWLoMX+iwvR0ZQ0V1EXK/X/TNa
+	 x2U+T1sXkHnQNvsFqIYnmojLzz16FGlzNUSsp+EHJ5PYf2rOvrtHoPNK3QE9RiJUMr
+	 L1HHRvnQ3OjK0g9Q4rU4yazQxkDAujbJ3oUg2pqtf3SkUwNWfazJI1zW8xjHB2o1Zz
+	 YXo5efkCLW9Kpvt11ezv0rsOmBPIy/kvHLAmiGqM13ctF64DxkmF8LmGp4+FvsHBlg
+	 P5/aSCfRVfNsd2woY6bvvntlFmwZwpml1S8YwvYyxNC+RFvdrDSFDAKDX2naR4GKAo
+	 5gSQtkUzNcygA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4jY2st1tkpz7vRN;
+	Mon, 23 Nov 2026 11:55:46 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jY2sq21vTz8svc;
+	Mon, 23 Nov 2026 11:55:43 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4E55B5F8B0;
+	Mon, 23 Nov 2026 11:55:27 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <b2c5e6b7-d579-449c-b894-ee162230e328@leemhuis.info>
+Date: Mon, 23 Nov 2026 11:55:26 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -93,77 +73,164 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] drm/nouveau: NULL pointer dereference in
+ drm_atomic_commit during GP107 initialization
+To: lyude@redhat.com
+Cc: dakr@kernel.org, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>, maarten.lankhorst@linux.intel.com,
+ Eric Kim <seohyun.kim@outlook.kr>, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: 
+ <OS7PR01MB1391484D564CF93DFBB4C1DCE966A2@OS7PR01MB13914.jpnprd01.prod.outlook.com>
+ <b89c176a-922e-4628-b549-a6d4b7520ec7@leemhuis.info>
+ <b89b83ee3de3ab113820ad94cf09be6b98ec3585.camel@redhat.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <b89b83ee3de3ab113820ad94cf09be6b98ec3585.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <b8b122c5-87c7-4363-b3cc-c91d24ff4d2d@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <179543132790.1428421.6043635296124573607@mxe9fb.netcup.net>
+X-NC-CID: ykwqwavNXtJHKi1LboJkRmODmsG3XG50Gpsc1NWLrA1tquAvwVc=
 
-[please CC me, as I'm off list]
+On 11/10/26 01:54, lyude@redhat.com wrote:
+> Hi - I'm back! Sorry about this, I've been busy moving and only just
+> got my machine setup. I will take a look at this tomorrow
 
-I know it's a late report, but I thought, you may know about this one...
+Any progress on this? Looks like nothing happened, but it's easy to miss
+something from the outside.
 
-I experienced severe Btrfs corruption twice, on Linux 7.1.10 and 7.1.12, us=
-ing substantially different storage configurations.
+Just wondering: should we maybe just revert the culprit for now and
+retry in a later cycle?
 
-Incident 1 =E2=80=94 Linux 7.1.10
+Ciao, Thorsten
+> On Mon, 2026-11-09 at 08:45 +0100, Thorsten Leemhuis wrote:
+>> On 11/2/26 13:47, Eric Kim wrote:
+>>>
+>>> On my laptop, which has GP107 GPU with intel graphics and uses
+>>> nouveau
+>>> driver, booting kernels after commit
+>>> 2652aca460dcfdd0d169bbfa358aa15804dc736b causes NULL pointer
+>>> dereference
+>>> at initialization.
+>>
+>> Thx for your report. Hmm, no reply yet afaics. Wondering if it would
+>> have been better to report it at the dedicated place for nouveau
+>> kernel
+>> bugs: https://gitlab.freedesktop.org/drm/nouveau/-/work_items/
+>>
+>> You thus might want to at least check if any similar reports are
+>> found
+>> there.
+>>
+>> Would also be good to know if reverting 2652aca460dc ontop of latest
+>> mainline fixes this.
+>>
+>> Ciao, Thorsten
+>>> [   17.556328] [drm] Initialized nouveau 1.4.3 for 0000:01:00.0 on
+>>> minor 0
+>>> [   17.556364] nouveau 0000:01:00.0: [drm] No compatible format
+>>> found
+>>> [   17.556792] nouveau 0000:01:00.0: [drm] Cannot find any crtc or
+>>> sizes
+>>> [   17.557237] BUG: kernel NULL pointer dereference, address:
+>>> 0000000000000000
+>>> [   17.583880] #PF: supervisor instruction fetch in kernel mode
+>>> [   17.598078] #PF: error_code(0x0010) - not-present page
+>>> [   17.601475] PGD 0 P4D 0 [   17.608839] Oops: Oops: 0010 [#1] SMP
+>>> PTI
+>>> [   17.608914] CPU: 6 UID: 0 PID: 1443 Comm: modprobe Not tainted
+>>> 7.3.0+
+>>> #1 PREEMPT(lazy) [   17.608954] Hardware name: SAMSUNG ELECTRONICS
+>>> CO.,
+>>> LTD. 800G5M/800G5W/NT800G5M-X78W, BIOS P11RDV.075.170829.XJ
+>>> 08/29/2017
+>>> [   17.608990] RIP: 0010:0x0
+>>> [   17.609090] Code: Unable to access opcode bytes at
+>>> 0xffffffffffffffd6.
+>>> [   17.610081] RSP: 0018:ffffca4d86537828 EFLAGS: 00010246
+>>> [   17.610135] RAX: 0000000000000000 RBX: ffff89b74dcf1180 RCX:
+>>> ffffffffa97d8091
+>>> [   17.610172] RDX: 0000000000000000 RSI: ffff89b74dcf1180 RDI:
+>>> ffff89b74c466800
+>>> [   17.610207] RBP: ffff89b74c466800 R08: ffff89b74dcf1180 R09:
+>>> 0000000000000000
+>>> [   17.610245] R10: 0000000000000010 R11: ffffffffa9b65410 R12:
+>>> ffff89b74c466800
+>>> [   17.610283] R13: 0000000000000001 R14: ffff89b74c466800 R15:
+>>> ffff89b77f1a2400
+>>> [   17.610320] FS:  00007fc4a888d780(0000)
+>>> GS:ffff89bac4364000(0000)
+>>> knlGS:0000000000000000
+>>> [   17.610357] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [   17.610414] CR2: ffffffffffffffd6 CR3: 0000000144b20004 CR4:
+>>> 00000000003726f0
+>>> [   17.610448] Call Trace:
+>>> [   17.610483]  <TASK>
+>>> [   17.610521]  drm_atomic_commit+0xb1/0xe0
+>>> [   17.610558]  ? __pfx___drm_printfn_info+0x10/0x10
+>>> [   17.610590]  drm_client_modeset_commit_atomic+0x25c/0x2d0
+>>> [   17.610618]  drm_client_modeset_commit_locked+0x5a/0x170
+>>> [   17.610647]  ? drm_master_internal_acquire+0x1d/0x40
+>>> [   17.610675]  drm_client_modeset_commit+0x25/0x40
+>>> [   17.610700]  drm_fb_helper_single_fb_probe+0x1aa/0x1c0
+>>> [   17.610729] 
+>>> __drm_fb_helper_initial_config_and_unlock+0xa8/0x1b0
+>>> [   17.610754]  drm_fbdev_client_hotplug+0x79/0xb0
+>>> [   17.610782]  ? drm_client_init+0x13e/0x180
+>>> [   17.610811]  drm_client_register+0x79/0xc0
+>>> [   17.610839]  drm_fbdev_client_setup+0xc9/0x1c0
+>>> [   17.610867]  drm_client_setup+0x6a/0x90
+>>> [   17.610893]  nouveau_drm_probe+0x15b/0x1e0 [nouveau]
+>>> [   17.610922]  local_pci_probe+0x4a/0x90
+>>> [   17.610951]  ? cpu_hotplug_disable+0x15/0x30
+>>> [   17.610977]  pci_call_probe+0x5a/0x1a0
+>>> [   17.611009]  pci_device_probe+0xdb/0x180
+>>> [   17.611060]  call_driver_probe+0x23/0x100
+>>> [   17.611104]  ? driver_sysfs_add+0x55/0xc0
+>>> [   17.611137]  really_probe+0xd7/0x2d0
+>>> [   17.611171]  ? __pm_runtime_resume+0x50/0x60
+>>> [   17.611220]  __driver_probe_device+0x9c/0x1b0
+>>> [   17.611261]  driver_probe_device+0x1f/0x80
+>>> [   17.611297]  ? __pfx___driver_attach+0x10/0x10
+>>> [   17.611335]  __driver_attach+0xcc/0x200
+>>> [   17.611373]  ? __pfx___driver_attach+0x10/0x10
+>>> [   17.611409]  bus_for_each_dev+0x97/0x100
+>>> [   17.611451]  bus_add_driver+0x1d0/0x280
+>>> [   17.611493]  ? __pfx_init_module+0x10/0x10 [nouveau]
+>>> [   17.611530]  ? __pfx_init_module+0x10/0x10 [nouveau]
+>>> [   17.611567]  driver_register+0x75/0xe0
+>>> [   17.611602]  nouveau_drm_init+0x60/0xff0 [nouveau]
+>>> [   17.611633]  do_one_initcall+0x89/0x3d0
+>>> [   17.611667]  do_init_module+0x8e/0x290
+>>> [   17.611703]  init_module_from_file+0xc8/0x180
+>>> [   17.611736]  idempotent_init_module+0x23e/0x360
+>>> [   17.611773]  __x64_sys_finit_module+0x7f/0x110
+>>> [   17.611805]  do_syscall_64+0xbe/0x470
+>>> [   17.611844]  ? do_syscall_64+0x37/0x470
+>>> [   17.611883]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>
+>>> It boots without this problem when booting with nouveau.atomic=0
+>>> kernel parameter.
+>>>
+>>> My guess is that atomic_(commit|check) operation is not present in
+>>> nouveau_mode_config_funcs, and commit
+>>> 2652aca460dcfdd0d169bbfa358aa15804dc736b enabled
+>>> atomic modesetting by default for NV50+ gpus caused
+>>> the problem.
+>>>
+>>> Also, drm_helper_(commit|check) was added to
+>>> nouveau_mode_config_funcs
+>>> at commit 604826acb3f53c6648a7ee99a3914ead680ab7fb, but it was
+>>> reverted at commit 6c65db809796717f0a96cf22f80405dbc1a31a4b due to
+>>> unreliability.
+>>>
+>>> I hope this problem can be fixed at one of the next releases.
+>>>
+>>> Thanks,
+>>> Eric Kim
+>>>
+>>> #regzbot introduced: 2652aca460dc
+> 
 
-I was running Btrfs on LUKS/dm-crypt over md RAID5, using four SATA devices=
- with 64 KiB chunks. The incident occurred during or after a RAID5 reshape =
-and enlargement of the encrypted device. After enlarging the crypt layer, I=
- tried mounting the filesystem, but "mount.btrfs" failed.
-
-Subsequent diagnostics revealed metadata errors at offsets beyond Btrfs's r=
-eported size:
-
-"total_bytes =3D 20001389936640"
-
-- Wanted bytenr "20015028908032", found "8567551700635656859"; checksum wan=
-ted "0x836ea028", found "0x8db80d65".
-- Wanted bytenr "20024023199744", found "12778909791338521120"; checksum wa=
-nted "0xfd168e20", found "0x95744024".
-
-These offsets were approximately 13.65 GB and 22.64 GB beyond the reported =
-filesystem size, but within the underlying device's addressable capacity.
-
-I did not touch the underlying filesystem during the enlargement. Just at t=
-he end. I was surprised, that an untouched filesystem could go so messed up=
-. I thought, it could be an mdadm grow failure.
-
-I made extensive attempts to diagnose and recover the filesystem. I tried s=
-uperblock recovery, "btrfs check --repair", "btrfs restore", "btrfs-find-ro=
-ot", mounting with recovery options, and "dmsetup"-based approaches. I also=
- used a device-mapper snapshot to rule out concurrent changes during checki=
-ng. Despite these efforts, I could not restore a usable filesystem. "btrfs =
-restore" recovered some files but reported checksum errors.
-
-Incident 2 =E2=80=94 Linux 7.1.12
-
-I was running Btrfs on an approximately 1 TB root logical volume on LVM, on=
- a single 2 TB NVMe device, without md RAID. The root filesystem became unu=
-sable. I recall seeing what appeared to be the same kind of "bytenr" failur=
-e, although I no longer have the logs to confirm the exact error. I had not=
- observed unusually large writes before the failure.
-
-I lost the logs of the first attempt, that I saved on the root partition. I=
- was like to be afraid to cope with the responses of you. (I'm shy)
-
-Because the second incident occurred on a substantially different storage c=
-onfiguration, I find it less likely that the problem was specific to the RA=
-ID reshape or crypt-layer resizing in the first incident.
-
-I want you to help make the btrfs filesystem more error prone. But I can on=
-ly point into the direction. I cannot prove that such a write occurred or t=
-hat both incidents shared the same root cause, but I believe the recurrence=
- and the first incident's specific offsets warrant investigation.
-
-I don't know, how to help further, but I don't dare to trust Linux 7.1.x an=
-d successors, with 7.0.x I believe, this is the last stable one. I need to =
-upgrade sooner or later, so please find the root cause of this behavior...
-
-Marcus Lell
-
-
---=20
-Return to the point of no return._
-
---=20
-Return to the point of no return._
