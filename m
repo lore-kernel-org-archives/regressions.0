@@ -1,115 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795426349;
-	b=eoLgyoijejnnxrOgyd1d5i+mA+ompKvTsz3Ypjl1RO6Xc7Hmjq/2ZMXPntgxeaSYATXJ
-	 oh7GF8pjyqnvpjf3ZPDm4RHqMIL56yY7wF/ei5BHmBf9iucyEuc5oOls1tzelb5yI4fyl
-	 pJ7n0LLtNNtZjlk0SMwCcu56IpUi2Wx7xfj3wDnrzNAnylZv0izJc3DMEmlpC51LYKmIc
-	 a7Z5bmqj8MdrmTQD5WcZ+iBEsPQVzvukVyzqL4Oaxk51uUfuFh6alI7LzakQEmYux4kgT
-	 cdXS1/5vdgWSFXjir73u/K124gtIb2wimaocE+LS0UXU3PKQKyqPNpXGYHczsmGmSwg==
+	t=1795427224;
+	b=G7/oaD+rHysvtLAsbIoxfnqBZz8HB0u8Kd7s6iD4TZQt+ZeUEAoz1fyrvB8UqHZ3ri1u
+	 CY2eQkdSjF3YX0oXj4sgRjunEtg6YA/vNJCWV9Z/LYHmWoSMy14QiCm0p72oqzqrIkpLs
+	 v8MQR3zXZWK1JCJWYTExJ+p8rJ1RCZhwa7BWCgmfcCb4zD6TDgjkYkn1ZV38eZl1sR4EE
+	 a/jXBr21NjBt0liFrqprgONgcDES8NUpM0s/VJc6qzxkeukcbZG9bly3gA+VID02Q0FZb
+	 zotkPxgFeq2pAjyaZYaHiFF4NUY+TYWDbqEJQi4qVjB3oEs+VG/44EVzgKrW3WNPRnQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795426349;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 X-Rspamd-Queue-Id:X-Spam-Level:X-Rspamd-Server:X-Rspamd-Action:
-	 X-Spam-Flag:X-Spamd-Result:X-Spam-Score;
-	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
-	b=gtxE1dMnuGJ5HKOHI15pyfkjESu5CmM+tDG6wWPJ9sCoLUL5Wdd5U0577wL5X7iPbx4u
-	 Fq16aAZ45DfdrbS9NvY6yW3QofF6K9zQ41MomOaVZiuSNlOctj6VZqLCrTsdhgYqH6YjQ
-	 xoZveUB8EbuIBLgodHGueTtVR5IIp6z9RkaehjUxSBKCO8dTo9N8rzAJBbfIJMjUkSEiI
-	 +S5hv+AlXwMpYxDjebyiU3BCaQEVuGGD+0AgnAzwoq6WPMA10X4hKcuubtsEEWwiTdXK+
-	 PkGAn52boeARZoo/xwxOYx5yPmfFsxfxWUM6oXKDjMf4/H/XrFOvVtoDfB6u/gwHgag==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795427224;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
+	 Message-ID:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Correlation-ID;
+	bh=QKKddyB/3LPaj9XpOHrjBXWO+kDb0/gFR60jM/AbPd4=;
+	b=S9r8dUXN0T2l9BFFkwJgTmGdD0F6qAP83BExL3ArlaALYrYgK/TtYu6LOexQn14uqnnA
+	 g6C6xy6uwGDADL9ji0sA5l/t9H4DoHix6AtCF91ExqrV67kCS9u92cLKPBDRJNSkemoVl
+	 97JBM95XraYbwqnoRUMeK1Bj8i20ksCg95XtjeGhgmajGYe1S2Zvo3GMQ25lm70KnGpYi
+	 WWZ5jwii1fbxPeIL82rfbepep1a1JqDe5mqpUTRhFizfohFBXCMLRGJb1R8DpFGcPRtr0
+	 pWNoNjs+MWLHizY1wGa7hTC8mczniJ+Y5NUHL0fMKdJ4bnXF6goWg1GQA79qFOcLxaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=R2MI97kV;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ddgAvCDh;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=NkOveBO5;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=YHxH7fMz;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zW+C5Osj;
+	arc=none smtp.remote-ip=209.85.221.50
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70FE606A32A
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:32:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E70FE606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EFB606A31E
+	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:47:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1EFB606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=R2MI97kV;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ddgAvCDh;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=NkOveBO5;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=YHxH7fMz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DA2071F7E2;
-	Mon, 23 Nov 2026 09:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1795426347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
-	b=R2MI97kVvdXL/ZqV6R8nhIKO61gY5xmUr3sUng6A+IodkR48mStUGxcRHEv59MqjRyWCd6
-	djyPRcJWc1qeIMkUaZ0pzBybqvOdvEBiCsoA8esmBSieltAQmoJWqWJ0igrG9NggMl355D
-	3RyPRp7hH9cHXYUDsP9NdpqtqAoVS1Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1795426347;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
-	b=ddgAvCDh46aA+RmgXGKTi4x8dEGCwsKQZ3us4tdjY4ppT6pWa5Ws0bZFve/v/MR/Vf2C3q
-	/oR80W00V+mWOACQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NkOveBO5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=YHxH7fMz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1795426346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
-	b=NkOveBO5NMFqrdWyNd1W6PkLGKdLVsVaQ0bPJ1G0h2Ku2fJ6D0iHrVk45odpQRKRI4M2hx
-	cH8QrvEwo/N/nK0MdKxIsjl+VW/EZ/rL1uw3XMSFDaO4J4vyZcfXdiH5kQjsfpVxhCeEIN
-	vGTXHOlAN5g14ARsJ1dizvmzrRa5zKc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1795426346;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
-	b=YHxH7fMzj2LlNhVkNyxuFU484CBngGmZdoP8xF0r8sEzJrkVux86+wemp/WTje/CeGKa0g
-	42nPKLuf71CKNPBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82C171352B;
-	Mon, 23 Nov 2026 09:32:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vl8PFioIBGvNJgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 23 Nov 2026 09:32:26 +0000
-Date: Mon, 23 Nov 2026 10:32:26 +0100
-Message-ID: <87ld6jdhat.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Yu-Hsiang Tseng <asas1asas200@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Cristian-Marian Fotache <cristianmarianfotache@gmail.com>,
-	Takashi Iwai <tiwai@suse.com>,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] ALSA: hda/realtek: Higole F9B fixup breaks speakers on unrelated Apollo Lake laptop (10ec:111e)
-In-Reply-To: <179542261324.542908.13953751300676446171@gmail.com>
-References: <CACGjpbf73XdwrG34ffjmYU3ZYuStPpFNXf9w+AGYcTmLyHCN_w@mail.gmail.com>
-	<87cxrx70qe.wl-tiwai@suse.de>
-	<87pkvx5625.wl-tiwai@suse.de>
-	<179542261324.542908.13953751300676446171@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zW+C5Osj
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-48e47347279so1748634f8f.1
+        for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 01:47:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795427222; x=1796032022; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:subject
+         :message-id:cc:to:from:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=QKKddyB/3LPaj9XpOHrjBXWO+kDb0/gFR60jM/AbPd4=;
+        b=zW+C5OsjyVPTCx3/5FxXT+q0PZV/L3N55gFlgW17W8LerHKlltoYzUgyFPjSqgLedf
+         tT2ghEqouTYPMBmCkUj/XnaJ1hxPPPcVeg8tczzAmlttlp1vBKbbjjKqvLtTGjSiNjze
+         ZIQx7uw2IUzlrsCNdPF8uZ72C8nrx4mhM5ijBJQ9ISK5E0adSl/jGt7fctvhPvTLcID6
+         yFyTz+mYB425X6LyN63/yNvIMefZH5YGh5uSc7GubK2RIo+hHFlr9LJNy61DHTc8AyG8
+         G7G7ZzLSg78XlBhE9PTETEuJ5SU43nycpo93MQUqtcf5daxyeU1xjtLqDhsKvZAdx/uP
+         07Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795427222; x=1796032022;
+        h=content-transfer-encoding:content-type:mime-version:subject
+         :message-id:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=QKKddyB/3LPaj9XpOHrjBXWO+kDb0/gFR60jM/AbPd4=;
+        b=bZ7JRqucuwpRd20Iy4NnONzzX6ZjBhjotT6zpuHn4h1HNPebSll/CRQqwVOUUrsnh4
+         edPZHZv0+HyFQjFQBn7ZcpFOK9ydoMQjJ2e7ZWjwkk3pPi95TRfPNgDiZ5uEv5mnUDdS
+         VUujktUMjig2vTiV70UAZ7OzOO9GYzSHm5UnfIGDLthojyuDi6v7YovSVLneiwWh71R3
+         lL5IH4BYUt0O3dyNHD4l5u/jsEQXIzv700s4WsfwxnHg0Qo+U6s1pLS6s1vAIt/7RVTn
+         j2R+udKfjj1yvnKA8059tes+CnhxD0uvzB32T72XmmMLph9hrJLB51FMqzE9pGVkToQn
+         tPrw==
+X-Gm-Message-State: APuU4Z/CTZK0cLRLzbCP5AyjGl89/mxMvnylHobKLCf7nYdSwGaXmKYc
+	UAMtTEvUohhQshtz/xFEoCEb/jhG00G2cZifKHAJ4epxwQ8/alGpQJ6MaRlR2HL5
+X-Gm-Gg: AZFdTZe25GJwFp9GGxH83GIiK9wj541KbPqZ1gMohTf+NEoQpsYFfjnLZrMUFrCsxxR
+	YHdtLV2L5jlOErL6AcVgrtpB2Rs5euUD6EjdVwrKG4/fZPDSqSWWQzEl3zIuWNGqxcRKufqYzmR
+	v/XOPGc/BYjLBlc7PO0wmIqNAb3ABKVyuPlum005QBlmuuOORdmLcGprJalNr4GGnSHr8SF/HoH
+	jJUaT/EaIO2ezpeRVWr/8wBkcl53akwOCzDS4rPJ4komSLZYFts7MEzRTIrqZuSIjcPWUKfZbl6
+	V7pfN1Gh6mQ03XdBd/e/kjTGqfVswyxWTcx2VBoLtqSjKUOld8oZyWtTJGtSF9/OCoGW5fQzlXm
+	eoiNKOiJfq+z5bc/rT5mxSIrDIAXHCWXV7yQCIh3d3b0EBo6UPtsu7rmFIDpH2FUC4lGc+e96Zn
+	oysmgEnrQbdoFTPSzCffwYA/V2wwAH+CfqpaFqVmh29ToEP8HErcPa4ry2I5XdrJFdxXN9RW3L1
+	gWliQk/rYbnJunIskQ2XwK1HdcZco8L6RI6rsq1yeS6kL3mYKweV0LG6h1FBpnYgOIhkldHntgk
+	AYjSBFjm66Lki+6ZVvfiXC8xwQg5nrRMbt4VoST1EYbfjIk1EQ==
+X-Received: by 2002:a05:6000:29c6:b0:4a9:b2f1:aac4 with SMTP id ffacd0b85a97d-4abb42ea141mr14220172f8f.22.1795427221995;
+        Mon, 23 Nov 2026 01:47:01 -0800 (PST)
+Received: from [127.0.0.1] ([187.40.49.252])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a68048esm21834603f8f.29.2026.11.23.01.47.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Nov 2026 01:47:01 -0800 (PST)
+Date: Mon, 23 Nov 2026 10:46:58 +0100
+From: Marcus Lell <marcus.lell@gmail.com>
+To: linux-btrfs@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Message-ID: <b8b122c5-87c7-4363-b3cc-c91d24ff4d2d@gmail.com>
+Subject: btrfs corruption across different storage configurations. Both with
+ free addressable free storage.
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -118,80 +92,78 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: DA2071F7E2
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-12.51 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[suse.de,gmail.com,suse.com,perex.cz,vger.kernel.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Spam-Score: -12.51
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <b8b122c5-87c7-4363-b3cc-c91d24ff4d2d@gmail.com>
 
-On Mon, 23 Nov 2026 09:30:13 +0100,
-Yu-Hsiang Tseng wrote:
-> 
-> On Sun, 22 Nov 2026 14:50:10 +0100, Takashi Iwai wrote:
-> > > Yu-Hsiang, could you check whether the quirk can be replaced with
-> > > HDA_QUIRK_ENTRY() with the codec ID instead?
-> >
-> > Correction: here I meant "codec SSID", of course.
-> 
-> Sorry for the breakage. The codec SSID doesn't help, unfortunately:
-> it is 0x10ec111e on both machines. Cristian's codec dumps show
-> "Subsystem Id: 0x10ec111e", the same as on the F9B, so an
-> HDA_CODEC_QUIRK() entry would still match his laptop.
-> 
-> Please go ahead with the revert.
-> 
-> The commit is in 7.3 and was backported to 6.1.y, 6.6.y, 6.12.y,
-> 6.18.y and 7.2.y, so the revert will need Cc: stable.
-> 
-> For the record, this is how the fixup silences his speakers. His BIOS
-> declares two internal speaker pins, 0x1a and 0x14, besides the
-> headphone on 0x15. Without the fixup, the headphone gets DAC 0x02 and
-> both speaker pins get DAC 0x03. With it, 0x14 can only use mixer 0x0c,
-> so it shares DAC 0x02 with the headphone. That DAC holds "Headphone
-> Playback Volume", and PipeWire turns it all the way down while the
-> speaker is the active output.
-> 
-> Also, pin 0x14 on his laptop follows its connection select, which is
-> not what I saw on the F9B. I'll re-check the F9B before proposing a
-> narrower match, and I'll Cc Cristian so he can test it.
-> 
-> Cristian, thanks for the report and the dumps.
+[please CC me, as I'm off list]
 
-Thanks for the confirmation.  Then I'll revert the commit for now.
+I know it's a late report, but I thought, you may know about this one...
 
-For Higole F9B, until we find some better way, please use
-model=mono-speakers option as a temporary workaround.
+I experienced severe Btrfs corruption twice, on Linux 7.1.10 and 7.1.12, us=
+ing substantially different storage configurations.
+
+Incident 1 =E2=80=94 Linux 7.1.10
+
+I was running Btrfs on LUKS/dm-crypt over md RAID5, using four SATA devices=
+ with 64 KiB chunks. The incident occurred during or after a RAID5 reshape =
+and enlargement of the encrypted device. After enlarging the crypt layer, I=
+ tried mounting the filesystem, but "mount.btrfs" failed.
+
+Subsequent diagnostics revealed metadata errors at offsets beyond Btrfs's r=
+eported size:
+
+"total_bytes =3D 20001389936640"
+
+- Wanted bytenr "20015028908032", found "8567551700635656859"; checksum wan=
+ted "0x836ea028", found "0x8db80d65".
+- Wanted bytenr "20024023199744", found "12778909791338521120"; checksum wa=
+nted "0xfd168e20", found "0x95744024".
+
+These offsets were approximately 13.65 GB and 22.64 GB beyond the reported =
+filesystem size, but within the underlying device's addressable capacity.
+
+I did not touch the underlying filesystem during the enlargement. Just at t=
+he end. I was surprised, that an untouched filesystem could go so messed up=
+. I thought, it could be an mdadm grow failure.
+
+I made extensive attempts to diagnose and recover the filesystem. I tried s=
+uperblock recovery, "btrfs check --repair", "btrfs restore", "btrfs-find-ro=
+ot", mounting with recovery options, and "dmsetup"-based approaches. I also=
+ used a device-mapper snapshot to rule out concurrent changes during checki=
+ng. Despite these efforts, I could not restore a usable filesystem. "btrfs =
+restore" recovered some files but reported checksum errors.
+
+Incident 2 =E2=80=94 Linux 7.1.12
+
+I was running Btrfs on an approximately 1 TB root logical volume on LVM, on=
+ a single 2 TB NVMe device, without md RAID. The root filesystem became unu=
+sable. I recall seeing what appeared to be the same kind of "bytenr" failur=
+e, although I no longer have the logs to confirm the exact error. I had not=
+ observed unusually large writes before the failure.
+
+I lost the logs of the first attempt, that I saved on the root partition. I=
+ was like to be afraid to cope with the responses of you. (I'm shy)
+
+Because the second incident occurred on a substantially different storage c=
+onfiguration, I find it less likely that the problem was specific to the RA=
+ID reshape or crypt-layer resizing in the first incident.
+
+I want you to help make the btrfs filesystem more error prone. But I can on=
+ly point into the direction. I cannot prove that such a write occurred or t=
+hat both incidents shared the same root cause, but I believe the recurrence=
+ and the first incident's specific offsets warrant investigation.
+
+I don't know, how to help further, but I don't dare to trust Linux 7.1.x an=
+d successors, with 7.0.x I believe, this is the last stable one. I need to =
+upgrade sooner or later, so please find the root cause of this behavior...
+
+Marcus Lell
 
 
-Takashi
+--=20
+Return to the point of no return._
+
+--=20
+Return to the point of no return._
