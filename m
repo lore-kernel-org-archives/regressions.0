@@ -1,69 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795433118;
-	b=4ltfaDCN79NyiAh+qAsD8P7s6e3Fvxln4Cj9avPFzdFgYZ2jt2HX4D6wIUDoODwO//sO
-	 LpzUMD5xM5xLBZgt3tl4obw3PjhMZpqTIPaZEjzkdxql4lVBNDXuTkyEcaYvu3mWXwKIP
-	 +UrYXPJmmW37v8GdqpvHV3d3QUHk/xhrX95oFlF045v9ARNrYgSXAfn+0yGA8m2JadZvC
-	 CMYrkPjz/aAQiLl/oyCk5zwm18xY8Dk+ASXlz9L67TpRVCyh6DFvfNUH4fKvH2G/bBLaV
-	 mFUhloDY72JfXXeAkb5oSJghRCHYybDynnJyNivV4zIusDsTWGXVK3Dc8IT9HYLMJfg==
+	t=1795433936;
+	b=K59uNqdeD2Oo7nxY4Nu9ATR9LIKtebjvzkZPENty9q1ueGbNSmvk8cgHj32Pc1FeyVoy
+	 5RpASTZVj+KwsQ5PY4HYlFyQRKawWrWFQHwQnz9TAkPYjUjWijZX/4SNA75x1snsgfovr
+	 NBoM2stZcQ6vKh77EHayYBsWm07pedW0ko5G1VYupxOPMi9tdI+3F+TJ+RyV7Xt5ypUqB
+	 UPywslklY25vZTKooE/cqgkVUWRENB1hhTZ1lTFLzTdq1ty2CXhBihvsEN5WsGvVnTbza
+	 YZ3OiJ568SJduBPY3wfP9f3F5HQdSFaGawpUpJ8xjPE4ZlmqFDM2300vXuUqa9xjH2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795433118;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795433936;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
 	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
 	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=QeFgwFK61Qlk9n0b9oGrXn+BKDOwoNhEC2QHtkJNw2s=;
-	b=Efec77mbJyoQwC5e2tt7xbYfozB5gPpTJDOVxB7SH5EE+5C3I7irBBriRTbHC+fa+VOR
-	 PqzyLSW46UhKkjh0Vky2NDSJgwm7LKgwoqVYyyc3DIvDIAPK7dHKi48eK33Rp1WrtbDSy
-	 +QYNQ1LIcfQYfJseB6GrdPH+daVgw8ehl5+zOA5xHlX3xgZbt0cFkyJ8KdsfL2kJNoHvq
-	 rN9Bd+d2z2vk6ISlMdTJwuNTOWwsBC24L1OSFkhaw7Kh32gX2XajbghJQ94wOIQpLNfBq
-	 FWJq9Vk+L/shayTl4jkXy5R/FSpRP9UFbdtBNNP8+v4YEL48BPu+yJq51IBKeQSYU6A==
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=DXr0pXHD3bRMuhs+z9S3qmz1LdcfanyjhhMk8486lYs=;
+	b=qujTeW9s+Lna9JICNr3hQrB9l9MxCa4tCzcwa/jr1Nz3UITDkRPn3ZBioHPemfrPHThl
+	 /IoYTswPpU9rd9Ic02qGVlwWuuG081v51IPmPu+035qLl1PDe/9edHeafQmD6dH4nQx5q
+	 v/viJWQKhyWSbAHxLuVZ3SDj5hoHL4fdJL3rW5sHsfWQCexZi52s3RNzVgIx41mYa9zGg
+	 KsRy60L0mrRGmnY6/Mv+aBNyvUBtCGRL+pnhh0kYVCrOclJc4B1+PtPj+tdKhqZnyunhA
+	 SkVg+xwDJ8soavf2raEEZ4y1w53UII8sxhRhavUQ5tLQX0Oa/2/2yE+DbNwBzQMrMHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=leemhuis.info;
 	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b="W+7L/n+y";
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=hHxmnXfG;
 	arc=none smtp.remote-ip=188.68.63.102
 Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A413D606A337
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 11:25:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A413D606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E6F606A32A
+	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 11:38:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 17E6F606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=W+7L/n+y
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=hHxmnXfG
 Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jY3Ww0Jj3z6Kty;
-	Mon, 23 Nov 2026 12:25:16 +0100 (CET)
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jY3qN4pFMz6Mv3;
+	Mon, 23 Nov 2026 12:38:40 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1795433116;
-	bh=PwEIzrhdbOgq2dDwxEKJ5z1esNrMe4RRpf3PI8f6pVY=;
+	s=key2; t=1795433920;
+	bh=bpCvclBnqTFpGqJDi3k3TXF12kr9zYWAAPKnUQdM+Ys=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W+7L/n+ySgNKWpC7brvSwfoZ1lT/Bv2Sm0J4tqD8W+iYkueEtu0qz3+89etzy/dcw
-	 rMXYxHxiW0awanzaqGkyfKM5OLoaXbVOqJ0XxfS5Cpesqc9y/MALXGWaahQUxgN1Bg
-	 L9EHU6O/TNehrJV1O1VV+OpfzI2U/pDpDwBll9kMoDKlhC23aB/1y67FAbNTPaHicf
-	 n0a+iqPgIAjIVbUCH0Dc9NBODQMJbKa6554td1tPwky49v7PsK2F6KlXmhwNArP79j
-	 nOkR3aZ231IQJ0dLrITPI8KXlSY5YSwSPmdZQ4/GZkzxnWe6R/ArY8yhfV/AvXGkCH
-	 jeuUznPQFXSog==
+	b=hHxmnXfGaV6gtwR1p/Y7UOMXqWyXPLF5fVG40GmvkkMHUIuPcB1obwxI3U/KCbsVa
+	 xjAQVl/w4bJWaZqfPDY754hKRxLgL2MtEiLX3gj4u7m/5PKSaBUzQFadwlEJxdgz0f
+	 5f5qSdKe6yOLF6XJyPa3AQKdcZmI5orisNMh8qsry09Y+R/q4nN3NoRT9YtcJLuvww
+	 bR3VzlvCHFE/8M+frvG2QBUXAG3qwMrPBB02hV0yb0ipcPxvTbzypwqjBjwyb/c+ki
+	 VeoECKG+4NK7dJhgyTPhC0MrfVa71l8oHmg3l8DziWeL87OOP+ZBANVDIz1SuRzg6Q
+	 l+EP9Z79oabWA==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jY3Wv6fr2z4ylg;
-	Mon, 23 Nov 2026 12:25:15 +0100 (CET)
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jY3pS2P6Gz4yrS;
+	Mon, 23 Nov 2026 12:37:52 +0100 (CET)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jY3Wt5Lhrz8sZw;
-	Mon, 23 Nov 2026 12:25:14 +0100 (CET)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jY3pQ3r1Qz8svX;
+	Mon, 23 Nov 2026 12:37:50 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 239B75F837;
-	Mon, 23 Nov 2026 12:24:42 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 799775F837;
+	Mon, 23 Nov 2026 12:37:44 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <52ec243f-5d13-4260-86cf-57800e1b887a@leemhuis.info>
-Date: Mon, 23 Nov 2026 12:24:40 +0100
+Message-ID: <329cd215-d824-44be-a1dd-3ebbf5c0803a@leemhuis.info>
+Date: Mon, 23 Nov 2026 12:37:43 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,63 +75,81 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] ASoC: tas2783-sdw: add firmware download status check
-To: baojun.xu@ti.com, broonie@kernel.org
-Cc: shenghao-ding@ti.com, niranjan.hy@ti.com, antoine@montane.tech,
- andrey.golovko@gmail.com, Lee Mann <leepaulmann@gmail.com>,
- pierre-louis.bossart@linux.dev, matthew.schwartz@linux.dev,
- linux-sound@vger.kernel.org, regressions@lists.linux.dev
-References: <4d940e83-a3cc-4b2c-8f1f-9a4ce67c1f89@leemhuis.info>
- <20261113124358.11823-1-leepaulmann@gmail.com>
+Subject: Re: [PATCH v3 0/2] usb: core: fix failed device driver probes, add
+ pre_probe
+To: James Clark <jjc@jclark.com>, Alan Stern <stern@rowland.harvard.edu>
+Cc: Johan Hovold <johan@kernel.org>, Bastien Nocera <hadess@hadess.net>,
+ Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Douglas Anderson <dianders@chromium.org>,
+ Robert Nelson <robertcnelson@gmail.com>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <cover.1793669297.git.jjc@jclark.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <20261113124358.11823-1-leepaulmann@gmail.com>
+In-Reply-To: <cover.1793669297.git.jjc@jclark.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179543308261.1518568.3438918419129213930@mxe9fb.netcup.net>
-X-NC-CID: jJ32yJnfBY/13nVQBaAUNW2EWUnQOY/8FGFK7MQOOiYo+29y2Bc=
+X-PPP-Message-ID: 
+ <179543386507.1524621.15830580690752356180@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 799775F837
+X-NC-CID: t5w+dL6WwtxG3tWCMI8WeaTrlJSnO3BdmPMvXavSdnkLoYzMeOI=
 
-On 11/13/26 13:43, Lee Mann wrote:
-> On 11/13/26 13:07, Thorsten Leemhuis wrote:
->> /me is not sure what "this patch" exactly means (the culprit?)
-> Yes, sorry: I meant the culprit's approach of leaving channel selection
-> to the DisCo table.
-> 
->> But if not: Lee, does a revert of the culprit fix this?
-> Yes.
+On 11/3/26 04:34, James Clark wrote:
+> On a BeagleY-AI with BeagleBoard's device tree, kernels since commit
+> f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64 platforms")
+> no longer boot to a usable system: the on-board USB hub is re-probed in
+> a loop. Patch 2 fixes this as Johan Hovold suggested, with a pre_probe
+> callback that lets onboard_usb_dev defer before the hub is configured.
 
-Hmmm. After more than two weeks still no reaction from Baojun Xu so far
-afaics, neither here not in the ticket mentioned below. Lore also
-doesn't find any other messages from Baojun Xu since early Nov.
+James, Alan, what happened to this? Looks like it feel through the
+cracks after Alan's "This is all starting to sound very complicated and
+fragile.  Isn't there any way to simplify it?" later in the thread,
+which was more than two weeks ago. Or was this regression fixed and I
+just missed it?
 
-Mark, do you know how to bring this to the attention of the right
-developers? Or should we just revert the culprit for now?
+Side note: another regression bisected to the above mentioned culprit
+was reported recently:
+
+gpio: shared-proxy: open-drain regulators on ODROID-HC4 fail with -EPERM
+https://lore.kernel.org/all/20261115-hc4-gpio-shared-od-1@iav.lv/
+
+Doesn't look related from a quick look, but well, at the same time I
+wonder if there is some subtle connection.
 
 Ciao, Thorsten
-
-> Kernel 7.3.4 with only snd-soc-tas2783-sdw swapped for the
-> v7.4-rc1 tas2783-sdw.c with f42fbd560cd8 reverted (the revert applies
-> cleanly), stock snd-soc-sdca, no fallback:
+> Patch 1 fixes two pre-existing bugs found by a Sashiko review of v2.
 > 
->   speaker-test -c2 -t wav: Front Left from the left speaker, Front
->   Right from the right speaker.
+> Tested on the BeagleY-AI on top of v7.4-rc1: the board boots normally.
+> The -ENODEV fallback that patch 1 changes is not reached on this board.
 > 
-> The kernel log still shows "function type only supported as DisCo
-> constant" for both amps, so stereo there comes from the restored
-> split, not from the ACPI table.
+> I found this by booting commit 85b4bc79dde7 (net/main during the 7.4
+> merge window) on a BeagleY-AI with BeagleBoard's device tree. A coding
+> agent identified the problem, explained it to me and proposed an initial
+> fix, which was revised numerous times on the basis of comments on v1 and
+> v2, my feedback and local Sashiko reviews. I verified that the series
+> fixes the problem on top of v7.4-rc1.
 > 
-> To sum up on the PX13:
+> v3:
+> - Add a patch to fix existing problems, as requested by Alan Stern.
+> - Patch 2: rebased on it, no other change.
+> v2: https://lore.kernel.org/all/20261030151919.3511106-1-jjc@jclark.com/
+> v1: https://lore.kernel.org/all/20261030114705.3159093-1-jjc@jclark.com/
 > 
->   v7.4-rc1 driver                          : right speaker silent
->   v7.4-rc1 driver, f42fbd560cd8 reverted   : stereo
->   v7.4-rc1 driver + PR #5904 SDCA fallback : stereo
+> #regzbot introduced: f918e3804498
 > 
->> Or do you want to maybe open a separate bug in
->> https://github.com/thesofproject/linux/ and see if that gets things
->> rolling
+> James Clark (2):
+>   usb: core: clean up before handing a device to the generic driver
+>   usb: core: add a pre_probe callback for device drivers that may defer
 > 
-> Done: https://github.com/thesofproject/linux/issues/6037
+>  drivers/usb/core/driver.c          | 42 ++++++++++++++++++++++++++----
+>  drivers/usb/misc/onboard_usb_dev.c | 15 ++++++-----
+>  include/linux/usb.h                | 14 ++++++++++
+>  3 files changed, 59 insertions(+), 12 deletions(-)
 > 
-> Thanks,
-> Lee Mann
+> 
+> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
 
