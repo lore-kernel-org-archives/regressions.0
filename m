@@ -1,70 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795433936;
-	b=K59uNqdeD2Oo7nxY4Nu9ATR9LIKtebjvzkZPENty9q1ueGbNSmvk8cgHj32Pc1FeyVoy
-	 5RpASTZVj+KwsQ5PY4HYlFyQRKawWrWFQHwQnz9TAkPYjUjWijZX/4SNA75x1snsgfovr
-	 NBoM2stZcQ6vKh77EHayYBsWm07pedW0ko5G1VYupxOPMi9tdI+3F+TJ+RyV7Xt5ypUqB
-	 UPywslklY25vZTKooE/cqgkVUWRENB1hhTZ1lTFLzTdq1ty2CXhBihvsEN5WsGvVnTbza
-	 YZ3OiJ568SJduBPY3wfP9f3F5HQdSFaGawpUpJ8xjPE4ZlmqFDM2300vXuUqa9xjH2A==
+	t=1795435980;
+	b=oR33ngWl/5zr+ee6a0VpYUvvpcyy1z/7dDLB65xKoFtyh2gtl9iGy3QhLREnoLT0xble
+	 tGarQmfXXmoFEV6d3TeyF1frN9qrjJXCrdH85MJgKD2+FQ5GzWz880co0uPgt1G5Qi58T
+	 xqYzPPAiP0PZxB96yWEooPY/kxadvRnyhP9S47Ehx0BTCT/PPEW3ana4FQrIRduNbULKz
+	 2iIPYxa4iZtEylQSRWhz7+G0NKapmKGIU6z4XRMenOZbWgMeLiMuIx5/iCcHFvorYNRs1
+	 0JtJObc3QKYxe6Nt5DanZWhIrxdGqdpGRKX7so/3r+0xdeAn6qFRklvhSwtnyFqhdrA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795433936;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=DXr0pXHD3bRMuhs+z9S3qmz1LdcfanyjhhMk8486lYs=;
-	b=qujTeW9s+Lna9JICNr3hQrB9l9MxCa4tCzcwa/jr1Nz3UITDkRPn3ZBioHPemfrPHThl
-	 /IoYTswPpU9rd9Ic02qGVlwWuuG081v51IPmPu+035qLl1PDe/9edHeafQmD6dH4nQx5q
-	 v/viJWQKhyWSbAHxLuVZ3SDj5hoHL4fdJL3rW5sHsfWQCexZi52s3RNzVgIx41mYa9zGg
-	 KsRy60L0mrRGmnY6/Mv+aBNyvUBtCGRL+pnhh0kYVCrOclJc4B1+PtPj+tdKhqZnyunhA
-	 SkVg+xwDJ8soavf2raEEZ4y1w53UII8sxhRhavUQ5tLQX0Oa/2/2yE+DbNwBzQMrMHA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795435980;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=YXiKSe1b4sqmwhSslNYFvKYiTOVoSzJmWVzJ8m+MYNw=;
+	b=wwVhRLXA8FYAl4Er4P8JB0BVJts9YQM0rRBC1mQjhanaY4iMhtmhGE1Ccqk00tWMqjSZ
+	 u1dQhArg0lQJNMtJYbiFi/Zn36jAbixSjn1rtdEE3e5DWz+zyP8NIIN8JpRewfqFhxwDg
+	 CBxAcmoVOMQiB3926fmCzBqXaLU0hdojmtBwZl95paXd5DD3WJNQfpHxN8IRtQXYXH1fI
+	 kxeMP2WbmZ8KQxQ+IwzXRiD1ouM76nh3J+/QEo2PycqQ/m97jCqtQAXYe0SjBYnPkvN5d
+	 gyuRaPT/2REnlqacqjOOlXbOPKgvtnkJMBQ3KqjNmTPwYoW9fwggdml+FPWh9flhcNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=hHxmnXfG;
-	arc=none smtp.remote-ip=188.68.63.102
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=none header.from=jclark.com;
+	spf=pass smtp.mailfrom=jclark.com;
+	dkim=pass header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=lJyKI1Mn;
+	arc=none smtp.remote-ip=209.85.214.172
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E6F606A32A
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 11:38:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 17E6F606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBB0606A321
+	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 12:12:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7FBB0606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jclark.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jclark.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=hHxmnXfG
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jY3qN4pFMz6Mv3;
-	Mon, 23 Nov 2026 12:38:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1795433920;
-	bh=bpCvclBnqTFpGqJDi3k3TXF12kr9zYWAAPKnUQdM+Ys=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hHxmnXfGaV6gtwR1p/Y7UOMXqWyXPLF5fVG40GmvkkMHUIuPcB1obwxI3U/KCbsVa
-	 xjAQVl/w4bJWaZqfPDY754hKRxLgL2MtEiLX3gj4u7m/5PKSaBUzQFadwlEJxdgz0f
-	 5f5qSdKe6yOLF6XJyPa3AQKdcZmI5orisNMh8qsry09Y+R/q4nN3NoRT9YtcJLuvww
-	 bR3VzlvCHFE/8M+frvG2QBUXAG3qwMrPBB02hV0yb0ipcPxvTbzypwqjBjwyb/c+ki
-	 VeoECKG+4NK7dJhgyTPhC0MrfVa71l8oHmg3l8DziWeL87OOP+ZBANVDIz1SuRzg6Q
-	 l+EP9Z79oabWA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4jY3pS2P6Gz4yrS;
-	Mon, 23 Nov 2026 12:37:52 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jY3pQ3r1Qz8svX;
-	Mon, 23 Nov 2026 12:37:50 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 799775F837;
-	Mon, 23 Nov 2026 12:37:44 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <329cd215-d824-44be-a1dd-3ebbf5c0803a@leemhuis.info>
-Date: Mon, 23 Nov 2026 12:37:43 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=jclark-com.20260707.gappssmtp.com header.i=@jclark-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=lJyKI1Mn
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2f04bea9a93so26603295ad.3
+        for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 04:12:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jclark-com.20260707.gappssmtp.com; s=20260707; t=1795435975; x=1796040775; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=YXiKSe1b4sqmwhSslNYFvKYiTOVoSzJmWVzJ8m+MYNw=;
+        b=lJyKI1Mn6y4ibOoVu+7vw0eXMHi7CM1G2nKt+rEC5FR2SygQosCGV85JSLOPD+sJJT
+         PbGwgIXg7vh0rJmYb/Lakgum6skoYkNli19694qPXacM8qN+dtivlY9mkqfuZouVeby/
+         OFSiDYjuKYywgybnS/QHFctvrUZMfedZrang119jMEGXfyhCSTF/UNkiWWB8a2KfVtGy
+         iAHV1GDP0YUU1LH8YaSbOMUMYtVG2T+vGS23TIUhHCFMuIT/wELAI4Ks7R6R5xwl3r/l
+         Z0nU3IE+T1wFaJfMHz10NOGzuk4ZIq0YQd1FVjf8EYQEVUqc6eaYyb3qUUHRdI9x9uvX
+         fbNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795435975; x=1796040775;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=YXiKSe1b4sqmwhSslNYFvKYiTOVoSzJmWVzJ8m+MYNw=;
+        b=xo2a0aQPZm5ZGrvszAJUR8SDlUDkP1td1vsSQJwatlZclGpjULsDdByX+GUnz2NIav
+         DCmZDkkaj6pTvVKPZcngZi3F3EPmSqK5WFg1o6AMsgNYC2Fzm0S7oE4fJhxqW1Vq3fGG
+         PNOpEZWuW62/mGsIgGkBBW/REZhMjZTbHWDpMPgQtbAm8KqII4ry5/8rY8Dx80qQvuju
+         F6IDJyYCYZMoMOppOL7NCasib/u+xebj5zQv/k2e7rqTgmzD1lIn5YYWLCAmydyiVcux
+         sChoSrPxJDNpru7og16QWvGgbp9dLkrh/iA5QON+YCakkD2castsOhWXkCCF5Xqj59Pk
+         99AQ==
+X-Forwarded-Encrypted: i=1; AL+hErHjYs1NGZhPufNAUyrdahitC1vW9rYi3T22dItC+5T5yex1PpzWasoWmX1Gs+JU0MXnDw8pdUnGj/JLRA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/RuJ3bR1fhVGHqkQK2C1UfzcArBU3uqxHFUp2qn9GWdfHftLuS
+	ac7LpBBAaH1sw4//fVumNtJ8YZEwxkA17tlYxALPQr26HIsg1YWdEgf7B0WEYt8H4g==
+X-Gm-Gg: AZFdTZdG09cLZVn6VKqn05j/y2Hoc4i2citHAcJ7JDRw6iWk/VClUT368WRn0dmAWiB
+	KtU1xV3TTh9jUp3DEWvkQzb2EKU+JPJyYsakHSlgd2fThQPjV0JKyuQfB4MJukneFHrFrvQOR8r
+	JW5nHnOKokPF9VrLgENqUFwEnUuSC2cFvYN8IzwRHIuHAvrqe1Gpj12rFF92DvNgWPGy1Zxxn8o
+	oiql9rmBl4VRatk6PcX2h2DW76Asv+H3WrlijsaFNwZdfN2yrTBC/NMkVd90W1n+vWaU89+wpnI
+	9Wa3aCkiO6HY4bPdI/P0xm7Glxx1I8YHVI6N7Nn5qIY2oVoQ/wLnskTW7m1U06IErHLmC3C4ng9
+	hxcIpZBv6296VddLsVCnl9BYzJ75cV48MZmf3aTE8MG7nRNxeHu4Gvqz5YcNSLSKAnFoE1AQ5+H
+	NEQy7HItcOMQZkhyTu1WcyJn5GprLnUhXvS8DAhaFSN2Yqg67ZlR4D2lRl8nlUzzWQR/smBinsd
+	48Yx6yIKjXmDJrxWmK4gTlQaXM8HJPlVezJgSRM13x/K2rZwQHCpTN61gGw8YPkX/DxVwGLw6b6
+	I50PePxDOfKCaajMo91oPJFxWhsX5b/B+FBSwz00DsBlmBB7oLJPqlTpTDi+/5dY9eutQE/EdOr
+	6c1prD3+uqcmJke89Eg==
+X-Received: by 2002:a17:903:1ce:b0:2ed:3ca1:848d with SMTP id d9443c01a7336-2f03f1ea636mr110975425ad.25.1795435974723;
+        Mon, 23 Nov 2026 04:12:54 -0800 (PST)
+Received: from cantal.lan ([58.136.72.57])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f099a4d875sm12731675ad.37.2026.11.23.04.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2026 04:12:54 -0800 (PST)
+From: James Clark <jjc@jclark.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Alan Stern <stern@rowland.harvard.edu>
+Cc: Johan Hovold <johan@kernel.org>,
+	Bastien Nocera <hadess@hadess.net>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Robert Nelson <robertcnelson@gmail.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3 0/2] usb: core: fix failed device driver probes, add pre_probe
+Date: Mon, 23 Nov 2026 19:12:49 +0700
+Message-ID: <20261123121249.43867-1-jjc@jclark.com>
+X-Mailer: git-send-email 2.56.1
+In-Reply-To: <329cd215-d824-44be-a1dd-3ebbf5c0803a@leemhuis.info>
+References: <cover.1793669297.git.jjc@jclark.com> <329cd215-d824-44be-a1dd-3ebbf5c0803a@leemhuis.info>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -74,82 +109,35 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] usb: core: fix failed device driver probes, add
- pre_probe
-To: James Clark <jjc@jclark.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: Johan Hovold <johan@kernel.org>, Bastien Nocera <hadess@hadess.net>,
- Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Douglas Anderson <dianders@chromium.org>,
- Robert Nelson <robertcnelson@gmail.com>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- regressions@lists.linux.dev
-References: <cover.1793669297.git.jjc@jclark.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <cover.1793669297.git.jjc@jclark.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179543386507.1524621.15830580690752356180@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 799775F837
-X-NC-CID: t5w+dL6WwtxG3tWCMI8WeaTrlJSnO3BdmPMvXavSdnkLoYzMeOI=
+Content-Transfer-Encoding: 8bit
 
-On 11/3/26 04:34, James Clark wrote:
-> On a BeagleY-AI with BeagleBoard's device tree, kernels since commit
-> f918e3804498 ("arm64: enable HAVE_SHARED_GPIOS for all ARM64 platforms")
-> no longer boot to a usable system: the on-board USB hub is re-probed in
-> a loop. Patch 2 fixes this as Johan Hovold suggested, with a pre_probe
-> callback that lets onboard_usb_dev defer before the hub is configured.
+On Mon, Nov 23, 2026 at 12:37:43PM +0100, Thorsten Leemhuis wrote:
+> James, Alan, what happened to this? Looks like it feel through the
+> cracks after Alan's "This is all starting to sound very complicated and
+> fragile.  Isn't there any way to simplify it?" later in the thread,
+> which was more than two weeks ago. Or was this regression fixed and I
+> just missed it?
 
-James, Alan, what happened to this? Looks like it feel through the
-cracks after Alan's "This is all starting to sound very complicated and
-fragile.  Isn't there any way to simplify it?" later in the thread,
-which was more than two weeks ago. Or was this regression fixed and I
-just missed it?
+It's not fixed yet. After Alan's comment I dropped the pre_probe
+approach. v4 instead had onboard_usb_dev call the generic driver's
+operations itself, so that it can defer before the hub is configured
+(Johan's first suggestion). Alan acked the USB core patch. v5 is the
+current version, sent on 2026-11-07:
 
-Side note: another regression bisected to the above mentioned culprit
-was reported recently:
+https://lore.kernel.org/all/cover.1794018128.git.jjc@jclark.com/
 
-gpio: shared-proxy: open-drain regulators on ODROID-HC4 fail with -EPERM
-https://lore.kernel.org/all/20261115-hc4-gpio-shared-od-1@iav.lv/
+My understanding is that patch 2 is waiting for a review from Matthias,
+as onboard_usb_dev maintainer.
 
-Doesn't look related from a quick look, but well, at the same time I
-wonder if there is some subtle connection.
+> Side note: another regression bisected to the above mentioned culprit
+> was reported recently:
+>
+> gpio: shared-proxy: open-drain regulators on ODROID-HC4 fail with -EPERM
+> https://lore.kernel.org/all/20261115-hc4-gpio-shared-od-1@iav.lv/
+>
+> Doesn't look related from a quick look, but well, at the same time I
+> wonder if there is some subtle connection.
 
-Ciao, Thorsten
-> Patch 1 fixes two pre-existing bugs found by a Sashiko review of v2.
-> 
-> Tested on the BeagleY-AI on top of v7.4-rc1: the board boots normally.
-> The -ENODEV fallback that patch 1 changes is not reached on this board.
-> 
-> I found this by booting commit 85b4bc79dde7 (net/main during the 7.4
-> merge window) on a BeagleY-AI with BeagleBoard's device tree. A coding
-> agent identified the problem, explained it to me and proposed an initial
-> fix, which was revised numerous times on the basis of comments on v1 and
-> v2, my feedback and local Sashiko reviews. I verified that the series
-> fixes the problem on top of v7.4-rc1.
-> 
-> v3:
-> - Add a patch to fix existing problems, as requested by Alan Stern.
-> - Patch 2: rebased on it, no other change.
-> v2: https://lore.kernel.org/all/20261030151919.3511106-1-jjc@jclark.com/
-> v1: https://lore.kernel.org/all/20261030114705.3159093-1-jjc@jclark.com/
-> 
-> #regzbot introduced: f918e3804498
-> 
-> James Clark (2):
->   usb: core: clean up before handing a device to the generic driver
->   usb: core: add a pre_probe callback for device drivers that may defer
-> 
->  drivers/usb/core/driver.c          | 42 ++++++++++++++++++++++++++----
->  drivers/usb/misc/onboard_usb_dev.c | 15 ++++++-----
->  include/linux/usb.h                | 14 ++++++++++
->  3 files changed, 59 insertions(+), 12 deletions(-)
-> 
-> 
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+I don't think they're related.
 
+James
