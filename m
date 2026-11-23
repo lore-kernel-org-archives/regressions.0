@@ -1,48 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.59.206.189
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795410186;
-	b=j0vtLUtDC1hz7jzJlCEoTEucsCypOvV0/3//V9We4rR9BsEuN1fFDzofYriiod9tyEKe
-	 K3kB5spuU8WG47Cblz033R1T5JTpZ0cvxQ9F6E6R4mBWzpC3vwjniDoWMZS6hoNWMIucd
-	 rT9VH3Wdfpcvw2NLrotJJfCmQVh2ZBCX4qlX2zesF4+pL0yhOJDGdqttrbbkYgo9/1bBV
-	 WWAKF002l6/8lWwRTV2DdzKEirv/ohCPOcQNPwvYsYlaeFEajEJqBXJbTQJvwoMMuj2t+
-	 DVZ414FDGt3nEbASFk/Zb8lzc+pkFGJ/9sdXMiSPMQ/9fFMYRhFKByNSNhN07ez6iXA==
+	t=1795414210;
+	b=dTTT1R45ELLOYoE9WaaCclIQHZoFCzLxocR23Z+GSWYnwoRpNOmJOCWw4vgklLcyuRQj
+	 W38Hsm1Awo94LHNIaBSAQlQGGffpoN0qRKN1poMnqCqhWGD9Nn5VL0Rfg4gXaHgqbw52r
+	 wb/rpDGFZZerGk/Utt+iWmvTNk4tOiinbiOwQrht6uXjVpiBRbH3unfrqBMjrwHDCJDoY
+	 0odUQG7Fb5Q29AzG8Hv0k7o0O4DIllYt0vQ53PnWFmeP5GCwNEkcCzDdMKWu68zAPm0NG
+	 K8x7awOi5HrrCfVlZqHsc+AHYLVuYl6u7LAIUzLN9RHi1qrjZiQrOS7SkdtgpGiQlNA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795410186;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=txMBHNnDlIN2ZVpqzWAUJtzvCft4A8gUpeRp8AWQt5s=;
-	b=NJaIvn2mNILYojm1tjCPdIq+qgy7YmVfk97DYKnm96hkqN8qS34QxkNB/RSn0NcWI9sM
-	 VKyuIoKKLkUe7iWsHSx0DoY+OMOq9SCV/nsbOyhru/Na6SxrhiW8lmEhSahCTiPFeocp1
-	 ogIBsKuRMfpBgMWRwrNw9FWn/92+tGKHeYWvI4srTtXw0gHYmHJmRK8czcD9sVOnlAF66
-	 d50ZEmH66+zsdTqfYC6sBJXwrSDCGzV/Eb/SO6+0ELHQc6MRGX+UT9DWB+6MVxeW2t1se
-	 FR96U+v0gztxT3JwUjAXp4M2+90H6HBRYGypnMbLpjcnSFxQvlKm43Fiu3sysDjmAYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795414210;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=yLN4S3lrqlKtWig3p1xpyEGfVn7ZeVXiVgaiSlEzVEE=;
+	b=WDvqDdmTkEC8IFzHNtmFVm8JNXH4oINdr/1xBw6yqZoyxMR4SEiGfqREzHkW9Z0fl3ww
+	 oUF+EZadmpDpUU9ZCxku1BfMAjvu3qBISIJzkb14qAEQCFtHpK8t+dcAhu9dMHGIcrxu/
+	 ecmJ2GqPeXeJYOHbPwOtQfJFE5GdnvfkA4D7aeVHV3MA0HCXcwd25LA4YWkLrjxyJ+nXm
+	 sfE0oh5TOsnAAfE/HTmIMR/IBcb9gsv/MYF0Xvtg13LmzeXyQd3hmHzuhNaRDCJCVTYIY
+	 UE/3U6RqFYS0xMyXR8vJ94S3AFHSLos5kBbWOP5aOHn5yWVPk/N/IgLXey1pTGb7uKQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=YjJPFPiv;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=evjLP5aM;
+	arc=none smtp.remote-ip=194.59.206.189
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698AD606A31A;
-	Mon, 23 Nov 2026 05:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710FE606A31F
+	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 06:10:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 710FE606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=YjJPFPiv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614E61F000C4;
-	Mon, 23 Nov 2026 05:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1795410185;
-	bh=txMBHNnDlIN2ZVpqzWAUJtzvCft4A8gUpeRp8AWQt5s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YjJPFPivK5rHjzBuq15FfOdSDx5/k3xRN7KD03ILW0Tj8NH+dDfz6W00o/NUWafvy
-	 3jmgxRTNdqibIZ8uR9u1ytI5zF66RpcYOwVVdx9tHxCgH0rc2k6Ko2N3MW0ZB7y6f7
-	 hG2xzjNWQQKPfonCi1el7FaCgtgVQf6v+EKkXPWk=
-Date: Mon, 23 Nov 2026 06:03:01 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Iulian Vaideanu <iulian.vaideanu@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Unable to compile 6.12 kernels on SPARC64 since 6.12.105
-Message-ID: <2026112346-vagueness-naming-01f0@gregkh>
-References: <CAPK=yVMe1Ro=aw_daLCOM9cBATsp6crdgB4wd0ty4vrnxtVKkQ@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=evjLP5aM
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jXwV720P7z4Fdy;
+	Mon, 23 Nov 2026 07:08:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1795414095;
+	bh=+Hnb++gw85v3HhE/K0yTC4jAJfHcueKVxn3kbMs17QI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=evjLP5aMylD+My2TuqwtmEnS24UW+7AGkdG2gRGnfJLuxs95uq0p9ye9d42J+DW4f
+	 CSnvFKXprqWCWg+Y74Y24/Xmx8GyMy5mkzF8K/8pMHYjAnj2s0/7oijfSe0lz0red0
+	 9hiSP70wdmPgmr6R++wRBQza1aujRzx2oqqpijuYzsNtlJE2sKTxyy8cx9FDsQq2IE
+	 RWHOJOHAbnjrnV7BepgSaRfI/9GvbHksFapRceZw7R7DgmQlOybPSYJwtKkcBH4Mij
+	 uh5vxnCwSzU42YY1zhLoMUknnMDTZrPRUoXGRgfyIS93DWBPh7wY2lPrE5wAQgBQF4
+	 4HlKuL7r0ezGw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jXwSw5mqVz7x8S;
+	Mon, 23 Nov 2026 07:07:12 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jXwSt3Lpjz8v3M;
+	Mon, 23 Nov 2026 07:07:10 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8787E5FBDB;
+	Mon, 23 Nov 2026 07:06:58 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <841bc5e9-51f3-4eff-8c54-8dfac6762c17@leemhuis.info>
+Date: Mon, 23 Nov 2026 07:06:57 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -52,20 +79,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPK=yVMe1Ro=aw_daLCOM9cBATsp6crdgB4wd0ty4vrnxtVKkQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Unable to compile 6.12 kernels on SPARC64 since 6.12.105
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Iulian Vaideanu <iulian.vaideanu@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+References: 
+ <CAPK=yVMe1Ro=aw_daLCOM9cBATsp6crdgB4wd0ty4vrnxtVKkQ@mail.gmail.com>
+ <2026112346-vagueness-naming-01f0@gregkh>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <2026112346-vagueness-naming-01f0@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179541401883.830933.13122758706311832823@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 8787E5FBDB
+X-NC-CID: 1CrMVWaMhYywk+Z1sR4PNr7Rjia7iyMGv8Mbn8NTYP0hWQMHi2c=
 
-On Sun, Nov 22, 2026 at 08:39:18PM +0200, Iulian Vaideanu wrote:
-> Hello everyone,
+On 11/23/26 06:03, Greg KH wrote:
+> On Sun, Nov 22, 2026 at 08:39:18PM +0200, Iulian Vaideanu wrote:
+>>
+>> Ever since 6.12.105 I cannot "make bindeb-pkg" vanilla kernels
+>> (platform is Debian unstable on bare-metal Netra SPARC T4-1, GCC 16.1
+>> or 16.2 from Debian ports) - it always ends in the error below in
+>> fcntl.c, probably brought up by one of the fsnotify-related commits in
+>> 105.
+>>
+>> Is there anything I can do to work around this?
 > 
-> Ever since 6.12.105 I cannot "make bindeb-pkg" vanilla kernels
-> (platform is Debian unstable on bare-metal Netra SPARC T4-1, GCC 16.1
-> or 16.2 from Debian ports) - it always ends in the error below in
-> fcntl.c, probably brought up by one of the fsnotify-related commits in
-> 105.
-> 
-> Is there anything I can do to work around this?
+> Can you use 'git bisect' to track down the offending change?
 
-Can you use 'git bisect' to track down the offending change?
+Not my area of expertise, so this might be misleading, but FWIW:
 
+Wondering if this is related to another sparc build problem in the same
+area for which a fix was recently queued for 6.12.y, but then dropped
+for now to prevent a deadlock situation:
+
+* https://lore.kernel.org/all/2026102206-trinity-feminism-b082@gregkh/
+*
+https://lore.kernel.org/all/09fded57a6074dd89485.sashal-rc-0003@kernel.org/
+
+Ciao, Thorsten
