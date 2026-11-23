@@ -1,75 +1,115 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795425657;
-	b=yTY170E307Mvt3EAOWNQ8BDsl9gyMbETDppRtykHPTfXTeYM2XmHj1LBNrIOGfQR81wF
-	 siXTuEp8VLBtC6gSzpQSWfE4QrYlUfA097zzqz7uaRFfV5QGSik5wUayPjY2yFgLtv+VB
-	 es4ZBWauiVy/A3eEx2839kcTjk05exA7QbdUTbohGzM6DwKAnSdhGVepfznvnPrusyjBh
-	 sFhFZgMYqdYyDZkphDjmr4XnLbJe2/5/94sQ4G3g6FXwq6Hp0E6ixY/+TwRTvM8ooWiFj
-	 CoAtpJn/Y8JtDWWuwFyG7sCVV2sXreJ9RCpc4BISWKzzEfqXEOlQHyP6r7Yzw1+lBZQ==
+	t=1795426349;
+	b=eoLgyoijejnnxrOgyd1d5i+mA+ompKvTsz3Ypjl1RO6Xc7Hmjq/2ZMXPntgxeaSYATXJ
+	 oh7GF8pjyqnvpjf3ZPDm4RHqMIL56yY7wF/ei5BHmBf9iucyEuc5oOls1tzelb5yI4fyl
+	 pJ7n0LLtNNtZjlk0SMwCcu56IpUi2Wx7xfj3wDnrzNAnylZv0izJc3DMEmlpC51LYKmIc
+	 a7Z5bmqj8MdrmTQD5WcZ+iBEsPQVzvukVyzqL4Oaxk51uUfuFh6alI7LzakQEmYux4kgT
+	 cdXS1/5vdgWSFXjir73u/K124gtIb2wimaocE+LS0UXU3PKQKyqPNpXGYHczsmGmSwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795425657;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:X-Virus-Scanned:
-	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spam-Status:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:
-	 References:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=+x19aiOTaxH3XtYDkDOQR3CDrFOAa0y1NWB8p30AqmA=;
-	b=Eg1BU1YedfWg4UqG0lyoKOasNt4QjDQXunYy2/xVzGheHfqCVqZ9sFIPFQ2iYYBOQsWN
-	 Zr8VRxQNVA/4o9DFXx01eCAkw1XIQ3qzfWoBSyUe/Uu9lZLq3i9tXeYYo0TQG3m7bsHHp
-	 Z0q7aRFgdYqVp1zTenoLFeI3eeqry/J9PuSpVQmrv11HV1hMwticncE6a6nKGdlxehuwJ
-	 2DjkeYhXvAVkwSXAcmONH1zvmNg/BO7//aLo2zufJCFVQtzlJsSby+tylIFgyjCp3381P
-	 /s6dPZddh8mGgr0SQWSKjnFgah0/Vkxy/Xd6esM74GyzzL4byb891I1kGmZpuPYJKzQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795426349;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-Rspamd-Queue-Id:X-Spam-Level:X-Rspamd-Server:X-Rspamd-Action:
+	 X-Spam-Flag:X-Spamd-Result:X-Spam-Score;
+	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
+	b=gtxE1dMnuGJ5HKOHI15pyfkjESu5CmM+tDG6wWPJ9sCoLUL5Wdd5U0577wL5X7iPbx4u
+	 Fq16aAZ45DfdrbS9NvY6yW3QofF6K9zQ41MomOaVZiuSNlOctj6VZqLCrTsdhgYqH6YjQ
+	 xoZveUB8EbuIBLgodHGueTtVR5IIp6z9RkaehjUxSBKCO8dTo9N8rzAJBbfIJMjUkSEiI
+	 +S5hv+AlXwMpYxDjebyiU3BCaQEVuGGD+0AgnAzwoq6WPMA10X4hKcuubtsEEWwiTdXK+
+	 PkGAn52boeARZoo/xwxOYx5yPmfFsxfxWUM6oXKDjMf4/H/XrFOvVtoDfB6u/gwHgag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=N3xctTYj;
-	arc=none smtp.remote-ip=188.68.63.170
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=R2MI97kV;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ddgAvCDh;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=NkOveBO5;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=YHxH7fMz;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FC2606A6B5
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:20:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69FC2606A6B5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70FE606A32A
+	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:32:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E70FE606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=N3xctTYj
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4jY0mK52NGz8qQV
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1795425649;
-	bh=QH8VbvcBXv3Xq7BSoO/tDSj637wOT21tG5tuoW4c3YA=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=N3xctTYjUpVH8j2owMw/1PDU2GUSYerXWwwBlIoKXrLFDEKf/THWb/HWCJsaczJjK
-	 6nhdTOG1YF10BLntyFEBYaQnee2W2u1xvr4RaeIpzCqkIc43Uml0BmVWB67sq1TX12
-	 n3qkqcBTGH+BLJWlcm8UTIR74KJ3z8TJ0gs17/eXDb/BGfdXB1yV2andWDdSHLX/70
-	 lZIPNGO3YSwubdE931mLCB6naTmk5T089u1XdyYfRbhTOZcQsRHjzgi6iuQFCsBqhQ
-	 4w110+XfvMUO/W/H6dOdWN5nUuL6f4KIOiG2k8RaPisIo+C21MKK+6tGfBu2vxCfk3
-	 quAdW5fDiawjg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4jY0mK4LFxz8qQC
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 09:20:49 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=R2MI97kV;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ddgAvCDh;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=NkOveBO5;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=YHxH7fMz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4jY0mJ6vjzz8vK6
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 10:20:48 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3D8B45FD2E
-	for <regressions@lists.linux.dev>; Mon, 23 Nov 2026 10:20:40 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <9fbaed0b-2b98-4625-8b29-aad5d6bb607a@leemhuis.info>
-Date: Mon, 23 Nov 2026 10:20:38 +0100
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DA2071F7E2;
+	Mon, 23 Nov 2026 09:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795426347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
+	b=R2MI97kVvdXL/ZqV6R8nhIKO61gY5xmUr3sUng6A+IodkR48mStUGxcRHEv59MqjRyWCd6
+	djyPRcJWc1qeIMkUaZ0pzBybqvOdvEBiCsoA8esmBSieltAQmoJWqWJ0igrG9NggMl355D
+	3RyPRp7hH9cHXYUDsP9NdpqtqAoVS1Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795426347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
+	b=ddgAvCDh46aA+RmgXGKTi4x8dEGCwsKQZ3us4tdjY4ppT6pWa5Ws0bZFve/v/MR/Vf2C3q
+	/oR80W00V+mWOACQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NkOveBO5;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=YHxH7fMz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795426346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
+	b=NkOveBO5NMFqrdWyNd1W6PkLGKdLVsVaQ0bPJ1G0h2Ku2fJ6D0iHrVk45odpQRKRI4M2hx
+	cH8QrvEwo/N/nK0MdKxIsjl+VW/EZ/rL1uw3XMSFDaO4J4vyZcfXdiH5kQjsfpVxhCeEIN
+	vGTXHOlAN5g14ARsJ1dizvmzrRa5zKc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795426346;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HENCv2ieEzXZok7KFVbIdnLvR/2pBLxGqmsDYmJcTLg=;
+	b=YHxH7fMzj2LlNhVkNyxuFU484CBngGmZdoP8xF0r8sEzJrkVux86+wemp/WTje/CeGKa0g
+	42nPKLuf71CKNPBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82C171352B;
+	Mon, 23 Nov 2026 09:32:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vl8PFioIBGvNJgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 23 Nov 2026 09:32:26 +0000
+Date: Mon, 23 Nov 2026 10:32:26 +0100
+Message-ID: <87ld6jdhat.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Yu-Hsiang Tseng <asas1asas200@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Cristian-Marian Fotache <cristianmarianfotache@gmail.com>,
+	Takashi Iwai <tiwai@suse.com>,
+	perex@perex.cz,
+	linux-sound@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [REGRESSION] ALSA: hda/realtek: Higole F9B fixup breaks speakers on unrelated Apollo Lake laptop (10ec:111e)
+In-Reply-To: <179542261324.542908.13953751300676446171@gmail.com>
+References: <CACGjpbf73XdwrG34ffjmYU3ZYuStPpFNXf9w+AGYcTmLyHCN_w@mail.gmail.com>
+	<87cxrx70qe.wl-tiwai@suse.de>
+	<87pkvx5625.wl-tiwai@suse.de>
+	<179542261324.542908.13953751300676446171@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -78,54 +118,80 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <179542564044.1249608.13158753329412644409@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 3D8B45FD2E
-X-NC-CID: K5XA4u5Uxh2EE+Xac5Fu0VmnEYCEnHpEq9tSqBikAHKvUh0gXhM=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: DA2071F7E2
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-12.51 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[suse.de,gmail.com,suse.com,perex.cz,vger.kernel.org,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
+X-Spam-Score: -12.51
+
+On Mon, 23 Nov 2026 09:30:13 +0100,
+Yu-Hsiang Tseng wrote:
+> 
+> On Sun, 22 Nov 2026 14:50:10 +0100, Takashi Iwai wrote:
+> > > Yu-Hsiang, could you check whether the quirk can be replaced with
+> > > HDA_QUIRK_ENTRY() with the codec ID instead?
+> >
+> > Correction: here I meant "codec SSID", of course.
+> 
+> Sorry for the breakage. The codec SSID doesn't help, unfortunately:
+> it is 0x10ec111e on both machines. Cristian's codec dumps show
+> "Subsystem Id: 0x10ec111e", the same as on the F9B, so an
+> HDA_CODEC_QUIRK() entry would still match his laptop.
+> 
+> Please go ahead with the revert.
+> 
+> The commit is in 7.3 and was backported to 6.1.y, 6.6.y, 6.12.y,
+> 6.18.y and 7.2.y, so the revert will need Cc: stable.
+> 
+> For the record, this is how the fixup silences his speakers. His BIOS
+> declares two internal speaker pins, 0x1a and 0x14, besides the
+> headphone on 0x15. Without the fixup, the headphone gets DAC 0x02 and
+> both speaker pins get DAC 0x03. With it, 0x14 can only use mixer 0x0c,
+> so it shares DAC 0x02 with the headphone. That DAC holds "Headphone
+> Playback Volume", and PipeWire turns it all the way down while the
+> speaker is the active output.
+> 
+> Also, pin 0x14 on his laptop follows its connection select, which is
+> not what I saw on the F9B. I'll re-check the F9B before proposing a
+> narrower match, and I'll Cc Cristian so he can test it.
+> 
+> Cristian, thanks for the report and the dumps.
+
+Thanks for the confirmation.  Then I'll revert the commit for now.
+
+For Higole F9B, until we find some better way, please use
+model=mono-speakers option as a temporary workaround.
 
 
-
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/netdev/MAEpYNlWKRd7lM0j62YlEZ97Ux1h5AyjSuFRm4Lxk2Q6haeDGTKqX8lpDRZ8slvBu6qA7Bbt18zpr9fyF_jArrEemTgRqzqluxmsGH7UcFk=@protonmail.com/
-#regzbot fix: netfilter: flowtable: cache destination hw address for
-XMIT_NEIGH type
-
-#regzbot report:
-https://lore.kernel.org/all/20261121101350.bab69dff11a2@gmail.com/
-#regzbot introduced: 2139cb633d48
-#regzbot title: drm/nouveau:  machine hangs during boot
-
-#regzbot report:
-https://lore.kernel.org/all/CAFS5DSFUi28HgX8t5bRRGVqPkOZ+VqrP+LtyMiwPQhyRpTxFTg@mail.gmail.com/
-#regzbot resolve: likely fixed in 7.4-rc (see replies to report)
-
-#regzbot report:
-https://lore.kernel.org/linux-arm-kernel/20261119114041.GA166708@francesco-nb/
-#regzbot dup:
-https://lore.kernel.org/linux-arm-kernel/avrLnVFtgobyTwN1@francesco-nb/
-
-#regzbot report:
-https://lore.kernel.org/all/CAAk_qkgY_To5dwBgua8NBpUv7YWB6g1w5b2g6+BzQ5=mqgq6dA@mail.gmail.com/
-#regzbot introduced: 108704eecab9
-#regzbot title: ALSA: hda/realtek: speaker and mic-mute LEDs stopped
-tracking mute state
-
-
+Takashi
