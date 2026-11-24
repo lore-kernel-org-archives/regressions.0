@@ -1,77 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795522113;
-	b=XXdaSo5XbADXiqNAhvmDtpk4mahuOD5xLXE2tEAj0vljEia8bASFGX75+O8uXAqZrWv0
-	 c6cgJGERl4jBYWsa/hFSPoKE5vBjnFZOdRGhy0ir45ZEeIud+LtyBsDyao+SHHCNGSPK1
-	 n8D4EmNn6Hx/SmSKZT45cedBOB3AX2BW7j2XwmcuczoH/NDU5EqdBxNZ0FIhj1S5Rlyiy
-	 UzSKOlFbw/MrPxZZyIZ+HvPteyHi4Z6gCsT9VbvunHcctCeOaTXxNIZGzYNeCFrkn61aJ
-	 tse9v6+tTiUt0ZCF2/tfYB+2k6AdFxFeMJostpTsvBJgXXVmHPDcxGHvUYcd35TLPGA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795522113;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=VqJ96x7irDA25tpkuaj/0vDZJhWuEo9c3bEZALNqSGo=;
-	b=KB24BCJz9NlQxL1ts4dw7/mYZtRrQuAjDWvw6V56H0zt5w1pBUCIx9de5u2/uuJowiy4
-	 E/xTOZQCF31eBgfs7k2wK76KCfhXfmT1iONqczymxuWX7ZWq6TBqadu6crONUQbgi1sxR
-	 61mkBaSkQVmbKWV/m3Hh8psUlEa1VPWErj5aagDd0KvuEUQwLX6i5bym9rHCLk3qvOKxy
-	 MbqcvzjztdZYS89BlPfL82nYb3C5Bsws16Nj+IjqmBN+ZCJWWhZh+rVAX8w1cSylhOAAG
-	 iGvtX2ldZjkMb1D7DGsE94oVQRAMeOPI6Bv36CFUzz1TwzrZw1g7CjMoOs3NZgWZprA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=gn5MVccG;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=BnOOc09t;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=81.169.146.163
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795525702;
+	b=jRjMw5zeuNMXSjaCox4A6OZK3ZeLba1aKFSAg739KVxOEm7YJYidaSIN4Zg2gft9N5Sb
+	 uj+O24+0YK6QnbLLlGDx0a3PErhUdNTuoPJ8Rxwfcf42pSjSw7qfQO+dN6CwhYjfEGpIK
+	 WBN7C6bKy6b0DWNWN1SFi3CJ1pT3RDaNRFG/iu7ZL75AJEeE+VNF2VEgicRqYSGXgdJuG
+	 DcuVjKyJZvuSXnuQBX4lQzLsti7PcqlAiSveucWN0qHLzcpDPgw7mkK0AOFWSyvrR6Slc
+	 asFLGpomKNPXzGQedBOmakuaVRHa3Hbak2kZGBGLaFQnhTgYeETah1aUczUpwlzBQgA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795525702;
+	h=DMARC-Filter:X-RZG-CLASS-ID:DKIM-Signature:DKIM-Signature:X-RZG-AUTH:
+	 Received:Message-ID:Date:MIME-Version:User-Agent:Content-Language:
+	 From:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=msYZK5ytPl8qKKCV6KhsMHbgx7s+83d6N2eTtOR06bc=;
+	b=foKdwn49k9/QsfYewMgKJEScm9ndwpV8KFZVHRmTAG0B6keWMk9o2iA8pU1E88Y1yRt8
+	 W6oCmB0SMUo1Vky3ohEg3czBNajEBpbZeXmiuGiDZxT3hYp3jmkdkOPFkpEgCGKVWLtek
+	 dACouNY4Vi1WVJruzYjXCU9x8qaq4FpcAGZkjNkJD/KKzkOd/o+aKW7s9aE2vWO56Lq8j
+	 BjsVraEtZqtN4M/ej45JF0vxM6QQ+S9UzVEwB/0Z7Z95OnMa5j5Iikb2y3kRvq8KsTwq+
+	 NMPjY3K7f4WyafAuc0Tdoj9NtkZBtk9cTnxP/FfMM12AztxrVToH+qxn7WGzBa5onSQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=plamper.com;
+	spf=none smtp.mailfrom=plamper.com;
+	dkim=pass header.d=plamper.com header.i=@plamper.com header.a=rsa-sha256 header.s=strato-dkim-0002 header.b=U7gWN0uS;
+	dkim=pass header.d=plamper.com header.i=@plamper.com header.a=ed25519-sha256 header.s=strato-dkim-0003 header.b="5/kXZDhd";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=81.169.146.163
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.163])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDF0606A327
-	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 12:08:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8FDF0606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD08606A31E
+	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 13:08:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AAD08606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=plamper.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=plamper.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=gn5MVccG;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=BnOOc09t
-Date: Tue, 24 Nov 2026 13:08:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1795522111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VqJ96x7irDA25tpkuaj/0vDZJhWuEo9c3bEZALNqSGo=;
-	b=gn5MVccGImMymK0cGWAo2vuYbwr5w2XyJbSq20Mv/pjr9t70Ey7iKWFukb/aaqa12yDTrf
-	VxTHiFBFBz+LqOQqruBdbbbLlId0Izo4Ps9bx45WOmDZWkoRpgGLIqHlQQ4eT+SsxiDPsz
-	MuoXxYgMIiefFRh1G/Y5mBxv6/iL+s46ogDCgrHNf50TuTZNc57/mEgcExK2HtSsWVq1pI
-	KVYDM2jmbacQwGgTqrTe+WsdNii45TwlcmkkV7r4a+YXJ0RGPyWCazz/qpT04cdL8ctEBm
-	FKgwokg7dfNMLkvQ45jeH/GXfDQOVCrtdEGRe9/85P6UMDj8pw0fUUlROA1L5g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1795522111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VqJ96x7irDA25tpkuaj/0vDZJhWuEo9c3bEZALNqSGo=;
-	b=BnOOc09tUwiZGYNo3KQCsEaSmxM9WTuSQkf5+SyCFWU0GdmrCWuW30ZGSVuHrUlZ9GgZou
-	BsSLQorvdNLiJ+Bw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Martin King <martin3kx@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH] sched/rt: push a queued task when its priority is boosted
-Message-ID: <20261124120829.53F8ppqc@linutronix.de>
-References: <CAEB5A_91hob8ddOhW=PrO1=O7GrFmSxY3r1-_Ard6x8KHHuJGA@mail.gmail.com>
- <20260814183652.611e7ecf@gandalf.local.home>
- <6db9c47f-a1f8-49dd-9e80-f9014d75f9e8@leemhuis.info>
- <20260903092037.5b739980@gandalf.local.home>
- <20261015061915.126442-1-chaosheng.qu.linux@gmail.com>
- <20261015084615.05957ae3@gandalf.local.home>
- <179526068763.97100.12205093734161349836@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=plamper.com header.i=@plamper.com header.a=rsa-sha256 header.s=strato-dkim-0002 header.b=U7gWN0uS;
+	dkim=pass header.d=plamper.com header.i=@plamper.com header.a=ed25519-sha256 header.s=strato-dkim-0003 header.b=5/kXZDhd
+ARC-Seal: i=1; a=rsa-sha256; t=1795525693; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=O38Q4NV/hddvNSS+APH/3qL+xNOtvueWSaTH0V9vQC/QG0sBvGQy5Uj9USPn2Ke/cE
+    wrlcKaiWjO87v45CPx1wUScIcPAtAJ/OmY38dBgACmtM66p1dLrAlIvlYUbspZ3kQNMz
+    9FDBysDLhkOzt2jgxxtFEOmuax2IjGr4C5z/GUyabsffmRNSQW5rEgH9XNzBUoQKXTog
+    uFsDwnqWOHWYBGmf2ZbadosqJWn+csdOjAH4ZGdsHXNRrgvT6+m6yUde8S4oFAVAjBvS
+    RMdS22ok5vyV3ngNGK6ejqvKQ3WOqiZq0uuBhlHu5Hc/rFMRKkbQbqXXAverA7cz+cQE
+    teUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1795525693;
+    s=strato-dkim-0002; d=strato.com;
+    h=Cc:To:Subject:From:Date:Message-ID:Cc:Date:From:Subject:Sender;
+    bh=msYZK5ytPl8qKKCV6KhsMHbgx7s+83d6N2eTtOR06bc=;
+    b=WJW8Qq3dd7+c3BZiHUqnSxn2mi/3XomQ8LikR3FJscncCCb0PS/p1AzHs+ff6u8oGv
+    yTRPKJWF/6bLXPMCBnc5Xl795w3GyyUZ3UE2eg7SYOD4zKIWATZgiGxoAKVxG3Tk6LmY
+    /t3GSpCloJ7dc1wVJPC4r0MEPca+TLP537yCAbVI0fZlmW0hJ+fn7oL+23UQlXHbbfVv
+    8/obVfSaKP/WJ2Af6/Y6XljSaEKTaIn/CMBoj1pZ2pMbE5J/nYFKxKg2guEUxmg37bsk
+    Aj7B1+SF8UXTbMzb5FNCUegC7HL/mtbnpMy9jDob+IFzth0JvZ32kJsanzpbrZKAuu9z
+    7E1A==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1795525693;
+    s=strato-dkim-0002; d=plamper.com;
+    h=Cc:To:Subject:From:Date:Message-ID:Cc:Date:From:Subject:Sender;
+    bh=msYZK5ytPl8qKKCV6KhsMHbgx7s+83d6N2eTtOR06bc=;
+    b=U7gWN0uSNe0CZ1TxGKAP6K/xknkzpPsXMMl/eflZtxiJsK4mEqgLHsCvxT1XpiE4lq
+    WB7HgVv/S3OelpOh3wCra+cqXW3ioPHTh1r++5gaXZVx7XPDHK068gSa3JCVILRpGVfL
+    n1isCqpMxuLFKQtAJfRZ44tuhxo4AX42BSbA2BUV1h/Rj/u0mS/FG6O49FkcXaHjL/dy
+    J9eHLRe9WZSogn6wqUdPB4jdfn3A3IwUO4honjdrISCZwSekYeD+1nGpHcvrO9AOHg0T
+    WDKBXqd/QKOsU864IKbCU2fnazVTDbZyFI3EChvR/ooyVIJsy/VKImuTdJ7lD0eP4vWd
+    saLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1795525693;
+    s=strato-dkim-0003; d=plamper.com;
+    h=Cc:To:Subject:From:Date:Message-ID:Cc:Date:From:Subject:Sender;
+    bh=msYZK5ytPl8qKKCV6KhsMHbgx7s+83d6N2eTtOR06bc=;
+    b=5/kXZDhdqAT0521CY2acWVaj8oa+0K/+21ggwuZFRK9rum/AktPxVmD3GfJ0BxZE9m
+    FjEl+2ifc4/4FUPqzxAQ==
+X-RZG-AUTH: ":KmkIfFiIa/PduFlmlzlQvmlOb71gHElbhgsSPxOFNRkvB3ccTjKq2nHOg0SdSv87"
+Received: from [10.172.128.204]
+    by smtp.strato.de (RZmta 55.6.3 AUTH)
+    with ESMTPSA id 5b30a62AOD8D3Dk
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 24 Nov 2026 14:08:13 +0100 (CET)
+Message-ID: <74ce70a8-8faf-4bf0-8967-e5b4a4418ced@plamper.com>
+Date: Tue, 24 Nov 2026 14:08:11 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -81,94 +91,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <179526068763.97100.12205093734161349836@gmail.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Felix Plamper <felix@plamper.com>
+Subject: [REGRESSION] HID: logitech-hidpp: Signature M650 Bluetooth side
+ buttons broken in GNOME/browsers
+To: linux-input@vger.kernel.org
+Cc: jikos@kernel.org, bentiss@kernel.org, hadess@hadess.net,
+ regressions@lists.linux.dev, edouglas7358@gmail.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Martin, can you check if this solves your problem?
+Hi all,
 
-On 2026-11-21 19:31:27 [+0800], Chaosheng Qu wrote:
-> A PI boost can raise a queued task above everything that is runnable on
-> other CPUs while it still cannot run on its own rq, because the task
-> currently running there has equal or higher priority.  prio_changed_rt()
-> only calls resched_curr() in that case.  The task then waits for the
-> current task to schedule out.
+After upgrading to Linux 7.3.4 (NixOS 26.05, GNOME 50 / Wayland), the
+two side buttons on my Logitech Signature M650 (Bluetooth ID
+0005:046D:B02A) stopped working for Back/Forward navigation in GNOME
+apps and web browsers. The same mouse still works as expected over the
+USB dongle.
 
-It only calls resched_curr() if the boosted task has a higher priority
-and is not running. Then it will force a scheduling event by calling
-resched_curr().
+This appears to be a regression introduced by:
+   HID: logitech-hidpp: enable reprogrammable buttons on Signature M650
 
-If it has a lower priority than the currently running task will remain
-on CPU and the boosted will remain waiting.
+Before Linux 7.3 (and still over USB), the side buttons emitted
+BTN_SIDE (275) and BTN_EXTRA (276). With the new HID++ 2.0 diversion
+enabled for Bluetooth in 7.3, they now emit BTN_BACK (278) and
+BTN_FORWARD (277), which GTK/Firefox/Chromium seem to ignore for
+standard mouse Back/Forward navigation.
 
-> The pull side does not necessarily rescue it: pull_rt_task() only picks a
-> task whose affinity includes the pulling CPU, so a task whose mask
-> excludes the CPUs that just became idle is unreachable until the running
-> task leaves on its own.  With RT_PUSH_IPI off this is the difference
-> between a millisecond migration and a wait for the hog to finish.
+Remapping BTN_BACK -> BTN_SIDE and BTN_FORWARD -> BTN_EXTRA in
+userspace (via evremap) immediately restores Back/Forward navigation.
 
-While browsing through the code, the task should be added to the
-pushable_tasks list once blocked. A PI-boost seems not to do anything if
-it did not become highest priority on the local CPU.
-A push as suggested below will try to move it to another CPU if
-possible. What I don't get why does it work with RT_PUSH_IPI enabled?
+Wouldn't it make more sense to map the diverted 0x0053 / 0x0056 controls
+to BTN_SIDE and BTN_EXTRA instead of BTN_BACK and BTN_FORWARD so
+standard Linux desktop navigation doesn't break?
 
-This means there is a scheduling event (or something else) doing
-pull_rt_task() and the IPI feature causes to iterate over all CPUs und
-find the boosted task on a matching CPU.
-Without RT_PUSH_IPI, it is limited to a CPU which might not to be suited
-for the task (due to different affinity). Did I get it right?
+Device info (libinput list-devices):
+   Device: Logitech Signature M650
+   Id:     bluetooth:046d:b02a
 
-> Queue a push when the priority of a queued, non-current RT task goes up.
-> push_rt_task() already declines to move a task that is not pushable and
-> skips the reschedule path when the task is higher priority than the
-> current one, so the extra callback only acts when a migration target
-> exists.
-> 
-> Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
-> ---
-> Steve,
-> 
-> This is the fix we discussed in October.  The case that matters is the
-> queued task that the pull side cannot reach because its mask excludes the
-> CPUs that just became idle.
-> 
-> Numbers from a 4-vCPU QEMU guest (TCG; KVM is not available here), non-RT
-> kernel, RT_PUSH_IPI off.  L is FIFO 10 with mask {cpu1,cpu3}, X is FIFO 99
-> hogging cpu1, W is FIFO 90 on cpu2 and blocks on L's PI mutex, R is FIFO 60
-> on cpu3:
-> 
->    baseline: 1/5 rescued, 802.8 / 1161.0 / 1311.8 / 30.2 / 1280.0 ms
->    patched:  5/5 rescued,  13.8 / 1.1 / 0.2 / 0.2 / 0.8 ms
-> 
-> The reproducer is a small static C program; I can post it if useful.
-> 
->  kernel/sched/rt.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 85303add7..db93bfff7 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -2499,6 +2499,19 @@ prio_changed_rt(struct rq *rq, struct task_struct *p, u64 oldprio)
->  		 */
->  		if (p->prio < rq->donor->prio)
->  			resched_curr(rq);
-> +
-> +		/*
-> +		 * A (PI) boost can make @p the highest priority
-> +		 * pushable task on this rq while it still cannot run
-> +		 * here, because the running task is of equal or higher
-> +		 * priority. If @p's affinity excludes the CPUs that
-> +		 * become idle, the pull side cannot pick it and it may
-> +		 * stay queued until the current task schedules out.
-> +		 * Trigger a push for the new priority.
-> +		 */
-> +		if (oldprio > p->prio && p->nr_cpus_allowed > 1 &&
-> +		    p->prio >= rq->donor->prio)
-> +			rt_queue_push_tasks(rq);
->  	}
->  }
->  
+Logs:
+$ sudo libinput debug-events
+event16  POINTER_BUTTON               +390.788s        BTN_BACK (278) 
+pressed, seat count: 1
+event16  POINTER_BUTTON               +390.953s        BTN_BACK (278) 
+released, seat count: 0
+event16  POINTER_BUTTON               +392.506s        BTN_FORWARD (277) 
+pressed, seat count: 1
+event16  POINTER_BUTTON               +392.701s        BTN_FORWARD (277) 
+released, seat count: 0
 
-Sebastian
+After Remap:
+  event17  POINTER_BUTTON               +0.570s  BTN_EXTRA (276) 
+pressed, seat count: 1
+  event17  POINTER_BUTTON               +0.773s  BTN_EXTRA (276) 
+released, seat count: 0
+  event17  POINTER_BUTTON               +1.635s  BTN_SIDE (275) pressed, 
+seat count: 1
+  event17  POINTER_BUTTON               +1.808s  BTN_SIDE (275) 
+released, seat count: 0
+
+With USB Dongle:
+  event19  POINTER_BUTTON               +2.828s  BTN_SIDE (275) pressed, 
+seat count: 1
+  event19  POINTER_BUTTON               +2.835s  BTN_SIDE (275) 
+released, seat count: 0
+  event19  POINTER_BUTTON               +5.003s  BTN_EXTRA (276) 
+pressed, seat count: 1
+  event19  POINTER_BUTTON               +5.010s  BTN_EXTRA (276) 
+released, seat count: 0
+
+#regzbot introduced: v7.2..v7.3
+
+Thanks,
+Felix Plamper
