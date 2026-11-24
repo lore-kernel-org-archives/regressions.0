@@ -1,47 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.65
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795496290;
-	b=32JXRO4dLwMsRzqVhdufNPk/7I954UIh0KZjYA7aX5KtNqxJmTEyTcZ/PqnIP0s2EClM
-	 yOJFyCNTJf9Z7OwEdZ0Kpx2jZSy12nR6DjeE73OmPOtx/z3ne+xmdHX011Irz8Zd+RooA
-	 qqtk+pUQcYliCPjHowtwtTjQVMZIW5KmgUphY9srifVSvn9Hn/OTBYxkuQweNXpjwXWyZ
-	 ylyudfNYX9Xq1JYLhz6RQ+opbjoXIeL3SEvrYDPuU37fybx2pTlrN1FudRfOK2HA5Z3I/
-	 ttt9PxQvSS9WuM0gAQrK9gcqLTDDcr127HagSrJFCeFkEtWldUYyDvExtzw6Mgcug7Q==
+	t=1795504842;
+	b=Qt+xbXEJjQbD55utmcOeP6PXBrc3dt+eZ28jFkWXicI9XGDs73/wWpwuFkHQ4Homs7Mk
+	 vyuEa+gD0PFGxMDpf8wdAcxzs4dlKz38oq2dooTPhHnnexK77XW0P4hCxtON9o1vfRAQg
+	 dTxT5lFFubScSXusZsPod+QX0iHpP3LFtrYnZ7Oy9ZeIWCRXlsDRVBw2h8pVPLowaOEGh
+	 yKITVDiMXvaIy9eSQr1cVyr/IZSHyRoGD1mCUuZhC+EC14FwTIM+RVtKZz5/vaskvqMcL
+	 mng7ggsnzcovMunZ5LkIaDZSDymXNJFHP81WONEPjm5t0vD2/nI5/hid6X9uqZvZRPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795496290;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=S8a37teKt/OqnBakAx6vq9yT/xIJtgp1IdnyvBc6+Hw=;
-	b=BhmmhZhMVo05uuf2O1rGJkaDUBOzF7/8/oB7axrVV31GOmHWEtqm++xZ3WE/jtMdkD/r
-	 8j10BJYo1m8cFun3JTpYVrzFQxDvNGIa/XPismlFhEkl99Fe2TGeO69PMILVwUErJAaFC
-	 DtBuuZ9C4+IaW98GssbAoBaGINsf1l7kwanrTx3FnDAJs+mhiLuZMv9c7BicAoU4Q//Zf
-	 i+rp/2aYXePiK6zWtLBbGGngY8jlPeCGAZpNXLTExx3aVUrEOFCCz7Uv2Qw54rJraKWZ4
-	 hYSr3nM5RlnlTEmL0O1G1+IY90PAWN2OFuiEpocuhDRvljgWh4WKTkTTTxPXOjIXP0A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795504842;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:MIME-Version:Date:From:
+	 To:Cc:Subject:In-Reply-To:References:Message-ID:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=tHvSxvXCf5VkLnPhHQoHOjXTPcUMHCtMx3XeIE3rH08=;
+	b=osCtSJgC/nPLJZAL2e0NwvdXtVzfGjPIw0fITkEMMEq0xLN2cR4ofHlBz8OYVThjzVsv
+	 /J6C6xIcaQnWCzB0qqTJW6RK17P178KNseO2fML3ju3JH+3uKO7hXZpjj0p21AD9snVS8
+	 6oOpr+Z4pdCmtKFLOQRQTCMJjstsC3PPz5pJg5s+KHTkxdjF8GTi+eulT/VDOrxKN7C6b
+	 6vrgawinQyrDclzVsgYemBPQEzv6Xy5AwA/v2VqHOZ6WU58nMPAKRxcXJgPAHF9yV+GF6
+	 yWyzBTkRSV8eoS+8g4nRXtSIjmQBqR6JIwhlIBzAhbiWFmxRCcLSd/ipHjmdX+SBWXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=pass smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.93.99
-Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
+	dmarc=pass header.from=posteo.de;
+	spf=pass smtp.mailfrom=posteo.de;
+	dkim=pass header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=CsoC5hck;
+	arc=none smtp.remote-ip=185.67.36.65
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93D0606A33E
-	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 04:58:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C93D0606A33E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jYVtV1P5wz1c1NV
-	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 12:57:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id DE15E405CC
-	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 12:57:56 +0800 (CST)
-Received: from [10.174.179.19] (unknown [10.174.179.19])
-	by APP4 (Coremail) with UTF8SMTPSA id gCh0CgB3sO9MGQVrKZFRFg--.28424S3;
-	Tue, 24 Nov 2026 12:57:56 +0800 (CST)
-Message-ID: <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
-Date: Tue, 24 Nov 2026 12:49:19 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0586F606A330
+	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 07:20:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0586F606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.a=rsa-sha256 header.s=1984.8680eb header.b=CsoC5hck
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id E824D24002D
+	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 08:20:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1795504839;
+	bh=tHvSxvXCf5VkLnPhHQoHOjXTPcUMHCtMx3XeIE3rH08=;
+	h=MIME-Version:Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=CsoC5hcktA08PIURAy8uvdKnj1gYgr5vDUKTQma8mgYzRrKQ38bWNDlB8LJ97gi4w
+	 rK3727e8WOkEgU7XgZnOg5EMSySyOKmfVb+C061+W1AJ1wOCmg57Pf/VPG0Nu5uKCS
+	 fvlhYRQ5MLZBJbHORM3Jd6++PHSsXpnqSBCX6D8BqSn4lhRIfkJtynDJ/B2akwqWFQ
+	 P0ojy/ceRnTi8T7tf0dZOtuJJ3dh1xCbAQb7HN6/Iw+TgDU6Ixqwm87X5HSYG+0jnM
+	 GhsAsP7OioCl6JweO0wkLN68Xr2dqc4pvyorANu2ykPcgwb4lF9xBJ9uAkxoDu1Wtj
+	 iHKlpdzmsrTCQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4jYZ3B1gqXz6tsb;
+	Tue, 24 Nov 2026 08:20:38 +0100 (CET)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -51,444 +59,105 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>,
- Ojaswin Mujoo <ojaswin@linux.ibm.com>, Theodore Ts'o <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun@linux.alibaba.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- guolingxing <guolingxing@tju.edu.cn>, Josef Bacik <josef@toxicpanda.com>,
- Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
- <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
- <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+Date: Tue, 24 Nov 2026 07:20:39 +0000
+From: Tobias Laas <tobias.laas@posteo.de>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ regressions@lists.linux.dev, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Lu
+ Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
+ "block: Increase =?UTF-8?Q?BLK=5FDEF=5FMAX=5FSECTORS=5FCAP=22=20=28=36=2E?=
+ =?UTF-8?Q?=31=37-rc=31=29?=
+In-Reply-To: <awSs5Cw3hFkf4O4T@ryzen>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
+ <awSs5Cw3hFkf4O4T@ryzen>
+Message-ID: <572a3776f303846961d9897c55421a0e@posteo.de>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgB3sO9MGQVrKZFRFg--.28424S3
-X-Coremail-Antispam: 1UD129KBjvAXoW3CFy8Gw18ZF47ur4Utr1kZrb_yoW8XrW7Jo
-	WxW3Z8Wr48Gwn8trZ5Krn7Kry7uanruw4fJF45ArWrJF9av345W3ySgw43X3W3tw48Crn7
-	Ja4xJan8JFZIqFs5n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYz7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK
-	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOB
-	MKDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 11/18/2026 10:06 PM, Jose Fernandez (Anthropic) wrote:
-> On Wed, Nov 18, 2026 Zhang Yi wrote:
->> Could you provide a reproducer? My guess is that high concurrency causes
->> the blocks freed by my current process to be taken by I/O issued by
->> other processes
+Am 23.11.2026 22:15 schrieb Niklas Cassel:
+> Hello Tobias,
 > 
-> That fits our runs. I'll send you the script off-list.
+> On Mon, Nov 23, 2026 at 06:51:03PM +0000, Tobias Laas wrote:
+>> One way forward could be to a new entry to __ata_dev_max_sec_quirks
+>> similarly to the recent commit 
+>> a12cc63129380a5364e787d92b30a3257f66c250
+>> ("ata: libata-core: Add max sector quirk to INTEL SSDSCKKB240G8"). 
+>> However,
+>> I wonder, whether that would fix the underlying issue or rather be a
+>> workaround, because 4088 does not fit the pattern of all other 
+>> entries,
+>> which specify either a power of 2 or a power of 2 minus 1.
 > 
-> - Jose
+> Your attached kernel log shows that you have a
+> Samsung SSD 860 PRO 1TB, FW: RVM02B6Q
+> 
+> This SSD is probably quite common, so I somewhat doubt that it is the
+> SSD that is at fault here.
+Hello Niklas,
 
+thanks for the the quick reply. Indeed the Samsung SSD 860 PRO series is 
+quite common.
+> 
+>> 
+>> Furthermore, the first error messages are DMAR faults, and a SATA SSD 
+>> that
+>> isn't functioning properly shouldn't cause any DMAR faults, because 
+>> the SATA
+>> controller should never read from or write to areas outside its memory
+>> region.
+>> Since the issue with mounting the rootfs disappears with 
+>> intel_iommu=off, I
+>> wonder, whether there is a limitation on the maxmium block size either 
+>> by
+>> the hardware or from the configuration of the IOMMU and SATA 
+>> controller by
+>> the kernel.
+> 
+> Considering how common your SSD is, my guess is that it is somehow an
+> IOMMU or a BIOS/ACPI bug (since the BIOS generates specific ACPI tables 
+> -
+> DMAR on Intel).
+> 
+> 
+> We have seen similar reports here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=220693
+> https://bugzilla.kernel.org/show_bug.cgi?id=221713
+Thanks for the pointer. The first report sounds as if it discusses 
+several issues. I agree with Ivan's comment at 
+https://bugzilla.kernel.org/show_bug.cgi?id=220693#c42 .
 
-Thank you for the reproducer. After debugging, I confirmed the cause. On
-each failed endio conversion, the retry commits the journal, but the
-blocks released by the commit are soon claimed again by the
-background fallocate loop, so after 3 retries the DIO finally returns
-ENOSPC.
+I am afraid the second report is specific to HP server mainboards. In 
+contrast to the logs in the Debian bug report, I have never seen the 
+following error:
+DMAR: DRHD: handling fault status reg 2
+DMAR: [INTR-REMAP] Request device [01:00.0] fault index 0x1c [fault 
+reason 0x26] Blocked an interrupt request due to source-id verification 
+failure.
+On my mainboard, I have only observed DMAR errors with [fault reason 
+0x0c] non-zero reserved fields in PTE.
+> 
+> Does it work if you 
+> revert:https://posteo.de/webmail/?_task=mail&_id=4553111306b0538dd90e75&_action=compose#
+> d373449d8e97 ("iommu/vt-d: Use the generic iommu page table") ?
+To be honest I built many kernel versions between the increase in 
+BLK_DEF_MAX_SECTORS_CAP (~ 6.17-rc1) and HEAD for the bisection, and 
+since the change you mention was not included until 6.19-rc1, I have 
+tested kernels with and without this change, so I doubt a revert would 
+help.
 
-Although Ojaswin's v2 does track the exact ranges when submitting I/Os,
-we cannot convert the whole extent after zeroing until all in-flight I/Os
-overlapping this extent have finished, which is too expensive to me. So I
-think we may still need the split to succeed.
-
-Note that we do reserve space for exactly this case. At mount time we
-set aside s_resv_clusters (2% of the clusters, capped at 4096 clusters),
-and EXT4_GET_BLOCKS_METADATA_NOFAIL is allowed to use it. The problem is
-that this reservation is not effective today. s_freeclusters_counter is
-incremented when blocks are freed, but for journaled frees the blocks
-only return to the buddy allocator after the freeing transaction
-commits. Most allocation paths already run inside a transaction, so we
-cannot force a commit from there, and even between retries the released
-space can be taken again, as the reproducer shows. So ordinary
-allocations can currently consume the reserved pool, and endio extent
-splits can be fooled into thinking space is available. This hurts both
-endio extent conversion and delalloc writeback.
-
-My idea is to make this a real reservation of currently allocatable
-clusters rather than just a counter check. We can subtract
-sbi->s_mb_free_pending from free_clusters in ext4_has_free_clusters().
-Then a successful check no longer counts clusters that cannot be
-allocated yet, ordinary allocations can no longer eat into the reserved
-pool, and the endio split can fall back on the reserve without having to
-force a commit first. Delalloc reservations benefit as well, since
-writeback is less likely to run into ENOSPC.
-
-The downside is that ENOSPC may be returned earlier, e.g. by buffered
-writes under the same heavy concurrency. I think that is acceptable
-since the retry is best effort anyway, and ext4_should_retry_alloc()
-still forces a commit when there are pending frees, so it can cover most
-scenarios. Even if it does fail, it is better to fail early than to fail
-after the data has already been written. This is also consistent with
-the behavior of allocating blocks directly when writing in old
-dioread_lock mode.
-
-With the reproducer, this takes the DIO ENOSPC rate from ~11% to 0, and
-failed conversion attempts from ~1500-2200 per run to ~0.3 per run.
-fallocate ENOSPC did not increase noticeably (2.0% before vs 2.2% after).
-However, the probability of returning ENOSPC for pure append writes
-increases by about 10%.
-
-Does this approach sounds OK?
-
-Best Regards,
-Yi.
-
-----
-
-The specific POC V2 fix code is as follows (based on Ojaswin's v1
-series, and in addition to changing the free_cluster accounting, it also
-fixes the fsync_tid issue mentioned earlier).
-
-
-diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-index 778fe8788f06..d4e0bb90a402 100644
---- a/fs/ext4/balloc.c
-+++ b/fs/ext4/balloc.c
-@@ -625,12 +625,14 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
- 				  s64 nclusters, unsigned int flags)
- {
- 	s64 free_clusters, dirty_clusters, rsv, resv_clusters;
-+	int pending_clusters;
- 	struct percpu_counter *fcc = &sbi->s_freeclusters_counter;
- 	struct percpu_counter *dcc = &sbi->s_dirtyclusters_counter;
-
- 	free_clusters  = percpu_counter_read_positive(fcc);
- 	dirty_clusters = percpu_counter_read_positive(dcc);
- 	resv_clusters = atomic64_read(&sbi->s_resv_clusters);
-+	pending_clusters = atomic_read(&sbi->s_mb_free_pending);
-
- 	/*
- 	 * r_blocks_count should always be multiple of the cluster ratio so
-@@ -639,13 +641,23 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
- 	rsv = (ext4_r_blocks_count(sbi->s_es) >> sbi->s_cluster_bits) +
- 	      resv_clusters;
-
-+	/*
-+	 * Clusters in s_mb_free_pending are already counted in
-+	 * s_freeclusters_counter when freed, but they can't be allocated
-+	 * until the transaction that freed them commits, so don't count
-+	 * them as available.
-+	 */
-+	free_clusters -= pending_clusters;
- 	if (free_clusters - (nclusters + rsv + dirty_clusters) <
- 					EXT4_FREECLUSTERS_WATERMARK) {
--		free_clusters  = percpu_counter_sum_positive(fcc);
-+		free_clusters  = percpu_counter_sum_positive(fcc) -
-+				 pending_clusters;
- 		dirty_clusters = percpu_counter_sum_positive(dcc);
- 	}
--	/* Check whether we have space after accounting for current
--	 * dirty clusters & root reserved clusters.
-+
-+	/*
-+	 * Check whether we have space after accounting for current
-+	 * dirty clusters, pending frees & root reserved clusters.
- 	 */
- 	if (free_clusters >= (rsv + nclusters + dirty_clusters))
- 		return 1;
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 8069521442a7..441356999594 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1761,6 +1761,7 @@ struct ext4_sb_info {
-
- 	/* workqueue for reserved extent conversions (buffered io) */
- 	struct workqueue_struct *rsv_conversion_wq;
-+	struct workqueue_struct *iomap_conversion_wq;
-
- 	/* timer for periodic error stats printing */
- 	struct timer_list s_err_report;
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 91857b46ce24..f9502d78f86b 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -3423,10 +3423,29 @@ static int ext4_split_extent_zeroout(handle_t *handle, struct inode *inode,
- 		if (err)
- 			/* ZEROOUT failed, just return original error */
- 			goto out_unlock;
-+	} else if (flags & EXT4_GET_BLOCKS_SPLIT_NOMERGE) {
-+		/*
-+		 * The caller wants to split the extent before submitting
-+		 * the I/O, but the split failed.  Zeroout the whole extent
-+		 * and mark it initialized as the last resort, the upcoming
-+		 * I/O will overwrite the map range.
-+		 */
-+		if (!is_unwrit) {
-+			/* Shouldn't happen. Just exit */
-+			err = -EINVAL;
-+			goto out_unlock;
-+		}
-+
-+		lblk = ee_block;
-+		len = ee_len;
-+		pblk = ext4_ext_pblock(ex);
-+		err = ext4_issue_zeroout(inode, lblk, pblk, len);
-+		if (err)
-+			/* ZEROOUT failed, just return original error */
-+			goto out_unlock;
- 	} else {
- 		/*
--		 * We no longer perform unwritten to unwritten splits in IO paths.
--		 * Hence this should not happen.
-+		 * This should not happen.
- 		 */
- 		WARN_ON_ONCE(true);
- 		err = -EINVAL;
-@@ -4073,6 +4092,38 @@ ext4_ext_handle_unwritten_extents(handle_t *handle, struct inode *inode,
- 	trace_ext4_ext_handle_unwritten_extents(inode, map, flags,
- 						*allocated, newblock);
-
-+	/* get_block() before submitting IO, split the extent */
-+	if (flags & EXT4_GET_BLOCKS_SPLIT_NOMERGE) {
-+		int depth;
-+
-+		path = ext4_split_convert_extents(handle, inode, map, path,
-+						  flags, allocated);
-+		if (IS_ERR(path))
-+			return path;
-+
-+		/*
-+		 * shouldn't get a 0 allocated when splitting an extent unless
-+		 * m_len is 0 (bug) or extent has been corrupted
-+		 */
-+		if (unlikely(*allocated == 0)) {
-+			EXT4_ERROR_INODE(inode,
-+					 "unexpected allocated == 0, m_len = %u",
-+					 map->m_len);
-+			err = -EFSCORRUPTED;
-+			goto errout;
-+		}
-+		/* Don't mark unwritten if the extent has been zeroed out. */
-+		path = ext4_find_extent(inode, map->m_lblk, path, flags);
-+		if (IS_ERR(path))
-+			return path;
-+		depth = ext_depth(inode);
-+		if (ext4_ext_is_unwritten(path[depth].p_ext))
-+			map->m_flags |= EXT4_MAP_UNWRITTEN;
-+		else
-+			ext4_update_inode_fsync_trans(handle, inode, 1);
-+		goto split_out;
-+	}
-+
- 	/* IO end_io complete, convert the filled extent to written */
- 	if (flags & EXT4_GET_BLOCKS_CONVERT) {
- 		path = ext4_convert_unwritten_extents_endio(handle, inode,
-@@ -4126,7 +4177,7 @@ ext4_ext_handle_unwritten_extents(handle_t *handle, struct inode *inode,
- 		err = -EFSCORRUPTED;
- 		goto errout;
- 	}
--
-+split_out:
- 	map->m_flags |= EXT4_MAP_NEW;
- map_out:
- 	map->m_flags |= EXT4_MAP_MAPPED;
-diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-index 52b1fb99484d..96049dc54963 100644
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -450,14 +450,30 @@ static int ext4_dio_write_end_io(struct kiocb *iocb, ssize_t size,
- 	loff_t pos = iocb->ki_pos;
- 	struct inode *inode = file_inode(iocb->ki_filp);
-
-+	if (!error && size && (flags & IOMAP_DIO_UNWRITTEN)) {
-+		int retries = 0;
-
--	if (!error && size && (flags & IOMAP_DIO_UNWRITTEN) &&
--			(iocb->ki_flags & IOCB_ATOMIC))
--		error = ext4_convert_unwritten_extents_atomic(NULL, inode, pos,
--							      size);
--	else if (!error && size && flags & IOMAP_DIO_UNWRITTEN)
--		error = ext4_convert_unwritten_extents(NULL, inode, pos, size,
--						       NULL, 0);
-+retry_convert:
-+		if (iocb->ki_flags & IOCB_ATOMIC)
-+			error = ext4_convert_unwritten_extents_atomic(NULL,
-+					inode, pos, size);
-+		else
-+			error = ext4_convert_unwritten_extents(NULL, inode,
-+					pos, size, NULL, 0);
-+
-+		/*
-+		 * The conversion may have failed to allocate metadata for
-+		 * splitting the extent.  Blocks freed by other operations
-+		 * (e.g. an unlink) may still be waiting for a journal
-+		 * commit, so commit and retry the conversion.
-+		 */
-+		if (error == -ENOSPC && EXT4_SB(inode->i_sb)->s_journal &&
-+		    ext4_count_free_clusters(inode->i_sb) &&
-+		    ++retries <= 3) {
-+			if (ext4_force_commit(inode->i_sb) == 0)
-+				goto retry_convert;
-+		}
-+	}
-
- 	/*
- 	 * If this dio covered an unwritten extent, we would have incremented
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 13449e4ebb6a..03d296f54b6d 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -991,7 +991,8 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
- 			goto out;
- 		if (map->m_flags & EXT4_MAP_UNWRITTEN &&
- 		    (flags & EXT4_GET_BLOCKS_UNWRIT_EXT) &&
--		    !(flags & EXT4_GET_BLOCKS_CONVERT)) {
-+		    !(flags & (EXT4_GET_BLOCKS_CONVERT |
-+			       EXT4_GET_BLOCKS_SPLIT_NOMERGE))) {
- 			/* Contains EXT4_GET_BLOCKS_CREATE - mark mapped. */
- 			ret = check_block_validity(inode, map);
- 			if (!ret)
-@@ -2600,8 +2601,17 @@ static int mpage_map_one_extent(handle_t *handle, struct mpage_da_data *mpd)
- 			   EXT4_EX_NOCACHE;
-
- 	dioread_nolock = ext4_should_dioread_nolock(inode);
--	if (dioread_nolock)
--		get_blocks_flags |= EXT4_GET_BLOCKS_UNWRIT_EXT;
-+	if (dioread_nolock) {
-+		get_blocks_flags |= EXT4_GET_BLOCKS_SPLIT_NOMERGE |
-+				    EXT4_GET_BLOCKS_UNWRIT_EXT;
-+		/*
-+		 * The io_end is accounted in i_conv_pending_ios only after
-+		 * the first unwritten extent has been mapped, so tell the
-+		 * zeroout fallback whether our own count is already included.
-+		 */
-+		if (!(mpd->io_submit.io_end->flag & EXT4_IO_END_UNWRITTEN))
-+			get_blocks_flags |= EXT4_GET_BLOCKS_NO_CONV_ACC;
-+	}
-
- 	err = ext4_map_blocks(handle, inode, map, get_blocks_flags);
- 	if (err < 0)
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index e99816017a18..35826bd19b51 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -649,7 +649,7 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
- 	unsigned long io_mode = (unsigned long)ioend->io_private;
- 	bool is_disksize_grow = (io_mode == EXT4_IOMAP_IOEND_DISKSIZE_GROW_IO);
- 	handle_t *handle;
--	int credits;
-+	int credits, retries = 0;
- 	int ret, err;
-
- 	/*
-@@ -684,6 +684,8 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
- 	/* Wait for disksize-pending zeroed data to be written out. */
- 	ext4_iomap_wb_disksize_pending_wait(inode, pos, size);
-
-+retry:
-+	ret = 0;
- 	/*
- 	 * We may need to convert one extent, update the i_disksize and
- 	 * dirty the inode.
-@@ -702,6 +704,8 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
- 						    is_disksize_grow);
- 		if (ret)
- 			goto out_journal;
-+
-+		is_disksize_grow = false;
- 	}
-
- 	if (ioend->io_flags & IOMAP_IOEND_UNWRITTEN)
-@@ -714,6 +718,12 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
- 		ret = err;
- out_err:
- 	if (ret < 0 && !ext4_emergency_state(sb)) {
-+		if (ret == -ENOSPC && EXT4_SB(sb)->s_journal &&
-+		    ext4_count_free_clusters(sb) && ++retries <= 3) {
-+			if (ext4_force_commit(sb) == 0)
-+				goto retry;
-+		}
-+
- 		ext4_msg(sb, KERN_EMERG,
- 			 "failed to convert unwritten extents to written extents or update inode size -- potential data loss! (inode %llu, error %d)",
- 			 inode->i_ino, ret);
-@@ -768,7 +778,7 @@ void ext4_iomap_end_bio(struct bio *bio)
-
- 	spin_lock_irqsave(&ei->i_completed_io_lock, flags);
- 	if (list_empty(&ei->i_rsv_conversion_list))
--		queue_work(EXT4_SB(ioend->io_inode->i_sb)->rsv_conversion_wq,
-+		queue_work(EXT4_SB(ioend->io_inode->i_sb)->iomap_conversion_wq,
- 			   &ei->i_rsv_conversion_work);
- 	list_add_tail(&ioend->io_list, &ei->i_rsv_conversion_list);
- 	spin_unlock_irqrestore(&ei->i_completed_io_lock, flags);
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 3c53bf27da45..859b9c65fc0b 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1326,6 +1326,7 @@ static void ext4_put_super(struct super_block *sb)
- 	flush_delayed_work(&sbi->s_ea_inode_work);
- 	ext4_quotas_off(sb, EXT4_MAXQUOTAS);
-
-+	destroy_workqueue(sbi->iomap_conversion_wq);
- 	destroy_workqueue(sbi->rsv_conversion_wq);
- 	ext4_release_orphan_info(sb);
-
-@@ -5668,6 +5669,23 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
- 		goto failed_mount4;
- 	}
-
-+	/*
-+	 * Buffered iomap conversions may have to force a journal commit and
-+	 * retry.  That commit can wait for the writeback/endio of a
-+	 * buffer_head io_end which is completed on rsv_conversion_wq, so the
-+	 * iomap conversions must not share that single-threaded workqueue.
-+	 */
-+	EXT4_SB(sb)->iomap_conversion_wq =
-+		alloc_workqueue("ext4-iomap-conversion",
-+				WQ_MEM_RECLAIM | WQ_UNBOUND, 1);
-+	if (!EXT4_SB(sb)->iomap_conversion_wq) {
-+		ext4_msg(sb, KERN_ERR, "failed to create workqueue");
-+		err = -ENOMEM;
-+		destroy_workqueue(EXT4_SB(sb)->rsv_conversion_wq);
-+		EXT4_SB(sb)->rsv_conversion_wq = NULL;
-+		goto failed_mount4;
-+	}
-+
- 	/*
- 	 * The jbd2_journal_load will have done any necessary log recovery,
- 	 * so we can safely mount the rest of the filesystem now.
-@@ -5842,6 +5860,8 @@ failed_mount8: __maybe_unused
- 	sb->s_root = NULL;
- failed_mount4:
- 	ext4_msg(sb, KERN_ERR, "mount failed");
-+	if (EXT4_SB(sb)->iomap_conversion_wq)
-+		destroy_workqueue(EXT4_SB(sb)->iomap_conversion_wq);
- 	if (EXT4_SB(sb)->rsv_conversion_wq)
- 		destroy_workqueue(EXT4_SB(sb)->rsv_conversion_wq);
- failed_mount_wq:
-@@ -6543,6 +6563,7 @@ static int ext4_sync_fs(struct super_block *sb, int wait)
- 		return ret;
-
- 	trace_ext4_sync_fs(sb, wait);
-+	flush_workqueue(sbi->iomap_conversion_wq);
- 	flush_workqueue(sbi->rsv_conversion_wq);
- 	flush_delayed_work(&sbi->s_ea_inode_work);
- 	/*
-
-
-
-
-
-
+Best regards,
+Tobias Laas
+> 
+> It would be nice if we could involve some Intel IOMMU experts.
+> 
+> If the ACPI DMAR is at fault, perhaps it is possible for the kernel to
+> patch the ACPI DMAR for your platform.
+> 
+> 
+> Kind regards,
+> Niklas
