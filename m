@@ -1,115 +1,150 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795535610;
-	b=xxu1akPu5gJ4cJNBY/ksuGqxA+4aInc1BGh9YsSRq747Ri1DrG0OswUs1zmDlensiB46
-	 5LPFoRsosWvwu5fkRTV9oO9WQyL689BhBZ4xGaClsAiZhO2eLd5giXLZaaS65n3eF/Bcc
-	 hsxkYmYv1Qr1a5zgJ4I6RqckQLST5NHa5DU3adIv9JiNfFt7epGMDvwiUAJ3byucDEu0A
-	 Q4E9zi0Cb4CaZJJp/Kci5p4gD4j7dX0gvxMW5uOWn2BAE+X0AIEV9wZJm1WV7ZEDqty+b
-	 CG5D5hR6XJHkbZKS32wxP5Tgi1H/JrM2ZuXFsySc+vEoZPz8ouFSmT5lop+dmMtV5CQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795535610;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Spamd-Result:X-Spam-Score:X-Spam-Level:X-Spam-Flag;
-	bh=lUyOpI4ZllHADObrpfElouVz31YbKj6UKHW0iS6ONz0=;
-	b=NFGQ0KXEUFE/YNB1PTwBNyWuqxPu0anAYUtYLxDpZ8e45jTSPzoZRXgLH9W2p6ArELlW
-	 Q6Zq0VXOVGagHnru4ON7i2AEbRcngXF/RD5sAkATFkuPOE4HRMpKwIsoOcnLKdiBXBgp5
-	 GX9UKGplymLEaVOImdVira/9+RGagmXnZcVlj+Iep1avVCNzyOLr7BFFrSrVnBKwh2qr3
-	 XyxeM2YfsTxHr1jkbuvheJPPsZYphjQWActijviqxe5KOjHGXZ2Deow6IODr3mwKb5s3Q
-	 y8c6OGmNSGGDFczI1x/M8Coen1JB+2IJuo201Y/fKVBYLsROnP2wOMuvbJjN26nTsQQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=suse.cz;
-	spf=pass smtp.mailfrom=suse.cz;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=If0WT6b1;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b="+oeAg/Fq";
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b="yiDg/mTp";
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vsI4CcAK;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.47.59
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795542629;
+	b=0I/WkxPzBsOA4juPjb+cGUjwSGKVp3VSnjvmOXpOM/Qow/9Jv4B9skhM3Zehl6oq04S7
+	 aKw7Ep8NoM+TpO81ftODHAHqGoKG7hcxc2ylHCQCUU1Rcf/jIktQjXvF6xCOwM6l9WGlA
+	 lwOV1Sv4pmbUYDdvbcCaQ4Beb98NF8doBhi3DTaAuCqmWSmQEd5Yqp9z2G77O3lVX2AcC
+	 6/SoSDKQ/fb/9c34KuJf4qNApepaZGVV7u03yJf+MzGzosRysoyKmTwNqPSwPFKZU8Lsj
+	 Kl3cM4pDW9WkZ4zmKGHpkuWJc4xmhJuKFSGbX4G4EehwULi5DJECon78Atk13sKUg6g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795542629;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
+	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 msip_labels:x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:x-fermilab-ob:
+	 x-fermilab-sender-location:x-ms-exchange-senderadcheck:
+	 x-ms-exchange-antispam-relay:x-microsoft-antispam:
+	 x-microsoft-antispam-message-info:x-forefront-antispam-report:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=N53u6adYmOTJkyfReQPNrtyl5e37F/t+5hjBUk70UUA=;
+	b=WVLEWaZXTeWWbRZgPaUXQBmafUfws9St4u8WQbIS/7qNjTg1pqqxJ2CPfAYgdBkNcqA/
+	 XqAu5dhjdR+/4gC2Jyp/DcnAJsquV36L6k3nvvB/+ibsYznTQcI0MWXUunbRWX7Wi82dW
+	 7T2T5TtDvgj87CecCSGiI9u508ennRUa63yR9WtkVuO4acAYxDnSHy1er+9quO0imSntU
+	 q2yvYT0nFCcGivDwt7Ap/nbGNllic29pRJoZpWnlRHloDW1jcQUCFLp060baoHIohz0vN
+	 UkwTrlNE4Q9Nf7rXasQqzZa9w6fUsbDXgQKOWF0f+DKgKrpjkCHTXj79h98fXX/YeNQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=fnal.gov;
+	spf=pass smtp.mailfrom=fnal.gov;
+	dkim=pass header.d=fnal.gov header.i=@fnal.gov header.a=rsa-sha256 header.s=selector2 header.b=Bvd8+5gV;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.47.59
+Received: from CO1PR09CU001.outbound.protection.outlook.com (mail-westus2azon11011059.outbound.protection.outlook.com [52.101.47.59])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0099606A331
-	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 15:53:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B0099606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3D5606A321
+	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 17:50:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE3D5606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fnal.gov
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnal.gov
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=If0WT6b1;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=+oeAg/Fq;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=yiDg/mTp;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vsI4CcAK
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B28931FA90;
-	Tue, 24 Nov 2026 15:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1795535607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lUyOpI4ZllHADObrpfElouVz31YbKj6UKHW0iS6ONz0=;
-	b=If0WT6b1oNX0NsP8KXz5hz6w0OSeaw9JT644GXpYQPnGdADQ91TExi85nHg0ISPl7nU+2N
-	ZVcK1R8Lho0S30c61RiduJcde4OSOU10IQeqWnqPmREm60rliRvK3SSKNewPcD2f3KTQug
-	fCxn2YndinPp5MBbEXNnjJjqVkCB2V0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1795535607;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lUyOpI4ZllHADObrpfElouVz31YbKj6UKHW0iS6ONz0=;
-	b=+oeAg/FqO3xs5p1Ei7p3mNU8GOy5FY7hkYBtNZSfuvMxBYbqTbUEK3IVXh4H4UwrpTjBRn
-	MfdpvvR5kyIT/oDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1795535606; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lUyOpI4ZllHADObrpfElouVz31YbKj6UKHW0iS6ONz0=;
-	b=yiDg/mTpoeRxI9KmKBzg8ax7YuuDuBdFThYc2xjfBHx2IK27wifmrA1ITt+9arXDIDNSeg
-	GzX6e5MS12JLhCVOqI0hUR9w+f6p4MgYeo+YmTVHJ0ogsA9KCLO3B7yABEw2m0xFCVh2MB
-	wXI9UYfiA+ThNfcbbHAMzjvaEBPdYus=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1795535606;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lUyOpI4ZllHADObrpfElouVz31YbKj6UKHW0iS6ONz0=;
-	b=vsI4CcAKPvBK1xOClFivut6AW0vsOHLUURooEVG6ffRR+bPZXrjlbQida2R6oYVmoN+JIK
-	yLL7eT6at1S5fZAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8638813505;
-	Tue, 24 Nov 2026 15:53:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id A0S1GPayBWsUCAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 24 Nov 2026 15:53:26 +0000
-Received: by quack.suse.cz (Postfix, from userid 1000)
-	id 150C227A04; Tue, 24 Nov 2026 16:53:22 +0100 (CET)
-Date: Tue, 24 Nov 2026 16:53:22 +0100
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>, 
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>, Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>, 
-	Baokun Li <libaokun@linux.alibaba.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, guolingxing <guolingxing@tju.edu.cn>, 
-	Josef Bacik <josef@toxicpanda.com>, Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-Message-ID: <osarljpnd2viffbi3lrgqccyjxjo6ktez73sizcstqjiaw3cbc@e5jnepamtbkl>
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
- <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
- <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
- <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
+	dkim=pass (2048-bit key, unprotected) header.d=fnal.gov header.i=@fnal.gov header.a=rsa-sha256 header.s=selector2 header.b=Bvd8+5gV
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eSF7XAAYhctBOQhdnOkvOouDR2RP1vibuBRBIZ0qO8qJT2DO8Wi7yinoieeRCsCGh4p397Fv+zmelT3Gy7MK8HZ6+mj23lgNwEKNwCM8Wj/u308+2t5jZ9lUGzRjPp2bKxRk7ZDwqcbt+SLBc1riMkGqguXMtdd7V5/i5f/sNZyMczsmiP5wy20rMuVPbKLMticQ8xU8dGGlWUDqdxi0KT6aDt69feqlWkNaNvwmBnC0BtgDp3Taj5O2+fjWDGh7ejhJytfgmOrvSPjY5ZPfKtUAwOaGf0vCxeI7qglgSNjH06BprnSJj/6d3h3hoLtCIhixT6eOKBfV5LrUVb9rnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N53u6adYmOTJkyfReQPNrtyl5e37F/t+5hjBUk70UUA=;
+ b=uTF0/V1xOXn5E8KDsLaoAviNzcBfGFVpEwlOvnkwdGzbuT0E7ZhsLPVks446wfkWvNyQHLlCn5TCY5gC5MQKbrbNU+ueGnLKZSPD3A6jeJYdvT+ZhstZui7/7gRNcgL6rtB6eGMCeigpZtdtkJ3OMJmX7Ht10C6ekhMkdKHtLkBGOgiqAE2Lyp8y2q1y20VcwvYG3Dkwyh8fXAjTeIfLnlJ4i1YQM15OPGhsLp67D8rOOjdEQ5c+8gi6H3xlLdJUdwfl9laP9LJ+/dF9l/vfnQZWYbgtxss5TEJ8TOnRyuvjzGpNC8US9fn46OudQBIGz4QvPoV7uTyvqiu3NgXEqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fnal.gov; dmarc=pass action=none header.from=fnal.gov;
+ dkim=pass header.d=fnal.gov; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fnal.gov; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N53u6adYmOTJkyfReQPNrtyl5e37F/t+5hjBUk70UUA=;
+ b=Bvd8+5gVlxwrHv4FbovtGIDKibr0Wvkt2TkN4gqPYzJr6xobnIHCFrWpthx4pKhnqqvOlCzB4VQa/iKGVr8K3YTXEHKeucTx7var3FJFbuxO0ufo6/3IvjhFUaZcAZ3cznwZGqwxkjd69VFr1MfC0srZv2AziLnbmGy3YaQkwcC0oFHFM1mqEcfp/Usvh8FVGh/QsJigSbJ5jxVrJZ3BDx/67Bq4xOmMFykgx2Itti58zteLOxJ+hj4m0CjRWv2gz/x/aJjygfc6lDPEkqrjExadPAun1Jk41GoWf/t2vYLoYWGJPDN1O8NasyiU7Cs53uQva5MvAgGgtdcv4qYQrA==
+Received: from DS5PR09MB13532.namprd09.prod.outlook.com (2603:10b6:8:47a::5)
+ by DS5PR09MB13025.namprd09.prod.outlook.com (2603:10b6:8:486::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.13; Tue, 24 Nov
+ 2026 17:50:23 +0000
+Received: from DS5PR09MB13532.namprd09.prod.outlook.com
+ ([fe80::21dd:6f53:4c7c:1611]) by DS5PR09MB13532.namprd09.prod.outlook.com
+ ([fe80::21dd:6f53:4c7c:1611%7]) with mapi id 15.21.0639.012; Tue, 24 Nov 2026
+ 17:50:22 +0000
+From: Ronald Rechenmacher <ron@fnal.gov>
+To: Jani Nikula <jani.nikula@linux.intel.com>, "linux-usb@vger.kernel.org"
+	<linux-usb@vger.kernel.org>
+CC: "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR20
+ in BW allocation mode for HBR3-only DP OUT, external monitors stay black
+ (v7.2 -> v7.3)
+Thread-Topic: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR20
+ in BW allocation mode for HBR3-only DP OUT, external monitors stay black
+ (v7.2 -> v7.3)
+Thread-Index: AQHdeST1dAec1YnCd0qQ5BmHrAikIrc8G2qAgAFjYCU=
+Date: Tue, 24 Nov 2026 17:50:22 +0000
+Message-ID:
+ <DS5PR09MB1353241C0DFC9781B60E696C2DC442@DS5PR09MB13532.namprd09.prod.outlook.com>
+References:
+ <DS5PR09MB1353250098A5804464BB8BAE6DC782@DS5PR09MB13532.namprd09.prod.outlook.com>
+ <7c77eaf0bdd8370e2259c654dd866561ca07d382@intel.com>
+In-Reply-To: <7c77eaf0bdd8370e2259c654dd866561ca07d382@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fnal.gov;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DS5PR09MB13532:EE_|DS5PR09MB13025:EE_
+x-ms-office365-filtering-correlation-id: dbac0a88-717d-4ef5-1810-08df4a536994
+x-fermilab-ob: 1
+x-fermilab-sender-location: inside
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|23010399003|1800799024|366016|22082099003|6133799003|12006099003|18002099003|4133799003|3023799007|4143699003|261022075727099003|5023799004|261021121427099003|56012099006|261021133027099003|261021135927099003|261022115727099003|261028144727099003|261102130727099003|261021130227099003|261026121527099003|261009223027099003|261022113327099003|261026130827099003|261026135527099003|261026140227099003|261021123027099003|261022105027099003|38070700021|10067099003|261102123227099003;
+x-microsoft-antispam-message-info:
+ GxiQ3wXuQ7rU18oxiy4aBOGLA1Pe086Jt/8BfQr+CAa8OUcQnkbQYAf6gw+rZyQ5IlR05RbZVEk+seOgsV1wvy0AcMpZGEE0fT344qDo/EKIjfqrhp7RgGo8UC3rb/CYFQfOqwKn+OcRzaf9bQD7xwoZonUx1fLgjepNrDyu+6KZ4e+5qhdw2WVn27Z0BWysqIc33qMCE7rcsVC1b1picYWJBePExDJB2ODN6nEl5QTqhv7+4Y1TnybYe+GC1gfZTWyIShXc7tWEPuiQk1jl6pfA2oF/4lkkrnQp2O+OtyLUUIDYi7eCpxpvnxp84rM4i4PhxR4UmaBvhiatwcXHjDRBARJkKsojQ75KpW6QanV2ZETe9XhInR5LTZ5O/Q2f6rrIIYpmlO6wI9QdMZGexUpcys6VyhM9ttK7jMCcaHJDYfh1LeYJNcOG1faUdZw1wfO7WY/KbzxxRT9kxSKDqWOLEQ8q/vwJN0WhkvfWsqnAPTVDBg6jnT9h2lSL42W08Bz2kBRQY3SXpKGrt7dm6/EBwdX6ZkQHJzI3ytKFp5K0hMaIh+mWjDTCqVbFn13ip9O2g/ol9EmdGmSNRL1zwTeR5iaYsC1pBBMl8iVNHT8mZsYOUBSOEBfiPA4T648lKVVI2IsZsBlwNFMVLItAld9KtqFNniMXZg2xT0U44g4=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS5PR09MB13532.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(22082099003)(6133799003)(12006099003)(18002099003)(4133799003)(3023799007)(4143699003)(261022075727099003)(5023799004)(261021121427099003)(56012099006)(261021133027099003)(261021135927099003)(261022115727099003)(261028144727099003)(261102130727099003)(261021130227099003)(261026121527099003)(261009223027099003)(261022113327099003)(261026130827099003)(261026135527099003)(261026140227099003)(261021123027099003)(261022105027099003)(38070700021)(10067099003)(261102123227099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?gpaq5udhssAAOClK801kW2EpAMvWJTJcjXHwt4bjWypjneego6bKABIU?=
+ =?Windows-1252?Q?/JR5sBq4J2dvAGwRq7cppVFhwwMu71eYZUcwkJDUbpGTRL0UWXs58djW?=
+ =?Windows-1252?Q?Mn9oK9wYkizIH9wSCcGLwBwGCx0Buhza7njJhiIpc3CZ26jRNeYzg9Ap?=
+ =?Windows-1252?Q?bJErtfX87MCuL1B4k97bR2t/XbZVmLrfWhORjBvISgEV1S2XX4HxIzEV?=
+ =?Windows-1252?Q?CpBRO2BCf0JHN6rMfjZNYCjz2DYjlzXS/VOuSG1NocgUvYfl7XzaTv40?=
+ =?Windows-1252?Q?Jb7DrThyZFn0bCEKuvsKblpIrlRLP4AVeWA8X55pJpk3FwqedHrh1OXW?=
+ =?Windows-1252?Q?6LpP5Wa96nvhb0jEteP9b8iKMhQR4IR1Z5a4T88OHRo64lYlQgXsJBMP?=
+ =?Windows-1252?Q?d7SB9RIetjIACKfaP/X3fuLvnb3XtS4iOrmXH1UYsQ6cM78Rs7kOq0oW?=
+ =?Windows-1252?Q?TWg++9sWOqpJ4Rzjhx8oBnTipk1QfQfm6RLBWakz7rAbUn8jv4EroDz5?=
+ =?Windows-1252?Q?BQzdzsCA/hLvy+R8avNlxZE9vJF19E2dHs/1M3lgcjUIRnh8+YcsLFGL?=
+ =?Windows-1252?Q?CMyUl2BAzejiB1Wy68DnvmmyCWtcts3Uh2C5O/Pi+7x1zITrRNdK/+cv?=
+ =?Windows-1252?Q?Hd2fPXHJipuE5EjB4VJRhox8uSNiBwjo0vK6ZbwD74fook7GRqyNQpvL?=
+ =?Windows-1252?Q?QwNEeJZynNmjxSGfv/sXMlEY1ozeHvuZqWWhwY13Vjx4R0GE3WsY3VcA?=
+ =?Windows-1252?Q?lOsndMLGNkuN418QLqLPXGRT72en0TrEbBsAijZWVTVnPvl3XxNYDQVT?=
+ =?Windows-1252?Q?gldPTQaD+w0MSmJxBlCjjU+GMIn6fZAbf7BQUGRE99jz+3G4wp7e1Mm4?=
+ =?Windows-1252?Q?FAYGPScSO/erLcCQOEzHihobIxxIbLEvBn0CyouFrcRaQOVFRurGctZq?=
+ =?Windows-1252?Q?sGOasoA28AZNq8jKtvZ0sHJ0wxrq5c2Dw9K1OgECC6CD+a1ia5s9Nntw?=
+ =?Windows-1252?Q?PavyACBFKMB1Zneqdu2h4OluZe1ZRTToohRIB6665qrr9/GynTsz0IyS?=
+ =?Windows-1252?Q?6ASXf84XzfYmuIvF3KAVIHEKkC4piCfaKUXaKRJoI8/MFOcg7jUfAA9F?=
+ =?Windows-1252?Q?7ReIRiiybsyyAy8wTHLFnbljoRwyaeibXmAOgMpWmdtstUkvkkYlsGXQ?=
+ =?Windows-1252?Q?2K+UzcfTin5UTNqPEzjNv4gKnzUdg8BFdjv4xJQvJeqXx3lX0J5hTDfb?=
+ =?Windows-1252?Q?lVkXcEDs4aqBuLAISPGqzNCVzp/kvY6KMNMoRssdyajoLDxgaduCFcC+?=
+ =?Windows-1252?Q?DLi50OjQm35O++frKkckMlfxZhFsJ2AF1ZB1jQGPumPVKbaha9x3T8db?=
+ =?Windows-1252?Q?fLQGQ1nJyd/JxdLeoC59snvHmzeoY9cPEPYyxfbHxV8bWGMSN9mCsOcg?=
+ =?Windows-1252?Q?FK/Qrmu3IxivuKEJ0ea8SD/uSG1PwNNhM7ieY3naeqy/isqH1WqmlIyK?=
+ =?Windows-1252?Q?H2OdP4lwZZfdutC4Wji5xDz4c4QZb9U6doPVWAxVqXFBdJ0jGgbUVxpv?=
+ =?Windows-1252?Q?RMi8hKfNoGE3XWOpzKjLhlt9Lvtb9mG5xtw2Y2SQ+b7d2AF0ca12mYvI?=
+ =?Windows-1252?Q?Lvdn3e7/P207FZGC0NHv6k0C4ipTNFkPGCCKLgJKkLwjTUwh7+xgIKov?=
+ =?Windows-1252?Q?YOzhIS9SjMXXLA5ii4avXf3IdQ6ZVnOkMGBXZxRgJ6e9rTK1pewJj9nt?=
+ =?Windows-1252?Q?i0w/+2Gq9m1GA2LdRDS4ZtJtQ3+ecB79CbL6LYzVVKYELRm0aPTYWd8d?=
+ =?Windows-1252?Q?Epjz6DDoP45Qu3W5OofujdIJfIFM8DF7gDJEjYnYO54LF2fs9UpdyBay?=
+ =?Windows-1252?Q?uKh6yZpQbeqqmg=3D=3D?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -119,439 +154,265 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
-X-Spamd-Result: default: False [-11.30 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.dev,linux.ibm.com,mit.edu,suse.cz,linux.alibaba.com,dilger.ca,gmail.com,tju.edu.cn,toxicpanda.com,kernel.org,vger.kernel.org,lists.linux.dev];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -11.30
-X-Spam-Level: 
-X-Spam-Flag: NO
+X-OriginatorOrg: fnal.gov
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS5PR09MB13532.namprd09.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbac0a88-717d-4ef5-1810-08df4a536994
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Nov 2026 17:50:22.3056
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9d5f83d3-d338-4fd3-b1c9-b7d94d70255a
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PR09MB13025
 
-On Tue 24-11-26 12:49:19, Zhang Yi wrote:
-> On 11/18/2026 10:06 PM, Jose Fernandez (Anthropic) wrote:
-> > On Wed, Nov 18, 2026 Zhang Yi wrote:
-> >> Could you provide a reproducer? My guess is that high concurrency causes
-> >> the blocks freed by my current process to be taken by I/O issued by
-> >> other processes
-> > 
-> > That fits our runs. I'll send you the script off-list.
-> > 
-> > - Jose
-> 
-> 
-> Thank you for the reproducer. After debugging, I confirmed the cause. On
-> each failed endio conversion, the retry commits the journal, but the
-> blocks released by the commit are soon claimed again by the
-> background fallocate loop, so after 3 retries the DIO finally returns
-> ENOSPC.
-> 
-> Although Ojaswin's v2 does track the exact ranges when submitting I/Os,
-> we cannot convert the whole extent after zeroing until all in-flight I/Os
-> overlapping this extent have finished, which is too expensive to me. So I
-> think we may still need the split to succeed.
-> 
-> Note that we do reserve space for exactly this case. At mount time we
-> set aside s_resv_clusters (2% of the clusters, capped at 4096 clusters),
-> and EXT4_GET_BLOCKS_METADATA_NOFAIL is allowed to use it. The problem is
-> that this reservation is not effective today. s_freeclusters_counter is
-> incremented when blocks are freed, but for journaled frees the blocks
-> only return to the buddy allocator after the freeing transaction
-> commits. Most allocation paths already run inside a transaction, so we
-> cannot force a commit from there, and even between retries the released
-> space can be taken again, as the reproducer shows. So ordinary
-> allocations can currently consume the reserved pool, and endio extent
-> splits can be fooled into thinking space is available. This hurts both
-> endio extent conversion and delalloc writeback.
-> 
-> My idea is to make this a real reservation of currently allocatable
-> clusters rather than just a counter check. We can subtract
-> sbi->s_mb_free_pending from free_clusters in ext4_has_free_clusters().
-> Then a successful check no longer counts clusters that cannot be
-> allocated yet, ordinary allocations can no longer eat into the reserved
-> pool, and the endio split can fall back on the reserve without having to
-> force a commit first. Delalloc reservations benefit as well, since
-> writeback is less likely to run into ENOSPC.
-> 
-> The downside is that ENOSPC may be returned earlier, e.g. by buffered
-> writes under the same heavy concurrency. I think that is acceptable
-> since the retry is best effort anyway, and ext4_should_retry_alloc()
-> still forces a commit when there are pending frees, so it can cover most
-> scenarios. Even if it does fail, it is better to fail early than to fail
-> after the data has already been written. This is also consistent with
-> the behavior of allocating blocks directly when writing in old
-> dioread_lock mode.
-> 
-> With the reproducer, this takes the DIO ENOSPC rate from ~11% to 0, and
-> failed conversion attempts from ~1500-2200 per run to ~0.3 per run.
-> fallocate ENOSPC did not increase noticeably (2.0% before vs 2.2% after).
-> However, the probability of returning ENOSPC for pure append writes
-> increases by about 10%.
-> 
-> Does this approach sounds OK?
-
-Yes, it sounds good to me. I was also puzzled why the reserved clusters are
-not effective so thanks for explaining that :)
-
-								Honza
-
-> The specific POC V2 fix code is as follows (based on Ojaswin's v1
-> series, and in addition to changing the free_cluster accounting, it also
-> fixes the fsync_tid issue mentioned earlier).
-> 
-> 
-> diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-> index 778fe8788f06..d4e0bb90a402 100644
-> --- a/fs/ext4/balloc.c
-> +++ b/fs/ext4/balloc.c
-> @@ -625,12 +625,14 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
->  				  s64 nclusters, unsigned int flags)
->  {
->  	s64 free_clusters, dirty_clusters, rsv, resv_clusters;
-> +	int pending_clusters;
->  	struct percpu_counter *fcc = &sbi->s_freeclusters_counter;
->  	struct percpu_counter *dcc = &sbi->s_dirtyclusters_counter;
-> 
->  	free_clusters  = percpu_counter_read_positive(fcc);
->  	dirty_clusters = percpu_counter_read_positive(dcc);
->  	resv_clusters = atomic64_read(&sbi->s_resv_clusters);
-> +	pending_clusters = atomic_read(&sbi->s_mb_free_pending);
-> 
->  	/*
->  	 * r_blocks_count should always be multiple of the cluster ratio so
-> @@ -639,13 +641,23 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
->  	rsv = (ext4_r_blocks_count(sbi->s_es) >> sbi->s_cluster_bits) +
->  	      resv_clusters;
-> 
-> +	/*
-> +	 * Clusters in s_mb_free_pending are already counted in
-> +	 * s_freeclusters_counter when freed, but they can't be allocated
-> +	 * until the transaction that freed them commits, so don't count
-> +	 * them as available.
-> +	 */
-> +	free_clusters -= pending_clusters;
->  	if (free_clusters - (nclusters + rsv + dirty_clusters) <
->  					EXT4_FREECLUSTERS_WATERMARK) {
-> -		free_clusters  = percpu_counter_sum_positive(fcc);
-> +		free_clusters  = percpu_counter_sum_positive(fcc) -
-> +				 pending_clusters;
->  		dirty_clusters = percpu_counter_sum_positive(dcc);
->  	}
-> -	/* Check whether we have space after accounting for current
-> -	 * dirty clusters & root reserved clusters.
-> +
-> +	/*
-> +	 * Check whether we have space after accounting for current
-> +	 * dirty clusters, pending frees & root reserved clusters.
->  	 */
->  	if (free_clusters >= (rsv + nclusters + dirty_clusters))
->  		return 1;
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 8069521442a7..441356999594 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -1761,6 +1761,7 @@ struct ext4_sb_info {
-> 
->  	/* workqueue for reserved extent conversions (buffered io) */
->  	struct workqueue_struct *rsv_conversion_wq;
-> +	struct workqueue_struct *iomap_conversion_wq;
-> 
->  	/* timer for periodic error stats printing */
->  	struct timer_list s_err_report;
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index 91857b46ce24..f9502d78f86b 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -3423,10 +3423,29 @@ static int ext4_split_extent_zeroout(handle_t *handle, struct inode *inode,
->  		if (err)
->  			/* ZEROOUT failed, just return original error */
->  			goto out_unlock;
-> +	} else if (flags & EXT4_GET_BLOCKS_SPLIT_NOMERGE) {
-> +		/*
-> +		 * The caller wants to split the extent before submitting
-> +		 * the I/O, but the split failed.  Zeroout the whole extent
-> +		 * and mark it initialized as the last resort, the upcoming
-> +		 * I/O will overwrite the map range.
-> +		 */
-> +		if (!is_unwrit) {
-> +			/* Shouldn't happen. Just exit */
-> +			err = -EINVAL;
-> +			goto out_unlock;
-> +		}
-> +
-> +		lblk = ee_block;
-> +		len = ee_len;
-> +		pblk = ext4_ext_pblock(ex);
-> +		err = ext4_issue_zeroout(inode, lblk, pblk, len);
-> +		if (err)
-> +			/* ZEROOUT failed, just return original error */
-> +			goto out_unlock;
->  	} else {
->  		/*
-> -		 * We no longer perform unwritten to unwritten splits in IO paths.
-> -		 * Hence this should not happen.
-> +		 * This should not happen.
->  		 */
->  		WARN_ON_ONCE(true);
->  		err = -EINVAL;
-> @@ -4073,6 +4092,38 @@ ext4_ext_handle_unwritten_extents(handle_t *handle, struct inode *inode,
->  	trace_ext4_ext_handle_unwritten_extents(inode, map, flags,
->  						*allocated, newblock);
-> 
-> +	/* get_block() before submitting IO, split the extent */
-> +	if (flags & EXT4_GET_BLOCKS_SPLIT_NOMERGE) {
-> +		int depth;
-> +
-> +		path = ext4_split_convert_extents(handle, inode, map, path,
-> +						  flags, allocated);
-> +		if (IS_ERR(path))
-> +			return path;
-> +
-> +		/*
-> +		 * shouldn't get a 0 allocated when splitting an extent unless
-> +		 * m_len is 0 (bug) or extent has been corrupted
-> +		 */
-> +		if (unlikely(*allocated == 0)) {
-> +			EXT4_ERROR_INODE(inode,
-> +					 "unexpected allocated == 0, m_len = %u",
-> +					 map->m_len);
-> +			err = -EFSCORRUPTED;
-> +			goto errout;
-> +		}
-> +		/* Don't mark unwritten if the extent has been zeroed out. */
-> +		path = ext4_find_extent(inode, map->m_lblk, path, flags);
-> +		if (IS_ERR(path))
-> +			return path;
-> +		depth = ext_depth(inode);
-> +		if (ext4_ext_is_unwritten(path[depth].p_ext))
-> +			map->m_flags |= EXT4_MAP_UNWRITTEN;
-> +		else
-> +			ext4_update_inode_fsync_trans(handle, inode, 1);
-> +		goto split_out;
-> +	}
-> +
->  	/* IO end_io complete, convert the filled extent to written */
->  	if (flags & EXT4_GET_BLOCKS_CONVERT) {
->  		path = ext4_convert_unwritten_extents_endio(handle, inode,
-> @@ -4126,7 +4177,7 @@ ext4_ext_handle_unwritten_extents(handle_t *handle, struct inode *inode,
->  		err = -EFSCORRUPTED;
->  		goto errout;
->  	}
-> -
-> +split_out:
->  	map->m_flags |= EXT4_MAP_NEW;
->  map_out:
->  	map->m_flags |= EXT4_MAP_MAPPED;
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index 52b1fb99484d..96049dc54963 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -450,14 +450,30 @@ static int ext4_dio_write_end_io(struct kiocb *iocb, ssize_t size,
->  	loff_t pos = iocb->ki_pos;
->  	struct inode *inode = file_inode(iocb->ki_filp);
-> 
-> +	if (!error && size && (flags & IOMAP_DIO_UNWRITTEN)) {
-> +		int retries = 0;
-> 
-> -	if (!error && size && (flags & IOMAP_DIO_UNWRITTEN) &&
-> -			(iocb->ki_flags & IOCB_ATOMIC))
-> -		error = ext4_convert_unwritten_extents_atomic(NULL, inode, pos,
-> -							      size);
-> -	else if (!error && size && flags & IOMAP_DIO_UNWRITTEN)
-> -		error = ext4_convert_unwritten_extents(NULL, inode, pos, size,
-> -						       NULL, 0);
-> +retry_convert:
-> +		if (iocb->ki_flags & IOCB_ATOMIC)
-> +			error = ext4_convert_unwritten_extents_atomic(NULL,
-> +					inode, pos, size);
-> +		else
-> +			error = ext4_convert_unwritten_extents(NULL, inode,
-> +					pos, size, NULL, 0);
-> +
-> +		/*
-> +		 * The conversion may have failed to allocate metadata for
-> +		 * splitting the extent.  Blocks freed by other operations
-> +		 * (e.g. an unlink) may still be waiting for a journal
-> +		 * commit, so commit and retry the conversion.
-> +		 */
-> +		if (error == -ENOSPC && EXT4_SB(inode->i_sb)->s_journal &&
-> +		    ext4_count_free_clusters(inode->i_sb) &&
-> +		    ++retries <= 3) {
-> +			if (ext4_force_commit(inode->i_sb) == 0)
-> +				goto retry_convert;
-> +		}
-> +	}
-> 
->  	/*
->  	 * If this dio covered an unwritten extent, we would have incremented
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 13449e4ebb6a..03d296f54b6d 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -991,7 +991,8 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
->  			goto out;
->  		if (map->m_flags & EXT4_MAP_UNWRITTEN &&
->  		    (flags & EXT4_GET_BLOCKS_UNWRIT_EXT) &&
-> -		    !(flags & EXT4_GET_BLOCKS_CONVERT)) {
-> +		    !(flags & (EXT4_GET_BLOCKS_CONVERT |
-> +			       EXT4_GET_BLOCKS_SPLIT_NOMERGE))) {
->  			/* Contains EXT4_GET_BLOCKS_CREATE - mark mapped. */
->  			ret = check_block_validity(inode, map);
->  			if (!ret)
-> @@ -2600,8 +2601,17 @@ static int mpage_map_one_extent(handle_t *handle, struct mpage_da_data *mpd)
->  			   EXT4_EX_NOCACHE;
-> 
->  	dioread_nolock = ext4_should_dioread_nolock(inode);
-> -	if (dioread_nolock)
-> -		get_blocks_flags |= EXT4_GET_BLOCKS_UNWRIT_EXT;
-> +	if (dioread_nolock) {
-> +		get_blocks_flags |= EXT4_GET_BLOCKS_SPLIT_NOMERGE |
-> +				    EXT4_GET_BLOCKS_UNWRIT_EXT;
-> +		/*
-> +		 * The io_end is accounted in i_conv_pending_ios only after
-> +		 * the first unwritten extent has been mapped, so tell the
-> +		 * zeroout fallback whether our own count is already included.
-> +		 */
-> +		if (!(mpd->io_submit.io_end->flag & EXT4_IO_END_UNWRITTEN))
-> +			get_blocks_flags |= EXT4_GET_BLOCKS_NO_CONV_ACC;
-> +	}
-> 
->  	err = ext4_map_blocks(handle, inode, map, get_blocks_flags);
->  	if (err < 0)
-> diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-> index e99816017a18..35826bd19b51 100644
-> --- a/fs/ext4/page-io.c
-> +++ b/fs/ext4/page-io.c
-> @@ -649,7 +649,7 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
->  	unsigned long io_mode = (unsigned long)ioend->io_private;
->  	bool is_disksize_grow = (io_mode == EXT4_IOMAP_IOEND_DISKSIZE_GROW_IO);
->  	handle_t *handle;
-> -	int credits;
-> +	int credits, retries = 0;
->  	int ret, err;
-> 
->  	/*
-> @@ -684,6 +684,8 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
->  	/* Wait for disksize-pending zeroed data to be written out. */
->  	ext4_iomap_wb_disksize_pending_wait(inode, pos, size);
-> 
-> +retry:
-> +	ret = 0;
->  	/*
->  	 * We may need to convert one extent, update the i_disksize and
->  	 * dirty the inode.
-> @@ -702,6 +704,8 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
->  						    is_disksize_grow);
->  		if (ret)
->  			goto out_journal;
-> +
-> +		is_disksize_grow = false;
->  	}
-> 
->  	if (ioend->io_flags & IOMAP_IOEND_UNWRITTEN)
-> @@ -714,6 +718,12 @@ static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
->  		ret = err;
->  out_err:
->  	if (ret < 0 && !ext4_emergency_state(sb)) {
-> +		if (ret == -ENOSPC && EXT4_SB(sb)->s_journal &&
-> +		    ext4_count_free_clusters(sb) && ++retries <= 3) {
-> +			if (ext4_force_commit(sb) == 0)
-> +				goto retry;
-> +		}
-> +
->  		ext4_msg(sb, KERN_EMERG,
->  			 "failed to convert unwritten extents to written extents or update inode size -- potential data loss! (inode %llu, error %d)",
->  			 inode->i_ino, ret);
-> @@ -768,7 +778,7 @@ void ext4_iomap_end_bio(struct bio *bio)
-> 
->  	spin_lock_irqsave(&ei->i_completed_io_lock, flags);
->  	if (list_empty(&ei->i_rsv_conversion_list))
-> -		queue_work(EXT4_SB(ioend->io_inode->i_sb)->rsv_conversion_wq,
-> +		queue_work(EXT4_SB(ioend->io_inode->i_sb)->iomap_conversion_wq,
->  			   &ei->i_rsv_conversion_work);
->  	list_add_tail(&ioend->io_list, &ei->i_rsv_conversion_list);
->  	spin_unlock_irqrestore(&ei->i_completed_io_lock, flags);
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 3c53bf27da45..859b9c65fc0b 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1326,6 +1326,7 @@ static void ext4_put_super(struct super_block *sb)
->  	flush_delayed_work(&sbi->s_ea_inode_work);
->  	ext4_quotas_off(sb, EXT4_MAXQUOTAS);
-> 
-> +	destroy_workqueue(sbi->iomap_conversion_wq);
->  	destroy_workqueue(sbi->rsv_conversion_wq);
->  	ext4_release_orphan_info(sb);
-> 
-> @@ -5668,6 +5669,23 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
->  		goto failed_mount4;
->  	}
-> 
-> +	/*
-> +	 * Buffered iomap conversions may have to force a journal commit and
-> +	 * retry.  That commit can wait for the writeback/endio of a
-> +	 * buffer_head io_end which is completed on rsv_conversion_wq, so the
-> +	 * iomap conversions must not share that single-threaded workqueue.
-> +	 */
-> +	EXT4_SB(sb)->iomap_conversion_wq =
-> +		alloc_workqueue("ext4-iomap-conversion",
-> +				WQ_MEM_RECLAIM | WQ_UNBOUND, 1);
-> +	if (!EXT4_SB(sb)->iomap_conversion_wq) {
-> +		ext4_msg(sb, KERN_ERR, "failed to create workqueue");
-> +		err = -ENOMEM;
-> +		destroy_workqueue(EXT4_SB(sb)->rsv_conversion_wq);
-> +		EXT4_SB(sb)->rsv_conversion_wq = NULL;
-> +		goto failed_mount4;
-> +	}
-> +
->  	/*
->  	 * The jbd2_journal_load will have done any necessary log recovery,
->  	 * so we can safely mount the rest of the filesystem now.
-> @@ -5842,6 +5860,8 @@ failed_mount8: __maybe_unused
->  	sb->s_root = NULL;
->  failed_mount4:
->  	ext4_msg(sb, KERN_ERR, "mount failed");
-> +	if (EXT4_SB(sb)->iomap_conversion_wq)
-> +		destroy_workqueue(EXT4_SB(sb)->iomap_conversion_wq);
->  	if (EXT4_SB(sb)->rsv_conversion_wq)
->  		destroy_workqueue(EXT4_SB(sb)->rsv_conversion_wq);
->  failed_mount_wq:
-> @@ -6543,6 +6563,7 @@ static int ext4_sync_fs(struct super_block *sb, int wait)
->  		return ret;
-> 
->  	trace_ext4_sync_fs(sb, wait);
-> +	flush_workqueue(sbi->iomap_conversion_wq);
->  	flush_workqueue(sbi->rsv_conversion_wq);
->  	flush_delayed_work(&sbi->s_ea_inode_work);
->  	/*
-> 
-> 
-> 
-> 
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Hi,=0A=
+=0A=
+Thanks, that patch fixes it here.=0A=
+=0A=
+Tested "drm/i915/dp: Fix source PHY updates for UHBR links with LTTPRs"=0A=
+https://lore.kernel.org/all/20261123120954.1115838-1-imre.deak@intel.com/=
+=0A=
+on top of Fedora's 7.3.4-300.fc45. The kernel also carries one unrelated=0A=
+local patch (a PCI P2PDMA host-bridge allowlist entry); nothing else in=0A=
+display or thunderbolt is changed. I removed thunderbolt.bw_alloc_mode=3D0,=
+=0A=
+so BW allocation mode is enabled, and booted with drm.debug=3D0x10e=0A=
+thunderbolt.dyndbg=3D+p.=0A=
+=0A=
+Results (Dell Pro Max 18 Plus + Dell Pro TBT5 Dock WD25TB5, 3 monitors on=
+=0A=
+the dock's MST hub):=0A=
+=0A=
+- Cold boot with the dock attached, then 3 unplug/replug cycles.=0A=
+- All 7 link trainings on DP-3 passed at UHBR20 x4 on the first attempt.=0A=
+  The source now applies the requested TX FFE preset and channel EQ=0A=
+  completes after two iterations:=0A=
+=0A=
+    [DPRX] 128b/132b, lanes: 4, TX FFE presets: 0/0/0/0=0A=
+    [DPRX] 128b/132b, lanes: 4, TX FFE request: 14/14/14/14=0A=
+    [DPRX] 128b/132b, lanes: 4, TX FFE presets: 14/14/14/14=0A=
+    [DPRX] 128b/132b, lanes: 4, TX FFE request: 14/14/14/14=0A=
+    [DPRX] 128b/132b, lanes: 4, TX FFE presets: 14/14/14/14=0A=
+    [DPRX] 128b/132b Link Training passed at link rate =3D 2000000, lane co=
+unt =3D 4=0A=
+=0A=
+  On 7.3.3 the sink kept requesting preset 14 until "Lane channel eq=0A=
+  timeout" / "Max loop count reached".=0A=
+- No "eq timeout", "Max loop count reached," or "Reducing link parameters"=
+=0A=
+  messages, and no modeset-retry / snd_hda_spdif_ctls_unassign WARN.=0A=
+- All three monitors light up at boot and after every replug;=0A=
+  i915_display_info shows port_clock=3D2000000, lane_count=3D4 on all three=
+=0A=
+  MST pipes.=0A=
+=0A=
+So my guess in the report (a failed UHBR attempt leaving the dock in a bad=
+=0A=
+state) is moot: UHBR20 itself trains fine once the source FFE presets are=
+=0A=
+programmed, and the HBR3 fallback path is no longer reached.=0A=
+=0A=
+Tested-by: Ron Rechenmacher <ron@fnal.gov>=0A=
+=0A=
+#regzbot fix: drm/i915/dp: Fix source PHY updates for UHBR links with LTTPR=
+s=0A=
+=0A=
+Thanks,=0A=
+Ron Rechenmacher=0A=
+=0A=
+=0A=
+________________________________________=0A=
+From: Jani Nikula <jani.nikula@linux.intel.com>=0A=
+Sent: Monday, November 23, 2026 2:11 PM=0A=
+To: Ronald Rechenmacher; linux-usb@vger.kernel.org=0A=
+Cc: intel-gfx@lists.freedesktop.org; regressions@lists.linux.dev=0A=
+Subject: Re: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR2=
+0 in BW allocation mode for HBR3-only DP OUT, external monitors stay black =
+(v7.2 -> v7.3)=0A=
+=0A=
+[EXTERNAL] =96 This message is from an external sender=0A=
+=0A=
+On Fri, 20 Nov 2026, Ronald Rechenmacher <ron@fnal.gov> wrote:=0A=
+> Subject: [REGRESSION] thunderbolt: Barlow Ridge DP tunnel reports UHBR20 =
+in BW allocation mode for HBR3-only DP OUT, external monitors stay black (v=
+7.2 -> v7.3)=0A=
+>=0A=
+> To: Thunderbolt/USB4 maintainers, linux-usb=0A=
+> Cc: i915/DP tunnel developers, intel-gfx, regressions=0A=
+>=0A=
+> Hi,=0A=
+>=0A=
+> Since moving from 7.2 to 7.3, the external monitors behind a Thunderbolt =
+5=0A=
+> dock stay black. They are detected, read EDID, and show up in the desktop=
+'s=0A=
+> display settings, but no picture appears. Booting with=0A=
+> thunderbolt.bw_alloc_mode=3D0 fixes it completely.=0A=
+=0A=
+Does [1] fix it?=0A=
+=0A=
+If not, please file a bug as described at [2]=0A=
+=0A=
+=0A=
+BR,=0A=
+Jani.=0A=
+=0A=
+=0A=
+[1] https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lore.kernel.org_=
+r_20261123120954.1115838-2D1-2Dimre.deak-40intel.com&d=3DDwIFaQ&c=3DgRgGjJ3=
+BkIsb5y6s49QqsA&r=3D7KXkqf0bzyUQv15jBKEcHw&m=3DWbtGBMNnikBCE_5bRt_3C41noX9b=
+J-cH0cFXlewGwKQVbCrdXe0i9NSfZxhreRS0&s=3DdCjUoOMnzVMdEbASjLsrUG6QeyNgvs9V2v=
+zGRRV-C1Y&e=3D=0A=
+[2] https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__drm.pages.freede=
+sktop.org_intel-2Ddocs_how-2Dto-2Dfile-2Di915-2Dbugs.html&d=3DDwIFaQ&c=3DgR=
+gGjJ3BkIsb5y6s49QqsA&r=3D7KXkqf0bzyUQv15jBKEcHw&m=3DWbtGBMNnikBCE_5bRt_3C41=
+noX9bJ-cH0cFXlewGwKQVbCrdXe0i9NSfZxhreRS0&s=3DrVzUy6qrWoDNiOMi61LshbXJh76bR=
+aquVr9Q0BkJx44&e=3D=0A=
+=0A=
+=0A=
+>=0A=
+> #regzbot introduced: v7.2..v7.3=0A=
+>=0A=
+> Hardware=0A=
+> --------=0A=
+> - Laptop: Dell Pro Max 18 Plus MB18250, BIOS 3.5.2 (10/15/2026)=0A=
+> - CPU/display: Arrow Lake-HX, i915 (MTL display version 14.00, PCI 8086:7=
+d67)=0A=
+> - Host router: Barlow Ridge JHL9580 (8086:5780/5781), NVM 64.81; the=0A=
+>   i915 DDI TC3 port is wired to the router's DP IN (TC port mode "legacy"=
+)=0A=
+> - Dock: Dell Pro TBT5 Dock WD25TB5 (Barlow Ridge hub JHL9480), NVM 69.81,=
+=0A=
+>   internal Synaptics MST branch (DPCD 1.4, max HBR3 x4)=0A=
+> - 3 monitors on the MST hub: 2x 3840x2160@60 (one uses DSC), 1x 1920x1080=
+@60=0A=
+> - USB4 link to the dock comes up asymmetric (3 RX / 1 TX, 40 Gb/s lanes)=
+=0A=
+>=0A=
+> Kernels=0A=
+> -------=0A=
+> - Good: 7.2.15 (Fedora 7.2.15-200.fc44)=0A=
+> - Bad:  7.3.3  (Fedora 7.3.3-300.fc45)=0A=
+> - The 7.3.4 stable changelog has no i915, drm display, or thunderbolt=0A=
+>   changes, so I expect 7.3.4 to be affected too (not tested).=0A=
+>=0A=
+> What happens=0A=
+> ------------=0A=
+> Both tunnel adapters report HBR3 x4 as their maximum. With bandwidth=0A=
+> allocation mode enabled, though, the tunnel's maximum is reported as=0A=
+> UHBR20 x4, and i915 picks that up as the DPRX rate:=0A=
+>=0A=
+>   thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): DP IN maximum supported b=
+andwidth 8100 Mb/s x4 =3D 25920 Mb/s=0A=
+>   thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): DP OUT maximum supported =
+bandwidth 8100 Mb/s x4 =3D 25920 Mb/s=0A=
+>   thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): non-reduced bandwidth 810=
+0 Mb/s x4 =3D 25920 Mb/s=0A=
+>   thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): maximum bandwidth through=
+ allocation mode 20000 Mb/s x4 =3D 77575 Mb/s=0A=
+>   thunderbolt 0000:05:00.0: 0:13 <-> 1:12 (DP): bandwidth allocation mode=
+ enabled=0A=
+>   i915 0000:00:02.0: [drm:drm_dp_tunnel_enable_bw_alloc] [DPTUN 1:1:13][A=
+UX USBC3/DDI TC3/PHY TC3] Enabling BW alloc mode: DPRX:20000x4 Group alloc:=
+0/103500 Mb/s (Ok)=0A=
+>=0A=
+> The LTTPR (LTTPR 1) PHY capabilities read by i915 also flip between=0A=
+> "04 03 00" and "04 00 00" around this point, i.e. its 128b/132b UHBR10/20=
+=0A=
+> bits come and go.=0A=
+>=0A=
+> i915 then tries 128b/132b, which always fails:=0A=
+>=0A=
+>   i915 [CONNECTOR:543:DP-3][ENCODER:542:DDI TC3/PHY TC3][DPRX] Max loop c=
+ount reached=0A=
+>   i915 ... [DPRX] 128b/132b Link Training failed at link rate =3D 2000000=
+, lane count =3D 4=0A=
+>   i915 ... [DPRX] 128b/132b Link Training failed at link rate =3D 2000000=
+, lane count =3D 4=0A=
+>   i915 ... [DPRX] Reducing link parameters from 4x2000000 to 4x1000000=0A=
+>=0A=
+> Two observed outcomes:=0A=
+>=0A=
+> 1. Cold boot with the dock attached: UHBR20 and UHBR10 fail, then i915 fa=
+lls=0A=
+>    back to HBR3, and 8b/10b training passes for both the LTTPR and the DP=
+RX.=0A=
+>    The monitors still stay black.=0A=
+> 2. Dock hotplug: the fallback state is reset, and UHBR20 fails twice. The=
+=0A=
+>    limit drops to UHBR10, but there is no further training attempt, and=
+=0A=
+>    i915_display_info still shows port_clock=3D2000000 on all MST pipes. T=
+he=0A=
+>    monitors stay black. On the hotplug path i915's modeset retry also hit=
+ a=0A=
+>    WARN in snd_hda_spdif_ctls_unassign (from=0A=
+>    intel_connector_modeset_retry_work_fn -> intel_audio_codec_disable).=
+=0A=
+>=0A=
+> In about 12 boot/hotplug attempts on 7.3.3, the monitors came up once or =
+twice.=0A=
+>=0A=
+> Workarounds that work on 7.3.3=0A=
+> ------------------------------=0A=
+> a) thunderbolt.bw_alloc_mode=3D0 on the kernel command line: no UHBR atte=
+mpts,=0A=
+>    training passes at HBR3 x4 on the first try at boot and after hotplug,=
+=0A=
+>    all monitors work, no i915 errors.=0A=
+> b) With BW allocation mode left enabled, forcing HBR3 before any UHBR att=
+empt=0A=
+>    on the new link also works, and the forced rate survives later hotplug=
+s:=0A=
+>      echo 810000 > /sys/kernel/debug/dri/0000:00:02.0/DP-3/i915_dp_force_=
+link_rate=0A=
+>      echo 1      > /sys/kernel/debug/dri/0000:00:02.0/DP-3/i915_dp_force_=
+link_retrain=0A=
+>    Forcing 540000 the same way trained successfully but stayed black (nee=
+ds=0A=
+>    DSC at ~13 bpp for this monitor setup).=0A=
+>=0A=
+> So falling back to HBR3 after a failed UHBR attempt is not enough; HBR3 o=
+nly=0A=
+> works when UHBR is never attempted. My guess is that the failed 128b/132b=
+=0A=
+> training leaves the Barlow Ridge DP IN/OUT path or the dock's branch devi=
+ce in=0A=
+> a state that 8b/10b retraining does not recover, but I can't verify that.=
+=0A=
+>=0A=
+> On 7.2.15, i915 always reports i915_dp_max_link_rate=3D810000 for this=0A=
+> connector and never logs a 128b/132b attempt or a link training error. I=
+=0A=
+> don't have drm.debug/thunderbolt dyndbg logs from 7.2, so I can't say whe=
+ther=0A=
+> 7.2 enabled BW allocation mode on this tunnel.=0A=
+>=0A=
+> Questions=0A=
+> ---------=0A=
+> - Should the tunnel's "maximum bandwidth through allocation mode" be capp=
+ed=0A=
+>   by the DP OUT adapter's maximum (HBR3 x4 here)?=0A=
+> - Should i915 handle a failed UHBR attempt on this path differently, keep=
+ing=0A=
+>   the fallback across hotplug and recovering after the 8b/10b fallback?=
+=0A=
+>=0A=
+> I have full logs (drm.debug=3D0x10e thunderbolt.dyndbg=3D+p) for the bad =
+boot,=0A=
+> covering a cold boot, a hotplug, and both debugfs experiments, plus=0A=
+> i915_display_info, i915_dp_mst_info and connector debugfs snapshots from =
+7.2.15=0A=
+> and 7.3.3. I can test patches or a mainline build, and can bisect v7.2..v=
+7.3=0A=
+> if that helps.=0A=
+> Download URL: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__driv=
+e.google.com_uc-3Fexport-3Ddownload-26id-3D1ZE5GYE69IgIpT6fWs5XHmMpseIurGgK=
+8&d=3DDwIFaQ&c=3DgRgGjJ3BkIsb5y6s49QqsA&r=3D7KXkqf0bzyUQv15jBKEcHw&m=3DWbtG=
+BMNnikBCE_5bRt_3C41noX9bJ-cH0cFXlewGwKQVbCrdXe0i9NSfZxhreRS0&s=3DfbQWcJvgh3=
+ipP_DR3JM7CTSKxJphgGUQV7JklVAu6OM&e=3D=0A=
+>=0A=
+> Thanks,=0A=
+> Ron Rechenmacher=0A=
+=0A=
+--=0A=
+Jani Nikula, Intel=0A=
