@@ -1,59 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.167
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795531737;
-	b=qjcfhOtxBYF7KcvD32tRWCZXTD9Ik0TZ1tVV4fYE2etqeux3rJteFSuhfe1orhkFPquV
-	 uJdOceUwLjotfNOUR1tZCDwVDKCCGXEx6PsN7imtQfhstE9bgRBd5Up8I/8vYD6dE7Ko3
-	 EJhWd4IBM9teQOwe4II1XMjwb4+0Rz1ChuCzIdGNEEn4WVC58umhF52QlmUJSaJm+uerI
-	 gVdiDIu2XvEEEQkZO28OsEvLFKB+cy1Z0OUtKCDdIb3Y5Z8emdze8uNqNCju+4/ijuAQP
-	 4us8f3ShfZD3RrfiUhKypZiAxNyl0QrSiQqREONvI7YszWVEekqiLhxipkeQpj1YqUA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795531737;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=v4XTDh7yGuOV+1Omye4+wgEj7R56IUboJQT1Dq56D90=;
-	b=1SG4yJ7rUnQI/bvb/gHGGwlhF829x6n8PpNx37OEu0FUCHilDVP4m407MFbx6fwlD0Q3
-	 zAuY6I5F7IhaCvMYBrjHzeqnyDSx6LaZoVpuJSN6OhErzXwcD2+dSDxEy3gPkjW0mOpPP
-	 0hyLiMx2kuYodLP2wEkU8KReOBaSVogUH3hkaacF6NOYlsjSLUBNohDlUMS4O458/7ump
-	 Fo9ATLfPW4kZNBZAY4rt/Ov5zl/7n4AYjd1fYqFhy92LtfkdfF5EGNRiLEmgt0i8LAEWm
-	 YCifVO75auTkj7jb2xrG5tQpnuPA+NLnd8wldU/UI62N2bAKOHlKwO8jWe40Pxl6ekQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=protonmail.com;
-	spf=pass smtp.mailfrom=protonmail.com;
-	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=QC6LhSui;
-	arc=none smtp.remote-ip=185.70.43.167
-Received: from mail-43167.protonmail.ch (mail-43167.protonmail.ch [185.70.43.167])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.45
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795533523;
+	b=izopBKIG8m4ywx/5ZyptjhY6G66ec13Io/EgymazuHpgWPxNPDqadgPlqfw1vZj70p1X
+	 yuvDqlfoPiOGp1NNJnK/uegatPwqxX6HgdNjqj59TIRAzH8ScDNPZtOjELpA33DKDE9RF
+	 efMrebxPd7GFEW3hHMw+g4OCvHLyWHaQkHueuUzW6TYMzwHgB5cVnEV3AVQsy4PhnfQQn
+	 HX6NXgp4gASLO1LUkUPV4bg8NOuRyk30oqoRE8FXPmLV/lW3OqbjUODxoCRlYTD86jcUN
+	 WekxJZuSMfri+rLqdJbVoM905McexSose2ndqVG1Ck+vqYOHKXUIIYFbex/dzQU+EXw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795533523;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=pMeAUfyQKs21PQxhTeThPehL8F0f2FfcH9tAVVckmCI=;
+	b=aZ9U+6eN9DqUO3bycK8WDxrYoahfb37+E/J0rGhcByDwoeB8Aj1J4cfE5YBgDQ/7iBDp
+	 7AzToiV53a3gN61EN0Eux8E99dwfcwygXcVH/rGHYaPHX0g8ShjdZqJUZ2SQeMYAfSrIV
+	 CWdsbPpW34/h1o2yuLiwDEQTeMK2IvlTkMTC3Gs8emkr7T6o0P3TK2nR7WgBQDl9E8WlJ
+	 kizmYGrGrrh7lFCt1+d+7Sk7nWuG1Wjg92hjbu5O814O0x8UeWDn3wnD+i+GGqwQBJZwm
+	 b5GnFgeSPnXzD3arTACQRBGffXZpFoOtJrry94C2SmZMvT9am791A1BGZR0v/DugsuQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=SKW8EYJi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.45
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0EF606A31E;
-	Tue, 24 Nov 2026 14:48:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA0EF606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3BF606A321
+	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 15:18:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DF3BF606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=QC6LhSui
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1795531734; x=1795790934;
-	bh=v4XTDh7yGuOV+1Omye4+wgEj7R56IUboJQT1Dq56D90=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=QC6LhSuij9JsD0p4k7g4vtDJMuupzflicUPjgue2+D31VNMDj2hMoYHFLQPBdrI71
-	 eG/yYhxPN/zs/0HVWHwq/as1Bt5JOgkduEosOTMGFmumN2Qm1Zw/ocbgG0ECbtkoUd
-	 pcoPbWGNoroiU33F4f7kOIGFlz09OL/Xrbm8bqhUIwpPcOMDmoKpNq1CpyR3oJagA3
-	 cwpf+5ukC5V2YHI8OnyUEtaPCG4IX1M1ItOyOrdV6ltUFW88s75wfPPobKxIorXhfE
-	 Xaq8JCwfz5H6QjGi2iw7JTqp11O2U0gqM5HpKwOP1o8D+/AxqGmAzuI/5j8Z6BXGHf
-	 rQxlTrhcTj0Qw==
-Date: Tue, 24 Nov 2026 14:48:48 +0000
-To: "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, Baolu Lu <baolu.lu@linux.intel.com>, Thorsten Leemhuis <regressions@leemhuis.info>, "info@aigeus.net" <info@aigeus.net>
-From: 70sp <70sp@protonmail.com>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU=@protonmail.com>
-In-Reply-To: <275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06070@linux.intel.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com> <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com> <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com> <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com> <5bVscg7a2_H1PPW3HmVtrYv_Xwtti2hzjD065W4OdwsD9rC2gw7sGVEg-2U596VZn8O2LAEfhWeZklRk63ymqNW9220R6R_jjif7BaWol9o=@protonmail.com> <82662a17-f9e2-46dd-9881-792412c1dc50@linux.intel.com> <X7nc9tQqVxmuR76GYNJnMRkqUTwNVlXTWpH0wGvJeiAHlcLaibPZHRN037p0359GpdmopB_wI2tF2x6EqZF4oY9J697tcTGYwfYMK96FcUs=@protonmail.com> <275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06070@linux.intel.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: d520ef07ea37302ab1e531094c992b0d5f8b3ff1
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=SKW8EYJi
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6b8977f2785so6122027a12.3
+        for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 07:18:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795533521; cv=none;
+        d=google.com; s=arc-20260327;
+        b=cI2jsKp5t6/WgAa27cEl5B4b94dipjFe/BgdeT320K7C3kIKl0rpI6mgBOZByyqAcN
+         mebjT6K/8Kxds2yitiAn3THEp5D7PK0qVodWQknuEg2pcvD8n+pQXcF/pwpkGkbV6qls
+         iKgw+P9Llxq7ISlrFePEYckoN7+Ew7RbLf8ZJy8c+QuAluLiQqHjngrFw9xbWqQzb5QX
+         tmE3Gn52gGENtWVqPRmGxtC03iMvJzgOk5T7Tg/iOZ/KKwQst6PTeb7IANNwpTVxkqYf
+         3mqej+EDKE8XbJbuYoiZKyKJIjBpg0xcjlFgJ4Bf4ULl5VSn1HS9gJmzyoGqeCU3g7A5
+         Ir3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=pMeAUfyQKs21PQxhTeThPehL8F0f2FfcH9tAVVckmCI=;
+        fh=za/KhkfNgEZfQ7pQbmMf1saZiDP8Nb0zAG3dsqhkRd4=;
+        b=pri4zJ3w/gymT0cwvhS1YEDese2kic6FVIZ++ecCLiGCpnJhnwNt4PIrny4EO385zn
+         QWEO4GoA5L83dnIilfaejYhfCuZCP//gvTuNtY5q2qMpDKZMD9G58BcJaTHcefWRDnB+
+         qZL30WBp0KKPJU/NrmdIgfDdTpfXg6kM/VimZUAHlM7xGJXyhYncmqpLW149NH3GTvJV
+         is6CSWobUPFWGjNYf59j413IfRnaT5NqPkFgeCeZuHJkXs1QDyFUAwyQY2ALt2C6XLRK
+         C/PphBcDZGbVIwxmSX+4A7XYS01FWtHGKrnXB2D07OJPifc0b8h1D6bodb7fuFShgKsp
+         Uujg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1795533521; x=1796138321; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=pMeAUfyQKs21PQxhTeThPehL8F0f2FfcH9tAVVckmCI=;
+        b=SKW8EYJih1eW+jyBRucoDaB+0XWzcpZXoKslKk2/bUWnryiIZfDxipGvIFl3zKPdlK
+         i4KL/COT8NYW9UpbfRMwkKO3p90BVSMaQQ0AfuSkwdeOkuTtD512i88RmDoPpdMDPd9B
+         heHf4IUOFFkCxCM8fGeZipdY5F5730xXrdrA5ienIWxyRXQUVTEcqVwiFub/wyxrfnoz
+         EY6PwRqhPwZVvIQWGB3BgS/Lm2vwU+OEuag2tqv2S/QCVRkFxPMJFDc1xfJLoBuT4T+C
+         +j5TehdR9K5SfoWkhij/INkkCphaVSZKWgQHkruwtOCjjVymtKSW4RzQi/b/OaT8F6sj
+         AQow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795533521; x=1796138321;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pMeAUfyQKs21PQxhTeThPehL8F0f2FfcH9tAVVckmCI=;
+        b=eQ7xCIBisK1uDAf+ArwoADdvooKdONl4Neuo91bYJaq7u8bts+wKyXCnRYHU74OOge
+         +3RYP4TPJtszfAx0bjqOL8WkSuERxJyqgQN0ZDkLnjgtZDlP3yX6g+l5QMXNzhNmIF+s
+         lYX+BqgkBBNSKIhrSgMBazy3qM2xK5OIMW46i1y3CsK40j9Bi5kTKtUW5g5n5tk9GbpB
+         +uKSO9S0NJcU/zV3k/VCcMIN5mmaYKd70/1UA9z+lFubGhpW4nh/WmNkEXGRg12IJY4z
+         eB5Zv+EMBQ6dGiR1uUF9raHeWiTygVXOhX1m9m73gTU91A7x6QiLcEVJPOVXGnZ0un8H
+         HWKw==
+X-Forwarded-Encrypted: i=1; AL+hErG2tiwueM0ALtGoR/Ci2k0V0SbrNyTK6GSbq7RCPACh6TpdGpXozSDBDRxg2ZAhUvDksfBul0Dvhhssmg==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+RISsQAZBbHsoAedXrFK34LGQ67NBeV3sOFsHBnHx7yi9jSAvw
+	jTqh8qmVfl/IpW8nhmtzMKW6LqmN6Gt9kBXRjIkCw5B1E8HoKEjDHc4VuXFIc9si38EqZk2InuC
+	0buQX3Q9AHC2CrpY0vC17KJoG7R7blQN5Tn5sTxUCOw==
+X-Gm-Gg: AZFdTZdlhAUYmMoXQY5l1IPiz3zy0sIb8dYAY0ahpKfMZ2N6cULJqnYIiIx9mquW1L4
+	eyROhemvNXj90/cHLDZSenYfer5qSidMY41Zl0KnhfJHtTwcnHnOXVXiS5g9gcepJEPOmaNikos
+	agnmlEatKm6xVg83q2YBqZfiMColVlRUZhq/a7eHQWi4dQoj1CVefN4s2EyQ8DWs2u6DUsziDtq
+	tpOQWYSpynI5n/3A9ss9dN+boMDTm2T39d/gHR6XZxd3LE67uS7MPhlrssQtjR3WYfOQpyyJRxe
+	EgZ7jRW7shKn32vp9zeJ5q3K/KLV5puXsY3IkpU1kZrgdW7CUz4W7NAXwNw9v+LjfOL8AEr7nCQ
+	Gs8jPeteXH4R7+B0R5B8omFNUIQPsdgUj0Skm4obqy2KmwJf3tykJOHMbo5f2ejfYIBvafg==
+X-Received: by 2002:a05:6402:3212:b0:6b7:28f:a3ac with SMTP id
+ 4fb4d7f45d1cf-6ba37d18d11mr10185076a12.7.1795533520984; Tue, 24 Nov 2026
+ 07:18:40 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -63,182 +104,191 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
+In-Reply-To: <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 24 Nov 2026 16:18:29 +0100
+X-Gm-Features: Aa3M54rPc23BD9JMCDfXBfEKa5k3TiaEoPqaYqWowySdm3smTxn0fkcqVx8it1w
+Message-ID: <CAKfTPtDBk=V+ApVCxGHQ0A+juE-rwid-hBxAF_KoeXbg4Vn5nw@mail.gmail.com>
+Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in select_idle_capacity()
+ leaves busy tasks on little CPUs while big CPUs are idle
+To: James Buck <jbuck2005.linux@outlook.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Andrea Righi <arighi@nvidia.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, 24 Nov 2026 at 12:56, James Buck <jbuck2005.linux@outlook.com> wrot=
+e:
+>
+> Hi,
+>
+> Since commit 61ea17a63719 ("sched/fair: Add SIS_UTIL support to select_id=
+le_capacity()"), first in v7.2, CPU-bound multi-threaded work on my big.LIT=
+TLE arm64 board runs 12-19% slower than on v7.1 and earlier, because waking=
+ threads are placed on idle little CPUs while idle big CPUs are never looke=
+d at.
+>
+> Turning SIS_UTIL off at runtime restores the old speed. select_idle_capac=
+ity() and update_idle_cpu_scan() are unchanged in v7.4-rc4, so I expect mai=
+nline to behave the same.
+>
+> #regzbot introduced: 61ea17a63719
+>
+> System
+> ------
+> Orange Pi 6 (CIX CD8180 "Sky1"), 12 CPUs in five clusters, ACPI boot, no =
+SMT:
+>
+> CPUs     capacity
+> 0-1       1024
+> 2-5         279   (little)
+> 6-7         905
+> 8-9         866
+> 10-11     984
+>
+> The firmware's PPTT gives one MC domain over all 12 CPUs. It has SD_ASYM_=
+CPUCAPACITY(_FULL) and SD_SHARE_LLC, with a CLS domain per cluster below it=
+. The kernel is v7.3.5 plus the out-of-tree Sky1 SoC
+> driver patches the board needs to boot. None of them touch kernel/sched/;=
+ the only one in drivers/base/arch_topology.c adds a helper that updates ca=
+pacity_freq_ref when boost is toggled.
+>
+> Workload
+> --------
+> llama.cpp llama-bench, Qwen2.5 1.5B Instruct Q4_K_M, CPU only, 8 threads,=
+ pp512 / tg128, tokens/s:
+>
+> 6.18.64                           123.5 / 36.5
+> 7.3.5                               109.0 / 29.5
+>
+> 7.3.5, taskset to the 8 big CPUs   121.4 / 34.7
+> 7.3.5, NO_SIS_UTIL at runtime     122.1 / 35.9
+> 7.3.5, patch below                       121.7 / 35.7
 
-I (alongside ChatGPT) found the solution and the root cause of this issue.
+I have something similar on radxa O6 and 7.4-rc4 with latest tip/sched/core
+- 7.4-rc4+tip : 124.4
+- 7.4-rc4+tip NO_SIS_UTIL at runtime : 136.3
 
-The regression is caused by the code improperly assuming that the CPU suppo=
-rts IOMMU superpages, which it does, but only when the integrated GPU is di=
-sabled (speciality of Intel Haswell).
+I'm surprised that the newly_idle and/or periodic load balance doesn't
+pull the tasks earlier onto a mid/big core. It takes around 15/20ms to
+migrate a long-running thread to a bigger core when it runs on a
+little core whereas misfit should trigger an active load balance at
+next tick. I wonder if the Cluster level could slow down this
+migration.
 
-The regression can either be fixed with a single kernel parameter "intel_io=
-mmu=3Don,sp_off" or by modifying the code.
-
-The LLM also generated me a patch that worked, but it was just about hardco=
-ding specific CPUs to not use superpages. Doesn't seem like a great solutio=
-n for this very delicate code. A much better solution would likely be makin=
-g a patch which checks for superpage compatibility universally.
-
-I am sending a working patch from a month ago edited by me and the reasonin=
-g from ChatGPT (if somebody would find it useful) below.
-
-the patch:
----
- drivers/iommu/intel/iommu.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 5a2e705a2f2e..dd49a4e37653 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -23,6 +23,7 @@
- #include <linux/syscore_ops.h>
- #include <linux/tboot.h>
- #include <uapi/linux/iommufd.h>
-+#include <asm/cpu_device_id.h>
-=20
- #include "iommu.h"
- #include "../dma-iommu.h"
-@@ -1876,6 +1877,13 @@ static int __init init_dmars(void)
- =09return ret;
- }
-=20
-+static const struct x86_cpu_id haswell_cpu_ids[] __initconst =3D {
-+=09X86_MATCH_VFM(INTEL_HASWELL, NULL),
-+=09X86_MATCH_VFM(INTEL_HASWELL_L, NULL),
-+=09X86_MATCH_VFM(INTEL_HASWELL_G, NULL),
-+=09{}
-+};
-+
- static void __init init_no_remapping_devices(void)
- {
- =09struct dmar_drhd_unit *drhd;
-@@ -1907,6 +1915,14 @@ static void __init init_no_remapping_devices(void)
- =09=09/* This IOMMU has *only* gfx devices. Either bypass it or
- =09=09   set the gfx_mapped flag, as appropriate */
- =09=09drhd->gfx_dedicated =3D 1;
-+
-+        /* Haswell requires superpages to be disabled in the default
-+=09=09   remapping unit too when integrated graphics is enabled. */
-+=09=09if (intel_iommu_superpage && x86_match_cpu(haswell_cpu_ids)) {
-+=09=09=09intel_iommu_superpage =3D 0;
-+=09=09=09pr_info("Disabling superpages on Haswell with integrated graphics=
-\n");
-+=09=09}
-+
- =09=09if (disable_igfx_iommu)
- =09=09=09drhd->ignored =3D 1;
- =09}
---=20
-
-the reasoning from ChatGPT:
-Haswell GPU passthrough has been reported to fail since the v6.13 VT-d
-domain capability changes. The reported fault is a legacy-mode reserved
-PTE field fault, and the dump ends at a level-3 entry with the large-page
-bit set (0x00000003c0000883), i.e. a 1 GiB mapping.
-
-Before commit c376a3456d8b ("iommu/vt-d: Remove domain_update_iommu_cap()")=
-,
-domain_update_iommu_superpage() intersected the superpage capabilities of
-all active remapping units. An active IGD unit without superpage support
-therefore prevented superpages in the default remapping unit as well.
-Removing the capability update exposed the default unit's own superpage
-capability to domains allocated for devices behind it.
-
-The Desktop 4th Generation Intel Core Processor Family Datasheet,
-Volume 1, document 328897-010, section 3.1.2, page 43, requires disabling
-superpages in the default VT-d engine when integrated graphics is enabled.
-The mobile M/H and U/Y datasheets (328901-006 and 329001-007) describe the
-same restriction. This provides a possible explanation for the regression
-even when the default unit advertises superpage support.
-
-Disable superpages on Haswell client CPUs when discovering a populated
-graphics-only remapping unit. Do this before domain allocation, using the
-existing superpage-disable policy, so both allocation and attachment keep
-their existing page-size rules. The check precedes the igfx_off handling:
-bypassing graphics translation does not disable the integrated graphics.
-Systems without a graphics-only remapping unit and other CPU families keep
-their existing behavior.
-
-This is a candidate fix; the reported hardware failure has not yet been
-retested with this change.
-
-Fixes: c376a3456d8b ("iommu/vt-d: Remove domain_update_iommu_cap()")
-Reported-by: 70sp <70sp@protonmail.com>
-Link: https://lore.kernel.org/regressions/275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06=
-070@linux.intel.com/
-Assisted-by: OpenAI ChatGPT
-
----
-RFC: hardware confirmation and a full kernel build are still required.
-The Fixes tag identifies the suspected loss of the global capability
-intersection, not a hardware-verified diagnosis.
-
-Prepared against the inspected source at Torvalds' mainline commit
-cbbddb6b08cc9900a87cccaa9b22bbe06aa4f50a (2026-10-31).
-Only web-rendered source excerpts were accessible in this environment;
-their indentation was reconstructed. Patch application was checked against
-those excerpts, not a complete, byte-identical kernel checkout.
-
-Validation performed:
-  - All hunk context matched the inspected mainline text after ignoring
-    leading whitespace; no upstream source text was invented for a hunk.
-  - git apply --check --whitespace=3Derror-all, forward application and
-    reverse application checks passed on a source-fragment fixture.
-  - Added lines passed trailing-whitespace and 100-column checks.
-  - The extracted init_no_remapping_devices() function compiled in a
-    userspace harness with GCC, -Wall -Wextra -Werror and UBSan. The
-    unpatched excerpt failed the modeled Haswell/IGD policy requirement;
-    the patched excerpt passed 896 modeled platform/page-size cases.
-    Kernel APIs were stubbed: this is not a kernel or VT-d hardware test.
-  - The model covered all three matched CPU variants, unaffected CPUs,
-    missing and sparse device scopes, mixed-device remapping units,
-    include-all units, duplicate graphics units, sp_off, and igfx_off.
-
-Not performed: a full-tree apply check, kernel build, boot, GPU passthrough
-test, checkpatch.pl run, or get_maintainer.pl run. These require a complete
-kernel checkout and, for runtime verification, the affected machine.
-
-Suggested confirmation on the affected Haswell / GTX 970 machine:
-  1. On the failing kernel, append sp_off to the existing intel_iommu=3D
-     options for a test boot (for example intel_iommu=3Don,sp_off). Keep
-     the other boot, firmware and VM settings unchanged. Retry the VM.
-     A successful test would support the superpage hypothesis; failure
-     would mean this candidate needs further investigation.
-  2. In a full mainline tree at the base commit, run:
-       git apply --check 0001-iommu-vt-d-disable-haswell-igfx-superpages.pa=
-tch
-       git apply 0001-iommu-vt-d-disable-haswell-igfx-superpages.patch
-     Then build with the reporter's configuration. Also build the affected
-     driver with x86_64 defconfig plus CONFIG_INTEL_IOMMU=3Dy and W=3D1, an=
-d run
-     scripts/checkpatch.pl and scripts/get_maintainer.pl on the patch.
-  3. Boot the patched kernel without sp_off and repeat the same VM test.
-     Expect "DMAR: Disabling superpages on Haswell with integrated
-     graphics" in dmesg. Confirm the VM starts, the NVIDIA driver loads,
-     and the previously reported DMA fault does not recur. Exercise VM
-     restarts and a GPU workload. Keep a known-working kernel available.
-  4. If possible, confirm that a Haswell machine with IGD disabled in
-     firmware, and a non-Haswell system, retain their page-size behavior.
-
-Tradeoff: affected hosts use 4 KiB IOMMU mappings, increasing page-table
-memory and potentially IOTLB pressure. Performance has not been measured.
-The change does not bypass DMA translation or relax mapping permissions.
-The supplied report establishes a functional regression; it does not
-demonstrate a security boundary violation.
-
-Source references:
-  https://lists.openwall.net/linux-kernel/2024/11/04/29
-  https://intel.manymanuals.com/processors/cm8064601618605/datasheet-16448/=
-43
-  https://device.report/m/be82c9d9f78a11870a802bca7e42a85048a57a958523fed45=
-96058d76f0c9e30.pdf
-  https://manuals.plus/m/45f81faae3cbf90473b6edc6d16f7451659a1afeea58999fe3=
-19dfe1fc07c5b5
-
-
-Best Regards,
-=C5=A0imon Posp=C3=ADchal
+>
+> Sampling each worker thread's CPU every 5 s on stock 7.3.5 showed one to =
+four of the 8 threads on cpu2-5 in every sample, with big CPUs idle. With N=
+O_SIS_UTIL, or with the patch below, threads only make brief visits to the =
+little CPUs. That costs nothing measurable, and 6.18 does the same. llama.c=
+pp syncs all threads at a barrier after every operation, so one thread on a=
+ 279-capacity CPU holds up the other seven.
+>
+> Other things I ruled out with runtime toggles or test builds: EAS off, ll=
+c_balancing off, the performance governor, NI_RATE/NI_RANDOM, the 6.18 misf=
+it logic, and restoring the old sd_init() rule that cleared SD_PREFER_SIBLI=
+NG on the child of an asymmetric domain. None of them changed the result. T=
+he slowdown only shows when prompt processing is part of the run, where the=
+ workers block and wake far more often than during generation, which points=
+ at the wakeup path.
+>
+> What I think happens
+> --------------------
+> The workers' util is about 850-1018, so they fit no CPU, not even a 1024 =
+one (the limit there is about 819). select_idle_capacity() therefore never =
+returns early. It returns the highest-capacity idle CPU among those it scan=
+ned.
+>
+> With 8 of 12 CPUs busy, nr_idle_scan comes out at about 6:
+>
+> x =3D 7200 / 12 =3D 600
+> y =3D 1024 - 600^2 * 117^2 / (10000 * 1024) =3D ~543
+>
+> nr =3D 12 * 543 / 1024 =3D ~6
+>
+> So the scan stops after six CPUs counted from target. From cpu0 that is c=
+pu0-5. With cpu0 and cpu1 busy, the best idle CPU it can see is a little on=
+e, and the idle cpu6-11 are never checked. From cpu10 the scan covers 10, 1=
+1, 0, 1, 2 and 3, with the same result. Once a thread is on a little CPU, i=
+ts next scan starts there, so it tends to stay.
+> Above about 85% load nr drops to 1 and the function returns -1 at once.
+>
+> The CPU numbering here (littles between two groups of bigs) makes it easy=
+ to hit. But the effect looks general: for a task that fits no CPU, a scan =
+cut short by nr returns the best of a partial set. On a system with the lit=
+tles at 0-3 and the bigs at 4-7, a wakeup with target on a little CPU and n=
+r <=3D 4 sees only little CPUs.
+>
+> The patch below (drop the limit from select_idle_capacity() only; select_=
+idle_cpu() keeps SIS_UTIL) is what I run now.
+>
+> I'm not proposing it as the fix, since it gives up what the commit wanted=
+ on large asymmetric domains.
+>
+> One option might be to keep scanning past nr while nothing has been found=
+ that fits. I'm happy to test anything on this board, and I can send the to=
+pology and sched domain dumps, /proc/schedstat, or traces if they help.
+>
+> Thanks,
+> James
+>
+>
+>
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9049,7 +9049,6 @@ select_idle_capacity(struct task_struct *p, struct =
+sched_domain *sd, int target)
+>         int fits, best_fits =3D ASYM_IDLE_THREAD_MISFIT;
+>         int cpu, best_cpu =3D -1;
+>         struct cpumask *cpus;
+> -       int nr =3D INT_MAX;
+>
+>         cpus =3D this_cpu_cpumask_var_ptr(select_rq_mask);
+>         cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+> @@ -9058,28 +9057,17 @@ select_idle_capacity(struct task_struct *p, struc=
+t sched_domain *sd, int target)
+>         util_min =3D uclamp_eff_value(p, UCLAMP_MIN);
+>         util_max =3D uclamp_eff_value(p, UCLAMP_MAX);
+>
+> -       if (sched_feat(SIS_UTIL) && sd->shared) {
+> -               /*
+> -                * Same nr_idle_scan hint as select_idle_cpu(), nr only l=
+imits
+> -                * the scan when not preferring an idle core.
+> -                */
+> -               nr =3D READ_ONCE(sd->shared->nr_idle_scan) + 1;
+> -               /* overloaded domain is unlikely to have idle cpu/core */
+> -               if (nr =3D=3D 1)
+> -                       return -1;
+> -       }
+> -
+> +       /*
+> +        * Scan the whole domain, as 6.18 did. Do not cut the scan short =
+with
+> +        * the SIS_UTIL nr_idle_scan hint: on a busy system the hint drop=
+s to a
+> +        * few CPUs, the scan then stops at whatever idle CPU it met firs=
+t, and
+> +        * a task that fits no CPU (util above every capacity margin) lan=
+ds on
+> +        * an idle little core while an idle big core is never looked at.
+> +        */
+>         for_each_cpu_wrap(cpu, cpus, target) {
+>                 bool preferred_core =3D !has_idle_core || is_core_idle(cp=
+u);
+>                 unsigned long cpu_cap =3D capacity_of(cpu);
+>
+> -               /*
+> -                * Stop when the nr_idle_scan is exhausted (mirrors
+> -                * select_idle_cpu() logic).
+> -                */
+> -               if (!has_idle_core && --nr <=3D 0)
+> -                       return best_cpu;
+> -
+>                 if (!choose_idle_cpu(cpu, p))
+>                         continue;
