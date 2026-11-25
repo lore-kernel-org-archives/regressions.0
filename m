@@ -1,99 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.214.182
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1795625219;
-	b=K8wH57Vm84LpLN17s2vDF/OwlXW2WubivBnymSANe5BxqqBp9epC414vEQGvn/4rvRwc
-	 NqTEEvX++GZcKPXytWbL9SG79CDh5unHgwU5rGmb6i5qeMkAnMUyVb17fyz+WB3aZ4lpF
-	 fZpedK/H6tjcDvTTgIhDzUJ0pElGU4qOzPCFX9LaKs/KhtGxltzB9QlFr8g4o8u8tZT9S
-	 FcbLdejKepml5+aOKUE53g2X1/pF+oMzc9wovUDbYbpYH5gfFkSfxRfqPW1ineBSD6Qt6
-	 dptnw4HP/DlzPPPqE/uykDDExEitRXO6O7jJpBKkxethey0s8bRB7ioO7tGoFkmo7ZQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795625219;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
-	b=sDIPE6tdmfR4P4dNmmZcwY/4bVcsHx8xqRfhfsUIt7pZftkMKbEC3RJX0RlsgjTAFx0y
-	 9582kZbcQ3kFXO8T0pQlSAXZJLrmpeIeT6Zsj9JgX6uppqTqjjzYdqjCtleO5s3AvFlO4
-	 IdsFsRTgMzYBqo5A36nvx2UrADVUYyDwoAMxsBAlS9rjlqauFZY8P2FXwzU8XrYY/DWQf
-	 BS5/qBEGob8gFPCksA3AjBKXVLhYsJicSCnC9W0RalECff3crFgYfTvB1k6EHP6LeArhL
-	 7TekbX7aHcL31pUDDnOHTz/N0tWHfZqPgs2qfLsc5nNk4jKBdMBFNb1tKaM2najyXhw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zGace+59;
-	arc=fail smtp.remote-ip=209.85.214.182
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.59.206.189
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795630472;
+	b=4CFRzVW6pwfFiEuHhxbw/A/GJf3v1H+ismoMHIr7A8pcfAj+WSYiCV/KZhepEXUh8eQN
+	 3LlY+u81Q9uNxP2rkZUTnIyewhLXClIV3+H5P14P+d9Va5/9Nqah0BQUW1SpJc97mQlsp
+	 kV1WIPJcQEtpC2I1BtBt4jcqQxA83w3c+t17hLIsUBVqZxfQqN3a36Zm2FFa6ODFOg7cu
+	 zEuEaRpcrhz0RhCl7dt8nr9TOMSFSgloL7sn/oRzhlSEBQOZEh5LI3oOseOkMeJWtF55q
+	 fm3Vd4FnXip+OTa+TMS6nQ5MXLtny0gziHECP1vJDUgVzwR1Ril8XCK96PqrNSybLcw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795630472;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:From:Content-Language:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-NC-CID;
+	bh=T7Jfy1YX0JM1xaHCJ3ZuUaayOlpEccV6YKpeVDstUOk=;
+	b=5p4rnzpEimA/6x1tVDhRNq3NpV/dACeXdZcgOCGbV1CH/RuEmJsFb4DYqXi5bEcpXy2u
+	 P/UNCuc2RBY1jwyT3uPMUx4+M+Th6ZhonFLcOvavC6ooXaA12qgwXoSJPsEhE8+9bcyMB
+	 usaWJwEi6iJdPnk9/hpsRkoyXFdTNabNtjc1+6YBOUqzyDyrSEZzaEVX8PUpVexwo60C4
+	 +AclGABjbJhWgv53fR6W/nEvBSJ+OVrdmCrISq8etTKCU4pq4yCWQBqCpw8xC3KBt5Qn0
+	 smBI91H3EV/zte55p5TxGD6yAcJs2NuT8lRNXP9smVYetdakvR0c6VpHvcu8dQ/93Yw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=leemhuis.info;
+	spf=pass smtp.mailfrom=leemhuis.info;
+	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=SqHy6r9g;
+	arc=none smtp.remote-ip=194.59.206.189
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BACC606A31E
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 16:46:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BACC606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63FD606A690
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 18:14:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C63FD606A690
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zGace+59
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2f0458cc9easo47782365ad.3
-        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 08:46:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795625219; cv=none;
-        d=google.com; s=arc-20260327;
-        b=UR/VPS6tD/xF7S/LXkDnK7aolTVS/pULbdyRPauCoUNjfY+fymyscvkeXkk9znmU9D
-         xnTkpRppj8yYWRpg20yExBHpGDMDEt9yyTr7zjASmls8iE+ZLapf6HD4ceBFHd/BAoGX
-         3zq1DreHbdDssKjExd0A7PJkckVMziYUCdwmrCKnA0UJD5RetT3MVUtxogzJ+IgEhGvP
-         +LjpSgubxsxpY53QgS6hMN6IWpodqaCT2pNQOjOrASKBqd7NPyb1L9PISRccUT9TW/bY
-         XTqx9aVZcpIU7EMDBI4WBl9pW+D3oRuzRpRZa1NBymCXei3HkFoAi/BmnLk3YnmnSMba
-         b2Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
-        fh=n3aHtTn4OayIrqe/sesn0jLkpk5nIVDrR37pn6lsiCU=;
-        b=eb3xRueXDzvYXMZWWI20cs92hJRAeAdn36DRLonsDzwDzbwerYP/2Sa2oLRKUfe47k
-         sjRHk0j1t8bupzLHHax7B1Pu+txW8d1Uwh3f3dRCII2IgGbZsSYqvlvvzALnch+yXn/P
-         xdrUI47mGhtXhm3+Yo5JuEyZevoPwEUld4+pKusA8n4O/gS+sMvp+HeSvBEuvBgiPAr6
-         Dd1Mrv6bNmcroKk1eXPIME2GA/02+2ENeAdgz8YkpvocwTqmG65UfMAHBoR3t+KszCi0
-         xUPRIqJkR8JjJtfiIg9aDf1jzd0+bwsDTjH6L6wiWIvooZdMlHHWDFyIVnALYBQYHA8u
-         ywKg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795625219; x=1796230019; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
-        b=zGace+59ESmF+ImcqaZEo3pcr0TcUCtk3KDRR+wFgzWYaL09t0/wFAmMmLwoAI+eRO
-         lj63r4GnMyAvDPU5yxGF0599W5i5nUhnALh6Oj4kALdHtXM3VACHUuTlBAYYLxAiA3Dj
-         PF6Yk0du64rpXS1MQaYi4RgeEEqHeeeG+BBLedEnxj3fufHNkKewFzRkOcyLV7DGKCIL
-         i87QOtmQB+QZNfHJ5LnJKBeLCg4w4wHUuqxJrYPPVYQ0siY7Ims+Jt42iWZ/LvUYGYHR
-         lQ6QtRdhgWcPH1GsEAXbEKskivYVuttRU9An+MOnU1echiof+2mH7Qd8bzfglwaV5alu
-         GnTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795625219; x=1796230019;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
-        b=a3ugL4JWxaKzZve19odbgKvQVmc6zhIQWj7r+au+rdka/bQXstao205QTySwUKgngh
-         Pp9bDmOe8ZfXVyD9/fl9MJbB8hoYnB1C4dd3SbNHCkpYD73eldvQXXO8KNCw7HZc3ope
-         2dHjtFCxsTocZAB6aQ6a02/ilbjPowi9X5Lvs2MAXbqfhV0PGxWPLWlcugRu9Y5IZRPN
-         S0rRL9bq855f9f7u6DiT5W9xMghim9xIO9ZenMCI0Ahddt5DjtyySM+WNq/erLPrBJXY
-         LiC3d9UTkGgZbhR2ihDpTpycrNPNHcrOa6qZWn2Rv9w4y0DPpa30rznHHmAKh9QMa1wb
-         TRNw==
-X-Forwarded-Encrypted: i=1; AL+hErE+zyKz4+HJf979bxaZmvk456KWaXbzjaaJzL9X5qIUAW8+j9iVKQW1xo2ZEjNsd3DbYxUPxlmMpKp1/A==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/neTRDN2KjZg5O3dWoto4fL0HAmUCPhsIqFCEfyozC5rqQ3WzF
-	tkTYWArQBALmEM2x8NAIqkJMH6rfsvkjQ02BvBRzYF5Q836ZZMyIM7oTWQUN2+dk7kvftTf0ORh
-	qOhYEBtTBmSoCn0qnshvUC+xjF5y1bMc=
-X-Gm-Gg: AZFdTZeVhq1pFZXew4h4LSo32W5EZo92N5aSt6MxdoEyy9Ik/Aub9u8h+YrCkznyjlj
-	d7BGLhXvFGJNXsQTxH1TSjMlGGrRskOSig76fvtozenRnjwlCaONBz/AtwUK3eqHdWzC2nNLPWq
-	4eDDZ1cE0MqKn0o0MjB11jlyb4UWX35lS18Qc/90Mw++SnSDlQKuFruKZdrT3hRy3QR09QEqZVM
-	3Iw3AC7v6ody9oBGk89MgAwq2dvoJDAA9dZka2je5mYwqQPCoWi+NviiBQ4qEuIsBkr9WLncQIZ
-	p7kGFJrcfwa3Tm6GZIc4hy8cn8yBHW0iJi6pj+182/JBH0KBBZIHy5ixoax5dhF+hntn3PUl+fg
-	wVlWDJCmzcCvcoQVW3hi67/UKAJsmNjxO
-X-Received: by 2002:a17:903:1b4c:b0:2f0:a8b5:4330 with SMTP id
- d9443c01a7336-2f0dc64fcbdmr24291335ad.18.1795625218595; Wed, 25 Nov 2026
- 08:46:58 -0800 (PST)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Wed, 25 Nov 2026 10:46:58 -0600
+	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=SqHy6r9g
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jZSW26NGYz4QKd;
+	Wed, 25 Nov 2026 19:14:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1795630462;
+	bh=my78kg4S54Fk8CVZt5B3siWtk9PWEx8eNQ9n1fmSTOw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SqHy6r9gKfeGooIxTWppV5bROD5x/eJ9tz4t2pjuS/jMsMQ5uL4lW4UArPZKrM4ao
+	 SucD9q7TEE9HR7awJehYsgcJ9StNsk8dN1XGLePCgiDdfAECdKrpgPkUTabspbj8eE
+	 99uoaLo9QrULihXpwhI0NwZyFvxNpc4KPJ6dQ0W2ay47VAdE0h3ygMN/txsay7spbu
+	 uvO5Ptm5J8hWorcxj21/qAP33q1t3+uovzBQp8fSP3piLslSPpSYH5bXrqtILetdkF
+	 za3NuMHhknDYs5+CRBnRgsesvksHj6dK0rVKgdIB95Mm/zutH/vA+5ArcDa9Tw0otL
+	 CgD3+N0vL099Q==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jZSW25gPMz7xCG;
+	Wed, 25 Nov 2026 19:14:22 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jZSW20fcMz8tH7;
+	Wed, 25 Nov 2026 19:14:22 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 855B85F985;
+	Wed, 25 Nov 2026 19:14:12 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <2d8bd052-fefa-45be-8712-bb93c73acc07@leemhuis.info>
+Date: Wed, 25 Nov 2026 19:14:10 +0100
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -103,58 +74,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: Flavio Giacchetti <flv.giacchetti@gmail.com>
-Date: Wed, 25 Nov 2026 10:46:58 -0600
-X-Gm-Features: Aa3M54r5hd1_jSn3QPbVycglwSRHi1SAylD7McKlbAvXL2of4Va2BSZXo0kgJpw
-Message-ID: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
-Subject: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB audio
- probe on Fedora 7.3.4
-To: linux-usb@vger.kernel.org
-Cc: Oliver Neukum <oneukum@suse.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB
+ audio probe on Fedora 7.3.4
+To: Flavio Giacchetti <flv.giacchetti@gmail.com>, linux-usb@vger.kernel.org
+Cc: Oliver Neukum <oneukum@suse.com>, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+ Linux Sound System <linux-sound@vger.kernel.org>
+References: 
+ <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <179563045288.4017891.9126847949981694816@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 855B85F985
+X-NC-CID: 30B9LND43JiTdovUqlYsOMsGn9G+e2I6feLTNWqyeHQzIz3YLy0=
 
-Hi,
+On 11/25/26 17:46, Flavio Giacchetti wrote:
+> 
+> My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
+> after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
+> Booting the previous Fedora kernel restores audio on this PC.
 
-My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
-after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
-Booting the previous Fedora kernel restores audio on this PC.
+Not my area of expertise (I only help with regressions in general), but
+this sounds somewhat odd to me. I CCed the sound maintainers and list,
+maybe someone with more knowledge in this area will share an opinion. If
+nobody comes around with an idea soon what's causing this, I suggest you
+check (a) if mainline (7.4-rc4 or later) is also affected and (b) run a
+bit bisection to find the change that caused the problem to appear.
 
-Hardware:
+Ciao, Thorsten
+ > Hardware:
+> 
+>   USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
+>   Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
+>   Connection: rear motherboard USB port, enumerated at 480 Mb/s
+> 
+> With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
+> USB ports. On one failed plug-in the kernel enumerated the device,
+> bound cdc_acm to interface 1 and then logged a disconnect. After
+> re-enumeration, the USB audio driver repeatedly failed to query sample
+> rates and mixer controls. The X3 never appeared in /proc/asound/cards.
+> 
+>   cdc_acm 1-12:1.1: ttyACM0: USB ACM device
+>   usb 1-12: USB disconnect, device number 7
+>   ...
+>   usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number
+> of sample rates (clock 33)
+>   ...
+>   usb 1-12: 13:3: failed to get current value for ch 0 (-110)
+> 
+> An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
+> With that module on the same 7.3.4 Fedora kernel, the X3 registered
+> with ALSA and played stereo audio at 48 kHz. The first hot-plug test
+> still logged errors during re-enumeration, then recovered. On a
+> subsequent normal reboot with the patched module installed and the X3
+> connected, ALSA and PipeWire exposed the output and input, and the
+> earlier rate-query errors and timeouts did not recur. Playback worked
+> after the reboot.
+> 
+> This is the result of testing one unit on one host. I have not isolated
+> the first bad upstream commit or established what functionality needs
+> the ACM interface. The results so far are for Fedora kernels.
+> 
+> Would a device-scoped ACM exclusion be appropriate here, or would a
+> comparison of USB traces with and without the ACM binding help narrow
+> this down?
+> 
+> Thanks,
+> Flavio
 
-  USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
-  Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
-  Connection: rear motherboard USB port, enumerated at 480 Mb/s
-
-With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
-USB ports. On one failed plug-in the kernel enumerated the device,
-bound cdc_acm to interface 1 and then logged a disconnect. After
-re-enumeration, the USB audio driver repeatedly failed to query sample
-rates and mixer controls. The X3 never appeared in /proc/asound/cards.
-
-  cdc_acm 1-12:1.1: ttyACM0: USB ACM device
-  usb 1-12: USB disconnect, device number 7
-  ...
-  usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number
-of sample rates (clock 33)
-  ...
-  usb 1-12: 13:3: failed to get current value for ch 0 (-110)
-
-An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
-With that module on the same 7.3.4 Fedora kernel, the X3 registered
-with ALSA and played stereo audio at 48 kHz. The first hot-plug test
-still logged errors during re-enumeration, then recovered. On a
-subsequent normal reboot with the patched module installed and the X3
-connected, ALSA and PipeWire exposed the output and input, and the
-earlier rate-query errors and timeouts did not recur. Playback worked
-after the reboot.
-
-This is the result of testing one unit on one host. I have not isolated
-the first bad upstream commit or established what functionality needs
-the ACM interface. The results so far are for Fedora kernels.
-
-Would a device-scoped ACM exclusion be appropriate here, or would a
-comparison of USB traces with and without the ACM binding help narrow
-this down?
-
-Thanks,
-Flavio
