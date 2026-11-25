@@ -1,143 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=198.175.65.10
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795603107;
-	b=fcshSqqRswVx+JIFry4C9Hoc3Be1wpLub6CLnIg1kDLzDsw37zOfWjU/49AJVz6eDLcx
-	 ssbuvuzamChZKzrjfHOiIAEQW9kfn90kByDUrG22fHWZpTD0s+n5ktO2ucMHb62C5IgZy
-	 2nMzDuxh8LdzOre6EDNh0GLFOLPvzRdxi1ea0GSLm1znVrRUz/3wuLG1rbNyXtN/5uGTY
-	 Hd5kfdA8YA0nerX5oJNE0vDgWJhf0PuFc4q2HSJTdOzv8eZcVREdTHPX1g5hhJkDPG1KL
-	 2LWUT2S+ATq0q6+Ct8swLiwDNap1vqPlN/LMv7MTwP7vAxieLki4uqBoy3XuohckqPA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795603107;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:DKIM-Signature:Received:Received:Date:From:To:CC:Subject:
-	 Message-ID:References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=Rs/Z5dcp71d+ahIoEXG0peF7ibJ+gpTyydnEAsbpnBI=;
-	b=SlZauKaFXhlKPKaErCIcfj9WBxUzDBAWmKAT6cC8591qEwC/vuEZiqVJSFHgOuz+m8bM
-	 H1lxEFbVeJwgZvckzyDV7uNRX12q7ZayLjNdOz8YT52KkglXvO81huyoaCBC66dSOWq3C
-	 ECa4rnRs7IK8aTqkAB9onc8yraI7HSOMm6nhEfCZgox5QmxT3aQeIiX6cn1Jbw6M+nfWF
-	 6y/+/Els2VNROTpm7Y+JMiBpZTiByNESYoWj0FlsYda3hfq265zCUjNWQspX8VjGKx5Th
-	 eeNsFjnz3uagEAkk7aIlobfkJ37s8wDsoHJBvKPBbKakt4Th2hcXrEmFZTlmRK/BnFw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N6b1bSIG;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=selector1 header.b=NfisUKwj;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=198.175.65.10
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795610733;
+	b=gYP+RAbfqMvmP3vc4d4U+frU4C0BbeKekeVX62Ck9ZQMegMRfbLUPO7RwDgXaU6AwHqF
+	 ulSwhC874m42SQ1y+IVMvqkIPrhdEfZa2q/JslxOefcKbfZvuWjfidXe2t8RIVBHumqxt
+	 V7j551mYgBDs1hKcr4y6WsUN4EwF/XY7GqME7dj0aGZ3hZOzFfnn4b6CEjtssMmaVgnOr
+	 URTtoFHtUzVx/bdLywyUvolNpQSkj4I6YTtcQQGRlFxYhoSPQQRLkWZqWtpw3jOoFPfSB
+	 7PihIwfeT9VSmDYOpCC9MZQjcQ68DgigjE5MLy8KfJvlpC1NWpdMz4e5fXnuTmDnz5Q==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795610733;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=zMekMOFYYzs6d6I/5DTGKyfePdDJNtHmrLQaB2m40Gk=;
+	b=nZ/kBJa4iZsb2cQ37ZPGz/2l2TG5tAaVkRl5UnMI5IN4yMPebfNvr8C6kObEvv8v9soY
+	 M/NPXRCo/ppNQ3j4VZnTdwfRixgEfQ1CZPKWJwkqELhx197v0D3taseeOlMijjLKgfzSG
+	 karq2PJ9BoKK+ZcyYvOTSSd2WnqCA/3Z0y6oZNun0Mg1I3eKmm5LDcvz616WnR1o0W/Tu
+	 OrAxsbJuHDGVKA62+A5i8O9w/cfdfQrb33jLWctxGAMCejSo06oojZCO0Slfw6dHeDn0B
+	 +zglmltAcoLrq70a0/l2xE6hVfqQL8nvN6UcTo8p7HALbC4YpPMltytpsIEMvv2VXWQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PpFu7qOj;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DE4606A31E
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 10:38:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09DE4606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4198606A334
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 12:45:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4198606A334
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=N6b1bSIG;
-	dkim=pass (1024-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=selector1 header.b=NfisUKwj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795603106; x=1827139106;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=S5oVGmsn4ku7D6Zt3ZebfMQsx+JhXX8pOgQkX6NFOq4=;
-  b=N6b1bSIGS5c0zdx3/bF2IDUymKXcCcnbToyuNskMzEOxk5W3wbQ+5mKv
-   AOfQu8JB2E0XYggOjIuZDqBHYakQC6YqBkRarsXc6CPkYmMe5gBHgCvyx
-   YkKVjc3YT5+UnkfnCRMj0rbLBNuKXdrAqhYRJoetMKDXO+njBKQTHRWhJ
-   lS+dU/oa5qiUGMYeKJ7zsYItupdE3aRkO5X+poklucHsKvFLNeaNSiWGR
-   aE7gKRrfMrTTmZEehAzsK6bNEu/YmnsJdlT4+pU7b3jLR6DZJtJxr3INC
-   wqO6EQrFn4rfQv3e3YbFW/LLChrSx1Fu8F8M+xbbeb3L4rL1lfxfgjrMd
-   A==;
-X-CSE-ConnectionGUID: bnrEZPzcRsSckJGkI+wEzQ==
-X-CSE-MsgGUID: aPne5PD6TNCltiwhtoSl/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11976"; a="4396261"
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="4396261"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 02:38:25 -0800
-X-CSE-ConnectionGUID: e2yOzAZDQFKxGdlo44VkKA==
-X-CSE-MsgGUID: J/iz0dQ5TMS9IbG3sduyNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="12263149"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 02:38:25 -0800
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.57; Wed, 25 Nov 2026 02:38:24 -0800
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.57 via Frontend Transport; Wed, 25 Nov 2026 02:38:24 -0800
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.55) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.57; Wed, 25 Nov 2026 02:38:24 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pp+u/rnJAuV7cEtWlLnSwbVjbpvrD0Q3xuIjJatQXByJ45mO+l4ciUeJBIQlu86rcaHUAFI8vAfAR/jkCKFimujJeTeNRvksRDU5xu52cKGxcktwWK7FTojQSjWA0djAnAVg8so5rDUIBYAxaZe3par1+bIMCfOEXMZ39oz5UexNz/sL0m15qH2a+swDeXaAY4h1PLxVZmX+9bR7qhUz0g5xQvPj6QKNvYf7pc2Q555EQAfvk7AseijPMKVWxY1ZdcKfUinzmSdd3o7AQkzXU8HaNskvhXXjRscNuxtIV9ijdGZWQXSA9SxzX/rC7n1M8Up9rtmqzTg4tjeasFP4ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rs/Z5dcp71d+ahIoEXG0peF7ibJ+gpTyydnEAsbpnBI=;
- b=kK8rGJhijtfO3mAzzXcMhZjcP2GcOvhf3KqxlX3RzCLai7TAUsxesV9VUfHYwZ+1YjCVp9/JlEQukEIHD7O4BuYtFEP1mLU3yQE9yDa9AquAOSzDkSRr+c72T1xZ5StHBhq4zvKvhlbCGEBlPp/EAl0OlyxCzsrcvvG4gMaaPYpDIyt2d1ASaCbnc3iyLfbZzXvTn01nG1rZul9iaJB9hMdtbSBVUKqLL4PFpDG2vrBW4UNBbD56e5W9Qav0L7k/sNM1vjsoRqqENXvHoriKYxq4AXVnMjosKjg9gvNk5yjVS5PfcL6muCgI7OQRE/xvUBJmMvWJIKxJjVvkYsUBsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rs/Z5dcp71d+ahIoEXG0peF7ibJ+gpTyydnEAsbpnBI=;
- b=NfisUKwjWU1f2zQc1/rnM5I4Fs2xXbPrGxQLBW7Pr7XiVS0nAb0PZRFM5KtgMVexrQPsq+r2DsEw+bOzc2nELe+RN6FBeGwAEfP/tTaCl9cl4P0TQGyuxL7GZ+bG6FxVR2FMkJSUXukKXA9kgXkhVKfJb6rU8/O5HeHpvQRAUlY=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
- PH8PR11MB7990.namprd11.prod.outlook.com (2603:10b6:510:259::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.639.13; Wed, 25 Nov 2026 10:38:18 +0000
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::3058:1480:e4ac:5765]) by DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::3058:1480:e4ac:5765%3]) with mapi id 15.21.0639.012; Wed, 25 Nov 2026
- 10:38:11 +0000
-Date: Wed, 25 Nov 2026 18:27:08 +0800
-From: Chen Yu <yu.c.chen@intel.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-CC: K Prateek Nayak <kprateek.nayak@amd.com>, Andrea Righi
-	<arighi@nvidia.com>, James Buck <jbuck2005.linux@outlook.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
-	<juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>, Usama Arif <usama.arif@linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in
- select_idle_capacity() leaves busy tasks on little CPUs while big CPUs are
- idle
-Message-ID: <awa3/FFd4hAnvtxK@chenyu-dev>
-References: <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
- <awWOCejxtjP12xFX@gpd4>
- <ce38fb8b-94d7-48ba-93bb-3b72cfcb3e61@amd.com>
- <CAKfTPtCudy4NV8sU+JWE=dcJpbKd+LVNZPZztU_0nD1a04Ca9g@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtCudy4NV8sU+JWE=dcJpbKd+LVNZPZztU_0nD1a04Ca9g@mail.gmail.com>
-X-ClientProxiedBy: SI2PR04CA0013.apcprd04.prod.outlook.com
- (2603:1096:4:197::6) To DM4PR11MB6020.namprd11.prod.outlook.com
- (2603:10b6:8:61::19)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PpFu7qOj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1795610731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zMekMOFYYzs6d6I/5DTGKyfePdDJNtHmrLQaB2m40Gk=;
+	b=PpFu7qOjgD50N8WhMp8IcFeb5NJdxriYHI1xx6/p5Oih6YB2VnIPUBVwDxvHVzWwPpDvad
+	u66UPCSTG+ZN1qejeK3F1qfJ8uEVOGHq7JDPoBJeQJd/K7kkK1ETEXFjrnI4j4sQeRyii1
+	wBM9KwSoXS/85GRVHfRNUds8sae5KW8=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-17-106nREkaPhq5krw06iRLOQ-1; Wed, 25 Nov 2026 12:45:30 +0000
+X-MC-Unique: 106nREkaPhq5krw06iRLOQ-1
+X-Mimecast-MFC-AGG-ID: 106nREkaPhq5krw06iRLOQ_1795610730
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-93f3969a2a7so837851185a.2
+        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 04:45:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795610730; x=1796215530;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zMekMOFYYzs6d6I/5DTGKyfePdDJNtHmrLQaB2m40Gk=;
+        b=yvuUEgP2kYznjsB/vj+VPX8NH5NW0WQmJs/KHNaLgkAZbDS49IhhWB59XWZBn/cKfc
+         N0drIe30n+q4wlXppFmzK8sRA5tOYcn6XV0FmW0GqPgs0v2eVUnSEAdDcU6wGc8zFDfo
+         hvLpIheZmDdm98gCY9MEHb6T4pE6PnUeWCrfnEWVIO/g42K0+bQCj6I6s7rbMxdYOz4w
+         BwMx3/8t7zEOwwtlf0bS+cMzUsV2Z+t45BCCpR9e8InUBPOQuZU1I2xrctXId/lkIQnr
+         jZ9Py86cNI8KAvbU+YfNRMeuBeZQ4EhwPct+xXgzSndojkQdeYA+rI8wfm6Facg2aRUe
+         QnTA==
+X-Forwarded-Encrypted: i=1; AL+hErFTFMAc40hnY4HzydQjMtTvRLeWqd/901SUhc3/RCMxJbiB0RGFTbBogKWSyFeCIaPjUZHHvdrVsTTivA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/kJ8AD+ezf9rf6SeeHcafG2OU0c2lKPZgEU3F1CG6H/ZoDmEFl
+	eb+t7WBXsmNTA3nAFR3mEYfyWaZVpqvwoYuJuLovPusgJe4kH5GoCIBYZ28eywSQXKwKm4KDqL7
+	ggof/LnqVO7hHSo4Wntln+TuLO35W4uFMm+5dfa9X4auPx/GyIViH+jd48mDX4nEJ
+X-Gm-Gg: AZFdTZeQsTZLDKu5EoV6Ia+bZGLUAYRPzSgmVG/VSElKOnzAAT4V5j0SgUDj7u4YDLr
+	ynL72r2hK21ySlQTBOg6hXdJs3ElnWAj45wnQzNLUPNH3lfebpbrVaughBaUMi6v0rerKSQju8j
+	52wqE+3TUjnv+AhVt30qMCvzmeI0Av+8riq+W+uVEnfvOLw4ThyNPt6LzS9iDLxqUE4EjzceKqr
+	TOVLJY1fgYxDcDRoW7AJ9PFK9JdQLZpd/m6O2STdP62nHzOLFf1GTdfjnNW6ZyJ6Rq1wURERUYm
+	A33LuxwRLW7wDG89GRC+UMERetoEgDvr3/e1SG/1lKzR3EUs2Jsslp6XuLByeP20Vk6tDSW/EVc
+	g96FoTidkjuaRWIMi8GYl7iceQt3RpLswvNB4KIvVFHKt6ig/sKIWikEpds3hRs7oUHYx+CXhqs
+	aT/qxWnEFZqJP35I8DkkwHhOBrUPOJ9c5GB3Z3TwyxZomTNr2k10qkaMJ8cddWgyt5/GG78GU=
+X-Received: by 2002:a05:620a:8395:b0:949:849d:e3c7 with SMTP id af79cd13be357-949baa0b24bmr3012431285a.33.1795610729627;
+        Wed, 25 Nov 2026 04:45:29 -0800 (PST)
+X-Received: by 2002:a05:620a:8395:b0:949:849d:e3c7 with SMTP id af79cd13be357-949baa0b24bmr3012424385a.33.1795610729010;
+        Wed, 25 Nov 2026 04:45:29 -0800 (PST)
+Received: from loberman-thinkpadp16gen3.rmtusma.csb ([2600:6c65:2440:d8c:aa2b:ddff:fe88:da74])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-949bb349db3sm1293829285a.7.2026.11.25.04.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 04:45:28 -0800 (PST)
+Message-ID: <8bb1bdab536b9f727b00e6b6d2246f44d5ff8567.camel@redhat.com>
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
+ "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
+From: Laurence Oberman <loberman@redhat.com>
+To: Tobias Laas <tobias.laas@posteo.de>, Thorsten Leemhuis
+	 <regressions@leemhuis.info>
+Cc: Niklas Cassel <cassel@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
+ Jens Axboe <axboe@kernel.dk>, regressions@lists.linux.dev,
+ linux-block@vger.kernel.org, 	linux-ide@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,  David Woodhouse
+ <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Date: Wed, 25 Nov 2026 07:45:27 -0500
+In-Reply-To: <ea064dc05dbf146814f1495adad4d39e@posteo.de>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
+	 <awSs5Cw3hFkf4O4T@ryzen>
+	 <7eb28c6334a655eb5bfbf3035cf1f1ff1041bb3e.camel@redhat.com>
+	 <ea064dc05dbf146814f1495adad4d39e@posteo.de>
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -147,158 +115,207 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|PH8PR11MB7990:EE_
-X-MS-Office365-Filtering-Correlation-Id: 548a2e57-1026-4c53-c594-08df4ae033c5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|1800799024|366016|376014|261026140227099003|261022075727099003|261102123227099003|261022105027099003|261026121527099003|261028144727099003|10067099003|4143699003|11063799006|56012099006|261021121427099003|22082099003|261009223027099003|18002099003|4133799003;
-X-Microsoft-Antispam-Message-Info: V5mpDTL9A+Bd1GhQ2gOroxEuVPMzzohws2P4P39moMWoABTTEuLBJ94LZVg2ojvutjfM4xLxqJvRkYxC4m4DciNJPZrArekj0b83MrFETIRZdn/5bBaUAh7GtrxMUaa6yGMAqRDfCABc6S6DdjdxdaOkhrUt4EqBwciSaWxSFBmVwhAN1rqE6O/qlUSCOmpbggWWwgE/4z9YW5GLk0RRzW+SRtF9O/LZ3r/taEeG316hJ+HG9BAyCR0mYrERai0KCEaQ9lgHSjwxi04dyrkbJIETtsfc4m/mVS85VVwiGMZoefgBW9ndBBoEsJBFLZCy32nr0rTnbDwwRnQ8oYD2g6QaOnRAHiQaVyqEJP5yj4hsqRAaNmjpAC/Fsrn0M3XgU8GRGNhoMmFs/J/3GJUYXGi0KtId4e4RwbR7Q7pk1XoOIVRmJtMbRwx3w95MSSOjiQe3pBPP8HSPDc4CzU+SFYYuTCGFQwIuBds2CwQNeO4dmjRJtg2zGBXXsL5OTKzpcvtD2BHlD4lQy+MXw93maKWuxW3vwTImqkyq64ei/GmaLs04vcy7nfW/+T79XeaxY1chKTaPzOXwdXvLG5sAY3YnHRU61WVCGFwutCN9KBDjRzGyS6zRZu1tUlYEKW5P
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(1800799024)(366016)(376014)(261026140227099003)(261022075727099003)(261102123227099003)(261022105027099003)(261026121527099003)(261028144727099003)(10067099003)(4143699003)(11063799006)(56012099006)(261021121427099003)(22082099003)(261009223027099003)(18002099003)(4133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?i1j38/RUTfz2ZM0GAVRDgfc2YjTFuN724qoNo35r5a2vWmSFjuCtdslvends?=
- =?us-ascii?Q?lev6PolEYa6d2DBHzHGLpxr84WcSnXvGFLZ6c6y/CMkevsBJWMJfdZSbOSIa?=
- =?us-ascii?Q?E0SgNm87A02O5iO78+fQCwsA+EgshfXDqzPVdgZ9CJ7feD3u95lGuVZbQpbc?=
- =?us-ascii?Q?N0wUn28I0X5XQf+PEzqVlAc9EdqKN6uUS1PQZAUwvlF01mwiutGkjK63xgtQ?=
- =?us-ascii?Q?k1XM0kO3PeIRRpxdktgbgd2sN/5Mp6jAUG1/GWDPdlp7FzmKmMd6yuWbRe9X?=
- =?us-ascii?Q?/b9/JMh+u4P2wtfESz9Lr2fMmtCHkDY9zQ2KP8C+Ku6U4BtKjhNEtJwf+CT8?=
- =?us-ascii?Q?9cMmFo+hzQdu2q8d5ceLIBIxGfXErNy6RYlyJ/QIRSrEfwHqaaehHqPHsMCs?=
- =?us-ascii?Q?9IMWeMLNSQnEz+QmULXheR31vHHo+nSvxncsywQG5ksufy49WNCBn6yJT5Zt?=
- =?us-ascii?Q?aOxbJRW72W77dXzRTzfIxYnTCOCf/YNVo6WrpdvxqQiLpoOYxNnaEBfH3WcN?=
- =?us-ascii?Q?aBfQ934Ylt5C21pkY77QEbQtS2/poMmW2kk+E+6J1MA/9qzfCfdRM0n4mh79?=
- =?us-ascii?Q?TFbToiFU6ZxD2xHGtIHh2hclhtHucSFhugJrnsg4prOfj7NCQ8nDcNeDAQt9?=
- =?us-ascii?Q?vmd5Hyam0Kz4pFNmdTvF7PI0Y0Lwy9VWsSB+GpmXo5IRjt8N4R5H1d1PHaKg?=
- =?us-ascii?Q?mHFc5F/f5tSEhAZen8GO0PvAzVx8Af54QLhSuWvvVw3bIvXLLpEYex8UAD4u?=
- =?us-ascii?Q?OmF4Vs5VPhGQ+8vaSIHzeAf1n+yPjB6shvWN6dERxNaSjZzVfVtykddqlVM9?=
- =?us-ascii?Q?+7iM9/f+dD7a/jz/jXFS+IgpR8JFrq3fQL4GaCKqfGMALkXQ7JyiOrPp7rjP?=
- =?us-ascii?Q?mj4BcsbPsAEtPojlDOkkurVpbbf7MOU0/NyuYVa22FaX4R5PoDXjjlSmjwK5?=
- =?us-ascii?Q?D4gJtnbHJC3d86Fw3cwWKK/8DSsD84hkUuOsv4BRU8cqh1Zcx8TjCsyJur7p?=
- =?us-ascii?Q?XcC1eCkxPyq9aMFXtSSLWrSmfdD14z7Z2bwRRPxjTboEO0APRn0tdUAHzBXI?=
- =?us-ascii?Q?12kHfePfFW8ohARE/sgJIjfwsul9iy7qdyg5W8wuLzlW3TzsT8zGWIeLKaQH?=
- =?us-ascii?Q?/KcF6VQydgFQ30XeXDD5k2izl6m+4Er6O6H7/Yz4mpjN+b4NqPHkSQf58JwD?=
- =?us-ascii?Q?CvLLxdTLNQQeOsdx5UuhdkSY+azH0kBtOOI5piEsNIBuAeXP4G+tt9bbtYsM?=
- =?us-ascii?Q?JGS9f2OMqn19rlnSAthLxxoCGIYfSAd/a9RsRi9nRehdIf9JoNCeZr1HuIzf?=
- =?us-ascii?Q?kTUV6UOtdQeDVuY7tyVgS5EdFRM4gfPh/hZexNGQcxAp+4A4ihobxijddUg0?=
- =?us-ascii?Q?UiNEuaUATW6P19biJoMAIC2zd+O+j0TD3AUbFw0EJU7TXpXI317M9V9y8vL4?=
- =?us-ascii?Q?etLQCadxfOXYY7t7lGZINUtO/ci4nd15hOft3J0sHeUPOSMfpfeRejQ8TYno?=
- =?us-ascii?Q?wNvJ/gxtpRJo5gyXFTm8NcNOXagA0p2tTzr/WGKTgQdo9QDQxxyJ4gFC/Yea?=
- =?us-ascii?Q?G3EGZnZ7jy1HdyXO/IqwDtFtbCJlAy9WzWGJ2sLR7C5slfxIBUBa0WX98zbN?=
- =?us-ascii?Q?kV150IqcqtQ4tBcpaZCa3026F/ZTY7Hp8qnpHyzqGd1XkeSLxMoNQJwFh80U?=
- =?us-ascii?Q?n1pdltEucr1Cd1IQzCJYwot2/jB3HpYW6uyAZeKax+rIL9gGLC/YGsORvKWi?=
- =?us-ascii?Q?YJLNK4NrfA=3D=3D?=
-X-Exchange-RoutingPolicyChecked: UTk6fEZnWWeXdJNrVrmeuTY3HTDO/riXe0dgctRi2lpRzRKLzHFX3X1YzUQxVDdnu5MBVn/2uMH+ktM/HmlT7kYC166cOy7pMVnBznFbg319oMjAu1Fs3MwiU8MUMewl1dVS9y7cZJWAO4mb93hWOn9VbFaisEhEuqMKNlvrtKCACePSTncr3ESnsbjKoFi0Y3ecPWyda6T3pBVMzoHHdw8OlKvhS2gnTWHYablVau80Dlm40n6U0cPUi2XHn78NvPvN3aTDcb7Dj1nUqzfFpILM8/D+/TjE0kOomvtPFH49RskfpYJLEIW2rKn83SsjxzU9JvdTJK2QwqXVo3lOFg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 548a2e57-1026-4c53-c594-08df4ae033c5
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2026 10:38:11.4686
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IRtUuCQm/7mS2/u3gb+wUx/jmqTiItacboyErl+oHbfXLey5HzMwC6rcb9xdmQtABdhU8sxbQjLikvBmZJqecQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7990
-X-OriginatorOrg: intel.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: u4mEzCr9YS1M3hyeU7e7P7tDqVz0lnL7ayzT2uZ8Gs4_1795610730
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 25, 2026 at 08:51:39AM +0100, Vincent Guittot wrote:
-> On Wed, 25 Nov 2026 at 03:53, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
-> >
-> > Hello Andrea,
-> >
-> > On 11/24/2026 6:45 PM, Andrea Righi wrote:
-> > > Hi James,
-> > >
-> > > On Tue, Nov 24, 2026 at 11:56:52AM +0000, James Buck wrote:
-> > >> Hi,
-> > >>
-> > >> Since commit 61ea17a63719 ("sched/fair: Add SIS_UTIL support to select_idle_capacity()"), first in v7.2, CPU-bound multi-threaded work on my big.LITTLE arm64 board runs 12-19% slower than on v7.1 and earlier, because waking threads are placed on idle little CPUs while idle big CPUs are never looked at.
-> > >>
-> > >> Turning SIS_UTIL off at runtime restores the old speed. select_idle_capacity() and update_idle_cpu_scan() are unchanged in v7.4-rc4, so I expect mainline to behave the same.
-> > >
-> > > A related regression from the same commit was reported by Usama here:
-> > > https://lore.kernel.org/r/20261113153157.2495664-1-usama.arif@linux.dev/
-> > >
-> > > On Grace, a zero SIS_UTIL budget skips the search despite suitable CPUs
-> > > being idle. Your case shows that a nonzero budget can stop the scan
-> > > before reaching an idle big CPU.
-> > >
-> > > We've discussed a minimum scan budget and accounting for idle CPU
-> > > availability, though a small minimum alone may not fix your case.
-> >
-> > This had problems in the past when Chenyu was iterating on SIS_UTIL
-> > where the search opportunity at higher utilization is actually very
-> > low and cutting off search for !idle core was beneficial for SMT
-> > systems.
-> >
-> > Now, for systems without SMT, it has its benefits too but a system
-> > without SMT should be equivalent to a SMT one where test_idle_core()
-> > returns true always if an idle CPU is present.
-> >
-> > So I'm wondering if {set,test}_idle_cores() can be extended !SMT
-> > to act like a gating indicator to say if an idle core exists or
-> > not much like how !get_rd_overloaded(this_rq->rd) serves as a
-> > gate for newidle balance - it can be flipped to true when a CPU
-> > goes idle or if load balancer sees an idle CPU. Thoughts?
-> 
-> I tested idle_cores tracking for !SMT and EAS months ago [1]
-> [1] https://lore.kernel.org/all/20251202181242.1536213-6-vincent.guittot@linaro.org/
-> 
-> >
-> > > Given both reports, reverting the commit seems the safest thing to do
-> > > for now. That would restore the previous asym search behavior and we can
-> > > revisit a better consistent strategy to cover both sym and asym CPU
-> > > selection later.
-> > >
-> > > Prateek, Vincent, what do you think?
-> >
-> > IMO it still makes sense for SMT systems since capacity on systems
-> > with SMT only makes sense if the entire core is idle and then it is
-> > just a best effort thing right?
-> >
-> > set_idle_cores(), would flip the flag as soon as an idle core is
-> > available and after that SIS_UTIL is bypassed. I don't think the
-> > SIS_UTIL cut-off for non-SMT ASYM_CAPACITY systems makes that much
-> > sense given misfit penalty is much higher.
-> 
-> In fact that depends on the number of CPUs in your LLC.
-> The current SIS_UTIL is unfair for small system because you skip the
-> loop with "low" utilization:
-> - with 12 cores per LLC, you skip the loop if the avg utilization per
-> cpu is above 839 whereas it also means that you have the compute
-> capacity of more than 2 CPUs that is not used and util_est can worse
-> the situation
-> - but with 64 cores LLC, you still tries 5 CPUs for the same avg
-> utilization per CPU
-> - and with 12864 cores LLC, it's 10 CPUs
-> 
->
+On Wed, 2026-11-25 at 08:29 +0000, Tobias Laas wrote:
+> Am 23.11.2026 22:49 schrieb Laurence Oberman:
+> > Hi Niklas, Tobias,
+>=20
+> Hi Torsten, hi Laurence,
+>=20
+> I am responding to both of your emails in this email, because you
+> both=20
+> suggested to check out intel_iommu=3Don,sp_off.
+>=20
+> >=20
+> > I tried to help here but (full transparency) I had some LLM help
+> > for
+> > further ideas after I coul dnot repriduce this on my platform.
+> >=20
+> > I tried to reproduce this on a Coffee Lake desktop (i7-8700, Cannon
+> > Lake PCH AHCI 00:17.0) whose INCLUDE_ALL DRHD reports the same
+> > relevant capabilities as Tobias's dmar1:
+> >=20
+> > =C2=A0 dmar1: cap d2008c40660462 ecap f050da
+> > =C2=A0 (SLLPS =3D 2M|1G, ecap.C =3D 0, MGAW 39, SAGAW 4-level only)
+> >=20
+> > with intel_iommu=3Don, DMA-FQ default domain, max_sectors_kb =3D 4096.
+> >=20
+> > - 6.12-based kernel (pre d373449d8e97, i.e. the old VT-d page table
+> > =C2=A0 code, with the larger BLK_DEF_MAX_SECTORS_CAP): 2M O_DIRECT
+> > reads,
+> > =C2=A0 clean.
+> > - 7.4.0-rc1 (generic iommu page table): 2M and 4M O_DIRECT reads
+> > and
+> > =C2=A0 2M writes from hugepage-backed buffers against a SATA SSD, ~15k
+> > =C2=A0 I/Os, no DMAR or ATA errors. The iommu:map tracepoint shows
+> > =C2=A0 2 MiB-aligned iova/paddr mappings, and domain_translation_struct
+> > =C2=A0 shows 2 MiB leaf PDEs (e.g. 0x000000039c200082, PS set), so the
+> > =C2=A0 superpage path was exercised.
+> >=20
+> > The 4088 vs 4089 threshold matches exactly the point where a
+> > request
+> > first needs a full 512-page (2 MiB) IOVA, which is where superpage
+> > mappings become possible. All three of Tobias's fault addresses
+> > fall
+> > in the same 2 MiB window at 0xff400000.
+> >=20
+> > So on this hardware neither the old nor the generic page table code
+> > shows the problem, which supports Niklas's suspicion of something
+> > platform specific. One difference: on Tobias's system dmar0 reports
+> > no superpage support (cap c0000020660462) while dmar1 does; on mine
+> > both do.
+> >=20
+> > Tobias, a few things that would maybe help narrow it down:
+> >=20
+> > =C2=A0 1. Boot with intel_iommu=3Don,sp_off and an unmodified cap. If t=
+he
+> > =C2=A0=C2=A0=C2=A0=C2=A0 faults go away, superpages are involved.
+> Very nice. I just tried with a kernel with the cap at 8191, which I
+> had=20
+> at hand (the new default cap is 8192 IIRC): with
+> intel_iommu=3Don,sp_off=20
+> the faults go away, indeed. More on this below.
+>=20
+> > =C2=A0 2. The full dmesg from a failing boot, including the DMAR/DRHD
+> > =C2=A0=C2=A0=C2=A0=C2=A0 lines. The faults are reported as DMA Write wh=
+ile the
+> > outstanding
+> > =C2=A0=C2=A0=C2=A0=C2=A0 commands were WRITE FPDMA QUEUED, and I'd like=
+ to see what
+> > else
+> > =C2=A0=C2=A0=C2=A0=C2=A0 was in flight.
+> To be honest, I'd like to avoid having to capture a full log when the
+> error occurs, because I can't think of a good way to save it.=20
+> Technically, I hope the logs up to the first fault are identical with
+> the various caps. As you can see in the log corresponding to the
+> first=20
+> screen full of errors in the attachment, there are exactly two WRITE=20
+> FPDMA QUEUED commands that fail at a time (with the cap at 4089
+> IIRC),=20
+> so the log looks very repetitive. After the first couple of errors,
+> the=20
+> kernel starts reducing the ATA link speed (and later maybe also the
+> UDMA=20
+> speeds) and continues to do so until it gives up on mounting the
+> rootfs.=20
+> Then I=E2=80=99m greeted by an initramfs shell prompt, and I=E2=80=99m no=
+t sure if I
+> can=20
+> mount any other filesystem at this point with the slimmed down kernel
+> config I used to speed up the bisection.
+> I=E2=80=99m not sure if I=E2=80=99ve understood you correctly regarding y=
+our second=20
+> sentence: I don=E2=80=99t see any contradiction here=E2=80=94for a WRITE =
+FPDMA QUEUED
+> command, there should be an associated DMA write. The QUEUED just=20
+> indicates that the SSD can reorder the commands in the queue (NCQ).
+>=20
+> Am 24.11.2026 09:55 schrieb Thorsten Leemhuis:
+> > I just a few days privately was told that "intel_iommu=3Don,sp_off"=20
+> > solved
+> > problems wrt to one unresolved regression related to iommu with a
+> > similar generation intel hardware. The user wrote "[kernel] code
+> > improperly thinking that the CPU supports something called=20
+> > "superpages",
+> > which it does, but only when the integrated GPU is disabled
+> > (speciality
+> > of Intel Haswell)."
+> >=20
+> > Could that maybe related? Do you use the iGPU? Does that parameter
+> > prevent the problems? It's a long shot, but quickly tested, so I=20
+> > thought
+> > it was worth mentioning.
+> Yes, it could very well be related. My CPU is a Haswell (Refresh)=20
+> Desktop processor, and I do use the iGPU. And sp_off seems to prevent
+> the problems, see above.
+>=20
+> But what I still don't understand is why DMAR faults occur. There are
+> dmar0 and dmar1, and as Laurence explained, dmar0 does not support=20
+> superpages on my board. I guess this is because the iGPU is supposed
+> to=20
+> be associated with dmar0 (The BIOS might configure this differently
+> when=20
+> I install a PCIe GPU and deactivate the iGPU). Is there any conflict
+> if=20
+> dmar1 uses superpages and dmar0 doesn't? Or does the kernel not
+> respect=20
+> that dmar0 does not support superpages? Or is the iGPU associated
+> with=20
+> dmar1? Who determines this: the kernel or the BIOS?
+>=20
+> Best regards,
+> Tobias Laas
 
-As you suggested in [1], maybe we can give a floor value of 3 when has_idle_core
-is true both for SMT and !SMT case(mainly for nr_scan = 0 case). Besides, we can
-scale up the number of CPUs to be scanned by their llc_weight, to fake
-a 32 CPUs LLC for the small LLC system, this should mitigate
-the issue of current report and the issue reported at [1]. 
+Hi Tobias, Thorsten,
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index da0d9e19c457..1c0e2ac7751d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -12937,8 +12937,9 @@ static void update_idle_cpu_scan(struct lb_env *env,
- 	y = SCHED_CAPACITY_SCALE - tmp;
- 
- 	/* equation [2] */
--	y *= llc_weight;
-+	y *= max(llc_weight, 32);
- 	do_div(y, SCHED_CAPACITY_SCALE);
-+	y = min_t(u64, y, llc_weight);
- 	if ((int)y != sd_share->nr_idle_scan)
- 		WRITE_ONCE(sd_share->nr_idle_scan, (int)y);
- }
--- 
-2.25.1
+Againe, I had LLM help here trying to get clarification.
 
-[1] https://lore.kernel.org/all/CAKfTPtDVqKyQ491MdUr2RbGmJ9ivofiiX7D7Xd-Sh2F0NLFmRw@mail.gmail.com/
-> >
-> > --
-> > Thanks and Regards,
-> > Prateek
-> >
+Thanks Tobias, the sp_off result confirms that superpage mappings are
+involved. No need for the full failing log; the question about DMA
+Write vs. WRITE FPDMA no longer matters given this.
+
+To your questions: the BIOS defines which devices each DRHD covers,
+via the ACPI DMAR table. On your board dmar0 (flags 0x0) covers only
+the iGPU (00:02.0), and dmar1 (INCLUDE_PCI_ALL) covers everything
+else, including the SATA controller at 00:1f.2. The iGPU is not
+behind dmar1.
+
+If I read the history right, this comes from three things combining:
+
+  - Before v6.13, intel-iommu used the lowest common superpage level
+    across all active IOMMUs (domain_update_iommu_superpage()). Since
+    your dmar0 reports no superpage support (cap c0000020660462),
+    superpages were never used anywhere on your system.
+
+  - 5bdd86ec5d19 ("iommu/vt-d: Remove domain_update_iommu_superpage()",
+    v6.13-rc1) made superpage support per-IOMMU, so dmar1 started
+    using its advertised 2M pages (cap d2008c20660462, SLLPS =3D 2M|1G).
+
+  - 9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP",
+    v6.17-rc1) raised the default cap from 2560 sectors (1.25 MiB) to
+    4 MiB. Block I/O can now produce 2 MiB-aligned 512-page mappings,
+    which is the first time AHCI DMA hits the superpage path by
+    default. That explains both the bisect result and the 4088/4089
+    threshold: 4088 sectors is exactly 511 pages, 4089 needs a full
+    2 MiB mapping.
+
+All three of your fault addresses (0xff400000, 0xff4a0000,
+0xff450000) fall in the same 2 MiB IOVA window, and fault reason 0x0c
+(non-zero reserved fields in PTE) at scattered 4K addresses inside it
+would fit the IOMMU not handling the 2M leaf entry correctly. That is
+similar to the Geminilake igfx superpage issue fixed a few years ago.
+
+For comparison, I could not reproduce this on a Coffee Lake system
+(i7-8700, Cannon Lake PCH AHCI) where both DRHDs report SLLPS =3D 2M|1G
+(dmar1 cap d2008c40660462, ecap f050da). On 7.4.0-rc1 with
+intel_iommu=3Don and max_sectors_kb =3D 4096, against a SATA SSD:
+
+  - O_DIRECT 2M/4M reads and 2M writes from hugepage-backed buffers
+    (~15k I/Os); domain_translation_struct confirms 2 MiB leaf PDEs
+    were installed (e.g. 0x000000039c200082, PS set)
+  - 60s of concurrent 2M sequential + 4k random O_DIRECT reads
+  - buffered XFS write/read/copy of 8 GiB, with ~2000 4 MiB mappings
+    in the iommu:map trace
+
+all completed without DMAR or ATA errors. A 6.12-based kernel with
+the larger cap was also clean. That is consistent with the problem
+being specific to the dmar0/dmar1 superpage asymmetry on Haswell with
+the iGPU enabled, as Thorsten's report suggests.
+
+Tobias, if you have time, a confirmation test: on a 6.13-6.16 kernel,
+raising max_sectors_kb to 4096 via sysfs on the SSD should reproduce
+the faults, while 6.12 with the same setting should not.
+
+Lu, is there a known Haswell erratum here? If so, a platform quirk
+that disables superpages (or restores the common-denominator rule)
+when the igfx DRHD lacks superpage support seems like the right fix,
+along the lines of the earlier Geminilake igfx superpage quirk,
+rather than limiting max_sectors in libata.
+
+Regards,
+Laurence
