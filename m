@@ -1,47 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795569914;
-	b=rfPZ3hdUgfIJwd9iJA5jX3TcYo9eHORqVrONyVe+JtqgHXgq+BZvOdsn2/a/48oC5Vsq
-	 vS+LhvJQdXx8Zv4I4pji2uk8yhPkalFMKrUuu+OpC8Bj6QP8AzluVY+BbDWvTtisCTJs1
-	 XIAOhWSPVCWK3ktUwcMy1N02AHLIr7o7w0vm4j5nXNQaTxNM4Ig75UJG3Yz1aEanSDH2B
-	 fk14gGncrde8BmPiFimYhVT2idbkPBBCxmBFSVd6NsrJdOUMNKWeVsl8VvDYrrItDTkES
-	 uz0ZPseDS9mQ10YrIUTkTNAUQA/N4RfNaGuULeq3w2ZP7CtyKleMx28b2jHQvW8QtiA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795569914;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=BMhI++4hrmOQdb1jbtyFj7f8QyI0a7HFLcXSQC8NNgQ=;
-	b=toNkBsK4AZ+lV2bNtre5TvHs7SKEnEv46bEcy72zHYicArBgH2Sk5yD+r96JYqT35J3Z
-	 2LtdvdDWLO/zzqC6OCgC4kCDbR1tpMMcK9KKem6ujRKwD8eAI/el0G+JVMUx65He020RG
-	 rWyU6lXOX74OKTzmOkbUu2Kgm84sYvyu3j3PcMo/BlqY+IgX5/ZFRxcJhrhNU8IZNN6Cs
-	 GfuEAZSHeDYiK6omIQQd5x0cJq8E3GF0FECeQanXpgrbRcox/IBqqhnLeXrtv2YxQ/pZ+
-	 5ngqXA2EjHg7zY8fabtMIU+0iigKIhbmYdxfdN/XkDr63+BC1IOlJq0R2QzQufX6fWA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=none smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.93.99
-Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.26
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795575204;
+	b=reH4sjiDqdt0yFSTVpWX3e53OsdAUTWCkzYx02gmvLAux6eMnwG2mZJJD/LEWL3I4XRU
+	 lqU1POHUN10OCk09O9reVchn0gOUTD9jchLeTkUYQlsAUGizZI7p8JhaepAch7HSEsYkz
+	 a0OB46LyKI0cHAvjRj9sj1Z98BexeglIOdc+ArPWU3me0beS+qpYIR1LqMdlb+ypbjaY9
+	 Ud/BDJp3tQ8apkT6Fd+7xtF3CIIq9hQpfCY5krq1NmUoQLxiHrgLeZDnL/5N5JvvmNkpK
+	 mz6tnZumpq84Oy8+82KVOjxQnTBpQpQLNsZDGtHornqNt0PD0iXig7X5fBBYsURavzA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795575204;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:
+	 CC:References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=vFS7QdjO5puzwlMacPQMPoCGHdlUW85ljlY+eoSO6w4=;
+	b=1YwNcFbUK4tpCMFMz67wvkCjwnud6L4ShYEXUx74qyEw1u6gJxYZY4ESKzOo6oMDBT+U
+	 WWj/LOnNaPCE4POvxdY1dkXNrIm/WWnD+C1QKdyjJKq0rLmyiSvPAMRSmx6qT49qLGIbI
+	 nrIIAz5fesy+v/EIR7m+DvierAIzO8/SugC5PuyV07GKHaahWVRyyPyftNV+1zaMHtfnR
+	 iVXdrYzDV7r5zHAv+3AVHiODk311Dej1BJdUOf0zAjG5Rx3AZWIGZML7ublawonP3WFyR
+	 IoRTANwL9Enjxlojhb0xs/9d9tELpKK7tfOWxri0nPDm/XwIbzjYuHvFnck5eZMTN0w==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=jsXy2fs2;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.26
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011026.outbound.protection.outlook.com [52.101.52.26])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1F3606A338
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 01:25:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC1F3606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jZ26S5Z3hz1c1F8
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 09:25:04 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 07D9240573
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 09:25:09 +0800 (CST)
-Received: from [10.174.179.19] (unknown [10.174.179.19])
-	by APP4 (Coremail) with UTF8SMTPSA id gCh0CgCn4O_rOAZrGoHDFg--.50683S3;
-	Wed, 25 Nov 2026 09:25:08 +0800 (CST)
-Message-ID: <490a7578-6171-4a48-8d7a-b8541f0e9425@huaweicloud.com>
-Date: Wed, 25 Nov 2026 09:24:59 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E524606A323
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 02:53:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7E524606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=jsXy2fs2
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yR21K15wQQWQCCPdVSrk092Uz2SKFI+dKw3OP20z3r5ByF3TZYug2ROe7qDaMAVOKxR/R76Xfz8SndVjLSjJw4ACcFfS57C2ziN0HrcJ27nTllc9CTfrJLWZqoSI7d2dMvqZvQeMnItKs6FQTjrsbEQBzRwO2DecoWuF95taWXCrEgnzfzK/u36aGjQ6JdztUZbKaawB68M6swuZvXx7WujXsFZbu6cE9m7PjXHnb5uk/m6cbNQ8tBG72bRbE65saVEz/4aaRWAOmg7kRunaEr1n/EQ2QQI+utsjbTlNQG0BPEgJVltq9GCtuyBBzcrzxZygAIkftu+8k1lVpg0H0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vFS7QdjO5puzwlMacPQMPoCGHdlUW85ljlY+eoSO6w4=;
+ b=ls8UqMeRHmtJUCkQaFaFcJ6b/HB4YGF/mn3WMzEgfLEq+/Zg2TD1LfKUGXjv81uy6OY4VuZ5nqO6LWvA+IKU5yx4/BG3Qy8jzvqw7Ylw3oCB5Oa1Jnbi18s9PosDSh6ydI90MB8F8DBj5/EUAwcTYtkjlNRVMR6PBWnUufp+WnKrI/JW/DhNMZuImcQ/gOo9OwbUnRUaIg38xJNUvJX6JBClTx9fPZvzaeY+C3MJxCjmcvZGomWowkAmoNQqcmOkRDFQPtDAh17YSFD4dx1rT8+TEebq/yFyMZCWs2f+4vqpNe1K/T3C9hQ3UwtJu557R9aRId9tfjz/oEYV0bQMQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vFS7QdjO5puzwlMacPQMPoCGHdlUW85ljlY+eoSO6w4=;
+ b=jsXy2fs2Kz/sc0pSKt9CITLrzf0ldBKiA6QiNqXk8ipEsGHTwU91zXEz4qYDg33tQnW5rl5ipAgqA0itRXyIEAIDbfhGIOh1xYL1iDGg+vhw1m40VHN0IrWVPLV3H0jeYCwHspPSYuZGPYkmj2qVtcxe6wSVuCLy/5F6S01fi/s=
+Received: from CH2PR14CA0052.namprd14.prod.outlook.com (2603:10b6:610:56::32)
+ by PH7PR12MB8153.namprd12.prod.outlook.com (2603:10b6:510:2b0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.14; Wed, 25 Nov
+ 2026 02:53:16 +0000
+Received: from CH01EPF000BE949.namprd02.prod.outlook.com
+ (2603:10b6:610:56:cafe::2e) by CH2PR14CA0052.outlook.office365.com
+ (2603:10b6:610:56::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.662.5 via Frontend Transport; Wed, 25
+ Nov 2026 02:53:15 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CH01EPF000BE949.mail.protection.outlook.com (10.167.244.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.662.3 via Frontend Transport; Wed, 25 Nov 2026 02:53:15 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 24 Nov
+ 2026 20:53:15 -0600
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Tue, 24 Nov
+ 2026 20:53:14 -0600
+Received: from [10.136.45.121] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.57 via Frontend
+ Transport; Tue, 24 Nov 2026 20:53:11 -0600
+Message-ID: <ce38fb8b-94d7-48ba-93bb-3b72cfcb3e61@amd.com>
+Date: Wed, 25 Nov 2026 08:23:10 +0530
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -52,119 +106,103 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-To: Jan Kara <jack@suse.cz>
-Cc: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>,
- Ojaswin Mujoo <ojaswin@linux.ibm.com>, Theodore Ts'o <tytso@mit.edu>,
- Baokun Li <libaokun@linux.alibaba.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- guolingxing <guolingxing@tju.edu.cn>, Josef Bacik <josef@toxicpanda.com>,
- Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
- <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
- <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
- <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
- <osarljpnd2viffbi3lrgqccyjxjo6ktez73sizcstqjiaw3cbc@e5jnepamtbkl>
+Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in select_idle_capacity()
+ leaves busy tasks on little CPUs while big CPUs are idle
+To: Andrea Righi <arighi@nvidia.com>, James Buck <jbuck2005.linux@outlook.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>, Usama Arif <usama.arif@linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
+ <awWOCejxtjP12xFX@gpd4>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <osarljpnd2viffbi3lrgqccyjxjo6ktez73sizcstqjiaw3cbc@e5jnepamtbkl>
-Content-Type: text/plain; charset=UTF-8
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <awWOCejxtjP12xFX@gpd4>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCn4O_rOAZrGoHDFg--.50683S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr45WFWUZF45ZrWUAFW7XFb_yoW5KF1rpF
-	Z5Ca43Kr4kKw1UJrsFqw1xX34Fkw4SgF4UGrykWr17u398urySgFs7KryY9F9Fkr4xGw1j
-	vFWj934ru3Z8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH01EPF000BE949:EE_|PH7PR12MB8153:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b8d1c46-dc6e-4c41-bcf4-08df4a9f4097
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700016|32650700020|23010399003|22082099003|18002099003|13003099007|261026121527099003|261026140227099003|261028144727099003|261021121427099003|261102123227099003|56012099006|261022105027099003|4143699003|10067099003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	34tXHzcC/rhONzUBdHlx9caVahM0FzCJ9Qq/Lxq24Bzgenxa2hx3xxrmv/VXXljyON2QSJCAg9PS7DnQd5KaBcY2MULnwRYJxl6bErFpmTNNSg82mEtSoUb3qMPp7I4w0aqxjhzLy65jpefCz1e6fD/9HIDxzu41K5iHix1WT/FWMbQD1IKCBh/KcQlsiYBi0J0lHDHpW6/biNEa7Sprz8uf8pTyqbZvWRVYyzxPyWjhYw5aCa5Y4+LypoZMpS2vL8ARYNmd/iLziXXu11H/eyFjZEe6q9Axz9pbq7S30ZifbJEU1rzyY2J9LkpBh7ixJLG2EAMcOkS67hcI7EqI1xTplKhp+om7CbAtFvGnxPLPDha2931kIJ/ghBdH+QVv9Z9x2Fwkc34itI/y0SvYZg77XGQFZCHqKT4MiWUz6hyDEXvxeSWdSqgGjxL8h1ADtF6dTwZSdfs24crvPQhZEdJrhr+NMwPHV4rcGUGPGcaZZNdmZQnfK9EtuoK+cMiD25vdUtSBAVYEfz9bEk2U1+8VBmAV99i40BMg3iidC5RgU/DmE6bQ0/xQYekz93aKXSVpaUpgE37JV2CopUJBlyX04hClygYaKjOmy/cw2574VW3Jj6Y0Jh4gE2U8Jbio9yhFdWeQ8c1T0/GjOatG7ntg5ZIQ3Hdxza2TzUeE7Dk=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700016)(32650700020)(23010399003)(22082099003)(18002099003)(13003099007)(261026121527099003)(261026140227099003)(261028144727099003)(261021121427099003)(261102123227099003)(56012099006)(261022105027099003)(4143699003)(10067099003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	9wj5x8WiGVl79bsAM9yNtiGePjdic1h2vQrjCLwdzc6aELAO2DabVj42QXXBXUZrWbZ/zU7gUnnNvytWZgNGyEhUXogOBkC//7YXO/8XShXkJtv7uyCFtaglOIanGnYQU7C2waiyeO202rzpeowSdkeA98GNwoIrCDJZPDfsd+ZmFQkKlt9s3KD1wSglrBhRmRChqQo+MEw4VmAqFGa/ELPU5izuGFZbmIwQKU0zn7Bif+QfxcGNE6AphAy/P60MYh1F8YUALr2TQW0mxdMKzso2e+yrblytvGFtNeVYPEAg0MGx4CVR55LQmm6yoXplBc24PrXU+dnHUx16thYDEUQJejDcsUh43ehhbQGGLs7C6morEKatbFBMksYT9Y9sOsAtxeiBYFoBE6Oat5O7yZMMhPYTA0NiWmu9BoVQcFVGNmzNrnLcDIzchCYsqSNZ
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2026 02:53:15.3284
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b8d1c46-dc6e-4c41-bcf4-08df4a9f4097
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH01EPF000BE949.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8153
 
-On 11/24/2026 11:53 PM, Jan Kara wrote:
-> On Tue 24-11-26 12:49:19, Zhang Yi wrote:
->> On 11/18/2026 10:06 PM, Jose Fernandez (Anthropic) wrote:
->>> On Wed, Nov 18, 2026 Zhang Yi wrote:
->>>> Could you provide a reproducer? My guess is that high concurrency causes
->>>> the blocks freed by my current process to be taken by I/O issued by
->>>> other processes
->>>
->>> That fits our runs. I'll send you the script off-list.
->>>
->>> - Jose
->>
->>
->> Thank you for the reproducer. After debugging, I confirmed the cause. On
->> each failed endio conversion, the retry commits the journal, but the
->> blocks released by the commit are soon claimed again by the
->> background fallocate loop, so after 3 retries the DIO finally returns
->> ENOSPC.
->>
->> Although Ojaswin's v2 does track the exact ranges when submitting I/Os,
->> we cannot convert the whole extent after zeroing until all in-flight I/Os
->> overlapping this extent have finished, which is too expensive to me. So I
->> think we may still need the split to succeed.
->>
->> Note that we do reserve space for exactly this case. At mount time we
->> set aside s_resv_clusters (2% of the clusters, capped at 4096 clusters),
->> and EXT4_GET_BLOCKS_METADATA_NOFAIL is allowed to use it. The problem is
->> that this reservation is not effective today. s_freeclusters_counter is
->> incremented when blocks are freed, but for journaled frees the blocks
->> only return to the buddy allocator after the freeing transaction
->> commits. Most allocation paths already run inside a transaction, so we
->> cannot force a commit from there, and even between retries the released
->> space can be taken again, as the reproducer shows. So ordinary
->> allocations can currently consume the reserved pool, and endio extent
->> splits can be fooled into thinking space is available. This hurts both
->> endio extent conversion and delalloc writeback.
->>
->> My idea is to make this a real reservation of currently allocatable
->> clusters rather than just a counter check. We can subtract
->> sbi->s_mb_free_pending from free_clusters in ext4_has_free_clusters().
->> Then a successful check no longer counts clusters that cannot be
->> allocated yet, ordinary allocations can no longer eat into the reserved
->> pool, and the endio split can fall back on the reserve without having to
->> force a commit first. Delalloc reservations benefit as well, since
->> writeback is less likely to run into ENOSPC.
->>
->> The downside is that ENOSPC may be returned earlier, e.g. by buffered
->> writes under the same heavy concurrency. I think that is acceptable
->> since the retry is best effort anyway, and ext4_should_retry_alloc()
->> still forces a commit when there are pending frees, so it can cover most
->> scenarios. Even if it does fail, it is better to fail early than to fail
->> after the data has already been written. This is also consistent with
->> the behavior of allocating blocks directly when writing in old
->> dioread_lock mode.
->>
->> With the reproducer, this takes the DIO ENOSPC rate from ~11% to 0, and
->> failed conversion attempts from ~1500-2200 per run to ~0.3 per run.
->> fallocate ENOSPC did not increase noticeably (2.0% before vs 2.2% after).
->> However, the probability of returning ENOSPC for pure append writes
->> increases by about 10%.
->>
->> Does this approach sounds OK?
+Hello Andrea,
+
+On 11/24/2026 6:45 PM, Andrea Righi wrote:
+> Hi James,
 > 
-> Yes, it sounds good to me. I was also puzzled why the reserved clusters are
-> not effective so thanks for explaining that :)
+> On Tue, Nov 24, 2026 at 11:56:52AM +0000, James Buck wrote:
+>> Hi,
+>>
+>> Since commit 61ea17a63719 ("sched/fair: Add SIS_UTIL support to select_idle_capacity()"), first in v7.2, CPU-bound multi-threaded work on my big.LITTLE arm64 board runs 12-19% slower than on v7.1 and earlier, because waking threads are placed on idle little CPUs while idle big CPUs are never looked at.
+>>
+>> Turning SIS_UTIL off at runtime restores the old speed. select_idle_capacity() and update_idle_cpu_scan() are unchanged in v7.4-rc4, so I expect mainline to behave the same.
 > 
-> 								Honza
+> A related regression from the same commit was reported by Usama here:
+> https://lore.kernel.org/r/20261113153157.2495664-1-usama.arif@linux.dev/
+> 
+> On Grace, a zero SIS_UTIL budget skips the search despite suitable CPUs
+> being idle. Your case shows that a nonzero budget can stop the scan
+> before reaching an idle big CPU.
+> 
+> We've discussed a minimum scan budget and accounting for idle CPU
+> availability, though a small minimum alone may not fix your case.
 
-Thank you for confirming this idea. Let's continue moving forward in
-this direction. :)
+This had problems in the past when Chenyu was iterating on SIS_UTIL
+where the search opportunity at higher utilization is actually very
+low and cutting off search for !idle core was beneficial for SMT
+systems.
 
-Best Regards,
-Yi.
+Now, for systems without SMT, it has its benefits too but a system
+without SMT should be equivalent to a SMT one where test_idle_core()
+returns true always if an idle CPU is present.
+
+So I'm wondering if {set,test}_idle_cores() can be extended !SMT
+to act like a gating indicator to say if an idle core exists or
+not much like how !get_rd_overloaded(this_rq->rd) serves as a
+gate for newidle balance - it can be flipped to true when a CPU
+goes idle or if load balancer sees an idle CPU. Thoughts?
+ 
+> Given both reports, reverting the commit seems the safest thing to do
+> for now. That would restore the previous asym search behavior and we can
+> revisit a better consistent strategy to cover both sym and asym CPU
+> selection later.
+> 
+> Prateek, Vincent, what do you think?
+
+IMO it still makes sense for SMT systems since capacity on systems
+with SMT only makes sense if the entire core is idle and then it is
+just a best effort thing right?
+
+set_idle_cores(), would flip the flag as soon as an idle core is
+available and after that SIS_UTIL is bypassed. I don't think the
+SIS_UTIL cut-off for non-SMT ASYM_CAPACITY systems makes that much
+sense given misfit penalty is much higher.
+
+-- 
+Thanks and Regards,
+Prateek
 
