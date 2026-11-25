@@ -1,97 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795556083;
-	b=C47Hia/0rEKfe/dMRAXFP5SZHVKKHZDzdoTKCXfhlElDDJ5fB5L4r2hHonoutrKeWpJ4
-	 z6I6po4CN5z1dit/ApED8Pw4vwmXogGy18n3IZeSYFeOdMEQ/13Z2br9V2r/dm+GkMjW9
-	 7kfWj+tfRG6z25YkubhQMfX/l5uyFTE+EcJ53JIw0k6cLH945cRU3CUfSSDNciz3/TTjY
-	 BKY2V9cPYHn0Ii3e4vbNXxjWRI28xBD2pPArr/eXNX3HLauRTRzpDknfOr/9pYt/8/zhO
-	 m1dqsJ+04mQhkvnYIm6QBe1IdlwSYH+ElStb4RYRD2ZTw1x+SPZcM9Drn5DXVX5lDHg==
+	t=1795569914;
+	b=rfPZ3hdUgfIJwd9iJA5jX3TcYo9eHORqVrONyVe+JtqgHXgq+BZvOdsn2/a/48oC5Vsq
+	 vS+LhvJQdXx8Zv4I4pji2uk8yhPkalFMKrUuu+OpC8Bj6QP8AzluVY+BbDWvTtisCTJs1
+	 XIAOhWSPVCWK3ktUwcMy1N02AHLIr7o7w0vm4j5nXNQaTxNM4Ig75UJG3Yz1aEanSDH2B
+	 fk14gGncrde8BmPiFimYhVT2idbkPBBCxmBFSVd6NsrJdOUMNKWeVsl8VvDYrrItDTkES
+	 uz0ZPseDS9mQ10YrIUTkTNAUQA/N4RfNaGuULeq3w2ZP7CtyKleMx28b2jHQvW8QtiA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795556083;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=PyyQwKmFe9iM2Cp50Hb1UepVeU0i/+dyb3nhRaBGF3U=;
-	b=dBqLaVArvDHJb7bilepW/2y4V435Z4IGQPO3zogbd8kYWk6vDdMyEj0f0NBi4Df/J5+o
-	 pT57qvVq4BRKrDdmjErW4cULBaZSojnRtoCVT5MaK/UiSifr9NprxB95FgM7JhYYZ4Lol
-	 lKDnuPMPkIGeSBOlCRe5kK2JAQ6brukt/lhO7SaJOQn7LvzIbpTSCoXg2JCJzzQHorZkk
-	 K/LUlNxhgcmZAOKTtpGjLIjicYpgzzeHp3CwokE97olK0XuJ+NzYF8oMxg70rzxasUpW8
-	 SuHsezr7ntj3qWa6Fi3o96Ovjugz9ke3rOeaX8znVQVMqJkFCxKv2rtWOGrWyzy2CYg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795569914;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=BMhI++4hrmOQdb1jbtyFj7f8QyI0a7HFLcXSQC8NNgQ=;
+	b=toNkBsK4AZ+lV2bNtre5TvHs7SKEnEv46bEcy72zHYicArBgH2Sk5yD+r96JYqT35J3Z
+	 2LtdvdDWLO/zzqC6OCgC4kCDbR1tpMMcK9KKem6ujRKwD8eAI/el0G+JVMUx65He020RG
+	 rWyU6lXOX74OKTzmOkbUu2Kgm84sYvyu3j3PcMo/BlqY+IgX5/ZFRxcJhrhNU8IZNN6Cs
+	 GfuEAZSHeDYiK6omIQQd5x0cJq8E3GF0FECeQanXpgrbRcox/IBqqhnLeXrtv2YxQ/pZ+
+	 5ngqXA2EjHg7zY8fabtMIU+0iigKIhbmYdxfdN/XkDr63+BC1IOlJq0R2QzQufX6fWA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="AB/zvdsC";
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=huaweicloud.com;
+	spf=none smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.93.99
+Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BC8606A327
-	for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 21:34:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 22BC8606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AB/zvdsC
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4bb70074ab2so54667225e9.0
-        for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 13:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795556081; x=1796160881; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PyyQwKmFe9iM2Cp50Hb1UepVeU0i/+dyb3nhRaBGF3U=;
-        b=AB/zvdsCM+6H4QDdZf4VqmpZlY76/AGtab3B6AhJ6/WIjjqp0XwoTiQGpzR7gyExmc
-         0xYDZhpMQSgpOOPK65ofwo1NUa8gTOScQ3eb9gNt/RvJmdVSckeF+dBbVOIenJ9MB09Z
-         F0aeEqjDU3eeVnzxCN6l2ZXtORhg6cDFlRumWdmCn7uqYC+Oko3rYDtcA7ysJ6Yf/Oiu
-         5h0s4Dql0GHvWCVqPBSbIJX3HznZyjNAD4ERuA8hbm+BkGSl7LmXvUfhdGrQ/3uYXmOZ
-         UcF4igOfwNuioBMvAuokNzaOHdvM22ug0u57tpktsPjG4PwrRWUdzeKbs4bbQhq9ZI91
-         WFvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795556081; x=1796160881;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PyyQwKmFe9iM2Cp50Hb1UepVeU0i/+dyb3nhRaBGF3U=;
-        b=xjkYf84txWQHzkoBwF8q1Vix/TkzPco2OIgLAiBP3Ce1Wzk1exOdb81TuV1zbyhTi3
-         8JfeWY4ZEqhj0wnTWcwDYWZtnLTWvDWCMEN4XTZpIwawz1Z0twdw3XkHmscFZqb81J4B
-         JU7WJcUR0iH1i4MAWF8Wb3W3uE2QVPaYIbWqAn6vmrCEaRWhM4rBl/lY91FZeYLxmm/q
-         HJO9NEOLbJkqDGct9ajcRhfoQfC3l8+Lp8vHZWM6Bp0fRLgygB92sw21gFt9mTrU4rNA
-         ixDkS3lRlwdHWVoqtn63dbiehHgN2BqC/gFQJfPFSfFW8/Am7p+cnCqMyw70wy8QALTS
-         qPFQ==
-X-Forwarded-Encrypted: i=1; AL+hErE20QAM9PzhKdIczMmvwu2p+70p36haqg4nJ53o7e3eX6E3H7A8mG2aPQqSB3DCFekvkr9KXXX507gvgw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8sj9c3IHgFX+UB+mj9yiu4IuPiLkFKVle4TRPgMUyuMmc2Ty81
-	BrYWkW2PgEvMHBg8dBvtpxa9RN4OuIXcOeNA+348Z6vixV3YpOgR11/p
-X-Gm-Gg: AZFdTZedFFaWhMHx+DuttOfvxlBPhmR8cnDk6mIFlqOdVYLdUK2zSIMeo5pTcOirLEb
-	slJqnfhFEuuFyAx6cAPmiQxUtVRZv4eC3SaYrB7uM4lelQQyg/AnYi6afAn0RnczBWLqufy8oNC
-	hJcfBek7GLryIIz6mHuIqT05jg17tFYGIp/G4/qw4A0xBEst0BTmZ8XFrFM9tl+0qN2mi37OrqY
-	LEIrrR4M6PgkE40RDLyoeS3HPI/VIu6vmwdV+RekU6Tx4RbRLjga0pt0OWvISDGmETi4hqYhT+A
-	x1/DhB0s46debdDlAzIi8S56h57R6Ekjpx8eSCZXR9aBjz3tPAxIr1dU8gkEXfPYp3tmX1ALT+H
-	KBLriDneC1keGCho52kg+vHoTQLej2o5qnAadxtqxFyjxrbZYi/SGyDUCsO1AwmNNrbwgX726rG
-	Jrr5AQmh+u8swK6+4eRGhFiwFWy3CoVxyQZCBTZt699jQGTq1KiugH1LKVZvDgklmZ28HQAOMIe
-	lDMQhCiWSpMTOLhUSsWhXisOUSKIQJAuZwFnZcqQOMZnFM0qkni+42pqhF76rJ0DePsXSCouO/q
-	qILWonNxzTAQJmNRn+Pk5jkDm/6kBA==
-X-Received: by 2002:a05:600c:800e:b0:4bb:7757:fe58 with SMTP id 5b1f17b1804b1-4bb8881b9d7mr328897525e9.19.1795556081300;
-        Tue, 24 Nov 2026 13:34:41 -0800 (PST)
-Received: from fra-x8664 ([151.83.244.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb90660cb4sm403974515e9.2.2026.11.24.13.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 13:34:40 -0800 (PST)
-From: Francesco Magazzu <postadelmaga@gmail.com>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Ilia Mirkin <imirkin@alum.mit.edu>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/nouveau/devinit/gf100-: fix POST being skipped on GPUs without display
-Date: Tue, 24 Nov 2026 22:34:30 +0100
-Message-ID: <20261124213430.9525-1-postadelmaga@gmail.com>
-X-Mailer: git-send-email 2.56.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1F3606A338
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 01:25:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC1F3606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jZ26S5Z3hz1c1F8
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 09:25:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 07D9240573
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 09:25:09 +0800 (CST)
+Received: from [10.174.179.19] (unknown [10.174.179.19])
+	by APP4 (Coremail) with UTF8SMTPSA id gCh0CgCn4O_rOAZrGoHDFg--.50683S3;
+	Wed, 25 Nov 2026 09:25:08 +0800 (CST)
+Message-ID: <490a7578-6171-4a48-8d7a-b8541f0e9425@huaweicloud.com>
+Date: Wed, 25 Nov 2026 09:24:59 +0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -101,68 +51,120 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
+ completion gets ENOSPC
+To: Jan Kara <jack@suse.cz>
+Cc: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>,
+ Ojaswin Mujoo <ojaswin@linux.ibm.com>, Theodore Ts'o <tytso@mit.edu>,
+ Baokun Li <libaokun@linux.alibaba.com>,
+ Andreas Dilger <adilger.kernel@dilger.ca>,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ guolingxing <guolingxing@tju.edu.cn>, Josef Bacik <josef@toxicpanda.com>,
+ Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
+ <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
+ <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
+ <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
+ <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
+ <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
+ <osarljpnd2viffbi3lrgqccyjxjo6ktez73sizcstqjiaw3cbc@e5jnepamtbkl>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <osarljpnd2viffbi3lrgqccyjxjo6ktez73sizcstqjiaw3cbc@e5jnepamtbkl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCn4O_rOAZrGoHDFg--.50683S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr45WFWUZF45ZrWUAFW7XFb_yoW5KF1rpF
+	Z5Ca43Kr4kKw1UJrsFqw1xX34Fkw4SgF4UGrykWr17u398urySgFs7KryY9F9Fkr4xGw1j
+	vFWj934ru3Z8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
+	v3UUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Commit 2139cb633d48 ("drm/nouveau/devinit/gf100-: try to avoid
-double-running vbios scripts") skips devinit if VGA CRTC register 0x00
-or 0x1a is non-zero, unless the display engine is disabled.  It detects
-the latter from the return value of nvkm_devinit_disable(), which is
-always 0: the strapped-off engines are removed with
-nvkm_subdev_disable() instead.  So the VGA registers are always read.
+On 11/24/2026 11:53 PM, Jan Kara wrote:
+> On Tue 24-11-26 12:49:19, Zhang Yi wrote:
+>> On 11/18/2026 10:06 PM, Jose Fernandez (Anthropic) wrote:
+>>> On Wed, Nov 18, 2026 Zhang Yi wrote:
+>>>> Could you provide a reproducer? My guess is that high concurrency causes
+>>>> the blocks freed by my current process to be taken by I/O issued by
+>>>> other processes
+>>>
+>>> That fits our runs. I'll send you the script off-list.
+>>>
+>>> - Jose
+>>
+>>
+>> Thank you for the reproducer. After debugging, I confirmed the cause. On
+>> each failed endio conversion, the retry commits the journal, but the
+>> blocks released by the commit are soon claimed again by the
+>> background fallocate loop, so after 3 retries the DIO finally returns
+>> ENOSPC.
+>>
+>> Although Ojaswin's v2 does track the exact ranges when submitting I/Os,
+>> we cannot convert the whole extent after zeroing until all in-flight I/Os
+>> overlapping this extent have finished, which is too expensive to me. So I
+>> think we may still need the split to succeed.
+>>
+>> Note that we do reserve space for exactly this case. At mount time we
+>> set aside s_resv_clusters (2% of the clusters, capped at 4096 clusters),
+>> and EXT4_GET_BLOCKS_METADATA_NOFAIL is allowed to use it. The problem is
+>> that this reservation is not effective today. s_freeclusters_counter is
+>> incremented when blocks are freed, but for journaled frees the blocks
+>> only return to the buddy allocator after the freeing transaction
+>> commits. Most allocation paths already run inside a transaction, so we
+>> cannot force a commit from there, and even between retries the released
+>> space can be taken again, as the reproducer shows. So ordinary
+>> allocations can currently consume the reserved pool, and endio extent
+>> splits can be fooled into thinking space is available. This hurts both
+>> endio extent conversion and delalloc writeback.
+>>
+>> My idea is to make this a real reservation of currently allocatable
+>> clusters rather than just a counter check. We can subtract
+>> sbi->s_mb_free_pending from free_clusters in ext4_has_free_clusters().
+>> Then a successful check no longer counts clusters that cannot be
+>> allocated yet, ordinary allocations can no longer eat into the reserved
+>> pool, and the endio split can fall back on the reserve without having to
+>> force a commit first. Delalloc reservations benefit as well, since
+>> writeback is less likely to run into ENOSPC.
+>>
+>> The downside is that ENOSPC may be returned earlier, e.g. by buffered
+>> writes under the same heavy concurrency. I think that is acceptable
+>> since the retry is best effort anyway, and ext4_should_retry_alloc()
+>> still forces a commit when there are pending frees, so it can cover most
+>> scenarios. Even if it does fail, it is better to fail early than to fail
+>> after the data has already been written. This is also consistent with
+>> the behavior of allocating blocks directly when writing in old
+>> dioread_lock mode.
+>>
+>> With the reproducer, this takes the DIO ENOSPC rate from ~11% to 0, and
+>> failed conversion attempts from ~1500-2200 per run to ~0.3 per run.
+>> fallocate ENOSPC did not increase noticeably (2.0% before vs 2.2% after).
+>> However, the probability of returning ENOSPC for pure append writes
+>> increases by about 10%.
+>>
+>> Does this approach sounds OK?
+> 
+> Yes, it sounds good to me. I was also puzzled why the reserved clusters are
+> not effective so thanks for explaining that :)
+> 
+> 								Honza
 
-On a GM108 (GeForce 940MX: no display engine, not POSTed by the
-firmware) those reads fault and return 0x13.  devinit is skipped, the
-GPU is used uninitialised and the machine panics at boot:
+Thank you for confirming this idea. Let's continue moving forward in
+this direction. :)
 
-  nouveau 0000:01:00.0: fifo: fault 01 [WRITE] at 00000000001a1000 engine 05 [BAR2] client 08 [HUB/HOST_CPU_NB] reason 04 [UNBOUND_INST_BLOCK] on channel -1
-  mce: CPUs not responding to MCE broadcast (may include false positives): 1,3
-  Kernel panic - not syncing: Timeout: Not all CPUs entered broadcast exception handler
-
-Check device->disp instead, once nvkm_devinit_disable() has removed the
-disabled engines, like nv50_devinit_preinit() does.
-
-Fixes: 2139cb633d48 ("drm/nouveau/devinit/gf100-: try to avoid double-running vbios scripts")
-Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-fable-5-2
-Signed-off-by: Francesco Magazzu <postadelmaga@gmail.com>
----
-
-Notes:
-    v7.3.4 boots on this machine; v7.3.5, which has the stable backport
-    (992f7f5f34f8), panics.  Tested on v7.3.5: with this patch the GM108 is
-    POSTed again at probe and on runtime resume.  Not tested on a board
-    that has a display engine.
-    
-    Read at preinit on this board: 0x2240c = 0x00000000, CR00 = CR1A = 0x13,
-    0x021c04 = 0x00000001 (display strapped off).
-    
-    The regression was analysed and the patch drafted with an AI coding
-    assistant (Claude Code); I tested it on the hardware above.
-
- drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c
-index 186e09ea0c..b256404c24 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gf100.c
-@@ -107,12 +107,12 @@ gf100_devinit_preinit(struct nvkm_devinit *base)
- 	 * VBIOS multiple times may have detrimental effects.
- 	 */
- 	if (base->post) {
--		u64 disable = nvkm_devinit_disable(base);
-+		nvkm_devinit_disable(base);
- 		/* magic to detect whether or not x86 vbios code has
- 		 * executed the devinit scripts to initialise the
- 		 * board. only works if there's a display engine.
- 		 */
--		if (!(disable & (1ULL << NVKM_ENGINE_DISP))) {
-+		if (device->disp) {
- 			if (nvkm_rdvgac(device, 0, 0x00) ||
- 			    nvkm_rdvgac(device, 0, 0x1a)) {
- 				base->post = false;
-
-base-commit: 8d7fe9885c62fc9a95bf55d9db244d9672a8aadc
--- 
-2.56.1
+Best Regards,
+Yi.
 
