@@ -1,113 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795634767;
-	b=2yuAbN9c1f97lmPCrd1ArZPBUMdouWELLfIU9HYdY0AEXlwIqG2diJiEipR2w+Ne7PZ4
-	 XBDR54qv5IZVNnX6jg/P/Tg1m57LQL6L9ITI0IZ2aTWaO/WDjB/kwgQR2Yh4BWRU0xZ/P
-	 5TUoToq4jE7PLCpLPx1+YT+VO4a/Ed4kYvL3J1M8iDtGHL8PMndzX5iFR+hVyMRzwWqnG
-	 WJzEQvhgmDyFVoazvcPzLGlAbfS9Vc8zNZ0UNypyL15EDVbyVSmCPA5twbWLcNVVnQNGN
-	 S/NwSJ69SNOZga8lcei7sE+xsrRI0Osdt/KFeLgxVE6v6BmE3oUv4NoV2Zc9s6GsWFQ==
+	t=1795635132;
+	b=jj6pSBG5b4lu5rc0FAidlh/25mY0xx20cKMvYLdWoT4zddDu6TMQBfbBbZMx7/28y222
+	 oWAhDDzk1KPSYr0r80Y0wekfcnbiYC+k7MTCraSrdubcx8EXqUnLlHoWt+YcVtWftdUFp
+	 cYjYwxb+nQaflYBXTx3oAdKLc4QKCThx3om7TUhn7BuMdPu1Znmq6ufGvZmpFidRUYGJc
+	 dcJ+mieHshnPCZezf9Wg4A2zF9VKMP8DLrWKbGWZAMnHlT7Q/rhQduVt/M+408JMNFvmU
+	 eudCJfi9Q7vnVGmJ7ZJncA52hI/BhlL/etAso7Gu6LtALMJHrCVoHsRziDUozs6qQdA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795634767;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=nVEfa0p4nUhAy9RkM9DjIM3WMQi1x6mlGWa6MjSqXyY=;
-	b=WJpYH2QPnaeDxtoZe/IS6M9KQAKokF1gc1Kfbv9wZaXV5/dGxClsMaDa2+iUIXplafYy
-	 GRQNo1DWgNSvBnf63XNVy38YFScyhviXSLTVKyoWzoxUNwZgfKZnkZs8GbYpjqFtZQIwc
-	 yddUbhTKv8b+sRXVEz7Cq62hZSEoy6IHZQ9v0TRyJ3EUvCxhYuIu2ewCDOtwcF2L3BnTy
-	 ldn+uTA3oY9V8HE/oFkF4HZIba2a/tgLvFr+z4ObgcRjVxbVMqNGX7qlMYB+7Ytmj52W2
-	 ne8UT2Bqb7NnnyjPmkua2wLRKLgQD4fojlZzqZ5OJPKqZMsT+Bh94DTfHMG604Hr+bw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795635132;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=ovHHtD+g/v2rwITp+yEHB4bzDII1NkPaoQCCK2QFSd4=;
+	b=rdsMECssEMQVtAPPJbr0kfec9T0tJlTgfX+AFc1NkOCFMVbZLUd4HwfvBr/81hDz5yNT
+	 lX2hviwwJonHWk212CIbp4ZBAxNYO24ryJHlBEcgjoRdhDkpGJ1TJarFqRh/jDsVNi8b9
+	 6LWjYXaijA7qXXBKcI7vCw36NsRd4kzjlr2SmZwQxpnCcC/+MKKY6dIptnPW9a+8kF6z5
+	 rKhXeT1HF1kdzyRJo4bl8YwgBOQYop3nuKwWbTYO9sCjrFxqc6FtEx3u9cmoZ5QPPs902
+	 jo3iQQclIdcmU8t9kIOz9KsKnIwsumcopC/eJQ/Tvn9hBrUYzHgRC5wfBVn3tlTtShw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AquARwiF;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MkoVEMFM;
+	arc=none smtp.remote-ip=209.85.221.51
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE1F606A323
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 19:26:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7BE1F606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F569606A321
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 19:32:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F569606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AquARwiF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795634765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nVEfa0p4nUhAy9RkM9DjIM3WMQi1x6mlGWa6MjSqXyY=;
-	b=AquARwiFl9ZPOjlURSKFDYDLKuJoUL7XlmJeqy0XiR3J3Z+YycWlusXRcwybGYFnzSzoHz
-	CAo7YWWPXvktMkY66sEPPUoKF/mQU4fMM3D6nhsRulUE0+7jXzI7s3kTIhHgbeK9Y8lw/g
-	plNYwvEbx+CKn3L76+wHsccR3UPpmPg=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-28-XbN0jw74P12q8MLKk6wztw-1; Wed, 25 Nov 2026 19:26:03 +0000
-X-MC-Unique: XbN0jw74P12q8MLKk6wztw-1
-X-Mimecast-MFC-AGG-ID: XbN0jw74P12q8MLKk6wztw_1795634763
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-93f33438950so1053707185a.1
-        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 11:26:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MkoVEMFM
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4b52fcb410dso2044062f8f.1
+        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 11:32:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795635131; x=1796239931; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ovHHtD+g/v2rwITp+yEHB4bzDII1NkPaoQCCK2QFSd4=;
+        b=MkoVEMFM1/tcDUzihzfdcbE83qq4rkPagR/eZxRxjdye5jTVCbfhHT0Vr3PIuWwowE
+         gqKUvA/8bwLILQEKRQssI10t1r6pDLmnzXOPeKN+fIanei4VxelCe/tn7tHVwkNddIK2
+         vdlnza9gXjme9VxqDw9Qv9rzldcJeI6LRmKMg+HA6FnxM2J2nFUoSSdduWqY3DzxAL02
+         BiwJQVsUpb1++GgGZoyoyDV2wXiM46H0AcJSaWZfaXNXxpKdObC2WpO+PIqS4Pyw4AjK
+         7TanaXBlHJLiN91xL3joOwi/Pbpie9VLZaEKnCZg1+l8J65uMpl9gcfdmDEV2/Mr1uZn
+         +aVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795634763; x=1796239563;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+        d=1e100.net; s=20260707; t=1795635131; x=1796239931;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=v6NmbSBdWpSm2uVrOp8tpZ65xhznrbrVh6qn8OyPhJ8=;
-        b=BCTWA1OflHeR7qAI2ElUoTQ06anv2MlzovqL8ppqZVPpKXdFyD6e5nMC8/u/5+GHhV
-         a1SImnOVIlTnz2xfVftXEJYKsalyvpgg+ZgykHCbaTAroYedStoAa0FDPi+OfS3mkMRq
-         x0f6iLTOX8LiFfWVYjA24dB+cbsUjPT7TuBzxQghbm8QEJ5SB9dMsg4FjO7FTJ2Z5sr6
-         i00f+56ci3T18HPTJxKTR+0g50qsGkapx6tF20j4cLpd6pZdtFgMgNHFoQgKKXHJ+Sre
-         DpPygyXe3/Xve1qjB8YMwQiz2uHa93EvcPOPhu36wFxA/2oB/4Fb/Ryuys4bbylc93BT
-         3vpQ==
-X-Forwarded-Encrypted: i=1; AL+hErGyThTFUgFk708puQ8LVumfXxrCkGBTrDAAZhKGf/ezzUv492wp1H0rNA/0EGX6QV5UbgqBj13AGGQNPg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8KvZWSrnECFMeOWI70/C5oywqMZRua43zVm/WCqzYysX6MR4TX
-	AauAIzX4X6LPlQFhMyxmOIA53cSPf2QPj9dYBDAaYP75K6LthG89llrhMjq58IX1/yZMi5WNNFc
-	yQ9XcaQdcu9jZhKeexXno8DaPt5si3EwPygaYfa4p+qBfkkhKqdl/+HD8VnJ8cYYb
-X-Gm-Gg: AZFdTZfM6djIMOyJm49OyPz2tiG8npqhhFA6pI91Uk0+iJL7a0sMJmHx16c6i+3Zee+
-	1R6k2E1Gwblk0ekzSt0jmEQ8iyyVICm44C9xIdQe9ZHEXkDeF2G6c6HEqvozBcH2gPhwOGpogcv
-	xREMtL6pyyODtq2KuXVjsx57RukatEyOUqU5IUIdlOY8+odsygArhtzVc4sj82TyHgj7i40urnB
-	txZWCsTvz5puaBik0co5JawdQecUg97k8Wj4i9qBd30LcNe3xj4Kn7nbuvnrFOBNPYGfgtRjqT0
-	sB9VfJ0R16nA9VB7OHmSjHnSOKXlZU+wFQSqTepUJaCeAdpwCCo7J6R/VI1hKxx5EoTB6WUhO6Z
-	J16VKYQn6FSe7VlccD0FpXnJ92YEmmPxudGbjnD6ZpMUhL4cMvFU6nJ4mSb/FR3x/lU87l5sSrn
-	gQGBQNki2nuoWv0TvGcl1pC+goS325iDidWOYOFK8Q7ShG3yvLOz/1cSGALVzBNt807F9lbaI=
-X-Received: by 2002:a05:620a:462a:b0:949:3302:1d9f with SMTP id af79cd13be357-949bab350e3mr3218670285a.78.1795634762621;
-        Wed, 25 Nov 2026 11:26:02 -0800 (PST)
-X-Received: by 2002:a05:620a:462a:b0:949:3302:1d9f with SMTP id af79cd13be357-949bab350e3mr3218663985a.78.1795634761937;
-        Wed, 25 Nov 2026 11:26:01 -0800 (PST)
-Received: from loberman-thinkpadp16gen3.rmtusma.csb ([2600:6c65:2440:d8c:aa2b:ddff:fe88:da74])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9213515f467sm168088266d6.41.2026.11.25.11.26.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 11:26:01 -0800 (PST)
-Message-ID: <2adaf0ef9e1a2fa18590f7d8dbf203c0f7de2be7.camel@redhat.com>
-Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
- "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
-From: Laurence Oberman <loberman@redhat.com>
-To: Bart Van Assche <bvanassche@acm.org>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Tobias Laas <tobias.laas@posteo.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	regressions@lists.linux.dev, linux-block@vger.kernel.org, 
-	linux-ide@vger.kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org,  David Woodhouse <dwmw2@infradead.org>, Lu
- Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, Will
- Deacon <will@kernel.org>, Niklas Cassel <cassel@kernel.org>, 70sp
- <70sp@protonmail.com>
-Date: Wed, 25 Nov 2026 14:26:00 -0500
-In-Reply-To: <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org>
-References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
-	 <awSs5Cw3hFkf4O4T@ryzen>
-	 <ec36d13e-e4c2-4bfb-8b50-69d4a1628839@leemhuis.info>
-	 <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info>
-	 <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org>
-User-Agent: Evolution 3.60.2 (3.60.2-3.fc44)
+        bh=ovHHtD+g/v2rwITp+yEHB4bzDII1NkPaoQCCK2QFSd4=;
+        b=u2JyQ8XH5uwJJmZnf+/JKflZyePReuqZAKmM3U8aiqC2It/eVWE+9T61gTamkcIGJp
+         3HhOikSaS7V7wIhQub602PLd1m24L84nmkm7dadvpCm4Pl31T9LKdpBRtLmXlgYnHU4f
+         VDX2mIT090IOtm3jSRkhe1YYLNc5TfQlLjD+juunp9MwFN32KzuAiqttGqEy6bIi/guX
+         b65FkPZfXUDOslQ6ccng+bbLO5YmChXRCJdHwXiAAs5ITK2r/05/r0gq76aQ87CTmKgE
+         bJaM4blgrtAFJxX67Jp92HUZapeyuRMBOfa3QFQXxE/cVyjS9ceLqAtLebw/eQ0hqO/u
+         3GMg==
+X-Forwarded-Encrypted: i=1; AL+hErH/BmzA+Op0nP97DE+JKDgcefMXMxoCTJJLsREvqsVgWdpFsM4O5riS9TsBnbBPg0ol9UxkjJB5iSEBbw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z+uURK04vmqiJVv9RrIenrQLDKMGCoGPZ+WsapEc4dn3HEqTm7G
+	AtE5R9/+fHbXx9wtaWDV2SYXDFfSRFLInlgLDCJRzTo0ZBjWg5qt4gDCcGqhfg==
+X-Gm-Gg: AZFdTZePCE8E56aQDSVxoRm3Rjhz7QmJHHnBP3SnrXHU4/rv6pmbGA/BDPPPSGfx8Jz
+	qyBhcrEjR0gicjysmfCuM2MxwlKuXdJ4ijWyf6123+iZsXctQLfiY0I1M2df+zzCXibYb0qq+TR
+	GRxTEV4+ni7YXKbqn166u50lggY764vyfNfmdXpvDikhAU/4KO3pGpTmI9yk7q9EVUo6F5LrowL
+	50JmTh8+dzTgQPzbnjUdBZSx4Cz2u6Uqy+54Ve07W1iiNFbHFDbMfxjfbpyatGROjInyg1hRSq5
+	9oharyT8lqokIIEZqj6nrgxIiq5iy1gPMDkTtFpDbNVSfLhGMSIZ+duGUUFJdpCXBxqJgEM5Grm
+	guU17ZOzm4wSluWXkHRZz4UT4HQVySEpYQSC77ycXL0FGHGZ00a+4jfQZsFku9dvAKzUdMBllR/
+	ao3M7PaUvgPfvy5Kri4GAteKaoBOwYFR5A2auo7RCSkxBi6pL4j6urbNp/Tm61s6ijgTAhTV8KQ
+	emuOXkRtAXoZPKAAbQ2ItGFcqtJv8xHt5qGjQquFzgHvFb1KpqtM4qTo/QalUBaoV89Q92BhbKq
+	idqcDzbCBT5GYv6wC3PyZFMhqUFIXG8kzjYfh3cYYw==
+X-Received: by 2002:a05:600c:a085:b0:4bb:85d9:156e with SMTP id 5b1f17b1804b1-4bb8880fe46mr375307005e9.11.1795635130719;
+        Wed, 25 Nov 2026 11:32:10 -0800 (PST)
+Received: from foxbook (bfh118.neoplus.adsl.tpnet.pl. [83.28.45.118])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb906e4ce6sm317579885e9.4.2026.11.25.11.32.09
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 25 Nov 2026 11:32:10 -0800 (PST)
+Date: Wed, 25 Nov 2026 20:32:11 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Flavio Giacchetti <flv.giacchetti@gmail.com>
+Cc: linux-usb@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+ regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB
+ audio probe on Fedora 7.3.4
+Message-ID: <20261125203211.76029bf0.michal.pecio@gmail.com>
+In-Reply-To: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
+References: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -117,202 +98,62 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gEiD1JvghEsqH2GZxHE1FMUrFDENTOxc4FpRn467eUc_1795634763
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2026-11-25 at 10:29 -0800, Bart Van Assche wrote:
-> On 11/25/26 12:52 AM, Thorsten Leemhuis wrote:
-> > For completeness, =C5=A0imon Posp=C3=ADchal (now CCed) shared findings =
-and a
-> > WIP
-> > fix (both with the help of a LLM) meanwhile here:
-> >=20
-> > https://lore.kernel.org/all/QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5=
-icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU%3D@protonm=
-ail.com/
->=20
-> Thanks Thorsten for having shared that link. The LLM I'm using
-> doesn't
-> like that patch and came up with the patch shown below. Untested.
->=20
-> Bart.
->=20
->=20
-> Subject: [PATCH] iommu/vt-d: Disable superpages on Haswell with=20
-> integrated graphics
->=20
-> Disable Intel VT-d superpages on bare-metal Haswell client systems
-> when
-> integrated graphics (0000:00:02.0) is enabled and an active remapping
-> unit advertises superpage support (CAP.SLLPS).
->=20
-> Per the 4th Generation Intel Core Processor Family datasheets
-> (document
-> 328897, section 3.1.2), the integrated graphics VT-d engine does not
-> support super-pages and BIOS must disable super-pages in the default
-> VT-d engine when integrated graphics is enabled. Several Haswell
-> BIOSes
-> leave CAP.SLLPS set on the default engine (dmar1). Whenever Linux
-> installs
-> a 2 MiB or 1 GiB leaf entry (PS=3D1) on dmar1, hardware aborts DMA with
-> fault reason 0x0c ("non-zero reserved fields in PTE"), breaking VFIO
-> passthrough, discrete GPUs, audio, and AHCI storage (exposed by
-> default
-> once BLK_DEF_MAX_SECTORS_CAP increased to 4 MiB in v6.17).
->=20
-> Prior to commit c376a3456d8b ("iommu/vt-d: Remove
-> domain_update_iommu_cap()"), domain_update_iommu_superpage()
-> intersected
-> superpage support across all active IOMMUs, so the IGD unit (SLLPS=3D0)
-> masked off superpages on dmar1. After that commit, dmar1 domains
-> started
-> honoring dmar1's advertised CAP.SLLPS.
->=20
-> Detect bare-metal Haswell client CPUs (INTEL_HASWELL,
-> INTEL_HASWELL_L,
-> INTEL_HASWELL_G), verify that the Intel integrated graphics device at
-> 0000:00:02.0 is present and not on an untrusted PCI link, and clear
-> intel_iommu_superpage during intel_iommu_init() before allocating any
-> paging domains if an active IOMMU advertises CAP.SLLPS.
->=20
-> Fixes: c376a3456d8b ("iommu/vt-d: Remove domain_update_iommu_cap()")
-> Reported-by: Tobias Laas <tobias.laas@posteo.de>
-> Closes:=20
-> https://lore.kernel.org/linux-block/5ad27a97aafbc08a8702d5b90d09cd59@post=
-eo.de/
-> Reported-by: =C5=A0imon Posp=C3=ADchal <70sp@protonmail.com>
-> Closes:=20
-> https://lore.kernel.org/r/HYhMd0Klo0XE_yiVY7XmsgyKKFDwKHfKRy22KrycLcYd0V_=
-ykA4xdbBMJXkA07YX3os6qK-NhMIVi6ITo-CkNIIF0e-GcI0UwwZmdDhAJ0I=3D@protonmail.=
-com
-> Cc: stable@vger.kernel.org
-> ---
-> =C2=A0 drivers/iommu/intel/iommu.c | 53
-> +++++++++++++++++++++++++++++++++++++
-> =C2=A0 1 file changed, 53 insertions(+)
->=20
-> diff --git a/drivers/iommu/intel/iommu.c
-> b/drivers/iommu/intel/iommu.c
-> index 5a2e705a2f2e..dd37aa25e287 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -24,6 +24,8 @@
-> =C2=A0 #include <linux/tboot.h>
-> =C2=A0 #include <uapi/linux/iommufd.h>
->=20
-> +#include <asm/cpu_device_id.h>
-> +
-> =C2=A0 #include "iommu.h"
-> =C2=A0 #include "../dma-iommu.h"
-> =C2=A0 #include "../irq_remapping.h"
-> @@ -43,6 +45,7 @@
->=20
-> =C2=A0 #define DEFAULT_DOMAIN_ADDRESS_WIDTH 57
->=20
-> +static void __init check_haswell_igfx_superpage(void);
-> =C2=A0 static void __init check_tylersburg_isoch(void);
-> =C2=A0 static int intel_iommu_set_dirty_tracking(struct iommu_domain
-> *domain,
-> =C2=A0=C2=A0=09=09=09=09=09=C2=A0 bool enable);
-> @@ -2762,6 +2765,7 @@ int __init intel_iommu_init(void)
-> =C2=A0=C2=A0=09=09pr_info("No SATC found\n");
->=20
-> =C2=A0=C2=A0=09init_no_remapping_devices();
-> +=09check_haswell_igfx_superpage();
->=20
-> =C2=A0=C2=A0=09ret =3D init_dmars();
-> =C2=A0=C2=A0=09if (ret) {
-> @@ -4266,6 +4270,55 @@ static void __init
-> check_tylersburg_isoch(void)
-> =C2=A0=C2=A0=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vtisochctrl);
-> =C2=A0 }
->=20
-> +static const struct x86_cpu_id haswell_cpu_ids[] __initconst =3D {
-> +=09X86_MATCH_VFM(INTEL_HASWELL, NULL),
-> +=09X86_MATCH_VFM(INTEL_HASWELL_L, NULL),
-> +=09X86_MATCH_VFM(INTEL_HASWELL_G, NULL),
-> +=09{}
-> +};
-> +
-> +/*
-> + * Per the 4th Generation Intel Core Processor Family datasheets
-> (e.g.
-> + * document 328897, section 3.1.2), the integrated graphics VT-d
-> engine
-> + * does not support super-pages and BIOS must disable super-pages in
-> the
-> + * default VT-d engine when integrated graphics is enabled. Some
-> Haswell
-> + * BIOSes leave CAP.SLLPS set on the default engine, causing fault
-> reason
-> + * 0x0c (non-zero reserved fields in PTE) when a 2 MiB or 1 GiB
-> superpage
-> + * mapping is used.
-> + */
-> +static void __init check_haswell_igfx_superpage(void)
-> +{
-> +=09struct dmar_drhd_unit *drhd;
-> +=09struct intel_iommu *iommu;
-> +=09struct pci_dev *pdev;
-> +
-> +=09if (!intel_iommu_superpage)
-> +=09=09return;
-> +
-> +=09if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) ||
-> +=09=C2=A0=C2=A0=C2=A0 !x86_match_cpu(haswell_cpu_ids))
-> +=09=09return;
-> +
-> +=09pdev =3D pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(2, 0));
-> +=09if (!pdev)
-> +=09=09return;
-> +
-> +=09if (pdev->vendor !=3D PCI_VENDOR_ID_INTEL ||
-> !IS_GFX_DEVICE(pdev) ||
-> +=09=C2=A0=C2=A0=C2=A0 risky_device(pdev)) {
-> +=09=09pci_dev_put(pdev);
-> +=09=09return;
-> +=09}
-> +=09pci_dev_put(pdev);
-> +
-> +=09for_each_active_iommu(iommu, drhd) {
-> +=09=09if (cap_super_page_val(iommu->cap)) {
-> +=09=09=09intel_iommu_superpage =3D 0;
-> +=09=09=09pr_info("Disabling superpages on Haswell
-> with integrated graphics\n");
-> +=09=09=09break;
-> +=09=09}
-> +=09}
-> +}
-> +
-> =C2=A0 /*
-> =C2=A0=C2=A0 * Here we deal with a device TLB defect where device may=20
-> inadvertently issue ATS
-> =C2=A0=C2=A0 * invalidation completion before posted writes initiated wit=
-h=20
-> translated address
+On Wed, 25 Nov 2026 10:46:58 -0600, Flavio Giacchetti wrote:
+> Hi,
+> 
+> My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
+> after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
+> Booting the previous Fedora kernel restores audio on this PC.
+> 
+> Hardware:
+> 
+>   USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
+>   Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
+>   Connection: rear motherboard USB port, enumerated at 480 Mb/s
+> 
+> With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
+> USB ports. On one failed plug-in the kernel enumerated the device,
+> bound cdc_acm to interface 1 and then logged a disconnect. After
+> re-enumeration, the USB audio driver repeatedly failed to query sample
+> rates and mixer controls. The X3 never appeared in /proc/asound/cards.
+> 
+>   cdc_acm 1-12:1.1: ttyACM0: USB ACM device
+>   usb 1-12: USB disconnect, device number 7
+>   ...
+>   usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number
+> of sample rates (clock 33)
+>   ...
+>   usb 1-12: 13:3: failed to get current value for ch 0 (-110)
+> 
+> An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
+> With that module on the same 7.3.4 Fedora kernel, the X3 registered
+> with ALSA and played stereo audio at 48 kHz. The first hot-plug test
+> still logged errors during re-enumeration, then recovered. On a
+> subsequent normal reboot with the patched module installed and the X3
+> connected, ALSA and PipeWire exposed the output and input, and the
+> earlier rate-query errors and timeouts did not recur. Playback worked
+> after the reboot.
+> 
+> This is the result of testing one unit on one host. I have not isolated
+> the first bad upstream commit or established what functionality needs
+> the ACM interface. The results so far are for Fedora kernels.
+> 
+> Would a device-scoped ACM exclusion be appropriate here, or would a
+> comparison of USB traces with and without the ACM binding help narrow
+> this down?
 
+Hi,
 
-Hi Bart,
+Does the 7.3.3 kernel also bind to that CDC interface, but without
+triggering disconnection and other problems? If this used to work
+then it might be better to fix it to work again.
 
-Tested-by: Laurence Oberman <loberman@redhat.com>
-
-Tested on a non-affected platform to check the quirk does not
-misfire: Coffee Lake i7-8700, Cannon Lake PCH AHCI, both DRHDs report
-SLLPS =3D 2M|1G (dmar0 cap 1c0000c40660462, dmar1 cap d2008c40660462),
-7.4.0-rc1 with intel_iommu=3Don. The quirk does not trigger, superpages
-remain in use (2 MiB leaf PDEs, e.g. 0x000000018f400082, confirmed via
-domain_translation_struct during 2M O_DIRECT reads), and there are no
-DMAR or ATA errors. I don't have Haswell hardware, so Tobias's test is
-the one that confirms the fix itself.
-
-The Fixes: tag looks right to me. c376a3456d8b is the commit that
-stopped intersecting superpage support across IOMMUs at attach time.
-In my earlier mail I pointed at 5bdd86ec5d19, which only removed the
-remaining hotplug user of domain_update_iommu_superpage(); both are in
-v6.13-rc1.
+If no one has better ideas, can you reproduce on upstream kernels and
+try git-bisect? Or run "git log --oneline v7.3.3..v7.3.4 drivers/usb/"
+and manually bisect these commits, because it's likely a USB bug.
 
 Regards,
-Laurence
+Michal
