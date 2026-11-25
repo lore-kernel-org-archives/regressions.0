@@ -1,94 +1,163 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.51
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795635132;
-	b=jj6pSBG5b4lu5rc0FAidlh/25mY0xx20cKMvYLdWoT4zddDu6TMQBfbBbZMx7/28y222
-	 oWAhDDzk1KPSYr0r80Y0wekfcnbiYC+k7MTCraSrdubcx8EXqUnLlHoWt+YcVtWftdUFp
-	 cYjYwxb+nQaflYBXTx3oAdKLc4QKCThx3om7TUhn7BuMdPu1Znmq6ufGvZmpFidRUYGJc
-	 dcJ+mieHshnPCZezf9Wg4A2zF9VKMP8DLrWKbGWZAMnHlT7Q/rhQduVt/M+408JMNFvmU
-	 eudCJfi9Q7vnVGmJ7ZJncA52hI/BhlL/etAso7Gu6LtALMJHrCVoHsRziDUozs6qQdA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795635132;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=ovHHtD+g/v2rwITp+yEHB4bzDII1NkPaoQCCK2QFSd4=;
-	b=rdsMECssEMQVtAPPJbr0kfec9T0tJlTgfX+AFc1NkOCFMVbZLUd4HwfvBr/81hDz5yNT
-	 lX2hviwwJonHWk212CIbp4ZBAxNYO24ryJHlBEcgjoRdhDkpGJ1TJarFqRh/jDsVNi8b9
-	 6LWjYXaijA7qXXBKcI7vCw36NsRd4kzjlr2SmZwQxpnCcC/+MKKY6dIptnPW9a+8kF6z5
-	 rKhXeT1HF1kdzyRJo4bl8YwgBOQYop3nuKwWbTYO9sCjrFxqc6FtEx3u9cmoZ5QPPs902
-	 jo3iQQclIdcmU8t9kIOz9KsKnIwsumcopC/eJQ/Tvn9hBrUYzHgRC5wfBVn3tlTtShw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MkoVEMFM;
-	arc=none smtp.remote-ip=209.85.221.51
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.12.3
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795644383;
+	b=Qx5uYheepAc8zHhQeiO+D3FAw3rSFje+9ahnqiKJsMTwqlh6F3HHLbWkAOGZ1/tIxpLK
+	 mrfnf0CL/II840BdTf+gUWFBsugXQiqqFOjQEDqFbiXHBsdRxe6Jrafm8W1sO3ItWGwpk
+	 /OkgStgjOSZNvNZfHhpB7q8Rtt2V6+2NV5SGkP1lOQI7rGsJkKVTKJoStCr+X/u4Hv3cq
+	 GlGoECw3J3JzxLM+p5CHOxjcPj8KaO3q2kmG2aMnUjOH/i1knxXp5MdInSbW902eLDFLH
+	 3+2BqMg5SYwuIPvETKuK5KLCygHuPDJx6kOWXiTnzs3CVR9UNPAt8hB7bUZDFuG9iyA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795644383;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
+	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 msip_labels:x-ms-exchange-messagesentrepresentingtype:
+	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
+	 x-microsoft-antispam-message-info:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-originalarrivaltime:
+	 X-MS-Exchange-CrossTenant-fromentityheader:
+	 X-MS-Exchange-CrossTenant-id:
+	 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=KzpKYxZfVN4xEjiRiMhVeSu3PbRC/rBntovkFoCumhc=;
+	b=qS1ADo9JSWvIKatvgNF/smQ+Pu6nvW1cPd3UuaCgz9ZaTwlhoMBxdtFYYlBcaihCxqYX
+	 GJVgBqRGL7EBIADLKF+K3WWZclrlKhnFjzUXAUQnih/QVfvH30pAw819NAMbf6HZWp3Ob
+	 6XO1+TX3qpZe8GJATaO7UBy6FcYcfcHOI0o6LhNWLY5BUV8gtl4eB/MDXD53asz9GFwjz
+	 DU6db+NLbWJqojW/8U0X3zkWZPD6Ttk5OLXztXd72zNvedGxkMl+0UQN2B3uV7T/tlUsY
+	 zmqTxAnamIqOuhCrOXy3ITW66rOsdmRwNXKlGoB5y8XpZ+oOCf/UaCr8w3+Ob0amKCA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=outlook.com;
+	spf=pass smtp.mailfrom=outlook.com;
+	dkim=pass header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=uJJ+WSCp;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.103.12.3
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010003.outbound.protection.outlook.com [52.103.12.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F569606A321
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 19:32:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F569606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F04A606A336
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 22:06:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F04A606A336
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MkoVEMFM
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4b52fcb410dso2044062f8f.1
-        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 11:32:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795635131; x=1796239931; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ovHHtD+g/v2rwITp+yEHB4bzDII1NkPaoQCCK2QFSd4=;
-        b=MkoVEMFM1/tcDUzihzfdcbE83qq4rkPagR/eZxRxjdye5jTVCbfhHT0Vr3PIuWwowE
-         gqKUvA/8bwLILQEKRQssI10t1r6pDLmnzXOPeKN+fIanei4VxelCe/tn7tHVwkNddIK2
-         vdlnza9gXjme9VxqDw9Qv9rzldcJeI6LRmKMg+HA6FnxM2J2nFUoSSdduWqY3DzxAL02
-         BiwJQVsUpb1++GgGZoyoyDV2wXiM46H0AcJSaWZfaXNXxpKdObC2WpO+PIqS4Pyw4AjK
-         7TanaXBlHJLiN91xL3joOwi/Pbpie9VLZaEKnCZg1+l8J65uMpl9gcfdmDEV2/Mr1uZn
-         +aVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795635131; x=1796239931;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ovHHtD+g/v2rwITp+yEHB4bzDII1NkPaoQCCK2QFSd4=;
-        b=u2JyQ8XH5uwJJmZnf+/JKflZyePReuqZAKmM3U8aiqC2It/eVWE+9T61gTamkcIGJp
-         3HhOikSaS7V7wIhQub602PLd1m24L84nmkm7dadvpCm4Pl31T9LKdpBRtLmXlgYnHU4f
-         VDX2mIT090IOtm3jSRkhe1YYLNc5TfQlLjD+juunp9MwFN32KzuAiqttGqEy6bIi/guX
-         b65FkPZfXUDOslQ6ccng+bbLO5YmChXRCJdHwXiAAs5ITK2r/05/r0gq76aQ87CTmKgE
-         bJaM4blgrtAFJxX67Jp92HUZapeyuRMBOfa3QFQXxE/cVyjS9ceLqAtLebw/eQ0hqO/u
-         3GMg==
-X-Forwarded-Encrypted: i=1; AL+hErH/BmzA+Op0nP97DE+JKDgcefMXMxoCTJJLsREvqsVgWdpFsM4O5riS9TsBnbBPg0ol9UxkjJB5iSEBbw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z+uURK04vmqiJVv9RrIenrQLDKMGCoGPZ+WsapEc4dn3HEqTm7G
-	AtE5R9/+fHbXx9wtaWDV2SYXDFfSRFLInlgLDCJRzTo0ZBjWg5qt4gDCcGqhfg==
-X-Gm-Gg: AZFdTZePCE8E56aQDSVxoRm3Rjhz7QmJHHnBP3SnrXHU4/rv6pmbGA/BDPPPSGfx8Jz
-	qyBhcrEjR0gicjysmfCuM2MxwlKuXdJ4ijWyf6123+iZsXctQLfiY0I1M2df+zzCXibYb0qq+TR
-	GRxTEV4+ni7YXKbqn166u50lggY764vyfNfmdXpvDikhAU/4KO3pGpTmI9yk7q9EVUo6F5LrowL
-	50JmTh8+dzTgQPzbnjUdBZSx4Cz2u6Uqy+54Ve07W1iiNFbHFDbMfxjfbpyatGROjInyg1hRSq5
-	9oharyT8lqokIIEZqj6nrgxIiq5iy1gPMDkTtFpDbNVSfLhGMSIZ+duGUUFJdpCXBxqJgEM5Grm
-	guU17ZOzm4wSluWXkHRZz4UT4HQVySEpYQSC77ycXL0FGHGZ00a+4jfQZsFku9dvAKzUdMBllR/
-	ao3M7PaUvgPfvy5Kri4GAteKaoBOwYFR5A2auo7RCSkxBi6pL4j6urbNp/Tm61s6ijgTAhTV8KQ
-	emuOXkRtAXoZPKAAbQ2ItGFcqtJv8xHt5qGjQquFzgHvFb1KpqtM4qTo/QalUBaoV89Q92BhbKq
-	idqcDzbCBT5GYv6wC3PyZFMhqUFIXG8kzjYfh3cYYw==
-X-Received: by 2002:a05:600c:a085:b0:4bb:85d9:156e with SMTP id 5b1f17b1804b1-4bb8880fe46mr375307005e9.11.1795635130719;
-        Wed, 25 Nov 2026 11:32:10 -0800 (PST)
-Received: from foxbook (bfh118.neoplus.adsl.tpnet.pl. [83.28.45.118])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb906e4ce6sm317579885e9.4.2026.11.25.11.32.09
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 25 Nov 2026 11:32:10 -0800 (PST)
-Date: Wed, 25 Nov 2026 20:32:11 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Flavio Giacchetti <flv.giacchetti@gmail.com>
-Cc: linux-usb@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB
- audio probe on Fedora 7.3.4
-Message-ID: <20261125203211.76029bf0.michal.pecio@gmail.com>
-In-Reply-To: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
-References: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=uJJ+WSCp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zMIdrXAvtaezV3fIu2jyNthMrKWYLWwnngIMTNxTL2eBVyCPkQIahkMWivLEHQKlOphXuKeyrOY1WTvkwvrpqZ44ej6YnI3j6ZpTaZij9EVZiHIl05DJQJKHOxTH87qtolrp3hMh4CjLbOtQ6CS71iumeMdV30jTxkBlg3Kla64+peJWqksUKjILfZanI6fBm1zZfFJxWaFK37lXh2Bn9Y3yxuAuMhDUYcTy7sd+rcVk2G2BWVJwfeURh+lVeq04GJcpLRyx1gvtJSOy5RN7dPXmWiIpt+Xc1VLvlAq91Nkv7gkn1bYdpgh7HKRnvoyQnOf4yvth3rQK1yFPxAQazg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KzpKYxZfVN4xEjiRiMhVeSu3PbRC/rBntovkFoCumhc=;
+ b=BZ7YOPEmawFUGG4/Ae0hu+1leUZeXUHCDed3TK3qwCpDZ6z1eiKtW7WcM9kQHefacrddQowgddGBJUWxMrjKl7/agEylRHrtDFGHV+D7JPeged/4jMtWyYVCkZ8SQwS/Z9WQVWElbVlynIXCN7iZOdWf7pU+eoYfnbjY+r6okd7DB+MIGLRekYDv5Xnd3ILE7wu7bPvdmdlCasrr7bwugNzQashmoeg2qvMgPrZNFPXsh7eNz45Zh2pY1estNQgKf6h8bUDlACHwWkaooTJJgTn38akqU9dhl1MfukTp3yShdem6IcczzcyMEi77bA58JhpGAfIA0SB9g/gUYiKnzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KzpKYxZfVN4xEjiRiMhVeSu3PbRC/rBntovkFoCumhc=;
+ b=uJJ+WSCpiRowGx6W1M+gNjpFxXkUJeH6JQlcwp3fpSEUYbTT3uvQSFmkExtuYx/ELd+iuCFfsn/AvgWyjWnfqSEU/GMccmL3Xl3USrqRiPPE/bTIKr3yHGKEkE84EeybrGcQjWm5hiI6ZEuLGlGS5Vs2z60+vyDrRuMvZhZ+9MuB6K89zVm0WhzgthiypLyPZqLTqHiwU2EntKoyj+jqH7qZuOSNwn0T4/Vj9+oLoEzDiESqBMrJv+WFVjGjV80MozeULWG8bjGOHfH3+elrCfQkiYIyLvUzMBx4uPByS8lbpc4BBaMQr72Ce9EdxzXpMx1k6uZJOhDTfMq0L0O2ww==
+Received: from CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM (2603:10b6:930:29::14)
+ by SN4P221MB0761.NAMP221.PROD.OUTLOOK.COM (2603:10b6:806:208::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.6; Wed, 25 Nov
+ 2026 22:06:19 +0000
+Received: from CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM
+ ([fe80::bde4:f456:ea01:16a2]) by CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM
+ ([fe80::bde4:f456:ea01:16a2%5]) with mapi id 15.21.0662.004; Wed, 25 Nov 2026
+ 22:06:19 +0000
+From: James Buck <jbuck2005.linux@outlook.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>, Chen Yu
+	<yu.c.chen@intel.com>
+CC: K Prateek Nayak <kprateek.nayak@amd.com>, Andrea Righi
+	<arighi@nvidia.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+	<mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, Usama
+ Arif <usama.arif@linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in select_idle_capacity()
+ leaves busy tasks on little CPUs while big CPUs are idle
+Thread-Topic: [REGRESSION] sched/fair: SIS_UTIL limit in
+ select_idle_capacity() leaves busy tasks on little CPUs while big CPUs are
+ idle
+Thread-Index: AQHdfBX3yoODcUWCA02VDJd3NOZx7Lc+GAkAgABTZoCAACtxAIAAQzsAgAB/w9g=
+Date: Wed, 25 Nov 2026 22:06:19 +0000
+Message-ID:
+ <CY5P221MB09265EFF7DA86632B51FFE74BD432@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
+References:
+ <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
+ <awWOCejxtjP12xFX@gpd4> <ce38fb8b-94d7-48ba-93bb-3b72cfcb3e61@amd.com>
+ <CAKfTPtCudy4NV8sU+JWE=dcJpbKd+LVNZPZztU_0nD1a04Ca9g@mail.gmail.com>
+ <awa3/FFd4hAnvtxK@chenyu-dev>
+ <CAKfTPtCukFOD6nKD6oDYvjEiXXUY5fHui4w6fgnhNw+jpE=0RA@mail.gmail.com>
+In-Reply-To:
+ <CAKfTPtCukFOD6nKD6oDYvjEiXXUY5fHui4w6fgnhNw+jpE=0RA@mail.gmail.com>
+Accept-Language: en-CA, en-US
+Content-Language: en-CA
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5P221MB0926:EE_|SN4P221MB0761:EE_
+x-ms-office365-filtering-correlation-id: c3027db4-35fb-4796-3b57-08df4b4055a4
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|15030799006|41001999006|15080799012|8060799015|8062599012|19110799012|24021099003|51005399006|25010399006|12121999013|37011999003|4302099013|440099028|3412199025|102099032|1602099012|10035399007|40105399003;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?vECBME/Hv6CrZhE2kzTIvjLX7VNrQJqXh5l8UiSOSrYVhjMCYI8BXaveDL?=
+ =?iso-8859-1?Q?8vsh7ony2T0QKMlPriWCneBFCZqjYO/96bzUPm7jcKFDCYoRHIdyPxK+39?=
+ =?iso-8859-1?Q?k39/XdUKveUn9bqvyGvD1KLTXFUgHSfPZvvQVGFd2o/4i8Yg3Ms/+9vyhW?=
+ =?iso-8859-1?Q?A5B3ne3p/Xm4iftW5LIQa7QsBVLeMIiY17PyJRJPqGYVtaF8SmLmloZueT?=
+ =?iso-8859-1?Q?wABBcSWP/hb1E/etWB+Zauz7frysLjAK4EiDCpAwuLyNktv6e9peNzqGZa?=
+ =?iso-8859-1?Q?T+GG9NsXedidWBAbhp/+q8dg8fqPTI4rqdxv3UbxhOQPFsH9V36dmnVXyM?=
+ =?iso-8859-1?Q?Jp3F+fjXMwF0wXHlMU42xiOzFXUAdGhsErMbBPa41vAVXjpulOFa1q3wK5?=
+ =?iso-8859-1?Q?hAQPzHvWtimvdTy64dXvHY3Rbie8pNVcnNUIc3i8VTE3LnRt2mV04guwGq?=
+ =?iso-8859-1?Q?87s/jcPFM4C4MwJ6a08K581F/hEAhbG5ATgE0hjpnZS02hU1qzljGRCL+m?=
+ =?iso-8859-1?Q?bNTMCKsJxtwLXud2oKa/iKCIXMRl6SGZLIAWmgZCFfxohPjLLQKkTdluwf?=
+ =?iso-8859-1?Q?wf5TtFlrqU7ReUaoKyB+uMAtLqUEvhSLxRWXkNsKHx1JohbByl2gBjF/Wv?=
+ =?iso-8859-1?Q?L6fw5gwf6hOi58qUjSwZXv2UvWhZ/M9wccsx+2E2NVbSAUetyVWvBxGhIq?=
+ =?iso-8859-1?Q?f94eWdk5p4Uqh3LVCoU8p5SCFUreHtr+QLXujsphfN3VJQOIwyyHWJzjxx?=
+ =?iso-8859-1?Q?gyMw+4R5UOiJ8auBJb0MU9xyq8jIcNbgylm3PAIHkRDJCR3j9ZbQ+Ly49A?=
+ =?iso-8859-1?Q?8bI4RkPtjUAZgDj/fWug3Tg0LiVwABVwB0m1vFRlHFq11SuoycFLTHYBvT?=
+ =?iso-8859-1?Q?+p37o94DFSnww1F+ezw0EcTxhP4b/FIIt8rUmXdCfZ9biev8IetxjALNtF?=
+ =?iso-8859-1?Q?uLn1HD2+Xe0q/u9VPPo3G0s42VgpK7klUB5bX/aqPFDZhCz4j5n3lRS9Gb?=
+ =?iso-8859-1?Q?/Mg2yCMG8JThhJ4UQF47DffHPksNV8L9+DVwqCi1jhOp0Ij4PMyuXti50s?=
+ =?iso-8859-1?Q?y9q19LGtPvwz3vASyQngatEwCcLbsSqUS0TBxOK0antWvUbAulU/kr0tps?=
+ =?iso-8859-1?Q?9j/hhXGeSCXGtMkkdRxFWG/eKr9yc=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?NNSmbpJZizEh41Qgeeuaop5wdWXNLE9Kln99Wbi7mikIcV2qPTFJwLzbfL?=
+ =?iso-8859-1?Q?QVcq2HZfqaCm+WuikzhKmUJjIEbFLQLbOdiDEPAV5f2baGynrnlS2ZMK77?=
+ =?iso-8859-1?Q?G7nx0Ha84hfiEWYOPbV8T05k0xRHw1cKcPxQDxYvQwauc7JQCPMC9r29fY?=
+ =?iso-8859-1?Q?OVtT3BW1fLOof/EilI2ajLSmsd3wuJv3L6VmQP1jH4FPKRUZlusHD96MyE?=
+ =?iso-8859-1?Q?kTeSLQd9C9XNHirFs+21qPEDydIzB/N+yr63bYx3oFQhmfPe+dEi5W9+Pa?=
+ =?iso-8859-1?Q?QCwQrr5Ajo961ifv+RsvW5PV/Ox21Qc2K6f7hHBD1h9+zhR/SaCCSAkHoY?=
+ =?iso-8859-1?Q?taYGFW+qMbRp0pvx4T4PbrORl33NJ4gD/KDrEd41BurN3vk6ZD3QW8ZYeq?=
+ =?iso-8859-1?Q?j63+uMDg44WiQDvuYWYZz+VHQvshfuEZW4hNXvB158uk9o0hHoqtT7S5qA?=
+ =?iso-8859-1?Q?QUVJaXDLgpsFg+BsgUqQuIwGzQUVSSQRscWbXRmRVY7hgWWQ6rTGDfRyWZ?=
+ =?iso-8859-1?Q?N3UGURxuNjllhDpLYARcJHJygnxEsJI2qOLtAsr5QmZcCdKRjek7wV7RX9?=
+ =?iso-8859-1?Q?S1OuoNM1CI2X6DMOi5fvJjTyHYQjaT64vmNhBYvJUmh64ryZnpioWu/41t?=
+ =?iso-8859-1?Q?c/kIiHj3LrsiKJ0NuJr3++SRbYeayYdlWKRtqUCgVOc5stvVpozNM7S9cs?=
+ =?iso-8859-1?Q?j0wxC3V4gaUiZHQM4anFOGzhUHspCdIwT843JMcUxA2nfHy/7DxbII49+e?=
+ =?iso-8859-1?Q?zxwtdEhuXJV4CIEZKADXxKF+eBDrYstzHyurvR385JgG4inJMrPOyj+DsH?=
+ =?iso-8859-1?Q?7sJkpH2P+zwVuQU9x6vqYhZm0g1swnn/PyTxnaJ3kDNfQ71Vu8U2whOmO2?=
+ =?iso-8859-1?Q?7IyTIg0J72gCEzk3EqdKbR2nSa6a62fOlX2rgWNYZVIdIzBFXVLcf70xLT?=
+ =?iso-8859-1?Q?DYYpriuiSxnRZONdTL6oQUftjs/BuYVLNm3nmYIbGjM9015ml1oyhXPmW5?=
+ =?iso-8859-1?Q?+OcEvN5G0N9ciZ0CGLIlP7IY0F/RWs1A5oldT5t/ZO7XyYn6A2rA6N0E2n?=
+ =?iso-8859-1?Q?dCobCvOAyaXZHPBt76W/1SdGFsiILVEVtatG0oLtAS63kBVY0mdMkpbqh2?=
+ =?iso-8859-1?Q?qDdyWcyeaaTi+GI4UwJF8yKycNQmpfHJAPiBwk1ESdR/7/yhpCrCBlXMJf?=
+ =?iso-8859-1?Q?24LwJf2Q8CAFUgjakgUK1w7/IOoLR1B5ytm4uNjYHU8UdT/Qi+m3+o0gm7?=
+ =?iso-8859-1?Q?mbsoax5QWFNXqrhabFfK0JUzejqAsJdSRZ0rAhtDaJN6RzPMc+CnrH4PQb?=
+ =?iso-8859-1?Q?Og7nYPybYy7+ZKeMwSDo5jm49g574oTkpGa66C0EwUtsVF2UYxqdFPE72l?=
+ =?iso-8859-1?Q?xerUo5d3yooJxR4Z+fwTk/qAlJjZbPp9fFofRNTFFDSbbE0S+mwUI=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -98,62 +167,196 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3027db4-35fb-4796-3b57-08df4b4055a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2026 22:06:19.6539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4P221MB0761
 
-On Wed, 25 Nov 2026 10:46:58 -0600, Flavio Giacchetti wrote:
-> Hi,
-> 
-> My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
-> after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
-> Booting the previous Fedora kernel restores audio on this PC.
-> 
-> Hardware:
-> 
->   USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
->   Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
->   Connection: rear motherboard USB port, enumerated at 480 Mb/s
-> 
-> With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
-> USB ports. On one failed plug-in the kernel enumerated the device,
-> bound cdc_acm to interface 1 and then logged a disconnect. After
-> re-enumeration, the USB audio driver repeatedly failed to query sample
-> rates and mixer controls. The X3 never appeared in /proc/asound/cards.
-> 
->   cdc_acm 1-12:1.1: ttyACM0: USB ACM device
->   usb 1-12: USB disconnect, device number 7
->   ...
->   usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number
-> of sample rates (clock 33)
->   ...
->   usb 1-12: 13:3: failed to get current value for ch 0 (-110)
-> 
-> An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
-> With that module on the same 7.3.4 Fedora kernel, the X3 registered
-> with ALSA and played stereo audio at 48 kHz. The first hot-plug test
-> still logged errors during re-enumeration, then recovered. On a
-> subsequent normal reboot with the patched module installed and the X3
-> connected, ALSA and PipeWire exposed the output and input, and the
-> earlier rate-query errors and timeouts did not recur. Playback worked
-> after the reboot.
-> 
-> This is the result of testing one unit on one host. I have not isolated
-> the first bad upstream commit or established what functionality needs
-> the ACM interface. The results so far are for Fedora kernels.
-> 
-> Would a device-scoped ACM exclusion be appropriate here, or would a
-> comparison of USB traces with and without the ACM binding help narrow
-> this down?
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index da0d9e19c457..1c0e2ac7751d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -12937,8 +12937,9 @@ static void update_idle_cpu_scan(struct lb_env *e=
+nv,
+>          y =3D SCHED_CAPACITY_SCALE - tmp;
+>
+>          /* equation [2] */
+> -       y *=3D llc_weight;
+> +       y *=3D max(llc_weight, 32);
+>          do_div(y, SCHED_CAPACITY_SCALE);
+> +       y =3D min_t(u64, y, llc_weight);
+>          if ((int)y !=3D sd_share->nr_idle_scan)
+>                  WRITE_ONCE(sd_share->nr_idle_scan, (int)y);
+>  }
 
-Hi,
+Thanks, this fixes it on my board also.
 
-Does the 7.3.3 kernel also bind to that CDC interface, but without
-triggering disconnection and other problems? If this used to work
-then it might be better to fix it to work again.
+Setup as in my report: CIX P1 (8x Cortex-A720 at capacities 1024/984/905/86=
+6, 4x Cortex-A520 at 279, one LLC of 12 CPUs), v7.3.5 with this change appl=
+ied and my local workaround (dropping the SIS_UTIL limit in select_idle_cap=
+acity()) removed. llama.cpp on the CPU, Qwen2.5-1.5B Q4_K_M, 8 threads, lla=
+ma-bench pp512 / tg128 in tok/s:
 
-If no one has better ideas, can you reproduce on upstream kernels and
-try git-bisect? Or run "git log --oneline v7.3.3..v7.3.4 drivers/usb/"
-and manually bisect these commits, because it's likely a USB bug.
+  v6.18                               123.5 / 36.5
+  v7.3.5                              109.0 / 29.5
+  v7.3.5, NO_SIS_UTIL                 122.1 / 35.9
+  v7.3.5 + this patch                 122.0 / 35.5
+  v7.3.5 + this patch, NO_SIS_UTIL    121.2 / 35.8
 
-Regards,
-Michal
+With the patch, SIS_UTIL on and off are within noise of each other and of v=
+6.18 (about 1%). Sampled thread placement during the run looks the same wit=
+h SIS_UTIL on and off: the busy threads sit on the A720s, with at most one =
+on an A520 at a time.
+
+Tested-by: James Buck <jbuck2005.linux@outlook.com>
+
+James
+
+________________________________________
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Sent: November 25, 2026 9:27 AM
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>; Andrea Righi <arighi@nvidia.c=
+om>; James Buck <jbuck2005.linux@outlook.com>; Peter Zijlstra <peterz@infra=
+dead.org>; Ingo Molnar <mingo@redhat.com>; Juri Lelli <juri.lelli@redhat.co=
+m>; Dietmar Eggemann <dietmar.eggemann@arm.com>; Valentin Schneider <vschne=
+id@redhat.com>; Usama Arif <usama.arif@linux.dev>; linux-kernel@vger.kernel=
+.org <linux-kernel@vger.kernel.org>; regressions@lists.linux.dev <regressio=
+ns@lists.linux.dev>
+Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in select_idle_capacit=
+y() leaves busy tasks on little CPUs while big CPUs are idle
+
+On Wed, 25 Nov 2026 at 11:38, Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> On Wed, Nov 25, 2026 at 08:51:39AM +0100, Vincent Guittot wrote:
+> > On Wed, 25 Nov 2026 at 03:53, K Prateek Nayak <kprateek.nayak@amd.com> =
+wrote:
+> > >
+> > > Hello Andrea,
+> > >
+> > > On 11/24/2026 6:45 PM, Andrea Righi wrote:
+> > > > Hi James,
+> > > >
+> > > > On Tue, Nov 24, 2026 at 11:56:52AM +0000, James Buck wrote:
+> > > >> Hi,
+> > > >>
+> > > >> Since commit 61ea17a63719 ("sched/fair: Add SIS_UTIL support to se=
+lect_idle_capacity()"), first in v7.2, CPU-bound multi-threaded work on my =
+big.LITTLE arm64 board runs 12-19% slower than on v7.1 and earlier, because=
+ waking threads are placed on idle little CPUs while idle big CPUs are neve=
+r looked at.
+> > > >>
+> > > >> Turning SIS_UTIL off at runtime restores the old speed. select_idl=
+e_capacity() and update_idle_cpu_scan() are unchanged in v7.4-rc4, so I exp=
+ect mainline to behave the same.
+> > > >
+> > > > A related regression from the same commit was reported by Usama her=
+e:
+> > > > https://lore.kernel.org/r/20261113153157.2495664-1-usama.arif@linux=
+.dev/
+> > > >
+> > > > On Grace, a zero SIS_UTIL budget skips the search despite suitable =
+CPUs
+> > > > being idle. Your case shows that a nonzero budget can stop the scan
+> > > > before reaching an idle big CPU.
+> > > >
+> > > > We've discussed a minimum scan budget and accounting for idle CPU
+> > > > availability, though a small minimum alone may not fix your case.
+> > >
+> > > This had problems in the past when Chenyu was iterating on SIS_UTIL
+> > > where the search opportunity at higher utilization is actually very
+> > > low and cutting off search for !idle core was beneficial for SMT
+> > > systems.
+> > >
+> > > Now, for systems without SMT, it has its benefits too but a system
+> > > without SMT should be equivalent to a SMT one where test_idle_core()
+> > > returns true always if an idle CPU is present.
+> > >
+> > > So I'm wondering if {set,test}_idle_cores() can be extended !SMT
+> > > to act like a gating indicator to say if an idle core exists or
+> > > not much like how !get_rd_overloaded(this_rq->rd) serves as a
+> > > gate for newidle balance - it can be flipped to true when a CPU
+> > > goes idle or if load balancer sees an idle CPU. Thoughts?
+> >
+> > I tested idle_cores tracking for !SMT and EAS months ago [1]
+> > [1] https://lore.kernel.org/all/20251202181242.1536213-6-vincent.guitto=
+t@linaro.org/
+> >
+> > >
+> > > > Given both reports, reverting the commit seems the safest thing to =
+do
+> > > > for now. That would restore the previous asym search behavior and w=
+e can
+> > > > revisit a better consistent strategy to cover both sym and asym CPU
+> > > > selection later.
+> > > >
+> > > > Prateek, Vincent, what do you think?
+> > >
+> > > IMO it still makes sense for SMT systems since capacity on systems
+> > > with SMT only makes sense if the entire core is idle and then it is
+> > > just a best effort thing right?
+> > >
+> > > set_idle_cores(), would flip the flag as soon as an idle core is
+> > > available and after that SIS_UTIL is bypassed. I don't think the
+> > > SIS_UTIL cut-off for non-SMT ASYM_CAPACITY systems makes that much
+> > > sense given misfit penalty is much higher.
+> >
+> > In fact that depends on the number of CPUs in your LLC.
+> > The current SIS_UTIL is unfair for small system because you skip the
+> > loop with "low" utilization:
+> > - with 12 cores per LLC, you skip the loop if the avg utilization per
+> > cpu is above 839 whereas it also means that you have the compute
+> > capacity of more than 2 CPUs that is not used and util_est can worse
+> > the situation
+> > - but with 64 cores LLC, you still tries 5 CPUs for the same avg
+> > utilization per CPU
+> > - and with 12864 cores LLC, it's 10 CPUs
+> >
+> >
+>
+> As you suggested in [1], maybe we can give a floor value of 3 when has_id=
+le_core
+> is true both for SMT and !SMT case(mainly for nr_scan =3D 0 case). Beside=
+s, we can
+> scale up the number of CPUs to be scanned by their llc_weight, to fake
+> a 32 CPUs LLC for the small LLC system, this should mitigate
+> the issue of current report and the issue reported at [1].
+
+This fixes the regression on my radxa O6 by keeping nr_idle_scan full
+for llc smaller than 32 CPUs while the avg utilization per CPU is
+below ~550
+
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index da0d9e19c457..1c0e2ac7751d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -12937,8 +12937,9 @@ static void update_idle_cpu_scan(struct lb_env *e=
+nv,
+>         y =3D SCHED_CAPACITY_SCALE - tmp;
+>
+>         /* equation [2] */
+> -       y *=3D llc_weight;
+> +       y *=3D max(llc_weight, 32);
+>         do_div(y, SCHED_CAPACITY_SCALE);
+> +       y =3D min_t(u64, y, llc_weight);
+>         if ((int)y !=3D sd_share->nr_idle_scan)
+>                 WRITE_ONCE(sd_share->nr_idle_scan, (int)y);
+>  }
+> --
+> 2.25.1
+>
+> [1] https://lore.kernel.org/all/CAKfTPtDVqKyQ491MdUr2RbGmJ9ivofiiX7D7Xd-S=
+h2F0NLFmRw@mail.gmail.com/
+> > >
+> > > --
+> > > Thanks and Regards,
+> > > Prateek
+> > >
