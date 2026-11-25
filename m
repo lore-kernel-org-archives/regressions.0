@@ -1,101 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.170
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795625223;
-	b=29qjfoVyc0ygWaGJa0jLJvv0a283CKaJtRlkSiU1EIQXrzpQMlVktGX4wMMVWVG4cGG6
-	 tABX8fUkLtC9cOeknk19QFKOvsMMuwq0lfzRmWQViO43GrpBUHpvMBCjkhZJPNEDZIcbs
-	 UXvqFzygVIUTJV92Ra0OYJPH+BcvHwqxb1hQDEQX9oG5frFLezB4XJQPkX7HrpeHevtmB
-	 P66pWdop8hsANsXNy+teiSICp7tq9sUzKVDKzKVI3fNhuP44vyL+7n8tGu8ngfIOpEu+R
-	 HPw3aBd41kaF7SNuT5+iLaBtmTh2D1roDHGT1PgMsWhgqkf4YeWIW7Us38qtTK5+RCg==
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.214.182
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1795625219;
+	b=K8wH57Vm84LpLN17s2vDF/OwlXW2WubivBnymSANe5BxqqBp9epC414vEQGvn/4rvRwc
+	 NqTEEvX++GZcKPXytWbL9SG79CDh5unHgwU5rGmb6i5qeMkAnMUyVb17fyz+WB3aZ4lpF
+	 fZpedK/H6tjcDvTTgIhDzUJ0pElGU4qOzPCFX9LaKs/KhtGxltzB9QlFr8g4o8u8tZT9S
+	 FcbLdejKepml5+aOKUE53g2X1/pF+oMzc9wovUDbYbpYH5gfFkSfxRfqPW1ineBSD6Qt6
+	 dptnw4HP/DlzPPPqE/uykDDExEitRXO6O7jJpBKkxethey0s8bRB7ioO7tGoFkmo7ZQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795625223;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795625219;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:From:In-Reply-To:References:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=AShdtrHvNaEwqIheqlFySuHF5NlLfzwjwhTuC38bcb0=;
-	b=3R/lggNw9rFhbn7nnFgeZKWTzbMUE11YlB4VQWOjvF3BQ1yyr0NmsT9y111IPmjQG5bF
-	 U9+mYR+ikVlvSG2088/SOzBluy238Z7aMbN2zGTP3f7Z4UOjWB1VUmtrrPOVGYHfuRFw2
-	 wB3jUgO/tPibKhM0i/UbOF6sqVoWFvUngewbJgkCHYh6+dyznWqnD6g2a8zC/ERbs0tJI
-	 P8SLWQRKXcKWvlycVbiVGkOwGJOQrCwhFrN1Q6VyM88Inv8V41hGrDadWTH0mzawLk52T
-	 E1DJm2eI0DYn+RUyuDjNXpbzO4nzQW0oivBtZucwmJNj/He6r/JdSb+tkDi2OyoS09g==
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
+	b=sDIPE6tdmfR4P4dNmmZcwY/4bVcsHx8xqRfhfsUIt7pZftkMKbEC3RJX0RlsgjTAFx0y
+	 9582kZbcQ3kFXO8T0pQlSAXZJLrmpeIeT6Zsj9JgX6uppqTqjjzYdqjCtleO5s3AvFlO4
+	 IdsFsRTgMzYBqo5A36nvx2UrADVUYyDwoAMxsBAlS9rjlqauFZY8P2FXwzU8XrYY/DWQf
+	 BS5/qBEGob8gFPCksA3AjBKXVLhYsJicSCnC9W0RalECff3crFgYfTvB1k6EHP6LeArhL
+	 7TekbX7aHcL31pUDDnOHTz/N0tWHfZqPgs2qfLsc5nNk4jKBdMBFNb1tKaM2najyXhw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FpUUUqsR;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.170
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zGace+59;
+	arc=fail smtp.remote-ip=209.85.214.182
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2929D606A326
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 16:47:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2929D606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BACC606A31E
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 16:46:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5BACC606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FpUUUqsR
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2f04b676219so33619785ad.0
-        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 08:47:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795625222; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zGace+59
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2f0458cc9easo47782365ad.3
+        for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 08:46:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795625219; cv=none;
         d=google.com; s=arc-20260327;
-        b=NnvzhmbGFvjk9J4prt5Jvhgf86EWLJFThRei/32Rns0zNA5A/NmJuCW0rVc8oKLWG4
-         TjnqKXXdgrqWw3N8dSEikrWbfwSX9RC3EW0O98wrnWXmtx3uzToxOg7oJdE4AJiCdy/G
-         5JBjigt4Pe2HZbfPx5PxixBuOfT7VVX8DFPLTJlRz/LHEo0fluOp6fSSlqNhrf+usfix
-         BcF0NEfGtEDC08G7Hl3XdjDIs2mwoCB7MfD7IUfzGTCYIwjyuVGBliEmO1BRPIwqVRGM
-         R8l70LdwRiFJMR30+4HaOHz6KDrutu08lajKcabihWSfmOg6+4UW+S352U+w5rNwws1k
-         RxeA==
+        b=UR/VPS6tD/xF7S/LXkDnK7aolTVS/pULbdyRPauCoUNjfY+fymyscvkeXkk9znmU9D
+         xnTkpRppj8yYWRpg20yExBHpGDMDEt9yyTr7zjASmls8iE+ZLapf6HD4ceBFHd/BAoGX
+         3zq1DreHbdDssKjExd0A7PJkckVMziYUCdwmrCKnA0UJD5RetT3MVUtxogzJ+IgEhGvP
+         +LjpSgubxsxpY53QgS6hMN6IWpodqaCT2pNQOjOrASKBqd7NPyb1L9PISRccUT9TW/bY
+         XTqx9aVZcpIU7EMDBI4WBl9pW+D3oRuzRpRZa1NBymCXei3HkFoAi/BmnLk3YnmnSMba
+         b2Og==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:references:in-reply-to:from
-         :mime-version:dkim-signature;
-        bh=AShdtrHvNaEwqIheqlFySuHF5NlLfzwjwhTuC38bcb0=;
-        fh=bFxA5Xhsh1qtVo2Qb9ruO1tQu7Ql7UM6Pw1eYohbo2A=;
-        b=Ll4RvGffFUvIM9Q/EfF2KhIuZUPpA4tpRWBsJofuzULSg/lSa1BB12wfDpYbNoL7B0
-         pk46w9C+TCQOO0xFMzgzsoprKZTTtOg4zmsEaKbOKICOInfKW/kFod4A+eaBoWq/1/1t
-         +cnhozF96lcKzm2k2/uGA2D+Osjd63UD0WT8Yc8/HYjbXSJfOGIGGEJsNlhC1hoUzd+K
-         qhh18XPiKP3NO3WuoOety4eC5yMCK2Zx8T9dQmooCV/n3CzRys/7dbWCPWGsxbaUuzT/
-         MAldwZ5kXKbv26n5sbW7yqBEh5x2P1YIYDpFRQ0AgXJHAJtqt4kAoNVD9yWM7CvctJDx
-         D9/Q==;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
+        fh=n3aHtTn4OayIrqe/sesn0jLkpk5nIVDrR37pn6lsiCU=;
+        b=eb3xRueXDzvYXMZWWI20cs92hJRAeAdn36DRLonsDzwDzbwerYP/2Sa2oLRKUfe47k
+         sjRHk0j1t8bupzLHHax7B1Pu+txW8d1Uwh3f3dRCII2IgGbZsSYqvlvvzALnch+yXn/P
+         xdrUI47mGhtXhm3+Yo5JuEyZevoPwEUld4+pKusA8n4O/gS+sMvp+HeSvBEuvBgiPAr6
+         Dd1Mrv6bNmcroKk1eXPIME2GA/02+2ENeAdgz8YkpvocwTqmG65UfMAHBoR3t+KszCi0
+         xUPRIqJkR8JjJtfiIg9aDf1jzd0+bwsDTjH6L6wiWIvooZdMlHHWDFyIVnALYBQYHA8u
+         ywKg==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795625222; x=1796230022; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=AShdtrHvNaEwqIheqlFySuHF5NlLfzwjwhTuC38bcb0=;
-        b=FpUUUqsRiSG12uKyHzF3ANUXX7dP39XklLdgJrhIY5BrSpCLUGXMEqDXdCxdaa9p2g
-         Jg4ROJ7kBj2mPp2+akfNlYvuJ8cM0gHhEqNDpFYYWfffllXabn1zOQc/zT67lVLdnXyI
-         yzgJTmuJDht/or1RXmdyNOJodx+vjITH5mmxxnNvt8uL4Ux8EQlufdSUKDKeMlrHknKP
-         kRKwmfK15gWIU3XpNfsXEnlmtM43+wrlmGGcTAzayj08wyVMD2ua6DeWW4oCAvhxYp5d
-         RZ9IRfoHP3fX+EKIrJYITUtClGGAZpteZ7z9TybypNQixbC5Gm9nBmYwxdQQLuZRRt5M
-         vQeA==
+        d=gmail.com; s=20260707; t=1795625219; x=1796230019; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
+        b=zGace+59ESmF+ImcqaZEo3pcr0TcUCtk3KDRR+wFgzWYaL09t0/wFAmMmLwoAI+eRO
+         lj63r4GnMyAvDPU5yxGF0599W5i5nUhnALh6Oj4kALdHtXM3VACHUuTlBAYYLxAiA3Dj
+         PF6Yk0du64rpXS1MQaYi4RgeEEqHeeeG+BBLedEnxj3fufHNkKewFzRkOcyLV7DGKCIL
+         i87QOtmQB+QZNfHJ5LnJKBeLCg4w4wHUuqxJrYPPVYQ0siY7Ims+Jt42iWZ/LvUYGYHR
+         lQ6QtRdhgWcPH1GsEAXbEKskivYVuttRU9An+MOnU1echiof+2mH7Qd8bzfglwaV5alu
+         GnTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795625222; x=1796230022;
-        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
-         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=AShdtrHvNaEwqIheqlFySuHF5NlLfzwjwhTuC38bcb0=;
-        b=DoxWjnNi5KdP+TdLmNokN6r+CvZ9SgBz1TL+yyUHC0P/fiETCQmYBdkdyNVKn+9wl3
-         06YMgF8BIp0+riI730hHbM27XqVe/wCGmpR148xA6bOStU4p2AgDkU++BJ5z5DNgo0uZ
-         ymUYOUXALcTlAgMCPdRajlUC4bvZ5olpywxxMEiddp2+QNqR/SIEITWCoZaKB3nXQlGB
-         BqIW4XrdXIlWazcchViz1Ofm6MUdLfqQgz0zM/XBkM/AUXscBtr/8c3H+yOGIjhge+yZ
-         c27rPLkG0+fML7ovqtrav4PLlIX/PdCt6iGKBTRupXIyFDuUBiNsJ7KYL/C0yoo/cIRp
-         wbog==
-X-Forwarded-Encrypted: i=1; AL+hErEjc4jh5Tw6BelX/BjBFx2/tFxsvt1iF+XOZCgmUAPewy2uhJDq3+eQ5hqvY6//ccyGXo21fm8elv9q3Q==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9yZuAKw6x8JSbMcdnThjLwESB8eT1L7yUsQ0VkMke8zpSTI9HY
-	+C4t4RpaFbzgNAmbpZsw1jM/NnKiIM/47CUf2kmL+qIFQWfJIJk+7WYHtwxqjY/GSflSxrl4CY6
-	Pz4icg+7Sao1T6Irh47dMy9bVmmnRZJQ=
-X-Gm-Gg: AZFdTZe9AgIE1X0tk7G0JMFHHhC0qM79IY4rIaxh/I0AXL/Bq0aCNrGi5dQPc0bkY2q
-	3Xd3j89LHSdYafG4fnUwkKoTrZt7aG8ZlZmqXR/+mwINzJFIgCJQ4JiZEXr6OCvW33Z8p83+fWL
-	kX+vxy8apaqh5prpzboD75vJBRGYBOwHJ7nC5YQrUk/B/NIKvLhtC8Ex1lJYjqa5pDjJlgKLrBs
-	3hvF6pMYbXCflFbVtF4gwSBPx6cLJf8xihAGCCd5maGzfQl4hr8+HvrGyZjxK5EDz+GwoxnOQec
-	nnyWJemQtkZispjjp/pG7RufB2XgjjM/WjDmUx13tSNTUGf6/hYZt4ItMjCSYf+Qf3tkKPAQx7/
-	RrqQDiObXzWNcExcfhBBER/rUdKc0sTLU
-X-Received: by 2002:a17:902:ecca:b0:2f0:4e5d:ff9a with SMTP id
- d9443c01a7336-2f04e5e0119mr149933095ad.55.1795625222273; Wed, 25 Nov 2026
- 08:47:02 -0800 (PST)
+        d=1e100.net; s=20260707; t=1795625219; x=1796230019;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=4l6su8J/2b05gZJamYLmbEnP/+CVAtPv/Cq+tXm1mwI=;
+        b=a3ugL4JWxaKzZve19odbgKvQVmc6zhIQWj7r+au+rdka/bQXstao205QTySwUKgngh
+         Pp9bDmOe8ZfXVyD9/fl9MJbB8hoYnB1C4dd3SbNHCkpYD73eldvQXXO8KNCw7HZc3ope
+         2dHjtFCxsTocZAB6aQ6a02/ilbjPowi9X5Lvs2MAXbqfhV0PGxWPLWlcugRu9Y5IZRPN
+         S0rRL9bq855f9f7u6DiT5W9xMghim9xIO9ZenMCI0Ahddt5DjtyySM+WNq/erLPrBJXY
+         LiC3d9UTkGgZbhR2ihDpTpycrNPNHcrOa6qZWn2Rv9w4y0DPpa30rznHHmAKh9QMa1wb
+         TRNw==
+X-Forwarded-Encrypted: i=1; AL+hErE+zyKz4+HJf979bxaZmvk456KWaXbzjaaJzL9X5qIUAW8+j9iVKQW1xo2ZEjNsd3DbYxUPxlmMpKp1/A==@lists.linux.dev
+X-Gm-Message-State: APuU4Z/neTRDN2KjZg5O3dWoto4fL0HAmUCPhsIqFCEfyozC5rqQ3WzF
+	tkTYWArQBALmEM2x8NAIqkJMH6rfsvkjQ02BvBRzYF5Q836ZZMyIM7oTWQUN2+dk7kvftTf0ORh
+	qOhYEBtTBmSoCn0qnshvUC+xjF5y1bMc=
+X-Gm-Gg: AZFdTZeVhq1pFZXew4h4LSo32W5EZo92N5aSt6MxdoEyy9Ik/Aub9u8h+YrCkznyjlj
+	d7BGLhXvFGJNXsQTxH1TSjMlGGrRskOSig76fvtozenRnjwlCaONBz/AtwUK3eqHdWzC2nNLPWq
+	4eDDZ1cE0MqKn0o0MjB11jlyb4UWX35lS18Qc/90Mw++SnSDlQKuFruKZdrT3hRy3QR09QEqZVM
+	3Iw3AC7v6ody9oBGk89MgAwq2dvoJDAA9dZka2je5mYwqQPCoWi+NviiBQ4qEuIsBkr9WLncQIZ
+	p7kGFJrcfwa3Tm6GZIc4hy8cn8yBHW0iJi6pj+182/JBH0KBBZIHy5ixoax5dhF+hntn3PUl+fg
+	wVlWDJCmzcCvcoQVW3hi67/UKAJsmNjxO
+X-Received: by 2002:a17:903:1b4c:b0:2f0:a8b5:4330 with SMTP id
+ d9443c01a7336-2f0dc64fcbdmr24291335ad.18.1795625218595; Wed, 25 Nov 2026
+ 08:46:58 -0800 (PST)
 Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Wed, 25 Nov 2026 10:47:01 -0600
+ Wed, 25 Nov 2026 10:46:58 -0600
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -106,94 +104,57 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 From: Flavio Giacchetti <flv.giacchetti@gmail.com>
-In-Reply-To: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
-References: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
-Date: Wed, 25 Nov 2026 10:47:01 -0600
-X-Gm-Features: Aa3M54qfON0_W-XuR0c3kYvZ0LE9PvCxw6i2-OaWxsTgsI7rmm0dwB5QEokQNW0
-Message-ID: <CACKiate5HP20D6StbQk9S2Z4bdLne=FBtOPLh8-SK8529L7EoQ@mail.gmail.com>
-Subject: [RFC PATCH] USB: cdc-acm: skip the Creative Sound Blaster X3 ACM interface
+Date: Wed, 25 Nov 2026 10:46:58 -0600
+X-Gm-Features: Aa3M54r5hd1_jSn3QPbVycglwSRHi1SAylD7McKlbAvXL2of4Va2BSZXo0kgJpw
+Message-ID: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
+Subject: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB audio
+ probe on Fedora 7.3.4
 To: linux-usb@vger.kernel.org
 Cc: Oliver Neukum <oneukum@suse.com>, regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-On Fedora 45, one Creative Sound Blaster X3 (041e:3264, bcdDevice
-10.90) fails to register with ALSA on 7.3.4-300.fc45. The kernel
-binds cdc-acm to interface 1 around the initial disconnect. The
-audio driver subsequently gets timeouts while reading sample rates
-and mixer controls. Audio works on the previous Fedora 7.3.3 kernel.
+Hi,
 
-Apply IGNORE_DEVICE to interface 1 of this USB ID so the audio and
-HID interfaces can still bind to their own drivers. A normal boot
-with this quirk restored registration and playback on the affected
-system. This removes access to the X3's ACM interface on Linux.
-Its role in vendor controls and firmware updates needs validation.
+My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
+after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
+Booting the previous Fedora kernel restores audio on this PC.
 
-The first bad upstream commit has not been identified.
+Hardware:
 
-Signed-off-by: Flavio Giacchetti <flv.giacchetti@gmail.com>
+  USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
+  Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
+  Connection: rear motherboard USB port, enumerated at 480 Mb/s
 
----
- drivers/usb/class/cdc-acm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
+USB ports. On one failed plug-in the kernel enumerated the device,
+bound cdc_acm to interface 1 and then logged a disconnect. After
+re-enumeration, the USB audio driver repeatedly failed to query sample
+rates and mixer controls. The X3 never appeared in /proc/asound/cards.
 
-diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -1775,4 +1775,9 @@
- static const struct usb_device_id acm_ids[] = {
- 	/* quirky and broken devices */
-+	/* Creative Sound Blaster X3 */
-+	{ USB_DEVICE_INTERFACE_NUMBER(0x041e, 0x3264, 1),
-+	  .driver_info = IGNORE_DEVICE,
-+	},
-+
- 	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
- 	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
+  cdc_acm 1-12:1.1: ttyACM0: USB ACM device
+  usb 1-12: USB disconnect, device number 7
+  ...
+  usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number
+of sample rates (clock 33)
+  ...
+  usb 1-12: 13:3: failed to get current value for ch 0 (-110)
 
+An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
+With that module on the same 7.3.4 Fedora kernel, the X3 registered
+with ALSA and played stereo audio at 48 kHz. The first hot-plug test
+still logged errors during re-enumeration, then recovered. On a
+subsequent normal reboot with the patched module installed and the X3
+connected, ALSA and PipeWire exposed the output and input, and the
+earlier rate-query errors and timeouts did not recur. Playback worked
+after the reboot.
 
-On Wed, 25 Nov 2026 10:46:58 -0600, Flavio Giacchetti
-<flv.giacchetti@gmail.com> wrote:
-> Hi,
->
-> My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
-> after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
-> Booting the previous Fedora kernel restores audio on this PC.
->
-> Hardware:
->
->   USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
->   Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
->   Connection: rear motherboard USB port, enumerated at 480 Mb/s
->
-> With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
-> USB ports. On one failed plug-in the kernel enumerated the device,
-> bound cdc_acm to interface 1 and then logged a disconnect. After
-> re-enumeration, the USB audio driver repeatedly failed to query sample
-> rates and mixer controls. The X3 never appeared in /proc/asound/cards.
->
->   cdc_acm 1-12:1.1: ttyACM0: USB ACM device
->   usb 1-12: USB disconnect, device number 7
->   ...
->   usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number of sample rates (clock 33)
->   ...
->   usb 1-12: 13:3: failed to get current value for ch 0 (-110)
->
-> An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
-> With that module on the same 7.3.4 Fedora kernel, the X3 registered
-> with ALSA and played stereo audio at 48 kHz. The first hot-plug test
-> still logged errors during re-enumeration, then recovered. On a
-> subsequent normal reboot with the patched module installed and the X3
-> connected, ALSA and PipeWire exposed the output and input, and the
-> earlier rate-query errors and timeouts did not recur. Playback worked
-> after the reboot.
->
-> This is the result of testing one unit on one host. I have not isolated
-> the first bad upstream commit or established what functionality needs
-> the ACM interface. The results so far are for Fedora kernels.
->
-> Would a device-scoped ACM exclusion be appropriate here, or would a
-> comparison of USB traces with and without the ACM binding help narrow
-> this down?
->
-> Thanks,
-> Flavio
+This is the result of testing one unit on one host. I have not isolated
+the first bad upstream commit or established what functionality needs
+the ACM interface. The results so far are for Fedora kernels.
+
+Would a device-scoped ACM exclusion be appropriate here, or would a
+comparison of USB traces with and without the ACM binding help narrow
+this down?
+
+Thanks,
+Flavio
