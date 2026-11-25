@@ -1,70 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=199.89.1.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795630472;
-	b=4CFRzVW6pwfFiEuHhxbw/A/GJf3v1H+ismoMHIr7A8pcfAj+WSYiCV/KZhepEXUh8eQN
-	 3LlY+u81Q9uNxP2rkZUTnIyewhLXClIV3+H5P14P+d9Va5/9Nqah0BQUW1SpJc97mQlsp
-	 kV1WIPJcQEtpC2I1BtBt4jcqQxA83w3c+t17hLIsUBVqZxfQqN3a36Zm2FFa6ODFOg7cu
-	 zEuEaRpcrhz0RhCl7dt8nr9TOMSFSgloL7sn/oRzhlSEBQOZEh5LI3oOseOkMeJWtF55q
-	 fm3Vd4FnXip+OTa+TMS6nQ5MXLtny0gziHECP1vJDUgVzwR1Ril8XCK96PqrNSybLcw==
+	t=1795631401;
+	b=GS2YP2AYuMw+fMVCRamIQfkBOZ3Usmbu6HsCqkEikIhiqpPGnV/ijLa305k7IFaf+yS1
+	 hHvWQTp24UyoGx3XjaO6A2I6k+lV6Ox5KTSTwMdaCgfnWbRRSCPThaTgvGa2WpcgkuC0o
+	 IP59TLihC0kfvG/sG8uNuZ8/UBCiAdY6IyMZ+OQk1Gubk+J74Tz2IKDhCG4YjbU/fGq7G
+	 op4ljzch41ayX9sU5O2dCWf9XYo9VQ6sHnqylXH/as5HCZlfNRlOMEDupIO2q+FIRCixD
+	 GPLPrwQwXjbcqR+R2u1luI71s/MCbcI+GPaE02UP7tH33bstbSfhaptYWWZOJuQg22g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795630472;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-NC-CID;
-	bh=T7Jfy1YX0JM1xaHCJ3ZuUaayOlpEccV6YKpeVDstUOk=;
-	b=5p4rnzpEimA/6x1tVDhRNq3NpV/dACeXdZcgOCGbV1CH/RuEmJsFb4DYqXi5bEcpXy2u
-	 P/UNCuc2RBY1jwyT3uPMUx4+M+Th6ZhonFLcOvavC6ooXaA12qgwXoSJPsEhE8+9bcyMB
-	 usaWJwEi6iJdPnk9/hpsRkoyXFdTNabNtjc1+6YBOUqzyDyrSEZzaEVX8PUpVexwo60C4
-	 +AclGABjbJhWgv53fR6W/nEvBSJ+OVrdmCrISq8etTKCU4pq4yCWQBqCpw8xC3KBt5Qn0
-	 smBI91H3EV/zte55p5TxGD6yAcJs2NuT8lRNXP9smVYetdakvR0c6VpHvcu8dQ/93Yw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795631401;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Virus-Scanned:Received:
+	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=thRt5lrTBHxA5kWjyhVc/0X4QbDWjOzyTASo1GnS3q4=;
+	b=cU17Jyieudkrj0AVF9WIjHT+NQo08aDAhFHBui+iY322d1k22KZuM73SS+jQRuGUsQCu
+	 FPkegqZmU412C7CnocNXzUFz0HiC4EFgwPgInnyalfIodW0oeUlXFqlryUYcUsWGrUE7V
+	 MrBGvOhPlDs6o7wdAFc8XCRqmz85rEX9MbGpm8LmFAECIRXMP/TrNOHIaacDwbJ8ANDDA
+	 +0PvTAS57QF8FIFkEWlo+lMQdQn7kDyQD96BSQ/gUzu5XcAM26Myg2m0G7MWJmN7Gsx8p
+	 DgDpxpoKu89FEoyvB/DSnjzgCDL5ZEQMtVCodbjCj66xbb87YCnGqCiAJ4iiw92THtA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=SqHy6r9g;
-	arc=none smtp.remote-ip=194.59.206.189
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+	dmarc=pass header.from=acm.org;
+	spf=pass smtp.mailfrom=acm.org;
+	dkim=pass header.d=acm.org header.i=@acm.org header.a=rsa-sha256 header.s=mr01 header.b=hel+7fhM;
+	arc=none smtp.remote-ip=199.89.1.16
+Received: from 013.lax.mailroute.net (013.lax.mailroute.net [199.89.1.16])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63FD606A690
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 18:14:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C63FD606A690
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB41D606A327;
+	Wed, 25 Nov 2026 18:30:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB41D606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=SqHy6r9g
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jZSW26NGYz4QKd;
-	Wed, 25 Nov 2026 19:14:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1795630462;
-	bh=my78kg4S54Fk8CVZt5B3siWtk9PWEx8eNQ9n1fmSTOw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SqHy6r9gKfeGooIxTWppV5bROD5x/eJ9tz4t2pjuS/jMsMQ5uL4lW4UArPZKrM4ao
-	 SucD9q7TEE9HR7awJehYsgcJ9StNsk8dN1XGLePCgiDdfAECdKrpgPkUTabspbj8eE
-	 99uoaLo9QrULihXpwhI0NwZyFvxNpc4KPJ6dQ0W2ay47VAdE0h3ygMN/txsay7spbu
-	 uvO5Ptm5J8hWorcxj21/qAP33q1t3+uovzBQp8fSP3piLslSPpSYH5bXrqtILetdkF
-	 za3NuMHhknDYs5+CRBnRgsesvksHj6dK0rVKgdIB95Mm/zutH/vA+5ArcDa9Tw0otL
-	 CgD3+N0vL099Q==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4jZSW25gPMz7xCG;
-	Wed, 25 Nov 2026 19:14:22 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (2048-bit key, unprotected) header.d=acm.org header.i=@acm.org header.a=rsa-sha256 header.s=mr01 header.b=hel+7fhM
+Received: from localhost (localhost [127.0.0.1])
+	by 013.lax.mailroute.net (Postfix) with ESMTP id 4jZSs413Jwzlfcpr;
+	Wed, 25 Nov 2026 18:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1795631391; x=1798223392; bh=thRt5lrTBHxA5kWjyhVc/0X4
+	QbDWjOzyTASo1GnS3q4=; b=hel+7fhMgAhDpO9lwN3vQjdkpPRQrMNgfcBdIYk7
+	Zym/OZdROp3JG3JHpJMLGxC0mmVte9UVjvSJaixDzEVLbtNGgVMTnjofBT3tindB
+	GqsVOF7E4qZHAWSVGKW6Z6crfPq3eTUiUdn41wuZ8gP0d6nmyX+RXuLrVdcNACoB
+	CI0fL6arkDFbUhOwaGnibDuLOEaxhxwUhWHQX6cZD7NCHnUzbLpaw9BhLVgntxL8
+	7fXBdqo+vOq51+jBwyxV2q6MImdGAZgTynFgJOiYu+nFYA7dP9l3i11slgsySrOt
+	MdUwqbzLXa12iVgZR0TRB6vyxTGVh9h06EMUCfv59gpGGQ==
+X-Virus-Scanned: by MailRoute
+Received: from 013.lax.mailroute.net ([127.0.0.1])
+ by localhost (013.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 7EqdZkBp2pxE; Wed, 25 Nov 2026 18:29:51 +0000 (UTC)
+Received: from [192.168.0.215] (c-24-6-239-25.hsd1.ca.comcast.net [24.6.239.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4jZSW20fcMz8tH7;
-	Wed, 25 Nov 2026 19:14:22 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 855B85F985;
-	Wed, 25 Nov 2026 19:14:12 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2d8bd052-fefa-45be-8712-bb93c73acc07@leemhuis.info>
-Date: Wed, 25 Nov 2026 19:14:10 +0100
+	(Authenticated sender: bvanassche@acm.org)
+	by 013.lax.mailroute.net (Postfix) with ESMTPSA id 4jZSrt62HMzlfvpT;
+	Wed, 25 Nov 2026 18:29:50 +0000 (UTC)
+Message-ID: <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org>
+Date: Wed, 25 Nov 2026 10:29:49 -0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -75,76 +71,174 @@ List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB
- audio probe on Fedora 7.3.4
-To: Flavio Giacchetti <flv.giacchetti@gmail.com>, linux-usb@vger.kernel.org
-Cc: Oliver Neukum <oneukum@suse.com>, regressions@lists.linux.dev,
- Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
- Linux Sound System <linux-sound@vger.kernel.org>
-References: 
- <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179563045288.4017891.9126847949981694816@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 855B85F985
-X-NC-CID: 30B9LND43JiTdovUqlYsOMsGn9G+e2I6feLTNWqyeHQzIz3YLy0=
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
+ "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Tobias Laas <tobias.laas@posteo.de>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ regressions@lists.linux.dev, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ 70sp <70sp@protonmail.com>, Laurence Oberman <loberman@redhat.com>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
+ <awSs5Cw3hFkf4O4T@ryzen> <ec36d13e-e4c2-4bfb-8b50-69d4a1628839@leemhuis.info>
+ <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On 11/25/26 17:46, Flavio Giacchetti wrote:
-> 
-> My Creative Sound Blaster X3 stopped appearing in ALSA on Fedora 45
-> after the update from 7.3.3-300.fc45.x86_64 to 7.3.4-300.fc45.x86_64.
-> Booting the previous Fedora kernel restores audio on this PC.
+On 11/25/26 12:52 AM, Thorsten Leemhuis wrote:
+> For completeness, =C5=A0imon Posp=C3=ADchal (now CCed) shared findings =
+and a WIP
+> fix (both with the help of a LLM) meanwhile here:
+>=20
+> https://lore.kernel.org/all/QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5=
+icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU%3D@proto=
+nmail.com/
 
-Not my area of expertise (I only help with regressions in general), but
-this sounds somewhat odd to me. I CCed the sound maintainers and list,
-maybe someone with more knowledge in this area will share an opinion. If
-nobody comes around with an idea soon what's causing this, I suggest you
-check (a) if mainline (7.4-rc4 or later) is also affected and (b) run a
-bit bisection to find the change that caused the problem to appear.
+Thanks Thorsten for having shared that link. The LLM I'm using doesn't
+like that patch and came up with the patch shown below. Untested.
 
-Ciao, Thorsten
- > Hardware:
-> 
->   USB device: Creative Sound Blaster X3, 041e:3264, bcdDevice 10.90
->   Host controller: Intel 600 Series xHCI [8086:7ae0], revision 11
->   Connection: rear motherboard USB port, enumerated at 480 Mb/s
-> 
-> With the stock 7.3.4 Fedora kernel, the failure reproduced on two rear
-> USB ports. On one failed plug-in the kernel enumerated the device,
-> bound cdc_acm to interface 1 and then logged a disconnect. After
-> re-enumeration, the USB audio driver repeatedly failed to query sample
-> rates and mixer controls. The X3 never appeared in /proc/asound/cards.
-> 
->   cdc_acm 1-12:1.1: ttyACM0: USB ACM device
->   usb 1-12: USB disconnect, device number 7
->   ...
->   usb 1-12: parse_audio_format_rates_v2v3(): unable to retrieve number
-> of sample rates (clock 33)
->   ...
->   usb 1-12: 13:3: failed to get current value for ch 0 (-110)
-> 
-> An experimental cdc-acm quirk skips interface 1 for 041e:3264 only.
-> With that module on the same 7.3.4 Fedora kernel, the X3 registered
-> with ALSA and played stereo audio at 48 kHz. The first hot-plug test
-> still logged errors during re-enumeration, then recovered. On a
-> subsequent normal reboot with the patched module installed and the X3
-> connected, ALSA and PipeWire exposed the output and input, and the
-> earlier rate-query errors and timeouts did not recur. Playback worked
-> after the reboot.
-> 
-> This is the result of testing one unit on one host. I have not isolated
-> the first bad upstream commit or established what functionality needs
-> the ACM interface. The results so far are for Fedora kernels.
-> 
-> Would a device-scoped ACM exclusion be appropriate here, or would a
-> comparison of USB traces with and without the ACM binding help narrow
-> this down?
-> 
-> Thanks,
-> Flavio
+Bart.
+
+
+Subject: [PATCH] iommu/vt-d: Disable superpages on Haswell with=20
+integrated graphics
+
+Disable Intel VT-d superpages on bare-metal Haswell client systems when
+integrated graphics (0000:00:02.0) is enabled and an active remapping
+unit advertises superpage support (CAP.SLLPS).
+
+Per the 4th Generation Intel Core Processor Family datasheets (document
+328897, section 3.1.2), the integrated graphics VT-d engine does not
+support super-pages and BIOS must disable super-pages in the default
+VT-d engine when integrated graphics is enabled. Several Haswell BIOSes
+leave CAP.SLLPS set on the default engine (dmar1). Whenever Linux install=
+s
+a 2 MiB or 1 GiB leaf entry (PS=3D1) on dmar1, hardware aborts DMA with
+fault reason 0x0c ("non-zero reserved fields in PTE"), breaking VFIO
+passthrough, discrete GPUs, audio, and AHCI storage (exposed by default
+once BLK_DEF_MAX_SECTORS_CAP increased to 4 MiB in v6.17).
+
+Prior to commit c376a3456d8b ("iommu/vt-d: Remove
+domain_update_iommu_cap()"), domain_update_iommu_superpage() intersected
+superpage support across all active IOMMUs, so the IGD unit (SLLPS=3D0)
+masked off superpages on dmar1. After that commit, dmar1 domains started
+honoring dmar1's advertised CAP.SLLPS.
+
+Detect bare-metal Haswell client CPUs (INTEL_HASWELL, INTEL_HASWELL_L,
+INTEL_HASWELL_G), verify that the Intel integrated graphics device at
+0000:00:02.0 is present and not on an untrusted PCI link, and clear
+intel_iommu_superpage during intel_iommu_init() before allocating any
+paging domains if an active IOMMU advertises CAP.SLLPS.
+
+Fixes: c376a3456d8b ("iommu/vt-d: Remove domain_update_iommu_cap()")
+Reported-by: Tobias Laas <tobias.laas@posteo.de>
+Closes:=20
+https://lore.kernel.org/linux-block/5ad27a97aafbc08a8702d5b90d09cd59@post=
+eo.de/
+Reported-by: =C5=A0imon Posp=C3=ADchal <70sp@protonmail.com>
+Closes:=20
+https://lore.kernel.org/r/HYhMd0Klo0XE_yiVY7XmsgyKKFDwKHfKRy22KrycLcYd0V_=
+ykA4xdbBMJXkA07YX3os6qK-NhMIVi6ITo-CkNIIF0e-GcI0UwwZmdDhAJ0I=3D@protonmai=
+l.com
+Cc: stable@vger.kernel.org
+---
+  drivers/iommu/intel/iommu.c | 53 +++++++++++++++++++++++++++++++++++++
+  1 file changed, 53 insertions(+)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 5a2e705a2f2e..dd37aa25e287 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -24,6 +24,8 @@
+  #include <linux/tboot.h>
+  #include <uapi/linux/iommufd.h>
+
++#include <asm/cpu_device_id.h>
++
+  #include "iommu.h"
+  #include "../dma-iommu.h"
+  #include "../irq_remapping.h"
+@@ -43,6 +45,7 @@
+
+  #define DEFAULT_DOMAIN_ADDRESS_WIDTH 57
+
++static void __init check_haswell_igfx_superpage(void);
+  static void __init check_tylersburg_isoch(void);
+  static int intel_iommu_set_dirty_tracking(struct iommu_domain *domain,
+  					  bool enable);
+@@ -2762,6 +2765,7 @@ int __init intel_iommu_init(void)
+  		pr_info("No SATC found\n");
+
+  	init_no_remapping_devices();
++	check_haswell_igfx_superpage();
+
+  	ret =3D init_dmars();
+  	if (ret) {
+@@ -4266,6 +4270,55 @@ static void __init check_tylersburg_isoch(void)
+  	       vtisochctrl);
+  }
+
++static const struct x86_cpu_id haswell_cpu_ids[] __initconst =3D {
++	X86_MATCH_VFM(INTEL_HASWELL, NULL),
++	X86_MATCH_VFM(INTEL_HASWELL_L, NULL),
++	X86_MATCH_VFM(INTEL_HASWELL_G, NULL),
++	{}
++};
++
++/*
++ * Per the 4th Generation Intel Core Processor Family datasheets (e.g.
++ * document 328897, section 3.1.2), the integrated graphics VT-d engine
++ * does not support super-pages and BIOS must disable super-pages in the
++ * default VT-d engine when integrated graphics is enabled. Some Haswell
++ * BIOSes leave CAP.SLLPS set on the default engine, causing fault reaso=
+n
++ * 0x0c (non-zero reserved fields in PTE) when a 2 MiB or 1 GiB superpag=
+e
++ * mapping is used.
++ */
++static void __init check_haswell_igfx_superpage(void)
++{
++	struct dmar_drhd_unit *drhd;
++	struct intel_iommu *iommu;
++	struct pci_dev *pdev;
++
++	if (!intel_iommu_superpage)
++		return;
++
++	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) ||
++	    !x86_match_cpu(haswell_cpu_ids))
++		return;
++
++	pdev =3D pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(2, 0));
++	if (!pdev)
++		return;
++
++	if (pdev->vendor !=3D PCI_VENDOR_ID_INTEL || !IS_GFX_DEVICE(pdev) ||
++	    risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++	pci_dev_put(pdev);
++
++	for_each_active_iommu(iommu, drhd) {
++		if (cap_super_page_val(iommu->cap)) {
++			intel_iommu_superpage =3D 0;
++			pr_info("Disabling superpages on Haswell with integrated graphics\n")=
+;
++			break;
++		}
++	}
++}
++
+  /*
+   * Here we deal with a device TLB defect where device may=20
+inadvertently issue ATS
+   * invalidation completion before posted writes initiated with=20
+translated address
 
