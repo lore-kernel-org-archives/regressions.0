@@ -1,100 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.43
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795593119;
-	b=K3JMW+k0yXvb8tZdbWEIFoYN9z67YpJxxapYNwC+s1AiMmHF/5nOtzbdE3NLKAwJDdJN
-	 abbPfoS1wCb0jfZ6Cs0yOUl9Cnfi3uPDTnUiq6P9Ees6Sdo9zkO8zdpO8LMZsXsXfn7R+
-	 gSxXlG2JwpPdFiiVEt4ovVue5jBai8VmsJtknKMdyWHu/QwIFqG0vF8Rn/s0QBKhybIiZ
-	 wiimWDsaF1/BDAVlwE5hMjGlMHFvWQFsMOkF0SMToSF4R6OmMCvn+dokaESnNi00gLZOi
-	 0ZW5S3SfrugNJTCy5GMiYvp0efXEisc9YbdfquiW7O60QduZhBA0zDtFYFtN21ztKQg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795593119;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Jvc6T0hsHWXffEvQKNFhCmtcAcfBWvvbJSXZbmwAzQQ=;
-	b=GNySW0/7Y+CGjVdKrgR8ZIiGMrfSdNkKduZIV8lXb4tDjA9r+7j9Ob971GwLXBEHSXLN
-	 RPwXteEkJX6rHspHtZIIXA0uNhg/HwxGynxiWrdbMMI6RUWUE398bdlPL+PCUuWaz8lKw
-	 m6LUARmScQkoAWBAmSFd9xH0Blkaekh3BWVtupL+uuu4axEpncaPNzRMLFeTHwveSnO6P
-	 clVA/jlHoIvCcE0ncVVmEGX21UjzffGrUZf8Ohi6L3CAuQy0BouKw8k1hOKkolknwtC7J
-	 ZyPWx93JkURuyU/yZfxNU35tCNWeNSDXUJoCNntetiN34zfvJC8uOHRdYdtkTITGFkA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=vqRzHD+b;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.43
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.67.36.66
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795595374;
+	b=bGK6K5qXVRgtzCfooB99VRjoeSAN2P8csSAi1fQ1nAsUqCNIlutWTA8E2LBdtJbLMPvO
+	 KkRcnR4DB+hb30CKNpZfU+SxVQL2gw+fC4FUsBELZITt01s4Qm3CFOgqlzwoL2H+0W3ta
+	 asJ/F35shPisYLFiT4TE2nPVH9R4tayOttSxz1KOXj8w3QrNaHW52jlCJZelyfho5CeKv
+	 aBs4m9KDMd4O/fchdmWm1meBEb9NLox1p7rO+bdzn7AJ5l8G4zEdwHyOsMb4Dxt1nfAhH
+	 eJNvJuFGzJk+zTx8zrtAtPsXmIMUorcXZRTTeRyhp4rbDDY1hNr9N4POkxQbf2uoPSQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795595374;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:MIME-Version:Date:From:
+	 To:Cc:Subject:In-Reply-To:References:Message-ID:Content-Type;
+	bh=S6ViIbz72DmFlSP9JPwMgRiVlDXqmWEKuOKUgxyI9tw=;
+	b=BBJ8llJdcpdIBfUxVda6ZKLlC9y1Nkm7iLO149Skwtc+j+MylP02Y46PKHMy56atpHlG
+	 WHO1jNflj9aHAE/hQ5vqa+nRXjYTEysc8KGYvr7JXloe4cnYTRiQjoyhHNmy6/1wi8bMM
+	 TPu8sP/G307w4TrtDTkXeJVB/BT6CxLKaHf4rRd3LsTuZ/K2ir8nqAVh1Wo9ehDNfH6BE
+	 Zi4XZ6QHIjCxBvc/FDXu7aoEIXz6LEbC94FjZVS27uIJB05pPBreo4c2YBlg9u+qT6gba
+	 jSazMjkBqBesF3nTCMGJznw1BPv4SgL7jLKYv4vzCvE/J0Iyb+CEJEBWH4yh3iQ9K1g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=posteo.de;
+	spf=pass smtp.mailfrom=posteo.de;
+	arc=none smtp.remote-ip=185.67.36.66
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21BA606A326
-	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 07:51:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D21BA606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=vqRzHD+b
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6b8a1f59d5eso7004093a12.3
-        for <regressions@lists.linux.dev>; Tue, 24 Nov 2026 23:51:53 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795593112; cv=none;
-        d=google.com; s=arc-20260327;
-        b=boklRMoTwzWphNUoOZAv3ZHHqRzV4RdrP+NG7J55EcsIKJqrS/hEiKzWu18lXrd9ZJ
-         yDN+HgRRY/OM/tV+DybDMF6x1EMX1QDaZwwgqS36yXVWhlZOnluw0kl7+Bl/krAHYBAv
-         VTjdJpGDigjmbN2B9GPO+a6oQMFkgwHMN5X/6BilR3Lt5HUhxytiu/O9k6cAw8yyk1Ue
-         vk6fdRsQ5DgrY9t7pxEF4X43moEDP6aJBWxpbetQeu4THiaYk+Hik/GNOXWemD2ef5aB
-         kCqXV1AGPuy1qOz2v9ckbsk/ZBKp9BHretHGr+DQpbg20swQQ88mp02o88yFni+Txoq9
-         W+WQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Jvc6T0hsHWXffEvQKNFhCmtcAcfBWvvbJSXZbmwAzQQ=;
-        fh=Bv+7aSOPCnILLbmujA+XlcYMdvhI+WP+lz6mnwY1Ahk=;
-        b=ngJ3tKp4y54SLVFKsaEXZPIiGaAswnFAVST6EZ0s6yYFbad35i5/JCADYIY4QDX89T
-         f7vi3yB7MFJsQUlNNYzSPxvweLXc/FTNTn2gaVDVXti/BBw4BdnUh5GvXbDtuHY+KyBM
-         jOWvNSYmixdYoLeViYYkjtv5zmd2aFLD3mctHYrKRHtDkYZEeICjb8bvWfsDKkbyiH5d
-         ypwB7rfC0cwEwYwjTdqja75hhj8IVg/FOPEP763zxSpIBCQGnGMCSfZKXKL7seLcw2hp
-         HRej2Zv3X2AnAalLCOMJ4YGRRYtxhPJqQISc6cDprfyJGM8v87edBqpHIWXq7a+5/Cig
-         Y9pA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795593112; x=1796197912; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Jvc6T0hsHWXffEvQKNFhCmtcAcfBWvvbJSXZbmwAzQQ=;
-        b=vqRzHD+bf+sQPyzlsaPujY/uZTjrhsK5to3sUf++vi7F46UOLLgrR5wW/CMW0bDS3l
-         VPPDRZu4nwWx3kZaKJKQhIafdKqqz0M662wMGP8Vbdm8IHYHaMoSeEviR2gHu4s7GBKT
-         XBI9XPLrAMWQLaMu6y53D789meK9rIya+m+eOFvfl3nOwcevummbkYLCx6mZ3ciV6eEN
-         wPWg0U6ugeZmayouacS1ZZ2LvDvhpAvUlsOfYTp1mqVMMuVBsQB9s9Gu1aDxT9DiqEb5
-         DlH8FJAklLy7Hx8eEv5kud5Xiv3hGu8isjLRr7btS3+m34qhrvaHQ7mIOD6rFahhWJ6T
-         XXHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795593112; x=1796197912;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Jvc6T0hsHWXffEvQKNFhCmtcAcfBWvvbJSXZbmwAzQQ=;
-        b=YjKqoyJmyttqgulDGIrDbLumIb5orr0+CQJFa+5PAui/XWgP9MSNeCCNGE+dMHVTF5
-         vEllR7yOEecdf2Ogz04X0A8/VdZlw/KQYvwd4SixhTDtA7yRyB+0g8j3gReicgullZbE
-         V2pp7Z967Ib9ggtM9dEOJl0zWM5pV95Bn/7uqR0BR5giL+o1jDyAUr5egxhYpAPjSrlQ
-         YJQTVtRnUJpWL9UcPfwXOGwKmsq1kL13KBoG1UWHWugwdcGSFDipZPqJerzijwTS7W8D
-         Jq2d2dv3nsnSREoPoQzFer3QGN4mABcAzir1ymtlM0BcXCOHn0aYHJx/2bh/mk0JfGH5
-         7iCQ==
-X-Forwarded-Encrypted: i=1; AL+hErGRTwcLL1+WXZS6pbfzUZrs+lxc21sUAl3SKqay2Vhw20At9/R1I5FWpjbumF6L45mCjnMADHyEzMBpeg==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/Pf2YWhGlXDX5C9w6NwDq0V+aytg5MVkkT1412RMlkOunq1uZ6
-	SsHsXTbC8IKPghsEaGH69P1vqn0KrgQxiifcOQ1g9L1mKo1gj60uNA7Fvp2BelRH45vvQ8PEiy/
-	Y+1oLqpHpdrsKAa2zckmpGXNjmAzWHaL60KQl+pJR5w==
-X-Gm-Gg: AZFdTZc0MsQTMiGVpnQGQZ+PDdAkMKgIocDAJNmv/0B52omkQmLI/Mi2hGMeBcmfsMu
-	A2ulvLc9pAkxjOkPsMwQkpPowNMG1xKEnmSUkilQo9IWBYN6ReN52iSWMzgYj2VcqyXKnJkte7H
-	+WUcRpTabbkgE/cIMNX0ohYDQokRwYVCgHhFkuYLZjNczOK9ijghs+pGBNuwrM2fSpTz3ujBcpe
-	Gxv4Q8POldNft+T0bMUjyFJj2zVHevmUoD+251DCcQjSngIw4lXYJEa139X7vgFuRdjHSC8vauh
-	2gj2Z62LYw8dtXXf5rsfFVjNg+ORM4aXI2x4qdQRNNUjYWWv4iaRQFNTIxUR0G+7sgDNuBPpN+o
-	RWwnmFNEgFf/XtFAmWY2hQ4UI/3pVYrdiJ3dMOsijX/pI/TKBkod4aV7aoHnJqVIOaBTQ
-X-Received: by 2002:a05:6402:c88e:20b0:6b8:854:da16 with SMTP id
- 4fb4d7f45d1cf-6bae6cc26f1mr3051170a12.18.1795593112101; Tue, 24 Nov 2026
- 23:51:52 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6817A606A323
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 08:29:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6817A606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 23F75240109
+	for <regressions@lists.linux.dev>; Wed, 25 Nov 2026 09:29:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1795595366;
+	bh=S6ViIbz72DmFlSP9JPwMgRiVlDXqmWEKuOKUgxyI9tw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 From;
+	b=VeflcpUyzPhCpjRA+hwGIABsDeXvnG4eFvJ3bXzmjs+kXSDXKtBiCc6WMRVbn1hmP
+	 EYePBgScZo2+dseEopZpPF+EWpUS4RooTMZMMIVpZ+Q6EHlmw+fwZFN04gzOhfoKz/
+	 U8fbKgAp/ZY1Nj6q0zYDV/drokdlPQ/f5102bqwh7TyWKGr0ziFb251T+bWtz+LjMO
+	 NVW9h4G0TcrahhwlOl6XFiXIxIctFN630WDA3YBPDzEKpk9NHI8L83S7FRxugT/Cak
+	 IaeK1pWvppakwIpacEBcHyqyetG6IQwgw6MzQltY8GqP05tVf6mrghnQ7H1iy2wjMh
+	 Th2Q0NZYiUp0A==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4jZCX35YyNz9rxD;
+	Wed, 25 Nov 2026 09:29:23 +0100 (CET)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,108 +55,156 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
- <awWOCejxtjP12xFX@gpd4> <ce38fb8b-94d7-48ba-93bb-3b72cfcb3e61@amd.com>
-In-Reply-To: <ce38fb8b-94d7-48ba-93bb-3b72cfcb3e61@amd.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 25 Nov 2026 08:51:39 +0100
-X-Gm-Features: Aa3M54rR6ZVPUahJy75241j29uSb7ZkPGUY3AC_gpwVLxdzpj7tWpPJ6cpSau0Y
-Message-ID: <CAKfTPtCudy4NV8sU+JWE=dcJpbKd+LVNZPZztU_0nD1a04Ca9g@mail.gmail.com>
-Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in select_idle_capacity()
- leaves busy tasks on little CPUs while big CPUs are idle
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Andrea Righi <arighi@nvidia.com>, James Buck <jbuck2005.linux@outlook.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Usama Arif <usama.arif@linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 25 Nov 2026 08:29:25 +0000
+From: Tobias Laas <tobias.laas@posteo.de>
+To: Laurence Oberman <loberman@redhat.com>, Thorsten Leemhuis
+ <regressions@leemhuis.info>
+Cc: Niklas Cassel <cassel@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, regressions@lists.linux.dev,
+ linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org, David Woodhouse
+ <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
+ "block: Increase =?UTF-8?Q?BLK=5FDEF=5FMAX=5FSECTORS=5FCAP=22=20=28=36=2E?=
+ =?UTF-8?Q?=31=37-rc=31=29?=
+In-Reply-To: <7eb28c6334a655eb5bfbf3035cf1f1ff1041bb3e.camel@redhat.com>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
+ <awSs5Cw3hFkf4O4T@ryzen>
+ <7eb28c6334a655eb5bfbf3035cf1f1ff1041bb3e.camel@redhat.com>
+Message-ID: <ea064dc05dbf146814f1495adad4d39e@posteo.de>
+Content-Type: multipart/mixed;
+ boundary="=_a0bc4d5717c364c5892ec2d35f20af0c"
+
+--=_a0bc4d5717c364c5892ec2d35f20af0c
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 
-On Wed, 25 Nov 2026 at 03:53, K Prateek Nayak <kprateek.nayak@amd.com> wrot=
-e:
->
-> Hello Andrea,
->
-> On 11/24/2026 6:45 PM, Andrea Righi wrote:
-> > Hi James,
-> >
-> > On Tue, Nov 24, 2026 at 11:56:52AM +0000, James Buck wrote:
-> >> Hi,
-> >>
-> >> Since commit 61ea17a63719 ("sched/fair: Add SIS_UTIL support to select=
-_idle_capacity()"), first in v7.2, CPU-bound multi-threaded work on my big.=
-LITTLE arm64 board runs 12-19% slower than on v7.1 and earlier, because wak=
-ing threads are placed on idle little CPUs while idle big CPUs are never lo=
-oked at.
-> >>
-> >> Turning SIS_UTIL off at runtime restores the old speed. select_idle_ca=
-pacity() and update_idle_cpu_scan() are unchanged in v7.4-rc4, so I expect =
-mainline to behave the same.
-> >
-> > A related regression from the same commit was reported by Usama here:
-> > https://lore.kernel.org/r/20261113153157.2495664-1-usama.arif@linux.dev=
-/
-> >
-> > On Grace, a zero SIS_UTIL budget skips the search despite suitable CPUs
-> > being idle. Your case shows that a nonzero budget can stop the scan
-> > before reaching an idle big CPU.
-> >
-> > We've discussed a minimum scan budget and accounting for idle CPU
-> > availability, though a small minimum alone may not fix your case.
->
-> This had problems in the past when Chenyu was iterating on SIS_UTIL
-> where the search opportunity at higher utilization is actually very
-> low and cutting off search for !idle core was beneficial for SMT
-> systems.
->
-> Now, for systems without SMT, it has its benefits too but a system
-> without SMT should be equivalent to a SMT one where test_idle_core()
-> returns true always if an idle CPU is present.
->
-> So I'm wondering if {set,test}_idle_cores() can be extended !SMT
-> to act like a gating indicator to say if an idle core exists or
-> not much like how !get_rd_overloaded(this_rq->rd) serves as a
-> gate for newidle balance - it can be flipped to true when a CPU
-> goes idle or if load balancer sees an idle CPU. Thoughts?
+Am 23.11.2026 22:49 schrieb Laurence Oberman:
+> Hi Niklas, Tobias,
 
-I tested idle_cores tracking for !SMT and EAS months ago [1]
-[1] https://lore.kernel.org/all/20251202181242.1536213-6-vincent.guittot@li=
-naro.org/
+Hi Torsten, hi Laurence,
 
->
-> > Given both reports, reverting the commit seems the safest thing to do
-> > for now. That would restore the previous asym search behavior and we ca=
-n
-> > revisit a better consistent strategy to cover both sym and asym CPU
-> > selection later.
-> >
-> > Prateek, Vincent, what do you think?
->
-> IMO it still makes sense for SMT systems since capacity on systems
-> with SMT only makes sense if the entire core is idle and then it is
-> just a best effort thing right?
->
-> set_idle_cores(), would flip the flag as soon as an idle core is
-> available and after that SIS_UTIL is bypassed. I don't think the
-> SIS_UTIL cut-off for non-SMT ASYM_CAPACITY systems makes that much
-> sense given misfit penalty is much higher.
+I am responding to both of your emails in this email, because you both=20
+suggested to check out intel_iommu=3Don,sp_off.
 
-In fact that depends on the number of CPUs in your LLC.
-The current SIS_UTIL is unfair for small system because you skip the
-loop with "low" utilization:
-- with 12 cores per LLC, you skip the loop if the avg utilization per
-cpu is above 839 whereas it also means that you have the compute
-capacity of more than 2 CPUs that is not used and util_est can worse
-the situation
-- but with 64 cores LLC, you still tries 5 CPUs for the same avg
-utilization per CPU
-- and with 12864 cores LLC, it's 10 CPUs
+>=20
+> I tried to help here but (full transparency) I had some LLM help for
+> further ideas after I coul dnot repriduce this on my platform.
+>=20
+> I tried to reproduce this on a Coffee Lake desktop (i7-8700, Cannon
+> Lake PCH AHCI 00:17.0) whose INCLUDE_ALL DRHD reports the same
+> relevant capabilities as Tobias's dmar1:
+>=20
+>   dmar1: cap d2008c40660462 ecap f050da
+>   (SLLPS =3D 2M|1G, ecap.C =3D 0, MGAW 39, SAGAW 4-level only)
+>=20
+> with intel_iommu=3Don, DMA-FQ default domain, max_sectors_kb =3D 4096.
+>=20
+> - 6.12-based kernel (pre d373449d8e97, i.e. the old VT-d page table
+>   code, with the larger BLK_DEF_MAX_SECTORS_CAP): 2M O_DIRECT reads,
+>   clean.
+> - 7.4.0-rc1 (generic iommu page table): 2M and 4M O_DIRECT reads and
+>   2M writes from hugepage-backed buffers against a SATA SSD, ~15k
+>   I/Os, no DMAR or ATA errors. The iommu:map tracepoint shows
+>   2 MiB-aligned iova/paddr mappings, and domain_translation_struct
+>   shows 2 MiB leaf PDEs (e.g. 0x000000039c200082, PS set), so the
+>   superpage path was exercised.
+>=20
+> The 4088 vs 4089 threshold matches exactly the point where a request
+> first needs a full 512-page (2 MiB) IOVA, which is where superpage
+> mappings become possible. All three of Tobias's fault addresses fall
+> in the same 2 MiB window at 0xff400000.
+>=20
+> So on this hardware neither the old nor the generic page table code
+> shows the problem, which supports Niklas's suspicion of something
+> platform specific. One difference: on Tobias's system dmar0 reports
+> no superpage support (cap c0000020660462) while dmar1 does; on mine
+> both do.
+>=20
+> Tobias, a few things that would maybe help narrow it down:
+>=20
+>   1. Boot with intel_iommu=3Don,sp_off and an unmodified cap. If the
+>      faults go away, superpages are involved.
+Very nice. I just tried with a kernel with the cap at 8191, which I had=20
+at hand (the new default cap is 8192 IIRC): with intel_iommu=3Don,sp_off=20
+the faults go away, indeed. More on this below.
 
+>   2. The full dmesg from a failing boot, including the DMAR/DRHD
+>      lines. The faults are reported as DMA Write while the outstanding
+>      commands were WRITE FPDMA QUEUED, and I'd like to see what else
+>      was in flight.
+To be honest, I'd like to avoid having to capture a full log when the=20
+error occurs, because I can't think of a good way to save it.=20
+Technically, I hope the logs up to the first fault are identical with=20
+the various caps. As you can see in the log corresponding to the first=20
+screen full of errors in the attachment, there are exactly two WRITE=20
+FPDMA QUEUED commands that fail at a time (with the cap at 4089 IIRC),=20
+so the log looks very repetitive. After the first couple of errors, the=20
+kernel starts reducing the ATA link speed (and later maybe also the UDMA=20
+speeds) and continues to do so until it gives up on mounting the rootfs.=20
+Then I=E2=80=99m greeted by an initramfs shell prompt, and I=E2=80=99m not =
+sure if I can=20
+mount any other filesystem at this point with the slimmed down kernel=20
+config I used to speed up the bisection.
+I=E2=80=99m not sure if I=E2=80=99ve understood you correctly regarding you=
+r second=20
+sentence: I don=E2=80=99t see any contradiction here=E2=80=94for a WRITE FP=
+DMA QUEUED=20
+command, there should be an associated DMA write. The QUEUED just=20
+indicates that the SSD can reorder the commands in the queue (NCQ).
 
->
-> --
-> Thanks and Regards,
-> Prateek
->
+Am 24.11.2026 09:55 schrieb Thorsten Leemhuis:
+> I just a few days privately was told that "intel_iommu=3Don,sp_off"=20
+> solved
+> problems wrt to one unresolved regression related to iommu with a
+> similar generation intel hardware. The user wrote "[kernel] code
+> improperly thinking that the CPU supports something called=20
+> "superpages",
+> which it does, but only when the integrated GPU is disabled (speciality
+> of Intel Haswell)."
+>=20
+> Could that maybe related? Do you use the iGPU? Does that parameter
+> prevent the problems? It's a long shot, but quickly tested, so I=20
+> thought
+> it was worth mentioning.
+Yes, it could very well be related. My CPU is a Haswell (Refresh)=20
+Desktop processor, and I do use the iGPU. And sp_off seems to prevent=20
+the problems, see above.
+
+But what I still don't understand is why DMAR faults occur. There are=20
+dmar0 and dmar1, and as Laurence explained, dmar0 does not support=20
+superpages on my board. I guess this is because the iGPU is supposed to=20
+be associated with dmar0 (The BIOS might configure this differently when=20
+I install a PCIe GPU and deactivate the iGPU). Is there any conflict if=20
+dmar1 uses superpages and dmar0 doesn't? Or does the kernel not respect=20
+that dmar0 does not support superpages? Or is the iGPU associated with=20
+dmar1? Who determines this: the kernel or the BIOS?
+
+Best regards,
+Tobias Laas
+--=_a0bc4d5717c364c5892ec2d35f20af0c
+Content-Transfer-Encoding: base64
+Content-Type: application/x-compressed;
+ name=errors-page1.log.xz
+Content-Disposition: attachment;
+ filename=errors-page1.log.xz;
+ size=756
+
+/Td6WFoAAAFpIt42AgAhAQEAAABSQCtu4BFRArhdACITRCb6Xl/hSARhz/6EHyB2DO+W+mIEXPW4
+9keuMX/fvz71eXlhu8OOAPIx6Gu0T4ns8pGP1CdRSOhWfUkV55qDAJpJaszN6meosmvP2+XAKE9k
+qNdBaR6OKSeo2pLZmcTw9Qsfvgn3OeLAbzMHYGdPoLbkdVFhikFVFCNY4HYXq+T04hOIMG1LgClT
+ZuqIMUzjActaxKY4VcyvkV6/mz2UakbFow+Cgz7sARw0dGqkSRxvgedSWjZfpKOjP4Ll8buPcjHG
+ebxU5MesHe7ST86Zd3vQ2C4A/oQB3jf47cFP2SoIxpN+Yr3kneTruvCAve8TZuvl7ImLAUen86xd
+JofDp3rx9OR/4nUj7cmdgTq2S17774PF6bB9SOpu0Hxo3CDMx+/3nMQ7OSaAWMXrGbX/qjV7ClVv
+nlDVu4iRpETy7IMUCrU/N1nHBG+HWZmX2jVCL1/8EppHMDvBkTRqFpfDDU+9jHOiZ/2Z1MLeDDSl
+/4huoxVKIiy2kLz/JbHwZtSsMbFgmkus2DZe1MRdC+UJ8fO1vf3ESNzFVqp6fYJ+SOl98Ag65Jnp
+8+CbtwNJYQnbfcUD5aH9/RjURtu606YhYgi5576dUq1/mZxjzCyyObKO0t7l7t9q9zrs5SzRrobQ
+Nx38zFBec8CXCTtQlc09oOrHF+GJX2bqqQY6QlQKWGUExFXMTiTrIGKH3dPpczGV7s39kcoCqXif
+p5MbW+7aQEpJPrXkGsMRRxpMIuIkrZ06XZODo+h+LcFsL5rE3CE6xChToAyEZcW7HmV76pJeX1mc
+vaijG9t+WfLR9Wbe47Rcmkl/JCmn2aa3I71UYO2L9qF11s2x16Mw7lh5PRhBwT6zQJDR8wAknnWf
+VBQOPIbZmSG7qrlIKQXztnXvI+Bvmfl15oYf0gT5NywFrYidUui1loqIkABASj3aAAHQBdIiAAAe
+pB+uPjANiwIAAAAAAVla
+--=_a0bc4d5717c364c5892ec2d35f20af0c--
+
