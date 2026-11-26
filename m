@@ -1,68 +1,117 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795687668;
-	b=dwoJQfTUvhQIwfLawRCS3h5Jhkynu+ozINnbOopUgUV+i85YCT1tYVEtZdUwWopJ3VBj
-	 KriWQavoTvJO5RvXlB32KRxJRvlK0VZT6CfAqyrI++1E8VNGYdac5Lgps/aC50p9bWc6z
-	 JYyPlHKqI/bIoXMkiD9+IFEkzE8z/t9ROEBLIeWEAlre0iih/GEZQW2O/CYnQ5VI85h2u
-	 ko0nnEcZbvuKO/6LTH61vSCzigQOc+DnLcj51tvGVCO8U759K8WkuLa1ayDMenBc3Amsw
-	 LOOZLt2WLJBNajgONrwT4sv7SulUktVRbCVo8rMq7arlcMeph9Q/qZYWn3wDI7ZKLSQ==
+	t=1795699916;
+	b=L41az57Qngb/wYV/l+ZypPFxiOFDCdZO8mh2zWbu7zP/e3gjWY3Q7thP3oD9da2c/uPv
+	 oy2FFJnm/GM6Not8jHt/txvtWeex/YJK4CArJ6bKOUn9DVian2mbTpj3INsRAiDRX7WG9
+	 p1Ou0I2UfmG2iCMzlhfo7N1n70Ma3G2rsYb+mRGbw6zUkjPzkWTIEGoLaGckXnEnm+opq
+	 N58XA3BH/KeR0M7luSccHzkWgCHoDlg1/RCg/Z79PoZwPx00ofoEZhALN4p+KFmKkpZJM
+	 N5xT9CfORI+7oWBfNt8dxVkT6WXmej9h/4Q8++qgeppIhvUpfAK1+49IfDHK+yAS8nA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795687668;
-	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:From:To:Cc:
-	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795699916;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=sqyhnicDhpkGAm6vt+Gh5feLU6BYKVrlXMdIf5bBnuA=;
-	b=aVozwRaQh00EuNJG4C+zrj9VFX8TotnC+6BjJtqWADM2Yt7/+87fkVEaivXs1LorcaTo
-	 uy5TDlmewmtC4A8IbB9ow2UTg6JuHPtbwJ+XD+g0ftpsAwrP5muaFGnc5avrTywdfKSYV
-	 +jnoLE7h/yx1YVPgbmBKCrzfy4D7D7RHO/wYTkdxatxItfSsWwGv38tErBgIfCO5qNkKW
-	 ygglzK/wj4AGh8s9ggNbHBZA2xoX3v/37ua18JpR0uCS+OYlMVsLm2Bozm8sB/tcyd9eW
-	 bUxi1u5BvSDMO1nJWHRY/M5wAj9azk7DgFTCkxgmILbtH3ZPqipPi6CsVSzrjdcECYw==
+	bh=3B43kyyzUUTLVNXK4AN+mljA56km2Ewzy7V4dK6lZDs=;
+	b=zk/Fjv4WMswH8o/m1OQoAWyWHDEVAdv6kxSM3M3rV/N1ibajNzUoTQZ95lvaw5LSjkxs
+	 rmHkwDRuS7wvIrP9E638dalacj/egckdv3YEXHBPhO8B64xeHhc2NBhWyDQ5a3KXSqvAt
+	 U2P9VkIdnu7XZeTdy3jw6ti4TKtyZN9hp7cm3koibHMylTu4g5Ozza52TG5ohVs+iF7vV
+	 Fk0wZwCiFBVqBEamYdmoxvWn10umrMskDihiEGNqY8nM261v+pXJsH54RCo8uJ4oc49Uq
+	 kqqowA/tBO1X1R+n8uyrVUPMY3ocm/KopN1uNynlyNnMAiERfJgah+GC4FYW3Bcd2ZQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kylinos.cn;
-	spf=pass smtp.mailfrom=kylinos.cn;
-	arc=none smtp.remote-ip=124.126.103.232
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=f7EDdOir;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02759606A31E
-	for <regressions@lists.linux.dev>; Thu, 26 Nov 2026 10:07:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02759606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 359f1e9ae98111f19a56ed5b684f684d-20261126
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:7abd7bb3-f148-44ef-a6fc-5090b5df27bb,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:7db8b62,CLOUDID:d88d4222f20b6b6f86b2c378f6c4f1a0,BulkI
-	D:nil,BulkQuantity:0,SF:102|850|865|898,TC:nil,Content:0|15|50|99,EDM:5,IP
-	:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
-	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 359f1e9ae98111f19a56ed5b684f684d-20261126
-X-User: zhangheng@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zhangheng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 798453359; Thu, 26 Nov 2026 18:07:38 +0800
-From: Zhang Heng <zhangheng@kylinos.cn>
-To: tiwai@suse.de
-Cc: perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	helamonster@gmail.com,
-	regressions@lists.linux.dev,
-	Zhang Heng <zhangheng@kylinos.cn>
-Subject: [PATCH] ALSA: hda/realtek: Fix mute LEDs on ThinkPad X1 Carbon 6th
-Date: Thu, 26 Nov 2026 18:07:31 +0800
-Message-Id: <20261126100731.903504-1-zhangheng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E9F606A31E
+	for <regressions@lists.linux.dev>; Thu, 26 Nov 2026 13:31:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38E9F606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=f7EDdOir
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1795699915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3B43kyyzUUTLVNXK4AN+mljA56km2Ewzy7V4dK6lZDs=;
+	b=f7EDdOirMWXC8akAqM9hNUNbt67exkg4w3GR3ZxjimjvLhVh0pYAcCTqRTE+ih/EONmbc2
+	LWmfgyO226ldZNKYd4m8ksWnOlp37kk8jH6L1AezJHweNA1QH9uegt6DCeg4hLebfG0jyB
+	ON/7vw0OJJKYkKFRXFjRMVTsQGz8zQI=
+Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
+ [209.85.221.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-sOwVTgcDOjqs74QkRTQwBw-1; Thu, 26 Nov 2026 13:31:53 +0000
+X-MC-Unique: sOwVTgcDOjqs74QkRTQwBw-1
+X-Mimecast-MFC-AGG-ID: sOwVTgcDOjqs74QkRTQwBw_1795699912
+Received: by mail-vk1-f198.google.com with SMTP id 71dfb90a1353d-5ecb636b587so1114139e0c.3
+        for <regressions@lists.linux.dev>; Thu, 26 Nov 2026 05:31:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795699912; x=1796304712;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3B43kyyzUUTLVNXK4AN+mljA56km2Ewzy7V4dK6lZDs=;
+        b=CeLHWZMLmqKpAE3owogX/TZbY2GhRmNiX3OhmSvlbu5ROIT7rxH8arQJe5lztHsLvp
+         bbBoRp3UXFkJJLk6OPkySva/wEr+67BZb50DbFXNC5kZSC3YqdMrUzqA/kI7MLuEaL6b
+         W+MXvJLTlVkLjhiVUBuuNAbbn3JzlyAoxf52zQNsxvJqmeVDVkO9j+YGtkf1poMWRRAp
+         ecMMOgUuRq8XXZIVMTucJ6OGlZ66vVOQipy6ws9j1ItkYCvynu0QCu7X+wChykXiOW+j
+         PFZnexM1ru9ZUgMflL7np2LiYSjIyIT/bfTdyqIElZGlMMJLD5S2is3x2wUYrMKXu9E7
+         urrA==
+X-Forwarded-Encrypted: i=1; AL+hErGgg1khkAUo3cy9jcHpT24G9WrwfuRtuII1JPR73mKVAQ7IenIEk8ZSo16Fba/dKwZIv9nSFnzutnW6oA==@lists.linux.dev
+X-Gm-Message-State: APuU4Z8twt7ONCQVGOzXYRvbkSdFpjO2dAjYEKlDdUjT+yVFZdRvljUH
+	XYtz9R3DCFrDHbgRUMufvlZFpQr2m+7EW481KRO46SLxgB2c+dJlZ5lqLY0iOvatQQxkrbabeXI
+	PvYQYxIrATh/7IIaRHMwxw8MzowJDjZt73zYR8mgMqHw7F8bF7io3uXRGFHUsX3OR
+X-Gm-Gg: AZFdTZfaDZZvLRhTI1EzABaJrVV9NcmsnZKDeBb2kNSJb5vgJqtuOFAnkOQrHYhjjRg
+	4pjtiZohPI0/fUliiZgMd2KPVGrhv6c//7fpSQkEHIgBpXBFuUvLMfyvvIKP+1gI1z2Dcx2XiwE
+	1v9/itoTLDIN37z1odMICyjIr8ZvzqoB2sloRq9l0OOEMJ7KODnhlxMlSzpyG6g+BKafeWIHQTh
+	E/4OTgFi27psk6AD1Z2uzFS7+NWh1CPeqQqHeJ7SPJcKaGEBN3BR9wuQ9/c8JQdR97Xc1iseG8Q
+	kDKYP4ViI++OV/Al9vo/j8ThHBFsSeBnDn1R1gOOIWq4UY/STaLds+nFkrYvlNk6heKS8hSd/ba
+	9qB1DJkPTE2ejCN0yy1yy5e1CSpiip1G8mgFMqX9MOnXDnyR7/LgWvOaUILSZITNCDOALv9yO+v
+	VdXU8PYeiHp4r9Z4J1nVDhsETEYpG8KCC3muAdZDvH/thWxpDNvWvu0CSutJlOjqliQCdmQA==
+X-Received: by 2002:a05:6122:29cd:b0:5ec:d751:a18e with SMTP id 71dfb90a1353d-5ee8af5d5c6mr11288494e0c.19.1795699911714;
+        Thu, 26 Nov 2026 05:31:51 -0800 (PST)
+X-Received: by 2002:a05:6122:29cd:b0:5ec:d751:a18e with SMTP id 71dfb90a1353d-5ee8af5d5c6mr11288267e0c.19.1795699910439;
+        Thu, 26 Nov 2026 05:31:50 -0800 (PST)
+Received: from loberman-thinkpadp1gen5.rmtusma.csb ([2600:6c65:2440:d8c:929c:b769:6def:faa3])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-55d788506b0sm180018331cf.17.2026.11.26.05.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2026 05:31:49 -0800 (PST)
+Message-ID: <f323c3d62265dfe90fa71514028af4d35f6e2420.camel@redhat.com>
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
+ "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
+From: Laurence Oberman <loberman@redhat.com>
+To: Bart Van Assche <bvanassche@acm.org>, Lu Baolu
+ <baolu.lu@linux.intel.com>,  Jason Gunthorpe	 <jgg@ziepe.ca>, Joerg Roedel
+ <joro@8bytes.org>
+Cc: 70sp <70sp@protonmail.com>, Thorsten Leemhuis
+ <regressions@leemhuis.info>,  Tobias Laas <tobias.laas@posteo.de>, Damien
+ Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	regressions@lists.linux.dev, linux-block@vger.kernel.org, 
+	linux-ide@vger.kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org,  David Woodhouse <dwmw2@infradead.org>, Will
+ Deacon <will@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Date: Thu, 26 Nov 2026 08:31:48 -0500
+In-Reply-To: <0edb9525-5068-42e6-b6c3-a1dcebcbcea7@acm.org>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
+	 <awSs5Cw3hFkf4O4T@ryzen>
+	 <ec36d13e-e4c2-4bfb-8b50-69d4a1628839@leemhuis.info>
+	 <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info>
+	 <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org>
+	 <2adaf0ef9e1a2fa18590f7d8dbf203c0f7de2be7.camel@redhat.com>
+	 <uJluFNYGCCrdvnYT3MatN_4Om8UczTJX_dzxumJxyCAC7F-Ubrekb7LPwlRxhCW0J91UBf-TqeRoJQfgYIYBRvMsPmE-Qs1eAg5zbDP0s58=@protonmail.com>
+	 <0edb9525-5068-42e6-b6c3-a1dcebcbcea7@acm.org>
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -72,34 +121,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 5yij8JjX9ChA42OgAcf7ExqGwZrH_YTRNeZv74Zx0Gs_1795699912
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ALC285_LENOVO_DAC_RENAME is not chained to ALC269_FIXUP_THINKPAD_ACPI,
-so the vendor fallback that registers the mute LEDs is skipped.  Chain
-it to restore the LEDs.
+On Wed, 2026-11-25 at 15:27 -0800, Bart Van Assche wrote:
+> On 11/25/26 2:51 PM, 70sp wrote:
+> > as I mentioned in the referenced regression thread I reported, the
+> > patch I sent out was basically an example to show that it works for
+> > my use case. I wrote that I don't think the patch is ideal (in
+> > fact,
+> > I think it's an absolutely terrible solution to fix this). This is
+> > also the reason, why I just sent it as a snippet of code.
+> >=20
+> > Please take a look at the code before the regression started to
+> > occur. It was implemented universally. These vibe coded patches are
+> > horrible compared to the original code. We are literally making an
+> > exemption for a specific CPU in a place where it shouldn't be. The
+> > actual correct solution would be to make a patch which works
+> > similarly to the pre-regression state.
+> >=20
+> > If we are going to merge something that is made by a LLM we should
+> > at least make it good. Ideally made by an actual human.
+> (+Lu, Jason and Joerg, signers/reviewers of the patch mentioned in
+> the
+> Fixes: tag)
+>=20
+> Is a better solution possible than the patch "iommu/vt-d: Disable
+> superpages on Haswell with integrated graphics" I posted here:
+> https://lore.kernel.org/linux-block/uJluFNYGCCrdvnYT3MatN_4Om8UczTJX_dzxu=
+mJxyCAC7F-Ubrekb7LPwlRxhCW0J91UBf-TqeRoJQfgYIYBRvMsPmE-Qs1eAg5zbDP0s58=3D@p=
+rotonmail.com/T/#mc147f250c5356e3742ab3d30ccf6b4a3a8c4196b
+> =C2=A0
+> ?
+>=20
+> Thanks,
+>=20
+> Bart.
 
-Fixes: 108704eecab9 ("ALSA: hda/realtek: Rename Line Out control to Headphone on ThinkPad X1 Carbon 6th")
-Cc: <stable@vger.kernel.org>
-Reported-by: Jeremy Bryan Smith <helamonster@gmail.com>
-Closes: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2174970
-Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
----
- sound/hda/codecs/realtek/alc269.c | 2 ++
- 1 file changed, 2 insertions(+)
+@Simon,
+To be clear, What I tested was the patch Bart suggested. Not your
+original suggestion. We will still need a test from Tobias to make
+sure.
 
-diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
-index 147e97f..a00b1b2 100644
---- a/sound/hda/codecs/realtek/alc269.c
-+++ b/sound/hda/codecs/realtek/alc269.c
-@@ -7476,6 +7476,8 @@ static const struct hda_fixup alc269_fixups[] = {
- 	[ALC285_LENOVO_DAC_RENAME] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_lenovo_dac_rename,
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
- 	},
- 	[ALC287_FIXUP_YOGA9_SPEAKER2_TO_DAC1] = {
- 		.type = HDA_FIXUP_FUNC,
--- 
-2.25.1
+Thanks
+Laurence
 
