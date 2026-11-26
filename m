@@ -1,61 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795682922;
-	b=FKnosCBs+jY0M8zm/rhkeEfoydZw7Jp0JRkcOXzi0G87Wx8dGtyvQC2/v4S7LQ8snY1y
-	 Zg2g+orCzIMwT3li7Qef9vPr0+bSzGyofjAWcvFdi0dM/dLbnyPA9lwYlRbQT8+fZpFnt
-	 lzvXsdTPY+jO0D80n6l+TEW0fPKDJUCPCO2BsG7DAdnfnIlqLJKC7WazM9WQcotE7pecL
-	 myK++s1gogv3AUf1QBNtWvNwyM4MahxYTz3nqaiE6GhINd/jeipJ7T/LJN8JJRkjdfPsB
-	 MLbvERb4z71oAhMTwmHsq5VvHhQnFtCiONveMnyxE6UHTmwlU0lXLT1l2xVX33gzhnQ==
+	t=1795687668;
+	b=dwoJQfTUvhQIwfLawRCS3h5Jhkynu+ozINnbOopUgUV+i85YCT1tYVEtZdUwWopJ3VBj
+	 KriWQavoTvJO5RvXlB32KRxJRvlK0VZT6CfAqyrI++1E8VNGYdac5Lgps/aC50p9bWc6z
+	 JYyPlHKqI/bIoXMkiD9+IFEkzE8z/t9ROEBLIeWEAlre0iih/GEZQW2O/CYnQ5VI85h2u
+	 ko0nnEcZbvuKO/6LTH61vSCzigQOc+DnLcj51tvGVCO8U759K8WkuLa1ayDMenBc3Amsw
+	 LOOZLt2WLJBNajgONrwT4sv7SulUktVRbCVo8rMq7arlcMeph9Q/qZYWn3wDI7ZKLSQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795682922;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=io1kMFUEr/ccPJRfYw0m/6E8bCk045K1I/y5et1ULyY=;
-	b=g7s24/qdg1cP368UdPDP1M0bbJTMNYeLoKjS1iZDdJSuQJZv2QmGjn0KJxzncbHCh5od
-	 EcP72sqFe8w9xlgVTst31Cmf6gbggDWYRaX/0yyAHVaED7/5gZYo5sv/KNqrUz2qiVg86
-	 P/I2HgEq0v7kif9K8Xh36mR3r+GjiyNxIURM5AIGjo1Ch4oXgJZjLvJIhoIYXgL2l+/uv
-	 u4yCo/A/h5N/+EtI5G+sTIiEUCYE+UE1AOL2TrnFALXui12oISbqZ31O+EoLO8QtkU59V
-	 eMm7nZ3+mRwAUPq/u/Uo/gb/KWyOfCQ9m6ompgWAcsp5RZpLWkRTWnFxB5MqtZ6bh5w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795687668;
+	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:X-CID-BVR:
+	 X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=sqyhnicDhpkGAm6vt+Gh5feLU6BYKVrlXMdIf5bBnuA=;
+	b=aVozwRaQh00EuNJG4C+zrj9VFX8TotnC+6BjJtqWADM2Yt7/+87fkVEaivXs1LorcaTo
+	 uy5TDlmewmtC4A8IbB9ow2UTg6JuHPtbwJ+XD+g0ftpsAwrP5muaFGnc5avrTywdfKSYV
+	 +jnoLE7h/yx1YVPgbmBKCrzfy4D7D7RHO/wYTkdxatxItfSsWwGv38tErBgIfCO5qNkKW
+	 ygglzK/wj4AGh8s9ggNbHBZA2xoX3v/37ua18JpR0uCS+OYlMVsLm2Bozm8sB/tcyd9eW
+	 bUxi1u5BvSDMO1nJWHRY/M5wAj9azk7DgFTCkxgmILbtH3ZPqipPi6CsVSzrjdcECYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AM2oPE1h;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=kylinos.cn;
+	spf=pass smtp.mailfrom=kylinos.cn;
+	arc=none smtp.remote-ip=124.126.103.232
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9166606A327;
-	Thu, 26 Nov 2026 08:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AM2oPE1h
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86D31F000D3;
-	Thu, 26 Nov 2026 08:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795682922;
-	bh=io1kMFUEr/ccPJRfYw0m/6E8bCk045K1I/y5et1ULyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AM2oPE1h1eijCq+wOs82I+3Ir+mXWdXechOjxktI2SaX4enYJ7F/SJItwYNeNPc/o
-	 A9AFjWZ/sToiQUR35COyMiVkjdiaqCHPvq4vS5sJaIkkrV8L/n1CFwwjtjOLlBIUxI
-	 BVFmSqUhySSFvg7iib0ZWfglytiNAXQDm8NYm4X4/Td7WwdeP6nlYQW2N9PeDAU0bm
-	 x/4mZWcb1p+//twK4V+mxgxAiojBThqOYyG0TH9pEMzpXCDCdcZML/adj8jvVRy9vX
-	 a9gkqlPnD2NHrPpGtfbaz1jSh0cJsdYXwhrA0aDGuyVbT9vtqn+luNToGIHrhG2U68
-	 89MIvV5y+rNEA==
-Date: Thu, 26 Nov 2026 09:48:37 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Pe3k <pe3cek@gmail.com>
-Cc: iommu@lists.linux.dev, Lu Baolu <baolu.lu@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Damien Le Moal <dlemoal@kernel.org>, regressions@lists.linux.dev
-Subject: Re: iommu/vt-d: data corruption, AHCI gets IOVAs inside its RMRR (HP
- Gen8)
-Message-ID: <awfyZTNe9WFue33m@ryzen>
-References: <CAGvcwsDdKSZe0reeuT0eQabaSbM6+KAfwFimxiqhvKrjD2nQeg@mail.gmail.com>
- <awX_cNOqtTjAP33a@ryzen>
- <CAGvcwsDwi9vNcCLxdBz-Arx=5i-fFvqxP+QbRKrx7hK4yqmvRg@mail.gmail.com>
- <awa_ys0XSt9UwAZE@ryzen>
- <CAGvcwsCvuedSN4Fs1TaFRTVc2QbcQK94P6+xqH3qmEvNqq3d9g@mail.gmail.com>
- <CAGvcwsDzu1HEUPWNRvybqH1=Lte0rYk9JohctDgR252eByBtvg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02759606A31E
+	for <regressions@lists.linux.dev>; Thu, 26 Nov 2026 10:07:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02759606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 359f1e9ae98111f19a56ed5b684f684d-20261126
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:7abd7bb3-f148-44ef-a6fc-5090b5df27bb,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:7db8b62,CLOUDID:d88d4222f20b6b6f86b2c378f6c4f1a0,BulkI
+	D:nil,BulkQuantity:0,SF:102|850|865|898,TC:nil,Content:0|15|50|99,EDM:5,IP
+	:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
+	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 359f1e9ae98111f19a56ed5b684f684d-20261126
+X-User: zhangheng@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <zhangheng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 798453359; Thu, 26 Nov 2026 18:07:38 +0800
+From: Zhang Heng <zhangheng@kylinos.cn>
+To: tiwai@suse.de
+Cc: perex@perex.cz,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	helamonster@gmail.com,
+	regressions@lists.linux.dev,
+	Zhang Heng <zhangheng@kylinos.cn>
+Subject: [PATCH] ALSA: hda/realtek: Fix mute LEDs on ThinkPad X1 Carbon 6th
+Date: Thu, 26 Nov 2026 18:07:31 +0800
+Message-Id: <20261126100731.903504-1-zhangheng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -65,36 +72,34 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGvcwsDzu1HEUPWNRvybqH1=Lte0rYk9JohctDgR252eByBtvg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 25, 2026 at 04:49:10PM +0100, Pe3k wrote:
-> Hi,
-> 
-> I tested the suspected commit and its parent on the spare Gen8. Same
-> setup as before: intel_iommu=on, translated default domain, the same
-> copy load, and the 5.11 mainline config trimmed with localmodconfig.
-> 
->   c062db039f40 (parent), two boots: clean. 0 of 6 copies bad, no DMAR
->       errors, and no map in the RMRR range in the iommu:map and
->       intel_iommu:map_sg traces.
->   c588072bba6b ("iommu/vt-d: Convert intel iommu driver to the iommu
->       ops"), one boot: broken. 21 x "DMA PTE for vPFN 0xf1f80..
->       already set" with the WARN in __domain_mapping, 1 of 6 copies bad
->       (20 zero pages and 1 page of RMRR firmware data), and iommu:map
->       shows AHCI mappings inside 0xf1f7e000-0xf1f94fff.
-> 
-> So c588072bba6b introduced it. Its changelog says "Remove the iova
-> handling and reserve region code from the intel iommu driver". Before
-> it, VT-d reserved the RMRRs in each domain's IOVA space itself. Since
-> then that seems to rely on the generic reserved-region code, and on this
-> machine AHCI's RMRR does not end up reserved in the IOVA space of the
-> group it shares with 00:1f.0.
+ALC285_LENOVO_DAC_RENAME is not chained to ALC269_FIXUP_THINKPAD_ACPI,
+so the vendor fallback that registers the mute LEDs is skipped.  Chain
+it to restore the LEDs.
 
-Adding regressions list and dropping linux-ide list, since this is not an
-ATA problem.
+Fixes: 108704eecab9 ("ALSA: hda/realtek: Rename Line Out control to Headphone on ThinkPad X1 Carbon 6th")
+Cc: <stable@vger.kernel.org>
+Reported-by: Jeremy Bryan Smith <helamonster@gmail.com>
+Closes: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2174970
+Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
+---
+ sound/hda/codecs/realtek/alc269.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
+index 147e97f..a00b1b2 100644
+--- a/sound/hda/codecs/realtek/alc269.c
++++ b/sound/hda/codecs/realtek/alc269.c
+@@ -7476,6 +7476,8 @@ static const struct hda_fixup alc269_fixups[] = {
+ 	[ALC285_LENOVO_DAC_RENAME] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc285_lenovo_dac_rename,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
+ 	},
+ 	[ALC287_FIXUP_YOGA9_SPEAKER2_TO_DAC1] = {
+ 		.type = HDA_FIXUP_FUNC,
+-- 
+2.25.1
 
-Kind regards,
-Niklas
