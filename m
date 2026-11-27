@@ -1,100 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.172
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.42
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795774402;
-	b=2cSb8LB2hU7HeskyTpTvR9PC/0G88KOp0F6fDC+RSYkCZtgJBtc0QbcrJypvRU5oRkUq
-	 CL2QtbtYKjHlX9hdM4d6W8jRO2h0xz5Fj/PydUchps5Zcm2fVby945bguJKkhapGpzTI2
-	 PNMsXaarNmGZGuB3EaEYsbdJDm0QZ3ZJOc3OqCnUD3RXYT0c4JflkRILQaxlKEtB+R3g6
-	 PtBoAF40lNFn49s2ZP0aQBmVemR7FnuVVfzTAQMczw6qW82epQQfwpTFTieS8pm0Y9YnT
-	 jZOvFBxT1HBem8oJO1HAAbm//t4fKbNxeQeXwYYFoLT/UVNq/HnqeiR52LzGMI37aBA==
+	t=1795778359;
+	b=BoLegatDX0d4MZm9XI/2OGKHn3ofPxpJiv98ZG7u8VEVAOPpM1q5+9Gth0jKKcI7D1Z5
+	 lAszVIMVZa5XGCNvzHrj5pQ+1fT198cKUhEQN2ghpR7hmpS3ETQB4xfJEmzQ0OtVuFYQH
+	 WVnrAHVsAS5F16XRnPamztRiAEEWEjzVapxPtqf9/NzQKfjib0bUARC/bldSPfCnx+W7p
+	 WMeGhk1YWpKL8rHZdHE0fHQT/neLyBbCbEaUc+yGrVHD+s6Qzu/DartaoUx1hGNOgnI6w
+	 +TZqUxqv1oqqs8kFwIKHEwWSwh6kplsFQzMcTQlDOx3X5NlyqUSXKgEj73GFHXOtmMA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795774402;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795778359;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Rg3eS140aI/+OFL98v6V5INyaBk7whCAxPtAkMQ5r2M=;
-	b=F7NttEa3EUXKwOHFLuMwJZ5HzbP6NclIh/ImoqNsBx8VfQ1Bj3Ts6R5F0AsXpibibFG4
-	 34XNrUOw8TPmMwr5qyRbT10rK0fNRWxAOiN4BPB9dDcwD/L/F4F7LK4VVTZg1bhAhXUbT
-	 KP5CIdymZeNjcUc7lWExnUcnzp3MXLrOZo9aDgxu+caxcIt6Xb5VsUarrv7CjqmwoHhLX
-	 89afFDxp3dG/KRxdmO+SwV/lDzT0z/1cadDTNLjN9XCDif8s85LynYMeU0JNMIeUo70ZQ
-	 Lwo1Qdox/Td6Q3NucgBDGIZS+U0ItYPDzmJajUdt9qCJrY48r4q0UuEpQtL3JUgVyPQ==
+	bh=ebCQTirr/RMa87RwZQrIepGXAsVVAdAub3WA6HHl5Wg=;
+	b=LZVOyQX9p0+Q+a1M5sLz6+KAQ3GjomRUtoSlr8j8UYgd6d+qx8B2iUnjBjTQzy77L5/O
+	 lBD4rVQ2JKLvotTCa4+NlacCp76cKGWkt3HZAfkdUh6kslIa+jOK50QT7kK3mGIUE6SAz
+	 FkPwFXky94JkrLbWtnNgwSmfiRxXtbzaOvSBJZMjt3pYAXetOU4AnwQmg7bYtedJ6HDd3
+	 WnPp64ryrY9YaL2u/sDIYbT60WDExGbCBt912gOPtnGyZbuA//j7CaoNJL8rnmancPkaB
+	 ZQnTExz6SfshVPBRVFaHXH/zdBdj+Dn5j02AydMQ8Y8pLZi1q7Exhxjf4MGD0uk55nA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=iEsAII2T;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.172
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ENUO72oS;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.42
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9271606A323
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 10:13:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9271606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B055606A31F
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 11:19:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8B055606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=iEsAII2T
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-385d8a00598so11792094eec.1
-        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 02:13:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795774401; cv=none;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ENUO72oS
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-1b3a05f8b5bso10888166c88.1
+        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 03:19:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795778359; cv=none;
         d=google.com; s=arc-20260327;
-        b=lFGw90YNRaQ82jJomc1lKkCiT7HczcZ0LzGW/52BZ2CzbeEkoq5Gwm7O2/RqhzSMkF
-         hxubudpU4KwSEVwXrjxbUShM+1aqmk8CyEI7KRM1vAghJtS/39hL6dZAp7oDtsRDYkyA
-         iJgp1jp10bjgm2ms8pGDnRfx0vgFUmK2NVmbd9tQe4OcVBNjY8w4YugCGyZdFSjIMtgx
-         Q7R9JlOCf5TKGQmnUNQqVlLYNGj2GdjwsCSUOHQhHV6qeLiWSCpbhfJqXRtStDLIC28j
-         D3vzl7tUupkU2eLkghCsxosgqByTIN94mBBzqtYMJjhHMBrN4aonZzxruWpn2txQ4GaJ
-         hyvw==
+        b=e/m45iS1Ju+e8lvfmyl/G4j7Wy61R5D5vl6eQLg77EEqWntm13HXVmRGvjEnpOXdQb
+         9pmIYEclWiVGGoy8wwdYA3P2McKMc/9tRxvze1wEAJnGOEwKFFuDjJwQ1PZQwT+3rvyI
+         0YGV9FDjI6+tBXvIk8Y2QYNzV3pNjGBPpbwJq8JK13NJII4vWIQ3f5dk3LPNe38Jw7X7
+         ftDT8S/yDpaHQToDvrlht5LNI5oeiciipyNA1OnEYkMgDbprASjwjTGjcZstWf+TkSoD
+         g4uB4vjtuSJ7zTyaet5Jun3aY3toLkvSzNc7I1rqgzv/OM0f9vr3pGJbBAYmx62yUtFk
+         3brQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Rg3eS140aI/+OFL98v6V5INyaBk7whCAxPtAkMQ5r2M=;
-        fh=1cQSyXjWBEk0m/dHlc6oCKDFFOVw2bfBP6YIivZcL4w=;
-        b=mFRiUXqykeH8EBd1p8No0nHKCN3p/bNu1Ki0koRbj0/TVXXjMVfBiMjnFhW90+G+o5
-         KXhkppCs7k6mMwudj/rM5jiqi8oz9iDnYd251psn4+8ZGdkYWjtAACpT1SvDboPzc/ME
-         nga2DG+1Ote3Y0Y6X/zOgQhXz4UcRlkF2W64SddQ/sFZLCUA2TkgAjq+I37ipeBUDrev
-         YoFul/CmVQ73wXS+TVsmf2zzTBqQ6rMS7KdIT1b7n0telPx+4gKcdD56XB4mUXQ/KP7M
-         pQy48CiwogzBR0YhiNq2BOzz261U2X06RBW+QBY8dG865E+s+6y+SP5ToZ0zzch+yKQJ
-         XWVg==;
+        bh=ebCQTirr/RMa87RwZQrIepGXAsVVAdAub3WA6HHl5Wg=;
+        fh=uDU6GYU6RaI1as8ZXPLmpA+go4hCGXdsRxmkVg8ng4E=;
+        b=Jq0XiKZj1AZS2zbu8diJFmbvblU5BqlKGOBGtqis9kX9u2vtlUtEVROOe2AqgXL7F6
+         PBAXpkL9hr+eWreQJnkhLgU4Dw8lO3UotDWLI61RZapp1xddbSOL0Bh+GFGV3gLTATcQ
+         uFw5zIcKqcOcDNHi+YzULlb05R1L4nQ8PlxVjFSKuxxew+WHmtJQA5dOHwzuSQ80iyOp
+         9ZHDxq37CdBVzVB3VkUDvCQ1oGR/UBtx2Wk2yYn57SsVLn4Y0kBSDr+GsiJpCfdIfmAa
+         OQqNEiFONOH0lmXgVue2kjm3cFokKkMNKMqKH8JAM1NhzNGqcEh20P1kXdi4sklk6J6F
+         qK/g==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795774401; x=1796379201; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1795778359; x=1796383159; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Rg3eS140aI/+OFL98v6V5INyaBk7whCAxPtAkMQ5r2M=;
-        b=iEsAII2T7bb9k1RM7xizq3sd2iXQvn4uNQNS53V3XL9farfJIzMwm0kyPUGPLW1wF0
-         YLX+DCKMwbkkqgjYDQ3Uw6pGXhC1XopMuuTGhw7w1cUo6UO0hyxkqLyxbe3EyvXVhPHk
-         40tTHab7BNcsAJuysY8j/U/uUfkWmlOWn+HTxkKUdjMztN6QHF2/FQFPAbMk3lXlh/8O
-         4wQpa0dWRAQKnLAqAW3uMdnJLpLwUT5cPzsVb3wCpgrymCnX81K0dWCkRPtlxSrRXWr7
-         gsXwKfNOSIMOuZW4wR85PEchqI0nji2KkbJWJsqhfYTT6END7niJWKtQvm6cBhivCgk/
-         CGpA==
+        bh=ebCQTirr/RMa87RwZQrIepGXAsVVAdAub3WA6HHl5Wg=;
+        b=ENUO72oS5JBC7MO1Iis9enZjMb6b6irBqV0vuBmdGAMaUrfl/ttBcw03boMrqkyEms
+         2szSet0dO29aiSsSQ0DTdRdeoXPdSBamB/cnfAb+58RSS2sEhomRvLGU0qSjGf7vEer2
+         yRjiV2JGabqzC3kExTwICCNCdb0ENatvh1s+O4l630eaSxs8j9zSEpmloloHhE+Ss6um
+         YEuqPBxoHiNS7H4NK/3fSrPUgfCt2zBdGy0Ox3O/Tcv6s+qH30MdE54yX6qU/IsqmUj/
+         kcW9qyyQwLQPj4U1FDa9fWJuBl09qRVwCe+TwXBrkfcqWRZomw48kA/fXpw/dy3JZx01
+         9Teg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795774401; x=1796379201;
+        d=1e100.net; s=20260707; t=1795778359; x=1796383159;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Rg3eS140aI/+OFL98v6V5INyaBk7whCAxPtAkMQ5r2M=;
-        b=ZhYGmJQE3qrMkZFwUV+hS8YAX6XVhK9y5zOKiZoVb7Z/5Sm+411OiyAFf5Kb44tYs8
-         GR5GWViUDRjisKFnB8zH1kYuGJkw0MRerzEgbgbCr112UYvIS+7tSQ+7NfKY4/Hk+iMZ
-         HntkU1UMkLnvWtqPpdHC3Jd1WKPk80VV6+VF2FU0SrlBx+GmSmZbNBKy4Yu6iRFAFtQS
-         Q+6gD2L03a12jeuDsI/E5B3Dt2MACmS5bMu8jiBBO1u+nvdmGwk9g383xetv+sifGcCv
-         Gzfxqd5lh//qjKlqf0k5ehqLFhtPYGQjzEHgW0JYXfcrmKsNTwyaCoCsSTWO6vLO6gzB
-         w3Gg==
-X-Forwarded-Encrypted: i=1; AL+hErGBL8CEbbaS/IDp8WuNjlgwQcHnx3rPaQCnjHdR5ZzeCHq4DXg2ELrOFvym07qurrRaJNInc53/od+ohw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z9uKDg0miok6eWf/Z4VWT+BH+xVTmZd62ptMtbXASdmpD3cemgK
-	+4UXd6eakr9biHTBIXdUzNN4SEkf7iZZmQ31hv8NwI3duSp2WSv+X0kzvXS9xdufQOL0yKrz/h6
-	nn/73W09y7NPgauYjmVhNaf8fhfp9aMw=
-X-Gm-Gg: AZFdTZcCPlMSltH7rVUcSEUhrsuMZeuEt10B0xoHFUCXpN6idUUh2I53K2QfP6Iddgo
-	pXKcRTYSo2hz/F+zOrSlIgLrnCpLyJXPLRCGL3VBdLTbYigzR5QILFDmt2dnWVemw745hN2zGUf
-	GB0vAJUQvAqyurcWDikXb5Khebnb5fID94W5zlzqQQoRSY71sZ/WUJo7LllFPIzgzxMFDJsFCGJ
-	KpBL+HdcWWFi/b+y3SxvZe9zJsOuGfsx3ZI/haUgjtUKezG/9IJVP5ss07C+OJGJ0YaEyvIvMpv
-	BM7lXH0mPo73dYWpBsYERe61J3HZeY7xEIAxB5t22gpnH08GC6QY0zZLgjlyK9OuOhgSrC8GOg7
-	t+wYdibA3H7rlJ6oKioH10nyIrYG28/14dn4w
-X-Received: by 2002:a05:7300:cf87:b0:386:565b:4f9b with SMTP id
- 5a478bee46e88-386565b529dmr19005091eec.36.1795774400449; Fri, 27 Nov 2026
- 02:13:20 -0800 (PST)
+        bh=ebCQTirr/RMa87RwZQrIepGXAsVVAdAub3WA6HHl5Wg=;
+        b=vu1ooe3secxS3wLpKkTIsR+XCWLrlPIJxgNRnBBSNkAgMx2Igp0SV1bBh5RuHtUbfW
+         wCskb3Wl9xT77Bs35L3/kS7rtk+Kq4dm2LF2N8l+5zDOY0jkdWM5Wu4fylPCfdtSrG8r
+         ImHV/ZLGfigg63AUtJlIw2jXmJRNFYLgJzgjGk5l4wPZLVEpWAmqrttTgBuareHh0MFV
+         ZdBNK9P/83+87+DM+kmgERzo8x6JEuAdKcPWclPOdKYppYLI0nphRGg966qTW/xI7a1D
+         5bU7gUtzMS8Gy2bRAoGqEKuY/j+Wox5uko50hIRHRvmP5SrLHQX1ZQqdZsEO9N7gY/GD
+         +THw==
+X-Forwarded-Encrypted: i=1; AL+hErG0T9pUKCJAsBFuKxta/7Pvjy9tVRa7Hl4OixmZwz7CW0UYGl3lY3u8ktUpaPs7ZXHjtl0FbDUk+mXrfw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9N729Uz0DLt/Ah9xl7DvOa7xOWQB+rQr8F25TubJhtl9VFAVsj
+	z0BWkwwW2jQsDQYrukcxz4AzluqdnnaK4kMEWry+rPZkdz3V3vMAYIqkPZr/AyiVAbX147PfPCA
+	ykGkA4XsLi9VMdE9zZ3pnN9KMxeVAaPEjxIfwqF7ojw==
+X-Gm-Gg: AZFdTZeV6bCd04jEeNFctX53w3ubrba5gxNnzIaeA/TuSLhP2dpkBreZXKxcFRQIg3A
+	DGcEwA/VwdMvtCtexICQ2WyUCjCdC6ydaBUTsxltvHmgHfyQcKe1C4em1/vqRU66ymo8o3Bcumr
+	Vgwvt9SJLDh/oyRrIj9+gzEQu2l3gG7noHDvEnNzc98gaoOy5p01IWoDg+rlTE9nZzB97Vqc6U4
+	6gLS1iLlDJXNeA5ZMJtnneBmvumR3DTKF6UkEdbCP/XZXAFmLaIaajn+SW0R0oJW0h4t0fTggOT
+	lk4adxwCDqkoshTmBDoC2lOlG3IZvt2fuhKYUA1ctUhhZdqdFJXMEDmP8QHYEply/mR1Npjcw9w
+	Za1JBJdEuIFIrTK2iPSKENdvVnJbbkBpxTO11tH+TV0vWFZ3CMUomY80sJRdlh+BvuJJLxA==
+X-Received: by 2002:a05:7022:f907:b0:1b2:558a:d781 with SMTP id
+ a92af1059eb24-1b5567b5788mr21084700c88.5.1795778358475; Fri, 27 Nov 2026
+ 03:19:18 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -104,145 +104,238 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <CAGvcwsDdKSZe0reeuT0eQabaSbM6+KAfwFimxiqhvKrjD2nQeg@mail.gmail.com>
- <3304e166-c2e6-4bda-bc75-46ca73f836e1@linux.intel.com>
-In-Reply-To: <3304e166-c2e6-4bda-bc75-46ca73f836e1@linux.intel.com>
-From: Pe3k <pe3cek@gmail.com>
-Date: Fri, 27 Nov 2026 11:13:08 +0100
-X-Gm-Features: Aa3M54o_aQ8iJ-kAp3ekkaD3-m2tHNuDZRMPmqEPRSpmjapyGgTgQ3YlK0bXNb0
-Message-ID: <CAGvcwsDMECLevqiy5iY2LOpPAoFknYVp+bJ+HDX8YemdzeUJCA@mail.gmail.com>
-Subject: Re: iommu/vt-d: data corruption, AHCI gets IOVAs inside its RMRR (HP Gen8)
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: iommu@lists.linux.dev, David Woodhouse <dwmw2@infradead.org>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, regressions@lists.linux.dev
+References: <CY5P221MB09262B7D6A68954CC1B3199FBD442@CY5P221MB0926.NAMP221.PROD.OUTLOOK.COM>
+ <awWOCejxtjP12xFX@gpd4> <ce38fb8b-94d7-48ba-93bb-3b72cfcb3e61@amd.com>
+ <CAKfTPtCudy4NV8sU+JWE=dcJpbKd+LVNZPZztU_0nD1a04Ca9g@mail.gmail.com>
+ <awa3/FFd4hAnvtxK@chenyu-dev> <CAKfTPtCukFOD6nKD6oDYvjEiXXUY5fHui4w6fgnhNw+jpE=0RA@mail.gmail.com>
+ <awlJ2Fp94knZQDxS@chenyu-dev>
+In-Reply-To: <awlJ2Fp94knZQDxS@chenyu-dev>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 27 Nov 2026 12:19:02 +0100
+X-Gm-Features: Aa3M54rLY7meJTUxiuiAVZ-WXvi4iBohtbbKbIgcxe4lp41qaNcl0nayfYtJWgQ
+Message-ID: <CAKfTPtAqP_U7MuX4ZsX+6uccdCPNSQ9hqBTX9MegF1hft2KUuQ@mail.gmail.com>
+Subject: Re: [REGRESSION] sched/fair: SIS_UTIL limit in select_idle_capacity()
+ leaves busy tasks on little CPUs while big CPUs are idle
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: James Buck <jbuck2005.linux@outlook.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Andrea Righi <arighi@nvidia.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Usama Arif <usama.arif@linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-added regressions@lists.linux.dev
-removed linux-ide@vger.kernel.org
-
-Hi Baolu,
-
-Thanks, that is the same bug, and Renato's analysis matches what I see.
-In case you missed it in the other branch of this thread: I bisected it
-to c588072bba6b ("iommu/vt-d: Convert intel iommu driver to the iommu
-ops"). Its parent c062db039f40 is clean, and so is 5.10. Before that
-commit, VT-d reserved the RMRRs in the IOVA space itself.
-
-I tested the one-line change on the spare Gen8: v7.4-rc4 plus
-
-- return 0;
-+ return iova_reserve_iommu_regions(dev, domain);
-
-in the already-initialised branch of iommu_dma_init_domain(). Same
-setup as before: intel_iommu=3Don, translated default domain (group 10 is
-DMA-FQ with 00:1f.0 and 00:1f.2), 6 parallel copies of a 10 GiB file,
-and an iommu:map trace filtered to 0xf1f7e000-0xf1f94fff.
-
-  v7.4-rc4 + patch, two boots: clean both times. 0 of 6 copies bad,
-      no DMAR errors, no failed ATA commands, no WARN, and the trace
-      shows no mapping inside the RMRR.
-  v7.4-rc4 unpatched, same machine and load: 1 of 6 copies bad (8 MiB
-      of zeros), 64 failed commands with "Emask 0x40 (internal error)"
-      (40 READ, 24 WRITE FPDMA QUEUED), and the trace shows
-      iova=3D0xf1f7e000 size=3D0 from iommu_dma_map_sg <=3D ata_qc_issue.
-
-So the change fixes this machine. I know Robin's concern from the 2024
-thread (Jerry Snitselaar's patch, same change), that a device may join
-after the domain is already in use, when reserve_iova() is no longer
-safe. This test does not cover that case. On this machine both
-functions are added to the group in bus_iommu_probe(), before any of
-them has DMA ops or a driver.
-
-I can test further patches on this machine.
-
-Thanks,
-Peter
-
-On Fri, Nov 27, 2026 at 6:38=E2=80=AFAM Baolu Lu <baolu.lu@linux.intel.com>=
- wrote:
+On Fri, 27 Nov 2026 at 10:25, Chen Yu <yu.c.chen@intel.com> wrote:
 >
-> On 11/25/26 02:08, Pe3k wrote:
-> > Hi,
+> On Wed, Nov 25, 2026 at 03:27:46PM +0100, Vincent Guittot wrote:
+> > On Wed, 25 Nov 2026 at 11:38, Chen Yu <yu.c.chen@intel.com> wrote:
+> > >
+> > > On Wed, Nov 25, 2026 at 08:51:39AM +0100, Vincent Guittot wrote:
+> > > > On Wed, 25 Nov 2026 at 03:53, K Prateek Nayak <kprateek.nayak@amd.c=
+om> wrote:
+> > > > >
+> > > > > Hello Andrea,
+> > > > >
+> > > > > On 11/24/2026 6:45 PM, Andrea Righi wrote:
+> > > > > > Hi James,
+> > > > > >
+> > > > > > On Tue, Nov 24, 2026 at 11:56:52AM +0000, James Buck wrote:
+> > > > > >> Hi,
+> > > > > >>
+> > > > > >> Since commit 61ea17a63719 ("sched/fair: Add SIS_UTIL support t=
+o select_idle_capacity()"), first in v7.2, CPU-bound multi-threaded work on=
+ my big.LITTLE arm64 board runs 12-19% slower than on v7.1 and earlier, bec=
+ause waking threads are placed on idle little CPUs while idle big CPUs are =
+never looked at.
+> > > > > >>
+> > > > > >> Turning SIS_UTIL off at runtime restores the old speed. select=
+_idle_capacity() and update_idle_cpu_scan() are unchanged in v7.4-rc4, so I=
+ expect mainline to behave the same.
+> > > > > >
+> > > > > > A related regression from the same commit was reported by Usama=
+ here:
+> > > > > > https://lore.kernel.org/r/20261113153157.2495664-1-usama.arif@l=
+inux.dev/
+> > > > > >
+> > > > > > On Grace, a zero SIS_UTIL budget skips the search despite suita=
+ble CPUs
+> > > > > > being idle. Your case shows that a nonzero budget can stop the =
+scan
+> > > > > > before reaching an idle big CPU.
+> > > > > >
+> > > > > > We've discussed a minimum scan budget and accounting for idle C=
+PU
+> > > > > > availability, though a small minimum alone may not fix your cas=
+e.
+> > > > >
+> > > > > This had problems in the past when Chenyu was iterating on SIS_UT=
+IL
+> > > > > where the search opportunity at higher utilization is actually ve=
+ry
+> > > > > low and cutting off search for !idle core was beneficial for SMT
+> > > > > systems.
+> > > > >
+> > > > > Now, for systems without SMT, it has its benefits too but a syste=
+m
+> > > > > without SMT should be equivalent to a SMT one where test_idle_cor=
+e()
+> > > > > returns true always if an idle CPU is present.
+> > > > >
+> > > > > So I'm wondering if {set,test}_idle_cores() can be extended !SMT
+> > > > > to act like a gating indicator to say if an idle core exists or
+> > > > > not much like how !get_rd_overloaded(this_rq->rd) serves as a
+> > > > > gate for newidle balance - it can be flipped to true when a CPU
+> > > > > goes idle or if load balancer sees an idle CPU. Thoughts?
+> > > >
+> > > > I tested idle_cores tracking for !SMT and EAS months ago [1]
+> > > > [1] https://lore.kernel.org/all/20251202181242.1536213-6-vincent.gu=
+ittot@linaro.org/
+> > > >
+> > > > >
+> > > > > > Given both reports, reverting the commit seems the safest thing=
+ to do
+> > > > > > for now. That would restore the previous asym search behavior a=
+nd we can
+> > > > > > revisit a better consistent strategy to cover both sym and asym=
+ CPU
+> > > > > > selection later.
+> > > > > >
+> > > > > > Prateek, Vincent, what do you think?
+> > > > >
+> > > > > IMO it still makes sense for SMT systems since capacity on system=
+s
+> > > > > with SMT only makes sense if the entire core is idle and then it =
+is
+> > > > > just a best effort thing right?
+> > > > >
+> > > > > set_idle_cores(), would flip the flag as soon as an idle core is
+> > > > > available and after that SIS_UTIL is bypassed. I don't think the
+> > > > > SIS_UTIL cut-off for non-SMT ASYM_CAPACITY systems makes that muc=
+h
+> > > > > sense given misfit penalty is much higher.
+> > > >
+> > > > In fact that depends on the number of CPUs in your LLC.
+> > > > The current SIS_UTIL is unfair for small system because you skip th=
+e
+> > > > loop with "low" utilization:
+> > > > - with 12 cores per LLC, you skip the loop if the avg utilization p=
+er
+> > > > cpu is above 839 whereas it also means that you have the compute
+> > > > capacity of more than 2 CPUs that is not used and util_est can wors=
+e
+> > > > the situation
+> > > > - but with 64 cores LLC, you still tries 5 CPUs for the same avg
+> > > > utilization per CPU
+> > > > - and with 12864 cores LLC, it's 10 CPUs
+> > > >
+> > > >
+> > >
+> > > As you suggested in [1], maybe we can give a floor value of 3 when ha=
+s_idle_core
+> > > is true both for SMT and !SMT case(mainly for nr_scan =3D 0 case). Be=
+sides, we can
+> > > scale up the number of CPUs to be scanned by their llc_weight, to fak=
+e
+> > > a 32 CPUs LLC for the small LLC system, this should mitigate
+> > > the issue of current report and the issue reported at [1].
 > >
-> > On the HP ProLiant MicroServer Gen8 (Xeon E3-1265L V2, C204, BIOS J06
-> > 04/04/2019) the AHCI controller is handed IOVAs inside an RMRR that the
-> > firmware declares for it. With the default translated DMA domain this
-> > corrupts disk data on every boot under write load. iommu=3Dpt avoids it=
-.
-> > Seen on two machines of this model, on 6.12.118, 7.3.4 and 7.4-rc4.
+> > This fixes the regression on my radxa O6 by keeping nr_idle_scan full
+> > for llc smaller than 32 CPUs while the avg utilization per CPU is
+> > below ~550
 > >
-> > Topology
-> > --------
-> > 00:1f.0 ISA bridge [8086:1c54] and 00:1f.2 AHCI [8086:1c02] share IOMMU
-> > group 10 (DMA-FQ), probed in that order. The group's reserved_regions
-> > include "0xf1f7e000 0xf1f94fff direct". The DMAR RMRRs covering that
-> > range list 00:1f.2 in their device scope, but not 00:1f.0.
-> >
-> > 6.12.118 (default cmdline)
-> > --------------------------
-> > Once per boot, ~20 min into sustained writes, 23 errors (21 + 2):
-> >
-> >    DMAR: ERROR: DMA PTE for vPFN 0xf1f80 already set (to f1f80003 not 1=
-67119001)
-> >
-> > from AHCI writeback (ata_qc_issue -> iommu_dma_map_sg). Each one is a
-> > 4 KiB page that reaches the disk with wrong content: mostly zeros, some
-> > with firmware data from the RMRR. No I/O error is reported.
-> >
-> > 7.3.4 and 7.4-rc4 (default cmdline)
-> > -----------------------------------
-> > No DMAR errors. Instead 64-84 writes per boot fail before reaching the
-> > device:
-> >
-> >    ata2.00: failed command: WRITE FPDMA QUEUED
-> >    ... res 40/00:00:00:00:00/00:00:00:00:00/00 Emask 0x40 (internal err=
-or)
-> >
-> > followed by I/O errors and 4-8 MiB of zeros in written files. In one
-> > 7.3.4 run the machine also took an NMI (iLO: "Unrecoverable System
-> > Error (NMI)"). An iommu:map trace filtered to the RMRR shows the cause:
-> >
-> >    map: IOMMU: iova=3D0x00000000f1f7e000 - 0x00000000f1f7e000
-> > paddr=3D0x00000001c94d6000 size=3D0
-> >     =3D> iommu_map_nosync <=3D iommu_map_sg <=3D iommu_dma_map_sg
-> >     <=3D dma_map_sg_attrs <=3D ata_qc_issue
-> >
-> > With iommu=3Dpt both 6.12 and 7.3.4 run clean.
-> >
-> > Suspected cause (not verified in the source)
-> > --------------------------------------------
-> > The domain's IOVA reservations seem to come from the device that
-> > initialises it (00:1f.0, no RMRR). When 00:1f.2 joins the domain, its
-> > RMRRs are identity-mapped but never reserved in the IOVA allocator.
-> >
-> > Reproducer
-> > ----------
-> > Fresh boot, ext4 on an AHCI disk, 6 parallel cp of a 10 GiB random
-> > file, sync, drop_caches, compare hashes. Fails within ~25 minutes.
-> >
-> > I can test patches on a spare machine of this model. Full logs, the
-> > DMAR table and traces are available on request.
-> >
-> > I used Claude Code to run the tests, analyse the
-> > logs and draft this report. The results and logs are from my own
-> > machines, and I have reviewed the report.
 >
-> This seems to have been root-caused in this thread:
+> Thanks Vincent, James for testing.
+> Let me post this as a formal patch with some test data, mainly with
+> the AMD server's data, because I only have some Intel servers and one
+> AMD server, and this patch might impact AMD more than Intel.
 >
-> https://lore.kernel.org/linux-iommu/02b201dd5ea3$02b88430$08298c90$@mache=
-lett.com/
->
-> A fix patch has also been posted:
->
-> https://lkml.iu.edu/2411.1/00575.html
->
-> Perhaps you could give that patch a try?
->
-> Thanks,
-> baolu
+> Besides, for Usama's 72-CPU NVIDIA Grace arm64 server, it seems that
+> the above patch cannot deal with it, as we only cure the system with
+> <=3D 32 CPUs per LLC. Inspired by Andrea, I wonder if we can
+> leverage the number of idle CPUs together with SIS_UTIL to decide the
+> search depth. In summary, the more idle CPUs there are, the more we
+> should try to scan. Given a fixed lower limit 3 or 4 might not fully reco=
+ver
+> the performance on Grace I'm afraid, because there are up to 72 CPUs in a=
+ LLC.
+
+This is worth being tried, in particular for system with high number
+of CPUs per LLC
 
 
-
---
+>
+> This can be seen as an extension of has_idle_cores to non-SMT systems.
+> Unlike has_idle_cores, which makes the wakeup path ignore the SIS_UTIL
+> hint entirely, the number of idle CPUs is only used as a floor of the
+> scan depth, so the SIS_UTIL hint is still respected in general, which
+> is a trade-off to not break other platform/workloads.
+>
+> I'm also wondering if the system supports the cluster domain, the
+> has_idle_cores calculation can be extended to the cluster level, so that
+> a fully idle cluster lets the wakeup path ignore the SIS_UTIL hint for be=
+tter
+> work conservation.
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1c0e2ac7751d..079d1fc06344 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -12874,8 +12874,11 @@ sched_balance_find_dst_group(struct sched_domain=
+ *sd, struct task_struct *p, int
+>         return idlest;
+>  }
+>
+> +#define SIS_UTIL_IDLE_MIN      2
+> +
+>  static void update_idle_cpu_scan(struct lb_env *env,
+> -                                unsigned long sum_util)
+> +                                unsigned long sum_util,
+> +                                unsigned int nr_idle)
+>  {
+>         struct sched_domain_shared *sd_share;
+>         struct sched_domain *sd =3D env->sd;
+> @@ -12940,6 +12943,10 @@ static void update_idle_cpu_scan(struct lb_env *=
+env,
+>         y *=3D max(llc_weight, 32);
+>         do_div(y, SCHED_CAPACITY_SCALE);
+>         y =3D min_t(u64, y, llc_weight);
+> +
+> +       if (nr_idle > SIS_UTIL_IDLE_MIN)
+> +               y =3D max_t(u64, y, nr_idle);
+> +
+>         if ((int)y !=3D sd_share->nr_idle_scan)
+>                 WRITE_ONCE(sd_share->nr_idle_scan, (int)y);
+>  }
+> @@ -12956,6 +12963,7 @@ static inline void update_sd_lb_stats(struct lb_e=
+nv *env, struct sd_lb_stats *sd
+>         struct sg_lb_stats *local =3D &sds->local_stat;
+>         struct sg_lb_stats tmp_sgs;
+>         unsigned long sum_util =3D 0;
+> +       unsigned int nr_idle =3D 0;
+>         bool sg_overloaded =3D 0, sg_overutilized =3D 0;
+>
+>         env->dst_core_idle =3D !sched_smt_active() || is_core_idle(env->d=
+st_cpu);
+> @@ -12988,6 +12996,7 @@ static inline void update_sd_lb_stats(struct lb_e=
+nv *env, struct sd_lb_stats *sd
+>                 sds->total_capacity +=3D sgs->group_capacity;
+>
+>                 sum_util +=3D sgs->group_util;
+> +               nr_idle +=3D sgs->idle_cpus;
+>                 sg =3D sg->next;
+>         } while (sg !=3D env->sd->groups);
+>
+> @@ -13013,7 +13022,7 @@ static inline void update_sd_lb_stats(struct lb_e=
+nv *env, struct sd_lb_stats *sd
+>                 set_rd_overutilized(env->dst_rq->rd, sg_overutilized);
+>         }
+>
+> -       update_idle_cpu_scan(env, sum_util);
+> +       update_idle_cpu_scan(env, sum_util, nr_idle);
+>  }
+>
+>  /**
+> --
+> 2.25.1
+>
