@@ -1,102 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.160.171
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1795794558;
-	b=YEjIKFueUNoPjpdg25MNFDGHjbe7eREUVM9hRsEcyif3Gz8CZQs87sB3FMjtq4eT+53I
-	 n0uI18atSlnvOCkUM8DVY7jbyOLsPoG/+Li369K34/9o2BldjtI5PbYaYIYdOygRq7Me3
-	 txPQKZF29XOCRuMyjnijkg25c9bguiuz29JjNw8XJk7Eta2+j8JaZZa8DhL0nZdeupGoC
-	 SjQWP2g4OEV3AJ1v/DZoyaXMK7ZEZGgz6UkUi8iCGeNML/Tv5NZFgkoEqNFs6ro7UHKsl
-	 Fv9C8sLz6bw1ihxpIG0h0GyXgrS0MOejEMLEH3EKsq65A4OYk5pvv58GG/ZlowKQM7g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795794558;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
-	b=jORvmOH21unlzXn5OxfFwvT7gd7/1jKNsDeX8hJYNvt9wOIakVRl2mva//aE7vesoVOA
-	 Xhc0kqHgZOZfvn4lq0y9RRRmvdzZEBylGni+I8iN+Z5Ge/LQdt8zT3LKvXdzuJZhKkF1Z
-	 AXQjz6ccOAlw8IdSQ8MzoZWUOxe4G2KN0H3alxzESE0xYKAmLLvVYJemtp+aT6alDTib3
-	 kYCDIJn963XZ3lqF/OtaNVTvqSrY4jici6PJH0GMREI4NPqBY/HeXM5Lg6bRC8yBfHfcg
-	 eSuUXkJrzlX5nESvKlrkF60RetEM7qUI/ytZITjfjLwUo7KzFSKQrNIA3ObR/HFTcyQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=E9UhvXUS;
-	arc=fail smtp.remote-ip=209.85.160.171
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=199.89.1.14
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795794989;
+	b=pZotfmqU0QuP1kFpBVekBmmIUqmIb2QR53aQe9OYds04XMPv4TdATSYlPZyYFMSR9tpn
+	 ku2TICVZCtIJzWlgSW7L6vXTQMak7fcc+RQ8kCirh3Wg0E/v9kulDW3SH/eX3AB3o8kEp
+	 Wx66V8J4jMDzUgUBTSLkrclU3m3lhnno0sku8nSJZpvM3bP0arL5SpKTFiRJo++19XMix
+	 GOVzzT3e7sML92cXyIwYG489QRpBBy/faeI1enNSfhFvL0K33lE1m2C8XAySpE0gbnEbp
+	 G3hz9SB5y8j5AvKWNDEor19nZJ5XuxBas9cS1sqTj0jspZehhvZKGRBq8PLXWKDrm6Q==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795794989;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Virus-Scanned:Received:
+	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=VOQN32mWBtipXbp6LOeA3aYHzW7Pgb5jWELRRzRROro=;
+	b=iAMd5m4GBUE/TIjUQ2Shd2MXgvHBHUJ0EvU+5T0i2613dg8Jn1uhqTMB6ChHBPMdBO3A
+	 w2HdYAT/yM8IDpnsIpomH4xjFkXGparIRLErR3WrcKmzt2N1IiUXORdXiFKcMEtufMxTG
+	 idxA3bU3eREbn2z+avn72jYKL2dbh0NMc7bIl2DhoGc5qaZ+Pu0m4mYHj4ZSuLm3T5TPp
+	 +ctY55vZSd4NzVc39AiXHeg5qAw4j7euMfFhWO6sA5kYTDU2llAB9xCJgSmHGWrzGb4r+
+	 41QZV7gHZoiSlvgtYvZjZYZ4gcMyfWd8c07t71sCa9t5zuTmRNoAZduodKEaNMHWK3g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=acm.org;
+	spf=pass smtp.mailfrom=acm.org;
+	dkim=pass header.d=acm.org header.i=@acm.org header.a=rsa-sha256 header.s=mr01 header.b=lxW+x7Td;
+	arc=none smtp.remote-ip=199.89.1.14
+Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FCC606A31E
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 15:49:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66FCC606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD948606A31F;
+	Fri, 27 Nov 2026 15:56:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DD948606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=E9UhvXUS
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-55c5b6584ceso60214941cf.2
-        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 07:49:18 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795794557; cv=none;
-        d=google.com; s=arc-20260327;
-        b=KQ9S+YMclvKJPFDRkIYFB2MJUyrALSO8v8iwgodCmq8p011oyYgOOPwliKUyZEeo6S
-         u4TS8YlG5Gp7dUdIY/yxBouVdVPBWkEIsqHpv/D75mPI6rrJm3eZLRIuJ5dcz3SLfxef
-         GUnS/4zpLEOi7G4RJ9rpQ8+0G4d5YIoPnhv3iof1L+kkMt6TBLjSzclkTdUB9qrHIqWp
-         /xfRUccB8K6QRlofPFd9m14h0ZZfbdA0JIBNzwPI1PsrPnPXRR6iu4aiRv1EZci13KGf
-         e5uoqvywpwTTAAS+DmqA5xdj6rzlGeyuqrJI/B9jj4Dp3tVZd/XQfCz9cFmGg9TTOAC1
-         TetA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
-        fh=QASMwmca5nD9zXFzXjpqMhu1sJwYYZTDVn+r+YHbGSs=;
-        b=exvyrkiHTLTqHMewe2cr7RNWNw4aq/caKlbOqqoRRDC2P2wd5LljwasZG4h+k+4DK0
-         ZTK39z3lOZxIcRaIYvxkjKYlUorZ4lRpMFyHteP4RQimAJN3QLqeMfcIDyu1Pxf0QNY4
-         U6rdKKloxKvXXZLJ6ZF5QQ3uHAff3qUm8PAxn1pKbewAAKVaKS2deICtZ7xfXi79NNok
-         PIM8CH2M3qAL7GygWEakMthyJfxTWIaY/yCvK8DDnQyayuqHcYmXK2ctaDps9fRD73bW
-         eW734iRDZdF8RCaeuR63SEcMennOXB+xFKPfjXpYCb3PVbz+Ea0yYQ12+DRUGIWnElow
-         ZE6Q==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795794557; x=1796399357; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
-        b=E9UhvXUS+uvLG4YB50GFMium22LZANKyb7ApIvEs0hmIFfIo6+AxAYCC8nMZlr3tjH
-         QZtMRPKpzfW+pfIK0XMlzm7x2zLqOMUAqsFIQU0uTJd+r2Vaoi0nNwoQaPTnurmvPMaF
-         vNWCfkeX/lsurGxqOU+KUx688LZvO8gogKdRe0HLYW99N/GAKM0W0KZtZc9gCA1uPUgg
-         4DuPFOOabAlzsVYKvXOcfTkHBtyDGxZ0XdywYGPNeZUfy4a4KE9+riC9yj0o5wPhusJU
-         DRLZemz8AvSrwtV8HXIxsJF1QPyF7LRwldvLwQqN1bpEUYfY1orPM/URWdSDNEyjSDbx
-         /W3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795794557; x=1796399357;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
-        b=B4JwUzPGAsAycmpFWVlHBvDiijgW6AYbs/Hntbi0zVSi+MJJaApEWnvJZ1y1l49WrQ
-         pptn2Rq81whp5TVlcMLA5fSLEyun0luMdOKLFRL7atONLAlvKH6INYBv/QUqvuF0fejI
-         lGtW3+HzXQBltnqsI+dWQ6TlEVSC7ifxmIuQYB41eKWIMgu1ArryziPgvyJDGfjW9j11
-         Zwnat2sFoDTuQdbQWuRwc8GDigzSMDkwFBQEe+jGV+t+0FFjA5Z4HThz8wx8kSRyDKvE
-         luH6AR2f+P3xheuLRqw7rJMCBKPAz3y/RPbWKRqU6dv/9sq7+WggZxDstN2GdFuXjOkG
-         5OQA==
-X-Forwarded-Encrypted: i=1; AL+hErFh9gdlP1JLl/RdGMgAe74tUw+CzFsU7uc+lDi4WFY+DPKgiSBbJYF6RWbrkvcYUhxlUGmfJWgaIOzRUw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8QmLnH33/T69+ZwyRUaF6vi8cRfEoqdMGpzRjlctLnHXrUXfI1
-	FrsiRXkbOpb0icAI/aa+ewIc045xsMEnD3DJSBOhEmrCePDy5bXKGSbI4ArBXEM6iXBSoMh375j
-	n56mOv8T4vy/WtNVzjMR0HS7jMuFdJOU=
-X-Gm-Gg: AZFdTZeOhWgGyV9Zs/XFXB2zCh80L93ZZmK8m3lQZs+SGXQHax9G2VTKExM4dglS/RS
-	FlpT60mXPTXCtsW1KrwLikKyvwOhNx9UoXC2ZqhURyj6Tl0LKQlPKlcVgfR3GPpyT88RYWjzeC5
-	UYR+6e5loehrtcTXOi2VeGj4KzWAmBrmpj67l+M4Er8vJjQFnA246wlRyVMR/desakHUKeXfuwC
-	JL6Qc7V1FE+BZmQbuzfFq3VNEocgbY1jEx2eVfEbQHggDwlehkodA3VknN6+U5Q7NyrbYBSt02u
-	VjOYoBOuXyb/iv+uck8gxd+D2DnqEYdpD3cGVCRMt/IQBDEWA4J6t3VO3csI54apCKU0JM9yFES
-	Ha0kTHOawlrsm4sEMhnalzazHq4vKeAghOu7Dr0cejQ69ijOSPqXmYecLFUA6Ma2z5mI/uUhWpl
-	SPmkvftYO4M04UFJmX0v4U4Qo2yH+WO2g8MkrzSRJEzwu6kUG5GBXOzAD7Onie2IvFYY5/K+LBW
-	gLtITENJz2wlwpt2tqgLr2aMapDH1/Tog==
-X-Received: by 2002:ac8:5754:0:b0:535:a5fa:edff with SMTP id
- d75a77b69052e-55d76a59807mr476389711cf.63.1795794557235; Fri, 27 Nov 2026
- 07:49:17 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=acm.org header.i=@acm.org header.a=rsa-sha256 header.s=mr01 header.b=lxW+x7Td
+Received: from localhost (localhost [127.0.0.1])
+	by 011.lax.mailroute.net (Postfix) with ESMTP id 4jbdM01DD5z1XMFvk;
+	Fri, 27 Nov 2026 15:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1795794976; x=1798386977; bh=VOQN32mWBtipXbp6LOeA3aYH
+	zW7Pgb5jWELRRzRROro=; b=lxW+x7TdBhEc0hBbqI700ZHNzHN9FN6P35FAzd/s
+	o+BQp9a9ZikoufRQXDBrnYyL+uJq55LWEk//rnuppkEgIDWslrm2BCyRReKj9zVx
+	d7gc44cL6dGwVkcMzXWWBgpverh2360D3TMM+jWF29R2dwJi6sbzvo8MKPXUGxic
+	Naxz8g6J70yGHO0U9fcV/DjrGz8xJulosVSnaPofaVFuvl3JGchbgQLTXXr3kwsJ
+	28Bt42PPyj50ZpX71vc7flSNaqGXCTId0oD0zhf0/iArJLphACuIAiE1tw1GL7Dh
+	xuwh8IFDKzQXjD7alLKDKsMcGKqFA6yXm91vYAopjrBMWg==
+X-Virus-Scanned: by MailRoute
+Received: from 011.lax.mailroute.net ([127.0.0.1])
+ by localhost (011.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id M3PTvbKtweB6; Fri, 27 Nov 2026 15:56:16 +0000 (UTC)
+Received: from [192.168.51.14] (c-24-6-239-25.hsd1.ca.comcast.net [24.6.239.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 011.lax.mailroute.net (Postfix) with ESMTPSA id 4jbdLl5Rd6z1XLyhd;
+	Fri, 27 Nov 2026 15:56:15 +0000 (UTC)
+Message-ID: <0318408a-20b8-4237-85b2-e522883f5436@acm.org>
+Date: Fri, 27 Nov 2026 07:56:14 -0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -106,52 +70,188 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-References: <20261126031506.165973-1-kaynak.oguzhan0@gmail.com> <awkzEjrVEz2jB1Ma@z790sl>
-In-Reply-To: <awkzEjrVEz2jB1Ma@z790sl>
-From: =?UTF-8?Q?O=C4=9Fuzhan_Kaynak?= <kaynak.oguzhan0@gmail.com>
-Date: Fri, 27 Nov 2026 18:49:05 +0300
-X-Gm-Features: Aa3M54oG8qNSkma9SYEe5bEWuLV762AYfcjKVO9GWl8LUMyf097tEckGvgVUriY
-Message-ID: <CAAKAQ7KpM5hT-Q0mdJr-0VnHy1DeFBoODjYM-FCoXiS+5DW+cA@mail.gmail.com>
-Subject: Re: [PATCH] ntb: ntb_tool: accept hexadecimal addresses in
- peer_mw_trans again
-To: Koichiro Den <den@valinux.co.jp>
-Cc: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, regressions@lists.linux.dev, 
-	yangqixiao <yangqixiao@inspur.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since
+ "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
+To: 70sp <70sp@protonmail.com>, Laurence Oberman <loberman@redhat.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Joerg Roedel <joro@8bytes.org>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Tobias Laas <tobias.laas@posteo.de>,
+ Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ regressions@lists.linux.dev, linux-block@vger.kernel.org,
+ linux-ide@vger.kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+ Will Deacon <will@kernel.org>, Niklas Cassel <cassel@kernel.org>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de>
+ <awSs5Cw3hFkf4O4T@ryzen> <ec36d13e-e4c2-4bfb-8b50-69d4a1628839@leemhuis.info>
+ <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info>
+ <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org>
+ <2adaf0ef9e1a2fa18590f7d8dbf203c0f7de2be7.camel@redhat.com>
+ <uJluFNYGCCrdvnYT3MatN_4Om8UczTJX_dzxumJxyCAC7F-Ubrekb7LPwlRxhCW0J91UBf-TqeRoJQfgYIYBRvMsPmE-Qs1eAg5zbDP0s58=@protonmail.com>
+ <0edb9525-5068-42e6-b6c3-a1dcebcbcea7@acm.org>
+ <f323c3d62265dfe90fa71514028af4d35f6e2420.camel@redhat.com>
+ <e_efhbm0Vxq0FxO3-QqPkyhGrjzTvBDYmUOsGgmebVSyd0qsXXxYFXwC9sSjRAP06gcpsttHunBLtc0Mmt0cIjEI_0sDXL61lnxHhmuaxWs=@protonmail.com>
+ <l7ImnFzOgVkMzGhZoxCBcI1dAbMnO2NlsstuK-4sh3CyOpWhWAC1RqFIr4CW82iTy3FZe2r1k4EFFtecv5PClmy_mvh10vI9W_W5Z5p-jlo=@protonmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <l7ImnFzOgVkMzGhZoxCBcI1dAbMnO2NlsstuK-4sh3CyOpWhWAC1RqFIr4CW82iTy3FZe2r1k4EFFtecv5PClmy_mvh10vI9W_W5Z5p-jlo=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 
-Koichiro Den <den@valinux.co.jp>, 27 Kas 2026 Cum, 11:01 tarihinde =C5=9Fun=
-u yazd=C4=B1:
->
-> On Thu, Nov 26, 2026 at 06:15:06AM +0300, Oguzhan KAYNAK wrote:
-> > -     n =3D sscanf(buf, "%llu:%zu", &addr, &wsize);
-> > +     n =3D sscanf(buf, "%lli:%zu", &addr, &wsize);
->
-> Just to clarify, do we have any rule about negative values for the addres=
-s part,
-> like in "-1:4096"? 21fbdc4d0b1e mentions "-1" as a possible input for the=
- size
-> part, but doesn't mention it for the address part. (For either part, "-1"=
- is
-> really odd, but that's not the point.) As you mention, your patch starts
-> accepting it for the address part again. Perhaps we should keep rejecting=
- it
-> there?
->
-> If so, to cover the cases broguht up so far, perhaps it would be an optio=
-n to
-> split the input at ":" with strsep() and use kstrtou64() with base 0 for =
-the
-> address?
+On 11/27/26 5:57 AM, 70sp wrote:
+> I have taken a look at the patches and the entire problem much more
+> in depth, and there probably isn't a significantly better variant to
+> do this.
+>=20
+> In the state before the regression, the kernel was assigning smaller
+> page sizes for some cases, so it wasn't ideal as I thought. I also
+> haven't found a better place for the quirk to belong as there are
+> already exemptions for specific platforms in the code (I thought
+> there weren't). This one is probably fine.
+>=20
+> I am sorry to Bart and Laurence who had to handle this. I thought my
+> patch was bad, so I thought the same about Barts, but it looks like
+> it's the correct way to approach it.
+>=20
+> I was told to repost my patch formally by Lu Baolu ( https://
+> lore.kernel.org/regressions/d931a389-c143-4a6a-931c-
+> bc7025bcefb9@linux.intel.com/ ), probably because it fixes at least
+> my case.
+>=20
+> I think we should wait for confirmation from Tobias and if it's
+> positive, we can send out the final patch closing both cases.
+My LLM came up with the (entirely untested) patch below after I asked
+it to generalize an earlier patch:
 
-Good point, thanks. A negative address was rejected before my patch,
-so it should stay that way. v2 does what you suggested: strsep() at ':'
-and kstrtou64() with base 0 for the address. I did not carry your
-Reviewed-by over, since the code changed.
+Subject: [PATCH] iommu/vt-d: Disable superpages when legacy IGD engine=20
+lacks them
 
-v2: https://lore.kernel.org/all/20261127154157.3541-1-kaynak.oguzhan0@gmail=
-.com/
+Disable Intel VT-d superpages on bare-metal systems when the Intel
+integrated graphics device (0000:00:02.0) is behind a dedicated legacy
+(non-scalable-mode) VT-d engine that reports CAP.SLLPS =3D=3D 0 while an
+active remapping unit advertises superpage support.
 
-Oguzhan
+Per Intel Core processor datasheets (e.g. document 328897, section 3.1.2
+for 4th Generation Core / Haswell), the integrated graphics VT-d engine
+does not support super-pages and BIOS must disable super-pages in the
+default VT-d engine while integrated graphics is enabled. Several BIOSes
+leave CAP.SLLPS set on the default engine (dmar1). Whenever Linux install=
+s
+a 2 MiB or 1 GiB leaf entry (PS=3D1) on dmar1, hardware aborts DMA with
+fault reason 0x0c ("non-zero reserved fields in PTE"), breaking VFIO
+passthrough, discrete GPUs, audio, and AHCI storage (exposed by default
+once BLK_DEF_MAX_SECTORS_CAP increased to 4 MiB in v6.17).
+
+Prior to commit c376a3456d8b ("iommu/vt-d: Remove
+domain_update_iommu_cap()"), domain_update_iommu_superpage() intersected
+superpage support across all active IOMMUs, so the IGD unit (SLLPS=3D0)
+masked off superpages on dmar1. After that commit, dmar1 domains started
+honoring dmar1's advertised CAP.SLLPS.
+
+Check the hardware capability directly instead of matching hardcoded CPU
+model IDs. During intel_iommu_init(), look up the Intel integrated
+graphics device at 0000:00:02.0, find its matched non-INCLUDE_ALL DRHD
+unit, and clear intel_iommu_superpage before allocating any paging
+domains if that unit is a legacy engine (ECAP.SMTS =3D=3D 0) without
+superpage support (CAP.SLLPS =3D=3D 0) while an active IOMMU advertises
+CAP.SLLPS. Skip virtualized guests, untrusted PCI devices, systems
+without integrated graphics, and newer generations whose IGD VT-d engine
+supports superpages or scalable mode.
+
+Fixes: c376a3456d8b ("iommu/vt-d: Remove domain_update_iommu_cap()")
+Reported-by: Tobias Laas <tobias.laas@posteo.de>
+Closes:=20
+https://lore.kernel.org/linux-block/5ad27a97aafbc08a8702d5b90d09cd59@post=
+eo.de/
+Reported-by: =C5=A0imon Posp=C3=ADchal <70sp@protonmail.com>
+Closes:=20
+https://lore.kernel.org/r/HYhMd0Klo0XE_yiVY7XmsgyKKFDwKHfKRy22KrycLcYd0V_=
+ykA4xdbBMJXkA07YX3os6qK-NhMIVi6ITo-CkNIIF0e-GcI0UwwZmdDhAJ0I=3D@protonmai=
+l.com
+Cc: stable@vger.kernel.org
+---
+  drivers/iommu/intel/iommu.c | 48 +++++++++++++++++++++++++++++++++++++
+  1 file changed, 48 insertions(+)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 5a2e705a2f2e..d2c03bec22e9 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -43,6 +43,7 @@
+
+  #define DEFAULT_DOMAIN_ADDRESS_WIDTH 57
+
++static void __init check_igfx_superpage(void);
+  static void __init check_tylersburg_isoch(void);
+  static int intel_iommu_set_dirty_tracking(struct iommu_domain *domain,
+  					  bool enable);
+@@ -2762,6 +2763,7 @@ int __init intel_iommu_init(void)
+  		pr_info("No SATC found\n");
+
+  	init_no_remapping_devices();
++	check_igfx_superpage();
+
+  	ret =3D init_dmars();
+  	if (ret) {
+@@ -4266,6 +4268,52 @@ static void __init check_tylersburg_isoch(void)
+  	       vtisochctrl);
+  }
+
++/*
++ * Per Intel Core processor datasheets (e.g. document 328897, section=20
+3.1.2),
++ * when the integrated graphics VT-d engine does not support super-pages
++ * (CAP.SLLPS =3D=3D 0), BIOS must disable super-pages in the default VT=
+-d=20
+engine
++ * while integrated graphics is enabled. Some BIOSes leave CAP.SLLPS set=
+ on
++ * the default engine, causing fault reason 0x0c (non-zero reserved=20
+fields in
++ * PTE) when a 2 MiB or 1 GiB superpage mapping is used.
++ */
++static void __init check_igfx_superpage(void)
++{
++	struct dmar_drhd_unit *drhd, *igfx_drhd;
++	struct intel_iommu *iommu;
++	struct pci_dev *pdev;
++
++	if (!intel_iommu_superpage ||
++	    cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
++		return;
++
++	pdev =3D pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(2, 0));
++	if (!pdev)
++		return;
++
++	if (pdev->vendor !=3D PCI_VENDOR_ID_INTEL || !IS_GFX_DEVICE(pdev) ||
++	    risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
++	igfx_drhd =3D dmar_find_matched_drhd_unit(pdev);
++	pci_dev_put(pdev);
++	if (!igfx_drhd || !igfx_drhd->iommu || igfx_drhd->include_all)
++		return;
++
++	if (ecap_smts(igfx_drhd->iommu->ecap) ||
++	    cap_super_page_val(igfx_drhd->iommu->cap))
++		return;
++
++	for_each_active_iommu(iommu, drhd) {
++		if (cap_super_page_val(iommu->cap)) {
++			intel_iommu_superpage =3D 0;
++			pr_info("Disabling superpages because integrated graphics VT-d=20
+engine lacks superpage support\n");
++			break;
++		}
++	}
++}
++
+  /*
+   * Here we deal with a device TLB defect where device may=20
+inadvertently issue ATS
+   * invalidation completion before posted writes initiated with=20
+translated address
+
