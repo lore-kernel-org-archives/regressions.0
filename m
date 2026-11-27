@@ -1,89 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=46.19.12.180
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.102
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795783224;
-	b=zSIwer9vhSljxhGAS8jtkid8wAUSd08g17KxDQNptqTmCFS0jgh7kzPCkvVYZEx1arBG
-	 cSiBqb+SptHa9Fjw0WVJfYm4EgWavxBCXmeXMrEAnXtyYjZv4uAKaSjEfqlFI5YKq1Lts
-	 ajQGfLxHGOJ9PE10p24oocDMicoKbclldu5x+9Kc9h3+ADJ2MJo420clC3Vtd64Guf/ay
-	 pbfGLggqLv1G+r/+7GonSqe+Qk7e8JGr2lBnix8q/hhRra/O1D2eptMZU7SBMRYOMFdZu
-	 12B7z5YktNU79HUiPedyjahHlwpezmvV9MV9VDctaZg3/OD/ddBYafMmpbyvaH818Rw==
+	t=1795787872;
+	b=IpZYwKKkKmr1zZiFvrqh+lGwfauAQWOD9WAtjT8SxsutriozMqGllWGkO5w5T/aV7wJc
+	 pshe5X9HF8FdC6Ari/uN0orfejLzzLklDGRh31crQOd7QtfNbCFnmT99VWWfWCybT4IER
+	 Kj54zslMbxKZc+quVlAvO5QZCXsvWrvLq87IRPUpgmVNquCp6ZATI4Ahh9KKpnsQIPn38
+	 ifGJh2w976gPYdhiJ+ieT3y5OAKhODOmsbER1cMsbobrQC7gk4KoR9Tf8mXl3M4HeJRui
+	 r5RzNRJ9IFwZf+o88nx9t2gFqeBkegny6Y66AaMarcLs0kYBiPVHvvoKglPj5oUX60g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795783224;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-AntiAbuse:X-AntiAbuse:X-AntiAbuse:
-	 X-AntiAbuse:X-AntiAbuse:X-Get-Message-Sender-Via:
-	 X-Authenticated-Sender:X-Source:X-Source-Args:X-Source-Dir;
-	bh=a1h7on8HImX2X0LgBMc3cNbmT/5TZPxb20/cpZcLkUw=;
-	b=RpdugRTOfyp8W3gIJRtblhQX34irNPpfA0IyoM4x5MQHkcao+tTMxcLQa7TkDBdZcPY5
-	 rL9ZpMWXa4VnWD9u1F1/HSTsvyZMlQGbWLm0WDKMZ67q1KI7dTw6ns9LsWgahflTWc4cE
-	 6kzOBSTH/per7kINcNTAWGv8kc+l6B36n+HnTpMTlVV3gWOt1Ms0N9202hhozRn9jmmn6
-	 N/CFZZgFtapeJzOt+v5d2BHf/3fs4C2qHJR9oCxRH9sTba7Y7YTnjoeslSUKmvbpTKCsH
-	 WX7XDg1ZF78UH6Gpo+c4S1+mxeIudp7NFuWzDa1MMOZpTtgTn3ELDEvb9Q4wPeGI9nA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795787872;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=/f2Rjil7PMsu5fgbkOYg0CtvxSG41oXOLBLAUWnSHOQ=;
+	b=chgWOLCMzFONvDq3pWhUwcEVzIQGgGmToAzAQNfuFDnTLv5ObIlXGcR8mnTC5rLZM8ti
+	 CDUNsfHsoYvX2Ll/c05K+dDfPvaYCl/t3Q3mrNx4P8nL07E9mNG+Y4aD+LOyPAw+symgw
+	 A3418o9hcHyfPasJ6G7dKPZYqDEI70+HYEZNXAkTfBVuAR4nR1imt06WTSErZ9/ZisB8e
+	 wtdCxzIwGfw5hXKmRb1GajYMFqQKj3Iul/liHQH1anc5DXC693LSEaviXZdyeL1tvDWsI
+	 Bhvw7r/bdZiwsLmhMuj7GGRseotnjBRC6LjB9Gsw2UqDjvsIn2L7JJOTllMsH8KIlAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=norik.com;
-	spf=pass smtp.mailfrom=norik.com;
-	dkim=pass header.d=norik.com header.i=@norik.com header.a=rsa-sha256 header.s=default header.b=MDGAnUER;
-	arc=none smtp.remote-ip=46.19.12.180
-Received: from cp2.siel.si (cp2.siel.si [46.19.12.180])
+	dmarc=pass header.from=protonmail.com;
+	spf=pass smtp.mailfrom=protonmail.com;
+	arc=none smtp.remote-ip=79.135.106.102
+Received: from mail-106102.protonmail.ch (mail-106102.protonmail.ch [79.135.106.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7293D606A31F
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 12:40:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7293D606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=norik.com header.i=@norik.com header.a=rsa-sha256 header.s=default header.b=MDGAnUER
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Unsubscribe-Post:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=a1h7on8HImX2X0LgBMc3cNbmT/5TZPxb20/cpZcLkUw=; b=MDGAnUERglQnqyyCJ5069e0ocB
-	H8j/V19yzpMwApbLBuukG7lBOK8yLeJIGfIglr00DoxaHZvkTPiSNorYeMBXfEGJUVbEZNIOufvot
-	Zo7gmKgCxeKunFu5bdOCqQa3SGRzqhTRtrHMkzD/Fmtvra99wClJfFzPbSG4ICyLkNavez3lUKNe1
-	S9Gc+92o7D33gbEk0fNqvHtbNYGD6yhw90HmrfYS06TEavP7hW/xTzbpPzLIqOfnnyxa5QHwC/kRI
-	QeIh/f/2iB/KTjONoS/P29Ay/k06+Y5U3zNwZKOYdK7gU6dugJJ+uHg3OLsUyweOPFSdw9ofEYX8W
-	OBH7T/Uw==;
-Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:55190 helo=localhost.localdomain)
-	by cp2.siel.si with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.100.1)
-	(envelope-from <andrej.picej@norik.com>)
-	id 1xWvFW-00000004Q4L-1Qqr;
-	Fri, 27 Nov 2026 13:40:21 +0100
-From: Andrej Picej <andrej.picej@norik.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Ernest Van Hoecke <ernestvanhoecke@gmail.com>,
-	regressions@lists.linux.dev
-Cc: tessolveupstream@gmail.com,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	marex@denx.de,
-	valentin@compulab.co.il,
-	philippe.schenker@toradex.com,
-	alexander.stein@ew.tq-group.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Teresa Remmet <t.remmet@phytec.de>,
-	upstream@lists.phytec.de
-Subject: Re: [PATCH v3 1/1] drm: bridge: ti-sn65dsi83: Fix DSI mode flags for stable LVDS output
-Date: Fri, 27 Nov 2026 13:40:12 +0100
-Message-Id: <20261127124012.3664549-1-andrej.picej@norik.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <DMTXMG427D7Z.MVUAQQE9B08W@bootlin.com>
-References: <DMTXMG427D7Z.MVUAQQE9B08W@bootlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE84606A32F
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 13:57:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3FE84606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1795787866; x=1796047066;
+	bh=/f2Rjil7PMsu5fgbkOYg0CtvxSG41oXOLBLAUWnSHOQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=sWaM3ZVA1i6iPF81IiUvQjgOXb9J9GItQ6ZZlATtU4T4wjbQhAr3VVld7PN4u16rt
+	 09G1VwzMokz12JZxoFkPnANe3b2c8OXxc0bRrEiMN25fRgLvZvVWXqDnMEDZN7TsjY
+	 NW1Lk8CcqN0KPMncGYDIkr7MYRrLmAB5l+Ok24DT9V+cywn/RHtAlYf6+TO/wp78C7
+	 fH1UWStUi9DVvlGCZgeh7El6G8XpkRNwlgplL7kXLVExAC6cVrrlsUNcc+QRgLCZXU
+	 1acG5+EcKUyXeezi3QkXrbG1V0HNk/UjOPIdnpBRdw166ZCk6L4s0dxRk8v4FpBUZs
+	 zpjm0Oy+3pF2g==
+Date: Fri, 27 Nov 2026 13:57:40 +0000
+To: Laurence Oberman <loberman@redhat.com>
+From: 70sp <70sp@protonmail.com>
+Cc: Bart Van Assche <bvanassche@acm.org>, Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>, Thorsten Leemhuis <regressions@leemhuis.info>, Tobias Laas <tobias.laas@posteo.de>, Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, regressions@lists.linux.dev, linux-block@vger.kernel.org, linux-ide@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Will Deacon <will@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
+Message-ID: <l7ImnFzOgVkMzGhZoxCBcI1dAbMnO2NlsstuK-4sh3CyOpWhWAC1RqFIr4CW82iTy3FZe2r1k4EFFtecv5PClmy_mvh10vI9W_W5Z5p-jlo=@protonmail.com>
+In-Reply-To: <e_efhbm0Vxq0FxO3-QqPkyhGrjzTvBDYmUOsGgmebVSyd0qsXXxYFXwC9sSjRAP06gcpsttHunBLtc0Mmt0cIjEI_0sDXL61lnxHhmuaxWs=@protonmail.com>
+References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de> <awSs5Cw3hFkf4O4T@ryzen> <ec36d13e-e4c2-4bfb-8b50-69d4a1628839@leemhuis.info> <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info> <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org> <2adaf0ef9e1a2fa18590f7d8dbf203c0f7de2be7.camel@redhat.com> <uJluFNYGCCrdvnYT3MatN_4Om8UczTJX_dzxumJxyCAC7F-Ubrekb7LPwlRxhCW0J91UBf-TqeRoJQfgYIYBRvMsPmE-Qs1eAg5zbDP0s58=@protonmail.com> <0edb9525-5068-42e6-b6c3-a1dcebcbcea7@acm.org> <f323c3d62265dfe90fa71514028af4d35f6e2420.camel@redhat.com> <e_efhbm0Vxq0FxO3-QqPkyhGrjzTvBDYmUOsGgmebVSyd0qsXXxYFXwC9sSjRAP06gcpsttHunBLtc0Mmt0cIjEI_0sDXL61lnxHhmuaxWs=@protonmail.com>
+Feedback-ID: 144929603:user:proton
+X-Pm-Message-ID: dfc8998b5cc479a8c6e040b1acb68bd2a7137075
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -93,88 +61,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cp2.siel.si
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cp2.siel.si: authenticated_id: andrej.picej@norik.com
-X-Authenticated-Sender: cp2.siel.si: andrej.picej@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello Luca, Francesco, Ernest,
+Hi all,
 
-On Fri Nov 13, 2026 at 9:15 AM CET, Luca Ceresoli wrote:
-> I hoped to get better info from Ernest. The commit looks correct so chances
-> are that regression is caused but other bugs (incorrect timings, inaccurate
-> clocks, etc).
+I have taken a look at the patches and the entire problem much more in dept=
+h, and there probably isn't a significantly better variant to do this.
 
-I see the same regression on another board, the PHYTEC phyBOARD-Polis
-i.MX8MM with the PEB-AV-10 adapter. This board also had a clock problem,
-but with that fixed, the display is clean without
-4af021a97773 and glitches constantly with it. Details below, following
-your list.
+In the state before the regression, the kernel was assigning smaller page s=
+izes for some cases, so it wasn't ideal as I thought. I also haven't found =
+a better place for the quirk to belong as there are already exemptions for =
+specific platforms in the code (I thought there weren't). This one is proba=
+bly fine.
 
-> * accurate description of what hardware breaks, with pipeline components
+I am sorry to Bart and Laurence who had to handle this. I thought my patch =
+was bad, so I thought the same about Barts, but it looks like it's the corr=
+ect way to approach it.
 
-i.MX8MM LCDIF (mxsfb) -> samsung-dsim (4 lanes, video burst mode) ->
-SN65DSI83 (single-link LVDS, LVDS clock taken from the DSI clock) ->
-EDT ETML1010G3DRA panel, DT overlay
-imx8mm-phyboard-polis-peb-av-10-etml1010g3dra.dtso.
+I was told to repost my patch formally by Lu Baolu ( https://lore.kernel.or=
+g/regressions/d931a389-c143-4a6a-931c-bc7025bcefb9@linux.intel.com/ ), prob=
+ably because it fixes at least my case.
 
-> * panel timings (or, better, panel datasheet URL with that info)
+I think we should wait for confirmation from Tobias and if it's positive, w=
+e can send out the final patch closing both cases.
 
-panel-simple edt_etml1010g3dra, typical values: 72.4 MHz, 1280x800,
-hfp 72, hbp 86, hsync 2, vfp 15, vbp 21, vsync 2.
-
-> * exact kernel version (upstream kernel tag or SHA-1)
-
-v7.4-rc2 (9d66f26fefac), and Frank Li's imx/fixes (acba37c2e2df, based
-on v7.4-rc1).
-
-> * clocks used and measured on the lines
-
-Clocks read from the registers, not measured on the lines:
-- LCDIF pixel clock: 72.375 MHz (video_pll1 144.75 MHz / 2, set by the
-  DT fix [1])
-- DSI: 434.4 Mbit/s per lane (samsung,burst-clock-frequency = <434400000>,
-  DSIM PLLCTRL 0x0155541F), so the SN65DSI83 runs its LVDS clock at
-  434.4 / 2 / 3 = 72.4 MHz
-
-Without [1], the pixel clock is exactly 72.4 MHz, and the panel shows
-line glitches even with 4af021a97773 reverted (about 12 per minute).
-That is a separate, older problem of this board, which [1] fixes.
-
-> * difference observed before/after the patch on the cables and in software
-
-                         4af021a97773 applied   reverted
-  without [1]            constant glitches      ~12 glitches/min
-  with [1]               constant glitches      clean (50 display starts)
-
-The glitch is a missing line for one frame. The SN65DSI83 does not
-report an error (register 0xE5 stays 0). In software, 4af021a97773
-changes the DSI mode flags from 0x2e3 to 0x283, and DSIM_CONFIG from
-0x1670707F to 0x1610707F, so the HFP and HBP blanking packets are
-sent.
-
-> * any other detail of your investigation
-
-I think, but I'm not sure, that the HFP/HBP packets don't fit into the
-line time, because the DSI link runs at exactly 72.4 MHz * 24 / 4 =
-434.4 Mbit/s per lane and has no headroom. As a quick test, a 724 Mbit/s
-link with the SN65DSI83 DSI clock divider changed to 5 by hand was clean
-with 4af021a97773 applied. That can't be set up properly without the DSI
-link-rate negotiation discussed for patch 2/2.
-
-Unlike on Ernest's board, disabling burst mode does not help here: with
-patch 2/2 applied on top (DSIM_CONFIG 0x1210707F), the SN65DSI83
-reports CHA_SYNCH_ERR (0xE5 = 0x80) and the driver resets the pipe
-about once per second.
-
-[1] https://lore.kernel.org/all/20261127093953.3541816-1-andrej.picej@norik.com/
+Thank you for listening to me.
 
 Best regards,
-Andrej
+=C5=A0imon Posp=C3=ADchal
