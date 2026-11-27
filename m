@@ -1,97 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795799586;
-	b=gDgijXjsojetRnLCufqNzqh9V9lBlqX07xC1pFpIdGu4P895qP/D+RNKDZrxUQU+8gQx
-	 7H65oraFTX3QEjmkvIstitqZNAjDq5CdFtNMCaYH+ZLVc+FIGCWs/zCzegy7TRQhTiN1K
-	 VHpHIZMDrE3VJPS0opPvwGsreuH6WMCFDT/ck6sRg2CDrO1EHszBZT9QYG/Ew+07SuRqW
-	 /Dx1I/7fmRvtpvuSHVp3+NkkbEE/uH6Z9SClruPC45TZOpIC5DgFPNEWsrjmMIzkhuuJZ
-	 Uy/Dh38JMppf+ZqImjsH5749Yv28BB+jP428dosYGCoouxFVyMuyRGVlgd3PBoNgtiA==
+	t=1795800765;
+	b=seuig/frwCUp/dVMn6BWUVuJOxtAUluUUSUrq69pj4pFcYZr7jaZloFOLAiRWW5VsBd8
+	 W4T/izKaPhOie4nr2C6mN5/4en3lNKDVCsaobsO9YP2vUVNQkxvogpcWyUkl06uwrZ1Rk
+	 acaCU9httIQIS+XUYfLJkx7BMnASYr4yvGXT7aJt+/s2I24SxUr+w2n7uAzqEdtYkb2QI
+	 nVFyhSnmBLVTS3jo5QfTBfIJmWmaHKJI9zPiv19HkXQPy14Zh4GiWhYAOV4V+TaG0byOV
+	 WWa/TzV5YJwBJWp1OI0+Pon548SZJmxr+Ee4JEzeAEZZ4z1Gladb1kx2wE9SVKkKkIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795799586;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=7S4J0Oj3sYJi1UqXP5r2+N/vXgyTszyUgul/cChtfHk=;
-	b=Aq4yyd3WIIClEvGQopUJb9W9wuciT2YoywFbt+X8uP8MWf/68AQW38waoRCU+3WSYyOc
-	 rHLMPLTEi1+RC2Nv2Fl0KQoHvQD8wjoJyra3tBN+pOIdnPJ3xXsbTjyBia7J00mIYXVi5
-	 8Uk1tp+kdKAxMGfHtrzxOhS6EWL4YUxQa0fP1rXFLazNHUxZct1kQf4kfF0oR8DHjfX25
-	 Aithoo4NdnNZBPZuvrR+K3xaegNCdd95hzaTamflf8XFnrgvhI1fH0vDYtd6EBp5Kee1c
-	 hvNq5xQv8t7nkSw6JVr6kq66dQoF1pNM5Xq0NemapIeVESkC0CgkoMezmx2VlaWIsVQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795800765;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-Spam-Flag:X-Spam-Level:X-Spamd-Result:X-Spam-Score;
+	bh=vqQBVV+JWftHY0f3XmU1p1clDKBJI0+9NyfmFolxJq0=;
+	b=gdDLNp+8RAUmux/NvYOgmIkKa1ErJbHw84DdHpgWfnvqYy/NJ2utivDl2b0zB6dQVTNO
+	 8qecM9aLYrheR85ZXnbLcZuKvQNwGTdBFc7e4ByBZLOaQcTXSHra9uM9NBvJDVzAEgPVl
+	 jb2doHnKCVw2BgJkryTezX7viL9JvffjMeNwDrCMqSoSSei5inVJxvYIpgho/znyWuQnA
+	 Nt4/PkrGNbK2HXQVJChQC+2HndSZhfSxVirZ6QeoikJiszpCHfHNNJFkSz3gIZzVk/3Xi
+	 bMEERlttNZ1gJbQ0+AtS/8CMLF6i58cT+YMAzvqR5XyKdSvxW7ry9aonDSKTpgLTuhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cuT2qXe9;
-	arc=none smtp.remote-ip=209.85.215.181
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=qTAfTQhC;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=OuB48qTL;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=qTAfTQhC;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=OuB48qTL;
+	arc=none smtp.remote-ip=195.135.223.131
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FCE606A31F
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 17:13:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2FCE606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A42606A31E
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 17:32:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2A42606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cuT2qXe9
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cd6acc50b8dso4244133a12.3
-        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 09:13:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795799585; x=1796404385; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=7S4J0Oj3sYJi1UqXP5r2+N/vXgyTszyUgul/cChtfHk=;
-        b=cuT2qXe9Za9Rd1ZtNkX98hFaGF11PQCyElwqKPvzL97KTfNyoOPNbGGh8pB+oiSBZk
-         WRn9hiHiyO4+P3V8ibhnIkzQ6qgLy0GLo+EW0F/KOTJTwacafKLRs/lFOoxws0PnIbZc
-         MgFP15IbBou2NtXK72ugL1J42ojM6LACISK0e0yH0eNzO4FinNIrCPTx031lmW0fZcb7
-         nRENzlILkE9Cm2/uXo29vxyb03Htzp0Qy7G/YKZW4DYbfzAuM5xCoGJ7uGC3o4GZC/RB
-         UR7wOQpltBVvgmDD9RZ/foQOaHN3F09igqbT00AVzoLnfdWuN7AF0en5O3s4PSJovN5i
-         IXLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795799585; x=1796404385;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=7S4J0Oj3sYJi1UqXP5r2+N/vXgyTszyUgul/cChtfHk=;
-        b=o17kUtvRKQmeOlV6tKViPvAmUCnRZjrnuJi/Tv3720T4eOS9+N4cFLQ7eb9r6oR/dY
-         Prm8HIFDUz+LOc092d3HXBahBdc/aBLjrDbHUfTi+AJb9XoEY9f2BKWfAecDS443RbY8
-         YMrQJ84X56QlgMsvrQLIRFqTfgqzExAzG4UGf+8RB1zrL4mLdymE22xnkrngv16BVNiN
-         bBQTWUnXRej7eWUkrEvPLXaNh3bH47/EYg+IecMLeAEhriElc40uL8W7zQgZfWcbSDLi
-         feSgB7IywfI0fbpy+OjxsD0tzoEkJPQnxxmPDErcS8IR6JbwAKFCDCUdLLFMb4/+/kQ9
-         f4iw==
-X-Forwarded-Encrypted: i=1; AL+hErGwh7S4CMfQ9mLtObxXm9458ICm3GjX3wsc+yKsVlJvVVFQETNRiBmRU+EbtZYG5pxk4glmuZKYwdBzDQ==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/O8xmzCWBjkQ8t1nzE8ZeU9HDp3Q/Ja0TGgJeQOY3YwIS1MpHd
-	4730t4Yy0dsUbCZ/U6cwmFUQZuNniOrZH2njxhLijphOjaD2CYK3EXYn
-X-Gm-Gg: AZFdTZfHRQF133GROXQ1jkFFwat2pkUirOSnQhDQZWb5wOqNiq8P4Y0JchIbne/0Jjc
-	EzNuh5WmlKjhuhr+2ZEdG4+qh3Qd/jan12bjH5j2Fb5NcWopwLxWRABtaEXdEWK0rXetqdpV2q+
-	QvoDg94tEvGZ1lA29xr1vhLN3lrpSHY7PkUZFP//x5XJzcfgQ57n9DunI4d+VoqceOUGd9Vcb/7
-	g8BsXNuJQLcXrayHpGu9fOEUzK4+2sz6HkyL567dN6yJx7jcJVLJKhCZA7wXY8ofU9/qoPiO6aQ
-	yTfRBlYkyiyfAB8Eib2gne3Rf1gWZrUUDX8PMrT/MEHOw9Nu5yAbjqDgWHj28yKanTNAmMQG5id
-	rZm105igeFxaIjg6pPLdt0xvfSvQycJ59bW02+z951PlE44hLrXQkCW0BAd0OJvOqxJQy94A+Wu
-	xSQA2yqTfkFcmfAz4WlfUYymvz2BO4k/j2EwLedc8KWNlWO8U6IYlncj7fX9uuS1V5YIXHF2l94
-	nmklr3c3dtkATOx+4xumLHeoQ3oBKRUV3qJc/cF1oRn5lN/zwDjtkdqpCmFKbuNpZtEiIWq6UWT
-	UWN6rfAPoipZ7qpNfZA4AQjrv68YlsD2Lafv4PKR3dB6pRxq3iATzB2vfZcFHnX4MUGhJ2WcTYJ
-	aFuVwJ4Sxhj+aEXSuYpqE1F0znCcbiVTQ7xcpf0ryiRs/ZRRyz6BSO2k0Sd4CIobue25nK5gEFO
-	iW+Nr9+JjjWR55ZIsHEj1q
-X-Received: by 2002:a17:90b:2e49:b0:3ac:80dc:f419 with SMTP id 98e67ed59e1d1-3b41c90811fmr24324820a91.25.1795799584854;
-        Fri, 27 Nov 2026 09:13:04 -0800 (PST)
-Received: from fangorn.. (97-120-153-124.ptld.qwest.net. [97.120.153.124])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b41ad0a34asm38643445a91.3.2026.11.27.09.13.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 09:13:04 -0800 (PST)
-From: Carl Egbert <egbertcarl@gmail.com>
-To: Takashi Iwai <tiwai@suse.com>,
-	Jaroslav Kysela <perex@perex.cz>
-Cc: Eric Naim <dnaim@cachyos.org>,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=qTAfTQhC;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=OuB48qTL;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=qTAfTQhC;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=OuB48qTL
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F8B51F7F2;
+	Fri, 27 Nov 2026 17:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795800762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vqQBVV+JWftHY0f3XmU1p1clDKBJI0+9NyfmFolxJq0=;
+	b=qTAfTQhCMYlBcr1+N70tWCbDSVuw32Pk9e6L0g8HWwjwjeS5wvWXn6gjKJPvEzmOE7v6K5
+	foe+TmHJ5Xc8nd+UO/8wNsQU7hAPGNPvyjntNcj98m6qZgCE7crh6eZSGXP7C23zAALqXw
+	7jNjFbQ+6b0X3UfPh410jSKN5FPA+eM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795800762;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vqQBVV+JWftHY0f3XmU1p1clDKBJI0+9NyfmFolxJq0=;
+	b=OuB48qTLhxn8Q8YnjFbNkMq72DHVXaNqZ80gdfBugRN6bAdFeOfmnH1+SZwZkjdQBAdlRd
+	btBBsmgntO7C+gDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1795800762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vqQBVV+JWftHY0f3XmU1p1clDKBJI0+9NyfmFolxJq0=;
+	b=qTAfTQhCMYlBcr1+N70tWCbDSVuw32Pk9e6L0g8HWwjwjeS5wvWXn6gjKJPvEzmOE7v6K5
+	foe+TmHJ5Xc8nd+UO/8wNsQU7hAPGNPvyjntNcj98m6qZgCE7crh6eZSGXP7C23zAALqXw
+	7jNjFbQ+6b0X3UfPh410jSKN5FPA+eM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1795800762;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vqQBVV+JWftHY0f3XmU1p1clDKBJI0+9NyfmFolxJq0=;
+	b=OuB48qTLhxn8Q8YnjFbNkMq72DHVXaNqZ80gdfBugRN6bAdFeOfmnH1+SZwZkjdQBAdlRd
+	btBBsmgntO7C+gDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CF254134E8;
+	Fri, 27 Nov 2026 17:32:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WPgqKbm+CWv6EAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 27 Nov 2026 17:32:41 +0000
+Date: Fri, 27 Nov 2026 18:32:41 +0100
+Message-ID: <87fqwmmb7q.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Zhang Heng <zhangheng@kylinos.cn>
+Cc: tiwai@suse.de,
+	perex@perex.cz,
 	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Carl Egbert <egbertcarl@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] ALSA: hda/realtek: Fix mute LED regression on ThinkPad T440/T450 family
-Date: Fri, 27 Nov 2026 09:12:41 -0800
-Message-ID: <20261127171241.1619113-1-egbertcarl@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	stable@vger.kernel.org,
+	helamonster@gmail.com,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] ALSA: hda/realtek: Fix mute LEDs on ThinkPad X1 Carbon 6th
+In-Reply-To: <20261126100731.903504-1-zhangheng@kylinos.cn>
+References: <20261126100731.903504-1-zhangheng@kylinos.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -100,84 +113,47 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spamd-Result: default: False [-12.30 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,perex.cz,vger.kernel.org,gmail.com,lists.linux.dev];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -12.30
 
-Since commit 8a889cce1c6d ("ALSA: hda/realtek: Unchain
-ALC269_FIXUP_THINKPAD_ACPI from ALC269_FIXUP_LIMIT_INT_MIC_BOOST"),
-ThinkPads whose fixup chain goes through ALC292_FIXUP_TPT440_DOCK or
-ALC283_FIXUP_INT_MIC no longer get their mute LEDs set up. On a ThinkPad
-T450 (SSID 17aa:5034), the speaker mute LED no longer follows the mute
-state: no mixer control gets the speaker LED access flag, so snd-ctl-led
-is not loaded automatically and
-/sys/class/sound/ctl-led/speaker/card1/list stays empty.
+On Thu, 26 Nov 2026 11:07:31 +0100,
+Zhang Heng wrote:
+> 
+> ALC285_LENOVO_DAC_RENAME is not chained to ALC269_FIXUP_THINKPAD_ACPI,
+> so the vendor fallback that registers the mute LEDs is skipped.  Chain
+> it to restore the LEDs.
+> 
+> Fixes: 108704eecab9 ("ALSA: hda/realtek: Rename Line Out control to Headphone on ThinkPad X1 Carbon 6th")
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Jeremy Bryan Smith <helamonster@gmail.com>
+> Closes: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2174970
+> Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
 
-Commit b2d447288fa7 ("ALSA: hda/realtek: Add
-ALC269_FIXUP_THINKPAD_LIMIT_INT_MIC_BOOST quirk") added a ThinkPad
-variant of ALC269_FIXUP_LIMIT_INT_MIC_BOOST and switched the quirk table
-entries that selected the plain fixup directly. Then
-commit 8a889cce1c6d ("ALSA: hda/realtek: Unchain
-ALC269_FIXUP_THINKPAD_ACPI from ALC269_FIXUP_LIMIT_INT_MIC_BOOST")
-removed the chain to ALC269_FIXUP_THINKPAD_ACPI from the plain fixup.
-However, two fixups reach the plain fixup through their own chain_id and
-were not converted:
+Applied now.  Thanks.
 
-  - ALC292_FIXUP_TPT440_DOCK, used by the ThinkPad T440, T440p, T440s
-    (via ALC292_FIXUP_TPT440), T540p, W541, X240, X1 Carbon 2nd, T550,
-    X250, L440, T450, T450s, L450 and X260
-  - ALC283_FIXUP_INT_MIC, used by a ThinkPad (17aa:501a), the IdeaPad
-    S210 and the Lenovo 145 (via ALC236_FIXUP_LENOVO_INV_DMIC)
 
-Their chains now end before alc_fixup_thinkpad_acpi(), so these machines
-no longer get the mute LED setup for thinkpad_acpi, nor no_shutup_pins.
-
-Point both fixups at ALC269_FIXUP_THINKPAD_LIMIT_INT_MIC_BOOST, which
-restores the fixup chains these machines had before 8a889cce1c6d. On
-the IdeaPad S210 and Lenovo 145, is_thinkpad() is false, so they only
-get no_shutup_pins back, as before the regression.
-
-Tested on a ThinkPad T450 on top of sound.git for-linus (e79163b531ec):
-with this patch, snd-ctl-led is loaded automatically at boot, and the
-speaker and mic mute LEDs follow the playback and capture mute state
-again. Not tested on the machines using ALC283_FIXUP_INT_MIC.
-
-The regression was bisected on the affected T450. An AI assistant
-(Claude Code, using Claude Opus 5.5) was used throughout: it helped
-diagnose the problem, plan the bisection and write the scripts used for
-it, identify the cause, and drafted this patch and changelog. I ran the
-bisection and the tests on the hardware and reviewed the change.
-
-Fixes: 8a889cce1c6d ("ALSA: hda/realtek: Unchain ALC269_FIXUP_THINKPAD_ACPI from ALC269_FIXUP_LIMIT_INT_MIC_BOOST")
-Cc: stable@vger.kernel.org
-Signed-off-by: Carl Egbert <egbertcarl@gmail.com>
----
- sound/hda/codecs/realtek/alc269.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
-index 5c3b383bb618..003f5052a842 100644
---- a/sound/hda/codecs/realtek/alc269.c
-+++ b/sound/hda/codecs/realtek/alc269.c
-@@ -5246,7 +5246,7 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{ }
- 		},
- 		.chained = true,
--		.chain_id = ALC269_FIXUP_LIMIT_INT_MIC_BOOST
-+		.chain_id = ALC269_FIXUP_THINKPAD_LIMIT_INT_MIC_BOOST
- 	},
- 	[ALC290_FIXUP_SUBWOOFER_HSJACK] = {
- 		.type = HDA_FIXUP_PINS,
-@@ -5361,7 +5361,7 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_tpt440_dock,
- 		.chained = true,
--		.chain_id = ALC269_FIXUP_LIMIT_INT_MIC_BOOST
-+		.chain_id = ALC269_FIXUP_THINKPAD_LIMIT_INT_MIC_BOOST
- 	},
- 	[ALC292_FIXUP_TPT440] = {
- 		.type = HDA_FIXUP_FUNC,
-
-base-commit: e79163b531eca7f3fdc05031f4b43b6f7c51d3bc
--- 
-2.48.1
-
+Takashi
