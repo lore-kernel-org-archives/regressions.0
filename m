@@ -1,69 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.249
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795801543;
-	b=l5wFXCLIjlAaaAHYkohjCB+kfNaSH/Qonk0Z7K8lXaC/gLwmjdEdwWqIGw3Kzf4oBwYS
-	 B5qz+UO2qHz8vDIr1f7Fz33tON5ANUSH+txvl5jVDm/wT43hItdIuRYKB1b4CDDpUxkGL
-	 9elYEdmtZ6sBNoOKrUH3oZvsEkwT8oSjPhwTTlZEsNSFdXemo/TEEx+OOxTe4ak6ZvazH
-	 6lvqcgnHotKt49wcMAnn43sof5upUv/66IREq0pDQHEeQppBlwS8zv0AzGlqbS/NzIgM3
-	 VItxDGzG0QWeQ2NL6zccybOpaWUrOHl11+NH3XYZVDq2MvCDT1ut92Kj9MQBxwwKvsQ==
+	t=1795809548;
+	b=OFA/zMnjNFqy7v6+Inih3FEtrXji0ETeW+9rf4MGxpXdPGWRVyagnX3/RVDwinSsGniT
+	 aeNVapOLFoJJRS0b6ELpVCuAiAoqmpGAHp4/+3v3MdOFAt04yhDllERBLXIcqCzxxYpPu
+	 SwuRk6hab5cZijSWZRlXfFFbald5Za+iAqZpxYq5F8eMNWHecjFlJGXeCbvOp0BxFgXhe
+	 uKc4W2bAlugkIjhmOC/hpK61PcQgZy7oXDI9T1ormqzMAKE8UKlwwPojkUm/D+AioJ/UQ
+	 EOLgH+HiXLPdqwdnFs2Raia7sLtW7WCv0Tu7BN//GI4eQotMIUXnSwuapCVGjyDQ7Yw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795801543;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=3tIZGzZp9XED1eYsjC7AojoBXQ/Rujhkgy0uNyPbeEw=;
-	b=Jt1T8B3ueTtynDLey+M9uTPivqr8YUt1SRn4EI6QjEo3hw9zShtcJ/WTnyWBtyv7pPoN
-	 +v7RYiYtxj4zx0yqFs+lyVQEpvKnC8kl99/d0QM8Varpb3gHoAh2DQ0/XDF9jBFQwALt5
-	 mi9P3wMOYvqjXtzYUYEhpJU3lq7dqR4HInRYxIb+wkdGN74FDNRVzfwvFgzzDl9uJr62n
-	 CQ3b8RRq+JIjwLZRptCDjminznnEkAcdTfHUHMXNksEC1+JAkuxt4QhhqhBnPiHBBFNl9
-	 S+ZdunZTKBPTd80hYRwtsJDwljhI1KDloo3FG/0/5znOpH1771Rb1tZUpsFbtnap8Hw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795809548;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Content-Type:
+	 MIME-Version:Content-Transfer-Encoding:Subject:From:To:Cc:Reply-To:
+	 Date:Message-ID;
+	bh=eDEirQQMamUNZawFJEgZuhdS2lg0tyCOVyKPInGW5TY=;
+	b=ZsCCPn0kUehDHeYakZrPrjIElPXWY8Nm3PI33ds1b2jIVzg4oQetqJPWsR9wNDwVWXCs
+	 /zffbAG9AS3KOOXrjvQ0yh+LRyIf0UZKPNiepNlbj9xOuSDxxkUzmPmUTQdGunxe7spMR
+	 hzjvSjrBIuMC1VqfkbIRx+fIYv2vXWWV3WpB93iiw7faHDLDpUewsVTr4o8mgQcE6srKD
+	 f2b9FAi7ee1YXLChc2U0fevEIdZyRnYImt8fjf1fSJQsOxg9fNLUis8yBTgSDiGa0bP/W
+	 DDlH3PBJLAeap/3hN1Is2bAMuw4liVzcpUR4fcWWHL8FaC9dqdnurmq5iQptbHSF8fA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=uW6sUxPu;
-	arc=none smtp.remote-ip=95.215.58.249
-Received: from mta1.migadu.com (out-249.mta1.migadu.com [95.215.58.249])
+	dmarc=pass header.from=kernelci.org;
+	spf=pass smtp.mailfrom=kernelci.org;
+	dkim=pass header.d=kernelci.org header.i=@kernelci.org header.a=rsa-sha256 header.s=google header.b=U1sr3Uiu;
+	arc=none smtp.remote-ip=74.125.82.173
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2383E606A31E
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 17:45:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2383E606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E165606A31C
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 19:59:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E165606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=uW6sUxPu
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=3tIZGzZp9XED1eYsjC7AojoBXQ/Rujhkgy0uNyPbeEw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795801540; v=1; x=1796406340;
- b=uW6sUxPusHYXxL1n7RbsyImfjuRZtOucfzvlLg2Au9CK+TtjL7RGU7uCv3AbGHlH+NFCBOBu
- r/qv++sQCU68oogFTLYxyLEnfysQCq58mtBLGZAiO95xDdMvMFqI80T2hg8CI9iV24jW5q+hoRN
- e3avGhDmoA66Vaskl+ueb3fw=
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id c4796adf2f73c32f;
-	Fri, 27 Nov 2026 17:45:39 +0000
-X-Mizu-Trace-ID: c4796adf2f73c32f
-X-Migadu-Flow: FLOW_OUT
-Date: Fri, 27 Nov 2026 17:45:35 +0000
-From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-To: Zhang Yi <yi.zhang@huaweicloud.com>, 
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>, Theodore Ts'o <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun@linux.alibaba.com>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	guolingxing <guolingxing@tju.edu.cn>, Josef Bacik <josef@toxicpanda.com>, 
-	Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-Message-ID: <20261127-jf-ext4-enospc-reply-zhangyi-r4-3-59ba31e6e023@linux.dev>
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
- <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
- <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
- <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernelci.org header.i=@kernelci.org header.a=rsa-sha256 header.s=google header.b=U1sr3Uiu
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-3863db981d4so11934250eec.0
+        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 11:59:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1795809547; x=1796414347; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=eDEirQQMamUNZawFJEgZuhdS2lg0tyCOVyKPInGW5TY=;
+        b=U1sr3UiukOUw1bgUALSgRpHz7q2UTKiWqIHa+bin/cRt72dHb8IlvL98YaiYuoGO5Q
+         n1NXfhMTS8xb7K2eJYtlhHIhKkwB7l6AVmjwkWS+3KAnBcYkG+fisXBzVRcXSMJXoSRO
+         yIrQUBqEA0YUT2MNuCfCLYHqS8EytXFFJUAfpXUBH25uW0iwxXbYSHWCq5H5snCdilY4
+         Z59zHDbBpbmFgueW2c/fxi/QGpmKjsWJHkQPIOk5oPAMz6rKFrvAM0NOefCfzyZYrwzG
+         m3uRT7sL6cGCJ/an+bvg8TIDAQ1JlRn4hSkOuZQPmoLM/WoQtxe0v8FakB6EunjXggPs
+         tBcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795809547; x=1796414347;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=eDEirQQMamUNZawFJEgZuhdS2lg0tyCOVyKPInGW5TY=;
+        b=ZLSLeoqPNg7Wf4ILrCZYk23ck2upFCJAG7SgkQ3LwE4APA7qYZuevXmeTpMIW5BSVZ
+         ETRqrXv9a7Kf7idZ/RlOWzGuaAXFYdvnBmaEeHit7c1LuVXLjyDH6rU/HQ9V2D1JaAwL
+         Z2FSQzIlpix8rR5Bcm/PhALCeV10SLnEhKNkQ278NNO7zrOfCYER1mG/pZUTjv5hzTA3
+         Hqaon6gkfrAz49VwEGmQ93Mv9FhYjhiqzq+GfZfngv0MIViuBvUDYc4aR94zVZo2JJsw
+         cyrTTj1zgwUbGVklWijAyA3YCryuH8Wh4j+9ifgN+cdZvFM62RLBX9MXsjNkBv7fa2ug
+         HeRQ==
+X-Gm-Message-State: APuU4Z+XEW2c0fv3R2dlvwt8r9u7XRzF9OHBc5Iiiud0e/wHVvVr+SVN
+	CvpJfQjNOinAHhuChiuUWJPEgTA4mivloF4JD2VVPcSkpHH6ZkjLOnjTzryy6k2ENVamrn9or7Z
+	ym8M3
+X-Gm-Gg: AZFdTZeGOuQw0XvCkmqHQveWVZhsKTc9oxmumgd92gVleBT7py+UrYqfARFfB6rkecr
+	CcEv063W/Brs9zFqR1wvTiwglJprj/gWb2s5vohpL+ldS4nuBJ+iTs79zRq4fIzocgmWQIRBrhm
+	Ma/ZmiUzxotq68t2NLZyNtg7Sm2i9QmjrK+XD5keaUe5/WdzKMmrl6wUVMlVJMRUZpULyEXkl71
+	qeDIryCPPd3chr3vsWgCgoc7+NoShwC+hR41y9NlyFRd8FtVJOhHhk8LHg99NnaU5+7gMoRca0O
+	1j4DwcpVr+cRqUklmwQesLvhoxHTDdw+rXo9aDuQNf/26oNjIesO94+zYLq6kReqbzFjU7c+94y
+	/m8YjllYwwlXFVJtAgmjh/RO+F8poM+ddgooUcKFAjZ73JAdhtMvoHUtbUXWX7sR21NJ0y4tHKm
+	igRSUGVIMjVNociA4fB/NpGTqYBqvb/kPCmFL3x1l4C/bo46jgTCn1SC296a5apV74RbwA4Hj7S
+	ZJ3yFNKturUN38KY+PnAz9SrSsTC5W/1m0G93TwsACzZGPjPCqg3x3DI7Sp5DeaMGvbEKfqkKiP
+	3wZdu2BBecbndsBN5+5/+Q==
+X-Received: by 2002:a05:7301:da86:b0:386:d481:8160 with SMTP id 5a478bee46e88-386d48183aemr7586621eec.37.1795809547006;
+        Fri, 27 Nov 2026 11:59:07 -0800 (PST)
+Received: from 52d83ede7c60 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385d2b93dd9sm84295786eec.24.2026.11.27.11.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Nov 2026 11:59:06 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -73,27 +89,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build)Error in
+ /tmp/kci/kernel_build/pmu-events/amd_metrics.py.mypy_log (...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Fri, 27 Nov 2026 19:59:06 -0000
+Message-ID: <179580954555.221446.8765451637967038515@kernelci.org>
 
-On Tue, Nov 24, 2026 Zhang Yi wrote:
-> My idea is to make this a real reservation of currently allocatable
-> clusters rather than just a counter check. We can subtract
-> sbi->s_mb_free_pending from free_clusters in ext4_has_free_clusters().
+Cc from: regression/mainline.yaml
 
-This makes sense to me.
+New build issue found on mainline/master:
 
-> However, the probability of returning ENOSPC for pure append writes
-> increases by about 10%.
+---
+Error in /tmp/kci/kernel_build/pmu-events/amd_metrics.py.mypy_log (pmu-events/Build:229) [logspec:kbuild,kbuild.other]
+---
 
-Our agents tried a close variant of it on mainline, with an exception
-for EXT4_MB_USE_RESERVED. The reproducer lost 0 of 72 files instead of
-32 of 72. But write() got ENOSPC on 54 of 540 delalloc files, against
-none without it, with the filesystem at most about half full. The
-writers ran as root. Is your 10% before or after
-ext4_should_retry_alloc() gives up? Ours is after.
+Log excerpt:
+=====================================================
+make[3]: *** [pmu-events/Build:229: /tmp/kci/kernel_build/pmu-events/amd_metrics.py.mypy_log] Error 1
 
-We can test the patch once it is posted.
+=====================================================
 
-- Jose
+When fixing this issue, please attribute this report according to the
+patch submission rules:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Link: https://lore.kernel.org/all/179580954555.221446.8765451637967038515@kernelci.org/
+
+For complete logs and details about the environment used, see the issue
+on the KernelCI dashboard:
+
+- dashboard: https://d.kernelci.org/i/maestro:10ef918ad7e7039c848700c156fc03fc1b2dc224
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  822ba3a89c7896b26e4beb70e2ebffb881924dfe
+
+# Builds where the incident occurred:
+
+## defconfig+lab-setup+perf+perf-arm64 on (arm64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6b09d335286e1965eccee1b1
+
+#regzbot introduced: 9437ee8b6cf607e883b36e44bd755968daaebd48..822ba3a89c7896b26e4beb70e2ebffb881924dfe
+#regzbot link: https://d.kernelci.org/i/maestro:10ef918ad7e7039c848700c156fc03fc1b2dc224
+
+#kernelci issue maestro:10ef918ad7e7039c848700c156fc03fc1b2dc224
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
