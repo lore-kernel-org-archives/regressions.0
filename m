@@ -1,101 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795727693;
-	b=RDFlxQNVNU56wsfSRWBI+eJDdBjilIKf8r5gl52epBiBhRBHrK5hx9Lf8iO83+VuLJ1E
-	 8Eaj0r5tPqa+WNj4wuh+yFr5gFJi8i9rEKVxK/9q6BGsWDKGp+qeti0mkeXQYtlcuGlb+
-	 ruyjEyw+nOZHU3nU6WJCeBD5MjcE2uQHXoS8lm7AjoiXnzAl2RDTbnCTge3RtNILyv5HE
-	 9/F4Kiq2Z+lr3qjQWjNqIykQohdCZQ/JRbzL0KGL1zaCLMHmjekLWnnBI6LOsrz6xZB/S
-	 /Ah9RfR9RZcUNCifHMD99RmZubUApNCgwKFJv/fqcxeB2VNXeWs5DFAIv2hb6PfeRpg==
+	t=1795752543;
+	b=JbefM6ik2YhdYW6LHeofLdow5/o7hQSAXAhpD2GQhUMLZiWS0s27T39yIdLFZsB1pkFj
+	 V2611eddONVWJTAQWE01TzkaqpgsJAr+v4Q/3up/DxC5J8KuBAHAw/u7xxqCokKjbwdpz
+	 wtrHcJZDCeEj3cOxfrAy4ICVrC3Kj+rAaG/sN0ST9pWAbPmnPbo7YNedg8gCVZ6mDOYJb
+	 TsUx1VnJdDFSazTXBc8u0I3xQu8xuGEe3p8yBC/VPWwl2FzkUCVClknbO7IReFdspygeV
+	 LMeuvCEpj7GFz/17wBV0HhiFwGoDGXIKD8xUhjQVcfCTEWEeCVBYa5UAM+yWyDPNt+w==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795727693;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 MIME-Version:From:In-Reply-To:References:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=ckt2njikgL1ic3W1hR7aCLqud/UP1BsggMEUROxgHHA=;
-	b=bA3po88uYZ/33BFSvkW55sYdDCUctd45RXgvJqE0k3TKIZ1hvHpt5r4tV4GBczFFokAV
-	 j16cod/In43nf/2ka+tAuYATr2e9vfqKakkurljl7NjHbd45nqDyspUG3xB9+VTBVAEmm
-	 zWFDj4u/DiW/iYBhtWSb4kQKSHKzMDyI5Tx5KtpGQWr3SxgUTA1zAyx5XQTW2JDtHpD9I
-	 01iTi9III1YioO2SA62uc3h3SINPGQcu/vHYJKDEyKrYRjfZWt9JxEZIVq+1MDtFPfrN7
-	 bkqsENpIEaMy4WQZu/8EA0ZBH3HK+ruNLnid3WK4t4RlBKXKXhbdKhq6JC2ltzUX5hw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795752543;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=li3JX+2Xd1AiqIgciAZ7DZSxkrw+I5jSEeNc/twiSZ4=;
+	b=OTOvMCTKpfcnwpwr7FGNu/FFqZGm9wtOaZ45TSgyhsYW9EldRFCpmXwWU+BiHc5sVbbb
+	 I3a0jmCfYzXgFmhCc6w4TZbNp1g3o89j24aUTTu6ANQFRdt8I48/vVWr9ho/0PFJWciBu
+	 j6EvQjHzFqSDMFPcovpZKeWQfsrKzqFRDOmfQp7SRszibZNPyoPsKd6GNIrINivtKmZr9
+	 +VLsnyeW8HaFwoJExrW+BiZxIMPzOIa3bhljnQhgkyZHZmzBoseuRpA/Fk+U2akDwalyy
+	 lsIaoExxqWW9szP74askdFe2+V5DX+tqyukEaEbgQpD1vcd606XKM3G7vmkHSbr4xpw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="N/bAqvQf";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.170
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M+oAXcfJ;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C164B606A32C;
+	Fri, 27 Nov 2026 04:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M+oAXcfJ
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1795752543;
+	b=r9sfhgD1kvBWHINRmHu/cKNolX5FJFPHaKm+qEvW0worfM5HLRSzrWWYpplEjZBGAF/Y
+	 5sKG4luj9IE9jTa9b8P+mHfe3gj/5E65LrS3ODfize9AuPQftDvOMGbc7O04hgOmm9czb
+	 AsKnQEbYDjwo6X+QWCnUqTFeEOxiakN1ZosPlKukpOoFt77hbU2BXx+tvRs0ci8JdFSMm
+	 FEw2lMYCJvCLfOxDvPyYz3tQeXB9NdfT/Ivv4MDPHvm8gd0XuVqqUsQ5S5zwRrjoNoceE
+	 Rm/X6ZFWpg5dxuSDriL6FaRM/qGo5aL9EWcQjQj8VuqWkn2sJYen3JqzVfUXIvaHxRg==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1795752543;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=li3JX+2Xd1AiqIgciAZ7DZSxkrw+I5jSEeNc/twiSZ4=;
+	b=g6TYauPgZucmoBcu5VcKLqHABTF90DekMUy+9074Tl93NHo4Je2rLOJ9gdO9ZyGz+EtH
+	 iPVLHQQplw0kBMMW8BVlam5Qgmpta/QCpkK25GIgoogtQAIF6HEhuVl3qvhKypGkO/T2v
+	 PPMYyrQkhDW9XuQ08/2tp40hELxZsLsvypyvad0PO5c/JpY+9JE2g92BNdTx3/EvsgeNY
+	 xFNW35BT/RWUkHmFQPrsisTX92Uu411cST4aVQsmhEycDzzt1vQx4a/McJhoQmqSr7KSm
+	 Z75Y3AzmuWeOnq3IZwisqnE7BmFCqMPJY9jtXP9w/JEaonMi8R6wIh1sOqMfCJmM/5Q==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD03606A31E
-	for <regressions@lists.linux.dev>; Thu, 26 Nov 2026 21:14:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0DD03606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=N/bAqvQf
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2f01f296937so55858895ad.3
-        for <regressions@lists.linux.dev>; Thu, 26 Nov 2026 13:14:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795727692; cv=none;
-        d=google.com; s=arc-20260327;
-        b=gbHRPgAHYCjlgFRLeMZlPifHfGDzjWlfjpCgccAmn+xuwNy0mmU8WcU2UHTgdkfPch
-         oTs+m4k3yaId3nUkjnHgShywZVwJ2EOWALOO8nVFShJIP7eCtSA3lf3cWbW0AuxdL7ap
-         OSPY/L9H7NSUX4MxLftLG+XBJ8JSYSIGCfwhI0zJjg0ZyIJtvM75OryQ/fD2l+JnQT+f
-         IYJPbSctEK3r4UAyb+c73wwxOe3jQxmT6YGVstim0E8Mz9ax54CyugSlpWy+BQM9s9V1
-         +YwbQOyHmS1mFzp2gO12yzNx/SGtMjlQvpQp+ohpSorQG4YIOL3yWR7LEAux5DOjknEE
-         QqKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:references:in-reply-to:from
-         :mime-version:dkim-signature;
-        bh=ckt2njikgL1ic3W1hR7aCLqud/UP1BsggMEUROxgHHA=;
-        fh=l37/ud1IIMVv9Q/P/cK152eQoKPqnAMSesg03HesPv4=;
-        b=o+lf6jXrmTtiFOiptfKbNHCEEH5k19AiVzXKfcthd0aMaYJapKARv4UxDciNy0EPLw
-         GSifltM+WAwT9Jd1oTrYWnuaFr9bspuUmyp5GaqXYkyz2U16DGRo23oEn6BraMJ6S4wv
-         vRNgvjLAaZNGBOmqVJzRNZ9rOI5/qchekzHKqVCmhdDtD36Sc3/CUkCtdTnmXpXTBchH
-         0UvulJXy9LJxUyBG+jXj6pLzwUIcbKWP4LSJe2ixcJg8346YtP4aVB0GfNCYQuclDy2V
-         FB3rwn2/Dta3lwBKA5yf5fH1jWF69Xc884aMkV0qiD4YnqVXChGpJJlyxLRYIGeCoUxZ
-         nKVw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795727692; x=1796332492; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ckt2njikgL1ic3W1hR7aCLqud/UP1BsggMEUROxgHHA=;
-        b=N/bAqvQfVpFTa//bUDyn6DHgzPaBnjv29gNALLL5TP4GlXaqV1+XE2xfL1yE/XtV1Z
-         EpVHiBpyLg3smfmaoQ/LBeCZSaAupDg+jiephgemy5Daud4LZ97WTLbFSPMyGvfLckXc
-         lFmKzsQFPt1VzAHQOxU7bjbjaUapyo/jWUYLlubnuGydVqEFUCmTGI9aQ+38r+C8pbiR
-         OuYNhY9u+egrPF+WUBkz2QzEJ7O8NenzsneNKfmzoG9rndETD/PbvbpcFlfLFX/yZirp
-         h7YeRse7EU9F2oNzxhqDwjMsUnqqH2I4DE3wL3Q97z56BsejKk93pA3LUi+usomVR6yy
-         nvGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795727692; x=1796332492;
-        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
-         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ckt2njikgL1ic3W1hR7aCLqud/UP1BsggMEUROxgHHA=;
-        b=1SAGJ5J9y8bXQwfeqIrwzTjYgUXlM/D0BNatwXWCBmfRfyxacjncynSt3NJxGU9YXE
-         G8nx3QezJDWhux+wNA3ovjBdHSMSq9jZZ4LTjWk3f3vBcCbBuQjfKfva6CN5eFCmXVFN
-         c75/4zDm+h7xLYJ9bKCoaRmpxgf0D3sRviNqeNv4hoH+PNSQAzHTfk3iKI0uVf1un5rl
-         LL3c0HLilQV8j77pGhf2qxkZJbuHjmErtGeSvaL88bL0hHeRQF5O+GAQA538QEAKV1OL
-         cjnBiIWJkApTEuFPeOVU5GaLJCiptu8I0hmZitc9jLATODpRYzkaVTxXUi0xq/JuZdsv
-         3GbA==
-X-Forwarded-Encrypted: i=1; AL+hErGZ9AS0wiRL3QlCcdDnM6dzgZwrUY45kLowuCnkhbcrQqYRL5M8MmFpZBa4T9f+KKazHqj/zQ2aVtOcHw==@lists.linux.dev
-X-Gm-Message-State: APuU4Z8xb5sOc9ooSTeNu5ST0TkyXUnfcB6CfdYCFhigyd6kgoKn1pWy
-	74FiC2cKjPX/a7focYOJMP6hr40hjooDY1fqcEBMRwdp0zr6akHw/x90lqkHIl386O+EtV10LXg
-	rPmwHKB1m7SHVc40c3Zh+tklEEe5Yrpc=
-X-Gm-Gg: AZFdTZeb5/48S3kBeNPohD4anR3ZO0TNemaVZ1xsQMvYFyeon7sdWznxozPbAPOGbos
-	oAmIoDSRGCtU/mH05F/4GVVAv/ZVoRCHQHbeGUCJt/WCdIhJCQMn6T49wrVsF6mqaVz9el3OXjQ
-	gIsIr9Np1ySEQ+UduyWYM8fQVNldyXUN/b7ODWPYgpz3ZeLt6M1cq2HkYiVZh0qZ5zcZWJV91q0
-	DbMnFqvY3C8f7kvf9WCLbFknRWnUn/X6ZQ2kOJ+H6idUF5YaCbJ6OA47A3bC4H1LiYQp1O3pJZ/
-	DT0pKBNTG9WM+Yw8RKhvaQGuV8znRpCO6dXUnqPqBpYY9P6DlgDZLGeMnayXq90QP7ADOGQWgCz
-	wWO+0JyOtCIUSGcb3ap6zL4fmrfA/RD8BcA==
-X-Received: by 2002:a17:902:e5c5:b0:2ed:a96:8a03 with SMTP id
- d9443c01a7336-2f03f27e77amr206374105ad.55.1795727692234; Thu, 26 Nov 2026
- 13:14:52 -0800 (PST)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 26 Nov 2026 15:14:50 -0600
+	by smtp.kernel.org (Postfix) with ESMTPS id 31CCA1F00923;
+	Fri, 27 Nov 2026 04:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795752543;
+	bh=li3JX+2Xd1AiqIgciAZ7DZSxkrw+I5jSEeNc/twiSZ4=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=M+oAXcfJyMhh4ui+uVN8NR+BdjjT58rZZY7NQ2xfin9m+84o46Od/4UsOV6t96hl/
+	 eMiYz8j3l3XzWMPp0XUsKAw7i3bF0RRi28/cgsRZMjW1BgNKF1CDCJnXDL+Ikv8+jB
+	 zsiiVC/cI+pyTOlH9KWj9mYOs3ba2M3ZudzUqEp7Q/I9F1uJ48d/acGxX2JcRl0jRC
+	 NTKc61WtG7BE3fHaV06+UrmB1IJRSuArcA/7311BmYelG5nT69Gh3y8LumagW7hvXO
+	 rqus8Z4YL/5XTgL6t4SIRgJnsj0v2MbFAZvzcXrkR41s+ciABXFmvdAezctLcvMIP+
+	 fY5UzPxTl+m+g==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id AA5484B55B;
+	Fri, 27 Nov 2026 04:08:51 +0000 (UTC)
+From: David Crawshaw via B4 Relay <devnull+david.exe.dev@kernel.org>
+Subject: [PATCH 0/2] fuse: fix data loss when writeback races a
+ write-through extending write
+Date: Fri, 27 Nov 2026 04:08:38 +0000
+Message-Id: <20261127-b4-fuse-wt-eof-v1-0-e055e2af652d@exe.dev>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -105,142 +84,79 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-From: flv.giacchetti@gmail.com
-In-Reply-To: <CACKiateKEggvx60zugZt_C1ejcLv55OiL6Hyv=DkF72370FU1Q@mail.gmail.com>
-References: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
- <20261125203211.76029bf0.michal.pecio@gmail.com> <CACKiateKEggvx60zugZt_C1ejcLv55OiL6Hyv=DkF72370FU1Q@mail.gmail.com>
-Date: Thu, 26 Nov 2026 15:14:50 -0600
-X-Gm-Features: Aa3M54pqAbUFR54EeJrok3NlplyzTGh_qB0asFD2VpdsVTGnDkBxrS2IGMdtoOQ
-Message-ID: <CACKiatdTKoyWu6gphWm1Zb8kF6pFBNfcN42zW7-sNMUdYvbDrg@mail.gmail.com>
-Subject: Re: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB
- audio probe on Fedora 7.3.4
-To: linux-usb@vger.kernel.org
-Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev, 
-	regressions@leemhuis.info, michal.pecio@gmail.com, oneukum@suse.com, 
-	tiwai@suse.com, perex@perex.cz
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEYCCWsC/yXMQQ6CMBBG4auQWTuJrdiKVzEuKP7VcQGkA2rSc
+ HcKLr/Fe5kUSaB0rTIlfERl6AvMoaLu1fZPsDyKyR6tM8Z6DjXHWcHfiTFE9sGb2jWX8ymASjQ
+ mRPntw9v9b53DG920XWhZVk8a8N1yAAAA
+X-Change-ID: 20261127-b4-fuse-wt-eof-7b71469853be
+To: Miklos Szeredi <miklos@szeredi.hu>, 
+ "Darrick J. Wong" <djwong@kernel.org>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Joanne Koong <joannelkoong@gmail.com>, Shuah Khan <shuah@kernel.org>
+Cc: fuse-devel@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev, 
+ David Crawshaw <david@exe.dev>, stable@vger.kernel.org
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795752531; l=1976;
+ i=david@exe.dev; s=20261127; h=from:subject:message-id;
+ bh=/uZwlpKJlvGvr6lTGIgh3p40tIbnOtPhD5Kl6WqbtuQ=;
+ b=+7IrrOKCwsFl/f8JAosPywwOryhD5UclQsoKBCSUXZ4rKvgiQraL0C6ykQ4RX58RHmueH3z8e
+ CqpLN5xraBTDsm+mvL5eAd+qJQdgfKBO6yqS8Mttj0rhY8y52FW3FR8
+X-Developer-Key: i=david@exe.dev; a=ed25519;
+ pk=eQfKiR9S2peqiHuuNGCAaWlxwP+RerhKT2wVxakCrjQ=
+X-Endpoint-Received: by B4 Relay for david@exe.dev/20261127 with
+ auth_id=1661
+X-Original-From: David Crawshaw <david@exe.dev>
+Reply-To: david@exe.dev
 
-Hi Michal, Thorsten, and ALSA maintainers,
+Since v6.17 commit ef7e7cbb323f "fuse: use iomap for writeback",
+a write-through pwrite() that extends a file inside the folio
+holding EOF can return success and lose its data. This happens
+when that folio is dirty and writeback of it starts while the
+FUSE_WRITE is in flight.
 
-I reproduced the high-speed failure again after a Creative App reset on
-macOS and captured usbmon from before plugging in. The following tests
-used the same X3 (041e:3264, bcdDevice 10.90), cable, rear port (1-10),
-Intel xHCI controller (8086:7ae0 rev 11), and stock Fedora
-7.3.4-300.fc45.x86_64. The device enumerated at 480 Mb/s.
+The mechanism is that fuse_perform_write() unlocks the folio before
+sending the request and only updates i_size after the reply, and
+iomap_writeback_handle_eof() zeroes the folio beyond the old i_size.
 
-With the default driver settings, device and configuration descriptors
-completed normally. ALSA then sent a UAC2 SET_CUR to clock selector
-0x22 on AudioControl interface 3. The X3 descriptor gives this selector
-a single input, clock source 0x21. The selector write and read-back
-completed. A subsequent clock validity GET_CUR for source 0x21
-returned -EPROTO. The next SET_INTERFACE timed out, followed by more
-control requests. The key usbmon setup packets and completion results
-were:
+Patch 1 keeps a folio that straddles i_size locked over the request
+when the write extends the file within it, and updates i_size before
+the folios are unlocked, like iomap_write_iter() does.
 
-  21 01 0100 2203 0001   SET_CUR selector 0x22         success
-  a1 01 0100 2203 0001   GET_CUR selector 0x22         success
-  21 01 0100 2103 0004   SET_CUR sample frequency     success
-  a1 01 0100 2103 0004   GET_CUR sample frequency     success
-  a1 01 0200 2103 0001   GET_CUR clock validity       -71
-  01 0b 0001 0004 0000   SET_INTERFACE (if 4, alt 1)  -2 after 5.08 s
+Patch 2 adds a deterministic selftest case.
 
-With ctl_msg_delay (20 ms) alone, the write to selector 0x22 again
-completed. Its immediate read-back timed out in that run, before the
-first sample-frequency write. The -2 completions are consistent with
-usbcore cancelling timed-out transfers.
+Reproduced on v6.17 and v7.4-rc4+ (9437ee8b6cf9); not on v6.16.
 
-With only skip_clock_selector, two consecutive hot-plugs registered
-the X3 in ALSA, with cdc_acm still bound as ttyACM0. Clock-validity
-requests succeeded. The first PCM playback altsetting advertised
-48/96/192 kHz at 16 bits, but the subsequent 24- and 32-bit playback
-altsettings returned only 48 kHz. The trace showed the driver
-activating the first altsetting before querying the next one's range.
+Data lost in the reproducer:
 
-I then added skip_iface_setup. With both flags, all three sample rates
-were advertised for S32_LE. I saved the following modprobe option and
-repeated the unplug/replug test:
+                                   unpatched        patched
+  WRITE delayed 200us/0/2ms        1428/1500        0/6000
+  8 mounts in parallel             3229/4000        0/4000
+  EOF in a large folio (THP)        811/900         0/900
+  new selftest case                 50/50 fail      50/50 pass
 
-  options snd_usb_audio
-quirk_flags=041e:3264:skip_clock_selector|skip_iface_setup;
+(All testing done on x86_64 KVM guests.)
 
-ALSA registered the X3 again at 480 Mb/s. I played a silent stereo
-stream through PipeWire at each rate and checked ALSA hw_params and
-status while running. The hardware PCM was S32_LE at 48, 96 and
-192 kHz, with no further USB audio timeouts in the kernel log.
+Disclosure: the bisection, and both patches were produced by an AI
+coding agent (exe.dev's Shelley, using the Opus 5.5 model).
+I reviewed the work and wrote the bulk of the prose.
 
-One other symptom may be relevant to USB core. During the failed
-probe, Unity's main thread was waiting in serial_show while reading
-the Intel root hub's sysfs serial attribute. It proceeded when the
-old device was finally removed, about ten minutes after enumeration.
-The USB hub worker was still handling probe timeouts after physical
-unplug.
+Signed-off-by: David Crawshaw <david@exe.dev>
+---
+David Crawshaw (2):
+      fuse: update i_size before unlocking the EOF folio in write-through writes
+      selftests/fuse: test a write extending the file beside writeback of the EOF page
 
-These results identify a reproducible workaround on this unit. I
-still have to test mainline, and I have no first bad commit or evidence
-that distinguishes device firmware from host/controller behavior. The
-earlier cdc-acm RFC remains withdrawn. Would a device-specific
-snd-usb-audio quirk be appropriate, or would you prefer a targeted
-xHCI trace or another controlled test first?
+ fs/fuse/file.c                                     | 21 ++++++-
+ .../filesystems/fuse/write_extend_eof_test.c       | 71 ++++++++++++++++++++++
+ 2 files changed, 91 insertions(+), 1 deletion(-)
+---
+base-commit: 9437ee8b6cf607e883b36e44bd755968daaebd48
+change-id: 20261127-b4-fuse-wt-eof-7b71469853be
 
-Feel free to reply here or contact me directly at this address. I can
-reproduce the issue on this hardware, share sanitized traces and
-descriptors, and test a patch or an upstream kernel build.
-
-Thanks,
-Flavio
+Best regards,
+--  
+David Crawshaw <david@exe.dev>
 
 
-On Thu, 26 Nov 2026 00:17:40 +0100, Flavio Giacchetti
-<flv.giacchetti@gmail.com> wrote:
-> Hi Michal,
->
-> Yes. The earlier Fedora 7.3.3-300.fc45 logs show the X3 enumerating
-> at high speed and cdc_acm binding to interface 1 as ttyACM0 without
-> the rate-query errors. Audio worked. In a later 7.3.3 boot the same
-> unit enumerated at full speed (12 Mb/s), so that later run did not
-> establish a working high-speed baseline.
->
-> The failure also reproduced with Fedora 7.3.5-300.fc45 and its stock
-> USB and ALSA drivers, with a different known-good cable. At 480 Mb/s,
-> the X3 disconnected and re-enumerated, then failed to answer USB audio
-> sample-rate and mixer requests. On 7.3.4 the same high-speed failure
-> also occurred with my experimental cdc-acm module loaded and the ACM
-> interface unbound. Please disregard my IGNORE_DEVICE RFC as a fix.
->
-> On the failing 7.3.5 run, the USB hub worker was blocked in
-> usb_start_wait_urb -> usb_control_msg -> usb_get_string, called from
-> get_term_name during snd_usb_create_mixer. A 30-second usbmon trace
-> showed repeated endpoint-0 GET_DESCRIPTOR (string) and class
-> control requests. For several requests, the next completion came
-> about 5.12 s later with status -2 and zero bytes, consistent with
-> cancellation after the timeout. In a separate 7.3.4 run, the Intel
-> xHCI driver logged two "Event dma ... not part of TD" messages at
-> disconnect.
->
-> When the old probe finally unwound and a different rear port was
-> enumerated, the unit briefly appeared as Creative 041e:6007
-> ("X-Fi UltraDSP"), with HID and CDC interfaces and no USB audio
-> interface. A targeted USB reset completed but left it at 6007. It
-> later returned to 041e:3264 and still failed the audio probe. I
-> have not identified what the 6007 state represents. Separately, a
-> local WirePlumber rule forced 32-bit PCM and hid the output when the
-> X3 enumerated at 12 Mb/s. Removing that rule restored 16-bit/48 kHz
-> playback in that mode, but did not fix the high-speed USB failure.
->
-> I then reset the X3 using Creative App on macOS. Back on Fedora
-> 7.3.4-300.fc45 with the original cdc-acm module and without the
-> experimental USB quirk, the X3 briefly disconnected on the first
-> plug-in, then enumerated again at 480 Mb/s as 041e:3264. ALSA
-> registered it and I verified active stereo playback with S32_LE at
-> both 96 and 192 kHz. There were no further USB errors after the
-> successful re-enumeration in that test.
->
-> This is one successful test after resetting the device. I have not
-> isolated a bad kernel commit or reproduced the issue on upstream
-> mainline. I can provide a sanitized USB trace and kernel stack. If
-> it recurs after the reset, would a good/bad usbmon comparison
-> starting before plug-in help distinguish what happens at the first
-> disconnect?
->
-> Thanks,
-> Flavio
