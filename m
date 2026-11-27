@@ -1,79 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795752549;
-	b=q7ITvdcO+BmCLWcG4/wpV/nGCd5H0sQKa+H3SGEeKqfMf+uA93tZrJg6qhLK1/pg+eao
-	 fp2lfXZAIqTr7SdsWjkF/h5nFA+VaaSK07K0darsC0OcGlxBJ4S13zcbCgdeToJwD4Kev
-	 HQCzii5lMOxHcS1UsdRt1laME/9rashOmT7YyLFoyFamvmi65qDyiVPgArvmxVVIXqytE
-	 1jLp84RFSBGuRu0l3SsJqgXI9uu+iHTkQfS4CPyaedRLhKDrZJUn4HJmgkXgHpUbk59bw
-	 Ya/Fd1IRF5O5qFAzbfrJwYEvKLM9re5yNAmaQ0f8JNE4PY6z+RtD+yVWkr1i5OvBe3Q==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795752549;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=HjpF0P5UyQ9nLom4QODoSUXMxsk2mmPrm0eKHuDGnBg=;
-	b=QigB+ZwvXtBJbK63wzFOhAsygYg7Euhz5Gbdbt0/yKxcxNgKjfEDABQgppz8O4YhdMRg
-	 Fz9WelDRysYuKe1AjrQB9i03DMo9vWFjPtgdHuI1Ya5mtiToYLt38Rmdf941xYTc7YBKJ
-	 HtI6gD6QKodINyS5Cr1Dt+DhElIQ0p7aFk0YR14UYoojtZKMxVyrzL0/+498qQS1Pp9e7
-	 13iUGt5fHOYSFRcgT0Nil5CD5rJPEnXy/qq9uQ4Y7tEAqshk4ldiKYTJ1MRTLhNjAgNTw
-	 SyaTMhKY0RzoW3U2FUoIHAPiCPqqqR67i3ZZKlp25dv5sbYGCEA3rnFK60CAOpqMv0Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jZViEjrH;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795760460;
+	b=oy/sL9P7rUqbUXbuQnxm6piQ2m5HqLzRzkPKtDpD5FFqfjn2IeYf3zY90W7HK5NLu2KN
+	 Q7QZWRviqs6dTMpc1ii0JzlXZ9LhHXgjCMtxgP/VIVyCos71r/RtINsKTodKSKsnI5Oe0
+	 HdX6VZwvK1if6JHelNMxsD6sVT+OTYNPE8TWpi/cShUjcOBIpnCdKjpSClBcSwOvqTUVH
+	 bg4L1cJKRvKpHIzjgY7x5Gw3oJRS4dbdRw9aEnWUT27/gFsE78CpA8+1co3gfGh2ApJNx
+	 Xy6dj/35pVdhmqe04s1aEAEbnBHm0njPyMLAKDznGS/4nB7zmUA73Xq7zWEahyui0NQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795760460;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:References:Content-Language:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=wRvoJuHizE5kAfOqgbi12VTVO89OpDkB8GyUIe90Dd0=;
+	b=IqbSg1rDQ+zD7ELViOojobQDtjVMZ1hCuIQRIn2dRBV1XbBSM7Tr8WV0VpQ6sd/x5Yi9
+	 1euSxgtNW2piJvv3/DmMfqCk1HuZb0TOn4qLTWExkRyijr0/Z5xo33jGQoUKqT5BPn7Ae
+	 aRh2ZP+klD5YCgiIfBK9UgkAzS2RcfyfkkpDjkMUvSO+PlLmSoFr6eoO3jF2KcaZDS134
+	 1n9CWArqIzuN4uZhlDKsVdYNrklBZIchabKxnXkRgMPwOo0B9un0asGFnt0gbFKMWW1Lp
+	 dRhinne+KDmgWrplLV5mF45/ovYarYOg8318ZV96XEIKZ8TWVenbYfiPsT8bHwO7lJg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hagWw5Vw;
+	arc=none smtp.remote-ip=192.198.163.9
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442B3606A323;
-	Fri, 27 Nov 2026 04:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA99606A32A;
+	Fri, 27 Nov 2026 06:20:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7BA99606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jZViEjrH
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795752548;
-	b=F8gkl5dz2zeGG5mwBRtAPBVa85fTWVoyJRHI6/kjMN2mRFJGSOr1eln+qVxZt94pT2cr
-	 6XtgMgTy5ofpH152BbruRV+M8S4Ek3Hk9xoe6sO55xtG/859P8u7h1JQCpyeI32rKjhum
-	 v33kRSGCxNHsI+xaeWm5zfZqyCyuqOSf6ZxtTOfMc7qqI9hLNQfIBF9Oo5aq1AdY9ji2F
-	 bex3OtMDKFH8NgW4OyYsrWLr9DtDnI4ORXKHjh1YHdh4pVrma0ZGWryohNtLqiCvqqDTO
-	 CSva5i5UUd07eqOgKx7DbDwE4ap7MiDbINwY36RFfbrA4+LWjVIWW/g0cwMgdDuzMEA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795752548;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=HjpF0P5UyQ9nLom4QODoSUXMxsk2mmPrm0eKHuDGnBg=;
-	b=GMwVXg7wlL4Eks+yB+NQdw+OnNiSVw/T2CgJp3hzGK+F8dOAhgmxINHZEtjxZOAdR04m
-	 kSx+TOkCWTZjeA5mkvmdKTbJavxKy/p61zfNd+8j45htAeGqMFkGJ8D88E2sCYB6/Mid1
-	 uUUNqncOjkVfkbcRx2pPu1pHOY936TG7kU0xLa9ZL0+l5iYCXMXz3CEJ7JAY+Facv6wf0
-	 EHwFct42tpeEt0F6aN/eMXpwSXV0yRT9bQNh1hpmkHXf5nJtJF/6EaJalhjeRkCk69YMo
-	 II1q7aFNlqVIg701BfSb+cksKDOW3vxUewi1kgZqdt/AB0FLS3/YnWJco8K9Djhdagg==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 4A2AB1F00924;
-	Fri, 27 Nov 2026 04:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795752548;
-	bh=HjpF0P5UyQ9nLom4QODoSUXMxsk2mmPrm0eKHuDGnBg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=jZViEjrHv7dvOmMePsATDqUzpBYEctt0Ldy+QMYHQPLrNh83CcrUuaKNva7rTo50Z
-	 ENdNGgZUwuetP2UKbzMBfyJGieqgzrjbGr/eHme5t/DydC4YaONuKfELSI+HbaGCNQ
-	 yrQjOHtYew5wmW1jQyTmv6xHFg+Lxl1fEuD8EoC42AxS8x1uYlfg0SMdSQQn79EXky
-	 RU+Rc1G/2uJhJ2BqKYPFc+8oi88yHm8E1mIDFwBt2WNfzK1CTnG79B50FZQgtaiQsx
-	 wupuDgJw7nvmEmcpvf1SwEQrToINvLy15Eh1q0uP6epiEEpwrKteIBUpvqiYDXFEuV
-	 KYO/V5A546rjg==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id D081C4B558;
-	Fri, 27 Nov 2026 04:08:51 +0000 (UTC)
-From: David Crawshaw via B4 Relay <devnull+david.exe.dev@kernel.org>
-Date: Fri, 27 Nov 2026 04:08:39 +0000
-Subject: [PATCH 1/2] fuse: update i_size before unlocking the EOF folio in
- write-through writes
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hagWw5Vw
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795760460; x=1827296460;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=umpBYyow/SOpcQs7PqWAQG0UpXjcYz/uyaroMTYK8YU=;
+  b=hagWw5VwCYt8p31Fa3Fkq2Qmd50bT3vevbGLYF1ON6DCar4uDeCq3kqq
+   3B9LsKLXrys1X3hXpSh2+xMTXxuyKFF5+MHnZVyPyCK1esJt6qb6qevsZ
+   55aNKy64C2kY7wGX48wZzZcEj8xp+sHtbWnGTWWIAVhtioa6hlUUBCoaZ
+   oQpfU0vUpir52OLb3ggwVA56YrmOrinfsFiVlEtEN0MRgmvdqJx+E4cKa
+   SmeMpZPLbhT/JBkk4Z8R3iHQwRTyqEfSB5dEs1ZiH2Tn4nIaQQfoDosNE
+   hc47m59TYL1zbscUAT205jAXUldgk7eKihA0PC1mnIUgf7yYmcmhgXTIf
+   Q==;
+X-CSE-ConnectionGUID: IxQpNDW7TbWwUMsf9rHHrg==
+X-CSE-MsgGUID: LWLVJGrRT1CuILB/vaL21g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4522363"
+X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
+   d="scan'208";a="4522363"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 22:20:59 -0800
+X-CSE-ConnectionGUID: Fyl54NFiRq6FEzowfDvdSQ==
+X-CSE-MsgGUID: SqgsGfoZRcKvwuMOTslu6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
+   d="scan'208";a="14097705"
+Received: from blu2-desk.sh.intel.com (HELO [10.239.156.26]) ([10.239.156.26])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 22:20:57 -0800
+Message-ID: <d931a389-c143-4a6a-931c-bc7025bcefb9@linux.intel.com>
+Date: Fri, 27 Nov 2026 14:20:55 +0800
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -83,128 +72,91 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261127-b4-fuse-wt-eof-v1-1-e055e2af652d@exe.dev>
-References: <20261127-b4-fuse-wt-eof-v1-0-e055e2af652d@exe.dev>
-In-Reply-To: <20261127-b4-fuse-wt-eof-v1-0-e055e2af652d@exe.dev>
-To: Miklos Szeredi <miklos@szeredi.hu>, 
- "Darrick J. Wong" <djwong@kernel.org>, 
- Christian Brauner <brauner@kernel.org>, 
- Joanne Koong <joannelkoong@gmail.com>, Shuah Khan <shuah@kernel.org>
-Cc: fuse-devel@lists.linux.dev, linux-kselftest@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev, 
- David Crawshaw <david@exe.dev>, stable@vger.kernel.org
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795752531; l=3912;
- i=david@exe.dev; s=20261127; h=from:subject:message-id;
- bh=aneCOpdxoK+BoX+KlAWJghFJrKt6ILqgZAIYQqmiW0I=;
- b=pZh3gDBUojjRGzwL5hg+aYbb26zpqEM71Wd+/shQt6BrHzKj9HuOjKvTby6mb6BA9RCczfdJ0
- lSNoakYmogFAEnBL4QI0J56eiQi7rzmRlhRFMuxLCktZNcYpBh3J7L4
-X-Developer-Key: i=david@exe.dev; a=ed25519;
- pk=eQfKiR9S2peqiHuuNGCAaWlxwP+RerhKT2wVxakCrjQ=
-X-Endpoint-Received: by B4 Relay for david@exe.dev/20261127 with
- auth_id=1661
-X-Original-From: David Crawshaw <david@exe.dev>
-Reply-To: david@exe.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
+ a98db518dde2
+To: 70sp <70sp@protonmail.com>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ "info@aigeus.net" <info@aigeus.net>
+References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
+ <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
+ <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
+ <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
+ <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com>
+ <5bVscg7a2_H1PPW3HmVtrYv_Xwtti2hzjD065W4OdwsD9rC2gw7sGVEg-2U596VZn8O2LAEfhWeZklRk63ymqNW9220R6R_jjif7BaWol9o=@protonmail.com>
+ <82662a17-f9e2-46dd-9881-792412c1dc50@linux.intel.com>
+ <X7nc9tQqVxmuR76GYNJnMRkqUTwNVlXTWpH0wGvJeiAHlcLaibPZHRN037p0359GpdmopB_wI2tF2x6EqZF4oY9J697tcTGYwfYMK96FcUs=@protonmail.com>
+ <275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06070@linux.intel.com>
+ <QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU=@protonmail.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-From: David Crawshaw <david@exe.dev>
+On 11/24/26 22:48, 70sp wrote:
+> Hello,
+> 
+> I (alongside ChatGPT) found the solution and the root cause of this issue.
+> 
+> The regression is caused by the code improperly assuming that the CPU supports IOMMU superpages, which it does, but only when the integrated GPU is disabled (speciality of Intel Haswell).
+> 
+> The regression can either be fixed with a single kernel parameter "intel_iommu=on,sp_off" or by modifying the code.
+> 
+> The LLM also generated me a patch that worked, but it was just about hardcoding specific CPUs to not use superpages. Doesn't seem like a great solution for this very delicate code. A much better solution would likely be making a patch which checks for superpage compatibility universally.
+> 
+> I am sending a working patch from a month ago edited by me and the reasoning from ChatGPT (if somebody would find it useful) below.
+> 
+> the patch:
+> ---
+>   drivers/iommu/intel/iommu.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 5a2e705a2f2e..dd49a4e37653 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -23,6 +23,7 @@
+>   #include <linux/syscore_ops.h>
+>   #include <linux/tboot.h>
+>   #include <uapi/linux/iommufd.h>
+> +#include <asm/cpu_device_id.h>
+>   
+>   #include "iommu.h"
+>   #include "../dma-iommu.h"
+> @@ -1876,6 +1877,13 @@ static int __init init_dmars(void)
+>   	return ret;
+>   }
+>   
+> +static const struct x86_cpu_id haswell_cpu_ids[] __initconst = {
+> +	X86_MATCH_VFM(INTEL_HASWELL, NULL),
+> +	X86_MATCH_VFM(INTEL_HASWELL_L, NULL),
+> +	X86_MATCH_VFM(INTEL_HASWELL_G, NULL),
+> +	{}
+> +};
+> +
+>   static void __init init_no_remapping_devices(void)
+>   {
+>   	struct dmar_drhd_unit *drhd;
+> @@ -1907,6 +1915,14 @@ static void __init init_no_remapping_devices(void)
+>   		/* This IOMMU has*only* gfx devices. Either bypass it or
+>   		   set the gfx_mapped flag, as appropriate */
+>   		drhd->gfx_dedicated = 1;
+> +
+> +        /* Haswell requires superpages to be disabled in the default
+> +		   remapping unit too when integrated graphics is enabled. */
+> +		if (intel_iommu_superpage && x86_match_cpu(haswell_cpu_ids)) {
+> +			intel_iommu_superpage = 0;
+> +			pr_info("Disabling superpages on Haswell with integrated graphics\n");
+> +		}
+> +
+>   		if (disable_igfx_iommu)
+>   			drhd->ignored = 1;
+>   	}
 
-Since FUSE writeback was converted to iomap, a write-through write
-that extends the file within the folio holding the current EOF can
-lose its data if writeback of that folio starts while the FUSE_WRITE
-request is in flight.
+Good catch. Could you please re-post this change as a formal fix patch?
 
-fuse_perform_write() copies the data into the page cache folio, unlocks
-it in fuse_fill_write_pages(), sends FUSE_WRITE, and only updates
-i_size after the reply has arrived.  If the folio is dirty, writeback
-can lock it in between, and iomap_writeback_handle_eof() zeroes the
-folio from the old i_size to its end.
-
-Depending on timing:
-
- - the page cache is left with zeroes where the write's data should be,
- - the FUSE_WRITE request itself carries zeroes, as its pages are the
-   page cache folios and are only copied when the server reads the
-   request, so the server stores zeroes,
- - a later writeback of the zeroed folio overwrites the server data.
-
-In each case the write returns success.  Before iomap, FUSE writeback
-never modified the folio and cropped the request to i_size at send time,
-so this window was harmless.  iomap, on the other hand, expects i_size
-to cover the data in a folio before the folio is unlocked, as
-iomap_write_iter() does for the writeback cache path.
-
-Fix it the same way for write-through writes: keep a folio that
-straddles i_size locked over the request when the write extends the
-file within it and update i_size from fuse_send_write_pages() before
-the folios are unlocked.
-
-Reproducer: a thread repeatedly stores into the EOF page through a
-shared mapping and calls sync_file_range(SYNC_FILE_RANGE_WRITE) on it,
-while another thread pwrite()s a few bytes past EOF within that page;
-with a server that delays FUSE_WRITE by 200us the data was lost in
-493/500 runs (the selftest added in the next patch fails reliably), and in
-0/3000 runs with this patch.
-
-This patch written with an AI coding assistant (Shelley using Opus 5.5).
-I reviewed and tested it.
-
-Fixes: ef7e7cbb323f ("fuse: use iomap for writeback")
-Cc: stable@vger.kernel.org # v6.17+
-Signed-off-by: David Crawshaw <david@exe.dev>
----
- fs/fuse/file.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 993a1d2b315..ee3bdc3cb04 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1287,6 +1287,15 @@ static ssize_t fuse_send_write_pages(struct fuse_io_args *ia,
- 	if (!err && ia->write.out.size > count)
- 		err = -EIO;
- 
-+	/*
-+	 * Extend i_size before unlocking the last folio, so that writeback
-+	 * cannot see the newly written data beyond i_size and zero it.  See
-+	 * fuse_fill_write_pages().
-+	 */
-+	if (!err)
-+		fuse_write_update_attr(inode, pos + ia->write.out.size,
-+				       ia->write.out.size);
-+
- 	for (i = 0; i < ap->num_folios; i++) {
- 		struct folio *folio = ap->folios[i];
- 
-@@ -1305,6 +1314,7 @@ static ssize_t fuse_fill_write_pages(struct fuse_io_args *ia,
- {
- 	struct fuse_args_pages *ap = &ia->ap;
- 	struct fuse_conn *fc = get_fuse_conn(mapping->host);
-+	loff_t isize = i_size_read(mapping->host);
- 	size_t count = 0;
- 	unsigned int num;
- 	int err = 0;
-@@ -1366,7 +1376,16 @@ static ssize_t fuse_fill_write_pages(struct fuse_io_args *ia,
- 		if (tmp == folio_size(folio))
- 			iomap_folio_mark_uptodate(folio);
- 
--		if (folio_test_uptodate(folio)) {
-+		/*
-+		 * Keep the folio locked until the reply if it is not uptodate,
-+		 * or if it straddles i_size and this write extends the file
-+		 * within it: writeback zeroes a folio beyond i_size
-+		 * (iomap_writeback_handle_eof()), which would wipe the data
-+		 * just copied, both in the page cache and in the request,
-+		 * while i_size has not yet been updated.
-+		 */
-+		if (folio_test_uptodate(folio) &&
-+		    !(folio_pos(folio) < isize && pos > isize)) {
- 			folio_unlock(folio);
- 		} else {
- 			ia->write.folio_locked = true;
-
--- 
-2.43.0
-
-
+Thanks,
+baolu
