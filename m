@@ -1,99 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795794130;
-	b=gr0vhnL5IXTk4LljIOIslO+2qhbXi104pvuBDnkYoodyroBvjPovl24yPilMSMrEVEHu
-	 Oz+FMP2JsyRBy9sVwfuwPB+uffCUQZS1jDe3owG7c4imY0S+baHK3PS6Uw/QY+ktBoE1o
-	 KtzuEozheJ+PyyHgaXPvKJlE2Fzy6fLAkUfzcPx3NFMnhIuXdbqDDy9WRq+hphOvzchMk
-	 tibMZP+wPY0sMZqpSj9wmAZjM2VcFGXpl38/JnGfHcK8E64A4blteEl8ZCJ5A84ckkaT0
-	 mMHHvbQg6HKL30kT+RiJ8Kyo750yORMtVjFA/qHFzf7yan8xKaFkEpbFCsb6BW0yWYw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795794130;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.160.171
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1795794558;
+	b=YEjIKFueUNoPjpdg25MNFDGHjbe7eREUVM9hRsEcyif3Gz8CZQs87sB3FMjtq4eT+53I
+	 n0uI18atSlnvOCkUM8DVY7jbyOLsPoG/+Li369K34/9o2BldjtI5PbYaYIYdOygRq7Me3
+	 txPQKZF29XOCRuMyjnijkg25c9bguiuz29JjNw8XJk7Eta2+j8JaZZa8DhL0nZdeupGoC
+	 SjQWP2g4OEV3AJ1v/DZoyaXMK7ZEZGgz6UkUi8iCGeNML/Tv5NZFgkoEqNFs6ro7UHKsl
+	 Fv9C8sLz6bw1ihxpIG0h0GyXgrS0MOejEMLEH3EKsq65A4OYk5pvv58GG/ZlowKQM7g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795794558;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=e2fJZFZERBeQNZtQBCOfYByS4NMe3sHfsqjEP9dc6kw=;
-	b=u+vT9WodpLs5LAGz+amdH6QAvbQLds823ttejmIKUjfnEyxonfKV4739NX0nIs0daeUw
-	 BgVQ5G7WZWALAVfiPAQMVrBwP15B/lhBqAXLM2BVN8SUH+F8eEgrZ3r/qegYh54POWPFu
-	 hwsBj1Ng2pAv+Q0Dh4VgBEgID6IIFe217nPzVzmVhN4IOnHpHM0IGTrOKLNZNxC1VgD0O
-	 N6cj5+3138cvSVFVA+G74c9/vCF9nSnSldRlbb72KY+d/i+BMyQLuHw6UUimWf57rAqVF
-	 eOrEcRCSNY4y1M3T6jfiyL7WgvOyEkM+mBGH1g6qKzT5ERwQkRpuSFrYQjCpqL43Dig==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
+	b=jORvmOH21unlzXn5OxfFwvT7gd7/1jKNsDeX8hJYNvt9wOIakVRl2mva//aE7vesoVOA
+	 Xhc0kqHgZOZfvn4lq0y9RRRmvdzZEBylGni+I8iN+Z5Ge/LQdt8zT3LKvXdzuJZhKkF1Z
+	 AXQjz6ccOAlw8IdSQ8MzoZWUOxe4G2KN0H3alxzESE0xYKAmLLvVYJemtp+aT6alDTib3
+	 kYCDIJn963XZ3lqF/OtaNVTvqSrY4jici6PJH0GMREI4NPqBY/HeXM5Lg6bRC8yBfHfcg
+	 eSuUXkJrzlX5nESvKlrkF60RetEM7qUI/ytZITjfjLwUo7KzFSKQrNIA3ObR/HFTcyQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SPZeye3Z;
-	arc=none smtp.remote-ip=209.85.128.50
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=E9UhvXUS;
+	arc=fail smtp.remote-ip=209.85.160.171
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89C7606A31E
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 15:42:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D89C7606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FCC606A31E
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 15:49:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66FCC606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SPZeye3Z
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so83783225e9.2
-        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 07:42:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=E9UhvXUS
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-55c5b6584ceso60214941cf.2
+        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 07:49:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795794557; cv=none;
+        d=google.com; s=arc-20260327;
+        b=KQ9S+YMclvKJPFDRkIYFB2MJUyrALSO8v8iwgodCmq8p011oyYgOOPwliKUyZEeo6S
+         u4TS8YlG5Gp7dUdIY/yxBouVdVPBWkEIsqHpv/D75mPI6rrJm3eZLRIuJ5dcz3SLfxef
+         GUnS/4zpLEOi7G4RJ9rpQ8+0G4d5YIoPnhv3iof1L+kkMt6TBLjSzclkTdUB9qrHIqWp
+         /xfRUccB8K6QRlofPFd9m14h0ZZfbdA0JIBNzwPI1PsrPnPXRR6iu4aiRv1EZci13KGf
+         e5uoqvywpwTTAAS+DmqA5xdj6rzlGeyuqrJI/B9jj4Dp3tVZd/XQfCz9cFmGg9TTOAC1
+         TetA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
+        fh=QASMwmca5nD9zXFzXjpqMhu1sJwYYZTDVn+r+YHbGSs=;
+        b=exvyrkiHTLTqHMewe2cr7RNWNw4aq/caKlbOqqoRRDC2P2wd5LljwasZG4h+k+4DK0
+         ZTK39z3lOZxIcRaIYvxkjKYlUorZ4lRpMFyHteP4RQimAJN3QLqeMfcIDyu1Pxf0QNY4
+         U6rdKKloxKvXXZLJ6ZF5QQ3uHAff3qUm8PAxn1pKbewAAKVaKS2deICtZ7xfXi79NNok
+         PIM8CH2M3qAL7GygWEakMthyJfxTWIaY/yCvK8DDnQyayuqHcYmXK2ctaDps9fRD73bW
+         eW734iRDZdF8RCaeuR63SEcMennOXB+xFKPfjXpYCb3PVbz+Ea0yYQ12+DRUGIWnElow
+         ZE6Q==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795794127; x=1796398927; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=e2fJZFZERBeQNZtQBCOfYByS4NMe3sHfsqjEP9dc6kw=;
-        b=SPZeye3ZsiWalqcv6Ga6AtJ4VUqjO9Sgi2az4AnEKMwiv3oeg+L7iGNCSJnVqtN0wa
-         RoD9qn/89WkqKBdWXI9DtKPerN2OdSrNEXd+UfDnI8bNg13fr+P/FsZVyGDhKGwSEAl3
-         5nngbCs72FxMgniVlnehgDpN1U8CwmZN3/lcPXcn+ENfMhQJaT2uthl+PD0Is9WpCZ+Y
-         m+T2US53npGUoQKpGIUhZFP58weE1/AAMtjA57sqXjOYKpMtkqm/zITSeyvtbpVJFxvM
-         rNqAqVWeeRJ+3Aw/ITLSWPvhdoIrDECnWBOrJwFPDLqXLnRCwhVnP3VqJhP3ircGtIPX
-         kkfg==
+        d=gmail.com; s=20260707; t=1795794557; x=1796399357; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
+        b=E9UhvXUS+uvLG4YB50GFMium22LZANKyb7ApIvEs0hmIFfIo6+AxAYCC8nMZlr3tjH
+         QZtMRPKpzfW+pfIK0XMlzm7x2zLqOMUAqsFIQU0uTJd+r2Vaoi0nNwoQaPTnurmvPMaF
+         vNWCfkeX/lsurGxqOU+KUx688LZvO8gogKdRe0HLYW99N/GAKM0W0KZtZc9gCA1uPUgg
+         4DuPFOOabAlzsVYKvXOcfTkHBtyDGxZ0XdywYGPNeZUfy4a4KE9+riC9yj0o5wPhusJU
+         DRLZemz8AvSrwtV8HXIxsJF1QPyF7LRwldvLwQqN1bpEUYfY1orPM/URWdSDNEyjSDbx
+         /W3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795794127; x=1796398927;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=e2fJZFZERBeQNZtQBCOfYByS4NMe3sHfsqjEP9dc6kw=;
-        b=KxAECi2h0qn6GbWVBp9xIV+Bvd7RWjPR85Yk3YwaQra2MffbA9SAO+Vp4WcoTeAoY3
-         c+4teFcl/q6c3oCbW7gH1EV9CCfdg+hjsy+G8BnE/3jnzR0NREiXZTMm88bQYgbVh98c
-         6ogt1s+RSQT1g7y9M9kRYSkMPdWRvpd1URMdgRA3pclmIESVw23OlDM+YD8cvUoiEnlW
-         jHxjaAulqnABuDYNhELVutcMOS2JtjgI24NYRHBhzuLwe2yTTkfPWPctrr5rJMZygJyf
-         ocMkXnrgUYMrsn+ndXI+18e/UKON3vnL5zR0CvzJyh9w/UmTF46LZGaXzHJ8zT7QOdPj
-         SyeA==
-X-Forwarded-Encrypted: i=1; AL+hErFAKvSOi+395xY8xU8sv9TjoliZ4vCv2kiHJ9D070YJjv9OOK4NyOUnrJhkeKYPpS/ARbcJWVGmHhUjoA==@lists.linux.dev
-X-Gm-Message-State: APuU4Z/K/4iMyPvSqH0Yg2g+k87LvvJIvG/gBCRtlj5DJW4HtqGDDXOg
-	9lClmjP2YOgAmaB9YbPIkI91qxo9568pZP8e1uRBgcMzIoFDBhF/iX1m
-X-Gm-Gg: AZFdTZeGECDcCIPgnWC2qoRRur+bYBHTDFqZ8aw5eYwIoNFvyq7+chqYW5KENUAQiDF
-	36ysMfzvHl5iIatWMEeNe8cTUsHu7w4k3oBEK/YDhhlJgRuBra0VMIqzaUxc21OJaP7HHfTD1m4
-	B018ko+erhYBl/ZXKFTVKITDIteLrna4VmxUq5phSK6N/EjHRcNxj9KXAahvVUWDYYYN9BpfkQM
-	IAlGhV/X2y2cxmqdKdtJvN5qS75yTojcxrSoH9/TbXJQRN5nTGy6/PjxwEq5zjtd5SmoesnR8Qc
-	UHY0xmyVuMrtFpt9+/GSXrtB/38ggv3DXZp5GEaG6ciyyGnaeiPcvCI/qx/+j9QSArkES70BOG8
-	CntU719IC+9rM1q3TfSFofzO220TMDGblhiY68pkePtwA1k/GsF5W7Pf6a4PCWdzZWtm1a32g6i
-	h6g9yTipOIH+sD898g0IC2+ikbX222EntBCusQlA2q2vf+qZ9Shj1b7GAt8EJTrNTlla+kmJ0Ci
-	5XW8zUVHR3mD8Qqj8kP1RV9FTfjeWofA6AecSuhD+VuNyqjwcD+xOTFDp1ESSNlRWRRl33zGwhP
-	vIhdvcYpxkYyTCFgAYQ6aBSm9Lrtc0SdCKt/9oOdjrL1u8XLilXnzvjTCiuLLaiqkJ/cKrISEli
-	eELn3srcINYxxT3RhnwR8wIhiCBcBhCqQz6nvzconQdfYVgGeGTkj7dXfAAVKPYVp8EiCj54tSC
-	GnJym5k4n2FbYv
-X-Received: by 2002:a05:600c:c173:b0:4a1:813f:2a60 with SMTP id 5b1f17b1804b1-4bb88800134mr482703475e9.11.1795794126985;
-        Fri, 27 Nov 2026 07:42:06 -0800 (PST)
-Received: from localhost.localdomain ([31.223.101.75])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb884b7515sm959073745e9.13.2026.11.27.07.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 07:42:06 -0800 (PST)
-From: Oguzhan KAYNAK <kaynak.oguzhan0@gmail.com>
-To: Jon Mason <jdmason@kudzu.us>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>
-Cc: Koichiro Den <den@valinux.co.jp>,
-	ntb@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	yangqixiao <yangqixiao@inspur.com>,
-	stable@vger.kernel.org,
-	Oguzhan KAYNAK <kaynak.oguzhan0@gmail.com>
-Subject: [PATCH v2] ntb: ntb_tool: accept hexadecimal addresses in peer_mw_trans again
-Date: Fri, 27 Nov 2026 18:41:57 +0300
-Message-Id: <20261127154157.3541-1-kaynak.oguzhan0@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20260707; t=1795794557; x=1796399357;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pm/8tep73L9V4TMW2Ch55CTSshK2JxETa/tNsbYXksY=;
+        b=B4JwUzPGAsAycmpFWVlHBvDiijgW6AYbs/Hntbi0zVSi+MJJaApEWnvJZ1y1l49WrQ
+         pptn2Rq81whp5TVlcMLA5fSLEyun0luMdOKLFRL7atONLAlvKH6INYBv/QUqvuF0fejI
+         lGtW3+HzXQBltnqsI+dWQ6TlEVSC7ifxmIuQYB41eKWIMgu1ArryziPgvyJDGfjW9j11
+         Zwnat2sFoDTuQdbQWuRwc8GDigzSMDkwFBQEe+jGV+t+0FFjA5Z4HThz8wx8kSRyDKvE
+         luH6AR2f+P3xheuLRqw7rJMCBKPAz3y/RPbWKRqU6dv/9sq7+WggZxDstN2GdFuXjOkG
+         5OQA==
+X-Forwarded-Encrypted: i=1; AL+hErFh9gdlP1JLl/RdGMgAe74tUw+CzFsU7uc+lDi4WFY+DPKgiSBbJYF6RWbrkvcYUhxlUGmfJWgaIOzRUw==@lists.linux.dev
+X-Gm-Message-State: APuU4Z8QmLnH33/T69+ZwyRUaF6vi8cRfEoqdMGpzRjlctLnHXrUXfI1
+	FrsiRXkbOpb0icAI/aa+ewIc045xsMEnD3DJSBOhEmrCePDy5bXKGSbI4ArBXEM6iXBSoMh375j
+	n56mOv8T4vy/WtNVzjMR0HS7jMuFdJOU=
+X-Gm-Gg: AZFdTZeOhWgGyV9Zs/XFXB2zCh80L93ZZmK8m3lQZs+SGXQHax9G2VTKExM4dglS/RS
+	FlpT60mXPTXCtsW1KrwLikKyvwOhNx9UoXC2ZqhURyj6Tl0LKQlPKlcVgfR3GPpyT88RYWjzeC5
+	UYR+6e5loehrtcTXOi2VeGj4KzWAmBrmpj67l+M4Er8vJjQFnA246wlRyVMR/desakHUKeXfuwC
+	JL6Qc7V1FE+BZmQbuzfFq3VNEocgbY1jEx2eVfEbQHggDwlehkodA3VknN6+U5Q7NyrbYBSt02u
+	VjOYoBOuXyb/iv+uck8gxd+D2DnqEYdpD3cGVCRMt/IQBDEWA4J6t3VO3csI54apCKU0JM9yFES
+	Ha0kTHOawlrsm4sEMhnalzazHq4vKeAghOu7Dr0cejQ69ijOSPqXmYecLFUA6Ma2z5mI/uUhWpl
+	SPmkvftYO4M04UFJmX0v4U4Qo2yH+WO2g8MkrzSRJEzwu6kUG5GBXOzAD7Onie2IvFYY5/K+LBW
+	gLtITENJz2wlwpt2tqgLr2aMapDH1/Tog==
+X-Received: by 2002:ac8:5754:0:b0:535:a5fa:edff with SMTP id
+ d75a77b69052e-55d76a59807mr476389711cf.63.1795794557235; Fri, 27 Nov 2026
+ 07:49:17 -0800 (PST)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -103,85 +106,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261126031506.165973-1-kaynak.oguzhan0@gmail.com> <awkzEjrVEz2jB1Ma@z790sl>
+In-Reply-To: <awkzEjrVEz2jB1Ma@z790sl>
+From: =?UTF-8?Q?O=C4=9Fuzhan_Kaynak?= <kaynak.oguzhan0@gmail.com>
+Date: Fri, 27 Nov 2026 18:49:05 +0300
+X-Gm-Features: Aa3M54oG8qNSkma9SYEe5bEWuLV762AYfcjKVO9GWl8LUMyf097tEckGvgVUriY
+Message-ID: <CAAKAQ7KpM5hT-Q0mdJr-0VnHy1DeFBoODjYM-FCoXiS+5DW+cA@mail.gmail.com>
+Subject: Re: [PATCH] ntb: ntb_tool: accept hexadecimal addresses in
+ peer_mw_trans again
+To: Koichiro Den <den@valinux.co.jp>
+Cc: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, regressions@lists.linux.dev, 
+	yangqixiao <yangqixiao@inspur.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 21fbdc4d0b1e ("ntb/ntb_tool: correct sscanf format for u64 and
-size_t in tool_peer_mw_trans_write") changed the format of the
-peer_mw_trans parser from "%lli:%zi" to "%llu:%zu". Unlike %lli, the
-kernel's vsscanf() parses %llu in base 10 only, so an address written in
-hexadecimal is read as 0, the ':' in the format no longer matches, and
-the write fails with -EINVAL.
+Koichiro Den <den@valinux.co.jp>, 27 Kas 2026 Cum, 11:01 tarihinde =C5=9Fun=
+u yazd=C4=B1:
+>
+> On Thu, Nov 26, 2026 at 06:15:06AM +0300, Oguzhan KAYNAK wrote:
+> > -     n =3D sscanf(buf, "%llu:%zu", &addr, &wsize);
+> > +     n =3D sscanf(buf, "%lli:%zu", &addr, &wsize);
+>
+> Just to clarify, do we have any rule about negative values for the addres=
+s part,
+> like in "-1:4096"? 21fbdc4d0b1e mentions "-1" as a possible input for the=
+ size
+> part, but doesn't mention it for the address part. (For either part, "-1"=
+ is
+> really odd, but that's not the point.) As you mention, your patch starts
+> accepting it for the address part again. Perhaps we should keep rejecting=
+ it
+> there?
+>
+> If so, to cover the cases broguht up so far, perhaps it would be an optio=
+n to
+> split the input at ":" with strsep() and use kstrtou64() with base 0 for =
+the
+> address?
 
-This breaks the usage documented at the top of ntb_tool.c
-("echo 0xADD0BA5E:16384 > $DBG_DIR/peer0/peer_mw_trans0") and the NTB
-selftest. tools/testing/selftests/ntb/ntb_test.sh writes back the "DMA
-Address" that mw_trans<N> prints with %pad, i.e. in hexadecimal. As the
-address format comes from ntb_tool itself, the first memory window test
-fails this way independent of the NTB hardware driver:
+Good point, thanks. A negative address was rejected before my patch,
+so it should stay that way. v2 does what you suggested: strsep() at ':'
+and kstrtou64() with base 0 for the address. I did not carry your
+Reviewed-by over, since the code changed.
 
-  Running mw0 tests on: 0000:00:04.0 /  0000:00:05.0
-  ntb_test.sh: line 117: echo: write error: Invalid argument
+v2: https://lore.kernel.org/all/20261127154157.3541-1-kaynak.oguzhan0@gmail=
+.com/
 
-Split the input at the ':' and parse the address with kstrtou64() in
-base 0, which accepts decimal and hexadecimal. A negative address stays
-rejected, as it is since that commit. The size is parsed with %zu as
-before.
-
-Found by running the NTB selftest against a virtual NTB device in
-QEMU; the fix was tested the same way (the unmodified selftest passes,
-hexadecimal writes to peer_mw_trans0 succeed, and malformed input
-including a negative address is rejected).
-
-Fixes: 21fbdc4d0b1e ("ntb/ntb_tool: correct sscanf format for u64 and size_t in tool_peer_mw_trans_write")
-Cc: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Cc: yangqixiao <yangqixiao@inspur.com>
-Suggested-by: Koichiro Den <den@valinux.co.jp>
-Assisted-by: LLM
-Signed-off-by: Oguzhan KAYNAK <kaynak.oguzhan0@gmail.com>
----
-v2:
-- Keep rejecting a negative address: split at ':' with strsep() and
-  parse the address with kstrtou64(base 0) instead of going back to
-  %lli (Koichiro Den).
-- Koichiro's Reviewed-by on v1 is not carried over, as the code changed.
-
-v1: https://lore.kernel.org/all/20261126031506.165973-1-kaynak.oguzhan0@gmail.com/
-
- drivers/ntb/test/ntb_tool.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -927,7 +927,8 @@ static ssize_t tool_peer_mw_trans_write(
- 	struct tool_mw *outmw = outmw_wrap->mw;
- 	size_t buf_size, wsize;
- 	char buf[TOOL_BUF_LEN];
--	int ret, n;
-+	char *addr_str, *size_str;
-+	int ret;
- 	u64 addr;
- 
- 	buf_size = min(size, (sizeof(buf) - 1));
-@@ -936,8 +937,16 @@ static ssize_t tool_peer_mw_trans_write(
- 
- 	buf[buf_size] = '\0';
- 
--	n = sscanf(buf, "%llu:%zu", &addr, &wsize);
--	if (n != 2)
-+	size_str = buf;
-+	addr_str = strsep(&size_str, ":");
-+	if (!size_str)
-+		return -EINVAL;
-+
-+	ret = kstrtou64(addr_str, 0, &addr);
-+	if (ret)
-+		return ret;
-+
-+	if (sscanf(size_str, "%zu", &wsize) != 1)
- 		return -EINVAL;
- 
- 	tool_free_peer_mw(outmw->tc, outmw->widx);
--- 
-2.34.1
-
+Oguzhan
