@@ -1,57 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.102
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.106
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795787872;
-	b=IpZYwKKkKmr1zZiFvrqh+lGwfauAQWOD9WAtjT8SxsutriozMqGllWGkO5w5T/aV7wJc
-	 pshe5X9HF8FdC6Ari/uN0orfejLzzLklDGRh31crQOd7QtfNbCFnmT99VWWfWCybT4IER
-	 Kj54zslMbxKZc+quVlAvO5QZCXsvWrvLq87IRPUpgmVNquCp6ZATI4Ahh9KKpnsQIPn38
-	 ifGJh2w976gPYdhiJ+ieT3y5OAKhODOmsbER1cMsbobrQC7gk4KoR9Tf8mXl3M4HeJRui
-	 r5RzNRJ9IFwZf+o88nx9t2gFqeBkegny6Y66AaMarcLs0kYBiPVHvvoKglPj5oUX60g==
+	t=1795789675;
+	b=zACEiSuufHwqih+it3ML3eUqLr+hdLusGrk5RA7Ueao7CGyvCdxrmZrq0OxGCEpjCEkv
+	 DuMy3Yss0JE4/UpWI90cdiQ3Xf+5avZAy2ZT3q/msTQ4o1O6YrimYvgDqeW25WTZKPkFG
+	 NICYvJmsasRO1tKexp//WffJKiNSixhzG0Q/JSJWUuz+ND/yGTjfrrkkEy+ESov6md2hv
+	 4+ISVC/Df6bytkcGrtrXxhxUDnFJUi2j1pMC/r/3UNCDB3GSfhDOpkB+n5oCiFYuBrQJj
+	 smS4Zu0IioctjA2ySA6fqwzItAX4OibfHi+cMUaAknUqmQwFZl4HRY6pYFOUP/qBwmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795787872;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=/f2Rjil7PMsu5fgbkOYg0CtvxSG41oXOLBLAUWnSHOQ=;
-	b=chgWOLCMzFONvDq3pWhUwcEVzIQGgGmToAzAQNfuFDnTLv5ObIlXGcR8mnTC5rLZM8ti
-	 CDUNsfHsoYvX2Ll/c05K+dDfPvaYCl/t3Q3mrNx4P8nL07E9mNG+Y4aD+LOyPAw+symgw
-	 A3418o9hcHyfPasJ6G7dKPZYqDEI70+HYEZNXAkTfBVuAR4nR1imt06WTSErZ9/ZisB8e
-	 wtdCxzIwGfw5hXKmRb1GajYMFqQKj3Iul/liHQH1anc5DXC693LSEaviXZdyeL1tvDWsI
-	 Bhvw7r/bdZiwsLmhMuj7GGRseotnjBRC6LjB9Gsw2UqDjvsIn2L7JJOTllMsH8KIlAQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795789675;
+	h=DMARC-Filter:DKIM-Signature:X-Pm-Submission-Id:From:To:Cc:Subject:
+	 In-Reply-To:References:Message-Id:Date;
+	bh=2lvQDzIwXX86EkagmIwt4gm5b7c7JGMGPsZmdb6GU58=;
+	b=zYOMzWGMBOBdq4Ptw1Cpcr/BntVHzncvEgwS44pRa68A42Itl94wmcDWRGEhyE0PsFzc
+	 efHN2aBl/SlWmSvNnWXvsRKHjS+EkcczV5HHH4EUgIFYK5kNr3y0InMYePyWsRrd1dul1
+	 qd/U96P6pjgK0HZyXAY0piXlEvb6cTaxr+8dPL3kZFaUpWD/eevlwFI2fpaUwWB/ujNxo
+	 Zi7M0mSBQRwvkwco6VcttuKiSOVdyz7Tr+nD3KA691J6Pvpjuy5yzvAoiQN2dg+vIQIIr
+	 2e3xkScxtWzsgJ4BI1heeymeTueQej9Ikb7kqzNnwux9y4MBtpF2QQpKyYaPNG8p+hw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=protonmail.com;
-	spf=pass smtp.mailfrom=protonmail.com;
-	arc=none smtp.remote-ip=79.135.106.102
-Received: from mail-106102.protonmail.ch (mail-106102.protonmail.ch [79.135.106.102])
+	dmarc=pass header.from=aigeus.net;
+	spf=pass smtp.mailfrom=aigeus.net;
+	dkim=pass header.d=aigeus.net header.i=@aigeus.net header.a=rsa-sha256 header.s=protonmail header.b=Gy7J5hUr;
+	arc=none smtp.remote-ip=109.224.244.106
+Received: from mail-244106.protonmail.ch (mail-244106.protonmail.ch [109.224.244.106])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE84606A32F
-	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 13:57:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3FE84606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1795787866; x=1796047066;
-	bh=/f2Rjil7PMsu5fgbkOYg0CtvxSG41oXOLBLAUWnSHOQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=sWaM3ZVA1i6iPF81IiUvQjgOXb9J9GItQ6ZZlATtU4T4wjbQhAr3VVld7PN4u16rt
-	 09G1VwzMokz12JZxoFkPnANe3b2c8OXxc0bRrEiMN25fRgLvZvVWXqDnMEDZN7TsjY
-	 NW1Lk8CcqN0KPMncGYDIkr7MYRrLmAB5l+Ok24DT9V+cywn/RHtAlYf6+TO/wp78C7
-	 fH1UWStUi9DVvlGCZgeh7El6G8XpkRNwlgplL7kXLVExAC6cVrrlsUNcc+QRgLCZXU
-	 1acG5+EcKUyXeezi3QkXrbG1V0HNk/UjOPIdnpBRdw166ZCk6L4s0dxRk8v4FpBUZs
-	 zpjm0Oy+3pF2g==
-Date: Fri, 27 Nov 2026 13:57:40 +0000
-To: Laurence Oberman <loberman@redhat.com>
-From: 70sp <70sp@protonmail.com>
-Cc: Bart Van Assche <bvanassche@acm.org>, Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>, Thorsten Leemhuis <regressions@leemhuis.info>, Tobias Laas <tobias.laas@posteo.de>, Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, regressions@lists.linux.dev, linux-block@vger.kernel.org, linux-ide@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Will Deacon <will@kernel.org>, Niklas Cassel <cassel@kernel.org>
-Subject: Re: [REGRESSION] DMAR fault by Intel H97 SATA controller since "block: Increase BLK_DEF_MAX_SECTORS_CAP" (6.17-rc1)
-Message-ID: <l7ImnFzOgVkMzGhZoxCBcI1dAbMnO2NlsstuK-4sh3CyOpWhWAC1RqFIr4CW82iTy3FZe2r1k4EFFtecv5PClmy_mvh10vI9W_W5Z5p-jlo=@protonmail.com>
-In-Reply-To: <e_efhbm0Vxq0FxO3-QqPkyhGrjzTvBDYmUOsGgmebVSyd0qsXXxYFXwC9sSjRAP06gcpsttHunBLtc0Mmt0cIjEI_0sDXL61lnxHhmuaxWs=@protonmail.com>
-References: <5ad27a97aafbc08a8702d5b90d09cd59@posteo.de> <awSs5Cw3hFkf4O4T@ryzen> <ec36d13e-e4c2-4bfb-8b50-69d4a1628839@leemhuis.info> <87b1bbd8-8113-4890-8623-738b19a9cc7b@leemhuis.info> <a0ff3156-add0-4f7d-8373-09f95bd7036b@acm.org> <2adaf0ef9e1a2fa18590f7d8dbf203c0f7de2be7.camel@redhat.com> <uJluFNYGCCrdvnYT3MatN_4Om8UczTJX_dzxumJxyCAC7F-Ubrekb7LPwlRxhCW0J91UBf-TqeRoJQfgYIYBRvMsPmE-Qs1eAg5zbDP0s58=@protonmail.com> <0edb9525-5068-42e6-b6c3-a1dcebcbcea7@acm.org> <f323c3d62265dfe90fa71514028af4d35f6e2420.camel@redhat.com> <e_efhbm0Vxq0FxO3-QqPkyhGrjzTvBDYmUOsGgmebVSyd0qsXXxYFXwC9sSjRAP06gcpsttHunBLtc0Mmt0cIjEI_0sDXL61lnxHhmuaxWs=@protonmail.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: dfc8998b5cc479a8c6e040b1acb68bd2a7137075
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991816070B87
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 14:27:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 991816070B87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aigeus.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aigeus.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=aigeus.net header.i=@aigeus.net header.a=rsa-sha256 header.s=protonmail header.b=Gy7J5hUr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aigeus.net;
+	s=protonmail; t=1795789672; x=1796048872;
+	bh=2lvQDzIwXX86EkagmIwt4gm5b7c7JGMGPsZmdb6GU58=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Message-Id:Date:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=Gy7J5hUrmtzUN/1DvQDRWZEpM+NdhOjMfKIgRymkF1plat/eRyZbgNLDCEPFYXXuO
+	 08NLbFbcKK7fFXAaP4zJg+JbPfWoEp0SpSp0UD811nixs6d8IqzIWDMNWK16oiNdYu
+	 uThCnISs/pdkR7CZEFaerMML7F5jePQo9kT6fuykBVvbsVEVAYCr1L9NV83dNut4RG
+	 PikxibvBs+sASblCQxO7unAPmIneZL28rzah3tpSqNTfSZ1HMusL8SwscFSW5liN4i
+	 ykHdXV7VVMDUPtzSmh7oF5i5u4ImBwlpqNn1K+k5AqQ8cndY04ioJHygHxpaF3mx2I
+	 cQ2cw3v3pCKAw==
+X-Pm-Submission-Id: 4jbbNj4Glnz2ScWg
+From: Aigeus <info@aigeus.net>
+To: "70sp" <70sp@protonmail.com>, "Baolu Lu" <baolu.lu@linux.intel.com>
+Cc: iommu@lists.linux.dev, regressions@lists.linux.dev,
+ "Thorsten Leemhuis" <regressions@leemhuis.info>
+Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
+In-Reply-To: <d931a389-c143-4a6a-931c-bc7025bcefb9@linux.intel.com>
+References: <275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06070@linux.intel.com>
+ <QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU=@protonmail.com>
+ <d931a389-c143-4a6a-931c-bc7025bcefb9@linux.intel.com>
+Message-Id: <4jbbNj4Glnz2ScWg@mailsubfra1002.protonmail.ch>
+Date: Fri, 27 Nov 2026 14:27:49 +0000 (UTC)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -60,33 +63,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hello,
 
-I have taken a look at the patches and the entire problem much more in dept=
-h, and there probably isn't a significantly better variant to do this.
+I am the reporter of the in-kernel amdgpu case in this thread (the one
+without VFIO, also filed as Debian bug #1155044). The superpage
+hypothesis fits my machine exactly and sp_off confirms it, so here is
+an independent data point from a plain DMA-API domain.
 
-In the state before the regression, the kernel was assigning smaller page s=
-izes for some cases, so it wasn't ideal as I thought. I also haven't found =
-a better place for the quirk to belong as there are already exemptions for =
-specific platforms in the code (I thought there weren't). This one is proba=
-bly fine.
+Hardware: Gigabyte H97-HD3 (BIOS F9c), Core i7-4790K (Haswell, iGPU
+enabled and driven by i915), Radeon RX 5500 XT (Navi 14) at
+0000:03:00.0, Debian 13, kernel 7.3.4+deb13-amd64.
 
-I am sorry to Bart and Laurence who had to handle this. I thought my patch =
-was bad, so I thought the same about Barts, but it looks like it's the corr=
-ect way to approach it.
+With plain intel_iommu=on this box fails as in my message of 23 Nov:
+DMAR faults with reason 0x0c (non-zero reserved fields in PTE) on DMA
+reads issued by the GPU itself, then "PSP load smu failed" and
+"Fatal error during GPU init" (36 fault lines across the failing
+boots, 0 on 6.12.118).
 
-I was told to repost my patch formally by Lu Baolu ( https://lore.kernel.or=
-g/regressions/d931a389-c143-4a6a-931c-bc7025bcefb9@linux.intel.com/ ), prob=
-ably because it fixes at least my case.
+After appending sp_off to the intel_iommu= options and rebooting, with
+everything else unchanged:
 
-I think we should wait for confirmation from Tobias and if it's positive, w=
-e can send out the final patch closing both cases.
+  /proc/cmdline: ... ro quiet splash intel_iommu=on,sp_off
+  DMAR: IOMMU enabled
+  DMAR-IR: Enabled IRQ remapping in xapic mode
+  i915 0000:00:02.0: [drm] VT-d active for gfx access
+  amdgpu 0000:03:00.0: VRAM: 8176M ...
+  amdgpu 0000:03:00.0: SMU is initialized successfully!
+  [drm] Initialized amdgpu 3.64.0 for 0000:03:00.0 on minor 1
+  dmesg | grep -c "fault reason"  ->  0
 
-Thank you for listening to me.
+So the fault class is not VFIO-specific: an in-kernel driver using a
+plain DMA-API domain hits the same reserved-PTE rejection, and
+disabling superpages removes it while DMA remapping and interrupt
+remapping stay enabled. That is consistent with the Haswell
+IGD/superpage restriction Šimon described.
 
-Best regards,
-=C5=A0imon Posp=C3=ADchal
+Once the change is reposted as a formal patch I can build it against
+the Debian 7.3.4 tree and boot-test it on this machine within a day,
+so the verification does not have to rest on one box.
+
+Thanks,
+Aigeus
+GitHub: EgolOS <79418083+EgolOS@users.noreply.github.com>
