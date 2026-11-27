@@ -1,68 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=54.240.27.107
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795760460;
-	b=oy/sL9P7rUqbUXbuQnxm6piQ2m5HqLzRzkPKtDpD5FFqfjn2IeYf3zY90W7HK5NLu2KN
-	 Q7QZWRviqs6dTMpc1ii0JzlXZ9LhHXgjCMtxgP/VIVyCos71r/RtINsKTodKSKsnI5Oe0
-	 HdX6VZwvK1if6JHelNMxsD6sVT+OTYNPE8TWpi/cShUjcOBIpnCdKjpSClBcSwOvqTUVH
-	 bg4L1cJKRvKpHIzjgY7x5Gw3oJRS4dbdRw9aEnWUT27/gFsE78CpA8+1co3gfGh2ApJNx
-	 Xy6dj/35pVdhmqe04s1aEAEbnBHm0njPyMLAKDznGS/4nB7zmUA73Xq7zWEahyui0NQ==
+	t=1795761985;
+	b=kZdE7/QBwunlIO2ZZKVn1a1vUIIpDrc+meBZJyYVNE74HL9HLLQEICyvD2/boTEi7XCn
+	 NUl6WJ7V8b1ui0ZelVgfsC6n8bcCMaXx5FxxGkLfl0o/Yv6iwrGLfe6YUCcGwua0kbb0i
+	 +lrsAzx9q0eCIb7HM32duwFU5Kq36MmHqCI5r8mv9ULXFn+H3zJ8tyRxP43rxQomQu5fd
+	 TxBncwCMw9hu7CB8rORC/Wn53qQ48GNCisGlPaTaB4ykT0uuP818ClRDPgB0SUjQ+WNu9
+	 ZNuo0SlcNNJfNhjLTt9A9J0SrtC36QQo5ZZF23C3H6Nx8Qk8SQ6oNHTlz214Go8eQ0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795760460;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:References:Content-Language:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=wRvoJuHizE5kAfOqgbi12VTVO89OpDkB8GyUIe90Dd0=;
-	b=IqbSg1rDQ+zD7ELViOojobQDtjVMZ1hCuIQRIn2dRBV1XbBSM7Tr8WV0VpQ6sd/x5Yi9
-	 1euSxgtNW2piJvv3/DmMfqCk1HuZb0TOn4qLTWExkRyijr0/Z5xo33jGQoUKqT5BPn7Ae
-	 aRh2ZP+klD5YCgiIfBK9UgkAzS2RcfyfkkpDjkMUvSO+PlLmSoFr6eoO3jF2KcaZDS134
-	 1n9CWArqIzuN4uZhlDKsVdYNrklBZIchabKxnXkRgMPwOo0B9un0asGFnt0gbFKMWW1Lp
-	 dRhinne+KDmgWrplLV5mF45/ovYarYOg8318ZV96XEIKZ8TWVenbYfiPsT8bHwO7lJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795761985;
+	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:Subject:From:To:Cc:Date:
+	 Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:
+	 References:X-Mailer:Thread-Index:Thread-Topic:X-Original-Mailer:
+	 X-Wm-Sent-Timestamp:Message-ID:Feedback-ID:X-SES-Outgoing;
+	bh=UUrmEL4fj7DBJYDRPj0ZU1jj66ejxzXJDf0rYEb8jlw=;
+	b=JLIX1htlXfkOLmX0Vw+uq3w8ZRPVqNmIZq/VIY66ui8DVJb5AB7hVQO2YuV+T8x4b1G+
+	 oNd3BOW6wMZnUCyiIDnJ0WW58NPq+ebjrZ11fJrcz0Om+5V9dEwPMdVkVhUgRLsuSCXhm
+	 Quzpa5CbNhMy4pMBuiSdw1/nBWlNKPZ7zS0b9ax1d4lqoz5KjXd40iaR+Dd5kSrnaOFAU
+	 HHhakOZTOvDEQ4ml1ZMw0P3/4uX4zbYrZXN+QN5VopMMCsueCTLXcAfGnt2n2P3iXgFhh
+	 55LQWcXquWxmGkfhSzUvvHIhyg55K1iqc7nNZpnj1WEtobwYWOkQrACzqK5bn+cYVPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hagWw5Vw;
-	arc=none smtp.remote-ip=192.198.163.9
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=geek-masa.com;
+	spf=pass smtp.mailfrom=mail.geek-masa.com;
+	dkim=pass header.d=geek-masa.com header.i=@geek-masa.com header.a=rsa-sha256 header.s=mwholqyuytutcif2rgzxazuf7vd3euk6 header.b=lrbBfw5T;
+	dkim=pass header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=hsbnp7p3ensaochzwyq5wwmceodymuwv header.b=FC6RUv2q;
+	arc=none smtp.remote-ip=54.240.27.107
+Received: from a27-107.smtp-out.us-west-2.amazonses.com (a27-107.smtp-out.us-west-2.amazonses.com [54.240.27.107])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA99606A32A;
-	Fri, 27 Nov 2026 06:20:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7BA99606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C0A606A31C
+	for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 06:46:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60C0A606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geek-masa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.geek-masa.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hagWw5Vw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795760460; x=1827296460;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=umpBYyow/SOpcQs7PqWAQG0UpXjcYz/uyaroMTYK8YU=;
-  b=hagWw5VwCYt8p31Fa3Fkq2Qmd50bT3vevbGLYF1ON6DCar4uDeCq3kqq
-   3B9LsKLXrys1X3hXpSh2+xMTXxuyKFF5+MHnZVyPyCK1esJt6qb6qevsZ
-   55aNKy64C2kY7wGX48wZzZcEj8xp+sHtbWnGTWWIAVhtioa6hlUUBCoaZ
-   oQpfU0vUpir52OLb3ggwVA56YrmOrinfsFiVlEtEN0MRgmvdqJx+E4cKa
-   SmeMpZPLbhT/JBkk4Z8R3iHQwRTyqEfSB5dEs1ZiH2Tn4nIaQQfoDosNE
-   hc47m59TYL1zbscUAT205jAXUldgk7eKihA0PC1mnIUgf7yYmcmhgXTIf
-   Q==;
-X-CSE-ConnectionGUID: IxQpNDW7TbWwUMsf9rHHrg==
-X-CSE-MsgGUID: LWLVJGrRT1CuILB/vaL21g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4522363"
-X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
-   d="scan'208";a="4522363"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 22:20:59 -0800
-X-CSE-ConnectionGUID: Fyl54NFiRq6FEzowfDvdSQ==
-X-CSE-MsgGUID: SqgsGfoZRcKvwuMOTslu6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
-   d="scan'208";a="14097705"
-Received: from blu2-desk.sh.intel.com (HELO [10.239.156.26]) ([10.239.156.26])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 22:20:57 -0800
-Message-ID: <d931a389-c143-4a6a-931c-bc7025bcefb9@linux.intel.com>
-Date: Fri, 27 Nov 2026 14:20:55 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=geek-masa.com header.i=@geek-masa.com header.a=rsa-sha256 header.s=mwholqyuytutcif2rgzxazuf7vd3euk6 header.b=lrbBfw5T;
+	dkim=pass (1024-bit key, unprotected) header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=hsbnp7p3ensaochzwyq5wwmceodymuwv header.b=FC6RUv2q
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=mwholqyuytutcif2rgzxazuf7vd3euk6; d=geek-masa.com; t=1795761983;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
+	bh=j452pPgXWbNkeLAE9DAUy1JgfKaEzF8HrEHs86FoXRA=;
+	b=lrbBfw5T5cGIpL1XtMEkwhrF8TjUh2NVb0m8HManf4EIwKcRIMXTqJfmYAgYCInu
+	58QxHyQ4PKX2/5qi1eErtutsn3RSjaYTdKBAxr3SThVIHoniyP4/CCEO8IpE15yawu/
+	CXASJcik9+n+SYLLI6gVaZeFZZKmMpwAF5H8FC0mhpHicrmUqDg0jxG5+VVgNYb+Ww4
+	XKV7UmiDdcmQcEu5utZ7VL9+u4RRS2qi9Xoq2eOcPIuIY/ArQl3zBizZtC/z760gC2m
+	fNmh0j7nTR82WVFb3UX0DlggqE82w7GWmqOdLdO0FNE82Ny8f618XvJ0rVaNwwn2Y1j
+	NkfDYt+NOA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1795761983;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
+	bh=j452pPgXWbNkeLAE9DAUy1JgfKaEzF8HrEHs86FoXRA=;
+	b=FC6RUv2q1aOeQW5EGteGdN9tSMtEV3ZsX6EMxTycgf9K1CpXnKdqmkGKwo2SMaa5
+	POWdKtgcvwRk5lN5H0wOFBHWNgDxhHieg+ja2vLsdPiJwvgxe8e1Ctj70mCC1+6ENir
+	TDBP9LfIXA8N7F7VYcUUZig8mCJyxiJ0TWfsH/bQ=
+Subject: [PATCH] ALSA: ua101: clamp playback packet sizes instead of
+ rejecting UA-1000
+From: =?UTF-8?Q?Masanori_Suto?= <suto@geek-masa.com>
+To: =?UTF-8?Q?tiwai=40suse=2Ede?= <tiwai@suse.de>
+Cc: =?UTF-8?Q?londongrad=40gmail=2Ecom?= <londongrad@gmail.com>, 
+	=?UTF-8?Q?xmei5=40asu=2Eedu?= <xmei5@asu.edu>, 
+	=?UTF-8?Q?clemens=40ladisc?= =?UTF-8?Q?h=2Ede?= <clemens@ladisch.de>, 
+	=?UTF-8?Q?perex=40perex=2Ecz?= <perex@perex.cz>, 
+	=?UTF-8?Q?linux-sound=40vger=2Ekernel=2Eorg?= <linux-sound@vger.kernel.org>, 
+	=?UTF-8?Q?stable=40vger=2Ekernel=2Eorg?= <stable@vger.kernel.org>, 
+	=?UTF-8?Q?regressions=40lists=2Elinux=2Edev?= <regressions@lists.linux.dev>, 
+	=?UTF-8?Q?Masanori_Suto?= <suto@geek-masa.com>
+Date: Fri, 27 Nov 2026 06:46:23 +0000
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -71,92 +74,112 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
- a98db518dde2
-To: 70sp <70sp@protonmail.com>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- "info@aigeus.net" <info@aigeus.net>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
- <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
- <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
- <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
- <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com>
- <5bVscg7a2_H1PPW3HmVtrYv_Xwtti2hzjD065W4OdwsD9rC2gw7sGVEg-2U596VZn8O2LAEfhWeZklRk63ymqNW9220R6R_jjif7BaWol9o=@protonmail.com>
- <82662a17-f9e2-46dd-9881-792412c1dc50@linux.intel.com>
- <X7nc9tQqVxmuR76GYNJnMRkqUTwNVlXTWpH0wGvJeiAHlcLaibPZHRN037p0359GpdmopB_wI2tF2x6EqZF4oY9J697tcTGYwfYMK96FcUs=@protonmail.com>
- <275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06070@linux.intel.com>
- <QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU=@protonmail.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <QISmXFlpPMgvFUKmdIBDwqn4JHHXt2NZeJzerMLHF_5icLo0lPKVlN0Ig9v8Vb52NmCeSFdyrao4x8KoN1DCXtDlnZS7eRIClC6vZyu-hPU=@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: 
+ <CANd6TdKdRftWyo5Cg_85-fBVGW3oHAntEY-DdCpQCDSyRpOprw@mail.gmail.com>
+References: 
+ <CANd6TdKdRftWyo5Cg_85-fBVGW3oHAntEY-DdCpQCDSyRpOprw@mail.gmail.com> 
+ <20261127064615.40817-1-suto@geek-masa.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHdfjsDkETvySPpTqK7zfeNAGe9Jw==
+Thread-Topic: [PATCH] ALSA: ua101: clamp playback packet sizes instead of
+ rejecting UA-1000
+X-Original-Mailer: git-send-email 2.56.1
+X-Wm-Sent-Timestamp: 1795761982
+Message-ID: <010101a21bc150d7-627da1ea-4ebf-499d-9ae0-edf88db3e063-000000@us-west-2.amazonses.com>
+Feedback-ID: ::1.us-west-2.An468LAV0jCjQDrDLvlZjeAthld7qrhZr+vow8irkvU=:AmazonSES
+X-SES-Outgoing: 2026.11.27-54.240.27.107
 
-On 11/24/26 22:48, 70sp wrote:
-> Hello,
-> 
-> I (alongside ChatGPT) found the solution and the root cause of this issue.
-> 
-> The regression is caused by the code improperly assuming that the CPU supports IOMMU superpages, which it does, but only when the integrated GPU is disabled (speciality of Intel Haswell).
-> 
-> The regression can either be fixed with a single kernel parameter "intel_iommu=on,sp_off" or by modifying the code.
-> 
-> The LLM also generated me a patch that worked, but it was just about hardcoding specific CPUs to not use superpages. Doesn't seem like a great solution for this very delicate code. A much better solution would likely be making a patch which checks for superpage compatibility universally.
-> 
-> I am sending a working patch from a month ago edited by me and the reasoning from ChatGPT (if somebody would find it useful) below.
-> 
-> the patch:
-> ---
->   drivers/iommu/intel/iommu.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 5a2e705a2f2e..dd49a4e37653 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -23,6 +23,7 @@
->   #include <linux/syscore_ops.h>
->   #include <linux/tboot.h>
->   #include <uapi/linux/iommufd.h>
-> +#include <asm/cpu_device_id.h>
->   
->   #include "iommu.h"
->   #include "../dma-iommu.h"
-> @@ -1876,6 +1877,13 @@ static int __init init_dmars(void)
->   	return ret;
->   }
->   
-> +static const struct x86_cpu_id haswell_cpu_ids[] __initconst = {
-> +	X86_MATCH_VFM(INTEL_HASWELL, NULL),
-> +	X86_MATCH_VFM(INTEL_HASWELL_L, NULL),
-> +	X86_MATCH_VFM(INTEL_HASWELL_G, NULL),
-> +	{}
-> +};
-> +
->   static void __init init_no_remapping_devices(void)
->   {
->   	struct dmar_drhd_unit *drhd;
-> @@ -1907,6 +1915,14 @@ static void __init init_no_remapping_devices(void)
->   		/* This IOMMU has*only* gfx devices. Either bypass it or
->   		   set the gfx_mapped flag, as appropriate */
->   		drhd->gfx_dedicated = 1;
-> +
-> +        /* Haswell requires superpages to be disabled in the default
-> +		   remapping unit too when integrated graphics is enabled. */
-> +		if (intel_iommu_superpage && x86_match_cpu(haswell_cpu_ids)) {
-> +			intel_iommu_superpage = 0;
-> +			pr_info("Disabling superpages on Haswell with integrated graphics\n");
-> +		}
-> +
->   		if (disable_igfx_iommu)
->   			drhd->ignored = 1;
->   	}
-
-Good catch. Could you please re-post this change as a formal fix patch?
-
-Thanks,
-baolu
+Commit 86f86e6fdedc ("ALSA: ua101: reject mismatched capture/playback=0D=0A=
+packet sizes") rejects a device at probe time when a capture packet of=0D=
+=0AwMaxPacketSize bytes would carry more frames than fit into a playback=0D=
+=0Apacket.  It assumed that genuine hardware declares proportional packet=
+=0D=0Asizes, but the UA-1000 does not:=0D=0A=0D=0A  capture  EP 0x81: 12 =
+ch x 4 bytes, wMaxPacketSize 720 -> 15 frames=0D=0A  playback EP 0x02: 10=
+ ch x 4 bytes, wMaxPacketSize 560 -> 14 frames=0D=0A=0D=0Aso the UA-1000 =
+now fails to probe with=0D=0A=0D=0A  playback packet size 560 too small f=
+or 15 capture frames=0D=0A=0D=0AIn practice the device sends about rate/8=
+000 frames per packet at high=0D=0Aspeed (6 at 48 kHz, 12 at 96 kHz), whi=
+ch always fits the playback=0D=0Apacket.=0D=0A=0D=0AThe out-of-bounds wri=
+te has a single source: capture_urb_complete()=0D=0Astores the received f=
+rame count in rate_feedback[], and both=0D=0Astart_usb_playback() and pla=
+yback_work() take their packet sizes only=0D=0Afrom that FIFO.  Clamp the=
+ value there to what fits into one playback=0D=0Apacket, so the playback =
+URB buffer cannot be overrun whatever the=0D=0Adescriptors say, and relax=
+ the probe check to require only that one=0D=0Apacket at the nominal rate=
+ fits.=0D=0A=0D=0ATested on a UA-1000 (0582:0044): the device probes agai=
+n, and playback=0D=0Aand capture both work.=0D=0A=0D=0AFixes: 86f86e6fded=
+c ("ALSA: ua101: reject mismatched capture/playback packet sizes")=0D=0AC=
+c: stable@vger.kernel.org=0D=0AReported-by: London grad <londongrad@gmail=
+=2Ecom>=0D=0ACloses: https://lore.kernel.org/all/CANd6Td+b6ituLFzkhvX09vr=
+icCY541fQapNOk3rTa=3D74zWA5LA@mail.gmail.com/=0D=0ACloses: https://bugzil=
+la.kernel.org/show_bug.cgi=3Fid=3D222261=0D=0ASigned-off-by: Suto, Masano=
+ri <suto@geek-masa.com>=0D=0A---=0D=0AHi Takashi,=0D=0A=0D=0ATo answer yo=
+ur question earlier in this thread: on my UA-1000=0D=0A(0582:0044, bcdDev=
+ice 1.07), reverting 86f86e6fdedc alone makes the=0D=0Adevice work again.=
+ It is registered in /proc/asound/cards, and playback=0D=0Aand capture bo=
+th work. Without the revert it fails to probe with=0D=0A"playback packet =
+size 560 too small for 15 capture frames", as in the=0D=0Aearlier report.=
+ So the commit is confirmed as the cause.=0D=0A=0D=0AA plain revert would=
+ reopen CVE-2026-98741, so this patch keeps the=0D=0Aprotection by clampi=
+ng the packet size where it is produced instead of=0D=0Arejecting the dev=
+ice. With this patch applied, playback and capture also=0D=0Aboth work. T=
+ested on linux-zen 7.3.6-zen1; sound/usb/misc/ua101.c there=0D=0Ais ident=
+ical to mainline.=0D=0A=0D=0ATo check that the 15-frame worst case does n=
+ot happen on real hardware,=0D=0AI captured the isochronous traffic with =
+usbmon: 60 s of simultaneous=0D=0Aplayback and capture at each rate the U=
+A-1000 supports, about 480000=0D=0Apackets each. Frames per packet, from =
+the actual capture length=0D=0A(EP 0x81) and the submitted playback lengt=
+h (EP 0x02):=0D=0A=0D=0A  rate       capture frames per packet           =
+max=0D=0A  44.1 kHz    5: 48.76%   6: 51.24%                6=0D=0A  48 k=
+Hz      5:  1.14%   6: 97.74%   7: 1.12%     7=0D=0A  88.2 kHz   10:  1.0=
+4%  11: 95.45%  12: 3.52%    12=0D=0A  96 kHz     11:  0.08%  12: 99.86% =
+ 13: 0.06%    13=0D=0A=0D=0APlayback used exactly the same distribution a=
+t every rate. The maximum=0D=0Ais 13 frames at 96 kHz, which fits the 14-=
+frame playback packet. The=0D=0A15 frames assumed from wMaxPacketSize nev=
+er occur: the device stays=0D=0Awithin one frame of rate/8000. The clamp =
+warning added by this patch=0D=0Anever appeared in the kernel log during =
+these runs.=0D=0A=0D=0AThe same breakage was also reported on LinuxMusici=
+ans:=0D=0Ahttps://linuxmusicians.com/viewtopic.php=3Fp=3D189180=0D=0A=0D=0A=
+#regzbot ^introduced: 86f86e6fdedc=0D=0A=0D=0A sound/usb/misc/ua101.c | 3=
+0 +++++++++++++++++++++++++-----=0D=0A 1 file changed, 25 insertions(+), =
+5 deletions(-)=0D=0A=0D=0Adiff --git a/sound/usb/misc/ua101.c b/sound/usb=
+/misc/ua101.c=0D=0Aindex bd8e0ed..196a588 100644=0D=0A--- a/sound/usb/mis=
+c/ua101.c=0D=0A+++ b/sound/usb/misc/ua101.c=0D=0A@@ -371,7 +371,7 @@ stat=
+ic void capture_urb_complete(struct urb *urb)=0D=0A =09struct ua101_urb *=
+ua_urb =3D urb->context;=0D=0A =09struct ua101 *ua =3D ua_urb->ua;=0D=0A =
+=09struct ua101_stream *stream =3D &ua->capture;=0D=0A-=09unsigned int fr=
+ames, write_ptr;=0D=0A+=09unsigned int frames, max_frames, write_ptr;=0D=0A=
+ =09bool do_period_elapsed;=0D=0A =09int err;=0D=0A=20=0D=0A@@ -402,6 +40=
+2,21 @@ static void capture_urb_complete(struct urb *urb)=0D=0A =09=09=09=
+=09goto stream_stopped;=0D=0A =09=09=09}=0D=0A=20=0D=0A+=09=09=09/*=0D=0A=
++=09=09=09 * The playback stream reuses this packet size, but its=0D=0A+=09=
+=09=09 * URB buffers hold only playback.max_packet_bytes.  The=0D=0A+=09=09=
+=09 * capture packet size comes from the device, so clamp it=0D=0A+=09=09=
+=09 * to what fits into one playback packet.=0D=0A+=09=09=09 */=0D=0A+=09=
+=09=09max_frames =3D ua->playback.max_packet_bytes /=0D=0A+=09=09=09=09  =
+   ua->playback.frame_bytes;=0D=0A+=09=09=09if (unlikely(frames > max_fra=
+mes)) {=0D=0A+=09=09=09=09dev_warn_ratelimited(&ua->dev->dev,=0D=0A+=09=09=
+=09=09=09=09     "capture packet of %u frames clamped\n",=0D=0A+=09=09=09=
+=09=09=09     frames);=0D=0A+=09=09=09=09frames =3D max_frames;=0D=0A+=09=
+=09=09}=0D=0A+=0D=0A =09=09=09/* append packet size to FIFO */=0D=0A =09=09=
+=09write_ptr =3D ua->rate_feedback_start;=0D=0A =09=09=09add_with_wraparo=
+und(ua, &write_ptr, ua->rate_feedback_count);=0D=0A@@ -1031,12 +1046,17 @=
+@ static int detect_usb_format(struct ua101 *ua)=0D=0A =09ua->playback.us=
+b_pipe =3D usb_sndisocpipe(ua->dev, usb_endpoint_num(epd));=0D=0A =09ua->=
+playback.max_packet_bytes =3D usb_endpoint_maxp(epd);=0D=0A=20=0D=0A-=09i=
+f (ua->capture.max_packet_bytes / ua->capture.frame_bytes *=0D=0A+=09/*=0D=
+=0A+=09 * capture_urb_complete() clamps the packet sizes passed to the pl=
+ayback=0D=0A+=09 * stream to playback.max_packet_bytes, so only the nomin=
+al rate must=0D=0A+=09 * fit here.  wMaxPacketSize of the capture endpoin=
+t may legitimately=0D=0A+=09 * be larger (e.g. UA-1000).=0D=0A+=09 */=0D=0A=
++=09if (DIV_ROUND_UP(ua->rate, ua->packets_per_second) *=0D=0A =09    ua-=
+>playback.frame_bytes > ua->playback.max_packet_bytes) {=0D=0A =09=09dev_=
+err(&ua->dev->dev,=0D=0A-=09=09=09"playback packet size %u too small for =
+%u capture frames\n",=0D=0A-=09=09=09ua->playback.max_packet_bytes,=0D=0A=
+-=09=09=09ua->capture.max_packet_bytes / ua->capture.frame_bytes);=0D=0A+=
+=09=09=09"playback packet size %u too small for %u Hz\n",=0D=0A+=09=09=09=
+ua->playback.max_packet_bytes, ua->rate);=0D=0A =09=09return -ENXIO;=0D=0A=
+ =09}=0D=0A =09return 0;=0D=0A--=20=0D=0A2.43.0=0D=0A=0D=0A
