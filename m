@@ -1,47 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795828138;
-	b=vdkEfQDGeAxIr1fgyo/KLOqpbfIZ+3ZQD9jXMc8fRhP3oiLSnd5lvs73lO3crNIvH4kW
-	 IB+LKkVOqq41Ia7KUm4timlQkj3LcQnQjHWz4n38qOYqs0YMy/DLZRTfqTC0Pf4tuQptS
-	 FpsI3McaU7KCeGYD/7mLvCo2JBlGqe5kycFweAqzpzQtCxAxQTDIooeAXTN/+lnKvb5lX
-	 +iQgE+G4De34RHOzgR9HdeyZO0XocPc+a0ZsvcWN1CBVm8IAE61PF2UjdZAqsYT8YJTHE
-	 n+8v3g4kqSBYhfQD6j80/LRwdogi7XoOLOm9s7RF6R8LGyseAB8KAmX+ijnwlMu/vfw==
+	t=1795844610;
+	b=XspzU0oZKYzEkWVe10Gw5q5RQXKvIBx27SjOIIt1iD3cMbUYvTG5H6duhfqiCS0byrD9
+	 i3w1xeh+vH/dQto/XGX4HWtDfLYX9/CJPIDfjkY2RQYRtP+9E3FL181gkK7o0T/CtwwC3
+	 kxGxiKvP35CZ7O2JdWueGP6UiMWZiApkphpFfS03rGWnJ9Bo9pYcjKGe3iDuTg2go9oNe
+	 UwxQXbcBfFvLogB4xgm+9wdVdQSl6f0bSqY1SOhebWMQma21tvmFnJKfk1P+ARs5WYIpu
+	 rIazCA8w1gL8Cg0RU6PAKsQAD510BczwpZkukxdEk7bLW5fhELs6GJdqJXgVobYJmHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795828138;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=bmzb2klBetVMKm+jeI0J25mw8bATel70nHjfOTu/sK8=;
-	b=KRb5/8GmBCYcvFiO12wOt3uEEGbnsWkupuLLh+jJQXQRdXkjg0EO9ZJhYvGcwEX1XlmY
-	 JFzNJi7KrfDszKExy5GOc8jZvoesVBMyGv3dMsPSXAwLwoEhpzYDhdl3tM1WLsvoWtgOM
-	 VU7lGSQlcl31CQJNb/Le1fuyyDJY6aYRq8PLwDJzBEcohazkDLCD1wPm15Ebld5L7g3UT
-	 kc3ReL/DUpkgSqHC1Fgboy49xQg6hYTXwslV2rB2/wZeGi/nAOSVwGj6txLt11M4m2An6
-	 /3DiRF9oDimNzHg9x7Gq9saNy9EVpOvU3pBYxY/pAlbyicIMlTPna8e8UBHxSgKQdCg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795844610;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=vEkdLN0VjxTpHlesa9nDXdjs6TRbBEQBDfO7BJmrmS4=;
+	b=EgJY+NRpSd3yGgtYa2yp3W/3R64j1UT7XsxEEX7yW7P34SIg/QwKtXqF+Lvr00+Z0PAr
+	 jKTwVMvfFDzVKX4bR1eBJ5GePzyQ/bl6AXslKOY8vyGz9yMtyO6DTBDKVjaiBIPKEyc7w
+	 omToci811uhENTKJKAmIGeu0RTi61M+TYGOV1xMSqWU41bEMEf5lJtaHOoeSqlgJMWoKx
+	 1W22RrnLXs2dY1Rlcxv7xG0dgaUVRNMRYkX09EuLntCyJDsySjKDnFWQCp3OKhwHoMkbz
+	 3ONZsZ3b0ss5Qt4/hg0t9owgi622q0iH7XxYoxOWVL/7+RImJ1NCQeaZ6yAwnpWZ88A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=pass smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.93.99
-Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YQqBN31V;
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EA0606A31E
-	for <regressions@lists.linux.dev>; Sat, 28 Nov 2026 01:08:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3EA0606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jbscC1Xsqz1c0Xp
-	for <regressions@lists.linux.dev>; Sat, 28 Nov 2026 09:08:43 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D2FB640B20
-	for <regressions@lists.linux.dev>; Sat, 28 Nov 2026 09:08:52 +0800 (CST)
-Received: from [10.174.179.19] (unknown [10.174.179.19])
-	by APP4 (Coremail) with UTF8SMTPSA id gCh0CgCXzeyiKQprH4NRGA--.24636S3;
-	Sat, 28 Nov 2026 09:08:52 +0800 (CST)
-Message-ID: <99ddd05c-7e38-4f8a-bd9e-fe87d1d959af@huaweicloud.com>
-Date: Sat, 28 Nov 2026 09:08:50 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE82B606A31E
+	for <regressions@lists.linux.dev>; Sat, 28 Nov 2026 05:43:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DE82B606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YQqBN31V
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4bb64ef5a00so71711265e9.3
+        for <regressions@lists.linux.dev>; Fri, 27 Nov 2026 21:43:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795844608; x=1796449408; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vEkdLN0VjxTpHlesa9nDXdjs6TRbBEQBDfO7BJmrmS4=;
+        b=YQqBN31VXLpbFsAPhQrP1yQK0t53XsTNghqrVQmOeKdVRhvYNpNFynNJxp70j7dVkd
+         xTPYK4iHLO3vU837eFwCzgh35Zh6YjBlgnnbCySQzhBA+m1xdo1g3eITyvIE6xnL00T6
+         S4nkwIKA35anlS/JRKGhz6O7mUtOEO9Egj63MMrl0tOXaLAInhkoqLtcWQWIcn0e7fL5
+         QMwjok5IrzvDEIWUaOAJFZzTlmXWGhkRfwm2mXl2A15cfawysG1+DTr/ovsVUJIpP/00
+         zxN25ZgFaXUQSqJMp62cwK+P1vOHBlZWTDiTndZE1hvBTn9IGk2vINv4RCMQNXM2dPz1
+         CsKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795844608; x=1796449408;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vEkdLN0VjxTpHlesa9nDXdjs6TRbBEQBDfO7BJmrmS4=;
+        b=DFqT/dIEmIstZY10DnMj++rDNN964yz6xjUEJiQhUeRF3hxUejeTqwNFuCoZzlCtmH
+         /N1holHXUGGqL8F7RIYULGuvcQFYSscytcJDq1CEFwmGU6BWUdj+egNfHjGuV+BCA6NF
+         aGiwbA7VtaoYUbdyTqnZ3Xy+lSzcvuAnyhVKGV/dPCUXm7YDpCvO3MCqYhcxLfJOvROS
+         6pINsU+nj37Ay66zoMr8NRN/6rF/O5mjmvQhydEYTbarljEo0ELtv6JJ28GNyOBmTwhs
+         4OXU5zUDlPbg/mL2fpXJY97R2b4yP4UZwW1r5N2F4Mfelj54oie/kUcX316z/H9kpCdL
+         wcFQ==
+X-Forwarded-Encrypted: i=1; AL+hErFtCbJGhI5Kq7dBX8VUb4bKURB3HGL/FIJOgNmluGzsEyh+txq0vwLX4PfvoK1HXQmGJDiEFp14uBvL2Q==@lists.linux.dev
+X-Gm-Message-State: APuU4Z9b9fcFuSj8XRQ8q8yWnFIEKOYX419rVAN3iQJ7WjPxK1r5/slv
+	RABLK3tFH6K9rDlfFf/LJxNIXUA4O3kJV/389vwCQM2YCC5zOEQ75+ch
+X-Gm-Gg: AZFdTZfvCuJ4gFAImyT0TJDxfRjtOrQsnuSwOSOidPFAtuW8BZ9y5YSWRNgQKk8CRlg
+	h3jlHZ6jh7/U0C2/pZW8ZdIkyVwAHuDAGtxLOa2DFLZ/VpN6k0fC5fHQeJ9hO9MDN80DTjiQ4Og
+	VCSLCjgp4vaPC8d4UxFA4uZwvlsnDLFywAk7oZi97X6rTkIYcZ3ORSb4KLkCgTKIwlldxu0Ggxm
+	1L2ByeZkOHnPyAByYAlVvIMWdFMfC14zqF2LwjRxtJ/7mwQJUYL03zLFJo20ochhUrXS0VOE5rd
+	T2ildn0GzEAlYd4agAg1jfjqKd+qVYk1GO2pAUUXrSvp1ICn1LiEFMTGoOKDPSomNnjEzhc5knW
+	wsEkR/WL5RMl+lCJgRuzgsJ+4PUBfDHs62qTJN4P92n6nxk4WkrA98ZOAV76t1+pkc+/PogwiXP
+	YLrCaymPiXcm9ady4We4HQ5j67W7pRcEjTbs0ET+fgI2P3AglG9oxljOu8nmh17Yz9R+ea9lyMq
+	9ZcHyXgkLvud52Ei4WT9Z3CuojoDP/p2VrZ/bPjOFtWERbK4qP/IDX/8zNhNIXBhXstzHo/Me94
+	xgPh41k62B/ZeIM3exw6C47tNioyjNBdcVZ3Mw==
+X-Received: by 2002:a05:600c:3508:b0:4b2:3c81:d1 with SMTP id 5b1f17b1804b1-4bb88826921mr526843535e9.5.1795844608045;
+        Fri, 27 Nov 2026 21:43:28 -0800 (PST)
+Received: from foxbook (bfj60.neoplus.adsl.tpnet.pl. [83.28.47.60])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb906817ccsm457333755e9.5.2026.11.27.21.43.27
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 27 Nov 2026 21:43:27 -0800 (PST)
+Date: Sat, 28 Nov 2026 06:43:31 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Flavio Giacchetti <flv.giacchetti@gmail.com>
+Cc: linux-usb@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+ regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Creative Sound Blaster X3 (041e:3264) fails USB
+ audio probe on Fedora 7.3.4
+Message-ID: <20261128064331.7324a947.michal.pecio@gmail.com>
+In-Reply-To: <CACKiateKEggvx60zugZt_C1ejcLv55OiL6Hyv=DkF72370FU1Q@mail.gmail.com>
+References: <CACKiatc1Bj2et4kcXDJiYx28XXxoo6iHPc9nYt3GhTCxUmdnsA@mail.gmail.com>
+	<20261125203211.76029bf0.michal.pecio@gmail.com>
+	<CACKiateKEggvx60zugZt_C1ejcLv55OiL6Hyv=DkF72370FU1Q@mail.gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Post: <mailto:regressions@lists.linux.dev>
@@ -51,76 +100,58 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:regressions+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ext4: silent data loss when a split at I/O
- completion gets ENOSPC
-To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>,
- Ojaswin Mujoo <ojaswin@linux.ibm.com>, Theodore Ts'o <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun@linux.alibaba.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- guolingxing <guolingxing@tju.edu.cn>, Josef Bacik <josef@toxicpanda.com>,
- Chris Mason <mason@kernel.org>, linux-ext4@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <d400205a-0d3d-4ec3-a916-6c0a085841b4@linux.dev>
- <d8ac3185-44c8-41e7-9cbf-3d1baa27f272@huaweicloud.com>
- <20261117-jf-ext4-enospc-reply-zhangyi-v9-b19eeb966ad0@linux.dev>
- <10712329-a587-496d-babf-620ebfd0e60e@huaweicloud.com>
- <20261118-jf-ext4-enospc-reply-zhangyi-v13-3886a3248c32@linux.dev>
- <9be1cb3e-4417-4609-bc0d-67dcfa24aa10@huaweicloud.com>
- <20261127-jf-ext4-enospc-reply-zhangyi-r4-3-59ba31e6e023@linux.dev>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20261127-jf-ext4-enospc-reply-zhangyi-r4-3-59ba31e6e023@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCXzeyiKQprH4NRGA--.24636S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4fZFyDJF1fXw1fWw4Uurg_yoWkXFc_uF
-	sFgrZFyrWDZF18G34xKFW3XrWYgFZYqFy8X3yrGa4fXr95ZFykCFyUXwn5Zas7KF45Ar9I
-	gwnFqF4xAF9IvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 11/28/2026 1:45 AM, Jose Fernandez (Anthropic) wrote:
-> On Tue, Nov 24, 2026 Zhang Yi wrote:
->> My idea is to make this a real reservation of currently allocatable
->> clusters rather than just a counter check. We can subtract
->> sbi->s_mb_free_pending from free_clusters in ext4_has_free_clusters().
-> 
-> This makes sense to me.
-> 
->> However, the probability of returning ENOSPC for pure append writes
->> increases by about 10%.
-> 
-> Our agents tried a close variant of it on mainline, with an exception
-> for EXT4_MB_USE_RESERVED. The reproducer lost 0 of 72 files instead of
-> 32 of 72. But write() got ENOSPC on 54 of 540 delalloc files, against
-> none without it, with the filesystem at most about half full. The
-> writers ran as root. Is your 10% before or after
-> ext4_should_retry_alloc() gives up? Ours is after.
+On Thu, 26 Nov 2026 00:17:40 +0100, Flavio Giacchetti wrote:
+> Yes. The earlier Fedora 7.3.3-300.fc45 logs show the X3 enumerating
+> at high speed and cdc_acm binding to interface 1 as ttyACM0 without
+> the rate-query errors. Audio worked.
 
-Yes, my test results match yours. Writes to preallocated files no longer
-lose data or return ENOSPC, while the probability of delalloc writes
-returning ENOSPC after ext4_should_retry_alloc() gives up increases from
-0 to about 10%.
+I suggest investigating which change in 7.3.4 broke it. And try
+upstream releases if possible, becauase no one here konws what code
+actually goes into some downstream kernel.
 
-Thanks,
-Yi.
+If you got kernel sources from a distro git repository, it probably
+still contains tags like v7.3.3, v7.3.4 or v7.4-rc4 created by Greg
+K-H and Linus, so simply use them.
 
+> The failure also reproduced with Fedora 7.3.5-300.fc45 and its stock
+> USB and ALSA drivers, with a different known-good cable. At 480 Mb/s,
+> the X3 disconnected and re-enumerated, then failed to answer USB audio
+> sample-rate and mixer requests. On 7.3.4 the same high-speed failure
+> also occurred with my experimental cdc-acm module loaded and the ACM
+> interface unbound. Please disregard my IGNORE_DEVICE RFC as a fix.
 > 
-> We can test the patch once it is posted.
-> 
-> - Jose
+> On the failing 7.3.5 run, the USB hub worker was blocked in
+> usb_start_wait_urb -> usb_control_msg -> usb_get_string, called from
+> get_term_name during snd_usb_create_mixer. A 30-second usbmon trace
+> showed repeated endpoint-0 GET_DESCRIPTOR (string) and class
+> control requests. For several requests, the next completion came
+> about 5.12 s later with status -2 and zero bytes, consistent with
+> cancellation after the timeout. In a separate 7.3.4 run, the Intel
+> xHCI driver logged two "Event dma ... not part of TD" messages at
+> disconnect.
 
+You should *never* be seeing this message, that's a bug. May or may not
+be related to other issues, hard to tell with the information at hand.
+
+My best guess is that some innocent change in cdc-acm (or elsewhere?)
+triggers a bug either in your device or in xhci-hcd, possibly related
+to the whole disconnection SNAFU in v7.3. (Some of that should be fixed
+in 7.4-rc4, not sure if 7.3 series backported it yet).
+
+Did the device disconnect and reconnect on 7.3.3, by the way?
+
+Did you use 7.2.x or earlier with this HW, any difference vs 7.3.3?
+
+> I have not isolated a bad kernel commit or reproduced the issue on
+> upstream mainline.
+
+Officially, kernel.org only takess report of upstream kernel bugs.
+People will often make exceptions when the bug's cause is clear and
+reasonably believed to exist in upstream too, but this doesn't seem
+to be one of those cases.
+
+Regards,
+Michal
